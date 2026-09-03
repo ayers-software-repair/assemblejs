@@ -54,11 +54,14 @@ module.exports = {
       name: "client-stays-browser-only",
       severity: "error",
       comment:
-        "Browser code may reach the shared WIRE SHAPES and nothing else: src/json for what " +
-        "JSON is, src/island for the payload that actually crosses the boundary. Both are " +
-        "types with no behaviour, which is why both sides may hold them. Anything else " +
-        "server-side that browser code imports is something a bundler would have to strip, " +
-        "and stripping is what leaks a secret when it fails.",
+        "Browser code may reach the SHARED VOCABULARY AND WIRE SHAPES and nothing else: " +
+        "src/json for what JSON is, src/island for the payload that crosses the boundary, and " +
+        "src/vocab for the words themselves. All three hold names and types with no behaviour, " +
+        "and the vocabulary is shared by definition: the server spells the envelope element to " +
+        "emit it and the browser spells the same one to find it, which is the entire reason " +
+        "those words live in one module. Anything else server-side that browser code imports " +
+        "is something a bundler would have to strip, and stripping is what leaks a secret when " +
+        "it fails.",
       from: { path: "^packages/[^/]+/src/client/" },
       to: {
         path: "^packages/[^/]+/src/",
@@ -66,6 +69,7 @@ module.exports = {
           "^packages/[^/]+/src/client/",
           "^packages/[^/]+/src/json/",
           "^packages/[^/]+/src/island/",
+          "^packages/[^/]+/src/vocab/",
         ],
       },
     },

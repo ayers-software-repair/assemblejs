@@ -55,6 +55,28 @@ jobs:
       - name: Check (identity, headers, emoji, organization, mirror, versions, lint, modules, types, tests, build, exports, pack, unused, publish)
         run: pnpm check
 
+  browser:
+    name: browser proof
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      # Kept out of `pnpm check` because it needs a browser engine, and the unit suite has to
+      # stay runnable anywhere. What runs here is what a DOM shim cannot honestly answer: real
+      # layout, a real IntersectionObserver, and real module loading.
+      - run: pnpm build
+      - run: pnpm test:browser
+
   commit-trailers:
     name: commit trailers
     if: github.event_name == 'pull_request'
