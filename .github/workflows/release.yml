@@ -1,0 +1,56 @@
+name: release
+
+# Publishes to npm by trusted publishing (OIDC). There is no NPM_TOKEN anywhere and there never
+# will be: the trusted publisher on npmjs.com names this repository, this file, and the `release`
+# environment, whose required reviewer gates every run. On `next` the changesets pre mode
+# publishes 1.0.0-next.N under the `next` dist-tag; on `main` a version is published once.
+
+on:
+  push:
+    branches: [main, next]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: version or publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: release
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: Pack check
+        run: node scripts/check-pack.mjs
+      - name: npm 11.5.1 or newer, required for trusted publishing
+        run: npm install -g npm@^11.5.1 && npm --version
+      - name: Version or publish
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
+        with:
+          publish: pnpm changeset publish
+          commit: "chore: version packages"
+          title: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

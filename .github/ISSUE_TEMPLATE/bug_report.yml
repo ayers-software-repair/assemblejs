@@ -1,0 +1,24 @@
+name: Bug report
+description: A reproducible defect in an @assemblejs package
+labels: ["bug", "needs-triage"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Package and version
+      placeholder: "@assemblejs/core@1.0.0-next.3"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: A repository link, a StackBlitz, or exact steps from a fresh project. Issues without a reproduction close after three days.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected versus actual behaviour
+    validations:
+      required: true

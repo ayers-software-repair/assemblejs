@@ -1,0 +1,5 @@
+# Review is required from the maintainers team for everything; the two paths below are the
+# supply-chain surface and are called out so a dependency or workflow change never lands unread.
+*                              @ayers-software-repair/maintainers
+/packages/*/package.json       @ayers-software-repair/maintainers
+/.github/workflows/            @ayers-software-repair/maintainers

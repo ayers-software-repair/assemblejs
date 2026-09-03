@@ -1,0 +1,2 @@
+pnpm exec commitlint --edit "$1"
+bash scripts/check-trailers.sh --message "$1"

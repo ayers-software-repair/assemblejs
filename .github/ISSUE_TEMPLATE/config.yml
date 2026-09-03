@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or usage help
+    url: https://github.com/ayers-software-repair/assemblejs/discussions
+    about: Use Discussions for questions. Issues are for confirmed bugs and accepted proposals.
+  - name: Report a security vulnerability
+    url: https://github.com/ayers-software-repair/assemblejs/security/advisories/new
+    about: Never open a public issue for a vulnerability. Use private advisory reporting.

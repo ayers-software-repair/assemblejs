@@ -1,0 +1,3 @@
+pnpm exec lint-staged
+bash scripts/identity-gate.sh
+node scripts/check-headers.mjs

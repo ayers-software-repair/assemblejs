@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose new behaviour. This is the required first step before any pull request.
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API or behaviour
+    validations:
+      required: true
+  - type: checkboxes
+    id: ai
+    attributes:
+      label: Disclosure
+      options:
+        - label: This proposal was drafted with AI assistance
+          required: false
