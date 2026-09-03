@@ -19,7 +19,7 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "changeset": "changeset",
-    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:organization && pnpm check:mirror && pnpm check:versions && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm test && pnpm build && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
+    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:site && pnpm check:organization && pnpm check:mirror && pnpm check:versions && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm test && pnpm build && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
     "check:emoji": "node scripts/check-emoji.mjs --self-test && node scripts/check-emoji.mjs",
     "check:exports": "node scripts/check-exports.mjs",
     "check:headers": "node scripts/check-headers.mjs",
@@ -29,6 +29,7 @@
     "check:organization": "node scripts/check-organization.mjs --self-test && node scripts/check-organization.mjs",
     "check:pack": "node scripts/check-pack.mjs",
     "check:publish": "pnpm -r --filter './packages/*' check:publish",
+    "check:site": "node scripts/check-site.mjs --self-test && node scripts/check-site.mjs",
     "check:trailers": "bash scripts/check-trailers.sh --self-test && bash scripts/check-trailers.sh",
     "check:unused": "knip",
     "check:versions": "syncpack lint",

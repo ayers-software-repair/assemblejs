@@ -1,0 +1,79 @@
+/* Copyright Ayers Electronics Inc. All rights reserved. */
+/* The landing page's own stylesheet. Landing pages are each product's own and do not use the
+ * shared kit (platform/sitekit/README.md), so this file owns its layout outright. It still
+ * speaks the skin's roles, so a colour changed in skin.css changes here too. */
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--face-text);
+  line-height: 1.55;
+}
+.wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.5rem; }
+a { color: var(--accent); }
+a:hover { color: var(--accent-strong); }
+code, pre { font-family: var(--face-mono); }
+
+.hero { padding: 5rem 0 3rem; }
+.hero h1 {
+  font-family: var(--face-display), var(--face-text);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.05;
+  margin: 0 0 1rem;
+}
+.hero p.lead { font-size: 1.2rem; color: var(--ink-muted); max-width: 42rem; margin: 0 0 2rem; }
+
+.cta a {
+  display: inline-block;
+  padding: 0.7rem 1.3rem;
+  border-radius: 0.4rem;
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 0.5rem 0.5rem 0;
+}
+.cta a.solid { background: var(--accent); color: var(--surface); }
+.cta a.solid:hover { background: var(--accent-strong); }
+.cta a.line { border: 1px solid var(--border); color: var(--ink); }
+.cta a.line:hover { background: var(--accent-wash); }
+
+/* THE FRAMEWORKS, AS NAMES. No third-party logo appears on this page: most framework marks need
+ * permission for placement on someone else's marketing page, and several forbid recolouring.
+ * Names in our own colours say the same thing and ask nobody. */
+.constellation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.9rem;
+  align-items: center;
+  padding: 2.5rem 0 3.5rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.constellation span {
+  font-family: var(--face-mono);
+  font-size: 0.95rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 2rem;
+  background: var(--accent-wash);
+  color: var(--accent);
+  white-space: nowrap;
+}
+.constellation .joins { color: var(--ink-muted); background: none; padding-left: 0; }
+
+.points { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); padding: 3.5rem 0; }
+.points h2 { font-size: 1.05rem; margin: 0 0 0.5rem; }
+.points p { color: var(--ink-muted); margin: 0; }
+
+pre.sample {
+  background: var(--surface-panel);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.1rem 1.2rem;
+  overflow-x: auto;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+footer { border-top: 1px solid var(--border); padding: 2rem 0 3rem; color: var(--ink-dim); font-size: 0.9rem; }
+footer a { margin-right: 0.9rem; }

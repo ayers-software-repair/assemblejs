@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting started - AssembleJS</title>
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="skin.css">
+<link rel="icon" href="favicon.svg">
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <img src="mark.svg" alt="" width="84" height="84">
+    <h1>Getting started</h1>
+    <div class="rule"></div>
+    <p>An assembly is a piece of a page written in one framework. A page places assemblies. That
+      is the whole model, and the rest of this page is how you write one.</p>
+  </header>
+
+  <h2>Your first assembly</h2>
+  <dl>
+    <div class="item">
+      <dt>A directory is an assembly</dt>
+      <dd>Make <code>src/assemblies/cart/cart.svelte</code> and you have an assembly called
+        <code>cart</code>. There is nothing to register: no import to add, no array to append
+        to, no list restating the directory tree. Your server file does not grow.</dd>
+    </div>
+    <div class="item">
+      <dt>The file name says which framework</dt>
+      <dd><code>cart.svelte</code> and <code>cart.vue</code> need no help. Where an extension is
+        shared, the name carries it: <code>cart.react.tsx</code>, <code>cart.preact.tsx</code>,
+        <code>cart.solid.tsx</code>. A directory listing tells you what a page is made of.</dd>
+    </div>
+    <div class="item">
+      <dt>Put it on a page</dt>
+      <dd>Write <code>&lt;assembly name="cart"&gt;&lt;/assembly&gt;</code> in a page template.
+        The server replaces it with the rendered assembly.</dd>
+    </div>
+  </dl>
+
+  <h2>Adding a second framework</h2>
+  <dl>
+    <div class="item">
+      <dt>assemblejs add assembly checkout --renderer react</dt>
+      <dd>One command and one tag. The React developer and the Svelte developer work on the same
+        page without either learning the other's framework.</dd>
+    </div>
+    <div class="item">
+      <dt>They talk through the page</dt>
+      <dd>Every assembly gets a typed events object scoped to it. One sends, another listens,
+        and neither needs an adapter, because the bus belongs to the page rather than to any
+        framework's tree.</dd>
+    </div>
+  </dl>
+
+  <h2>When one of them is slow</h2>
+  <dl>
+    <div class="item">
+      <dt>Every assembly has a deadline</dt>
+      <dd>A slow or dead assembly renders its declared fallback, or the last good content, and
+        the page still ships. One failing assembly is one failing assembly.</dd>
+    </div>
+  </dl>
+
+  <footer>
+    <p><a href="index.html">AssembleJS</a> &middot; <a href="install.html">Installing</a> &middot; <a href="docs/index.html">Documentation</a></p>
+    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
+  </footer>
+
+</main>
+</body>
+</html>

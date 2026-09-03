@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentation - AssembleJS</title>
+<!-- One directory down, so the kit and the skin are reached with ../ . Relative paths only:
+     an absolute one breaks under /assemblejs/ prefix hosting. -->
+<link rel="stylesheet" href="../kit/kit.css">
+<link rel="stylesheet" href="../skin.css">
+<link rel="icon" href="../favicon.svg">
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <img src="../mark.svg" alt="" width="84" height="84">
+    <h1>Documentation</h1>
+    <div class="rule"></div>
+    <p>Start with the guide for the framework you already know. They all describe the same
+      product; each one shows it in the idiom you write every day.</p>
+  </header>
+
+  <h2>Start here</h2>
+  <dl>
+    <div class="item">
+      <dt><a href="../install.html">Installing</a></dt>
+      <dd>Node 22 or newer, one command, and a project that runs.</dd>
+    </div>
+    <div class="item">
+      <dt><a href="../start.html">Getting started</a></dt>
+      <dd>Your first assembly, a second framework beside it, and what happens when one is slow.</dd>
+    </div>
+  </dl>
+
+  <h2>The model</h2>
+  <dl>
+    <div class="item">
+      <dt>assembly</dt>
+      <dd>A piece of a page written in one UI framework: whole, addressable, renderable on its
+        own. Nested inside another it is a subassembly. Given a URL, it lives on another server
+        and nothing else about it changes.</dd>
+    </div>
+    <div class="item">
+      <dt>page</dt>
+      <dd>A route that renders a template which places assemblies. A page is an assembly that
+        has a route.</dd>
+    </div>
+    <div class="item">
+      <dt>service</dt>
+      <dd>A function that runs on the server before an assembly renders and returns its data.
+        The same function answers the assembly's data endpoint, so the two can never disagree.</dd>
+    </div>
+    <div class="item">
+      <dt>api</dt>
+      <dd>A route that serves data to anyone.</dd>
+    </div>
+  </dl>
+
+  <h2>The contract</h2>
+  <dl>
+    <div class="item">
+      <dt>Three endpoints per assembly</dt>
+      <dd>Content, data and manifest. Any server in any language can serve an assembly by
+        answering those three correctly, which is what makes a second team cost nothing.</dd>
+    </div>
+    <div class="item">
+      <dt>Nothing crosses to the browser but JSON</dt>
+      <dd>A named projection of six fields. Not your request, not your headers, not your
+        cookies, and never another assembly's rendered bytes.</dd>
+    </div>
+  </dl>
+
+  <footer>
+    <p><a href="../index.html">AssembleJS</a> &middot; <a href="../install.html">Installing</a> &middot; <a href="../start.html">Getting started</a></p>
+    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
+  </footer>
+
+</main>
+</body>
+</html>

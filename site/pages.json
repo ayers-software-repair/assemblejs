@@ -1,0 +1,43 @@
+{
+  "_": "Single source of truth for what pages exist and how they link. scripts/check-site.mjs reads it: every declared page must exist, every required page must be declared, and no page may link to one that is not. Generated links name docs/index.html and NEVER a bare directory: CloudFront applies a default root object only at the distribution root, so /assemblejs/docs/ 404s while /assemblejs/docs/index.html is 200, and a repo check cannot tell them apart because the file exists either way.",
+  "base": "https://ayers.repair/assemblejs/",
+  "required": ["install.html", "start.html", "docs/index.html"],
+  "pages": [
+    {
+      "file": "index.html",
+      "url": "index.html",
+      "title": "AssembleJS",
+      "sep": "\n    ",
+      "in_nav": false
+    },
+    {
+      "file": "install.html",
+      "url": "install.html",
+      "title": "Installing",
+      "sep": " &middot; ",
+      "in_nav": true
+    },
+    {
+      "file": "start.html",
+      "url": "start.html",
+      "title": "Getting started",
+      "sep": " &middot; ",
+      "in_nav": true
+    },
+    {
+      "file": "docs/index.html",
+      "url": "docs/index.html",
+      "title": "Documentation",
+      "sep": " &middot; ",
+      "in_nav": true
+    },
+    { "file": "404.html", "url": "404.html", "title": "Not found", "in_nav": false }
+  ],
+  "external": [
+    { "url": "https://github.com/ayers-software-repair/assemblejs", "title": "Source" },
+    {
+      "url": "https://github.com/ayers-software-repair/assemblejs/issues/new/choose",
+      "title": "Report an issue"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+/* Copyright Ayers Electronics Inc. All rights reserved. */
+/* AssembleJS's skin - HAND-KEPT CONFIG. The shared kit (kit/kit.css) declares no colours and no
+ * faces; it only references roles, and this file is where they are bound. Changing a colour is
+ * one edit, here, and kit.css is untouched.
+ *
+ * PLACEHOLDER PALETTE. The brand's colours are the owner's to choose, along with the lovebird
+ * mark; these values exist so the pages are readable and the invariants are provable before that
+ * happens. They satisfy every contrast bound in platform/sitekit/ROLES.md, which
+ * scripts/check-site.mjs enforces, so replacing them is a change that has a gate waiting for it.
+ *
+ * Light ground on purpose: this is documentation for people reading code samples all day. */
+
+:root {
+  /* kit roles */
+  --surface: #fbfaf7;
+  --surface-panel: #efece4;
+  --border: #ddd7c9;
+  --ink: #17150f;
+  --ink-muted: #57513f;
+  --ink-dim: var(--ink-muted); /* no third grey in the voice: dim binds to muted */
+  --accent: #0b5d4e;
+  --accent-strong: #073e34; /* hover deepens on a light ground */
+  --accent-alt: #a4400f;
+  --accent-wash: #e8f0ed;
+  --face-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --face-text: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --face-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}

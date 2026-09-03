@@ -1,0 +1,106 @@
+# Deploy this product's site (site/) to the ayers.repair shop bucket and invalidate its path.
+#
+# Auth: OIDC role gh-deploy-assemblejs-site (no stored AWS keys) - trust scoped to THIS repo;
+# permissions scoped to the s3://ayers-repair-site-993011736775/assemblejs/ prefix and the one
+# CloudFront distribution, nothing else.
+#
+# site/ IS the whole site: static pages, no build, fonts and images vendored. No `--delete`: the
+# bucket carries other products' files.
+#
+# TWO PREFIXES, ONE FOLDER. This product publishes twice, which is the npm two-channel rule
+# applied to the site: `next` to /assemblejs/next/ alongside the `next` dist-tag, `main` to
+# /assemblejs/ alongside `latest`. The branch decides the prefix and the folder is identical.
+#
+# The paths filter is an INCLUDE on site/**, never an ignore list - most of a product repo is
+# not the site, so a skip-list publishes whatever is added next.
+name: deploy-site
+on:
+  push:
+    branches: [main, next]
+    paths:
+      - "site/**"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: deploy-site-assemblejs-${{ github.ref_name }}
+  cancel-in-progress: false
+
+env:
+  BUCKET: ayers-repair-site-993011736775
+  DIST: E1CZIGG4O8R7UI
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # main publishes the product's own prefix; next publishes the channel beneath it.
+      - name: Choose the prefix from the branch
+        id: prefix
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "path=assemblejs" >> "$GITHUB_OUTPUT"
+          else
+            echo "path=assemblejs/next" >> "$GITHUB_OUTPUT"
+          fi
+
+      # THE KIT IS REFERENCED, NEVER COPIED: one platform pin per product, and everything
+      # platform-sourced comes from it. For an npm product the pin is `ayersPlatform` in the root
+      # package.json, where a Go product reads its go.mod line.
+      - name: Read the platform pin
+        id: pin
+        run: |
+          ref=$(node -p "require('./package.json').ayersPlatform || ''")
+          if [ -z "$ref" ]; then
+            echo "::error::no ayersPlatform pin in package.json - an empty checkout ref silently means the DEFAULT BRANCH, defeating reference-at-pin"
+            exit 1
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ayers-software-repair/platform
+          ref: ${{ steps.pin.outputs.ref }}
+          token: ${{ secrets.RELEASES_PAT }}
+          path: _platform
+          persist-credentials: false
+
+      - name: Stage the kit into the site
+        run: |
+          rm -rf site/kit && mkdir -p site/kit
+          cp _platform/sitekit/*.css site/kit/
+
+      # The same gate a developer runs. A skin whose ink is unreadable, or a page advertised and
+      # missing, does not reach the bucket.
+      - name: Check the site
+        run: node scripts/check-site.mjs --self-test && node scripts/check-site.mjs
+
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::993011736775:role/gh-deploy-assemblejs-site
+          aws-region: us-east-1
+
+      - name: Sync HTML (5 min cache)
+        run: |
+          aws s3 sync site/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/" \
+            --exclude "*" --include "*.html" \
+            --cache-control "public, max-age=300" --only-show-errors
+
+      - name: Sync assets - fonts, images, css (7 day cache)
+        run: |
+          aws s3 sync site/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/" \
+            --exclude "*.md" --exclude "*.html" --exclude "*.json" \
+            --cache-control "public, max-age=604800" --only-show-errors
+
+      - name: Invalidate CloudFront (this prefix only)
+        run: |
+          aws cloudfront create-invalidation --distribution-id "$DIST" \
+            --paths "/${{ steps.prefix.outputs.path }}/*" \
+            --query 'Invalidation.Id' --output text

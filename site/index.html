@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AssembleJS</title>
+<meta name="description" content="Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.">
+<meta property="og:title" content="AssembleJS">
+<meta property="og:description" content="One page. Every framework. Hire anyone.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="skin.css">
+<link rel="stylesheet" href="index.css">
+<link rel="icon" href="favicon.svg">
+</head>
+<body>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>One page. Every framework.</h1>
+    <p class="lead">An assembly is a piece of a page written in one UI framework. AssembleJS
+      composes assemblies into pages on the server, whether they live in your project or on
+      someone else's, and hydrates them in the browser. Hire a React developer, a Svelte
+      developer and a Vue developer, and put them on the same page on their first day.</p>
+    <p class="cta">
+      <a class="solid" href="start.html">Get started</a>
+      <a class="line" href="docs/index.html">Documentation</a>
+      <a class="line" href="https://github.com/ayers-software-repair/assemblejs">Source</a>
+    </p>
+  </section>
+
+  <section class="constellation" aria-label="Frameworks you can write an assembly in">
+    <span>React</span><span>Vue</span><span>Svelte</span><span>Preact</span><span>Solid</span>
+    <span>Lit</span><span>Web Components</span><span>Markdown</span><span>HTML</span>
+    <span class="joins">on one page, at the same time</span>
+  </section>
+
+  <section class="points">
+    <div>
+      <h2>A directory is an assembly</h2>
+      <p>Make a directory, put a view in it, and it exists. Nothing to register, no import to
+        add, no list restating your own folder tree. Your server file never grows.</p>
+    </div>
+    <div>
+      <h2>The file name says the framework</h2>
+      <p><code>cart.svelte</code>, <code>cart.react.tsx</code>. A directory listing tells you
+        what a page is made of, so nobody has to read a config to find out.</p>
+    </div>
+    <div>
+      <h2>One slow assembly is not a slow page</h2>
+      <p>Every assembly carries a deadline and a fallback. A dead one degrades to its last good
+        content and the page still ships, in the template's order.</p>
+    </div>
+    <div>
+      <h2>They talk without adapters</h2>
+      <p>A typed event bus that belongs to the page rather than to any framework's tree, so a
+        React assembly and a Svelte one exchange messages with nothing in between.</p>
+    </div>
+    <div>
+      <h2>An assembly can live anywhere</h2>
+      <p>Give one a URL and another team serves it. Moving it changes a URL and nothing else:
+        the same deadline, the same fallback, the same headers.</p>
+    </div>
+    <div>
+      <h2>Your agent knows the framework</h2>
+      <p>An MCP server ships with it, so an AI agent reads your project, adds an assembly, and
+        then renders it to see what it actually produced. It carries no model and no key of its
+        own.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>The whole idea, in one page template</h2>
+    <pre class="sample">&lt;main&gt;
+  &lt;assembly name="catalogue"&gt;&lt;/assembly&gt;   &lt;!-- written in React  --&gt;
+  &lt;assembly name="cart"&gt;&lt;/assembly&gt;        &lt;!-- written in Svelte --&gt;
+&lt;/main&gt;</pre>
+  </section>
+
+  <footer>
+    <a href="install.html">Installing</a>
+    <a href="start.html">Getting started</a>
+    <a href="docs/index.html">Documentation</a>
+    <a href="https://github.com/ayers-software-repair/assemblejs">Source</a>
+    <p>Apache-2.0. Copyright Ayers Electronics Inc. All rights reserved. Published by Ayers Electronics.</p>
+  </footer>
+</main>
+
+</body>
+</html>

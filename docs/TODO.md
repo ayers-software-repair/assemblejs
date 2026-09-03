@@ -117,22 +117,24 @@ Two differences this product has, both already ruled: the pin is `ayersPlatform`
 `package.json` rather than a go.mod line, and there are two prefixes, `/assemblejs/` from `main`
 and `/assemblejs/next/` from `next`.
 
-- [ ] `site/pages.json`: the page list and cross-links, in magpie's schema
-- [ ] `site/index.html` + `index.css`: the landing page, the product's own skin, framework names
+- [x] `site/pages.json`: the page list and cross-links, in magpie's schema
+- [x] `site/index.html` + `index.css`: the landing page, the product's own skin, framework names
       typeset in our colours and no third-party logos
-- [ ] `site/install.html` and `site/start.html` from `platform/sitekit/templates/`, instantiated
+- [x] `site/install.html` and `site/start.html` from `platform/sitekit/templates/`, instantiated
       by hand as committed pages
-- [ ] `site/docs/index.html` and the guides: one per camp, plus the linear tutorial
-- [ ] `site/404.html` from the kit template
-- [ ] `site/skin.css`: the role bindings, no structural CSS
-- [ ] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
-- [ ] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
+- [x] `site/docs/index.html`: the model, the contract, and where to start
+- [ ] The guides: one per camp (for React devs, for Vue devs, for Svelte devs) and the
+      linear tutorial. Owed once the renderers exist, so a guide can show real code.
+- [x] `site/404.html` from the kit template
+- [x] `site/skin.css`: the role bindings, no structural CSS
+- [x] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
+- [x] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
 - [ ] `scripts/site-links.py`: cross-links generated from `pages.json`, never hand-written
-- [ ] A test binding `pages.json` to the deploy, so a required page cannot go missing
-- [ ] `.github/workflows/deploy-site.yml`: the pin read from `ayersPlatform`, OIDC to
+- [x] A test binding `pages.json` to the deploy, so a required page cannot go missing
+- [x] `.github/workflows/deploy-site.yml`: the pin read from `ayersPlatform`, OIDC to
       `gh-deploy-assemblejs-site`, sync to the shop bucket under the prefix, invalidate that
       prefix only, no `--delete`
-- [ ] The `next` branch variant publishing to `/assemblejs/next/`, with every link carrying the
+- [x] The `next` branch variant publishing to `/assemblejs/next/`, with every link carrying the
       trailing slash (the prefix router does not redirect a bare second segment)
 - [ ] The API reference generated into `site/docs/api/` at deploy time, never committed
 - [ ] **BLOCKING, the owner's hand:** `RELEASES_PAT` added to this repository's secrets, so
