@@ -21,7 +21,9 @@
       "@assemblejs/cli": ["./packages/cli/src/index.ts"],
       "@assemblejs/mcp": ["./packages/mcp/src/index.ts"],
       "@assemblejs/renderer-react": ["./packages/renderer-react/src/index.ts"],
-      "@assemblejs/renderer-react/client": ["./packages/renderer-react/src/client/index.ts"]
+      "@assemblejs/renderer-react/client": ["./packages/renderer-react/src/client/index.ts"],
+      "@assemblejs/renderer-svelte": ["./packages/renderer-svelte/src/index.ts"],
+      "@assemblejs/renderer-svelte/client": ["./packages/renderer-svelte/src/client/index.ts"]
     }
   }
 }

@@ -428,3 +428,27 @@ and rather than papered over with a fake import, because a file importing someth
 use to satisfy a tool is worse than a line of configuration that says what is going on.
 
 If the browser fixture ever stops bundling renderer source, this entry should go with it.
+
+## 2026-09-03: the mission is demonstrable, and a shim is not where it is demonstrated
+
+`browser/svelte.browser.ts` is the day-one proof: a Svelte assembly and a React assembly on one
+page, one click in Svelte, and the React assembly displaying who sent what. Neither imports the
+other, neither knows the other's framework, and nothing sits between them but the page's bus.
+That sentence is the product, and it is now a test rather than a claim.
+
+Recorded because getting there needed a judgment call. Svelte 5's client runtime reads
+`Node.prototype` getter descriptors when it initialises, and neither happy-dom nor jsdom
+reproduces them: hydration fails inside svelte before any of this repository's code runs. Several
+attempts went into the shim before that was clear.
+
+The call: that is a fidelity limit of the shim, not a defect in the renderer, and a test that
+passed on a fake DOM would be asserting something about the fake. So hydration is proved in a
+real browser, which is the same answer `client:visible` already gets for the same kind of reason,
+and the unit test says IN THE FILE what it does not test and why. A test file that quietly covers
+less than its name suggests is the failure mode this whole ladder keeps finding; saying so where
+the next reader will see it is the cheapest possible fix.
+
+The two renderers deliberately differ where their frameworks differ. React takes its events
+through a context; Svelte takes them as a prop. Each is the idiom an author of that framework
+already writes, and wrapping either in the other's habits would be the framework telling people
+how to write the framework they already know.

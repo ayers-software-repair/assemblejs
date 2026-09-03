@@ -87,7 +87,7 @@ starts. Until the owner enables Actions, every proof is local only.
       which are the command line's own logic reached through the same seam. Owed once `add`
       and `check` have a shape the protocol can hand back as structures.
 - [x] B-10 the first framework renderer: @assemblejs/renderer-react
-- [ ] B-11 the second framework renderer and the day-one proof
+- [x] B-11 the second framework renderer and the day-one proof: Svelte, and two frameworks sharing an event on one page in a real browser
 - [ ] B-12 services and apis
 - [ ] B-13 remote assemblies: allowlist, caps, handshake, cache
       Owed here: `Limits.maxBytes` is declared and has no reader until the remote

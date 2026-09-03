@@ -1,0 +1,73 @@
+{
+  "name": "@assemblejs/renderer-svelte",
+  "version": "1.0.0",
+  "description": "Write an AssembleJS assembly in Svelte.",
+  "license": "Apache-2.0",
+  "author": "Zachariah Ayers",
+  "homepage": "https://ayers.repair/assemblejs/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayers-software-repair/assemblejs.git",
+    "directory": "packages/renderer-svelte"
+  },
+  "bugs": "https://github.com/ayers-software-repair/assemblejs/issues",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "browser": "./dist/client/index.js",
+      "default": "./dist/client/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src test",
+    "check:publish": "publint && attw --pack . --profile esm-only"
+  },
+  "peerDependencies": {
+    "@assemblejs/core": "1.x",
+    "svelte": ">=5"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@assemblejs/core": "workspace:*",
+    "@sveltejs/vite-plugin-svelte": "7.3.0",
+    "@types/node": "26.4.1",
+    "publint": "0.3.24",
+    "svelte": "5.57.0",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "assemblejs": {
+    "vitePlugin": "@sveltejs/vite-plugin-svelte",
+    "frameworkPackages": [
+      "svelte"
+    ],
+    "viewExtensions": [
+      ".svelte"
+    ]
+  }
+}
