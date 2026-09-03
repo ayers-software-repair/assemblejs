@@ -14,13 +14,23 @@ import { readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
 
+// Same hole as the organization gate had: a source file the walker cannot see needs no test.
+const SOURCE = /\.(ts|tsx|mts|cts)$/;
+
+// Maps the extensionless path to the real file, so a message names a file that exists. Keying
+// on the stripped path and rebuilding it with ".ts" reported "probe.ts" for a "probe.mts",
+// which sends whoever reads it looking for a file that was never there.
 const listing = (root, suffix) => {
-  const found = new Set();
+  const found = new Map();
   const walk = (dir) => {
     for (const entry of readdirSync(dir)) {
       const path = join(dir, entry);
       if (statSync(path).isDirectory()) walk(path);
-      else if (path.endsWith(suffix)) found.add(relative(root, path).slice(0, -suffix.length));
+      else if (suffix === ".ts" && SOURCE.test(path) && !path.endsWith(".d.ts")) {
+        found.set(relative(root, path).replace(SOURCE, ""), path);
+      } else if (suffix !== ".ts" && path.endsWith(suffix)) {
+        found.set(relative(root, path).slice(0, -suffix.length), path);
+      }
     }
   };
   try {
@@ -34,22 +44,20 @@ const listing = (root, suffix) => {
 
 export function checkPair(srcRoot, testRoot) {
   const problems = [];
-  const sources = [...listing(srcRoot, ".ts")].filter((s) => !s.endsWith("index"));
+  const sources = listing(srcRoot, ".ts");
   const tests = listing(testRoot, ".test.ts");
-  for (const source of sources.sort()) {
-    if (!tests.has(source))
-      problems.push(`${join(srcRoot, source)}.ts has no ${join(testRoot, source)}.test.ts`);
+  for (const [key, path] of [...sources].sort()) {
+    if (key.endsWith("index")) continue;
+    if (!tests.has(key)) problems.push(`${path} has no ${join(testRoot, key)}.test.ts`);
   }
-  for (const test of [...tests].sort()) {
-    if (!sources.includes(test))
-      problems.push(`${join(testRoot, test)}.test.ts mirrors no source file`);
+  for (const [key, path] of [...tests].sort()) {
+    if (!sources.has(key)) problems.push(`${path} mirrors no source file`);
   }
   return problems;
 }
 
 // This module is imported by its own tests and by other tooling, so the command-line body only
-// runs when it IS the command. Without the guard, importing the module silently ran a full scan
-// and printed a verdict nobody asked for.
+// runs when it IS the command.
 const isEntryPoint = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
 if (isEntryPoint) {
   if (process.argv[2] === "--self-test") {

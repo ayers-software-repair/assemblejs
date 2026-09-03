@@ -7,6 +7,7 @@ import { carriesCredential } from "./carries-credential.js";
 import { DEFAULT_DEADLINE } from "./default-deadline.js";
 import type { Diagnostic } from "./diagnostic.js";
 import type { FailureReason } from "./failure-reason.js";
+import type { Fetch } from "./fetch.js";
 import { identity } from "./identity.js";
 import { RequiredFailure } from "./required-failure.js";
 import type { SettleInput } from "./settle-input.js";
@@ -62,7 +63,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     signal: controller.signal,
   };
 
-  const answer = await race(input.fetch(request), deadline, controller);
+  const answer = await race(call(input.fetch, request), deadline, controller);
 
   if (answer.ok) {
     write(input, answer.html, answer.version);
@@ -76,6 +77,38 @@ function refuseBeforeDispatch(input: SettleInput): FailureReason | undefined {
   if (input.depth + 1 > input.limits.depth) return "depth";
   if (input.path.includes(identity(input.name, input.view))) return "cycle";
   return undefined;
+}
+
+/**
+ * Calls the transport in a way that cannot take the page down.
+ *
+ * The declared type says a Fetch returns a Promise of a result, but a type is a promise about
+ * source, not about what a caller actually hands over. A transport can throw before it returns,
+ * return something that is not a Promise at all, or resolve to nothing. Each of those defeated
+ * an earlier version here: the page died on a placement that was never declared required, which
+ * is the exact failure isolation exists to prevent.
+ */
+async function call(fetch: Fetch, request: AssemblyRequest): Promise<AssemblyResponse> {
+  let answered: unknown;
+  try {
+    answered = await fetch(request);
+  } catch (error) {
+    return {
+      ok: false,
+      reason: "transport",
+      detail: error instanceof Error ? error.message : String(error),
+      correlationId: "",
+    };
+  }
+  if (typeof answered !== "object" || answered === null || !("ok" in answered)) {
+    return {
+      ok: false,
+      reason: "invalid",
+      detail: `the transport answered ${answered === undefined ? "nothing" : typeof answered}`,
+      correlationId: "",
+    };
+  }
+  return answered as AssemblyResponse;
 }
 
 /**
@@ -101,17 +134,7 @@ async function race(
     }, deadline);
   });
   try {
-    // A transport that rejects rather than returning is still answered: this function's contract
-    // is a result, and one thrown error must not take the page with it.
-    return await Promise.race([
-      answering.catch((error: unknown) => ({
-        ok: false as const,
-        reason: "transport" as const,
-        detail: error instanceof Error ? error.message : String(error),
-        correlationId: "",
-      })),
-      expired,
-    ]);
+    return await Promise.race([answering, expired]);
   } finally {
     if (timer !== undefined) clearTimeout(timer);
   }
@@ -133,13 +156,15 @@ function fallBack(
   diagnostic: Diagnostic,
   reason: FailureReason,
 ): SettledPlacement {
-  if (input.plan?.required === true) throw new RequiredFailure(diagnostic);
-
+  // The cache is consulted BEFORE required is considered. A required placement whose last good
+  // content is still held has not failed: the ladder answered it. Throwing first killed pages
+  // over an outage the cache was there to absorb.
   if (input.cache !== undefined && !carriesCredential(input.headers)) {
     const held = input.cache.get(cacheKey(input.name, input.view, input.query));
     if (held !== undefined) {
       return { html: held.html, diagnostic: { ...diagnostic, source: "cache", reason } };
     }
   }
+  if (input.plan?.required === true) throw new RequiredFailure(diagnostic);
   return { html: input.plan?.fallback ?? "", diagnostic };
 }

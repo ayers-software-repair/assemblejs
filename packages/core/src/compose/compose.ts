@@ -63,18 +63,32 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
   if (required !== undefined && required.status === "rejected") {
     throw required.reason as RequiredFailure;
   }
-  const other = settled.find((outcome) => outcome.status === "rejected");
-  if (other !== undefined && other.status === "rejected") throw other.reason as Error;
+  // Anything else that rejected is a defect in settling, not a reason to lose the page. It
+  // becomes that placement's failure and the rest of the page is served, because discarding
+  // what allSettled just bought is how one bad child takes a page down again.
 
   const diagnostics: Diagnostic[] = [];
   let html = "";
   let cursor = 0;
   placements.forEach((placement, index) => {
     const outcome = settled[index];
-    if (outcome === undefined || outcome.status !== "fulfilled") return;
-    html += options.template.slice(cursor, placement.start) + outcome.value.html;
+    if (outcome === undefined) return;
+    html += options.template.slice(cursor, placement.start);
     cursor = placement.end;
-    diagnostics.push(outcome.value.diagnostic);
+    if (outcome.status === "fulfilled") {
+      html += outcome.value.html;
+      diagnostics.push(outcome.value.diagnostic);
+      return;
+    }
+    // The placement renders as nothing, and says so, rather than vanishing without a trace.
+    diagnostics.push({
+      name: placement.name,
+      view: placement.view,
+      id: "",
+      source: "fallback",
+      reason: "invalid",
+      ms: 0,
+    });
   });
   html += options.template.slice(cursor);
 

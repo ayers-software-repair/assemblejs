@@ -15,6 +15,9 @@ import ts from "typescript";
 const BANNED_DIRECTORIES = new Set(["utils", "helpers", "common", "misc", "shared", "lib"]);
 const MAX_LINES = 300;
 const KEBAB = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+// Every extension TypeScript will compile. Walking only ".ts" left ".mts", ".cts" and ".tsx"
+// invisible to every rule below, which is a hole shaped exactly like the rules themselves.
+const SOURCE = /\.(ts|tsx|mts|cts)$/;
 
 const sourceFiles = (root) => {
   const found = [];
@@ -22,7 +25,7 @@ const sourceFiles = (root) => {
     for (const entry of readdirSync(dir)) {
       const path = join(dir, entry);
       if (statSync(path).isDirectory()) walk(path);
-      else if (path.endsWith(".ts") && !path.endsWith(".d.ts")) found.push(path);
+      else if (SOURCE.test(path) && !path.endsWith(".d.ts")) found.push(path);
     }
   };
   walk(root);

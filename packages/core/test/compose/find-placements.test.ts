@@ -45,3 +45,34 @@ describe("finding placements in a template", () => {
     );
   });
 });
+
+// Each of the following was found by an adversarial verification pass.
+describe("directives the finder used to get wrong", () => {
+  it("recognises the tag whatever its case, because HTML tag names are case insensitive", () => {
+    // It was previously not a directive at all: copied to the output verbatim, no diagnostic.
+    expect(findPlacements(`<ASSEMBLY name="cart"/>`)).toHaveLength(1);
+    expect(findPlacements(`<Assembly name="cart"/>`)[0]?.name).toBe("cart");
+  });
+
+  it("ignores a directive inside a comment", () => {
+    expect(findPlacements(`<!-- <assembly name="cart"/> -->`)).toEqual([]);
+    expect(findPlacements(`<!--\n  <assembly name="cart"/>\n-->`)).toEqual([]);
+    // And still finds the live one beside it.
+    expect(
+      findPlacements(`<!-- <assembly name="old"/> --><assembly name="new"/>`).map((p) => p.name),
+    ).toEqual(["new"]);
+  });
+
+  it("refuses a name that would collide with another assembly's identity", () => {
+    // identity("a/b", "c") and identity("a", "b/c") were both "a/b/c", so one assembly's
+    // content could be served into the other's placement, and from its cache key.
+    expect(() => findPlacements(`<assembly name="a/b" view="c"/>`)).toThrow(/usable url segment/);
+    expect(() => findPlacements(`<assembly name="a" view="b/c"/>`)).toThrow(/usable url segment/);
+  });
+
+  it("refuses a name that could never be a declared assembly", () => {
+    for (const bad of ["Cart", "1cart", "cart name", "../etc/passwd", "cart,other"]) {
+      expect(() => findPlacements(`<assembly name="${bad}"/>`)).toThrow(/usable url segment/);
+    }
+  });
+});

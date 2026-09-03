@@ -173,3 +173,19 @@ describe("composing a page", () => {
     expect(reached).toBe(false);
   });
 });
+
+describe("a placement that settles badly", () => {
+  it("does not take the page down when it was never declared required", async () => {
+    // compose used to re-throw any rejection, discarding what allSettled bought two lines above.
+    const { html, diagnostics } = await compose(
+      options({
+        fetch: ((request: { name: string }) => {
+          if (request.name === "b") throw new Error("boom");
+          return Promise.resolve({ ok: true, html: "<p>A</p>", source: "local" });
+        }) as never,
+      }),
+    );
+    expect(html).toBe("<main><p>A</p></main>");
+    expect(diagnostics[1]?.reason).toBe("transport");
+  });
+});

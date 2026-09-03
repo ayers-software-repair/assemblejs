@@ -269,3 +269,42 @@ Owner: "always use a verification subagent to verify your work", and "tripple ch
 full". Written into `CLAUDE.md` as a working rule. A rung's own proof being green is the author's
 claim; a fresh reader with no stake in the work checking it at the source is the verification.
 Its findings are fixed before the rung is reported done.
+
+## 2026-09-03: the second verification pass, and what it cost
+
+A separate agent verified B-03 and B-04 adversarially. Three findings were high, and all three
+were things a green local run had been asserting were fine.
+
+- **A clean clone could not install, so CI never reached the first gate.** pnpm 11 replaced
+  `onlyBuiltDependencies` with `allowBuilds` and refuses an install rather than running an
+  unapproved build script. The old key is silently inert. A working tree kept installing because
+  its `node_modules` was already built, so the failure was invisible to every local run and
+  total in CI. Fixed, and proved on a fresh clone.
+- **A transport that misbehaved took the whole page down.** The declared type says a Fetch
+  returns a Promise of a result, but a type is a promise about source, not about what a caller
+  hands over. A synchronous throw, a non-Promise return and a resolution to `undefined` each
+  killed a page over a placement that was never declared required, which is precisely what
+  failure isolation exists to prevent. The transport call is now normalised in one place, and
+  the composer no longer re-throws anything it did not declare required, which was discarding
+  what `allSettled` bought two lines earlier.
+- **Two different assemblies could share one identity.** `identity("a/b", "c")` and
+  `identity("a", "b/c")` are both `a/b/c`, and a template could declare either, so one
+  assembly's content could be served into the other's placement and read from its cache key.
+  Placement names and views are now validated against the same shape a declared assembly must
+  have, at the point the template is read.
+
+Three more that were silent rather than loud: an uppercase `<ASSEMBLY>` was not a directive at
+all and was copied to the output verbatim with no diagnostic, which is the exact silent drop the
+finder's own comment claims to prevent; a directive inside an HTML comment dispatched a real
+fetch and spliced markup into the comment; and a required placement threw before consulting the
+cache, so it killed pages over an outage the cache was there to absorb.
+
+Two gate holes: a `.mts`, `.cts` or `.tsx` source was invisible to both the organization gate and
+the mirror gate, so two declarations, a missing test and a self-package import all passed; and
+the CI workflow named its steps by hand and had drifted to running EIGHT FEWER gates than
+`pnpm check`. CI now runs the one command, because a job that lists its own steps is a second
+source of truth about what must pass and the two only ever drift.
+
+The pattern across both verification passes is one thing: every defect was in something that
+was reporting success. The gates are the product's memory, and a gate nobody has watched fail is
+a comment.

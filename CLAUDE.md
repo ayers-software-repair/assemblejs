@@ -72,11 +72,17 @@ the change; none of them is advice.
    owns its concept; if no directory owns it, the concept is missing, not the file.
 7. **300 lines is the hard ceiling.** A file that needs the word "and" to describe it is two.
 
-Enforced by `pnpm check:organization` (rules 1-4, 6, 7, over the TypeScript AST),
-`pnpm check:mirror` (rule 5), `depcruise` (no cycles, no orphans, layer direction), eslint with
-import and filename rules, `knip` (an export nothing reads is deleted), `publint` and
-`attw` (the published surface is correct), and `syncpack` (one version of a dependency across
-the workspace). Every one of them was watched refusing a known-bad tree before it was trusted.
+Enforced, and every one of these is a script in `pnpm check` rather than a claim in this file:
+`check:organization` (rules 1-4, 6, 7, read off the TypeScript AST), `check:mirror` (rule 5),
+`check:modules` (dependency-cruiser: no cycles, no orphans, layer direction), `lint` (eslint,
+import order and kebab filenames), `check:unused` (knip: a file or export nothing reads),
+`check:versions` (syncpack: one version of a dependency across the workspace), `check:exports`,
+`check:pack` and `check:publish` (publint and are-the-types-wrong on the real tarball).
+
+Every gate that can go red on a known-bad input has been watched doing so, and the ones with a
+`--self-test` run it immediately before they are trusted. This paragraph is checked against
+`package.json`: a gate named here that is not in the `check` chain is a false claim, which is
+what this list was the first time it was written.
 
 ## Release
 

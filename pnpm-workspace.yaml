@@ -3,9 +3,14 @@ packages:
   # The examples are real installs of the real package, so an example that stops working is
   # a failure the workspace notices rather than a file nobody runs.
   - "examples/*"
-# The native resolver behind eslint-plugin-import-x. Its JavaScript fallback is correct but
-# slow enough to be felt on every lint; the package is from the oxc toolchain and its build is
-# a prebuilt-binary link, not a compile.
-onlyBuiltDependencies:
-  - esbuild
-  - unrs-resolver
+
+# pnpm 11 replaced onlyBuiltDependencies with allowBuilds, and refuses the install rather than
+# running an unapproved build script. The old key is silently inert, which is why a working
+# tree kept installing (its node_modules was already built) while a clean clone exited 1 before
+# the first check ever ran.
+#
+# esbuild backs tsup; unrs-resolver is the native resolver behind eslint-plugin-import-x. Both
+# are prebuilt-binary links rather than compiles.
+allowBuilds:
+  esbuild: true
+  unrs-resolver: true

@@ -1,5 +1,6 @@
 {
   "name": "assemblejs-monorepo",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "author": "Zachariah Ayers",
@@ -18,7 +19,7 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "changeset": "changeset",
-    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:organization && pnpm check:mirror && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm test && pnpm build && pnpm check:exports && pnpm check:pack && pnpm check:publish",
+    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:organization && pnpm check:mirror && pnpm check:versions && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm test && pnpm build && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
     "check:emoji": "node scripts/check-emoji.mjs --self-test && node scripts/check-emoji.mjs",
     "check:exports": "node scripts/check-exports.mjs",
     "check:headers": "node scripts/check-headers.mjs",
@@ -29,6 +30,8 @@
     "check:pack": "node scripts/check-pack.mjs",
     "check:publish": "pnpm -r --filter './packages/*' check:publish",
     "check:trailers": "bash scripts/check-trailers.sh --self-test && bash scripts/check-trailers.sh",
+    "check:unused": "knip",
+    "check:versions": "syncpack lint",
     "lint": "eslint .",
     "prepare": "husky",
     "test": "pnpm -r test",
@@ -53,7 +56,6 @@
     "publint": "0.3.24",
     "sort-package-json": "4.0.0",
     "syncpack": "15.3.3",
-    "tsup": "8.5.1",
     "typescript": "6.0.3",
     "typescript-eslint": "8.69.0",
     "vitest": "4.1.11"

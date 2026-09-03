@@ -229,3 +229,66 @@ describe("settling one placement", () => {
     ).rejects.toThrow(/required assembly "cart"/);
   });
 });
+
+// Each of the following was found by an adversarial verification pass. The type says a Fetch
+// returns a Promise of a result; a type is a promise about source, not about what a caller
+// actually hands over, and every one of these took the page down.
+describe("a transport that does not behave", () => {
+  it("answers when the transport throws before it returns", async () => {
+    const settled = await settlePlacement(
+      input({
+        fetch: (() => {
+          throw new Error("boom");
+        }) as never,
+      }),
+    );
+    expect(settled.diagnostic.reason).toBe("transport");
+  });
+
+  it("answers when the transport returns something that is not a promise", async () => {
+    const settled = await settlePlacement(
+      input({ fetch: (() => ({ ok: true, html: "x", source: "local" })) as never }),
+    );
+    expect(settled.html).toBe("x");
+  });
+
+  it("answers when the transport resolves to nothing", async () => {
+    for (const nothing of [undefined, null, 42, "text"]) {
+      const settled = await settlePlacement(input({ fetch: (async () => nothing) as never }));
+      expect(settled.diagnostic.reason).toBe("invalid");
+    }
+  });
+
+  it("answers when the transport resolves to an object with no ok", async () => {
+    const settled = await settlePlacement(input({ fetch: (async () => ({ html: "x" })) as never }));
+    expect(settled.diagnostic.reason).toBe("invalid");
+  });
+});
+
+describe("a required placement", () => {
+  it("does not die when the cache still holds its last good content", async () => {
+    const cache = memory();
+    cache.set("cart/default", { html: "<p>yesterday</p>" }, 60_000);
+    const settled = await settlePlacement(
+      input({
+        fetch: failing,
+        cache,
+        plan: { name: "cart", view: "default", deadline: 3000, required: true },
+      }),
+    );
+    // The ladder answered it, so it did not fail, so the page lives.
+    expect(settled.html).toBe("<p>yesterday</p>");
+    expect(settled.diagnostic.source).toBe("cache");
+  });
+
+  it("dies when the whole ladder misses", async () => {
+    await expect(
+      settlePlacement(
+        input({
+          fetch: failing,
+          plan: { name: "cart", view: "default", deadline: 3000, required: true },
+        }),
+      ),
+    ).rejects.toThrow(/required assembly "cart"/);
+  });
+});
