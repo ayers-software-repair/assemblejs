@@ -36,6 +36,20 @@ the record of what was read, and they stay in the private estate document store,
 - [ ] `docs/dossiers/00-AUDIT.md`: the adversarial defect hunt over the v1, ranked, with the
       design rules that follow from it
 
+## Blocked, needs the owner (one admin click each)
+
+- [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
+      and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:
+    all`, both branches carry the workflow files, and `actions/runs` reports `total_count=0`.
+      The org-level Actions policy cannot be read without `admin:org`, so the remaining
+      explanation is that the organization allows Actions only for selected repositories and this
+      one is not among them. Until it runs, every gate is proven locally only.
+      Fix: organization settings, Actions, General, add `assemblejs` to the allowed repositories.
+- [ ] Repository settings that cannot be set from a token without admin scope: the branch ruleset
+      on `main` and `next`, required status checks, signed commits, fork pull-request approval,
+      private vulnerability reporting, CodeQL default setup, secret scanning with push protection,
+      and the `release` environment with a required reviewer.
+
 ## Phase 2: the design
 
 - [ ] Write the design: the assembly contract as a spec before any code
