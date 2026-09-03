@@ -388,3 +388,30 @@ owner's standing rule that users must not be able to run up a bill through our A
 
 It ships capability and not autonomy: one project root resolved once, no shell, no publish, no
 deploy, and every written file reported back so the agent's caller can see the whole change.
+
+## 2026-09-03: the agent surface works, and the loop it closes is the point
+
+`@assemblejs/mcp` is wired to the protocol and driven end to end in its own tests: an in-memory
+client reads `assemblejs://project`, calls `render_assembly` on an assembly written a moment
+before, calls `compose_page` on a template, and asks `explain` why a rule exists.
+
+The loop is the whole argument. An agent writes an assembly, renders it, sees the real envelope
+the server would emit, places it on a page, composes that page, and reads one diagnostic per
+placement. No server started, no browser opened, nobody asked to look. Every other tool on the
+surface is ordinary; those two are why this is not a wrapper around the command line.
+
+Three behaviours were chosen deliberately and each is watched failing:
+
+- **It refuses rather than approximates.** A framework view is source that must be compiled, so
+  it comes back with that reason instead of a rendering that is not what ships. Showing an agent
+  something plausible and wrong is worse than showing it nothing, because it will believe it.
+- **It names what exists.** Asked for an assembly that is not there, it lists the ones that are.
+  An agent told "not found" guesses; an agent told what IS there does not.
+- **It says what is next.** A rendered assembly comes back with the tag that places it, because
+  an assembly nobody placed is the commonest half-finished state there is.
+
+The safety primitive is one guard every path goes through, and it compares the RESOLVED
+destination rather than the argument, so a traversal is settled before the check and not after
+it. The root is a branded type, so a path that has not been through `resolveRoot` cannot stand
+in for one, which is what keeps the check from being the easy thing to skip. A test asserts the
+surface has no tool whose name contains shell, exec, publish, deploy or install.

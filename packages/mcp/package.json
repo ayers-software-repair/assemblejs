@@ -51,6 +51,11 @@
   },
   "dependencies": {
     "@assemblejs/cli": "workspace:*",
-    "@assemblejs/core": "workspace:*"
+    "@assemblejs/core": "workspace:*",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "zod": "4.5.4"
+  },
+  "bin": {
+    "assemblejs-mcp": "./dist/bin.js"
   }
 }
