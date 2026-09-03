@@ -9,6 +9,7 @@ export * from "./json/index.js";
 export * from "./compose/index.js";
 export * from "./vocab/index.js";
 export * from "./encode/index.js";
+export * from "./island/index.js";
 export * from "./envelope/index.js";
 export * from "./config/index.js";
 export * from "./failure/index.js";

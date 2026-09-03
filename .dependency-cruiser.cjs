@@ -54,13 +54,19 @@ module.exports = {
       name: "client-stays-browser-only",
       severity: "error",
       comment:
-        "Browser code may reach the shared JSON types and nothing else. Anything server-side " +
-        "that it imports is something a bundler would have to strip, and stripping is what " +
-        "leaks a secret when it fails.",
+        "Browser code may reach the shared WIRE SHAPES and nothing else: src/json for what " +
+        "JSON is, src/island for the payload that actually crosses the boundary. Both are " +
+        "types with no behaviour, which is why both sides may hold them. Anything else " +
+        "server-side that browser code imports is something a bundler would have to strip, " +
+        "and stripping is what leaks a secret when it fails.",
       from: { path: "^packages/[^/]+/src/client/" },
       to: {
         path: "^packages/[^/]+/src/",
-        pathNot: ["^packages/[^/]+/src/client/", "^packages/[^/]+/src/json/"],
+        pathNot: [
+          "^packages/[^/]+/src/client/",
+          "^packages/[^/]+/src/json/",
+          "^packages/[^/]+/src/island/",
+        ],
       },
     },
     {

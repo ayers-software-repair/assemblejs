@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { IslandPayload } from "./island-payload.js";
+import type { IslandPayload } from "../island/island-payload.js";
 import type { IslandSource } from "./island-source.js";
 
 /**
