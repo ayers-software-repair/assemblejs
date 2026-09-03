@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { AssemblyPlan } from "./assembly-plan.js";
 import type { ComposeOptions } from "./compose-options.js";
 import type { ComposeResult } from "./compose-result.js";
 import { DEFAULT_LIMITS } from "./default-limits.js";
@@ -19,13 +20,18 @@ import { settlePlacement } from "./settle-placement.js";
  * exception is a placement declared required, which is the only way a page dies from a child.
  */
 export async function compose(options: ComposeOptions): Promise<ComposeResult> {
+  // "constructor" and "toString" satisfy the name rule, so a bare lookup on a plain object can
+  // reach Object.prototype and hand a function to something expecting a plan.
+  const planFor = (name: string): AssemblyPlan | undefined =>
+    Object.hasOwn(options.plan, name) ? options.plan[name] : undefined;
+
   const limits = options.limits ?? DEFAULT_LIMITS;
   const placements = findPlacements(options.template);
   const query = options.query ?? new URLSearchParams();
   const headers = options.headers ?? {};
 
   for (const placement of placements) {
-    const plan = options.plan[placement.name];
+    const plan = planFor(placement.name);
     if (plan?.defer === true && plan.required === true) {
       throw new Error(
         `assembly "${placement.name}" is declared both deferred and required. A deferred ` +
@@ -42,7 +48,7 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
       settlePlacement({
         name: placement.name,
         view: placement.view,
-        plan: options.plan[placement.name],
+        plan: planFor(placement.name),
         fetch: options.fetch,
         cache: options.cache,
         limits,

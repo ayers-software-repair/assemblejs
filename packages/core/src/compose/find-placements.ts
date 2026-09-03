@@ -62,6 +62,13 @@ export function findPlacements(template: string): Placement[] {
           `<${PLACEMENT_ELEMENT}> at ${start} carries an unknown attribute "${key}"; only ${[...ALLOWED].join(" and ")} are understood`,
         );
       }
+      // Last-wins on a repeated attribute is a silent choice between two things the author
+      // wrote, and the one that loses is invisible.
+      if (attributes.has(key)) {
+        throw new Error(
+          `<${PLACEMENT_ELEMENT}> at ${start} names the attribute "${key}" more than once`,
+        );
+      }
       attributes.set(key, value);
     }
 

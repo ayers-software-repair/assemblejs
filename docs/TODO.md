@@ -80,6 +80,9 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-11 the second framework renderer and the day-one proof
 - [ ] B-12 services and apis
 - [ ] B-13 remote assemblies: allowlist, caps, handshake, cache
+      Owed here: `Limits.maxBytes` is declared and has no reader until the remote
+      transport exists. A verification pass found a 10 MiB fragment composing clean
+      through `maxBytes: 8`, which is correct today and must not be once B-13 lands.
 - [ ] B-14 auth and the default policy
 - [ ] B-15 styles: scoping, Shadow DOM opt-in, the documented holes
 - [ ] B-16 the remaining four framework renderers

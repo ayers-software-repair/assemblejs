@@ -189,3 +189,18 @@ describe("a placement that settles badly", () => {
     expect(diagnostics[1]?.reason).toBe("transport");
   });
 });
+
+describe("a placement whose name is also a property of Object", () => {
+  it("does not read the prototype for its plan", async () => {
+    // "constructor" satisfies the name rule, and a bare lookup would hand compose a function.
+    const { html, diagnostics } = await compose(
+      options({
+        template: `<main><assembly name="constructor"/></main>`,
+        plan: {},
+        fetch: async () => ({ ok: true, html: "<p>ok</p>", source: "local" }),
+      }),
+    );
+    expect(html).toBe("<main><p>ok</p></main>");
+    expect(diagnostics[0]?.source).toBe("local");
+  });
+});

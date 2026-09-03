@@ -76,3 +76,9 @@ describe("directives the finder used to get wrong", () => {
     }
   });
 });
+
+describe("attributes written twice", () => {
+  it("are refused rather than silently resolved last-wins", () => {
+    expect(() => findPlacements(`<assembly name="a" name="b"/>`)).toThrow(/more than once/);
+  });
+});
