@@ -41,7 +41,7 @@ the record of what was read, and they stay in the private estate document store,
 
 - [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
       and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:
-  all`, both branches carry the workflow files, and `actions/runs` reports `total_count=0`.
+all`, both branches carry the workflow files, and `actions/runs` reports `total_count=0`.
       The org-level Actions policy cannot be read without `admin:org`, so the remaining
       explanation is that the organization allows Actions only for selected repositories and this
       one is not among them. Until it runs, every gate is proven locally only.
@@ -57,9 +57,39 @@ the record of what was read, and they stay in the private estate document store,
 - [x] Reconcile the design against everything already ratified before asking anything
 - [ ] Put the remaining open questions to the owner, against the written design, in one pass
 - [ ] Record his answers in `docs/DECISIONS.md`
-- [ ] Freeze the ladder in `docs/PLAN.md`, one rung per gate, each with its proof command
+- [x] Freeze the ladder in `docs/PLAN.md`, one rung per gate, each with its proof command
 
 ## Phase 3: the ladder
 
-Filled in from the frozen ladder. Each rung is one pull request onto `next`, its proof command run
-and its output pasted, before the next rung starts.
+From the frozen ladder in `docs/PLAN.md`, which holds each rung's proof command. Each rung is one
+pull request onto `next`; its proof command is run and its output pasted before the next rung
+starts. Until the owner enables Actions, every proof is local only.
+
+- [x] B-01 repository skeleton, gates, working rules (`c565074`)
+- [ ] B-02 core package shell and the vocabulary module
+- [ ] B-03 the pure composer: deadlines, isolation, the fallback ladder, depth and cycles
+- [ ] B-04 the envelope and the three encoders
+- [ ] B-05 configuration from the process environment, validated at boot
+- [ ] B-06 the server: the three endpoints, header validation, the error contract
+- [ ] B-07 the browser runtime and the four mount modes
+- [ ] B-08 events: typed, addressable, replay opt-in, teardown exact
+- [ ] B-09 the CLI and create: discovery, templates, non-interactive
+- [ ] B-10 the first framework renderer
+- [ ] B-11 the second framework renderer and the day-one proof
+- [ ] B-12 services and apis
+- [ ] B-13 remote assemblies: allowlist, caps, handshake, cache
+- [ ] B-14 auth and the default policy
+- [ ] B-15 styles: scoping, Shadow DOM opt-in, the documented holes
+- [ ] B-16 the remaining four framework renderers
+- [ ] B-17 the template engines
+- [ ] B-18 real-time over server-sent events
+- [ ] B-19 devtools, read-only, with the boot assertion
+- [ ] B-20 the check, perf and deploy verbs
+- [ ] B-21 the conformance harness and its first specs
+- [ ] B-22 conformance breadth, batch one
+- [ ] B-23 conformance breadth, batch two
+- [ ] B-24 conformance breadth, batch three, and the acceptance table
+- [ ] B-25 size budgets, pack check, Scorecard
+- [ ] B-26 the release dry run with provenance
+- [ ] B-27a estate integration and the first prerelease
+- [ ] B-27b the stable publish, after the cold quickstart
