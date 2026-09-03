@@ -2,7 +2,14 @@
 description: Start or resume one ladder rung
 ---
 
-Read docs/HANDOFF.md for the ladder position and docs/dossiers/ for the subsystem named in
-$ARGUMENTS. State the rung's proof command before writing any code. A rung whose dossier carries
-no ratification line does not start; report which dossier is missing it. Work only inside
-packages/. Run the proof command yourself before reporting done and paste its output.
+Read `docs/PLAN.md` for the frozen ladder and `docs/TODO.md` for which rung is next; the rung is
+$ARGUMENTS if given, otherwise the first unchecked box. Read `docs/DESIGN.md` for the sections
+that rung builds, and `docs/DECISIONS.md` for what is already settled.
+
+State the rung's proof command, from the ladder, before writing any code. Where the rung adds a
+gate, construct the known-bad input and watch the gate refuse it BEFORE trusting it. Work only
+inside `packages/`, `scripts/` and `docs/`.
+
+Run the proof command yourself and paste its real output. Check the rung's box in `docs/TODO.md`
+in the same commit that does the work. Then have a separate agent verify it at the source before
+reporting it done.

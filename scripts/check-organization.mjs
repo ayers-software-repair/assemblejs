@@ -9,6 +9,7 @@
 // refusing before it is trusted.
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
+import { pathToFileURL } from "node:url";
 import ts from "typescript";
 
 const BANNED_DIRECTORIES = new Set(["utils", "helpers", "common", "misc", "shared", "lib"]);
@@ -141,45 +142,53 @@ export function checkTree(root) {
   return problems;
 }
 
-if (process.argv[2] === "--self-test") {
-  const fixture = "scripts/fixtures/organization-bad";
-  try {
-    statSync(fixture);
-  } catch {
-    console.error(`organization gate self-test FAILED: ${fixture} is missing`);
-    process.exit(1);
-  }
-  const found = checkTree(fixture);
-  const fired = new Set(found.map((p) => p.match(/\[rule (\d)\]/)?.[1]));
-  const expected = ["1", "2", "3", "4", "6", "7"];
-  const silent = expected.filter((r) => !fired.has(r));
-  if (silent.length) {
-    console.error(`organization gate self-test FAILED: rule(s) ${silent.join(", ")} did not fire`);
-    for (const p of found) console.error(`  saw: ${p}`);
-    process.exit(1);
-  }
-  console.log(`organization gate self-test: red on rules ${expected.join(", ")}, as required`);
-  process.exit(0);
-}
-
-const roots = process.argv.slice(2);
-if (roots.length === 0) {
-  for (const pkg of readdirSync("packages", { withFileTypes: true })) {
-    if (!pkg.isDirectory()) continue;
-    const src = join("packages", pkg.name, "src");
+// This module is imported by its own tests and by other tooling, so the command-line body only
+// runs when it IS the command. Without the guard, importing the module silently ran a full scan
+// and printed a verdict nobody asked for.
+const isEntryPoint = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
+if (isEntryPoint) {
+  if (process.argv[2] === "--self-test") {
+    const fixture = "scripts/fixtures/organization-bad";
     try {
-      statSync(src);
-      roots.push(src);
+      statSync(fixture);
     } catch {
-      /* a package without sources yet has nothing to organize */
+      console.error(`organization gate self-test FAILED: ${fixture} is missing`);
+      process.exit(1);
+    }
+    const found = checkTree(fixture);
+    const fired = new Set(found.map((p) => p.match(/\[rule (\d)\]/)?.[1]));
+    const expected = ["1", "2", "3", "4", "6", "7"];
+    const silent = expected.filter((r) => !fired.has(r));
+    if (silent.length) {
+      console.error(
+        `organization gate self-test FAILED: rule(s) ${silent.join(", ")} did not fire`,
+      );
+      for (const p of found) console.error(`  saw: ${p}`);
+      process.exit(1);
+    }
+    console.log(`organization gate self-test: red on rules ${expected.join(", ")}, as required`);
+    process.exit(0);
+  }
+
+  const roots = process.argv.slice(2);
+  if (roots.length === 0) {
+    for (const pkg of readdirSync("packages", { withFileTypes: true })) {
+      if (!pkg.isDirectory()) continue;
+      const src = join("packages", pkg.name, "src");
+      try {
+        statSync(src);
+        roots.push(src);
+      } catch {
+        /* a package without sources yet has nothing to organize */
+      }
     }
   }
-}
 
-const problems = roots.flatMap((root) => checkTree(root));
-if (problems.length) {
-  console.error(`organization check failed, ${problems.length} problem(s):`);
-  for (const p of problems) console.error(`  ${p}`);
-  process.exit(1);
+  const problems = roots.flatMap((root) => checkTree(root));
+  if (problems.length) {
+    console.error(`organization check failed, ${problems.length} problem(s):`);
+    for (const p of problems) console.error(`  ${p}`);
+    process.exit(1);
+  }
+  console.log(`organization check: clean (${roots.length} tree(s))`);
 }
-console.log(`organization check: clean (${roots.length} tree(s))`);

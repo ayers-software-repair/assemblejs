@@ -20,16 +20,19 @@
       "Bash(git commit *)"
     ],
     "deny": [
-      "Read(./.env)",
-      "Read(./.env.*)",
-      "Read(./**/.env)",
-      "Read(./**/.env.*)",
-      "Bash(rm -rf *)",
       "Bash(git push --force*)",
       "Bash(git push -f*)",
+      "Bash(npm login*)",
       "Bash(npm publish*)",
       "Bash(pnpm publish*)",
-      "Bash(npm login*)"
+      "Bash(rm -rf *)",
+      "Read(./**/*.pem)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Read(./**/id_rsa*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
     ]
   },
   "hooks": {
@@ -37,7 +40,10 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard-generated.sh" }
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard-generated.sh"
+          }
         ]
       }
     ],
@@ -45,7 +51,10 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/format-ts.sh" }
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/format-ts.sh"
+          }
         ]
       }
     ],
@@ -59,5 +68,10 @@
         ]
       }
     ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
   }
 }
