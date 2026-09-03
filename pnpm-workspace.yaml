@@ -1,4 +1,8 @@
 packages:
   - "packages/*"
+# The native resolver behind eslint-plugin-import-x. Its JavaScript fallback is correct but
+# slow enough to be felt on every lint; the package is from the oxc toolchain and its build is
+# a prebuilt-binary link, not a compile.
 onlyBuiltDependencies:
   - esbuild
+  - unrs-resolver

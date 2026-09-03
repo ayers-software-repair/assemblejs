@@ -66,7 +66,9 @@ pull request onto `next`; its proof command is run and its output pasted before 
 starts. Until the owner enables Actions, every proof is local only.
 
 - [x] B-01 repository skeleton, gates, working rules (`c565074`)
-- [ ] B-02 core package shell: exports map and build only
+- [x] B-02 core package shell: exports map and build only
+- [x] B-02b the conformance toolchain: every organization rule and every packaging rule enforced
+      by a tool that has been watched refusing a known-bad tree, plus the Claude tooling
 - [ ] B-03 the pure composer: deadlines, isolation, the fallback ladder, depth and cycles
 - [ ] B-04 the vocabulary module, the envelope and the three encoders
 - [ ] B-05 configuration from the process environment, validated at boot
@@ -93,3 +95,39 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-26 the release dry run with provenance
 - [ ] B-27a estate integration and the first prerelease
 - [ ] B-27b the stable publish, after the cold quickstart
+
+## Phase 4: the site, on the pattern howland and magpie already use
+
+Measured from `magpie/site/`, `howland/site/`, both `deploy-site.yml`, and `platform/sitekit/`.
+The pattern, verbatim: `site/` is the whole site, static, no build, fonts and images vendored;
+`site/pages.json` is the single source of truth for which pages exist and how they cross-link;
+`site/kit/` is gitignored and staged at deploy time from `platform/sitekit` checked out at the
+product's one pin; inner pages link `kit/kit.css` plus the product's own `skin.css`; the landing
+page is the product's own and does not use the kit; a push to the branch touching `site/**`
+publishes, and the paths filter is an include, never an ignore list.
+
+Two differences this product has, both already ruled: the pin is `ayersPlatform` in the root
+`package.json` rather than a go.mod line, and there are two prefixes, `/assemblejs/` from `main`
+and `/assemblejs/next/` from `next`.
+
+- [ ] `site/pages.json`: the page list and cross-links, in magpie's schema
+- [ ] `site/index.html` + `index.css`: the landing page, the product's own skin, framework names
+      typeset in our colours and no third-party logos
+- [ ] `site/install.html` and `site/start.html` from `platform/sitekit/templates/`, instantiated
+      by hand as committed pages
+- [ ] `site/docs/index.html` and the guides: one per camp, plus the linear tutorial
+- [ ] `site/404.html` from the kit template
+- [ ] `site/skin.css`: the role bindings, no structural CSS
+- [ ] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
+- [ ] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
+- [ ] `scripts/site-links.py`: cross-links generated from `pages.json`, never hand-written
+- [ ] A test binding `pages.json` to the deploy, so a required page cannot go missing
+- [ ] `.github/workflows/deploy-site.yml`: the pin read from `ayersPlatform`, OIDC to
+      `gh-deploy-assemblejs-site`, sync to the shop bucket under the prefix, invalidate that
+      prefix only, no `--delete`
+- [ ] The `next` branch variant publishing to `/assemblejs/next/`, with every link carrying the
+      trailing slash (the prefix router does not redirect a bare second segment)
+- [ ] The API reference generated into `site/docs/api/` at deploy time, never committed
+- [ ] **BLOCKING, the owner's hand:** `RELEASES_PAT` added to this repository's secrets, so
+      deploy-site can check the private platform repo out at the pin. Nothing about the site
+      publishes until it exists. Also his: the OIDC role and the bucket policy for this prefix.

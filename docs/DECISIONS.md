@@ -217,3 +217,55 @@ entirely. The owner's words with the answer: it should be as simple as possible.
 
 Consequence: the day-one transcript changes. The generated `server.ts` loses its imports, its
 renderer array, its pages array and its assemblies array. `add` never edits the author's source.
+
+## 2026-09-03: the organization rules, and that each one is a tool
+
+Owner, in his own words: "1 thing per file, clear dirs, even though its alot its clear to read",
+then "index with subdirs instead of all files by index", then "need to enforce all code styles
+too, with best practice tools for making sure things stay uniform, organized".
+
+Seven rules, settled with him and written into `CLAUDE.md`: one declaration per file with the
+filename naming it; every directory carrying an index that only re-exports; the package surface
+re-exporting child indexes and never a leaf; a sibling importing the leaf and never an index;
+`test/` mirroring `src/` exactly; no drawer directory; three hundred lines as the ceiling.
+
+The fourth was the one real fork and he took the strict side: inside a package a module imports
+the leaf file. An index is for consumers of a directory, not for the code inside it, which is
+what makes an index cycle impossible and what makes the dependency graph true.
+
+None of them is advice. `scripts/check-organization.mjs` reads them off the TypeScript AST rather
+than off a regex, because a rule about declarations has to count declarations; it was watched
+going red on a fixture that violates six of the seven, one violation per rule, and its
+`--self-test` fails if any rule stops firing. `scripts/check-mirror.mjs` covers the fifth and was
+watched catching both a source with no test and a test with no source. The module graph's own
+rules are dependency-cruiser's, and the two that matter, no cycle and browser code never reaching
+server code, were each introduced deliberately, watched failing, and reverted by inverse edit.
+
+Recorded because the first version of the surface rule keyed on the path spelling `src/index.ts`
+and was therefore silent on every tree not called `src`, including its own fixture. The
+self-test is what found it. A gate whose fixture cannot reach one of its rules is a gate with a
+hole in exactly the place nobody looks.
+
+## 2026-09-03: the toolchain is chosen, not inherited
+
+Owner: "dont just adopt the tooling of the other repos. do it right. get the docs. look up
+current best practices. etc. you are the maintainer. not me. be prideful. be smart. be exact.
+dont overengineer."
+
+So the predecessor's toolchain is evidence, not a template. Measured from its own manifest, it
+ran eslint 8 with the google config, prettier, dependency-cruiser, commitlint, husky,
+lint-staged, commitizen, auto-changelog, typedoc, jest, sort-package-json, depcheck, typesync and
+npm-check-updates. Of those, dependency-cruiser and sort-package-json are carried because they
+still earn their place; jest, commitizen and auto-changelog are replaced by vitest and changesets;
+depcheck and typesync are superseded by knip and by declaring dependencies properly.
+
+Everything else is being verified against the tools' current documentation before it lands, and
+anything that catches nothing another tool already catches is cut. The bar he set is six tools
+that each earn their keep over fourteen that overlap.
+
+## 2026-09-03: a separate agent verifies every rung
+
+Owner: "always use a verification subagent to verify your work", and "tripple check everything in
+full". Written into `CLAUDE.md` as a working rule. A rung's own proof being green is the author's
+claim; a fresh reader with no stake in the work checking it at the source is the verification.
+Its findings are fixed before the rung is reported done.

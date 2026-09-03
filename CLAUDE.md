@@ -53,6 +53,31 @@ No pull request without an `accepted` issue except one-line fixes. DCO sign-off 
 No emojis anywhere: code, docs, commits, comments. Comments explain behaviour, never history.
 No `any`. No console.log in packages. No legacy or compatibility paths: the product ships clean.
 
+## Organization: seven rules, each with a gate (owner, 2026-09-03)
+
+He asked for one thing per file and clear directories, even where that means many files, because
+many small named files read better than few large ones. Every rule below has a tool that refuses
+the change; none of them is advice.
+
+1. **One declaration per file, and the filename is the declaration**, kebab-cased.
+   `assembly-request.ts` exports `AssemblyRequest` and nothing else.
+2. **Every directory has an `index.ts` that only re-exports.** It declares nothing of its own.
+3. **`src/index.ts` re-exports the child directory indexes**, never a leaf file. A directory that
+   is its own published entry point is absent from it, because a thing published twice can drift.
+4. **A sibling imports the leaf file, never an index.** An index is for consumers of the
+   directory, not for the code inside it. This is what makes an index cycle impossible and what
+   makes the dependency graph true.
+5. **`test/` mirrors `src/` exactly**: one test file per source file, same path, `.test.ts`.
+6. **No `utils`, `helpers`, `common` or `misc` directory.** A file lands in the directory that
+   owns its concept; if no directory owns it, the concept is missing, not the file.
+7. **300 lines is the hard ceiling.** A file that needs the word "and" to describe it is two.
+
+Enforced by `pnpm check:organization` (rules 1-4, 6, 7, over the TypeScript AST),
+`pnpm check:mirror` (rule 5), `depcruise` (no cycles, no orphans, layer direction), eslint with
+import and filename rules, `knip` (an export nothing reads is deleted), `publint` and
+`attw` (the published surface is correct), and `syncpack` (one version of a dependency across
+the workspace). Every one of them was watched refusing a known-bad tree before it was trusted.
+
 ## Release
 
 changesets. `pnpm changeset` on any `packages/*/src` change. Publishing is CI only through
@@ -78,6 +103,12 @@ a laptop and there is no npm token anywhere.
   session and its output pasted; a green diff proves nothing.
 - A PROBE IS WATCHED FAILING BEFORE IT IS TRUSTED. A check that has never gone red on a known-bad
   input is not a check.
+- EVERY RUNG IS VERIFIED BY A SEPARATE AGENT (owner, 2026-09-03: "always use a verification
+  subagent to verify your work"). When a rung's own proof is green, a fresh reader with no stake
+  in the work checks it at the source: that the gates actually gate, that the claims in the commit
+  match the tree, that nothing was asserted from a diff. Its findings are fixed before the rung is
+  reported done. A self-verified rung is an unverified rung.
+- TRIPLE-CHECK IN FULL (owner, 2026-09-03). Read the whole thing, not the part that changed.
 
 ## After a restart
 
