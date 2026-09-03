@@ -5,5 +5,3 @@
 export interface MountHandle {
   unmount(): void;
 }
-
-import "../compose/limits.js";

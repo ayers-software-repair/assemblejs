@@ -13,6 +13,11 @@
     "skipLibCheck": true,
     "declaration": true,
     "sourceMap": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@assemblejs/core": ["./packages/core/src/index.ts"],
+      "@assemblejs/core/renderer": ["./packages/core/src/renderer/index.ts"],
+      "@assemblejs/core/client": ["./packages/core/src/client/index.ts"]
+    }
   }
 }

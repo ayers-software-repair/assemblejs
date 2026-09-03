@@ -32,10 +32,27 @@ const sourceFiles = (root) => {
 const parse = (path) =>
   ts.createSourceFile(path, readFileSync(path, "utf8"), ts.ScriptTarget.ES2022, true);
 
-/** Names this file declares and exports itself, ignoring anything it merely re-exports. */
+/**
+ * Names this file declares and exports itself, ignoring anything it merely re-exports.
+ *
+ * Three forms, because a file can export the same thing three ways and only one of them wears
+ * the `export` modifier. Counting the modifier alone let `export { x }` and `export default`
+ * through, so a second declaration could be added to any file without the gate noticing.
+ */
 const declaredExports = (file) => {
   const names = [];
   for (const node of file.statements) {
+    if (ts.isExportAssignment(node)) {
+      names.push("default");
+      continue;
+    }
+    if (ts.isExportDeclaration(node) && node.moduleSpecifier === undefined) {
+      const clause = node.exportClause;
+      if (clause !== undefined && ts.isNamedExports(clause)) {
+        for (const element of clause.elements) names.push(element.name.getText(file));
+      }
+      continue;
+    }
     const exported = ts.getModifiers(node)?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword);
     if (!exported) continue;
     if (ts.isVariableStatement(node)) {
@@ -65,6 +82,17 @@ const expectedName = (name) =>
     .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
     .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
     .toLowerCase();
+
+/** The package a source file belongs to, so a module importing its own package is detectable. */
+const owningPackage = (path) => {
+  const match = /(^|\/)packages\/([^/]+)\//.exec(path);
+  if (match === null) return undefined;
+  try {
+    return JSON.parse(readFileSync(join("packages", match[2], "package.json"), "utf8")).name;
+  } catch {
+    return undefined;
+  }
+};
 
 export function checkTree(root) {
   root = root.replace(/\/+$/, "");
@@ -129,12 +157,24 @@ export function checkTree(root) {
     }
 
     // Rule 4: a sibling imports the leaf, never an index.
+    //
+    // Both spellings of the same mistake. A relative path ending in index.js is the obvious one.
+    // The package's own name is the same mistake wearing a different specifier, and it is worse:
+    // it resolves through the exports map, so the edge is invisible to the module graph and the
+    // cycle it creates passes every other gate.
+    const own = owningPackage(path);
     for (const spec of [...importSpecifiers(file), ...reExportSpecifiers(file)]) {
       if (spec.startsWith(".") && /(^|\/)index\.js$/.test(spec)) {
         fail(
           rel,
           4,
           `imports "${spec}"; inside a package a module imports the leaf, never an index`,
+        );
+      } else if (own !== undefined && (spec === own || spec.startsWith(`${own}/`))) {
+        fail(
+          rel,
+          4,
+          `imports its own package as "${spec}"; a module imports the leaf by relative path, never the package surface`,
         );
       }
     }

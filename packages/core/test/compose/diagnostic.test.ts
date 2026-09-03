@@ -5,9 +5,16 @@ import type { Diagnostic } from "@assemblejs/core";
 
 describe("a diagnostic", () => {
   it("names which rung of the fallback ladder answered", () => {
-    const answered: Diagnostic = { name: "cart", id: "a7f3", source: "remote", ms: 84 };
+    const answered: Diagnostic = {
+      name: "cart",
+      view: "default",
+      id: "a7f3",
+      source: "remote",
+      ms: 84,
+    };
     const fellBack: Diagnostic = {
       name: "cart",
+      view: "default",
       id: "a7f3",
       source: "fallback",
       reason: "timeout",

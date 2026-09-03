@@ -35,7 +35,12 @@ export default tseslint.config(
     files: ["packages/*/src/**/*.ts", "packages/*/test/**/*.ts"],
     plugins: { "import-x": importX, unicorn },
     settings: {
-      "import-x/resolver": { typescript: { alwaysTryTypes: true } },
+      // Point the resolver at each package's own tsconfig, whose `paths` map the published
+      // specifier to src. Without it the resolver follows the exports map into dist, so lint
+      // passed or failed depending on whether a build happened to be on disk.
+      "import-x/resolver": {
+        typescript: { alwaysTryTypes: true, project: ["packages/*/tsconfig.json"] },
+      },
     },
     rules: {
       // Rule 1: the filename is the declaration, kebab-cased.

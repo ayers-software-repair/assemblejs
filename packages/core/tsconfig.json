@@ -4,12 +4,7 @@
     "rootDir": ".",
     "outDir": "dist",
     "types": ["node"],
-    "lib": ["ES2022", "DOM"],
-    "paths": {
-      "@assemblejs/core": ["./src/index.ts"],
-      "@assemblejs/core/renderer": ["./src/renderer/index.ts"],
-      "@assemblejs/core/client": ["./src/client/index.ts"]
-    }
+    "lib": ["ES2022", "DOM"]
   },
   "include": ["src", "test"]
 }

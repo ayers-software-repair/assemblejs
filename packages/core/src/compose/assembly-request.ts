@@ -11,7 +11,13 @@ export interface AssemblyRequest {
   readonly page: string;
   /** How many assemblies deep this request is. */
   readonly depth: number;
-  /** Ancestor ids, innermost last. A target already on it is a cycle. */
+  /**
+   * Ancestor IDENTITIES, innermost last, each `name/view`. A target already on the path is a
+   * cycle and the parent refuses it before dispatch.
+   *
+   * Identities, not instance ids: an instance id is minted fresh per request, so a path of them
+   * can never collide and the cycle check it was meant to perform would silently never fire.
+   */
   readonly path: readonly string[];
   readonly query: URLSearchParams;
   readonly headers: Readonly<Record<string, string>>;
