@@ -9,4 +9,5 @@ export type { ServerOptions } from "./server-options.js";
 export type { App } from "./app.js";
 export { BootError } from "./boot-error.js";
 export { bootProblems } from "./boot-problems.js";
+export { resolveData } from "./resolve-data.js";
 export { createServer } from "./create-server.js";

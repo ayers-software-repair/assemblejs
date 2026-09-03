@@ -7,7 +7,6 @@ import { renderEnvelope } from "../envelope/render-envelope.js";
 import { describeFailure } from "../failure/describe-failure.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
-import type { JsonObject } from "../json/json-object.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
@@ -16,6 +15,7 @@ import { BootError } from "./boot-error.js";
 import { bootProblems } from "./boot-problems.js";
 import { buildManifest } from "./build-manifest.js";
 import { readCompositionHeaders } from "./read-composition-headers.js";
+import { resolveData } from "./resolve-data.js";
 import type { ServerOptions } from "./server-options.js";
 
 interface Params {
@@ -97,7 +97,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
 
     // The same data function the data endpoint calls. One function, two endpoints, so the
     // contract's promise that they never drift is structural rather than a convention.
-    const data = (await declared.data({ query: queryOf(request) })) as JsonObject;
+    const data = await resolveData(declared, { query: queryOf(request), params: {} });
     const markup = await declared.markup({ data, children: {} });
 
     return reply
@@ -126,7 +126,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
       if (resolved === undefined) return reply;
       const declared = resolved.assembly.views[resolved.view];
       if (declared === undefined) return reply;
-      return reply.send(await declared.data({ query: queryOf(request) }));
+      return reply.send(await resolveData(declared, { query: queryOf(request), params: {} }));
     },
   );
 

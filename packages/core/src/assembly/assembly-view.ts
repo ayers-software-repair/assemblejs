@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { JsonObject } from "../json/json-object.js";
+import type { ServiceDefinition } from "../service/service-definition.js";
 import type { DataInput } from "./data-input.js";
 import type { MarkupInput } from "./markup-input.js";
 
@@ -13,6 +14,9 @@ import type { MarkupInput } from "./markup-input.js";
  */
 export interface AssemblyView {
   readonly renderer: string;
-  data(input: DataInput): JsonObject | Promise<JsonObject>;
+  /** Services that run before this view renders. Their returns are merged, in order. */
+  readonly services?: readonly ServiceDefinition[];
+  /** The view's own data, merged over what the services returned. Optional if services suffice. */
+  data?(input: DataInput): JsonObject | Promise<JsonObject>;
   markup(input: MarkupInput): string | Promise<string>;
 }

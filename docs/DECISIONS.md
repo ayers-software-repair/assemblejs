@@ -452,3 +452,32 @@ The two renderers deliberately differ where their frameworks differ. React takes
 through a context; Svelte takes them as a prop. Each is the idiom an author of that framework
 already writes, and wrapping either in the other's habits would be the framework telling people
 how to write the framework they already know.
+
+## 2026-09-03: services return, where the reference mutated
+
+The reference is `refs/minimesh/src/types/face.preprocessor.ts`. Its preprocessor is
+`(context) => Promise<void> | void` with a `priority?: number`, and
+`face.controller.ts:58-78` runs three arrays in a fixed order, each step mutating the shared
+context. Read before building, not after.
+
+Two deliberate departures, and the reason for each.
+
+- **A service RETURNS its data.** The reference's preprocessor returns void and mutates. That
+  makes every one of them order-dependent, untestable on its own, and silent about what it
+  actually contributed. With a return, the data's shape is the function's return type and a
+  service can be called in a test with nothing around it.
+- **`after: ["name"]` replaces `priority: number`.** A priority number is a claim about every
+  other service in the system, made by someone who can only see one of them, and two services
+  that both pick 1 have said nothing. Naming what you must follow is a claim about the one
+  relationship the author actually knows.
+
+What is kept from the reference, because it was right: services run BEFORE children are fetched,
+so a service can shape what its children are asked for, and they run sequentially rather than
+concurrently. A service that declared `after` said it needs the one before it to have FINISHED,
+and running them together would make that declaration a lie.
+
+Where the reference had three arrays with a fixed global-last order, there is one list. Its own
+comment says view, then face, then global, which means the GLOBAL one wins every collision: the
+least specific setting overrides the most specific. Here the order is declaration order with
+`after` honoured, and the later of two writers wins, which is the same rule the fallback ladder
+and the data merge already use.
