@@ -72,7 +72,7 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-03 the pure composer: deadlines, isolation, the fallback ladder, depth and cycles
 - [x] B-04 the vocabulary module, the envelope and the three encoders
 - [x] B-05 configuration from the process environment, validated at boot
-- [ ] B-06 the server: the three endpoints, header validation, the error contract
+- [x] B-06 the server: the three endpoints, header validation, the error contract
 - [ ] B-07 the browser runtime and the four mount modes
 - [ ] B-08 events: typed, addressable, replay opt-in, teardown exact
 - [ ] B-09 the CLI and create: discovery, templates, non-interactive

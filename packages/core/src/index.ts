@@ -12,3 +12,5 @@ export * from "./encode/index.js";
 export * from "./envelope/index.js";
 export * from "./config/index.js";
 export * from "./failure/index.js";
+export * from "./assembly/index.js";
+export * from "./server/index.js";

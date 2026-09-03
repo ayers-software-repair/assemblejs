@@ -6,3 +6,7 @@
 export { PLACEMENT_ELEMENT } from "./placement-element.js";
 export { ENVELOPE_ELEMENT } from "./envelope-element.js";
 export { ISLAND_SCRIPT_TYPE } from "./island-script-type.js";
+export { COMPOSITION_HEADER } from "./composition-header.js";
+export { ASSEMBLY_ROUTE_PREFIX } from "./assembly-route-prefix.js";
+export { FRAMEWORK_ROUTE_PREFIX } from "./framework-route-prefix.js";
+export { DEFAULT_VIEW } from "./default-view.js";

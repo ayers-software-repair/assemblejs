@@ -1,5 +1,8 @@
 packages:
   - "packages/*"
+  # The examples are real installs of the real package, so an example that stops working is
+  # a failure the workspace notices rather than a file nobody runs.
+  - "examples/*"
 # The native resolver behind eslint-plugin-import-x. Its JavaScript fallback is correct but
 # slow enough to be felt on every lint; the package is from the oxc toolchain and its build is
 # a prebuilt-binary link, not a compile.

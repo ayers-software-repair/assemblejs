@@ -78,6 +78,9 @@ export default tseslint.config(
   // Repository tooling prints to stdout on purpose: its output is the gate's evidence.
   { files: ["scripts/**", "eslint.config.js"], rules: { "no-console": "off" } },
 
+  // An example's output IS its interface: what it prints is what a reader is shown.
+  { files: ["examples/**"], rules: { "no-console": "off" } },
+
   // Browser code declares its own globals; a package opts in per directory as it is written.
   {
     files: ["packages/*/src/client/**", "packages/*/src/**/*.client.ts"],

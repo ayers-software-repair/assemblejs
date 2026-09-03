@@ -1,0 +1,13 @@
+{
+  "name": "@assemblejs/example-html",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The smallest server the assembly contract allows.",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*"
+  }
+}
