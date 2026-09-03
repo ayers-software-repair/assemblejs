@@ -10,7 +10,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 - [x] This ledger created
 - [x] `docs/DECISIONS.md` created and seeded with every ruling so far
 - [x] `docs/PLAN.md` created as the in-repo plan of record
-- [ ] `docs/PLAN.md` gains the design once the reference read is aggregated
+- [x] `docs/PLAN.md` gains the design once the reference read is aggregated
 
 ## Phase 1: read the references whole
 
@@ -31,16 +31,17 @@ the record of what was read, and they stay in the private estate document store,
 - [x] `examples` dossier
 - [x] `legacy-additions` dossier
 - [x] `legacy-tests` dossier
-- [ ] Every dossier's load-bearing claims refuted at the source by a second reader
-- [ ] `docs/dossiers/00-BRIEF.md`: the twelve dossiers aggregated into one design brief
-- [ ] `docs/dossiers/00-AUDIT.md`: the adversarial defect hunt over the v1, ranked, with the
-      design rules that follow from it
+- [x] Ten of the eleven dossiers' load-bearing claims refuted at the source by a second reader
+- [ ] The eleventh (`client`) verified: its first verifier died mid-run, a second is reading now
+- [x] `docs/dossiers/00-BRIEF.md`: the dossiers aggregated into one design brief
+- [x] `docs/dossiers/00-AUDIT.md`: the adversarial defect hunt over the v1, eight lenses, every
+      finding refuted by a second reader; 74 raised, 61 survived, fifteen design constraints
 
 ## Blocked, needs the owner (one admin click each)
 
 - [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
       and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:
-    all`, both branches carry the workflow files, and `actions/runs` reports `total_count=0`.
+  all`, both branches carry the workflow files, and `actions/runs` reports `total_count=0`.
       The org-level Actions policy cannot be read without `admin:org`, so the remaining
       explanation is that the organization allows Actions only for selected repositories and this
       one is not among them. Until it runs, every gate is proven locally only.
@@ -52,7 +53,8 @@ the record of what was read, and they stay in the private estate document store,
 
 ## Phase 2: the design
 
-- [ ] Write the design: the assembly contract as a spec before any code
+- [x] Write the design: the assembly contract as a spec before any code (`docs/DESIGN.md`)
+- [x] Reconcile the design against everything already ratified before asking anything
 - [ ] Put the remaining open questions to the owner, against the written design, in one pass
 - [ ] Record his answers in `docs/DECISIONS.md`
 - [ ] Freeze the ladder in `docs/PLAN.md`, one rung per gate, each with its proof command

@@ -34,9 +34,15 @@ framework or the framework's own jargon.
 5. **Build the ladder.** One rung per pull request onto `next`, proof command run and pasted
    before the next rung starts.
 
-## 3. Shape of the implementation
+## 3. The design
 
-Settled before the design, because these follow from decisions already made:
+`docs/DESIGN.md` is the contract, written before any code: the three endpoints of an assembly and
+the headers that carry composition state, the envelope, the composer's signature and its failure
+ladder, configuration, the trust boundaries, representation, the renderer interface, the events
+API, the service and api signatures, the runtime shape and the error contract. It settles every
+fork the reference reads left open and it is what the ladder below builds, rung by rung.
+
+The points below are the shape it assumes, and they follow from decisions already made:
 
 - pnpm workspace monorepo, ESM only, TypeScript, Node 22 or newer.
 - `node dist/server.js` starts a built app with no bundler present. A bundler is a development and

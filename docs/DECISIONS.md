@@ -113,3 +113,53 @@ now asserts its own preconditions (the fixture directory exists, the patterns ma
 fixtures, the publisher fixture is present) and was watched failing with the fixtures removed and
 with the publisher fixture removed. A probe that cannot fail is worse than no probe, because it
 reports safety.
+
+## 2026-09-03: the design is written, and what it reverses
+
+`docs/DESIGN.md` is the contract, written before any code. It specifies the decisions above
+rather than restating them, and it settles every fork the reference reads left open. Four of its
+rulings reverse a shape recorded earlier in the planning, and they are recorded here because a
+reversal that lives only in the newer document is a trap for the next reader.
+
+- **The placement element is `<sub-assembly>`**, in a page template and as the wrapper in the
+  output, the server filling it in place. Reverses the earlier working form, which stuttered.
+  Reason for not using the obvious word: `slot` is on the naming rule's taken list, and Shadow
+  DOM is a ratified per-assembly opt-in that uses the real `<slot>`, so the framework would ship
+  two unrelated meanings of one word. `sub-assembly` is already the ratified word for a nested
+  assembly, invents nothing, and satisfies the hyphen a custom element requires.
+- **The data an assembly renders with is `data`, not `api`.** `api` is the ratified noun for the
+  raw-data endpoint; one word cannot mean two things in the same object.
+- **Local assemblies need no declaration.** The filesystem is the registry and the tool generates
+  the import module the author never opens. Reverses the earlier shape, where adding an assembly
+  edited the author's own server file at marker comments. Reason: the hand-maintained list
+  restating the directory tree was the largest single piece of ceremony, and a generator that
+  edits the author's source is worse than the ceremony it removes.
+- **Services return their data rather than mutating a shared context.** Reason: a mutated context
+  makes every service order-dependent and untestable on its own.
+
+Three further rulings the design makes that were not previously recorded either way: a page
+template is the whole document and there is no layout concept; routes are a flat table with
+parameters; there is no form or mutation machinery, an api takes a POST. Each is in
+`docs/DESIGN.md` section 13 with its reason.
+
+## 2026-09-03: the adversarial audit, and the constraints it puts on the design
+
+The defect hunt over the production predecessor ran eight lenses, each finding refuted by an
+independent second reader. Raised 74, survived 61: thirteen critical, twenty high, twenty-two
+medium, six low. Thirteen fell to refutation, which is the point of the refutation pass.
+
+The finding that matters most is not any single defect but their shape: the architecture is
+sound and every failure is at a boundary that was never declared. Four boundaries, four
+patterns, and they account for nearly every row. Composition had no isolation and no bounds.
+The trust boundary was never stated, so credentials and raw headers crossed it. Configuration
+was read from a place that is empty at runtime, so every setting took its default forever and
+the security controls keyed on those settings could never turn on. And abstractions were
+declared without being wired, so the type system described a system that did not exist.
+
+The design answers each with a section rather than a bullet: configuration is section 4, trust
+is section 5, representation is section 6, errors are section 12, and failure isolation with
+bounds is sections 3.3 and 3.4. The audit's fifteen imperatives are each traceable into one of
+them. That is the audit's real output; the ranked list is the evidence for it.
+
+The audit stays in the private estate document store with the dossiers, for the reason already
+recorded: it is a security autopsy of a private repository.
