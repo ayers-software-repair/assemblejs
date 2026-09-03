@@ -16,6 +16,7 @@ import { pathToFileURL } from "node:url";
 
 // Same hole as the organization gate had: a source file the walker cannot see needs no test.
 const SOURCE = /\.(ts|tsx|mts|cts)$/;
+const TEST = /\.test\.(ts|tsx|mts|cts)$/;
 
 // Maps the extensionless path to the real file, so a message names a file that exists. Keying
 // on the stripped path and rebuilding it with ".ts" reported "probe.ts" for a "probe.mts",
@@ -28,8 +29,11 @@ const listing = (root, suffix) => {
       if (statSync(path).isDirectory()) walk(path);
       else if (suffix === ".ts" && SOURCE.test(path) && !path.endsWith(".d.ts")) {
         found.set(relative(root, path).replace(SOURCE, ""), path);
-      } else if (suffix !== ".ts" && path.endsWith(suffix)) {
-        found.set(relative(root, path).slice(0, -suffix.length), path);
+      } else if (suffix !== ".ts" && TEST.test(path)) {
+        // A test file may be .tsx: a React or Solid test needs JSX to say anything about a
+        // component. Matching only ".test.ts" made every one of those invisible, so the gate
+        // reported a missing test for a file that had one sitting beside it.
+        found.set(relative(root, path).replace(TEST, ""), path);
       }
     }
   };

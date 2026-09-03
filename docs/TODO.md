@@ -86,7 +86,7 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-09c the remaining agent tools: create_project, add_assembly, place_assembly and check,
       which are the command line's own logic reached through the same seam. Owed once `add`
       and `check` have a shape the protocol can hand back as structures.
-- [ ] B-10 the first framework renderer
+- [x] B-10 the first framework renderer: @assemblejs/renderer-react
 - [ ] B-11 the second framework renderer and the day-one proof
 - [ ] B-12 services and apis
 - [ ] B-13 remote assemblies: allowlist, caps, handshake, cache

@@ -1,0 +1,4 @@
+{
+  "$schema": "https://unpkg.com/syncpack@15/dist/schema.json",
+  "//": "The dependency types are passed on the command line (see check:versions), because a peer RANGE and a dev PIN answer different questions and must not be forced to agree. The peer range is the set of framework versions a renderer supports, deliberately wide so a React 18.3 project can install a renderer developed against 19. The dev pin is the one version we test against, exact like every other pin here. Making them equal would either narrow what users can install or loosen what we test."
+}

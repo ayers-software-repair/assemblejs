@@ -19,7 +19,9 @@
       "@assemblejs/core/renderer": ["./packages/core/src/renderer/index.ts"],
       "@assemblejs/core/client": ["./packages/core/src/client/index.ts"],
       "@assemblejs/cli": ["./packages/cli/src/index.ts"],
-      "@assemblejs/mcp": ["./packages/mcp/src/index.ts"]
+      "@assemblejs/mcp": ["./packages/mcp/src/index.ts"],
+      "@assemblejs/renderer-react": ["./packages/renderer-react/src/index.ts"],
+      "@assemblejs/renderer-react/client": ["./packages/renderer-react/src/client/index.ts"]
     }
   }
 }

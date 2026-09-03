@@ -415,3 +415,16 @@ destination rather than the argument, so a traversal is settled before the check
 it. The root is a branded type, so a path that has not been through `resolveRoot` cannot stand
 in for one, which is what keeps the check from being the easy thing to skip. A test asserts the
 surface has no tool whose name contains shell, exec, publish, deploy or install.
+
+## 2026-09-03: react-dom is ignored by knip, and why that is not a hole
+
+The browser proof bundles its fixture from source, aliasing `@assemblejs/renderer-react/client`
+to the renderer's own files. Those files import `react-dom/client`, so the root workspace must be
+able to RESOLVE react-dom even though no file in the root names it. knip reports what no file
+imports, which is exactly right and exactly why it cannot see this one.
+
+It is listed in `ignoreDependencies` rather than removed, because removing it breaks the bundle,
+and rather than papered over with a fake import, because a file importing something it does not
+use to satisfy a tool is worse than a line of configuration that says what is going on.
+
+If the browser fixture ever stops bundling renderer source, this entry should go with it.

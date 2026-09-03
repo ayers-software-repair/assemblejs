@@ -2,6 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // The browser half of a renderer: its own published entry point.
 
+// The shape browser code receives. Re-exported here rather than reached for through the package
+// root, so a renderer's browser half can name what it is handed without importing the server
+// surface to do it.
+export type { JsonObject } from "../json/json-object.js";
 export type { MountMode } from "./mount-mode.js";
 export { readMountMode } from "./read-mount-mode.js";
 export { readIsland } from "./read-island.js";

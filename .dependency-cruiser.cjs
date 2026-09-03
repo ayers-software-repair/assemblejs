@@ -70,6 +70,11 @@ module.exports = {
           "^packages/[^/]+/src/json/",
           "^packages/[^/]+/src/island/",
           "^packages/[^/]+/src/vocab/",
+          // A renderer's props contract, which both halves agree on: the server renders with
+          // them and the browser mounts with them. Fourth and last of the shared-shape
+          // directories, and the rule is the same one each time: a directory holding types and
+          // no behaviour is owned by both sides, and everything else is not.
+          "^packages/[^/]+/src/props/",
         ],
       },
     },
