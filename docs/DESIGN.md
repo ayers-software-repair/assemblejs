@@ -637,29 +637,24 @@ reason, so nothing has to be remembered.
 
 ---
 
-## 14. Open for the owner
+## 14. Answered by the owner
 
-One item, and it is the one reversal expensive enough to be worth his word before it is built.
-Everything else in this document is decided; section 13 names what each decision reverses and
-why, and any of it can be overruled by a sentence.
+**How does an assembly get registered? It does not.** Owner, 2026-09-03, against this design.
 
-**How does an assembly get registered? Recommendation: it does not.**
+A directory under `assemblies/` simply is an assembly. Nothing to register, nothing to import,
+no list restating the directory tree, no file two people editing different assemblies both have
+to touch. The tool generates a typed import module the author never opens and never commits, so
+the built server still has a static import graph and production never scans a directory.
 
-The shape recorded earlier is that adding an assembly edits the author's own server file at a
-marker comment, so the file carries an import and a registry entry per assembly. The design's
-recommendation is that a directory under `assemblies/` simply is an assembly: the tool generates
-a typed import module the author never opens and never commits, the built server imports that,
-and production keeps a static import graph with no runtime scanning.
+`server.ts` is two lines and never grows:
 
-Why the recommendation. A hand-maintained list that restates the directory tree is the largest
-single piece of ceremony in the whole authoring experience, it is the thing a new hire gets
-wrong first, and it is the one file two people editing different assemblies will always conflict
-in. Worse than the ceremony is the tool that removes it by editing the author's source: a
-generator that rewrites a file the author also edits is a generator that will one day rewrite
-something else, and it makes `add` unsafe to run twice.
+```ts
+const app = await createServer();
+await app.listen();
+```
 
-What it costs. It changes the day-one transcript already reviewed, so the server file in that
-transcript loses its imports and its two registry lines. It changes what `add` does, from
-editing source to writing files. And it is the expensive one to undo, because the tool and every
-template are built around whichever answer is right, which is why it is asked before the rung
-that builds it rather than after.
+Adding an assembly writes the assembly's own files and adds one tag to a page template. That is
+the whole change. This supersedes the earlier recorded shape, where adding an assembly edited
+the author's server file at a marker comment.
+
+Nothing else in this document is open.

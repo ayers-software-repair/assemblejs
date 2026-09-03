@@ -199,3 +199,21 @@ template get built around whichever answer is right.
 Consequence for the ladder: B-02 now lands only the package's exports map and build, and the
 vocabulary constants move to B-04, where the envelope first needs them. A word still waiting on
 the owner is not encoded into six rungs before he has seen it.
+
+## 2026-09-03: an assembly is not registered anywhere. Owner.
+
+Asked against the written design, as the one front-loaded question: when someone adds an
+assembly, how does the server learn about it?
+
+Answered: it just exists. A directory under `assemblies/` is an assembly. Nothing to register,
+nothing to import, no list restating the directory tree. The tool generates a typed import module
+the author never opens and never commits, so the built server keeps a static import graph and
+production never scans a directory. `server.ts` is `createServer()` and `listen()`, and it never
+grows. Adding an assembly writes that assembly's files and adds one tag to a page template.
+
+This supersedes the earlier recorded shape, where adding an assembly edited the author's own
+server file at a marker comment, and it strikes the marker-comment mechanism from the tool
+entirely. The owner's words with the answer: it should be as simple as possible.
+
+Consequence: the day-one transcript changes. The generated `server.ts` loses its imports, its
+renderer array, its pages array and its assemblies array. `add` never edits the author's source.

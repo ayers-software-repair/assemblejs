@@ -56,7 +56,7 @@ all`, both branches carry the workflow files, and `actions/runs` reports `total_
 - [x] Write the design: the assembly contract as a spec before any code (`docs/DESIGN.md`)
 - [x] Reconcile the design against everything already ratified before asking anything
 - [x] Put the remaining open question to the owner, against the written design, in one pass
-- [ ] Record his answers in `docs/DECISIONS.md`
+- [x] Record his answers in `docs/DECISIONS.md`
 - [x] Freeze the ladder in `docs/PLAN.md`, one rung per gate, each with its proof command
 
 ## Phase 3: the ladder
