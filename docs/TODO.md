@@ -70,7 +70,7 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-02b the conformance toolchain: every organization rule and every packaging rule enforced
       by a tool that has been watched refusing a known-bad tree, plus the Claude tooling
 - [ ] B-03 the pure composer: deadlines, isolation, the fallback ladder, depth and cycles
-- [ ] B-04 the vocabulary module, the envelope and the three encoders
+- [x] B-04 the vocabulary module, the envelope and the three encoders
 - [ ] B-05 configuration from the process environment, validated at boot
 - [ ] B-06 the server: the three endpoints, header validation, the error contract
 - [ ] B-07 the browser runtime and the four mount modes

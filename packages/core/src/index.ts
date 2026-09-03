@@ -8,3 +8,5 @@ export * from "./contract/index.js";
 export * from "./json/index.js";
 export * from "./compose/index.js";
 export * from "./vocab/index.js";
+export * from "./encode/index.js";
+export * from "./envelope/index.js";
