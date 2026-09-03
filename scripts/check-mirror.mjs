@@ -47,7 +47,10 @@ export function checkPair(srcRoot, testRoot) {
   const sources = listing(srcRoot, ".ts");
   const tests = listing(testRoot, ".test.ts");
   for (const [key, path] of [...sources].sort()) {
-    if (key.endsWith("index")) continue;
+    // An entry point is covered by the tests of what it wires together. `bin` is exempt for the
+    // same reason `index` is, and it cannot hide logic: the organization gate's rule 2 refuses
+    // any declaration in either of them.
+    if (key.endsWith("index") || key.endsWith("bin")) continue;
     if (!tests.has(key)) problems.push(`${path} has no ${join(testRoot, key)}.test.ts`);
   }
   for (const [key, path] of [...tests].sort()) {

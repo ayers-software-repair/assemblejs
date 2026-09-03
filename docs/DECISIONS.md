@@ -356,3 +356,35 @@ arrives stamped as the catalogue.
 Replay is opt-in per topic. The race it solves is real: an assembly that hydrates late missing a
 message sent before it existed. An unbounded history that nobody reads is not, so a topic keeps
 its last message only when it was declared to.
+
+## 2026-09-03: the agent surface, and why it is not a wrapper around the command line
+
+Owner: "this will be the first ai powered microfrontend framework where it exposes an mcp where
+an agent can build it by using the mcp, in tandem with you like you use the cli, its like it
+knows but its an expert."
+
+Decided: `@assemblejs/mcp`, specified in `docs/DESIGN.md` section 13, and a ladder rung of its
+own at B-09b, placed straight after the command line because it needs the composer, the server
+and discovery and nothing after them.
+
+The reasoning, because it is the part worth keeping. A command line is built for a person at a
+terminal: it prints prose, takes flags in an order, and answers in exit codes. An agent driving
+one parses sentences written to be read, guesses what is valid before trying, and learns what it
+broke afterwards. The MCP inverts all three. It answers in structures, it says what is valid
+before anything is written, and every mutation returns what changed together with what is now
+true.
+
+The two tools that make it expert rather than mechanical are `render_assembly` and
+`compose_page`. An agent that has just written an assembly can see what it renders, what data it
+produced, and which placement fell back, without starting a server, opening a browser or asking
+the developer to look. It closes its own loop. Everything else on the surface is ordinary; those
+two are the reason this is not a wrapper.
+
+It carries no model and no credential and calls no inference API, ever. The intelligence is the
+agent already in the room; what ships is the expertise. That is a cost property as much as a
+security one: a framework that phoned an inference API would put a bill and a key into every
+project that installed it, and neither of those is ours to put there. It also satisfies the
+owner's standing rule that users must not be able to run up a bill through our AI.
+
+It ships capability and not autonomy: one project root resolved once, no shell, no publish, no
+deploy, and every written file reported back so the agent's caller can see the whole change.

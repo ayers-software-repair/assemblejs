@@ -76,6 +76,10 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-07 the browser runtime and the four mount modes
 - [x] B-08 events: typed, addressable, replay opt-in, teardown exact
 - [ ] B-09 the CLI and create: discovery, templates, non-interactive
+      Done: discovery, the generated registry, new, add, generate, the non-interactive bin.
+      Left: `dev` and `build` (they need the bundler seam), and `@assemblejs/create` so
+      `npm create @assemblejs` works. The rung's own proof needs both.
+- [ ] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
 - [ ] B-10 the first framework renderer
 - [ ] B-11 the second framework renderer and the day-one proof
 - [ ] B-12 services and apis

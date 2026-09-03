@@ -1,14 +1,14 @@
 {
-  "name": "@assemblejs/core",
+  "name": "@assemblejs/cli",
   "version": "1.0.0",
-  "description": "Server-composed micro-frontend runtime: pages assembled from assemblies, each written in one UI framework.",
+  "description": "The AssembleJS command line: scaffold a project, add an assembly, build and run it.",
   "license": "Apache-2.0",
   "author": "Zachariah Ayers",
   "homepage": "https://ayers.repair/assemblejs/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ayers-software-repair/assemblejs.git",
-    "directory": "packages/core"
+    "directory": "packages/cli"
   },
   "bugs": "https://github.com/ayers-software-repair/assemblejs/issues",
   "type": "module",
@@ -18,6 +18,7 @@
   },
   "files": [
     "dist",
+    "templates",
     "README.md",
     "LICENSE",
     "NOTICE"
@@ -26,29 +27,24 @@
     "access": "public",
     "provenance": true
   },
+  "bin": {
+    "assemblejs": "./dist/bin.js",
+    "asm": "./dist/bin.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./renderer": {
-      "types": "./dist/renderer/index.d.ts",
-      "default": "./dist/renderer/index.js"
-    },
-    "./client": {
-      "types": "./dist/client/index.d.ts",
-      "browser": "./dist/client/index.js",
-      "default": "./dist/client/index.js"
-    },
     "./package.json": "./package.json"
   },
   "scripts": {
     "build": "tsup",
-    "check:publish": "publint && attw --pack . --profile esm-only",
     "dev": "tsup --watch",
-    "lint": "eslint src test",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "lint": "eslint src test",
+    "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
@@ -57,8 +53,5 @@
     "tsup": "8.5.1",
     "typescript": "6.0.3",
     "vitest": "4.1.11"
-  },
-  "dependencies": {
-    "fastify": "5.12.1"
   }
 }

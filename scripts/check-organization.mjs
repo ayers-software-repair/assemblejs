@@ -106,7 +106,10 @@ export function checkTree(root) {
     const rel = relative(process.cwd(), path);
     const file = parse(path);
     const name = basename(path, ".ts");
-    const isIndex = name === "index";
+    // A bin is an executable entry, not a module: it exports nothing because nothing imports
+    // it. Same category as an index, which is why both skip the one-declaration rule.
+    const isEntry = name === "index" || name === "bin";
+    const isIndex = isEntry;
 
     // Rule 7: the ceiling.
     const lines = readFileSync(path, "utf8").split("\n").length;

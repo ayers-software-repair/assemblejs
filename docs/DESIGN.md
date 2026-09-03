@@ -1,7 +1,7 @@
 # Design
 
 The contract, written before the code. Everything here is decided. What it reverses from an
-earlier record is named in section 13; what remains genuinely open for the owner is section 14.
+earlier record is named in section 14; what remains genuinely open for the owner is section 15.
 
 The rule that produced this document: **an assembly is an HTTP resource, and the contract is the
 product.** Get the resource contract exactly right and everything else is convenience on top of
@@ -585,7 +585,95 @@ by nature and are not scoped. Nothing pretends otherwise.
 
 ---
 
-## 13. Decided here
+## 13. The agent surface
+
+An MCP server, shipped as `@assemblejs/mcp`, so an agent builds with this framework the way a
+developer does, with the framework's own knowledge behind it rather than a guess at it.
+
+This is the thing nothing else in the category has, and it follows from the mission rather than
+decorating it. The mission is that a team of mixed frontend developers share one page without
+learning each other's frameworks. An agent is exactly that developer: it knows some frameworks
+well, has never seen this project, and must not break the parts it did not write.
+
+### 13.1 Why a CLI is not enough
+
+A command line is built for a person at a terminal. It prints prose, takes flags in an order,
+and answers in exit codes. An agent driving it has to parse sentences that were written to be
+read, guess what is valid before trying, and find out what it broke afterwards.
+
+The MCP inverts all three: it answers in structures, it says what is valid before anything is
+written, and every mutation returns what changed together with what is now true.
+
+### 13.2 It carries no model and no key
+
+The server runs locally against the developer's own project and calls no paid model, ever. It
+holds no credential and reaches no network by itself. The intelligence is the agent already in
+the room; what this ships is the expertise, not the reasoning.
+
+That is a security property and a cost property at once: a framework that phoned an inference
+API would put a bill and a key in every project that installed it, and neither belongs to us.
+
+### 13.3 What an agent reads
+
+Resources, not commands, because an agent that has to ask what exists spends its first three
+turns finding out.
+
+| resource                       | what it answers                                                                                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `assemblejs://project`         | Every assembly, page, renderer and setting, and how they are wired. The whole shape in one read.                                                                   |
+| `assemblejs://assembly/{name}` | One assembly: its files, its view, its renderer, the shape of its data, where it is placed.                                                                        |
+| `assemblejs://contract`        | The three endpoints, their headers and the envelope, as a specification. An agent writing a remote assembly in another language reads this and needs nothing else. |
+| `assemblejs://rules`           | The constraints real code must satisfy, with the reason for each. One framework per assembly; children arrive as strings; nothing crosses to the browser but JSON. |
+| `assemblejs://diagnostics`     | What is wrong right now, per assembly and per placement, with the correlation id that finds it in a log.                                                           |
+
+### 13.4 What an agent does
+
+Every tool answers with the change it made and the state that resulted. None of them prints
+prose for a human to re-read.
+
+| tool              | what it does                                                                                 |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| `create_project`  | Scaffolds a project that runs.                                                               |
+| `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.   |
+| `place_assembly`  | Puts the placement into a page template, at a named position.                                |
+| `render_assembly` | Renders one assembly NOW and returns its HTML, its data and its diagnostics.                 |
+| `compose_page`    | Composes a page NOW and returns the HTML with one diagnostic per placement.                  |
+| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix. |
+| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                |
+
+`render_assembly` and `compose_page` are the two that matter most, and they are the reason this
+is not a wrapper. An agent that writes an assembly can immediately see what it renders, what
+data it produced and which placement fell back, without starting a server, opening a browser or
+asking the developer to look. It closes its own loop.
+
+### 13.5 What makes it expert rather than mechanical
+
+Four properties, each of which is a thing a human maintainer would otherwise have to say out
+loud on a pull request.
+
+- **It refuses with a fix, never with an error string.** An assembly named `Cart` comes back as
+  a refusal that names the rule, the reason, and `cart` as the name that would work.
+- **It says what is next.** Adding an assembly returns the tag that places it, because an
+  assembly nobody placed is the most common half-finished state there is.
+- **It knows what it cannot know.** Asked to place an assembly on a page that does not exist, it
+  says so and lists the pages that do, rather than creating one nobody asked for.
+- **It never edits the author's own files to register anything.** The generated module is
+  regenerated; a page template is edited only when the agent asked for a placement, at a named
+  position, and the diff comes back with the answer.
+
+### 13.6 Safety
+
+The framework ships capability, not autonomy.
+
+- Every tool is scoped to one project root, resolved once, and refuses a path outside it.
+- Nothing runs a shell command. `check` runs the gates in process and returns findings.
+- Nothing publishes, deploys, or touches a remote. Those stay in the command line, where a
+  person types them.
+- Mutating tools report every file they wrote, so the agent's caller can see the whole change.
+
+---
+
+## 14. Decided here
 
 Each of these was open, or reverses something recorded earlier. Each is decided, with the
 reason, so nothing has to be remembered.
@@ -637,7 +725,7 @@ reason, so nothing has to be remembered.
 
 ---
 
-## 14. Answered by the owner
+## 15. Answered by the owner
 
 **How does an assembly get registered? It does not.** Owner, 2026-09-03, against this design.
 
