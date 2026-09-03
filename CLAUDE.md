@@ -59,7 +59,27 @@ changesets. `pnpm changeset` on any `packages/*/src` change. Publishing is CI on
 `release.yml`'s `release` environment (npm trusted publishing); nobody runs `npm publish` from
 a laptop and there is no npm token anywhere.
 
+## How this repository is worked (owner's standing rules, 2026-09-03)
+
+- NOTHING LIVES IN A SESSION'S MEMORY. A fact is a fact only once it is in a file here: a rule in
+  this document, a decision in `docs/DECISIONS.md`, a read in `docs/dossiers/`, a task in
+  `docs/TODO.md`. A session that ends takes nothing with it.
+- CHECK THE FILE, NEVER ASSUME. Before stating what a file, a flag, a version or a route does,
+  open it. A claim with no read behind it is a defect, not a shortcut.
+- THE TODO LIST IS KEPT LIKE A LEDGER. `docs/TODO.md` holds every task; do the task, check it off
+  in the same commit, never in a batch afterwards. An unchecked box is work not done.
+- THE PLAN GOVERNS. `docs/PLAN.md` is the implementation plan and the bite ladder. Do not stray
+  from it. When something unexpected forces a change: fix it, log it in `docs/DECISIONS.md` with
+  what was expected and what was found, raise it with the owner only if the change alters the
+  plan's shape, then pivot and continue.
+- AUTONOMOUS BY DEFAULT. Work runs without asking. Stop for the owner only when the plan itself
+  must change, never for permission to continue.
+- EVERY GATE IS RUN, NOT ASSUMED. A rung is done when its proof command has been run in this
+  session and its output pasted; a green diff proves nothing.
+- A PROBE IS WATCHED FAILING BEFORE IT IS TRUSTED. A check that has never gone red on a known-bad
+  input is not a check.
+
 ## After a restart
 
-Re-read this file, then `docs/HANDOFF.md` and `WORKING.md`, then the dossier in `docs/dossiers/`
-for the subsystem in scope, before writing code.
+Re-read this file, then `docs/TODO.md` for where the work is, `docs/PLAN.md` for what governs it,
+and `docs/DECISIONS.md` for what is already settled, before writing code.

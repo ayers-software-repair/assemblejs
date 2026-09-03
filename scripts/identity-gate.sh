@@ -13,25 +13,38 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PATTERN='zjayers|MeridianVega|asmbl|icloud'
-EXCLUDES=(--exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=.changeset --exclude-dir=coverage --exclude-dir=fixtures --exclude=identity-gate.sh --exclude=pnpm-lock.yaml)
 
+# THE GATE SCANS WHAT GIT TRACKS, not the working tree.
+# Only a tracked file can be committed, published, or shipped in a tarball; an ignored or
+# untracked file is none of those. `git ls-files` covers tracked AND staged, so a new file
+# reaches the gate at the moment it could first enter history, which is where it matters.
+# Scanning the whole tree instead would fail on scratch files that can never ship, and a gate
+# that fails on things that do not matter is a gate people learn to skip.
+tracked() {
+  git ls-files -c -- . \
+    | grep -vE '^(scripts/identity-gate\.sh|scripts/fixtures/|pnpm-lock\.yaml|docs/dossiers/)'
+}
+
+# `--self-test` runs the gate's own patterns against scripts/fixtures/identity-bad/ and REQUIRES
+# them to match. A check never watched failing is not a check. This block was once deleted during
+# a refactor and the flag then printed success without running anything, which is the exact
+# failure it exists to catch, so every precondition is asserted rather than assumed.
 if [ "${1:-}" = "--self-test" ]; then
-  hits=$(grep -rEIl "$PATTERN" scripts/fixtures/identity-bad || true)
-  n=$(printf '%s\n' "$hits" | sed '/^$/d' | wc -l)
-  if [ "$n" -lt 4 ]; then
-    echo "identity gate self-test FAILED: expected at least 4 fixture hits, got $n" >&2
+  fixtures="scripts/fixtures/identity-bad"
+  [ -d "$fixtures" ] || { echo "identity gate self-test FAILED: $fixtures is missing" >&2; exit 1; }
+  hits=$(grep -rEIl "$PATTERN" "$fixtures" | wc -l)
+  if [ "$hits" -lt 4 ]; then
+    echo "identity gate self-test FAILED: patterns matched $hits fixture(s), expected at least 4" >&2
     exit 1
   fi
-  if grep -rEIl "Ayers Software Repair" scripts/fixtures/identity-bad >/dev/null; then :; else
-    echo "identity gate self-test FAILED: publisher fixture missing" >&2
-    exit 1
-  fi
-  echo "identity gate self-test: red on $n fixture(s) as required"
+  grep -rIl "Ayers Software Repair" "$fixtures" >/dev/null || {
+    echo "identity gate self-test FAILED: no publisher-law fixture" >&2; exit 1; }
+  echo "identity gate self-test: red on $hits fixture(s) and on the publisher fixture, as required"
   exit 0
 fi
 
 fail=0
-if grep -rEIn "${EXCLUDES[@]}" "$PATTERN" . ; then
+if tracked | xargs -r grep -EIn "$PATTERN" ; then
   echo "identity gate: forbidden identity string found (matches above)" >&2
   fail=1
 fi
@@ -40,6 +53,6 @@ while IFS= read -r pj; do
     echo "identity gate: publisher law violated in $pj" >&2
     fail=1
   fi
-done < <(find . -name package.json -not -path '*/node_modules/*' -not -path '*/fixtures/*')
+done < <(tracked | grep -E '(^|/)package\.json$')
 if [ "$fail" -ne 0 ]; then exit 1; fi
 echo "identity gate: clean"

@@ -7,3 +7,7 @@ dist/
 CLAUDE.local.md
 .DS_Store
 coverage/
+
+# Reference reads of a PRIVATE predecessor. They stay out of this public repository;
+# they live in the private estate document store. See docs/PLAN.md.
+docs/dossiers/
