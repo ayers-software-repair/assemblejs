@@ -163,3 +163,39 @@ them. That is the audit's real output; the ranked list is the evidence for it.
 
 The audit stays in the private estate document store with the dossiers, for the reason already
 recorded: it is a security autopsy of a private repository.
+
+## 2026-09-03: the placement element is two elements, not one
+
+Expected: one custom element serving as both the placeholder an author writes in a page template
+and the wrapper the server emits, the server filling it in place. It is the smaller surface and
+it was the design's first form.
+
+Found on review: no single word is right in both positions. A placement is nested by definition,
+so a name that says so reads correctly in a template and wrongly on the envelope returned by a
+bare fetch of `/assembly/<name>/`, where nothing encloses it. A name that ignores the nesting
+reads correctly on the envelope and vaguely in a template. The sameness was the constraint
+forcing an awkward name, so it was dropped.
+
+Decided: a page template writes `<assembly name="cart">`, which is a directive the server
+replaces and never emits, so it needs no hyphen and reads as the plain noun. The server emits
+`<assembly-root data-name="cart" …>`, a real custom element, hyphenated as the standard requires,
+named for what every framework already calls the element it mounts into. The author writes one
+and reads the other, which is the same split every framework has between authored and emitted.
+
+## 2026-09-03: the registration question is what goes to the owner, not the scaffold
+
+Expected: the one front-loaded question would be whether the tool's `new` scaffolds one framework
+or two.
+
+Found: that is a template choice, reversible in an afternoon, and the design already has a
+defensible answer, so it was decided rather than asked. `new` produces one framework and `add`
+brings the second, because the move is the thing worth teaching. The reversal that actually needs
+the owner's word is registration: the design recommends that a directory under `assemblies/` is
+simply an assembly, with a generated import module the author never opens, replacing the recorded
+shape where adding an assembly edits the author's own server file at a marker comment. It changes
+the day-one transcript he has already reviewed, it changes what `add` does, and the tool and every
+template get built around whichever answer is right.
+
+Consequence for the ladder: B-02 now lands only the package's exports map and build, and the
+vocabulary constants move to B-04, where the envelope first needs them. A word still waiting on
+the owner is not encoded into six rungs before he has seen it.

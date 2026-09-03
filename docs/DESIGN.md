@@ -121,24 +121,33 @@ Every fragment is wrapped in one element, and this is the canonical attribute se
 is emitted, and every other section refers here rather than restating it.
 
 ```html
-<sub-assembly data-name="cart" data-id="a7f3" data-view="default" data-renderer="svelte">
+<assembly-root data-name="cart" data-id="a7f3" data-view="default" data-renderer="svelte">
   …the assembly's own markup…
   <script type="application/json" data-assembly="a7f3">
     { …data… }
   </script>
-</sub-assembly>
+</assembly-root>
 ```
 
 Added only when they apply: `data-remote` (the origin, when the assembly came from another
 server), `data-defer` (the content has not been fetched yet), `data-failed` (the render or the
 fetch failed and this is a fallback).
 
-`sub-assembly` is a custom element with no behaviour of its own. It is the styling scope hook
-and the hydration hook. It is chosen so the boundary is visible in devtools and addressable in
-CSS without a class convention, and so that the same element serves as the placeholder in a page
-template and as the wrapper in the output: the server fills it in place. An author may add
-classes and attributes to it through the assembly's declaration, never through the page
-template, which keeps a page from styling another team's internals.
+`assembly-root` is a custom element with no behaviour of its own. It is the styling scope hook,
+the hydration hook, and the element a renderer's `mount` receives, which is what every framework
+already calls a root. It is chosen so the boundary is visible in devtools and addressable in CSS
+without a class convention. An author may add classes and attributes to it through the
+assembly's declaration, never through the page template, which keeps a page from styling another
+team's internals.
+
+It is deliberately not the same element the author writes in a template. A page template places
+an assembly with `<assembly name="cart">`, which is a template directive: the server replaces it
+and it is never emitted, so it needs no hyphen and carries no meaning in the browser. The two
+are separate because one word cannot be right in both positions. A placement is nested by
+definition and a served fragment is not, so a name that reads correctly in a template reads
+wrongly on a bare fetch, and the reverse. The author writes the directive and reads the
+envelope, which is the same split every framework has between what is authored and what is
+emitted.
 
 The data island sits inside the envelope, next to the markup. The browser runtime reads it,
 parses it and removes it. It carries only what section 5.3 allows.
@@ -437,14 +446,15 @@ assemblejs.config.ts            policy only: remotes, deadlines, renderers, port
 **A directory under `assemblies/` is an assembly.** There is no registry to maintain, no import
 to add, no list restating the directory tree. The CLI generates a typed module the author never
 opens and never commits; the built server imports it, so production has a static import graph
-and no runtime globbing.
+and no runtime globbing. This is the one recommendation waiting on the owner's word; section 14
+states it, with what it reverses and what it costs.
 
-A page template places assemblies by name, using the same element that will wrap them:
+A page template places assemblies by name:
 
 ```html
 <main>
-  <sub-assembly name="hello-react"></sub-assembly>
-  <sub-assembly name="hello-svelte"></sub-assembly>
+  <assembly name="hello-react"></assembly>
+  <assembly name="hello-svelte"></assembly>
 </main>
 ```
 
@@ -580,20 +590,21 @@ by nature and are not scoped. Nothing pretends otherwise.
 Each of these was open, or reverses something recorded earlier. Each is decided, with the
 reason, so nothing has to be remembered.
 
-1. **The placement element is `<sub-assembly>`**, both in a page template and as the wrapper in
-   the output; the server fills it in place. It reverses the earlier `<assemble-assembly>`
-   working form, which stutters, and it avoids `slot`, which the naming rule lists as already
-   taken and which would ship a second meaning next to a ratified Shadow DOM opt-in that uses
-   the real `<slot>`. `sub-assembly` is exactly the ratified word for a nested assembly, needs
-   no new vocabulary, and satisfies the hyphen a custom element requires. The plan left this
-   detail to be decided at the rung that emits it.
+1. **A page template writes `<assembly name="…">` and the server emits `<assembly-root …>`.**
+   Two elements, because no single word is right in both positions: a placement is nested by
+   definition, a served fragment is not. The template form is a directive the server replaces
+   and never emits, so it needs no hyphen and reads as the plain noun. The emitted form is a
+   real custom element, so it takes the hyphen, and `root` is what every framework already calls
+   the element it mounts into. This reverses the earlier `<assemble-assembly>` working form,
+   which stutters, and it avoids `slot`, which the naming rule lists as taken and which would
+   ship a second meaning beside a ratified Shadow DOM opt-in that uses the real `<slot>`. The
+   plan left this detail to the rung that emits it.
 2. **The data an assembly renders with is `data`**, not `api`. `api` is the ratified noun for
    the raw-data endpoint, and one word cannot mean two things in the same object.
-3. **Local assemblies need no declaration**; the filesystem is the registry and the CLI
-   generates the import module. This reverses the earlier working shape, where `add` edited the
-   author's `server.ts` at marker comments. A hand-maintained list restating the directory tree
-   was the largest single piece of ceremony, and a generator that edits the author's source to
-   register something is worse than the ceremony it removes.
+3. **The CLI's `new` produces a one-framework project and `add` brings the second.** The move
+   is the thing worth teaching, and a first `dev` that already shows two frameworks hides it.
+   It also keeps the smallest project small and installs no framework the author did not ask
+   for. The two-framework page is what the tutorial's second minute produces, not its first.
 4. **Services return their data** rather than mutating a shared context. A mutated context makes
    every service order-dependent and untestable alone.
 5. **Nothing is forwarded to a remote assembly by default.** Forwarding an incoming
@@ -628,13 +639,27 @@ reason, so nothing has to be remembered.
 
 ## 14. Open for the owner
 
-One item. Everything else in this document is decided, and section 13 names the four decisions
-that reverse an earlier record and can be overruled by a word.
+One item, and it is the one reversal expensive enough to be worth his word before it is built.
+Everything else in this document is decided; section 13 names what each decision reverses and
+why, and any of it can be overruled by a sentence.
 
-- **Does the CLI's `new` produce a one-framework project or a two-framework page?** The mission
-  is that many frameworks share one page, and a first `dev` that already shows two frameworks
-  talking to each other demonstrates it in the first minute. It also makes the smallest project
-  bigger than it needs to be, and installs a framework the author did not ask for. The recorded
-  transcript starts with one and adds the second by hand, which teaches the move rather than
-  showing the result. Both are defensible and the choice is about what the product says on first
-  contact.
+**How does an assembly get registered? Recommendation: it does not.**
+
+The shape recorded earlier is that adding an assembly edits the author's own server file at a
+marker comment, so the file carries an import and a registry entry per assembly. The design's
+recommendation is that a directory under `assemblies/` simply is an assembly: the tool generates
+a typed import module the author never opens and never commits, the built server imports that,
+and production keeps a static import graph with no runtime scanning.
+
+Why the recommendation. A hand-maintained list that restates the directory tree is the largest
+single piece of ceremony in the whole authoring experience, it is the thing a new hire gets
+wrong first, and it is the one file two people editing different assemblies will always conflict
+in. Worse than the ceremony is the tool that removes it by editing the author's source: a
+generator that rewrites a file the author also edits is a generator that will one day rewrite
+something else, and it makes `add` unsafe to run twice.
+
+What it costs. It changes the day-one transcript already reviewed, so the server file in that
+transcript loses its imports and its two registry lines. It changes what `add` does, from
+editing source to writing files. And it is the expensive one to undo, because the tool and every
+template are built around whichever answer is right, which is why it is asked before the rung
+that builds it rather than after.

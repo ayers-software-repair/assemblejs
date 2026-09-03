@@ -55,7 +55,7 @@ all`, both branches carry the workflow files, and `actions/runs` reports `total_
 
 - [x] Write the design: the assembly contract as a spec before any code (`docs/DESIGN.md`)
 - [x] Reconcile the design against everything already ratified before asking anything
-- [ ] Put the remaining open questions to the owner, against the written design, in one pass
+- [x] Put the remaining open question to the owner, against the written design, in one pass
 - [ ] Record his answers in `docs/DECISIONS.md`
 - [x] Freeze the ladder in `docs/PLAN.md`, one rung per gate, each with its proof command
 
@@ -66,9 +66,9 @@ pull request onto `next`; its proof command is run and its output pasted before 
 starts. Until the owner enables Actions, every proof is local only.
 
 - [x] B-01 repository skeleton, gates, working rules (`c565074`)
-- [ ] B-02 core package shell and the vocabulary module
+- [ ] B-02 core package shell: exports map and build only
 - [ ] B-03 the pure composer: deadlines, isolation, the fallback ladder, depth and cycles
-- [ ] B-04 the envelope and the three encoders
+- [ ] B-04 the vocabulary module, the envelope and the three encoders
 - [ ] B-05 configuration from the process environment, validated at boot
 - [ ] B-06 the server: the three endpoints, header validation, the error contract
 - [ ] B-07 the browser runtime and the four mount modes
