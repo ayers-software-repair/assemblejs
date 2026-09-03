@@ -113,6 +113,39 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-27a estate integration and the first prerelease
 - [ ] B-27b the stable publish, after the cold quickstart
 
+## Release notes: the uniform pattern (owner order, 2026-09-03) — NOT STARTED, awaiting his word
+
+Relayed by the AVP as a notification, explicitly not a dispatch, while this seat was on hold.
+Nothing here is begun until the owner lifts the hold. Recorded now because a fact that lives only
+in a session's memory is a fact that is lost.
+
+His order: "howland and magpie should do release notes the same way, same for assemblejs, uniform
+pattern". The shape is written up at `ayers.repair/docs/RELEASE-NOTES-PATTERN.md`, derived from
+what magpie and howland already converged on independently rather than invented.
+
+VERIFIED HERE TODAY: this repository has NONE of the four surfaces. `RELEASE_NOTES.md`,
+`CHANGELOG.md` and `site/release-notes.html` are all absent, the page is not declared in
+`site/pages.json`, and `release.yml` has no body generation. So assemblejs adopts all four, where
+howland is said to need three and magpie already has them.
+
+- [ ] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, and the source the release body is
+      generated FROM.
+- [ ] `CHANGELOG.md` at the root: the developer register, hand-kept. A different register from
+      the notes on purpose.
+- [ ] `site/release-notes.html`: one `<section id="v...">` per version, declared in `pages.json`
+      so `check-site.mjs` refuses it going missing.
+- [ ] The GitHub release BODY generated at release time from `RELEASE_NOTES.md` plus the
+      production guide links, gated on DNS resolving rather than on a flag. Never a tracked file:
+      a tracked body is one the next person cutting a release can silently ship without the links.
+- [ ] THE DRIFT GATE, which is the part that actually holds it together: a test asserting every
+      version heading in `CHANGELOG.md` has a matching `<section id="v...">` in the site page.
+      STRUCTURE ONLY, never prose — the two deliberately say the same thing in different
+      registers and flattening that difference is the failure, not the fix. Watch it red on an
+      injected version before trusting it, the way every other gate here was.
+- [ ] Standing bar, same ruling: no old releases left around. One release per version, no orphaned
+      drafts or prereleases, superseded ones deleted rather than left visible. `gh release list`
+      before any cut.
+
 ## Phase 4: the site, on the pattern howland and magpie already use
 
 Measured from `magpie/site/`, `howland/site/`, both `deploy-site.yml`, and `platform/sitekit/`.
