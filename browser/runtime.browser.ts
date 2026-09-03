@@ -86,3 +86,40 @@ test("one assembly whose renderer is missing does not stop the others", async ({
   await expect.poll(() => browser.evaluate(() => window.mounted)).toEqual(["ok"]);
   await expect(browser.locator(`[data-id="orphan"]`)).toContainText("server markup for orphan");
 });
+
+// The mission, reduced to its smallest honest test: two assemblies written against different
+// renderers, sharing nothing but the page, exchanging a message with no adapter between them.
+test("two assemblies in different frameworks exchange an event", async ({ page: browser }) => {
+  const react = `<assembly-root data-id="r" data-name="counter" data-view="default" data-renderer="reactish"><button id="bump">bump</button><script type="application/json" data-assembly="r">{"id":"r","name":"counter","view":"default","renderer":"reactish","data":{},"deferred":false}</script></assembly-root>`;
+  const svelte = `<assembly-root data-id="s" data-name="readout" data-view="default" data-renderer="sveltish"><p id="readout">nothing yet</p><script type="application/json" data-assembly="s">{"id":"s","name":"readout","view":"default","renderer":"sveltish","data":{},"deferred":false}</script></assembly-root>`;
+
+  await browser.setContent(`<!doctype html>
+<html><head><meta charset="utf-8"><title>two frameworks</title></head><body>${react}${svelte}
+<script type="module">
+${readFileSync(clientPath, "utf8").replace(/export\s*\{[^}]*\};?/g, "")}
+window.mounted = [];
+start({ renderers: {
+  // Stands in for a framework that sends. It knows nothing about the other one.
+  reactish: { mount: (element, _data, context) => {
+    window.mounted.push(context.name);
+    element.querySelector("#bump").addEventListener("click", () => {
+      context.events.send("count", { by: context.name });
+    });
+    return { unmount: () => {} };
+  } },
+  // Stands in for a different framework that listens. It knows nothing about the first.
+  sveltish: { mount: (element, _data, context) => {
+    window.mounted.push(context.name);
+    context.events.on("count", (message) => {
+      element.querySelector("#readout").textContent = "heard from " + message.from.name;
+    });
+    return { unmount: () => {} };
+  } },
+} });
+</script></body></html>`);
+
+  await expect.poll(() => browser.evaluate(() => window.mounted)).toEqual(["counter", "readout"]);
+  await expect(browser.locator("#readout")).toHaveText("nothing yet");
+  await browser.locator("#bump").click();
+  await expect(browser.locator("#readout")).toHaveText("heard from counter");
+});

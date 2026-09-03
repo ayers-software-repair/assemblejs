@@ -8,4 +8,6 @@ export interface StartOptions {
   readonly renderers: Readonly<Record<string, ClientRenderer>>;
   /** Where to look. The document, unless a caller is mounting one subtree. */
   readonly root?: ParentNode;
+  /** Topics that keep their last message for an assembly that hydrates after it was sent. */
+  readonly replay?: readonly string[];
 }

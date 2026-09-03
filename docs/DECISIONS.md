@@ -308,3 +308,51 @@ source of truth about what must pass and the two only ever drift.
 The pattern across both verification passes is one thing: every defect was in something that
 was reporting success. The gates are the product's memory, and a gate nobody has watched fail is
 a comment.
+
+## 2026-09-03: the browser runtime, and what a DOM shim cannot answer
+
+The runtime's logic is proved in happy-dom on every `pnpm test`; four things are proved in real
+Chromium and kept out of that suite, because they are what a shim cannot honestly answer: real
+layout, a real `IntersectionObserver`, real module loading, and a real click.
+
+The one that decides it is `client:visible`. A shim has no layout, so nothing in it can say
+whether an element is on screen; the browser test puts an assembly three thousand pixels down a
+page, asserts it has not mounted and still shows the server's markup, scrolls to it, and asserts
+it then mounts. It goes red the moment `visible` stops deferring.
+
+Recorded because one unit test was green for a reason it did not claim. "Does not mount twice"
+passed with the guard deleted, because reading an island removes it and the second pass then
+found nothing to mount. It was testing a side effect. It now puts an island back before the
+second pass and goes red when the guard goes. A test that passes for the wrong reason is worse
+than a missing test, because it is counted.
+
+## 2026-09-03: the layer rule was answered twice rather than loosened
+
+Building the runtime tripped `client-stays-browser-only` twice, and both times the honest fix
+was to say what is genuinely shared rather than to widen the rule to fit the code.
+
+`IslandPayload` moved to `src/island`: it is the wire format, so both sides own it by definition,
+the same way `src/json` says what JSON is. `src/vocab` joined the shared list for the same
+reason: the server spells the envelope element in order to emit it and the browser spells the
+same one in order to find it, which is the entire reason those words live in one module.
+
+After each widening the rule was re-proved against a real violation, browser code reaching
+server configuration and then server options, and refused both times. A rule that has been
+widened and not re-tested is a rule nobody knows the shape of any more.
+
+## 2026-09-03: events are scoped by construction, not by discipline
+
+An assembly never holds the bus. It holds what `forAssembly` returns, and every subscription made
+through that is remembered against that assembly, so the runtime's teardown removes exactly the
+ones it added and none of anyone else's. Forgetting to unsubscribe is not something an author can
+do, rather than something they are told not to do. The leak test runs a hundred mount and unmount
+cycles and asserts the bus returns to exactly the size it started at.
+
+The sender is stamped by the runtime from what it already knows and is never taken from the
+caller. A bus where anyone can claim to be anyone is a bus with no addressing at all, and the
+test sends a payload whose own field says it is the cart while asserting the message still
+arrives stamped as the catalogue.
+
+Replay is opt-in per topic. The race it solves is real: an assembly that hydrates late missing a
+message sent before it existed. An unbounded history that nobody reads is not, so a topic keeps
+its last message only when it was declared to.

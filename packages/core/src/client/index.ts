@@ -14,3 +14,4 @@ export { start } from "./start.js";
 export type { ClientRenderer } from "./client-renderer.js";
 export type { MountContext } from "./mount-context.js";
 export type { MountHandle } from "./mount-handle.js";
+export * from "./events/index.js";

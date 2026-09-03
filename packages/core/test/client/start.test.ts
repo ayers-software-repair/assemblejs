@@ -201,3 +201,58 @@ describe("tearing down", () => {
     error.mockRestore();
   });
 });
+
+describe("the runtime's bus", () => {
+  it("gives each assembly an events object scoped to it", () => {
+    document.body.innerHTML = envelope("a") + envelope("b");
+    const heard: string[] = [];
+    const runtime = start({
+      renderers: {
+        html: {
+          mount: (_element, _data, context) => {
+            context.events.on("ping", (message) =>
+              heard.push(`${context.name}<-${message.from.name}`),
+            );
+            return { unmount: () => {} };
+          },
+        },
+      },
+    });
+    // Two assemblies, talking through the page rather than through each other.
+    runtime.bus.forAssembly({ id: "x", name: "outside", view: "default" }).events.send("ping", {});
+    expect(heard.sort()).toEqual(["a<-outside", "b<-outside"]);
+  });
+
+  // The half that makes per-assembly scoping mean anything: without it the events object is
+  // just a global with extra steps.
+  it("releases every subscription it handed out when it tears down", () => {
+    document.body.innerHTML = envelope("a") + envelope("b");
+    const runtime = start({
+      renderers: {
+        html: {
+          mount: (_element, _data, context) => {
+            context.events.on("t", () => {});
+            context.events.on("u", () => {});
+            return { unmount: () => {} };
+          },
+        },
+      },
+    });
+    expect(runtime.bus.size).toBe(4);
+    runtime.unmountAll();
+    expect(runtime.bus.size).toBe(0);
+  });
+
+  it("replays a declared topic to an assembly that mounts after it was sent", () => {
+    document.body.innerHTML = "";
+    const runtime = start({ renderers: {}, replay: ["cart:add"] });
+    runtime.bus
+      .forAssembly({ id: "x", name: "catalogue", view: "default" })
+      .events.send("cart:add", { sku: "late" });
+
+    document.body.innerHTML = envelope("cart");
+    runtime.mount(document);
+    const held = runtime.bus.forAssembly({ id: "y", name: "cart", view: "default" });
+    expect(held.events.last<{ sku: string }>("cart:add")?.payload).toEqual({ sku: "late" });
+  });
+});

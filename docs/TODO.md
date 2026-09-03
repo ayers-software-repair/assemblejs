@@ -69,12 +69,12 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-02 core package shell: exports map and build only
 - [x] B-02b the conformance toolchain: every organization rule and every packaging rule enforced
       by a tool that has been watched refusing a known-bad tree, plus the Claude tooling
-- [ ] B-03 the pure composer: deadlines, isolation, the fallback ladder, depth and cycles
+- [x] B-03 the pure composer: deadlines, isolation, the fallback ladder, depth and cycles
 - [x] B-04 the vocabulary module, the envelope and the three encoders
 - [x] B-05 configuration from the process environment, validated at boot
 - [x] B-06 the server: the three endpoints, header validation, the error contract
 - [x] B-07 the browser runtime and the four mount modes
-- [ ] B-08 events: typed, addressable, replay opt-in, teardown exact
+- [x] B-08 events: typed, addressable, replay opt-in, teardown exact
 - [ ] B-09 the CLI and create: discovery, templates, non-interactive
 - [ ] B-10 the first framework renderer
 - [ ] B-11 the second framework renderer and the day-one proof

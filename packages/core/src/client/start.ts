@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { createBus } from "./events/create-bus.js";
 import { findEnvelopes } from "./find-envelopes.js";
 import type { MountedAssembly } from "./mounted-assembly.js";
 import { readIsland } from "./read-island.js";
@@ -23,6 +24,8 @@ import type { StartOptions } from "./start-options.js";
 export function start(options: StartOptions): Runtime {
   const mounted = new Map<string, MountedAssembly>();
   const cancels: Array<() => void> = [];
+  const releases: Array<() => void> = [];
+  const bus = createBus(options.replay);
 
   const mount = (root: ParentNode): void => {
     for (const element of findEnvelopes(root)) {
@@ -49,10 +52,12 @@ export function start(options: StartOptions): Runtime {
       cancels.push(
         scheduleMount(element, mode, () => {
           try {
+            const sender = { id: payload.id, name: payload.name, view: payload.view };
+            const held = bus.forAssembly(sender);
+            releases.push(held.release);
             const handle = renderer.mount(element, payload.data, {
-              id: payload.id,
-              name: payload.name,
-              view: payload.view,
+              ...sender,
+              events: held.events,
             });
             mounted.set(id, {
               id,
@@ -73,9 +78,13 @@ export function start(options: StartOptions): Runtime {
 
   return {
     mounted,
+    bus,
     mount,
     unmountAll: () => {
       for (const cancel of cancels.splice(0).reverse()) cancel();
+      // Every subscription this runtime handed out, released. This is the half that makes the
+      // per-assembly scoping mean something: without it the events object is just a global.
+      for (const release of releases.splice(0).reverse()) release();
       // Reverse order, so an inner assembly is torn down before the outer one whose markup it
       // is living inside.
       for (const assembly of [...mounted.values()].reverse()) {
