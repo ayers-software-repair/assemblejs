@@ -80,6 +80,9 @@ starts. Until the owner enables Actions, every proof is local only.
       Left: `dev` and `build` (they need the bundler seam), and `@assemblejs/create` so
       `npm create @assemblejs` works. The rung's own proof needs both.
 - [ ] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
+      Done: the project-root guard, the queryable rules, render_assembly and compose_page.
+      Left: the protocol wiring itself, and the create/add/place/check tools that are the
+      command line's logic reached through the same seam.
 - [ ] B-10 the first framework renderer
 - [ ] B-11 the second framework renderer and the day-one proof
 - [ ] B-12 services and apis

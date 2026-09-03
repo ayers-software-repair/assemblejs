@@ -18,7 +18,8 @@
       "@assemblejs/core": ["./packages/core/src/index.ts"],
       "@assemblejs/core/renderer": ["./packages/core/src/renderer/index.ts"],
       "@assemblejs/core/client": ["./packages/core/src/client/index.ts"],
-      "@assemblejs/cli": ["./packages/cli/src/index.ts"]
+      "@assemblejs/cli": ["./packages/cli/src/index.ts"],
+      "@assemblejs/mcp": ["./packages/mcp/src/index.ts"]
     }
   }
 }

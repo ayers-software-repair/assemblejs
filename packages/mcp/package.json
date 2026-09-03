@@ -1,0 +1,56 @@
+{
+  "name": "@assemblejs/mcp",
+  "version": "1.0.0",
+  "description": "The AssembleJS agent surface: an MCP server so an agent builds with the framework the way a developer does.",
+  "license": "Apache-2.0",
+  "author": "Zachariah Ayers",
+  "homepage": "https://ayers.repair/assemblejs/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayers-software-repair/assemblejs.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": "https://github.com/ayers-software-repair/assemblejs/issues",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src test",
+    "check:publish": "publint && attw --pack . --profile esm-only"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@types/node": "26.4.1",
+    "publint": "0.3.24",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  },
+  "dependencies": {
+    "@assemblejs/cli": "workspace:*",
+    "@assemblejs/core": "workspace:*"
+  }
+}
