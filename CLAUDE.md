@@ -120,3 +120,17 @@ a laptop and there is no npm token anywhere.
 
 Re-read this file, then `docs/TODO.md` for where the work is, `docs/PLAN.md` for what governs it,
 and `docs/DECISIONS.md` for what is already settled, before writing code.
+
+## Tooling — the global rules apply here (see ~/.claude/CLAUDE.md)
+
+Two laws from the root file bind every session in this repo. They are not repeated in full here on
+purpose: a long CLAUDE.md gets ignored in the middle, so this is a pointer, not a copy.
+
+1. **CONSULT THE DOCS, NEVER GUESS.** Any claim about a library, framework, SDK or platform gets
+   read from the real documentation first — `context7` for libraries, `microsoft-docs` for
+   .NET/Windows/Azure. Cite the source. Never from memory.
+2. **Reach for the tool before the generic one.** `serena` for "where is this symbol used" before
+   grep; the LSP for definitions and references; `playwright` for a real browser (this box needs
+   `--no-sandbox` and `--mute-audio`).
+
+This repo is **TypeScript** — `typescript-language-server` applies.
