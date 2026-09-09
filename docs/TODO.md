@@ -113,6 +113,26 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-27a estate integration and the first prerelease
 - [ ] B-27b the stable publish, after the cold quickstart
 
+## House style / hooks stack (CTO ruled 2026-09-03..09; owner routed it here) — assemblejs's part
+
+Ruling lives in ayers.repair/docs/CODESTYLE-HOOKS-RULING.md. These are the rows that touch THIS
+repo only. Not begun; the work hold still stands and platform/codestyle is uncommitted upstream.
+
+- [ ] Release-notes DRIFT GATE: a test asserting every `CHANGELOG.md` version heading has a matching
+      `<section id="v...">` in `site/release-notes.html`, structure only never prose, watched red on
+      an injected version first. Correct whether notes are typed or generated. Ties into the
+      release-notes-pattern block below (this repo needs all four surfaces).
+- [ ] Keep changesets permanently (owner ruling: only a per-package bump computes which of five
+      packages move when core moves). Do NOT swap to a commit-derived generator here.
+- [ ] Keep husky + commitlint (already live). When the shared house check set lands, add a
+      CROSS-TEST feeding the same fixture messages to commitlint and the shared script, asserting
+      the same verdict, so one rule does not drift into two implementations.
+- [ ] Adopt the canonical `.editorconfig` from platform/codestyle (49-line per-language version;
+      mine is the 8-line minimal) plus a byte-equality drift test. Measured: prettier does not act
+      on `trim_trailing_whitespace`, so this is uniformity, not a bug fix.
+- [ ] Reconcile the eslint pin: platform/codestyle pins 10.10.0, this repo carries 10.9.1. One
+      version or a stated reason. Prettier already agrees at 3.9.6.
+
 ## Release notes: the uniform pattern (owner order, 2026-09-03) — NOT STARTED, awaiting his word
 
 Relayed by the AVP as a notification, explicitly not a dispatch, while this seat was on hold.
