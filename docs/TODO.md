@@ -3,42 +3,71 @@
 The ledger. Every task lives here; a task is checked off in the same commit that does it, never
 in a batch afterwards. An unchecked box is work not done. Order is the order of work.
 
-## RESUME HERE - the one block a fresh session reads first (refreshed at every commit)
+## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**HELD by the owner 2026-09-09 to preserve context. Resume only on his word. Report-only until then.**
+**STATE 2026-09-10.** Branch `next` @ `ead61f3`, pushed, tree clean. Full gate `pnpm check` exit 0
+on this HEAD (367 tests, five packages). Last CODE commit `ab13197`; everything after is docs. The
+seat that built this was stopped mid-ladder on the owner's word; nothing is half-written in the tree.
 
-POSITION: **B-12 (services and apis) is PARTIAL, and B-09 is PARTIAL before it.** The plan order is
-B-09 -> B-12 -> B-13; both partials close before B-13 opens.
+**1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
+micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
+published as `@assemblejs/*`. `docs/DESIGN.md` is the contract, `docs/PLAN.md` the frozen rung
+ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-11 are DONE (49 rows).
+IN FLIGHT: **B-12 partial** - the service model landed (services RETURN, ordered by `after`,
+`resolveData` is the one function both endpoints call); the user-declared api routes are NOT wired.
+**B-09 partial** - `dev`, `build`, `@assemblejs/create` left; **B-09c** - agent tools
+`create_project`, `add_assembly`, `place_assembly`, `check` left.
 
-- B-12 LANDED: the service model. Services RETURN data (never mutate a shared context) and are
-  ordered by `after: ["name"]`, not a priority number - both deliberate departures from the
-  reference, reasons in `docs/DECISIONS.md`. `resolveData` is the one function both endpoints call.
-- B-12 LEFT: wire the api routes into `createServer`, then the curl proof, then check the row off
-  and run the verification subagent.
-- B-09 LEFT: `dev`, `build`, `@assemblejs/create`. B-09c LEFT: the remaining agent tools
-  (`create_project`, `add_assembly`, `place_assembly`, `check`).
+**THE EXACT FIRST STEP:** finish B-12. `packages/core/src/api/api-definition.ts` is the landed,
+tested contract (`{ path, method?, handle(context) }`); `server-options.ts` has NO `apis` field and
+`create-server.ts` registers no user apis. Add `apis?: readonly ApiDefinition[]`; a `register-apis.ts`
+(own file, own test) mounting each as a fastify route replying JSON; boot-time refusals through the
+existing `boot-problems.ts` for a duplicate (method,path), a path not starting with `/`, and a path
+under `/assembly/` or `/_assemblejs/`; tests via `app.inject`, each watched RED by disabling the
+guard first; align `docs/DESIGN.md` section 8's snippet (shows `GET:` as a field) to the code's
+`method`+`handle`; the curl proof on a REAL listening server bound to 127.0.0.1, output pasted;
+check this row off in the SAME commit. Then close B-09/B-09c, then B-13 onward in ledger order.
 
-LAST CODE COMMIT: `ab13197` - full gate 0 failures, 367 tests across five packages. Every commit after
-it is docs-only. Tree clean at HEAD.
+**ORDER AND DEPENDENCIES of the 37 open rows:** B-12 -> B-09/B-09c -> B-13 (remote; carries recorded
+debt: `Limits.maxBytes` has no reader) -> B-14 auth -> B-15 styles -> B-16 four renderers -> B-17
+templates -> B-18 SSE -> B-19 devtools -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) ->
+B-25 budgets -> B-26 release dry run -> B-27a/B-27b (need the owner's acts). The five house-style
+rows and the six release-notes rows (owner ruled: hand-kept notes for the 1.0.0 train, generated
+later; CHANGELOG<->site drift gate now; changesets kept permanently) can land any time. Site guides
+wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions
+org allowlist (Actions runs NOTHING here yet), branch rulesets, the bird mark, the palette, the
+old npm package deprecation, the first hand publish.
 
-NEXT ACTION ON RESUME, in order:
+**STALE ROW, resolve first, do not assume:** Phase 1's "eleventh (client) dossier verified" still
+says a verifier "is reading now" - its outcome was never recorded.
 
-1. Re-read `CLAUDE.md`, this file, `docs/PLAN.md`, `docs/DECISIONS.md`. Nothing lives in memory.
-2. Run `pnpm check` IN THE BACKGROUND and confirm it is still green before touching code - the tree
-   has not been built since the hold and a dependency could have moved underneath it.
-3. Finish B-12 as above. 4. Close B-09 and B-09c. 5. Open B-13.
-   Also cheap and safe to do at resume: the five house-style rows in the section below - the
-   `.editorconfig` adoption is PROVEN to reformat no source file, the `.codestyle` file and the eslint
-   pin are one-liners.
+**2. THE HOUSE-STYLE KIT (private `platform` repo, `codestyle/`).** v0.23.0 is tagged and pushed;
+nothing unpushed there. PENDING: the ruling document's section 16 (in the business-site repo,
+`docs/CODESTYLE-HOOKS-RULING.md`) still describes v0.22.0 - sync it to v0.23.0 (`_platform` is a
+worktree at the pin with a hook guard; browser/test eslint globals; dependabot skip). Consumer
+migration: `platform-pin.sh --sync`, re-copy `lefthook.yml` and `codestyle.yml` byte-identical, add
+`identity_scan_exclude=` and `gates_since=` to `.codestyle`, `platform_ref=` ONLY where there is no
+go.mod. THIS REPO IS PUBLIC: it never fetches private platform in CI - it VENDORS the scripts (a
+fork PR has no secrets); target v0.23.0+, add both keys, and the byte-equality drift test runs only
+on trusted events (push to next/main), never on fork PRs.
 
-STALE ROW TO RESOLVE FIRST: Phase 1's "eleventh (client) dossier verified" row still says "a second
-is reading now" - that verifier's outcome was never recorded here. Check the private dossier store
-and either check the row off or re-run the verification. DO NOT ASSUME it passed.
+**3. THE REFERENCES.** Two read-only clones live OUTSIDE this repo (`chmod a-w`, `origin` removed):
+the production v1 and its later rewrite. Never written, never copied from; every read is recorded in
+the gitignored `docs/dossiers/`, which never enters this tree. The legacy names are banned by the
+identity gate and are deliberately not spelled out anywhere in prose.
 
-DISCIPLINE THAT HOLDS ON RESUME: tests in background shells (they block for minutes); every rung
-verified by a separate agent before it is reported done; a probe is watched failing before it is
-trusted; the two reference clones are read-only and nothing from them enters this repository;
-`docs/dossiers/` is gitignored on purpose.
+**4. TRAPS.** pnpm 11 `allowBuilds` replaced `onlyBuiltDependencies` (old key silently inert; a
+clean clone could not install). Path mapping lives in `tsconfig.base.json` so no gate ever resolves
+through a stale `dist/`. Revert a red-test probe by inverse edit, never `git checkout` (one probe
+reached HEAD once). Three tests were once green for a reason they did not claim - mutate to prove
+red, always. Svelte 5 hydration cannot run in a DOM shim (reads `Node.prototype` getters): Chromium
+only, the test file says why. syncpack is deliberately `--dependency-types prod,dev`. The
+`client-stays-browser-only` cruiser rule is ANSWERED by moving the file, never loosened. A waiter
+using `pgrep -f` matches its own command line - use a captured PID. `identity()` joins with a
+separator that cannot collide (`a/b`+`c` vs `a`+`b/c`). The `<assembly>` directive matches
+case-insensitively. The commit-msg hook runs commitlint + DCO; CI greps attribution trailers because
+fork PRs run default settings. The house emoji gate refuses a document that QUOTES an emoji -
+describe it in words. Run every test in a background shell; they block for minutes.
 
 ## Phase 0: the record
 
