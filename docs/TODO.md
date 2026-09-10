@@ -3,6 +3,43 @@
 The ledger. Every task lives here; a task is checked off in the same commit that does it, never
 in a batch afterwards. An unchecked box is work not done. Order is the order of work.
 
+## RESUME HERE - the one block a fresh session reads first (refreshed at every commit)
+
+**HELD by the owner 2026-09-09 to preserve context. Resume only on his word. Report-only until then.**
+
+POSITION: **B-12 (services and apis) is PARTIAL, and B-09 is PARTIAL before it.** The plan order is
+B-09 -> B-12 -> B-13; both partials close before B-13 opens.
+
+- B-12 LANDED: the service model. Services RETURN data (never mutate a shared context) and are
+  ordered by `after: ["name"]`, not a priority number - both deliberate departures from the
+  reference, reasons in `docs/DECISIONS.md`. `resolveData` is the one function both endpoints call.
+- B-12 LEFT: wire the api routes into `createServer`, then the curl proof, then check the row off
+  and run the verification subagent.
+- B-09 LEFT: `dev`, `build`, `@assemblejs/create`. B-09c LEFT: the remaining agent tools
+  (`create_project`, `add_assembly`, `place_assembly`, `check`).
+
+LAST CODE COMMIT: `ab13197` - full gate 0 failures, 367 tests across five packages. Every commit after
+it is docs-only. Tree clean at HEAD.
+
+NEXT ACTION ON RESUME, in order:
+
+1. Re-read `CLAUDE.md`, this file, `docs/PLAN.md`, `docs/DECISIONS.md`. Nothing lives in memory.
+2. Run `pnpm check` IN THE BACKGROUND and confirm it is still green before touching code - the tree
+   has not been built since the hold and a dependency could have moved underneath it.
+3. Finish B-12 as above. 4. Close B-09 and B-09c. 5. Open B-13.
+   Also cheap and safe to do at resume: the five house-style rows in the section below - the
+   `.editorconfig` adoption is PROVEN to reformat no source file, the `.codestyle` file and the eslint
+   pin are one-liners.
+
+STALE ROW TO RESOLVE FIRST: Phase 1's "eleventh (client) dossier verified" row still says "a second
+is reading now" - that verifier's outcome was never recorded here. Check the private dossier store
+and either check the row off or re-run the verification. DO NOT ASSUME it passed.
+
+DISCIPLINE THAT HOLDS ON RESUME: tests in background shells (they block for minutes); every rung
+verified by a separate agent before it is reported done; a probe is watched failing before it is
+trusted; the two reference clones are read-only and nothing from them enters this repository;
+`docs/dossiers/` is gitignored on purpose.
+
 ## Phase 0: the record
 
 - [x] Repository skeleton and gates, every gate watched failing first (B-01, `c565074`)
