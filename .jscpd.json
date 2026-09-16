@@ -1,0 +1,18 @@
+{
+  "threshold": 4,
+  "reporters": ["console"],
+  "gitignore": true,
+  "absolute": true,
+  "ignore": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/test-results/**",
+    "**/*.snap",
+    "**/fixtures/**",
+    "**/docs/**",
+    "**/*-lock.yaml",
+    "LICENSE",
+    "**/.claude/**"
+  ]
+}
