@@ -4,6 +4,7 @@ import type { Authenticate } from "../access/authenticate.js";
 import type { ApiDefinition } from "../api/api-definition.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import type { Config } from "../config/config.js";
+import type { Devtools } from "../devtools/devtools.js";
 import type { LogLine } from "../failure/log-line.js";
 import type { PageDefinition } from "../page/page-definition.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
@@ -33,4 +34,6 @@ export interface ServerOptions {
   readonly maxDepth?: number;
   /** Where failures are logged, against the id the visitor was told. Standard error if absent. */
   readonly log?: (line: LogLine) => void;
+  /** Read-only devtools, mounted under their prefix in development and ignored in production. */
+  readonly devtools?: Devtools;
 }

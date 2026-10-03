@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-18 are done, with the
+**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-19 are done, with the
 findings of their independent reviews fixed; `pnpm check` is green on every landing commit, on a
 fresh clone as well, and the browser suite (`pnpm test:browser`) passes. The commits are
 local: GitHub refused this session's push (403, the Claude GitHub App's access to the
@@ -27,10 +27,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-19, then onward in ledger order.
+**THE EXACT NEXT STEP:** B-20, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** B-19 devtools
--> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
+**ORDER AND DEPENDENCIES of the open rows:** B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
 the OIDC role, the Actions org allowlist (Actions runs NOTHING here yet), branch rulesets, the
@@ -268,7 +267,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] The verification of dev reload and the B-18 fixes: `last` honours addressing, back-pressure
       drops only a stalled client, the reload routes under the devtools prefix, the page carries
       its boot
-- [ ] B-19 devtools, read-only, with the boot assertion
+- [x] B-19 devtools, read-only, with the boot assertion: handed to the server as data, mounted
+      in development only; boot refuses any route under the prefix that writes, proved with a
+      POST; `@assemblejs/devtools` serves an overview and `project.json`
 - [ ] B-20 the check, perf and deploy verbs
 - [ ] B-21 the conformance harness and its first specs
 - [ ] B-22 conformance breadth, batch one

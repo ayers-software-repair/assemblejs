@@ -636,7 +636,12 @@ root. Nothing pretends otherwise.
   outright is answered with its failure body, which carries no script, and reloads by hand.
 - The dev server binds loopback by default. Devtools are development-only, read-only over HTTP,
   and a boot assertion refuses to start if any route under the devtools prefix accepts anything
-  but `GET` or `HEAD`.
+  but `GET` or `HEAD`. A server is handed devtools as data, `createServer({ devtools })`: routes
+  under `/_assemblejs/devtools/`, each answering a read from a summary of the project (names,
+  routes, settings; no function, credential or template source) and the failures the process
+  logged most recently. In production the server mounts none of them, so a project hands them
+  over unconditionally; `@assemblejs/devtools` supplies an overview page and the same reading as
+  JSON.
 
 ---
 

@@ -9,6 +9,7 @@ import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_LIMITS } from "../compose/default-limits.js";
 import { readConfig } from "../config/read-config.js";
 import { exitOnUnhandled } from "../failure/exit-on-unhandled.js";
+import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
 import { createRemoteTransport } from "../remote/create-remote-transport.js";
@@ -23,19 +24,24 @@ import { BootError } from "./boot-error.js";
 import { bootProblems } from "./boot-problems.js";
 import { buildManifest } from "./build-manifest.js";
 import { createMemoryCache } from "./create-memory-cache.js";
+import { devtoolsProblems } from "./devtools-problems.js";
+import { devtoolsWrites } from "./devtools-writes.js";
 import { listAssets } from "./list-assets.js";
 import { localFetch } from "./local-fetch.js";
 import { queryOf } from "./query-of.js";
 import { readCompositionHeaders } from "./read-composition-headers.js";
+import { recentFailures } from "./recent-failures.js";
 import { registerApis } from "./register-apis.js";
 import { registerAssets } from "./register-assets.js";
 import { registerDevReload } from "./register-dev-reload.js";
+import { registerDevtools } from "./register-devtools.js";
 import { registerFailures } from "./register-failures.js";
 import { registerPages } from "./register-pages.js";
 import { registerStreams } from "./register-streams.js";
 import { renderLocal } from "./render-local.js";
 import { resolveData } from "./resolve-data.js";
 import type { ServerOptions } from "./server-options.js";
+import { summarizeProject } from "./summarize-project.js";
 import { writeLogLine } from "./write-log-line.js";
 
 interface Params {
@@ -68,6 +74,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
       options.publicRoutes ?? [],
       options.contentSecurityPolicy,
     ),
+    ...(options.devtools === undefined ? [] : devtoolsProblems(options.devtools)),
   ];
   if (problems.length > 0) throw new BootError(problems);
 
@@ -75,11 +82,19 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const maxDepth = options.maxDepth ?? 8;
   const byName = new Map(options.assemblies.map((assembly) => [assembly.name, assembly]));
 
-  const log = options.log ?? writeLogLine;
+  const development = config.mode === "development";
+  // In development, every failure is also kept for devtools to show, a bounded number of them.
+  const failures = recentFailures();
+  const log = (line: LogLine): void => {
+    if (development) failures.record(line);
+    (options.log ?? writeLogLine)(line);
+  };
   // One id per process, which the pages it renders carry and its reload stream tells, so a page
   // in development reloads when the server that rendered it has been replaced.
-  const boot = config.mode === "development" ? randomUUID() : undefined;
+  const boot = development ? randomUUID() : undefined;
   const app = Fastify({ logger: false });
+  // Before any route is mounted, so it sees every one, whoever mounts it.
+  const writes = devtoolsWrites(app);
 
   registerFailures(app, log);
   // Before every route: the one decision, and the policy every html answer carries. Health is
@@ -190,6 +205,24 @@ export async function createServer(options: ServerOptions): Promise<App> {
     ...(boot === undefined ? {} : { reload: boot }),
   });
   if (boot !== undefined) registerDevReload(app, log, boot);
+  if (development && options.devtools !== undefined) {
+    registerDevtools(app, options.devtools, {
+      project: summarizeProject({
+        mode: config.mode,
+        version,
+        assemblies: options.assemblies,
+        pages,
+        apis,
+        remotes,
+      }),
+      failures: failures.list,
+    });
+  }
+  // Nothing under the devtools prefix may write, in any mode: refused before anything listens.
+  if (writes().length > 0) {
+    await app.close();
+    throw new BootError(writes());
+  }
 
   await app.ready();
 

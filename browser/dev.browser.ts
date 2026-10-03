@@ -58,4 +58,16 @@ test("a page under dev reloads itself after a source file changes", async ({ pag
   expect(loads).toBe(0);
   writeFileSync(join(project, "src", "assemblies", "hello", "hello.html"), "<h1>Rebuilt</h1>\n");
   await expect(page.locator("h1")).toHaveText("Rebuilt", { timeout: 60_000 });
+
+  // Devtools, read-only, under the page's own content security policy: the overview names what
+  // the server was built from, and its stylesheet is a file the policy allows.
+  const errors: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") errors.push(message.text());
+  });
+  await page.goto(`${origin}/_assemblejs/devtools/`);
+  await expect(page.locator("h1")).toHaveText("AssembleJS devtools");
+  await expect(page.locator("table").first()).toContainText("counter");
+  expect(await page.locator("body").evaluate((body) => getComputedStyle(body).margin)).toBe("32px");
+  expect(errors).toEqual([]);
 });

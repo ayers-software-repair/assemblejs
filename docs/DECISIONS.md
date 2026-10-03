@@ -1273,3 +1273,24 @@ The verifier of `dev`'s reload and of the B-18 fix round found, and this round f
   development), which DESIGN 3.6 now says; HTTP/2 would lift it and needs TLS, which a local
   development server does not have. Tests now hold the reload stream's absence in production and
   both reload routes behind the access decision.
+
+## 2026-10-03: B-19, devtools
+
+Expected, from DESIGN 11 and the plan: devtools development-only and read-only over HTTP, with a
+boot assertion that nothing under their prefix accepts a write. The design names no seam, so:
+
+- **A server is handed devtools as data**, `createServer({ devtools })`, a list of routes under
+  `/_assemblejs/devtools/`, each answering a GET from a view: a summary of the project copied out
+  of its declarations field by field (names, routes, settings; no function, credential or
+  template source) and the failures this process logged most recently, fifty at most. Core
+  depends on no devtools package; the package depends on core's types.
+- **Mounted in development, ignored in production**, rather than refused there, so a project's
+  server file hands devtools over unconditionally and the same build runs in both modes.
+- **The boot assertion watches the router, not the devtools list:** every route mounted under the
+  prefix by anyone, the server's own reload routes included, is checked as it is mounted, and one
+  that answers anything but GET or HEAD refuses the server before it listens, in either mode.
+  Proof: a devtools route declared POST, and `createServer` rejecting with that route named.
+- **`@assemblejs/devtools`** serves an overview (every value escaped, its stylesheet a file the
+  page's policy allows, no form, script or button) and `project.json`. `examples/two-frameworks`
+  hands it over, and the dev browser proof opens it in Chromium with no console error.
+- The project scaffold does not add devtools; a project opts in with one import and one option.
