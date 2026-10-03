@@ -3,6 +3,8 @@
 import type { AssemblyView } from "../assembly/assembly-view.js";
 import type { DataSchema } from "../service/data-schema.js";
 import { mergeSchemas } from "../service/merge-schemas.js";
+import { OWN_DATA_SOURCE } from "./own-data-source.js";
+import { serviceSource } from "./service-source.js";
 
 /**
  * The composed schema of one view: each of its services' schemas, then the view's own, merged.
@@ -10,14 +12,15 @@ import { mergeSchemas } from "../service/merge-schemas.js";
  */
 export function viewSchema(view: AssemblyView): {
   readonly schema: DataSchema;
+  readonly owners: ReadonlyMap<string, string>;
   readonly problems: readonly string[];
 } {
   const parts: Array<{ source: string; schema: DataSchema }> = [];
   for (const service of view.services ?? []) {
     if (service.schema !== undefined) {
-      parts.push({ source: `service "${service.name}"`, schema: service.schema });
+      parts.push({ source: serviceSource(service.name), schema: service.schema });
     }
   }
-  if (view.schema !== undefined) parts.push({ source: "the view's own data", schema: view.schema });
+  if (view.schema !== undefined) parts.push({ source: OWN_DATA_SOURCE, schema: view.schema });
   return mergeSchemas(parts);
 }

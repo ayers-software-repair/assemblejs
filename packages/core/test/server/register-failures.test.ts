@@ -15,6 +15,12 @@ beforeAll(async () => {
     throw new Error("connection to postgres://user:hunter2@db refused");
   });
   app.post("/items", (request) => ({ body: request.body ?? null }));
+  app.get("/upstream", () => {
+    throw Object.assign(new Error("upstream token sk-123 rejected"), {
+      statusCode: 401,
+      code: "ERR_UPSTREAM_REJECTED",
+    });
+  });
   app.get("/:anything", () => ({ shadowed: true }));
   await app.ready();
 });
@@ -41,6 +47,14 @@ describe("what the server answers when it will not serve", () => {
     const malformed = await post("application/json", "{bad");
     expect(malformed.statusCode).toBe(400);
     expect(malformed.json()).toEqual(failure);
+  });
+
+  it("treats a handler's own error as the server's failure, whatever statusCode it carries", async () => {
+    const response = await app.inject({ method: "GET", url: "/upstream" });
+    expect(response.statusCode).toBe(500);
+    expect(response.body).not.toContain("sk-123");
+    const { correlationId } = (response.json() as { error: { correlationId: string } }).error;
+    expect(logged.some((line) => line.correlationId === correlationId)).toBe(true);
   });
 
   it("answers an unknown route with the failure body, not the router's description", async () => {

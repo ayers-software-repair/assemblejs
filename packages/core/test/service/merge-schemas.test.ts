@@ -33,17 +33,32 @@ describe("deep-merging the schemas that compose one view's data", () => {
       expect(problems.join()).toMatch(/data field "title" is declared by both/);
       expect(problems.join()).toContain('service "a"');
       expect(problems.join()).toContain('service "b"');
+      // The first declaration stands; the second is reported, never merged over it.
+      expect(mergeSchemas(parts).owners.get("title")).toBe(parts[0]?.source);
     }
   });
 
-  it("refuses a required field its contributor does not declare, which nothing could satisfy", () => {
+  it("refuses a required field nobody declares, which nothing could satisfy", () => {
     const { problems } = mergeSchemas([
       { source: 'service "a"', schema: { properties: {}, required: ["missing"] } },
     ]);
-    expect(problems.join()).toMatch(/requires data field "missing" but does not declare it/);
+    expect(problems.join()).toMatch(/data field "missing" is required and nobody declares it/);
+  });
+
+  it("lets one contributor require a field another declares", () => {
+    const { problems, owners } = mergeSchemas([
+      { source: 'service "a"', schema: { properties: { title: {} } } },
+      { source: "the view's own data", schema: { properties: {}, required: ["title"] } },
+    ]);
+    expect(problems).toEqual([]);
+    expect(owners.get("title")).toBe('service "a"');
   });
 
   it("is empty for nothing to merge", () => {
-    expect(mergeSchemas([])).toEqual({ schema: { properties: {}, required: [] }, problems: [] });
+    expect(mergeSchemas([])).toEqual({
+      schema: { properties: {}, required: [] },
+      owners: new Map(),
+      problems: [],
+    });
   });
 });

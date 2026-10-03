@@ -3,7 +3,7 @@
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { BootError, createServer, defineApi, defineAssembly } from "@assemblejs/core";
 import type { App, Config, LogLine } from "@assemblejs/core";
 
@@ -279,8 +279,19 @@ describe("refusing to be built", () => {
     }
   });
 
-  it("reads its configuration from the environment when it is given none", async () => {
-    const server = await createServer({ assemblies: [hello] });
-    await server.close();
+  it("reads its configuration from the environment, and logs to standard error, by default", async () => {
+    const written: string[] = [];
+    const spy = vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+      written.push(String(chunk));
+      return true;
+    });
+    const server = await createServer({ assemblies: [exploding] });
+    try {
+      await server.inject({ method: "GET", url: "/assembly/exploding/" });
+    } finally {
+      spy.mockRestore();
+      await server.close();
+    }
+    expect(written.join("")).toContain("hunter2");
   });
 });

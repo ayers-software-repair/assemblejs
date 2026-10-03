@@ -73,4 +73,31 @@ describe("the one function both endpoints call", () => {
       /data field "greeting" is required and nothing returned it/,
     );
   });
+
+  it("refuses a contributor returning a field another one declared, schema or not", async () => {
+    const declared = view({
+      services: [
+        defineService({
+          name: "typed",
+          schema: { properties: { title: { type: "string" } } },
+          run: () => ({ title: "typed" }),
+        }),
+        defineService({ name: "untyped", run: () => ({ title: 42 }) }),
+      ] as never,
+    });
+    await expect(resolveData(declared, context)).rejects.toThrow(
+      /service "untyped" returned data field "title", which service "typed" declares/,
+    );
+    const ownData = view({
+      services: [
+        defineService({
+          name: "typed",
+          schema: { properties: { title: {} } },
+          run: () => ({ title: "typed" }),
+        }),
+      ] as never,
+      data: () => ({ title: "mine" }),
+    });
+    await expect(resolveData(ownData, context)).rejects.toThrow(/the view's own data returned/);
+  });
 });

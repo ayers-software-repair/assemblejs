@@ -11,8 +11,8 @@ import { queryOf } from "./query-of.js";
  * The reply is serialised here rather than handed to the router, because the router sends a bare
  * string as plain text: a handler that returns `"ok"` answers the JSON string `"ok"`, the same
  * type it declared. A plain-JavaScript handler that returns nothing answers `null`, never an
- * empty body labelled JSON. A handler that throws reaches the server's one error handler, so its message
- * never reaches a body.
+ * empty body labelled JSON. A handler that throws reaches the server's one error handler, so its
+ * message never reaches a body.
  */
 export function registerApis(app: FastifyInstance, apis: readonly ApiDefinition[]): void {
   for (const api of apis) {

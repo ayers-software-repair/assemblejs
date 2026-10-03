@@ -10,11 +10,16 @@ import type { DataSchema } from "./data-schema.js";
  * A field declared by two contributors is a problem, not an overwrite. Which one wins would
  * otherwise depend on the order the merge ran in, and the author of each can see only their own
  * half. A required field that no contributor declares is a problem too, because nothing would
- * ever satisfy it.
+ * ever satisfy it; one contributor may require a field another declares.
  */
 export function mergeSchemas(
   parts: ReadonlyArray<{ readonly source: string; readonly schema: DataSchema }>,
-): { readonly schema: DataSchema; readonly problems: readonly string[] } {
+): {
+  readonly schema: DataSchema;
+  /** Which contributor declared each field. */
+  readonly owners: ReadonlyMap<string, string>;
+  readonly problems: readonly string[];
+} {
   const properties: Record<string, JsonObject> = {};
   const owner = new Map<string, string>();
   const required: string[] = [];
@@ -31,11 +36,12 @@ export function mergeSchemas(
       properties[field] = definition;
     }
     for (const field of schema.required ?? []) {
-      if (!Object.hasOwn(schema.properties, field)) {
-        problems.push(`${source} requires data field "${field}" but does not declare it`);
-      }
       if (!required.includes(field)) required.push(field);
     }
   }
-  return { schema: { properties, required }, problems };
+  for (const field of required) {
+    if (!owner.has(field))
+      problems.push(`data field "${field}" is required and nobody declares it`);
+  }
+  return { schema: { properties, required }, owners: owner, problems };
 }

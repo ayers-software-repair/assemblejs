@@ -34,7 +34,7 @@ any time. Site guides wait for renderers so they show real code. Owner-blocked: 
 the OIDC role, the Actions org allowlist (Actions runs NOTHING here yet), branch rulesets, the
 bird mark, the palette, the old npm package deprecation, the first publish. Raised with the
 owner, unanswered: whether changesets start before or after the first publish (DECISIONS,
-2026-10-03; `CLAUDE.md` still says every `packages/*/src` change).
+2026-10-03, "open"; `CLAUDE.md` still says every `packages/*/src` change).
 
 **THE CLIENT DOSSIER ROW (Phase 1) cannot be resolved from here.** The dossiers and the reference
 clones live outside this tree by design and a cloud session has neither; its outcome was never

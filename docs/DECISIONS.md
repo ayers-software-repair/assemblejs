@@ -512,7 +512,10 @@ is a boot error naming both, whichever order they would have run in. The schema 
 field the composed schema requires that no contributor returned fails the render, so a declared
 shape is enforced at the boundary rather than written down and trusted. Data from contributors
 that declare no schema still merges later-writer-wins; the entry above is right for them, and
-declaring a schema is how an author asks for the stricter rule.
+declaring a schema is how an author asks for the stricter rule, and it binds every contributor: a
+field a schema declares may be returned only by its declarer, so an undeclared service returning
+it fails the render rather than overwriting it. A required field must be declared by someone, not
+necessarily by whoever requires it.
 
 The same verification found, and this commit fixes: a caller's own 4xx (an unsupported body type,
 a malformed body) was reported as a 500; the server's log was a no-op (`logger: false` with every
@@ -523,7 +526,7 @@ reserved prefix; and an api path outside a flat grammar (an optional or regex pa
 parameters in one segment, a `?` or `#`) was accepted, though it matches differently from how it
 reads or matches nothing.
 
-## 2026-10-03: no changeset until the first publish
+## 2026-10-03: open - whether changesets start before the first publish
 
 Expected, from `CLAUDE.md`: a changeset on every `packages/*/src` change. Found: every package
 already reads `1.0.0` and nothing has been published, and no rung so far has written one. A

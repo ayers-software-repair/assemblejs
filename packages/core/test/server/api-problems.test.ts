@@ -60,7 +60,18 @@ describe("what is checked about apis before anything listens", () => {
   });
 
   it("refuses a parameter that is not a whole segment, and markers that match nothing", () => {
-    for (const path of ["/a/:id?", "/a/:id(^\\d+)", "/a/:b-:c", "/a/::x", "/x?y", "/x#y", "//x"]) {
+    for (const path of [
+      "/a/:id?",
+      "/a/:id(^\\d+)",
+      "/a/:b-:c",
+      "/a/::x",
+      "/x?y",
+      "/x#y",
+      "//x",
+      "/./x",
+      "/a/..",
+      "/a/:id/:id",
+    ]) {
       expect(apiProblems([defineApi({ path, handle })]).join()).toMatch(/not a flat path/);
     }
   });
