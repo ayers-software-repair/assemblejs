@@ -5,8 +5,10 @@ import type { TemplateCompiler } from "./template-compiler.js";
 /**
  * Handlebars, which escapes what `{{ }}` writes. A child's HTML is handed over as a safe
  * string, so `{{children.name}}` writes it as it is while every value from `data` stays
- * escaped. Each template compiles in an instance of its own, so nothing one registers reaches
- * another.
+ * escaped. Templates compile in an instance of this package's own, so a helper or partial
+ * another library registers on the shared Handlebars never reaches them. A partial from another
+ * file is refused when it renders; an inline partial, or a partial block's own fallback, is the
+ * same file and renders.
  */
 export async function loadHandlebars(): Promise<TemplateCompiler> {
   const { default: handlebars } = await import("handlebars");

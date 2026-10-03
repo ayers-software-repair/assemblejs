@@ -37,4 +37,24 @@ describe("a Handlebars template", () => {
     expect(() => (html = compile(`{{> ${JSON.stringify(other)} }}`)(input))).toThrow();
     expect(html).not.toContain("leaked");
   });
+
+  it("keeps what another library registers on the shared Handlebars out of its templates", async () => {
+    const { default: shared } = await import("handlebars");
+    shared.registerHelper("shout", () => "SHARED");
+    shared.registerPartial("shared", "SHARED");
+    const compile = await loadHandlebars();
+    try {
+      expect(() => compile("{{shout 'x'}}")(input)).toThrow();
+      expect(() => compile("{{> shared}}")(input)).toThrow();
+    } finally {
+      shared.unregisterHelper("shout");
+      shared.unregisterPartial("shared");
+    }
+  });
+
+  it("renders a partial the same file defines, which reaches no other file", async () => {
+    const compile = await loadHandlebars();
+    expect(compile('{{#*inline "p"}}inline{{/inline}}{{> p}}')(input)).toBe("inline");
+    expect(compile("{{#> missing}}fallback{{/missing}}")(input)).toBe("fallback");
+  });
 });

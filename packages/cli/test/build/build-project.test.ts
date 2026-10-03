@@ -1,7 +1,16 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -186,6 +195,33 @@ describe("building what the command line scaffolds, in Solid and Lit", { timeout
 // Nested in the example that installs the templates package.
 const templates = fileURLToPath(new URL("../../../../examples/templates/", import.meta.url));
 
+/** Every script a build wrote for the browser. */
+const builtScripts = (root: string): string[] =>
+  existsSync(join(root, "dist", "client"))
+    ? readdirSync(join(root, "dist", "client"), { recursive: true, encoding: "utf8" }).filter(
+        (file) => file.endsWith(".js"),
+      )
+    : [];
+
+describe("building the templates example", { timeout: 60_000 }, () => {
+  it("renders all five languages on one page, escaping each one's data", async () => {
+    const root = mkdtempSync(join(templates, ".dev-example-"));
+    try {
+      cpSync(join(templates, "src"), join(root, "src"), { recursive: true });
+      writeFileSync(join(root, "package.json"), "{}");
+      expect(await buildProject(root, capture().io)).toBe(0);
+      const page = await serve(root, "/");
+      for (const engine of ["ejs", "handlebars", "nunjucks", "pug"]) {
+        expect(page).toContain(`<h2>Written in ${engine} &lt;em&gt;escaped&lt;/em&gt;</h2>`);
+      }
+      expect(page).toContain("<h1>Five template languages</h1>");
+      expect(builtScripts(root)).toEqual([]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
 describe("building what the command line scaffolds, in each template language", () => {
   it.each([
     ["ejs", "<p>notice</p>"],
@@ -218,8 +254,10 @@ describe("building what the command line scaffolds, in each template language", 
             `<assembly-root data-name="notice"[^>]*data-renderer="${renderer}"[^>]*>${markup}`,
           ),
         );
-        // Server markup and nothing more: no browser half, so no script on the page.
+        // Server markup and nothing more: no browser half, so no script on the page and none
+        // built, which would serve the template's source as a public asset.
         expect(page).not.toContain('<script type="module"');
+        expect(builtScripts(root)).toEqual([]);
       } finally {
         rmSync(root, { recursive: true, force: true });
       }

@@ -39,4 +39,13 @@ describe("rendering a template", () => {
     await expect(renderTemplate("ejs", "<% if ( %>", input("a"))).rejects.toThrow();
     await expect(renderTemplate("ejs", "<% if ( %>", input("a"))).rejects.toThrow();
   });
+
+  it("names the view's file in the error, when it is given", async () => {
+    await expect(
+      renderTemplate("pug", "p(class=", input("a"), "src/assemblies/a/a.pug"),
+    ).rejects.toThrow(/^src\/assemblies\/a\/a\.pug: /);
+    await expect(
+      renderTemplate("nunjucks", "{{ data.x( }}", input("a"), "src/assemblies/b/b.njk"),
+    ).rejects.toMatchObject({ message: expect.stringMatching(/^src\/assemblies\/b\/b\.njk: /) });
+  });
 });

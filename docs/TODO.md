@@ -252,6 +252,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       `@assemblejs/renderer-templates`, each engine imported on first use and each template
       compiled once; `data` escaped, `children` raw; one project per language scaffolded, built
       and served, five of five
+- [x] The verification of B-17: Nunjucks reads no `views/` directory, the browser filter and
+      the templates example held by the unit suite, errors name the template's file
+- [ ] `build` and `check` compile each template view, so a template that cannot compile refuses
+      the build rather than falling back at its first render (DECISIONS, 2026-10-03, "verifying
+      B-17").
 - [ ] B-18 real-time over server-sent events
 - [ ] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
       development only and under the framework's prefix (DECISIONS, 2026-10-03, "dev is the

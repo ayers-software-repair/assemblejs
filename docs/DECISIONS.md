@@ -1118,17 +1118,22 @@ A fresh review of the Solid and Lit renderers found, and this round fixed:
   EJS (`.ejs`), Handlebars (`.hbs`), Markdown (`.md`), Nunjucks (`.njk`) and Pug (`.pug`) through
   `renderTemplate(engine, source, input)`. Each engine is imported the first time a template in
   its language renders, so the package itself imports none, and each template compiles once. A
-  failed engine load or a failed compile is not remembered, so it fails the same way each time.
+  failed engine load is tried again; a failed compile fails the same way on every render.
 - **A template view is a static view, as html is.** The build reads it as text and the registry
   renders it on the server; it has no browser half of its own, a `.client.ts` gives it one, and
   it gets no shadow stylesheet. One CLI concept, `isStaticView`, now answers this for html and
-  the five languages where `"html"` was tested in five places.
+  the five languages where `"html"` was tested in four places.
 - **`data` is escaped and `children` is HTML.** Each engine's default output escapes; children
   arrive as safe strings in Handlebars and Nunjucks and are written by the raw form in EJS and
   Pug. (Core passes no children to a local view yet, so the raw form is held by unit tests.)
-- **A view is one file.** An include, extends or partial throws at render. Found: EJS reads an
-  included file from disk when it is there; an includer that throws now refuses it, held by a
-  test that includes a real file.
+- **A view is one file.** An include, extends, import or a partial from another file throws at
+  render. Found: EJS reads an included file from disk when it is there; an includer that throws
+  now refuses it, held by a test that includes a real file. Found by the rung's verifier:
+  Nunjucks, given no loaders, reads from `views/` under the working directory, so a template
+  could include a file from wherever the server ran; it is given an empty list. A Handlebars
+  inline partial is the same file and renders.
+- **A template's error names its file**, which the engines' own messages do not: the registry
+  hands each render its view's path from the project root.
 - **Markdown is prose:** it reads no data, places no children, and shows HTML inside it as text;
   an `.html` view is the place for markup.
 - **The agent surface no longer previews Markdown.** Found: it showed a Markdown view's source
@@ -1161,3 +1166,13 @@ run` in the package's test script), and a test proves the build each run loaded.
   import, as documented.
 - Not changed: `app.test.ts` in core spawns the built `dist/`, so a package-local run needs a
   build first; `pnpm check` builds before it tests.
+
+## 2026-10-03: verifying B-17
+
+The rung's verifier found, beyond the Nunjucks loader above: the build's browser filter was not
+held by any test (a template view built as a browser chunk would serve its source as a public
+asset), now asserted by the five-of-five proof and by a build of `examples/templates` in the unit
+suite; the Handlebars instance is the package's own, not one per template, as its comment now
+says; the agent surface lists every renderer it can scaffold. Pug's escaping leaves `'`, which
+the README says. Not done here, and in the ledger: a broken template passes `build` and `check`
+and is found at its first render, where its placement falls back.

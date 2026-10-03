@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -36,5 +36,27 @@ describe("a Nunjucks template", () => {
     let html = "";
     expect(() => (html = compile(`{% include ${JSON.stringify(other)} %}`)(input))).toThrow();
     expect(html).not.toContain("leaked");
+  });
+
+  // Given no loaders, Nunjucks reads templates from views/ under the working directory.
+  it("reads nothing from a views directory where the server runs", async () => {
+    const root = mkdtempSync(join(tmpdir(), "cwd-"));
+    mkdirSync(join(root, "views"));
+    writeFileSync(join(root, "views", "x.njk"), "leaked");
+    const compile = await loadNunjucks();
+    const before = process.cwd();
+    process.chdir(root);
+    try {
+      for (const source of [
+        "{% include 'x.njk' %}",
+        "{% extends 'x.njk' %}",
+        "{% import 'x.njk' as m %}hi",
+        `{% include ${JSON.stringify(join(root, "views", "x.njk"))} %}`,
+      ]) {
+        expect(() => compile(source)(input), source).toThrow(/template not found/);
+      }
+    } finally {
+      process.chdir(before);
+    }
   });
 });

@@ -14,20 +14,28 @@ const compiled = new Map<TemplateEngine, Map<string, CompiledTemplate>>();
  * already HTML, is written as it is by the engine's raw form.
  *
  * It does not catch: a template that does not compile or fails to render throws, the composer
- * catches it, and the placement falls back. A template that fails to compile is not remembered,
- * so it fails the same way on every render.
+ * catches it, and the placement falls back, the same way on every render. Given the view's file,
+ * the error names it, which the engines' own messages do not.
  */
 export async function renderTemplate(
   engine: TemplateEngine,
   source: string,
   input: MarkupInput,
+  file?: string,
 ): Promise<string> {
   const templates = compiled.get(engine) ?? new Map<string, CompiledTemplate>();
   compiled.set(engine, templates);
-  let template = templates.get(source);
-  if (template === undefined) {
-    template = (await loadCompiler(engine))(source);
-    templates.set(source, template);
+  try {
+    let template = templates.get(source);
+    if (template === undefined) {
+      template = (await loadCompiler(engine))(source);
+      templates.set(source, template);
+    }
+    return template(input);
+  } catch (error) {
+    if (file === undefined) throw error;
+    throw new Error(`${file}: ${error instanceof Error ? error.message : String(error)}`, {
+      cause: error,
+    });
   }
-  return template(input);
 }

@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { RENDERERS } from "@assemblejs/cli";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { addAssembly } from "../author/add-assembly.js";
@@ -38,7 +39,7 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         "Writes an assembly for a named renderer and returns the files and the tag that places it. A directory is an assembly: nothing else is edited to register it.",
       inputSchema: {
         name: z.string().describe("the assembly's name, which becomes its directory"),
-        renderer: z.string().describe("html, react or svelte").default("html"),
+        renderer: z.string().describe(RENDERERS.join(", ")).default("html"),
       },
     },
     ({ name, renderer }) => json(addAssembly(root, name, renderer)),

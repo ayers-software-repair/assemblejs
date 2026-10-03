@@ -25,9 +25,13 @@ HTML and is written as it is:
 A Markdown view is prose: it reads no data, places no children, and shows HTML written inside it
 as text.
 
-A view is one file: an include, an extends or a partial is refused when it renders. Each engine
-is imported the first time a template in its language renders, so a project using one language
-never loads the other four, and each template compiles once.
+A view is one file: an include, an extends, an import or a partial from another file is refused
+when it renders; a Handlebars inline partial, defined in the same file, renders. Each engine is
+imported the first time a template in its language renders, so a project using one language
+never loads the other four, and each template compiles once. An error names the view's file.
+
+Pug's escaping leaves `'` as it is: write an attribute with Pug's own syntax, `a(title=data.name)`,
+rather than inside a single-quoted attribute in raw HTML.
 
 See <https://ayers.repair/assemblejs/>.
 

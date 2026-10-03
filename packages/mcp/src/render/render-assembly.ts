@@ -16,8 +16,8 @@ import type { RenderedAssembly } from "./rendered-assembly.js";
  * opening a browser, or asking the developer to look. It closes its own loop.
  *
  * A framework or template view is source that only its renderer turns into markup, so it is
- * REFUSED with the reason rather than approximated. Showing an agent something that is not what will ship is worse than
- * showing it nothing, because it will believe it.
+ * REFUSED with the reason rather than approximated. Showing an agent something that is not what
+ * will ship is worse than showing it nothing, because it will believe it.
  */
 export function renderAssembly(root: ProjectRoot, name: string): RenderedAssembly {
   const { assemblies } = discoverAssemblies(withinRoot(root, "src", "assemblies"));

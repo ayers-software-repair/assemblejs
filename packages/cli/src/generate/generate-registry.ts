@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { dirname, relative, sep } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import { TEMPLATE_RENDERERS } from "../discovery/template-renderers.js";
@@ -7,6 +8,11 @@ import type { AssemblyStyles } from "../styles/assembly-styles.js";
 import { GENERATED_HEADER } from "./generated-header.js";
 import { identifierFor } from "./identifier-for.js";
 import { importPath } from "./import-path.js";
+
+// A view's path from the project root, which the generated module's directory sits in: what a
+// template's errors name it by.
+const projectPath = (from: string, file: string): string =>
+  relative(dirname(from), file).split(sep).join("/");
 
 // The package every template language renders through, and the name its one render function is
 // imported under.
@@ -61,7 +67,7 @@ export function generateRegistry(
     }
     fields.push(
       template
-        ? `markup: (input) => ${TEMPLATE_RENDER}("${assembly.renderer}", ${view}, input)`
+        ? `markup: (input) => ${TEMPLATE_RENDER}("${assembly.renderer}", ${view}, input, ${JSON.stringify(projectPath(options.from, assembly.view))})`
         : html
           ? `markup: () => ${view}`
           : `markup: (input) => ${identifierFor("render", assembly.renderer)}(${view}.default, input)`,

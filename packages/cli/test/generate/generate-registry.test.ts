@@ -143,8 +143,13 @@ describe("generating the registry the built server imports", () => {
         /import \{ renderTemplate as render_template \} from "@assemblejs\/renderer-templates";/g,
       )?.length,
     ).toBe(1);
-    expect(source).toContain('markup: (input) => render_template("markdown", view_notes, input)');
-    expect(source).toContain('markup: (input) => render_template("nunjucks", view_cart, input)');
+    // A template's errors name its file, by its path from the project root.
+    expect(source).toContain(
+      'markup: (input) => render_template("markdown", view_notes, input, "src/assemblies/notes/notes.md")',
+    );
+    expect(source).toContain(
+      'markup: (input) => render_template("nunjucks", view_cart, input, "src/assemblies/cart/cart.njk")',
+    );
     // No browser half of its own: none without a .client.ts, the client entry with one.
     expect(source).toMatch(/name: "notes".*mount: "none"/);
     expect(source).not.toMatch(/name: "cart".*mount:/);
