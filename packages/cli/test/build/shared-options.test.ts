@@ -5,15 +5,19 @@ import { sharedOptions } from "@assemblejs/cli";
 
 describe("what both bundles agree on", () => {
   it("reads a template as text and leaves stylesheets out until they are scoped", () => {
-    const options = sharedOptions("/p", undefined, "server");
+    const options = sharedOptions({ root: "/p", side: "server", assemblies: [] });
     expect(options.absWorkingDir).toBe("/p");
     expect(options.loader).toEqual({ ".html": "text", ".md": "text", ".css": "empty" });
     expect(options.jsx).toBe("automatic");
-    expect(options.plugins).toEqual([]);
+    expect(options.plugins?.map((plugin) => plugin.name)).toEqual(["assemblejs-jsx"]);
   });
 
   it("compiles Svelte only when the project has a compiler", () => {
-    const compile = () => ({ js: { code: "" } });
-    expect(sharedOptions("/p", compile, "client").plugins).toHaveLength(1);
+    const svelte = () => ({ js: { code: "" } });
+    expect(
+      sharedOptions({ root: "/p", side: "client", assemblies: [], svelte }).plugins?.map(
+        (plugin) => plugin.name,
+      ),
+    ).toEqual(["assemblejs-jsx", "assemblejs-svelte"]);
   });
 });

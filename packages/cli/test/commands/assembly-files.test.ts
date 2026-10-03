@@ -8,6 +8,9 @@ describe("what a new assembly is made of", () => {
     expect(Object.keys(assemblyFiles("cart", "svelte") ?? {})).toEqual([
       "src/assemblies/cart/cart.svelte",
     ]);
+    expect(Object.keys(assemblyFiles("cart", "preact") ?? {})).toEqual([
+      "src/assemblies/cart/cart.preact.tsx",
+    ]);
     expect(Object.keys(assemblyFiles("cart", "react") ?? {})).toEqual([
       "src/assemblies/cart/cart.react.tsx",
     ]);

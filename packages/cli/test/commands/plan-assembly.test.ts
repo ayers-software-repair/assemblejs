@@ -23,7 +23,10 @@ describe("what adding an assembly would write", () => {
   it("refuses a renderer it cannot build, naming the ones it can", () => {
     expect(planAssembly("cart", "angular", false)).toMatchObject({
       usage: true,
-      problem: { rule: "a-view-needs-its-renderer", fix: "use one of: html, react, svelte" },
+      problem: {
+        rule: "a-view-needs-its-renderer",
+        fix: "use one of: html, preact, react, svelte",
+      },
     });
   });
 

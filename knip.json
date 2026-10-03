@@ -25,6 +25,11 @@
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
       "ignoreDependencies": ["@assemblejs/renderer-react"]
+    },
+    "examples/frameworks": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}"],
+      "project": ["src/**/*.{ts,tsx,svelte}"],
+      "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte"]
     }
   }
 }

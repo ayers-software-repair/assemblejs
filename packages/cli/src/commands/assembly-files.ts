@@ -18,6 +18,15 @@ export default function ${pascal(name)}({ data }: AssemblyProps) {
 }
 `,
   ],
+  preact: (name) => [
+    `${name}.preact.tsx`,
+    `import type { AssemblyProps } from "@assemblejs/renderer-preact";
+
+export default function ${pascal(name)}({ data }: AssemblyProps) {
+  return <p>${name} {Object.keys(data).length}</p>;
+}
+`,
+  ],
   svelte: (name) => [
     `${name}.svelte`,
     `<script lang="ts">

@@ -210,7 +210,13 @@ starts. Until the owner enables Actions, every proof is local only.
       declarative shadow root with its own unscoped sheet. Proof, in Chromium from the built
       `examples/styles`: two assemblies' `.title` keep their own colours, one's `@keyframes`
       runs in the other, and the shadow assembly keeps a page rule out and still hydrates
-- [ ] B-16 the remaining four framework renderers
+- [ ] B-16 the remaining four framework renderers, proved on one page (`examples/frameworks`)
+  - [x] `renderer-preact`: `.preact.tsx`, server render, hydration (shadow roots included), the
+        events hook; each JSX file compiles through its own framework's runtime
+  - [ ] `renderer-vue`
+  - [ ] `renderer-solid`
+  - [ ] `renderer-lit`
+  - [ ] the page carrying all six, in Chromium
 - [ ] B-17 the template engines
 - [ ] B-18 real-time over server-sent events
 - [ ] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,

@@ -93,7 +93,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       }),
     );
     await build({
-      ...sharedOptions(root, svelte, "server"),
+      ...sharedOptions({ root, side: "server", assemblies: found.assemblies, svelte }),
       entryPoints: [join(src, "server.ts")],
       platform: "node",
       format: "esm",

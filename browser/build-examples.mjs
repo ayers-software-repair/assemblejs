@@ -20,11 +20,13 @@ export default function buildExamples() {
       "@assemblejs/renderer-react",
       "--filter",
       "@assemblejs/renderer-svelte",
+      "--filter",
+      "@assemblejs/renderer-preact",
       "build",
     ],
     { cwd: root, stdio: "pipe" },
   );
-  for (const example of ["examples/two-frameworks", "examples/styles"]) {
+  for (const example of ["examples/two-frameworks", "examples/styles", "examples/frameworks"]) {
     execFileSync(process.execPath, ["packages/cli/dist/bin.js", "build", "--cwd", example], {
       cwd: root,
       stdio: "pipe",

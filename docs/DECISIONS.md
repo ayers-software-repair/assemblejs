@@ -906,3 +906,26 @@ Two independent reviews read B-13 to B-15 at the source. What they found, and wh
   Svelte assembly (Svelte's own class hashes keep it from touching anything else).
 - **Inline styles are refused by the default policy, and now said so** in DESIGN 5.2, rather
   than loosened: the policy's point is that nothing inline applies.
+
+## 2026-10-03: Preact, and a JSX runtime per file
+
+B-16 begins with `@assemblejs/renderer-preact`, the same shape as the React renderer: a server
+half rendering through `preact-render-to-string` inside an events context, a browser half that
+hydrates into the envelope or the assembly's own shadow root, `useEvents()` and `Slot`. Preact is
+its one peer dependency; `preact-render-to-string` is a plain dependency, as it is a renderer's
+own machinery, not a framework the author chose.
+
+- **Each JSX file compiles through its own framework's runtime.** Expected: one `jsx:
+"automatic"` setting for the bundle. Found: that compiles a Preact view against React's
+  runtime. The build names the runtime at the top of each project file as esbuild reads it: the
+  framework a file's name says (`.preact.tsx`), else the framework of the assembly whose
+  directory holds it, so a Preact view's own components compile as Preact, else React.
+- **`examples/frameworks` is the B-16 proof**, one assembly per framework on one page, growing
+  as each renderer lands. In Chromium each is server-rendered, keeps the very element the server
+  sent through hydration, counts, and is heard by every other over the bus.
+- **An equivalent mutant, recorded rather than tested:** Preact's `render` into a container with
+  no previous tree adopts the existing DOM much as `hydrate` does, so replacing one with the
+  other is not visible to the browser proof. `hydrate` is the documented call and is kept.
+- **Package metadata follows the existing renderers'** (author, repository on the GitHub
+  organization), which the owner flag on package metadata already covers; a new package did not
+  fork the convention ahead of that ruling.

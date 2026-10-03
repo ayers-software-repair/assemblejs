@@ -37,7 +37,13 @@ export async function bundleClient(
 
   const outdir = join(root, "dist", "client");
   const result = await build({
-    ...sharedOptions(root, svelte, "client", onCss),
+    ...sharedOptions({
+      root,
+      side: "client",
+      assemblies,
+      svelte,
+      ...(onCss === undefined ? {} : { onCss }),
+    }),
     entryPoints: [join(generated, "client.ts")],
     platform: "browser",
     format: "esm",
