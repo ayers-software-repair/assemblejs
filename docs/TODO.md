@@ -142,9 +142,11 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-07 the browser runtime and the four mount modes
 - [x] B-08 events: typed, addressable, replay opt-in, teardown exact
 - [ ] B-09 the CLI and create: discovery, templates, non-interactive
-      Done: discovery, the generated registry, new, add, generate, the non-interactive bin.
-      Left: `dev` and `build` (they need the bundler seam), and `@assemblejs/create` so
-      `npm create @assemblejs` works. The rung's own proof needs both.
+      Done: discovery, the generated registry, new, add, generate, the non-interactive bin, and
+      pages served by core (definePage, the composer's local transport, browser files served
+      from a build's directory and hoisted into each page, templates checked at boot).
+      Left: `build` (the bundler seam), `dev`, and `@assemblejs/create` so
+      `npm create @assemblejs` works. The rung's own proof needs all three.
 - [x] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
       Landed: the project-root guard, the queryable rules, render_assembly, compose_page,
       explain, the project and rules resources, and the stdio server, all driven end to end

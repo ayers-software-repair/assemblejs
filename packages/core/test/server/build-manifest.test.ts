@@ -25,6 +25,17 @@ describe("building a manifest", () => {
     });
   });
 
+  it("reports the browser files the assembly declared", () => {
+    const withAssets = defineAssembly({
+      ...cart,
+      assets: { css: ["/_assemblejs/assets/cart.css"], js: ["/_assemblejs/assets/client.js"] },
+    });
+    expect(buildManifest(withAssets, "default", "1").assets).toEqual({
+      css: ["/_assemblejs/assets/cart.css"],
+      js: ["/_assemblejs/assets/client.js"],
+    });
+  });
+
   // The predecessor built its manifest by removing three fields and shipping the rest, which
   // leaks by default every time the internal object grows. This one cannot.
   it("carries nothing of the assembly beyond those fields", () => {

@@ -2,14 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { ApiDefinition } from "../api/api-definition.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import type { PageDefinition } from "../page/page-definition.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { apiProblems } from "./api-problems.js";
+import { pageProblems } from "./page-problems.js";
 import { viewSchema } from "./view-schema.js";
 
 const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
- * Everything wrong with a set of assemblies and apis, found before anything listens.
+ * Everything wrong with a set of assemblies, apis and pages, found before anything listens.
  *
  * Every check that can refuse runs here, so a process that is accepting connections is a
  * process that is configured. A server that throws after `listen` has already told a load
@@ -18,6 +20,7 @@ const NAME = /^[a-z][a-z0-9-]*$/;
 export function bootProblems(
   assemblies: readonly AssemblyDefinition[],
   apis: readonly ApiDefinition[] = [],
+  pages: readonly PageDefinition[] = [],
 ): readonly string[] {
   const problems: string[] = [];
   const seen = new Set<string>();
@@ -47,5 +50,5 @@ export function bootProblems(
       }
     }
   }
-  return [...problems, ...apiProblems(apis)];
+  return [...problems, ...apiProblems(apis), ...pageProblems(pages, assemblies, apis)];
 }

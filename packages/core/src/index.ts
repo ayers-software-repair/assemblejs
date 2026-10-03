@@ -16,4 +16,5 @@ export * from "./failure/index.js";
 export * from "./assembly/index.js";
 export * from "./service/index.js";
 export * from "./api/index.js";
+export * from "./page/index.js";
 export * from "./server/index.js";

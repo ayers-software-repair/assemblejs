@@ -28,7 +28,7 @@ export function buildManifest(
     version,
     views: Object.keys(definition.views),
     renderer: declared.renderer,
-    assets: { css: [], js: [] },
+    assets: { css: [...(definition.assets?.css ?? [])], js: [...(definition.assets?.js ?? [])] },
     public: true,
   };
 }

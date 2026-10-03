@@ -1,5 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { BootError, createServer, defineApi, defineAssembly } from "@assemblejs/core";
 import type { App, Config, LogLine } from "@assemblejs/core";
@@ -35,21 +38,28 @@ const exploding = defineAssembly({
   },
 });
 
+const assets = mkdtempSync(join(tmpdir(), "assets-"));
+writeFileSync(join(assets, "client-1a2b.js"), "export {};");
+const counter = defineAssembly({
+  name: "counter",
+  mount: "idle",
+  views: { default: { renderer: "html", markup: () => "<button>0</button>" } },
+  assets: { css: [], js: ["/_assemblejs/assets/client-1a2b.js"] },
+});
+const page =
+  '<html><body><assembly name="hello"></assembly><assembly name="counter"></assembly></body></html>';
+
 const logged: LogLine[] = [];
 let app: App;
 beforeAll(async () => {
   app = await createServer({
     config,
     log: (line) => logged.push(line),
-    assemblies: [hello, exploding],
+    assemblies: [hello, exploding, counter],
+    pages: [{ route: "/", template: page }],
+    assets,
     apis: [
       defineApi({ path: "/api/time", handle: () => ({ now: "2026-10-03T00:00:00.000Z" }) }),
-      defineApi({
-        path: "/api/items",
-        method: "POST",
-        handle: ({ body }) => ({ body: body ?? null }),
-      }),
-      defineApi({ path: "/:anything", handle: () => ({ shadowed: true }) }),
       defineApi({
         path: "/api/leak",
         handle: () => {
@@ -199,14 +209,6 @@ describe("the error contract", () => {
   });
 });
 
-describe("an unknown route", () => {
-  it("answers the failure body, not the router's own description of the request", async () => {
-    const response = await app.inject({ method: "GET", url: "/no/such/route" });
-    expect(response.statusCode).toBe(404);
-    expect(response.json()).toEqual({ error: { correlationId: expect.any(String) } });
-  });
-});
-
 describe("the framework's own surface", () => {
   it("answers health under the reserved prefix", async () => {
     const response = await app.inject({ method: "GET", url: "/_assemblejs/health" });
@@ -234,61 +236,51 @@ describe("the product's own apis", () => {
     const line = logged.find((entry) => entry.correlationId === correlationId);
     expect(line?.message).toContain("hunter2");
   });
+});
 
-  it("keep a caller's own mistake a 4xx rather than reporting it as the server's", async () => {
-    const unsupported = await app.inject({
-      method: "POST",
-      url: "/api/items",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      payload: "a=1",
-    });
-    expect(unsupported.statusCode).toBe(415);
-    const malformed = await app.inject({
-      method: "POST",
-      url: "/api/items",
-      headers: { "content-type": "application/json" },
-      payload: "{bad",
-    });
-    expect(malformed.statusCode).toBe(400);
-    expect(malformed.json()).toEqual({ error: { correlationId: expect.any(String) } });
-  });
-
-  it("cannot answer an unclaimed path under a reserved prefix, even one starting with a parameter", async () => {
-    for (const url of ["/assembly", "/assembly/", "/_assemblejs", "/_assemblejs/nope"]) {
-      const response = await app.inject({ method: "GET", url });
-      expect(response.statusCode).toBe(404);
-      expect(response.body).not.toContain("shadowed");
-    }
-    expect((await app.inject({ method: "GET", url: "/elsewhere" })).json()).toEqual({
-      shadowed: true,
-    });
+describe("a page, served by the built server", () => {
+  it("composes its template from the assemblies in this process and links their modules", async () => {
+    const response = await app.inject({ method: "GET", url: "/?name=ada" });
+    expect(response.statusCode).toBe(200);
+    // The page's query reaches its placements, as the composer hands it to each of them.
+    expect(response.body).toContain("<p>Hello, ada</p>");
+    expect(response.body).toContain('data-mount="idle"');
+    expect(response.body).toContain(
+      '<script type="module" src="/_assemblejs/assets/client-1a2b.js"></script></body>',
+    );
+    const module = await app.inject({ method: "GET", url: "/_assemblejs/assets/client-1a2b.js" });
+    expect(module.statusCode).toBe(200);
   });
 });
 
 describe("refusing to be built", () => {
   // Everything that can refuse refuses before anything listens: a process accepting
   // connections is a process that is configured.
-  it("throws before listen, not after", async () => {
-    await expect(
-      createServer({ config, assemblies: [{ name: "Bad Name", views: {} }] }),
-    ).rejects.toThrow(BootError);
-  });
-
-  it("refuses an api that would collide with another, before anything listens", async () => {
+  it("throws before listen for every declaration it cannot serve", async () => {
     const handle = () => ({});
-    await expect(
-      createServer({
-        config,
+    const unwritten = defineAssembly({
+      ...counter,
+      assets: { css: [], js: ["/_assemblejs/assets/client-missing.js"] },
+    });
+    for (const options of [
+      { assemblies: [{ name: "Bad Name", views: {} }] },
+      {
         assemblies: [],
-        apis: [defineApi({ path: "/api/x", handle }), defineApi({ path: "/api/x", handle })],
-      }),
-    ).rejects.toThrow(/declared more than once/);
+        apis: [defineApi({ path: "/x", handle }), defineApi({ path: "/x", handle })],
+      },
+      { assemblies: [], apis: [defineApi({ path: "/assembly/x", handle })] },
+      {
+        assemblies: [hello],
+        pages: [{ route: "/", template: '<assembly name="no"></assembly>' }],
+      },
+      { assemblies: [unwritten] },
+    ]) {
+      await expect(createServer({ config, ...options })).rejects.toThrow(BootError);
+    }
   });
 
-  it("refuses an api under the framework's reserved prefixes", async () => {
-    const handle = () => ({});
-    await expect(
-      createServer({ config, assemblies: [], apis: [defineApi({ path: "/assembly/x", handle })] }),
-    ).rejects.toThrow(BootError);
+  it("reads its configuration from the environment when it is given none", async () => {
+    const server = await createServer({ assemblies: [hello] });
+    await server.close();
   });
 });

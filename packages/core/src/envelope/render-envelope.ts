@@ -24,6 +24,9 @@ export function renderEnvelope(input: EnvelopeInput): string {
   if (input.remote !== undefined) attributes.push(["data-remote", input.remote]);
   if (input.deferred === true) attributes.push(["data-defer", ""]);
   if (input.failed === true) attributes.push(["data-failed", ""]);
+  if (input.mount !== undefined && input.mount !== "load") {
+    attributes.push(["data-mount", input.mount]);
+  }
 
   const opening = attributes.map(([key, value]) => ` ${key}="${escapeAttribute(value)}"`).join("");
 

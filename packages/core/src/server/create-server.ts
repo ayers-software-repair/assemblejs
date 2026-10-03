@@ -3,20 +3,26 @@
 import Fastify from "fastify";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
-import { renderEnvelope } from "../envelope/render-envelope.js";
-import { describeFailure } from "../failure/describe-failure.js";
+import { readConfig } from "../config/read-config.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
 import type { App } from "./app.js";
+import { assetProblems } from "./asset-problems.js";
 import { BootError } from "./boot-error.js";
 import { bootProblems } from "./boot-problems.js";
 import { buildManifest } from "./build-manifest.js";
+import { listAssets } from "./list-assets.js";
+import { localFetch } from "./local-fetch.js";
 import { queryOf } from "./query-of.js";
 import { readCompositionHeaders } from "./read-composition-headers.js";
 import { registerApis } from "./register-apis.js";
+import { registerAssets } from "./register-assets.js";
+import { registerFailures } from "./register-failures.js";
+import { registerPages } from "./register-pages.js";
+import { renderLocal } from "./render-local.js";
 import { resolveData } from "./resolve-data.js";
 import type { ServerOptions } from "./server-options.js";
 import { writeLogLine } from "./write-log-line.js";
@@ -36,8 +42,15 @@ interface Params {
  * at boot if one would land under either prefix.
  */
 export async function createServer(options: ServerOptions): Promise<App> {
+  const config = options.config ?? readConfig(process.env);
   const apis = options.apis ?? [];
-  const problems = bootProblems(options.assemblies, apis);
+  const pages = options.pages ?? [];
+  const files =
+    options.assets === undefined ? new Map<string, string>() : listAssets(options.assets);
+  const problems = [
+    ...bootProblems(options.assemblies, apis, pages),
+    ...assetProblems(options.assemblies, files),
+  ];
   if (problems.length > 0) throw new BootError(problems);
 
   const version = options.version ?? "dev";
@@ -47,23 +60,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const log = options.log ?? writeLogLine;
   const app = Fastify({ logger: false });
 
-  // One error handler. The visitor is told an id; the log holds what actually happened. An
-  // exception's message never reaches a body, whatever threw and wherever. A request the router
-  // itself refused (an unsupported body type, a malformed or oversized body) keeps its 4xx, so
-  // a caller's mistake is not reported as the server's.
-  app.setErrorHandler((error, _request, reply) => {
-    const correlationId = newCorrelationId();
-    const status =
-      typeof error === "object" && error !== null && "statusCode" in error
-        ? Number(error.statusCode)
-        : 500;
-    const code = status >= 400 && status < 500 ? status : 500;
-    if (code === 500) log(describeFailure(correlationId, error));
-    void reply.code(code).send(renderFailure(correlationId));
-  });
-  app.setNotFoundHandler((_request, reply) => {
-    void reply.code(404).send(renderFailure(newCorrelationId()));
-  });
+  registerFailures(app, log);
 
   app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));
 
@@ -103,28 +100,19 @@ export async function createServer(options: ServerOptions): Promise<App> {
     const headers = composition(request, reply);
     if (headers === undefined) return reply;
 
-    const declared = resolved.assembly.views[resolved.view];
-    if (declared === undefined) return reply;
-
-    // The same data function the data endpoint calls. One function, two endpoints, so the
-    // contract's promise that they never drift is structural rather than a convention.
-    const data = await resolveData(declared, { query: queryOf(request.url), params: {} });
-    const markup = await declared.markup({ data, children: {} });
-
+    // The same function the composer's local transport calls, which calls the same data
+    // function the data endpoint calls: one path from declaration to markup, however reached.
+    const html = await renderLocal(
+      resolved.assembly,
+      resolved.view,
+      headers.id ?? newCorrelationId(),
+      queryOf(request.url),
+    );
     return reply
       .header("content-type", "text/html; charset=utf-8")
       .header("assembly-name", resolved.assembly.name)
       .header("assembly-version", version)
-      .send(
-        renderEnvelope({
-          id: headers.id ?? newCorrelationId(),
-          name: resolved.assembly.name,
-          view: resolved.view,
-          renderer: declared.renderer,
-          markup,
-          data,
-        }),
-      );
+      .send(html);
   };
 
   app.get<{ Params: Params }>(`${ASSEMBLY_ROUTE_PREFIX}/:name/`, content);
@@ -150,17 +138,9 @@ export async function createServer(options: ServerOptions): Promise<App> {
     },
   );
 
-  // Static routes outrank parameters, so these answer every unclaimed path under the reserved
-  // prefixes before a product route that starts with a parameter can.
-  for (const prefix of [ASSEMBLY_ROUTE_PREFIX, FRAMEWORK_ROUTE_PREFIX]) {
-    for (const path of [prefix, `${prefix}/*`]) {
-      app.all(path, async (_request, reply) =>
-        reply.code(404).send(renderFailure(newCorrelationId())),
-      );
-    }
-  }
-
   registerApis(app, apis);
+  registerAssets(app, files);
+  registerPages(app, pages, byName, localFetch(byName, log), log);
 
   await app.ready();
 
@@ -168,7 +148,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
     fastify: app,
     inject: app.inject.bind(app),
     listen: async () => {
-      const url = await app.listen({ host: options.config.host, port: options.config.port });
+      const url = await app.listen({ host: config.host, port: config.port });
       return { url };
     },
     close: async () => {

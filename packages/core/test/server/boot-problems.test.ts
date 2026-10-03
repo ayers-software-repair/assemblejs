@@ -55,4 +55,13 @@ describe("what is checked before anything listens", () => {
     ]);
     expect(problems.join()).toMatch(/assembly "cart" view "default": data field "title"/);
   });
+
+  it("includes what is wrong with the pages", () => {
+    const problems = bootProblems(
+      [{ name: "cart", views: { default: view } }],
+      [],
+      [{ route: "/", template: '<assembly name="nope"></assembly>' }],
+    );
+    expect(problems.join()).toMatch(/no such assembly/);
+  });
 });

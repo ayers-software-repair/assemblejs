@@ -532,3 +532,35 @@ with the first change after the first publish; until then the packages' versions
 first release is, and the release notes say what is in it. This sets aside a rule `CLAUDE.md`
 states, so it is raised with the owner rather than settled here, and `CLAUDE.md` is left as he
 wrote it until he answers.
+
+## 2026-10-03: the server serves pages, which no rung had named
+
+Expected, from the ladder: B-09's `build` and `dev` sit on top of a server that already serves a
+page. Found: `createServer` answered the three assembly endpoints, health and apis, and nothing
+else. The composer (B-03) was a pure function no route called, the browser runtime (B-07) was
+proved only from hand-built fixtures, and nothing turned a page template into a document or
+linked a module into one. B-09's proof (create, build, `node dist/server.js`) cannot pass without
+it, so it lands as the first part of B-09. The plan's shape is unchanged: every piece is something
+the design already specifies.
+
+- **A page is `{ route, template, place? }`**, passed to `createServer` as `pages`. What an author
+  writes in a page's own file is the `PageDeclaration` (`route?`, `place?`) the design's section 8
+  shows; the build reads the template from the page's html and joins the two.
+- **Every placement goes through the composer and one transport.** The local transport renders
+  through `renderLocal`, the same function the content endpoint calls, so a placed assembly is
+  byte-for-byte what its endpoint answers. It never throws: a render that throws is logged against
+  an id and answered as a failure for the composer's ladder.
+- **Templates are read at boot.** A placement with no assembly behind it, a view it does not have,
+  policy for a placement the template never makes, a route twice or shadowing a GET api, and
+  deferred-with-required are all refusals before listen. A placement with a `url` is refused too,
+  until B-13 brings the remote transport; that refusal is B-13's to delete.
+- **Browser files.** An assembly may declare `assets` (`css`, `js` urls); the manifest now reports
+  them instead of a constant empty list, and a page links the files of every assembly it placed,
+  each once. A build's directory is served under `/_assemblejs/assets/` from a listing taken at
+  boot, so no request path is ever joined onto the filesystem; an asset the build did not write is
+  a boot refusal.
+- **The mount mode reaches the browser.** The runtime read `data-mount` and nothing emitted it. An
+  assembly declares `mount`, and the envelope carries it when it is not the default; DESIGN 2.4
+  lists it with the other conditional attributes.
+- **`config` is optional**, read from the process environment when absent, so the author's server
+  file does not have to know configuration exists.

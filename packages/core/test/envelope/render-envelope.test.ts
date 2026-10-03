@@ -39,6 +39,13 @@ describe("rendering the envelope", () => {
     expect(marked).toContain(`data-failed=""`);
   });
 
+  it("declares the mount mode only when it is not the default", () => {
+    expect(renderEnvelope(input())).not.toContain("data-mount");
+    expect(renderEnvelope(input({ mount: "load" }))).not.toContain("data-mount");
+    expect(renderEnvelope(input({ mount: "visible" }))).toContain(`data-mount="visible"`);
+    expect(renderEnvelope(input({ mount: "none" }))).toContain(`data-mount="none"`);
+  });
+
   // The named adversarial case: no value can end the tag it sits in, whatever it contains.
   //
   // The property under test is not that the text "onload=" is absent. It survives, as inert

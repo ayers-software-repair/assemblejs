@@ -10,3 +10,4 @@ export { COMPOSITION_HEADER } from "./composition-header.js";
 export { ASSEMBLY_ROUTE_PREFIX } from "./assembly-route-prefix.js";
 export { FRAMEWORK_ROUTE_PREFIX } from "./framework-route-prefix.js";
 export { DEFAULT_VIEW } from "./default-view.js";
+export { ASSET_ROUTE_PREFIX } from "./asset-route-prefix.js";

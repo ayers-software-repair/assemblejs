@@ -12,5 +12,12 @@ describe("what a server is built from", () => {
     expect(options.version).toBeUndefined();
     expect(options.maxDepth).toBeUndefined();
     expect(options.apis).toBeUndefined();
+    expect(options.pages).toBeUndefined();
+    expect(options.assets).toBeUndefined();
+  });
+
+  it("may leave the configuration to the process environment", () => {
+    const options: ServerOptions = { assemblies: [] };
+    expect(options.config).toBeUndefined();
   });
 });

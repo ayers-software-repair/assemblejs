@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { MountMode } from "../client/mount-mode.js";
 import type { JsonObject } from "../json/json-object.js";
 
 /** Everything the envelope is built from. */
@@ -20,4 +21,6 @@ export interface EnvelopeInput {
   readonly deferred?: boolean;
   /** The render or the fetch failed and this is a fallback. */
   readonly failed?: boolean;
+  /** When the browser half runs. Emitted only when it is not the default, \`load\`. */
+  readonly mount?: MountMode;
 }
