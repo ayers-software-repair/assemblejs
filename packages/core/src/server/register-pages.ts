@@ -19,7 +19,8 @@ import { pagePlan } from "./page-plan.js";
  * every assembly it placed, and answer the document.
  *
  * A required placement that does not answer is the one way a page fails from a child, and it
- * answers 503 with an id, never the cause.
+ * answers 503 with an id, never the cause. Every placement that did not answer is logged against
+ * its correlation id, whichever rung of the ladder covered for it.
  */
 export function registerPages(
   app: FastifyInstance,
@@ -52,6 +53,15 @@ export function registerPages(
 
       const assets: { css: string[]; js: string[] } = { css: [], js: [] };
       for (const diagnostic of composed.diagnostics) {
+        // A placement that fell back still served a page, so nothing else would ever say it
+        // failed. Its envelope carries this id; the log line is what the id finds.
+        if (diagnostic.reason !== undefined) {
+          log({
+            correlationId: diagnostic.correlationId ?? newCorrelationId(),
+            message: `assembly "${diagnostic.name}" on page "${page.route}" was answered by the ${diagnostic.source} after ${diagnostic.reason}`,
+            stack: undefined,
+          });
+        }
         const declared: AssemblyAssets | undefined = assemblies.get(diagnostic.name)?.assets;
         assets.css.push(...(declared?.css ?? []));
         assets.js.push(...(declared?.js ?? []));

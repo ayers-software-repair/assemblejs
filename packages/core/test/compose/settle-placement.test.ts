@@ -71,7 +71,7 @@ describe("settling one placement", () => {
         plan: { name: "cart", view: "default", deadline: 3000, fallback: "<p>unavailable</p>" },
       }),
     );
-    expect(settled.html).toBe("<p>unavailable</p>");
+    expect(settled.html).toContain('data-failed="c-1"><p>unavailable</p><script');
     expect(settled.diagnostic.source).toBe("fallback");
     expect(settled.diagnostic.reason).toBe("status");
     expect(settled.diagnostic.correlationId).toBe("c-1");
@@ -93,10 +93,16 @@ describe("settling one placement", () => {
     expect(settled.diagnostic.reason).toBe("status");
   });
 
-  it("renders nothing, with an account, when there is no fallback and no cache", async () => {
+  it("renders an empty envelope marked failed, with an account, when there is nothing else", async () => {
     const settled = await settlePlacement(input({ fetch: failing }));
-    expect(settled.html).toBe("");
+    expect(settled.html).toMatch(/^<assembly-root data-name="cart" [^>]*data-failed="c-1"><script/);
     expect(settled.diagnostic.source).toBe("fallback");
+  });
+
+  it("gives a failure an id even when its transport reported none", async () => {
+    const silent = async () => ({ ok: false, reason: "timeout", detail: "", correlationId: "" });
+    const settled = await settlePlacement(input({ fetch: silent as never }));
+    expect(settled.html).toContain(`data-failed="id-1"`);
   });
 
   it("writes to the cache only when a ttl was declared", async () => {

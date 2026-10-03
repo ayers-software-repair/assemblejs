@@ -567,3 +567,30 @@ the design already specifies.
   lists it with the other conditional attributes.
 - **`config` is optional**, read from the process environment when absent, so the author's server
   file does not have to know configuration exists.
+
+## 2026-10-03: what verifying the pages found, and page parameters held back
+
+The verifying agent found that a required placement which timed out answered 503 with an empty
+correlation id, because a transport that times out reports none; that a placement which fell back
+was logged nowhere; that the composer emitted nothing for a failure with no fallback, where DESIGN
+3.3 says an empty envelope marked failed; and that page routes were not held to the flat grammar
+apis already were. All four are fixed here, with the rest of what it found.
+
+- **Every failure has an id.** The composer mints one, from the id source it already owns, when
+  the transport reported none. A fallback and the empty envelope are both wrapped in an envelope
+  whose `data-failed` carries that id, which is how DESIGN 12's "in the fallback envelope" is met
+  without a new attribute. The browser runtime never mounts a `data-failed` envelope: its markup
+  is the page's stand-in, not anything the assembly's browser half produced. Every placement that
+  did not answer is logged against its id by the page that placed it.
+- **Page routes take the flat grammar**, now one function both apis and pages call.
+- **Page parameters are refused at boot, for now.** `/products/:id` is the design's own example
+  route, and nothing carries a page's parameters to the assemblies it places: the request a
+  placement receives has a query and no parameters, the cache key is built from the query, and
+  the remote transport (B-13) will need to say how parameters cross a server boundary. Accepting
+  the route and dropping the value would be the silent kind of wrong. Recorded as an open row
+  under B-13, where the request shape is next extended.
+- Also: hoisting passes over closing tags inside comments, scripts and styles; asset urls are the
+  files' percent-encoded paths, served with a declared type and `nosniff`, a missing one answers
+  the failure body; a root-relative asset url outside the asset prefix is a boot refusal because
+  nothing serves it; a policy that is not an object is reported rather than thrown on; and the
+  immediately-closed directive is recognised in any case, as the self-closing one already was.

@@ -131,7 +131,8 @@ is emitted, and every other section refers here rather than restating it.
 
 Added only when they apply: `data-remote` (the origin, when the assembly came from another
 server), `data-defer` (the content has not been fetched yet), `data-failed` (the render or the
-fetch failed and this is a fallback), `data-mount` (when the browser half runs, section 9, when it
+fetch failed and this is a fallback; its value is the failure's correlation id, section 12),
+`data-mount` (when the browser half runs, section 9, when it
 is not the default `load`).
 
 `assembly-root` is a custom element with no behaviour of its own. It is the styling scope hook,

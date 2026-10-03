@@ -40,7 +40,19 @@ describe("linking a page's browser files", () => {
   });
 
   it("encodes a url so it cannot end the attribute it sits in", () => {
-    const html = hoistAssets("<body></body>", { css: [], js: ['/c.js" onload="x'] });
+    const html = hoistAssets("<head></head><body></body>", {
+      css: ['/a.css" onload="x'],
+      js: ['/c.js" onload="x'],
+    });
     expect(html).not.toContain('" onload="');
+  });
+
+  it("passes over a closing tag inside a comment, a script or a style", () => {
+    const tricky =
+      "<head><!-- </head> --><script>var s='</head>'</script><style>/* </head> */</style></head>" +
+      "<body><main></main><script>var b='</body>'</script></body><!-- </body> -->";
+    const html = hoistAssets(tricky, { css: ["/a.css"], js: ["/c.js"] });
+    expect(html).toContain('</style><link rel="stylesheet" href="/a.css"></head>');
+    expect(html).toContain('</script><script type="module" src="/c.js"></script></body><!--');
   });
 });

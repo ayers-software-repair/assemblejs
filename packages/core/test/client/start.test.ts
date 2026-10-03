@@ -88,6 +88,15 @@ describe("starting the runtime", () => {
     start({ renderers: { html: renderer } });
     expect(mounts).toEqual(["b"]);
   });
+
+  it("never mounts a fallback, which stands in for an assembly that did not render", () => {
+    document.body.innerHTML =
+      envelope("a").replace("<assembly-root ", '<assembly-root data-failed="8f212c16" ') +
+      envelope("b");
+    const { mounts, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect(mounts).toEqual(["b"]);
+  });
 });
 
 describe("one assembly failing", () => {

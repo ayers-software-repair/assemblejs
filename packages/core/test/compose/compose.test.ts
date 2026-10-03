@@ -59,7 +59,9 @@ describe("composing a page", () => {
         plan: { b: { name: "b", view: "default", deadline: 3000, fallback: "<p>no B</p>" } },
       }),
     );
-    expect(html).toBe("<main><p>A</p><p>no B</p></main>");
+    expect(html).toMatch(
+      /^<main><p>A<\/p><assembly-root data-name="b" [^>]*data-failed="c-b"><p>no B<\/p><script/,
+    );
     expect(diagnostics[0]?.source).toBe("local");
     expect(diagnostics[1]?.source).toBe("fallback");
     expect(diagnostics[1]?.correlationId).toBe("c-b");
@@ -185,8 +187,11 @@ describe("a placement that settles badly", () => {
         }) as never,
       }),
     );
-    expect(html).toBe("<main><p>A</p></main>");
+    expect(html).toMatch(/^<main><p>A<\/p><assembly-root data-name="b" [^>]*data-failed="[^"]+">/);
     expect(diagnostics[1]?.reason).toBe("transport");
+    // The transport threw and reported no id, so the composer minted one rather than leave the
+    // failure unfindable.
+    expect(diagnostics[1]?.correlationId).toMatch(/.+/);
   });
 });
 

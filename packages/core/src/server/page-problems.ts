@@ -4,6 +4,8 @@ import type { ApiDefinition } from "../api/api-definition.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { findPlacements } from "../compose/find-placements.js";
 import type { PageDefinition } from "../page/page-definition.js";
+import type { PagePlacement } from "../page/page-placement.js";
+import { isFlatRoute } from "./is-flat-route.js";
 import { reservedPrefix } from "./reserved-prefix.js";
 import { routeKey } from "./route-key.js";
 
@@ -31,6 +33,12 @@ export function pageProblems(
     if (!page.route.startsWith("/")) problems.push(`${at} does not start with "/"`);
     if (page.route.includes("*")) {
       problems.push(`${at} uses a wildcard; routes are a flat table with parameters`);
+    } else if (page.route.startsWith("/") && !isFlatRoute(page.route)) {
+      problems.push(`${at} is not a flat path of literal segments and whole-segment :parameters`);
+    } else if (page.route.includes("/:")) {
+      problems.push(
+        `${at} has a parameter, which nothing yet carries from a page to the assemblies it places`,
+      );
     }
     const reserved = reservedPrefix(page.route);
     if (reserved !== undefined) {
@@ -69,16 +77,21 @@ export function pageProblems(
     }
 
     const placed = new Set(placements.map((placement) => placement.name));
-    for (const [name, policy] of Object.entries(place)) {
+    for (const [name, policy] of Object.entries(place) as Array<[string, unknown]>) {
+      if (typeof policy !== "object" || policy === null) {
+        problems.push(`${at} declares policy for "${name}" that is not an object`);
+        continue;
+      }
       if (!placed.has(name)) {
         problems.push(`${at} declares policy for "${name}", which its template never places`);
       }
-      if (policy.defer === true && policy.required === true) {
+      const declared = policy as PagePlacement;
+      if (declared.defer === true && declared.required === true) {
         problems.push(`${at} declares "${name}" both deferred and required`);
       }
       if (
-        policy.deadline !== undefined &&
-        !(Number.isFinite(policy.deadline) && policy.deadline > 0)
+        declared.deadline !== undefined &&
+        !(Number.isFinite(declared.deadline) && declared.deadline > 0)
       ) {
         problems.push(`${at} gives "${name}" a deadline that is not a positive, finite number`);
       }

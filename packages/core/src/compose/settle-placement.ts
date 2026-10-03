@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { renderEnvelope } from "../envelope/render-envelope.js";
 import type { AssemblyRequest } from "./assembly-request.js";
 import type { AssemblyResponse } from "./assembly-response.js";
 import { cacheKey } from "./cache-key.js";
@@ -18,9 +19,12 @@ import type { SettledPlacement } from "./settled-placement.js";
  * because a placement that throws is a page that dies from a child.
  *
  * The ladder, in order: the content that was fetched, then the last good content the cache
- * holds, then the declared fallback, then nothing. The cache outranks the fallback because it
- * holds real content this assembly actually produced, and the fallback is what to show when
- * there is none.
+ * holds, then the declared fallback, then an empty envelope. The cache outranks the fallback
+ * because it holds real content this assembly actually produced, and the fallback is what to
+ * show when there is none. A fallback and the empty envelope are both wrapped in an envelope
+ * marked failed with the failure's correlation id, so the one failing placement on a page can
+ * be found in the log from the page itself, and every failure has an id even when its transport
+ * reported none.
  */
 export async function settlePlacement(input: SettleInput): Promise<SettledPlacement> {
   const { name, view, plan, now } = input;
@@ -46,7 +50,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
 
   const refusal = refuseBeforeDispatch(input);
   if (refusal !== undefined) {
-    return fallBack(input, at("fallback", refusal), refusal);
+    return fallBack(input, id, at("fallback", refusal, input.newId()), refusal);
   }
 
   const deadline = plan?.deadline ?? DEFAULT_DEADLINE;
@@ -69,7 +73,12 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     write(input, answer.html, answer.version);
     return { html: answer.html, diagnostic: at(answer.source) };
   }
-  return fallBack(input, at("fallback", answer.reason, answer.correlationId), answer.reason);
+  return fallBack(
+    input,
+    id,
+    at("fallback", answer.reason, answer.correlationId || input.newId()),
+    answer.reason,
+  );
 }
 
 /** The two refusals a parent makes itself, before anything is dispatched. */
@@ -153,6 +162,7 @@ function write(input: SettleInput, html: string, version: string | undefined): v
 
 function fallBack(
   input: SettleInput,
+  id: string,
   diagnostic: Diagnostic,
   reason: FailureReason,
 ): SettledPlacement {
@@ -166,5 +176,14 @@ function fallBack(
     }
   }
   if (input.plan?.required === true) throw new RequiredFailure(diagnostic);
-  return { html: input.plan?.fallback ?? "", diagnostic };
+  const html = renderEnvelope({
+    id,
+    name: input.name,
+    view: input.view,
+    renderer: "",
+    markup: input.plan?.fallback ?? "",
+    data: {},
+    failed: diagnostic.correlationId ?? "",
+  });
+  return { html, diagnostic };
 }

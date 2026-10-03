@@ -32,11 +32,11 @@ describe("rendering the envelope", () => {
     expect(renderEnvelope(input())).not.toContain("data-failed");
 
     const marked = renderEnvelope(
-      input({ remote: "https://checkout.example.com", deferred: true, failed: true }),
+      input({ remote: "https://checkout.example.com", deferred: true, failed: "8f212c16" }),
     );
     expect(marked).toContain(`data-remote="https://checkout.example.com"`);
     expect(marked).toContain(`data-defer=""`);
-    expect(marked).toContain(`data-failed=""`);
+    expect(marked).toContain(`data-failed="8f212c16"`);
   });
 
   it("declares the mount mode only when it is not the default", () => {

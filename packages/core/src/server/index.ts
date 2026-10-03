@@ -17,6 +17,7 @@ export { viewSchema } from "./view-schema.js";
 export { resolveData } from "./resolve-data.js";
 export { queryOf } from "./query-of.js";
 export { writeLogLine } from "./write-log-line.js";
+export { isFlatRoute } from "./is-flat-route.js";
 export { routeKey } from "./route-key.js";
 export { reservedPrefix } from "./reserved-prefix.js";
 export { pagePlan } from "./page-plan.js";

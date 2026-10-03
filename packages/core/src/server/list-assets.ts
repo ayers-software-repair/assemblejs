@@ -9,6 +9,8 @@ import { ASSET_ROUTE_PREFIX } from "../vocab/asset-route-prefix.js";
  *
  * Listed once, at boot. Only a file that is in this map is ever served, so no request can name
  * its way out of the directory: there is no path joined from a url anywhere on the request side.
+ * Each url is the file's path percent-encoded, as a browser sends it, and only regular files are
+ * listed: a symbolic link could point anywhere.
  */
 export function listAssets(directory: string): ReadonlyMap<string, string> {
   const files = new Map<string, string>();
@@ -17,7 +19,8 @@ export function listAssets(directory: string): ReadonlyMap<string, string> {
       const path = join(at, entry.name);
       if (entry.isDirectory()) walk(path);
       else if (entry.isFile()) {
-        files.set(`${ASSET_ROUTE_PREFIX}/${relative(directory, path).split(sep).join("/")}`, path);
+        const url = relative(directory, path).split(sep).join("/");
+        files.set(`${ASSET_ROUTE_PREFIX}/${encodeURI(url)}`, path);
       }
     }
   };

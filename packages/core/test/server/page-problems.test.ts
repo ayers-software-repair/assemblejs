@@ -14,7 +14,7 @@ const page = (route: string, template = '<assembly name="hello"></assembly>') =>
 
 describe("what is checked about pages before anything listens", () => {
   it("passes a well formed set", () => {
-    expect(pageProblems([page("/"), page("/products/:id")], [hello], [])).toEqual([]);
+    expect(pageProblems([page("/"), page("/products/all")], [hello], [])).toEqual([]);
   });
 
   it("refuses a placement with no assembly behind it, rather than leaving a blank space", () => {
@@ -52,6 +52,36 @@ describe("what is checked about pages before anything listens", () => {
   it("allows a page beside an api that answers a different method on the same path", () => {
     const api = defineApi({ path: "/form", method: "POST", handle: () => ({}) });
     expect(pageProblems([page("/form")], [hello], [api])).toEqual([]);
+  });
+
+  it("refuses a page parameter, which nothing yet carries to the assemblies it places", () => {
+    expect(pageProblems([page("/products/:id")], [hello], []).join()).toMatch(/has a parameter/);
+  });
+
+  it("refuses a route outside the flat grammar, before the router can throw on it", () => {
+    for (const route of ["/a/:id?", "/c/:x-:y", "/d?x", "//f", "/b/:id(\\d+)"]) {
+      expect(pageProblems([page(route)], [hello], []).join()).toMatch(/not a flat path/);
+    }
+  });
+
+  it("reports a policy that is not an object, rather than throwing on it", () => {
+    const odd = {
+      route: "/",
+      template: '<assembly name="hello"></assembly>',
+      place: { hello: null },
+    };
+    expect(pageProblems([odd as never], [hello], []).join()).toMatch(/not an object/);
+  });
+
+  it("refuses a deadline of zero or less", () => {
+    for (const deadline of [0, -1]) {
+      const zero = {
+        route: "/",
+        template: '<assembly name="hello"></assembly>',
+        place: { hello: { deadline } },
+      };
+      expect(pageProblems([zero], [hello], []).join()).toMatch(/positive, finite/);
+    }
   });
 
   it("refuses a route that is not a flat, rooted, unreserved path", () => {

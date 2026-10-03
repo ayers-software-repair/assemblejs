@@ -31,6 +31,10 @@ export function start(options: StartOptions): Runtime {
     for (const element of findEnvelopes(root)) {
       const id = element.getAttribute("data-id");
       if (id === null || mounted.has(id)) continue;
+      // A fallback stands in for an assembly that did not render. Its markup is the page's, not
+      // the assembly's, so there is nothing to hydrate and mounting it would run a browser half
+      // against markup it never produced.
+      if (element.hasAttribute("data-failed")) continue;
 
       const payload = readIsland(element);
       const mode = readMountMode(element);

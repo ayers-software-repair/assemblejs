@@ -3,12 +3,26 @@
 import type { AssemblyAssets } from "../assembly/assembly-assets.js";
 import { escapeAttribute } from "../encode/escape-attribute.js";
 
-const HEAD_CLOSE = /<\/head\s*>/i;
-const BODY_CLOSE = /<\/body\s*>(?![\s\S]*<\/body\s*>)/i;
+const HEAD_CLOSE = /<\/head\s*>/gi;
+const BODY_CLOSE = /<\/body\s*>/gi;
+// Text in which a closing tag is not a tag: a comment, and the contents of a script or a style.
+const INERT = /<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script\s*>|<style\b[\s\S]*?<\/style\s*>/gi;
+
+const inertRanges = (html: string): Array<readonly [number, number]> =>
+  [...html.matchAll(INERT)].map((match) => [match.index, match.index + match[0].length] as const);
+
+/** Where each match of a closing tag is, leaving out any that sits in inert text. */
+const live = (html: string, tag: RegExp): number[] => {
+  const ranges = inertRanges(html);
+  return [...html.matchAll(tag)]
+    .map((match) => match.index)
+    .filter((at) => !ranges.some(([from, to]) => at >= from && at < to));
+};
 
 /**
  * Links a page's browser files into its document: stylesheets at the end of the head, modules
- * at the end of the body, each url once.
+ * at the end of the body, each url once. A closing tag inside a comment, a script or a style is
+ * text, not a tag, and is passed over.
  *
  * A template without a head gets its stylesheets first and one without a body gets its modules
  * last, because the template is the author's whole document and a page that loses its assets
@@ -24,12 +38,12 @@ export function hoistAssets(html: string, assets: AssemblyAssets): string {
 
   let out = html;
   if (css !== "") {
-    const head = HEAD_CLOSE.exec(out);
-    out = head === null ? css + out : out.slice(0, head.index) + css + out.slice(head.index);
+    const head = live(out, HEAD_CLOSE)[0];
+    out = head === undefined ? css + out : out.slice(0, head) + css + out.slice(head);
   }
   if (js !== "") {
-    const body = BODY_CLOSE.exec(out);
-    out = body === null ? out + js : out.slice(0, body.index) + js + out.slice(body.index);
+    const body = live(out, BODY_CLOSE).at(-1);
+    out = body === undefined ? out + js : out.slice(0, body) + js + out.slice(body);
   }
   return out;
 }

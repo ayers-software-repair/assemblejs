@@ -30,10 +30,14 @@ describe("building a manifest", () => {
       ...cart,
       assets: { css: ["/_assemblejs/assets/cart.css"], js: ["/_assemblejs/assets/client.js"] },
     });
-    expect(buildManifest(withAssets, "default", "1").assets).toEqual({
+    const reported = buildManifest(withAssets, "default", "1").assets;
+    expect(reported).toEqual({
       css: ["/_assemblejs/assets/cart.css"],
       js: ["/_assemblejs/assets/client.js"],
     });
+    // Copied, never the assembly's own arrays, so nothing holding a manifest can change them.
+    expect(reported.js).not.toBe(withAssets.assets?.js);
+    expect(reported.css).not.toBe(withAssets.assets?.css);
   });
 
   // The predecessor built its manifest by removing three fields and shipping the rest, which

@@ -165,6 +165,9 @@ starts. Until the owner enables Actions, every proof is local only.
       Owed here: `Limits.maxBytes` is declared and has no reader until the remote
       transport exists. A verification pass found a 10 MiB fragment composing clean
       through `maxBytes: 8`, which is correct today and must not be once B-13 lands.
+- [ ] Page route parameters reach the assemblies a page places: the placement request, the
+      cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
+      2026-10-03, "page parameters held back").
 - [ ] B-14 auth and the default policy
 - [ ] B-15 styles: scoping, Shadow DOM opt-in, the documented holes
 - [ ] B-16 the remaining four framework renderers

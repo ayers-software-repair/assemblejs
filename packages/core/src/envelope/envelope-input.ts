@@ -19,8 +19,11 @@ export interface EnvelopeInput {
   readonly remote?: string;
   /** The content has not been fetched yet; the browser fills it after load. */
   readonly deferred?: boolean;
-  /** The render or the fetch failed and this is a fallback. */
-  readonly failed?: boolean;
+  /**
+   * The render or the fetch failed and this is a fallback: the correlation id the failure was
+   * logged against, so the envelope on the page names the log line that explains it.
+   */
+  readonly failed?: string;
   /** When the browser half runs. Emitted only when it is not the default, \`load\`. */
   readonly mount?: MountMode;
 }

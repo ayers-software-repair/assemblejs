@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -18,5 +18,20 @@ describe("listing a build's browser files", () => {
       "/_assemblejs/assets/client-1a2b.js",
     ]);
     expect(files.get("/_assemblejs/assets/client-1a2b.js")).toBe(join(root, "client-1a2b.js"));
+  });
+
+  it("lists no symbolic link, which could point anywhere", () => {
+    const root = mkdtempSync(join(tmpdir(), "assets-"));
+    const outside = mkdtempSync(join(tmpdir(), "outside-"));
+    writeFileSync(join(outside, "secret.txt"), "hunter2");
+    symlinkSync(join(outside, "secret.txt"), join(root, "link.js"));
+    symlinkSync(outside, join(root, "linked"));
+    expect([...listAssets(root).keys()]).toEqual([]);
+  });
+
+  it("keys a name a browser percent-encodes by its encoded form", () => {
+    const root = mkdtempSync(join(tmpdir(), "assets-"));
+    writeFileSync(join(root, "s p.js"), "");
+    expect([...listAssets(root).keys()]).toEqual(["/_assemblejs/assets/s%20p.js"]);
   });
 });

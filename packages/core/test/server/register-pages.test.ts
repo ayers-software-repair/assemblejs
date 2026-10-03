@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import type { LogLine } from "@assemblejs/core";
 import { defineAssembly, localFetch, registerPages } from "@assemblejs/core";
 
 const hello = defineAssembly({
@@ -20,10 +21,16 @@ const broken = defineAssembly({
     },
   },
 });
+const slow = defineAssembly({
+  name: "slow",
+  views: { default: { renderer: "html", markup: () => new Promise<string>(() => undefined) } },
+});
 const byName = new Map([
   ["hello", hello],
   ["broken", broken],
+  ["slow", slow],
 ]);
+const logged: LogLine[] = [];
 const app = Fastify({ logger: false });
 
 beforeAll(async () => {
@@ -45,10 +52,15 @@ beforeAll(async () => {
         template: '<body><assembly name="broken"></assembly></body>',
         place: { broken: { required: true } },
       },
+      {
+        route: "/stalled",
+        template: '<body><assembly name="slow"></assembly></body>',
+        place: { slow: { required: true, deadline: 20 } },
+      },
     ],
     byName,
     localFetch(byName, () => undefined),
-    () => undefined,
+    (line) => logged.push(line),
   );
   await app.ready();
 });
@@ -83,5 +95,22 @@ describe("a page, mounted", () => {
     expect(response.statusCode).toBe(503);
     expect(response.body).not.toContain("hunter2");
     expect(response.json()).toEqual({ error: { correlationId: expect.any(String) } });
+  });
+
+  it("logs every placement that fell back, against the id its envelope carries", async () => {
+    const response = await app.inject({ method: "GET", url: "/soft" });
+    const id = /data-failed="([^"]+)"/.exec(response.body)?.[1];
+    expect(id).toMatch(/.+/);
+    expect(
+      logged.some((line) => line.correlationId === id && line.message.includes("broken")),
+    ).toBe(true);
+  });
+
+  it("gives a required placement that timed out a real id, and logs it", async () => {
+    const response = await app.inject({ method: "GET", url: "/stalled" });
+    expect(response.statusCode).toBe(503);
+    const { correlationId } = (response.json() as { error: { correlationId: string } }).error;
+    expect(correlationId).not.toBe("");
+    expect(logged.some((line) => line.correlationId === correlationId)).toBe(true);
   });
 });

@@ -29,4 +29,19 @@ describe("what is checked about browser files before anything listens", () => {
     });
     expect(assetProblems([remote], new Map())).toEqual([]);
   });
+
+  it("refuses a url on this server outside the asset prefix, which nothing serves", () => {
+    const local = defineAssembly({
+      name: "local",
+      views: { default: view },
+      assets: { css: [], js: ["/static/app.js"] },
+    });
+    expect(assetProblems([local], new Map()).join()).toMatch(/where nothing serves it/);
+    const elsewhere = defineAssembly({
+      name: "elsewhere",
+      views: { default: view },
+      assets: { css: ["//cdn.example.com/a.css"], js: [] },
+    });
+    expect(assetProblems([elsewhere], new Map())).toEqual([]);
+  });
 });
