@@ -16,4 +16,9 @@ export interface StartOptions {
   readonly origin?: string;
   /** Topics that keep their last message for an assembly that hydrates after it was sent. */
   readonly replay?: readonly string[];
+  /**
+   * The stream to open, whose messages go onto the page's bus. Absent, the page's own runtime
+   * opens the one the page names in its head, and a remote's runtime opens none.
+   */
+  readonly stream?: string;
 }

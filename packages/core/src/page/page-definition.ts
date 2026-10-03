@@ -14,4 +14,9 @@ export interface PageDefinition {
   readonly template: string;
   /** Policy per placement, keyed by the name the template writes. */
   readonly place?: Readonly<Record<string, PagePlacement>>;
+  /**
+   * The path of one of this server's streaming apis, which the page's runtime opens once and
+   * whose messages it delivers onto the page's bus.
+   */
+  readonly stream?: string;
 }

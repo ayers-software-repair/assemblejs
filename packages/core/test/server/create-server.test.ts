@@ -60,6 +60,7 @@ beforeAll(async () => {
     assets,
     apis: [
       defineApi({ path: "/api/time", handle: () => ({ now: "2026-10-03T00:00:00.000Z" }) }),
+      defineApi({ path: "/api/ended", stream: () => Promise.reject(new Error("ended")) }),
       defineApi({
         path: "/api/leak",
         handle: () => {
@@ -221,6 +222,9 @@ describe("the product's own apis", () => {
     const response = await app.inject({ method: "GET", url: "/api/time" });
     expect(response.statusCode).toBe(200);
     expect(response.json()).toEqual({ now: "2026-10-03T00:00:00.000Z" });
+    const ended = await app.inject({ method: "GET", url: "/api/ended" }); // a stream that ends
+    expect(ended.headers["content-type"]).toBe("text/event-stream; charset=utf-8");
+    expect(ended.body).toBe(": open\n\n");
   });
 
   it("reach the one error handler when they throw, so the message never reaches a body", async () => {
@@ -281,10 +285,9 @@ describe("refusing to be built", () => {
 
   it("reads its configuration from the environment, and logs to standard error, by default", async () => {
     const written: string[] = [];
-    const spy = vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
-      written.push(String(chunk));
-      return true;
-    });
+    const spy = vi
+      .spyOn(process.stderr, "write")
+      .mockImplementation((chunk) => written.push(String(chunk)) > 0);
     const server = await createServer({ assemblies: [exploding] });
     try {
       await server.inject({ method: "GET", url: "/assembly/exploding/" });

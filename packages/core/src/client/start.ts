@@ -3,6 +3,7 @@
 import { createBus } from "./events/create-bus.js";
 import { findEnvelopes } from "./find-envelopes.js";
 import type { MountedAssembly } from "./mounted-assembly.js";
+import { openPageStream } from "./open-page-stream.js";
 import { readIsland } from "./read-island.js";
 import { readMountMode } from "./read-mount-mode.js";
 import type { Runtime } from "./runtime.js";
@@ -13,7 +14,7 @@ import type { StartOptions } from "./start-options.js";
  * Starts the page's one runtime.
  *
  * It finds every envelope, reads and removes each island, and mounts each assembly through its
- * renderer's browser half. Nothing here knows any framework: the whole cross-framework contract
+ * renderer's browser half, and opens the page's stream when it names one. Nothing here knows any framework: the whole cross-framework contract
  * is one mount call and the handle it returns.
  *
  * One assembly failing is one assembly failing. A missing renderer, a malformed island or a
@@ -89,11 +90,14 @@ export function start(options: StartOptions): Runtime {
 
   mount(options.root ?? document);
 
+  const closeStream = openPageStream(options, bus);
+
   return {
     mounted,
     bus,
     mount,
     unmountAll: () => {
+      closeStream?.();
       for (const cancel of cancels.splice(0).reverse()) cancel();
       // Every subscription this runtime handed out, released. This is the half that makes the
       // per-assembly scoping mean something: without it the events object is just a global.

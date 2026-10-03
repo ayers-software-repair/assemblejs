@@ -4,6 +4,8 @@ import Fastify from "fastify";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { contentSecurityPolicy } from "../access/content-security-policy.js";
 import { registerAccess } from "../access/register-access.js";
+import type { DataApi } from "../api/data-api.js";
+import { isStreamApi } from "../api/is-stream-api.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_LIMITS } from "../compose/default-limits.js";
 import { readConfig } from "../config/read-config.js";
@@ -30,6 +32,7 @@ import { registerApis } from "./register-apis.js";
 import { registerAssets } from "./register-assets.js";
 import { registerFailures } from "./register-failures.js";
 import { registerPages } from "./register-pages.js";
+import { registerStreams } from "./register-streams.js";
 import { renderLocal } from "./render-local.js";
 import { resolveData } from "./resolve-data.js";
 import type { ServerOptions } from "./server-options.js";
@@ -170,7 +173,11 @@ export async function createServer(options: ServerOptions): Promise<App> {
     },
   );
 
-  registerApis(app, apis);
+  registerApis(
+    app,
+    apis.filter((api): api is DataApi => !isStreamApi(api)),
+  );
+  registerStreams(app, apis.filter(isStreamApi), log);
   registerAssets(app, files);
   registerPages(app, {
     pages,

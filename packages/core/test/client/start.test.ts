@@ -29,14 +29,16 @@ const recorder = () => {
   const mounts: string[] = [];
   const unmounts: string[] = [];
   const into: Array<Element | ShadowRoot> = [];
+  const given: unknown[] = [];
   const renderer: ClientRenderer = {
-    mount: (element, _data, context) => {
+    mount: (element, data, context) => {
       mounts.push(context.name);
+      given.push(data);
       into.push(element);
       return { unmount: () => unmounts.push(context.name) };
     },
   };
-  return { mounts, unmounts, into, renderer };
+  return { mounts, unmounts, into, given, renderer };
 };
 
 beforeEach(() => {
@@ -69,18 +71,9 @@ describe("starting the runtime", () => {
 
   it("hands the renderer the island's data and the assembly's identity", () => {
     document.body.innerHTML = envelope("cart", { data: { total: 2 } });
-    const seen: Array<{ data: unknown; name: string }> = [];
-    start({
-      renderers: {
-        html: {
-          mount: (_element, data, context) => {
-            seen.push({ data, name: context.name });
-            return { unmount: () => {} };
-          },
-        },
-      },
-    });
-    expect(seen).toEqual([{ data: { total: 2 }, name: "cart" }]);
+    const { mounts, given, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect([mounts, given]).toEqual([["cart"], [{ total: 2 }]]);
   });
 
   it("never mounts an assembly declared static", () => {
@@ -190,7 +183,6 @@ describe("mounting again", () => {
     const { mounts, renderer } = recorder();
     const runtime = start({ renderers: { html: renderer } });
     expect(mounts).toEqual(["a"]);
-
     const element = document.querySelector(`assembly-root[data-id="a"]`);
     element?.insertAdjacentHTML(
       "beforeend",
@@ -211,12 +203,21 @@ describe("mounting again", () => {
 });
 
 describe("tearing down", () => {
-  it("unmounts in reverse, so an inner assembly goes before the outer one", () => {
+  it("closes the page's stream, and unmounts in reverse, inner before outer", () => {
     document.body.innerHTML = `<assembly-root data-id="outer" data-name="outer" data-view="default" data-renderer="html"><script type="application/json" data-assembly="outer">{"id":"outer","name":"outer","view":"default","renderer":"html","data":{},"deferred":false}</script>${envelope("inner")}</assembly-root>`;
+    const closed = vi.fn();
+    vi.stubGlobal(
+      "EventSource",
+      class {
+        onmessage = null;
+        close = closed;
+      },
+    );
     const { unmounts, renderer } = recorder();
-    const runtime = start({ renderers: { html: renderer } });
+    const runtime = start({ renderers: { html: renderer }, stream: "/live" });
     runtime.unmountAll();
-    expect(unmounts).toEqual(["inner", "outer"]);
+    vi.unstubAllGlobals();
+    expect([closed.mock.calls.length, unmounts]).toEqual([1, ["inner", "outer"]]);
     expect(runtime.mounted.size).toBe(0);
   });
 
@@ -289,7 +290,6 @@ describe("the runtime's bus", () => {
     runtime.bus
       .forAssembly({ id: "x", name: "catalogue", view: "default" })
       .events.send("cart:add", { sku: "late" });
-
     document.body.innerHTML = envelope("cart");
     runtime.mount(document);
     const held = runtime.bus.forAssembly({ id: "y", name: "cart", view: "default" });

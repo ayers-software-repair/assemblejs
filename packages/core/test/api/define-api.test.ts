@@ -5,10 +5,22 @@ import { defineApi } from "@assemblejs/core";
 
 describe("declaring an api", () => {
   it("returns what it was given", async () => {
-    const time = defineApi({ path: "/api/time", handle: () => ({ ok: true }) });
+    const time = defineApi({ path: "/api/time", handle: (context) => ({ ok: context.params }) });
     expect(time.path).toBe("/api/time");
     expect(
       await time.handle({ query: new URLSearchParams(), params: {}, body: undefined }),
-    ).toEqual({ ok: true });
+    ).toEqual({ ok: {} });
+  });
+
+  it("returns a stream as it was given, its context typed", async () => {
+    const sent: string[] = [];
+    const ticks = defineApi({ path: "/api/ticks", stream: (context) => context.send("tick", 1) });
+    await ticks.stream({
+      query: new URLSearchParams(),
+      params: {},
+      send: (topic) => sent.push(topic),
+      signal: new AbortController().signal,
+    });
+    expect(sent).toEqual(["tick"]);
   });
 });

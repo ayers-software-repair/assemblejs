@@ -37,6 +37,7 @@ export default function buildExamples() {
     "examples/styles",
     "examples/frameworks",
     "examples/shadow",
+    "examples/realtime",
   ]) {
     execFileSync(process.execPath, ["packages/cli/dist/bin.js", "build", "--cwd", example], {
       cwd: root,

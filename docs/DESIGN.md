@@ -283,6 +283,26 @@ one connection per page, not one per assembly, and delivers each message onto th
 bus, where assemblies receive it exactly like any other event. Nothing in the assembly's code
 knows the message came from the network.
 
+```ts
+// src/api/prices.api.ts: `stream` in place of `handle`, run once per connection
+export default defineApi({
+  path: "/api/prices",
+  stream: ({ send, signal }) => {
+    const off = feed.subscribe((price) => send("price", price)); // or send(topic, payload, { name })
+    signal.addEventListener("abort", off);
+  },
+});
+
+// src/pages/home/home.page.ts: the page names its one stream
+export default definePage({ stream: "/api/prices" });
+```
+
+Each message is one `data:` line of JSON, `{ topic, payload, to? }`, which cannot be broken by a
+line break in the payload. It arrives on the bus from the sender `{ id: "server" }`, an id no
+placement can have. The page's own runtime opens the stream its head names; a remote's runtime
+never does. A stream answers GET, writes a comment while quiet, and is closed before the server
+stops. A page naming a stream that is not one of the server's streaming apis is a boot error.
+
 There is no WebSocket in core.
 
 ---

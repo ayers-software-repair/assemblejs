@@ -85,4 +85,16 @@ describe("what is checked about apis before anything listens", () => {
   it("reports every problem, not the first", () => {
     expect(apiProblems([defineApi({ path: "assembly/*", handle })]).length).toBe(2);
   });
+
+  it("refuses a stream declared for a method other than GET, which no event source asks", () => {
+    const posted = {
+      path: "/live",
+      method: "POST",
+      stream: () => undefined,
+    } as unknown as Parameters<typeof apiProblems>[0][number];
+    expect(apiProblems([posted]).join()).toMatch(
+      /api POST "\/live" streams, and a stream answers GET/,
+    );
+    expect(apiProblems([defineApi({ path: "/live", stream: () => undefined })])).toEqual([]);
+  });
 });

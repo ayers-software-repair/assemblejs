@@ -1,0 +1,23 @@
+{
+  "name": "@assemblejs/example-realtime",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A server push over server-sent events, reaching a React assembly and a Svelte assembly on one page through the page's bus.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/renderer-react": "workspace:*",
+    "@assemblejs/renderer-svelte": "workspace:*",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "svelte": "5.57.0"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}

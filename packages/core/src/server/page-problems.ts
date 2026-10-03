@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { ApiDefinition } from "../api/api-definition.js";
+import { isStreamApi } from "../api/is-stream-api.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { findPlacements } from "../compose/find-placements.js";
 import type { PageDefinition } from "../page/page-definition.js";
@@ -20,7 +21,8 @@ import { routeKey } from "./route-key.js";
  * at boot, so a name with no assembly behind it is a refusal and not a
  * blank space a visitor discovers. The same goes for policy written for a placement the template
  * does not make: it would be read by nothing, and the author would believe it applied. And a
- * placement from another server cannot sit inside one of the page's forms.
+ * placement from another server cannot sit inside one of the page's forms. A page's stream must be
+ * one of this server's streaming apis.
  */
 export function pageProblems(
   pages: readonly PageDefinition[],
@@ -34,6 +36,14 @@ export function pageProblems(
     apis.filter((api) => (api.method ?? "GET") === "GET").map((api) => routeKey("GET", api.path)),
   );
   const seen = new Set<string>();
+  // A page's runtime opens its stream by the path as written, so a path with a parameter is one
+  // no page can name.
+  const streams = new Set(
+    apis
+      .filter(isStreamApi)
+      .map((api) => api.path)
+      .filter((path) => !path.includes(":")),
+  );
 
   for (const page of pages) {
     const at = `page "${page.route}"`;
@@ -50,6 +60,11 @@ export function pageProblems(
     const reserved = reservedPrefix(page.route);
     if (reserved !== undefined) {
       problems.push(`${at} is under "${reserved}/", which the framework reserves`);
+    }
+    if (page.stream !== undefined && !streams.has(page.stream)) {
+      problems.push(
+        `${at} opens the stream "${page.stream}", which is not the path of a streaming api without parameters`,
+      );
     }
     const key = routeKey("GET", page.route);
     if (seen.has(key)) problems.push(`${at} is declared more than once`);

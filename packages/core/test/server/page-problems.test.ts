@@ -145,4 +145,19 @@ describe("what is checked about pages before anything listens", () => {
     );
     expect(problems.join()).toMatch(/inside a <form>/);
   });
+
+  it("refuses a stream that is not one of this server's streaming apis without parameters", () => {
+    const apis = [
+      defineApi({ path: "/live", stream: () => undefined }),
+      defineApi({ path: "/data", handle: () => null }),
+      defineApi({ path: "/rooms/:room", stream: () => undefined }),
+    ];
+    const streaming = (stream: string) => [{ ...page("/"), stream }];
+    expect(pageProblems(streaming("/live"), [hello], apis)).toEqual([]);
+    for (const stream of ["/data", "/nowhere", "/rooms/:room"]) {
+      expect(pageProblems(streaming(stream), [hello], apis).join(), stream).toMatch(
+        /opens the stream .*, which is not the path of a streaming api without parameters/,
+      );
+    }
+  });
 });

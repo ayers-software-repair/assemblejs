@@ -73,6 +73,12 @@ beforeAll(async () => {
         template: '<html><head></head><body><assembly name="card"></assembly></body></html>',
       },
       {
+        route: "/streaming",
+        template:
+          '<html><head><title>t</title></head><body><assembly name="hello"></assembly></body></html>',
+        stream: "/live?room=a&b",
+      },
+      {
         route: "/stalled",
         template: '<body><assembly name="slow"></assembly></body>',
         place: { slow: { required: true, deadline: 20 } },
@@ -102,6 +108,15 @@ describe("a page, mounted", () => {
     expect(response.headers["content-type"]).toBe("text/html; charset=utf-8");
     expect(response.body.match(/<assembly-root/g)?.length).toBe(2);
     expect(response.body).not.toMatch(/<assembly /);
+  });
+
+  it("names the page's stream in its head, for its runtime to open", async () => {
+    const html = (await app.inject({ method: "GET", url: "/streaming" })).body;
+    expect(html).toContain(
+      '<title>t</title><link rel="stylesheet" href="/hello.css"><meta name="assemblejs-stream" content="/live?room=a&amp;b"></head>',
+    );
+    // A page that names no stream carries no element for one.
+    expect((await app.inject({ method: "GET", url: "/" })).body).not.toContain("assemblejs-stream");
   });
 
   it("links each placed assembly's browser files once", async () => {

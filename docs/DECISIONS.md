@@ -1176,3 +1176,27 @@ suite; the Handlebars instance is the package's own, not one per template, as it
 says; the agent surface lists every renderer it can scaffold. Pug's escaping leaves `'`, which
 the README says. Not done here, and in the ledger: a broken template passes `build` and `check`
 and is found at its first render, where its placement falls back.
+
+## 2026-10-03: B-18, real-time
+
+- **A stream is an api with `stream` in place of `handle`.** `ApiDefinition` is now the union of
+  a data api and a streaming api, so a project's `*.api.ts` files need nothing new and the
+  generated module is unchanged; `defineApi` answers the definition's own type, so each kind
+  keeps its context's type (overloads would read to the organization gate as three exports).
+  A stream runs once per connection with `send` and an `AbortSignal` that aborts when the
+  connection closes from either end.
+- **The page names its stream** (`definePage({ stream })`), and the server writes it as a meta
+  element at the end of the head, where the page's runtime reads it. Expected from DESIGN 3.6:
+  "one connection per page". A runtime started for a remote's assemblies never opens one, so a
+  page that places another server's assemblies is still one connection.
+- **Wire format:** the event source's default message, one `data:` line of
+  `{ topic, payload, to? }` JSON; a message that does not parse is dropped. Named events were
+  not used because an event source needs a listener per name, and topics are open-ended.
+- **Found while testing:** a stream's open connection is not idle, so a server that closes only
+  idle connections would wait on it forever; every open stream is closed in `preClose`. Node's
+  fetch can also hold a spare connection that sends no request, which the tests' own servers
+  close by force; that is the test client, not the stream.
+- Equivalent mutant recorded: skipping a send after the connection closed changes nothing a test
+  can see, as Node drops a write after the end; the check stays, so a closed stream does no work.
+- Proof: `browser/realtime.browser.ts`, from `examples/realtime`: one push reaches a React and a
+  Svelte assembly through the bus, over exactly one connection.

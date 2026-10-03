@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { FastifyInstance } from "fastify";
-import type { ApiDefinition } from "../api/api-definition.js";
+import type { DataApi } from "../api/data-api.js";
 import type { JsonValue } from "../json/json-value.js";
 import { queryOf } from "./query-of.js";
 
@@ -14,7 +14,7 @@ import { queryOf } from "./query-of.js";
  * empty body labelled JSON. A handler that throws reaches the server's one error handler, so its
  * message never reaches a body.
  */
-export function registerApis(app: FastifyInstance, apis: readonly ApiDefinition[]): void {
+export function registerApis(app: FastifyInstance, apis: readonly DataApi[]): void {
   for (const api of apis) {
     app.route({
       method: api.method ?? "GET",

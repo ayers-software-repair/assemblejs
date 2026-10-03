@@ -4,3 +4,4 @@
 // server writes the island, the browser parses it. It holds shapes only, never behaviour.
 
 export type { IslandPayload } from "./island-payload.js";
+export type { StreamMessage } from "./stream-message.js";

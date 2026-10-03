@@ -15,6 +15,7 @@ import { parseContentUrl } from "../remote/parse-content-url.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
 import type { RemoteTransport } from "../remote/remote-transport.js";
 import { hoistAssets } from "./hoist-assets.js";
+import { linkStream } from "./link-stream.js";
 import { pageFetch } from "./page-fetch.js";
 import { pagePlan } from "./page-plan.js";
 import { queryOf } from "./query-of.js";
@@ -101,7 +102,7 @@ export function registerPages(
       }
       return reply
         .header("content-type", "text/html; charset=utf-8")
-        .send(hoistAssets(composed.html, assets));
+        .send(linkStream(hoistAssets(composed.html, assets), page.stream));
     });
   }
 }
