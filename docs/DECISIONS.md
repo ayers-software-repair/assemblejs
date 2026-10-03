@@ -1341,3 +1341,26 @@ build that runs") and the design says no more, so:
   directory goes is the author's. `deploy/` joins the generated project's `.gitignore`.
 - Proof: a generated project passes `check`; a generated project's `deploy/` starts with plain
   node from inside itself and serves its page.
+
+## 2026-10-03: B-21, the conformance harness
+
+- **From the outside, over HTTP alone.** `conformance/harness/run.mjs` packs core, cli and
+  create, creates a project from the starter's tarball, lays a fixture's files over it, installs
+  every `@assemblejs` package from its tarball (an override pins core to the tarball whoever asks
+  for it), builds with the command line the project installed, starts `dist/server.js` under
+  plain node in production, and runs `conformance/specs/*.spec.mjs` against it with node's own
+  test runner. A spec names the DESIGN section it holds the server to and reads only what an
+  HTTP client can: no import of a package, no workspace link. It needs the network and minutes,
+  so it is `pnpm conformance`, run on demand like `pnpm proof:create`, not a gate in `pnpm check`.
+- **The first specs** hold DESIGN 2 to the reference server: the content endpoint (a fragment
+  that is exactly one envelope, the echoed name and version, the parent's id stamped, every
+  malformed composition header a 400, 404 for an unknown assembly or view), the data endpoint
+  (the island's object exactly; a throwing service a 500 with an id and nothing else), the
+  manifest (the named fields and nothing else, the content endpoint's version) and the envelope
+  (the canonical attributes and only those that apply, the island inside it addressed by its id
+  and unable to end its script, the directive never emitted).
+- **Found by the first run:** given a service that throws, the content endpoint answered the JSON
+  failure body, where DESIGN 2.2 says it renders the assembly's fallback and logs against the
+  same id. It now answers the fallback envelope, marked `data-failed` with the logged id, under a
+  500, so a composing server still applies its own policy and caches nothing while a bare fetch
+  reads an envelope. Proof: `pnpm conformance`, 14 of 14, after the same specs were red on it.

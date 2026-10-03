@@ -78,6 +78,9 @@ export default tseslint.config(
   // Repository tooling prints to stdout on purpose: its output is the gate's evidence.
   { files: ["scripts/**", "eslint.config.js"], rules: { "no-console": "off" } },
 
+  // The conformance harness prints its steps on purpose: they are the run's evidence.
+  { files: ["conformance/**"], rules: { "no-console": "off" } },
+
   // An example's output IS its interface: what it prints is what a reader is shown.
   { files: ["examples/**"], rules: { "no-console": "off" } },
 

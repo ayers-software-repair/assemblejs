@@ -196,17 +196,17 @@ describe("the composition headers", () => {
 });
 
 describe("the error contract", () => {
-  it("tells the visitor an id and never what went wrong", async () => {
+  it("answers its fallback marked with the logged id, and never what went wrong", async () => {
     const response = await app.inject({ method: "GET", url: "/assembly/exploding/" });
     expect(response.statusCode).toBe(500);
     const body = response.body;
-    expect(body).toMatch(/[0-9a-f]{8}/);
+    const id = /^<assembly-root [^>]*data-failed="([0-9a-f]{8})"/.exec(body)?.[1];
     // Not the message, not the credential in it, not a stack frame.
     expect(body).not.toContain("postgres");
     expect(body).not.toContain("hunter2");
     expect(body).not.toContain("refused");
     expect(body).not.toContain("create-server");
-    expect(response.json()).toEqual({ error: { correlationId: expect.any(String) } });
+    expect(logged.map((line) => line.correlationId)).toContain(id);
   });
 });
 

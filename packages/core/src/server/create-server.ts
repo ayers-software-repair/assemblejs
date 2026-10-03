@@ -8,6 +8,8 @@ import { registerAccess } from "../access/register-access.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_LIMITS } from "../compose/default-limits.js";
 import { readConfig } from "../config/read-config.js";
+import { renderEnvelope } from "../envelope/render-envelope.js";
+import { describeFailure } from "../failure/describe-failure.js";
 import { exitOnUnhandled } from "../failure/exit-on-unhandled.js";
 import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
@@ -157,12 +159,27 @@ export async function createServer(options: ServerOptions): Promise<App> {
 
     // The same function the composer's local transport calls, which calls the same data
     // function the data endpoint calls: one path from declaration to markup, however reached.
-    const html = await renderLocal(
-      resolved.assembly,
-      resolved.view,
-      headers.id ?? newCorrelationId(),
-      queryOf(request.url),
-    );
+    const id = headers.id ?? newCorrelationId();
+    let html: string;
+    try {
+      html = await renderLocal(resolved.assembly, resolved.view, id, queryOf(request.url));
+    } catch (error) {
+      // The assembly's fallback, marked with the id its failure is logged against: a 500, so a
+      // composing server applies its own policy and caches nothing, with an envelope a bare
+      // fetch can read.
+      const correlationId = newCorrelationId();
+      log(describeFailure(correlationId, error));
+      html = renderEnvelope({
+        id,
+        name: resolved.assembly.name,
+        view: resolved.view,
+        renderer: resolved.assembly.views[resolved.view]?.renderer ?? "",
+        markup: "",
+        data: {},
+        failed: correlationId,
+      });
+      void reply.code(500);
+    }
     return reply
       .header("content-type", "text/html; charset=utf-8")
       .header("assembly-name", resolved.assembly.name)

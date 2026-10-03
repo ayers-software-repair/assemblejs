@@ -39,7 +39,8 @@
     "test": "pnpm -r test",
     "test:browser": "playwright test -c browser/playwright.config.ts",
     "proof:create": "node scripts/proof-create.mjs",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "conformance": "node conformance/harness/run.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
