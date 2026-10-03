@@ -13,18 +13,21 @@ owner does every release himself, from his own sessions, so nothing here publish
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
 micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
 published as `@assemblejs/*`. `docs/DESIGN.md` is the contract, `docs/PLAN.md` the frozen rung
-ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE except B-09
-(`dev`, `build`, `@assemblejs/create` left) and B-09c (agent tools `create_project`,
-`add_assembly`, `place_assembly`, `check` left).
+ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE except B-09c
+(agent tools `create_project`, `add_assembly`, `place_assembly`, `check` left). The browser suite
+(`pnpm test:browser`) is outside `pnpm check`; on a machine whose Chromium is not the one this
+Playwright expects, `ASSEMBLEJS_CHROMIUM` names the binary.
 
-**THE EXACT NEXT STEP:** B-09. Found on resuming, and logged in `docs/DECISIONS.md`: the server
+**B-09 IS DONE (2026-10-03).** Its record, kept for the next lane: Found on resuming, and logged in `docs/DECISIONS.md`: the server
 served the assembly endpoints but no PAGES - nothing turned a template into a composed document
 or linked a browser runtime - and B-09's proof (create, build, `node dist/server.js`) needs both.
 So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild owned by the
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
-`@assemblejs/create` and the tarball proof. Then B-09c, then B-13 onward in ledger order.
+`@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**ORDER AND DEPENDENCIES of the open rows:** B-09 -> B-09c -> B-13 (remote; carries recorded
+**THE EXACT NEXT STEP:** B-09c, the four agent tools, then B-13 onward in ledger order.
+
+**ORDER AND DEPENDENCIES of the open rows:** B-09c -> B-13 (remote; carries recorded
 debt: `Limits.maxBytes` has no reader, and pages refuse a `url` placement at boot until it lands)
 -> B-14 auth -> B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
@@ -140,14 +143,10 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-06 the server: the three endpoints, header validation, the error contract
 - [x] B-07 the browser runtime and the four mount modes
 - [x] B-08 events: typed, addressable, replay opt-in, teardown exact
-- [ ] B-09 the CLI and create: discovery, templates, non-interactive
-      Done: discovery, the generated registry, new, add, generate, the non-interactive bin, and
-      pages served by core (definePage, the composer's local transport, browser files served
-      from a build's directory and hoisted into each page, templates checked at boot), and
-      `build` (esbuild owned by the CLI; `dist/server.js` runs under plain node; the day-one
-      proof runs from a real build in Chromium).
-      and `dev` (the same build and `node dist/server.js`, rebuilt and restarted on change).
-      Left: `@assemblejs/create` so `npm create @assemblejs` works, and the tarball proof.
+- [x] B-09 the CLI and create: discovery, templates, non-interactive; new, add, the
+      non-interactive bin; pages served by core; `build` (esbuild owned by the CLI,
+      `dist/server.js` under plain node); `dev`; `@assemblejs/create`. Proof: `pnpm proof:create`
+      (packed tarballs, the starter run from its tarball, built, dev dependencies pruned, served)
 - [x] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
       Landed: the project-root guard, the queryable rules, render_assembly, compose_page,
       explain, the project and rules resources, and the stdio server, all driven end to end

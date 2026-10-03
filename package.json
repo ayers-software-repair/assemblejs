@@ -38,6 +38,7 @@
     "prepare": "husky",
     "test": "pnpm -r test",
     "test:browser": "playwright test -c browser/playwright.config.ts",
+    "proof:create": "node scripts/proof-create.mjs",
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {

@@ -653,3 +653,22 @@ What it does not do yet is refresh the browser: the page reloads by hand. A relo
 page wants the server-sent events B-18 builds, under the framework's own prefix and only in
 development, so it is a ledger row after B-18 rather than a second channel invented now. DESIGN 11
 is updated to say what `dev` does.
+
+## 2026-10-03: create, and B-09's proof from the tarballs
+
+`@assemblejs/create` is the command line's own `new` behind the bin `npm create @assemblejs`
+runs: one argument, the directory, and no question asked, so a project started either way is the
+same project and the starter behaves the same in a terminal and a script.
+
+The rung's proof is `pnpm proof:create`, a script rather than a gate in `pnpm check` because it
+needs the network and minutes. It packs core, cli and create with pnpm (real versions where the
+workspace says `workspace:*`, as a publish writes them), runs the starter from its tarball with
+`npm exec` (what `npm create` runs, handed the unpublished dependencies as tarballs too), points
+the project at the tarballs where the starter put each one, installs, builds with the command
+line it installed, prunes every development dependency, asserts esbuild and the command line are
+gone, and fetches the page `node dist/server.js` composes.
+
+It was green for a reason it did not claim on its first run: it moved the command line into the
+project's development dependencies itself, so a starter that installed it at run time still
+passed. It now rewrites each dependency where the starter put it, and was watched red on a
+starter that lists the command line as a production dependency.
