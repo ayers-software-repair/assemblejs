@@ -82,4 +82,57 @@ describe("writing each assembly's stylesheet", () => {
     writeFileSync(join(root, "src", "assemblies", "cart", "cart.css"), ".title { color: blue }");
     expect(writeStyles(root, [found], new Map(), realIo).get("cart")?.scoped).not.toBe(first);
   });
+
+  it("adds the style of every component in the assembly's directory, and of shared ones", () => {
+    const root = project();
+    const found = assembly(root, []);
+    const sheets = writeStyles(
+      root,
+      [
+        found,
+        {
+          ...found,
+          name: "list",
+          directory: join(root, "src", "assemblies", "list"),
+          view: join(root, "src", "assemblies", "list", "list.html"),
+          renderer: "html",
+        },
+      ],
+      new Map([
+        [found.view, ".own.svelte-a{}"],
+        [join(found.directory, "parts", "child.svelte"), ".kid.svelte-b{}"],
+        [join(root, "src", "lib", "button.svelte"), ".shared.svelte-c{}"],
+        [join(root, "src", "assemblies", "list", "row.svelte"), ".row.svelte-d{}"],
+      ]),
+      realIo,
+    );
+    const read = (url: string | undefined) =>
+      readFileSync(
+        join(root, "dist", "client", "styles", (url ?? "").split("/").at(-1) ?? ""),
+        "utf8",
+      );
+    const cart = read(sheets.get("cart")?.scoped);
+    expect(cart).toContain(".own.svelte-a{}");
+    expect(cart).toContain(".kid.svelte-b{}");
+    expect(cart).toContain(".shared.svelte-c{}");
+    expect(cart).not.toContain(".row.svelte-d{}");
+    // Shared components go with Svelte assemblies only; an html assembly keeps its own.
+    expect(read(sheets.get("list")?.scoped)).not.toContain(".shared.svelte-c{}");
+  });
+
+  it("carries the files a stylesheet names into the build", () => {
+    const root = project();
+    writeFileSync(
+      join(root, "src", "assemblies", "cart", "cart.css"),
+      ".a { background: url(bg.png) }",
+    );
+    writeFileSync(join(root, "src", "assemblies", "cart", "bg.png"), "pixels");
+    const found = assembly(root, [join(root, "src", "assemblies", "cart", "cart.css")]);
+    const url = writeStyles(root, [found], new Map(), realIo).get("cart")?.scoped ?? "";
+    const css = readFileSync(
+      join(root, "dist", "client", "styles", url.split("/").at(-1) ?? ""),
+      "utf8",
+    );
+    expect(css).toMatch(/url\(\/_assemblejs\/assets\/styles\/files\/bg-[0-9a-f]{8}\.png\)/);
+  });
 });

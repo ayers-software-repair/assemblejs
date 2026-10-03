@@ -875,3 +875,34 @@ Two independent reviews read B-13 to B-15 at the source. What they found, and wh
 - **`pnpm check` builds before it tests.** Found: on a fresh clone the command line's tests
   bundled projects against packages that were not built yet, so CI, which runs `pnpm check`
   straight after install, would have been red; every green run here had a built tree.
+
+## 2026-10-03: the rest of both reviews
+
+- **`check` reads a page's declaration without running it.** A placement whose policy in
+  `<name>.page.ts` names a `url` is remote, so it is checked against the remotes in
+  `assemblejs.config.ts` (when the url is a literal) rather than reported as a missing
+  assembly. `check` stays a reading of the project that executes none of it; a placement whose
+  policy is computed is not seen, and boot still refuses an undeclared remote.
+- **`dev` always ends.** A stop asks the server to end and, after three seconds, makes it; a
+  second Ctrl-C exits at once through `exit`, whose handler kills the server, because a signal
+  death runs no `exit` handler at all. A test drives the real command line with a server that
+  ignores SIGTERM. Found while proving it: this container's first process does not reap
+  orphans, so a killed server lingers as a zombie, and the test counts a zombie as stopped.
+- **The private-range check is `net.BlockList`**, covering every reserved IPv4 range (shared,
+  benchmarking, documentation, multicast, reserved, broadcast) and IPv6's site-local, multicast
+  and NAT64 prefixes. The block list reads every spelling of an IPv6 address, mapped IPv4 in hex
+  included, which was checked before relying on it.
+- **A stylesheet's references are built with it.** `url(./bg.png)` is copied into
+  `dist/client/styles/files/` under its content's hash and the url rewritten; a relative
+  `@import`, a missing file and CSS the build cannot parse are problems with rule
+  `an-assembly-owns-its-styles`, reported by `build` and `check` before anything is bundled.
+  `Io.write` takes bytes as well as text for it.
+- **Scoping follows what the author wrote.** A nested rule is scoped through its parent, never
+  twice; a `:scope` inside `:not()` or `:is()` is the envelope and the rule is still scoped, so
+  it cannot reach outside; a selector starting at `:root`, `html`, `body` or `:host` names the
+  envelope; inside `@scope`, `:scope` keeps the meaning `@scope` gives it.
+- **A Svelte assembly's styles are its components'**, every one in its directory; a component
+  outside every assembly's directory may be used by any, so its `<style>` goes with every
+  Svelte assembly (Svelte's own class hashes keep it from touching anything else).
+- **Inline styles are refused by the default policy, and now said so** in DESIGN 5.2, rather
+  than loosened: the policy's point is that nothing inline applies.

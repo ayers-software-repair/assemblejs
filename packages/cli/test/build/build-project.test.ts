@@ -147,3 +147,22 @@ describe("building what the command line scaffolds", () => {
     );
   });
 });
+
+describe("building a project with styles and no browser script", () => {
+  it("serves its stylesheets all the same", async () => {
+    const root = mkdtempSync(join(example, ".dev-styles-"));
+    try {
+      for (const [path, contents] of Object.entries(projectFiles("plain"))) {
+        realIo.write(join(root, path), contents);
+      }
+      writeFileSync(join(root, "src", "assemblies", "hello", "hello.css"), ".hi { color: red }");
+      expect(await buildProject(root, capture().io)).toBe(0);
+      const page = await serve(root, "/");
+      expect(page).not.toContain('<script type="module"');
+      const href = /href="(\/_assemblejs\/assets\/styles\/hello-[0-9a-f]{8}\.css)"/.exec(page)?.[1];
+      expect(await serve(root, String(href))).toContain('assembly-root[data-name="hello"] .hi');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});

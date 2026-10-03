@@ -59,4 +59,22 @@ describe("checking a project", () => {
     expect(rules).toContainEqual(["the-server-file-never-grows", "src/server.ts"]);
     expect(rules).toContainEqual(["a-view-needs-its-renderer", "package.json"]);
   });
+
+  it("reads a placement its page declares from another server, against the declared remotes", () => {
+    const page = (origin: string) => ({
+      "src/server.ts": "",
+      "src/pages/home/home.html": '<body><assembly name="cart"></assembly></body>',
+      "src/pages/home/home.page.ts": `export default { place: { cart: { url: "${origin}/assembly/cart/" } } };`,
+      "assemblejs.config.ts":
+        'export default { remotes: [{ origin: "https://shop.example.com" }] };',
+    });
+    expect(checkProject(project(page("https://shop.example.com")))).toEqual([]);
+    expect(checkProject(project(page("https://other.example.com")))).toEqual([
+      expect.objectContaining({
+        path: "src/pages/home/home.page.ts",
+        rule: "a-placement-names-an-assembly",
+        fix: 'add { origin: "https://other.example.com" } to remotes in assemblejs.config.ts',
+      }),
+    ]);
+  });
 });

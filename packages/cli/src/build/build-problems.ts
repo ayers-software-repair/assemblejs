@@ -4,6 +4,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { styleProblems } from "../styles/style-problems.js";
 import { findPackage } from "./find-package.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 
@@ -11,8 +12,8 @@ import { RENDERER_PACKAGES } from "./renderer-packages.js";
  * Everything that would stop a project building, found before the bundler runs: no server file,
  * a view whose renderer this version cannot build, a renderer package or the Svelte compiler the
  * project has not installed, and a framework view with a `.client.ts`, whose browser behaviour is
- * its component already. `check` reports the same list, so it never answers clean for a project
- * `build` would refuse.
+ * its component already, and a stylesheet the build cannot carry into `dist/` intact. `check`
+ * reports the same list, so it never answers clean for a project `build` would refuse.
  */
 export function buildProblems(
   root: string,
@@ -69,5 +70,6 @@ export function buildProblems(
       });
     }
   }
+  problems.push(...styleProblems(assemblies));
   return problems;
 }

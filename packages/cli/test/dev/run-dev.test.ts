@@ -56,6 +56,8 @@ describe("dev", () => {
     }
     expect(await done).toBe(0);
     await expect(page()).rejects.toThrow();
+    // Every server here was stopped by dev itself, on a restart or at the end.
+    expect(errors.join()).not.toContain("the server stopped");
   });
 });
 
@@ -81,9 +83,10 @@ describe("dev, when the project misbehaves", () => {
       process.env["ASSEMBLEJS_PORT"] = port;
       const controller = new AbortController();
       const page = async () => (await fetch(`http://127.0.0.1:${port}/`)).text();
+      const errors: string[] = [];
       const done = runDev(
         quiet,
-        { ...realIo, log: () => undefined, error: () => undefined },
+        { ...realIo, log: () => undefined, error: (line) => errors.push(line) },
         controller.signal,
       );
       try {
@@ -96,6 +99,8 @@ describe("dev, when the project misbehaves", () => {
       }
       expect(await done).toBe(0);
       await expect(page()).rejects.toThrow();
+      // It never said it was listening, and was still never reported as stopping by itself.
+      expect(errors.join()).not.toContain("the server stopped");
     } finally {
       rmSync(quiet, { recursive: true, force: true });
     }
@@ -119,6 +124,33 @@ describe("dev, when the project misbehaves", () => {
     expect(await done).toBe(0);
     expect(errors.join()).toContain("a directory vanished");
     rmSync(thrown, { recursive: true, force: true });
+  });
+
+  it("rebuilds when the project's config changes, and not for other files beside it", async () => {
+    const configured = mkdtempSync(join(example, ".dev-config-"));
+    mkdirSync(join(configured, "src"));
+    writeFileSync(join(configured, "assemblejs.config.ts"), "export default {};");
+    let builds = 0;
+    const controller = new AbortController();
+    const done = runDev(
+      configured,
+      { ...realIo, log: () => undefined, error: () => undefined },
+      controller.signal,
+      async () => {
+        builds += 1;
+        return 1;
+      },
+    );
+    await until(async () => builds === 1);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    writeFileSync(join(configured, "notes.txt"), "not the config");
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    expect(builds).toBe(1);
+    writeFileSync(join(configured, "assemblejs.config.ts"), "export default { remotes: [] };");
+    await until(async () => builds === 2);
+    controller.abort();
+    expect(await done).toBe(0);
+    rmSync(configured, { recursive: true, force: true });
   });
 
   it("refuses to run where there is no src/ to watch", async () => {

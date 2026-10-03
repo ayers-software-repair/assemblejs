@@ -2,19 +2,22 @@
 // SPDX-License-Identifier: Apache-2.0
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { Io } from "../io/io.js";
 import type { AssemblyStyles } from "./assembly-styles.js";
+import { carryReferences } from "./carry-references.js";
 import { scopeCss } from "./scope-css.js";
 import { shadowCss } from "./shadow-css.js";
 
 /**
  * Writes each assembly's stylesheets into the build, and answers where each is served by
- * assembly name: its own `.css` files, then its Svelte component's `<style>`, already scoped by
- * Svelte. A file is named by its content's hash, so a page links only the styles of the
- * assemblies it places and a changed stylesheet is a new url.
+ * assembly name: its own `.css` files, with every file they name carried along, then the
+ * `<style>` of each Svelte component it is made of, already scoped by Svelte. A component in the
+ * assembly's directory is its own; one outside every assembly's directory may be used by any of
+ * them, so it goes with every Svelte assembly. A file is named by its content's hash, so a page
+ * links only the styles of the assemblies it places and a changed stylesheet is a new url.
  *
  * A framework view gets a second sheet for the shadow root it may opt into, because a selector
  * scoped to the envelope matches nothing inside that root. Which of the two is linked is the
@@ -33,12 +36,25 @@ export function writeStyles(
     io.write(join(root, "dist", "client", "styles", file), css);
     return `${ASSET_ROUTE_PREFIX}/styles/${file}`;
   };
+  const within = (directory: string, file: string): boolean => {
+    const step = relative(directory, file);
+    return step !== "" && !step.startsWith("..");
+  };
+  const components = [...componentCss.entries()].sort(([a], [b]) => (a < b ? -1 : 1));
+  const shared = components
+    .filter(([file]) => !assemblies.some((assembly) => within(assembly.directory, file)))
+    .map(([, css]) => css);
   const styles = new Map<string, AssemblyStyles>();
   for (const assembly of assemblies) {
-    const sources = assembly.styles.map((file) => ({ file, css: readFileSync(file, "utf8") }));
-    const own = componentCss.get(assembly.view);
-    if (sources.length === 0 && own === undefined) continue;
-    const tail = own === undefined ? [] : [own];
+    const sources = assembly.styles.map((file) => ({
+      file,
+      css: carryReferences(readFileSync(file, "utf8"), file, root, io),
+    }));
+    const tail = [
+      ...components.filter(([file]) => within(assembly.directory, file)).map(([, css]) => css),
+      ...(assembly.renderer === "svelte" ? shared : []),
+    ];
+    if (sources.length === 0 && tail.length === 0) continue;
     const scoped = sources.map((source) => scopeCss(source.css, assembly.name, source.file));
     const isolated = sources.map((source) => shadowCss(source.css, source.file));
     styles.set(assembly.name, {

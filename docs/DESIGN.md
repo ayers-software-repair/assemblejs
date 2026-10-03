@@ -335,7 +335,9 @@ The framework ships no user store, no login page and no session.
 
 A default content-security policy and a same-origin CORS policy ship on by default; allowlisted
 remote origins are added to the policy automatically, because they are the only extra origins
-the page is designed to load from.
+the page is designed to load from. Nothing inline runs or applies under it: no inline script, no
+`<style>` block and no `style` attribute, a framework's server-rendered `style` included. Styles
+belong in an assembly's stylesheet (section 10); a project that needs more replaces the policy.
 
 ### 5.3 The server-to-browser boundary
 
@@ -566,6 +568,9 @@ real.
 An assembly's stylesheet is compiled at build time with a scope derived from its name, so two
 independently written assemblies cannot collide. Shadow DOM is a per-assembly opt-in for hard
 isolation.
+
+Every file a stylesheet names beside it is built with it, and one it cannot carry (a relative
+`@import`, a missing file) is a build problem, not a broken link found later.
 
 Stated plainly rather than implied: `@keyframes`, `@font-face`, `@import` and `@page` are global
 by nature and are not scoped. A nested assembly sits inside its parent's envelope, so a parent's

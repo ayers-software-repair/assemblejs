@@ -16,4 +16,5 @@ export const RULE_IDS = [
   "a-placement-names-an-assembly",
   "the-server-file-never-grows",
   "one-project-per-root",
+  "an-assembly-owns-its-styles",
 ] as const;

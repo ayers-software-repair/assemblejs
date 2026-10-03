@@ -9,7 +9,7 @@
  * disk to prove that it would have.
  */
 export interface Io {
-  write(path: string, contents: string): void;
+  write(path: string, contents: string | Uint8Array): void;
   exists(path: string): boolean;
   log(line: string): void;
   error(line: string): void;

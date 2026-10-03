@@ -5,8 +5,9 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-15 are done; `pnpm check` is green
-on every landing commit and the browser suite (`pnpm test:browser`) passes. The commits are
+**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-15 are done, with the
+findings of their independent reviews fixed; `pnpm check` is green on every landing commit, on a
+fresh clone as well, and the browser suite (`pnpm test:browser`) passes. The commits are
 local: GitHub refused this session's push (403, the Claude GitHub App's access to the
 organization), and a bundle of them was written to the session's scratchpad. A cloud session resumed the ladder on the owner's word ("complete all you can"); the
 owner does every release himself, from his own sessions, so nothing here publishes.
@@ -26,8 +27,7 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** the open review rows after B-13 below (the rest of the second B-13
-review, the B-15 review's findings), then B-16, then onward in ledger order.
+**THE EXACT NEXT STEP:** B-16, then onward in ledger order.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
@@ -182,17 +182,20 @@ starts. Until the owner enables Actions, every proof is local only.
       stamped with its origin, and the runtime takes an envelope's owner from its nearest
       marked ancestor; the root guard follows dangling links; the manifest is read beside the
       content under the cap, JSON only, its files on the remote's own origin
-- [ ] The rest of the second B-13 review: `check` reporting every remote placement as a missing
-      assembly; Ctrl-C in `dev` waiting forever on a server that ignores SIGTERM. Low: the
-      private-range list's gaps, `dev`'s stop message on every restart, `dev` not watching
-      the config
-- [ ] The B-15 review's open findings: a nested CSS rule without `&` scoped twice and dead;
-      `:scope` inside `:not()` or `:is()` making a rule global; a child Svelte component's
-      `<style>` left out; `url()` and relative `@import` in assembly CSS left pointing at
-      nothing; inline styles refused by the default policy and not documented. Low: `:root`,
-      `html`, `body` and an author's `:host` dead in a scoped sheet; `@scope`'s own `:scope`
-      rewritten; a CSS parse error not a structured problem; an html-only project with styles
-      and no script untested
+- [x] The rest of the second B-13 review: `check` reads a placement a page declares from
+      another server against the remotes `assemblejs.config.ts` declares; `dev` stops a server
+      that ignores SIGTERM after a grace, a second Ctrl-C ends it at once and takes the server
+      with it, a server dev stopped itself is not reported as stopping, and the config is
+      watched; the private-range check is a block list covering every reserved range and every
+      spelling of an IPv6 address
+- [x] The B-15 review's findings: a nested rule is scoped through its parent; `:scope` inside
+      `:not()` or `:is()` stays inside the assembly; `:root`, `html`, `body` and `:host` name
+      the envelope; `@scope`'s own `:scope` is left to it; every Svelte component in an
+      assembly's directory brings its `<style>`, shared ones go with every Svelte assembly; a
+      file a stylesheet names is built with it, and a relative `@import`, a missing file or CSS
+      the build cannot parse is a structured problem `check` reports too; the default policy's
+      refusal of inline styles is documented (DESIGN 5.2); an html-only project with styles is
+      proved to serve them
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").

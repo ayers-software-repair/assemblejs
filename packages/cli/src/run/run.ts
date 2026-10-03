@@ -108,11 +108,17 @@ function addAssembly(rest: readonly string[], renderer: string, cwd: string, io:
   return 0;
 }
 
-/** Aborts on Ctrl-C or a supervisor's stop, so a long-running command can end cleanly. */
+/**
+ * Aborts on Ctrl-C or a supervisor's stop, so a long-running command can end cleanly. A second
+ * one ends the process at once, through `exit`, so what it started is still stopped on the way.
+ */
 function interrupted(): AbortSignal {
   const controller = new AbortController();
   for (const name of ["SIGINT", "SIGTERM"] as const) {
-    process.once(name, () => controller.abort());
+    process.on(name, () => {
+      if (controller.signal.aborted) process.exit(130);
+      controller.abort();
+    });
   }
   return controller.signal;
 }

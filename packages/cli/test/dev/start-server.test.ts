@@ -44,3 +44,23 @@ describe("starting a built server", () => {
     }
   });
 });
+
+describe("stopping a server that will not stop", () => {
+  it("makes it, once the grace period is over", async () => {
+    const stubborn = mkdtempSync(join(example, ".dev-stubborn-"));
+    try {
+      mkdirSync(join(stubborn, "dist"));
+      writeFileSync(
+        join(stubborn, "dist", "server.js"),
+        'process.on("SIGTERM", () => {});\nconsole.log("listening http://127.0.0.1:1");\nsetInterval(() => {}, 1000);\n',
+      );
+      const running = startServer(stubborn, { ...realIo, log: () => undefined }, 200);
+      await running.ready;
+      const started = Date.now();
+      await running.stop();
+      expect(Date.now() - started).toBeLessThan(2000);
+    } finally {
+      rmSync(stubborn, { recursive: true, force: true });
+    }
+  });
+});

@@ -1,5 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { spawn } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { run } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
@@ -9,7 +13,7 @@ const fake = (existing: readonly string[] = []) => {
   const logs: string[] = [];
   const errors: string[] = [];
   const io: Io = {
-    write: (path, contents) => void written.set(path.replaceAll("\\", "/"), contents),
+    write: (path, contents) => void written.set(path.replaceAll("\\", "/"), String(contents)),
     exists: (path) => existing.includes(path.replaceAll("\\", "/")),
     log: (line) => logs.push(line),
     error: (line) => errors.push(line),
@@ -111,4 +115,49 @@ describe("add assembly", () => {
     expect(run(["add", "assembly", "cart"], io)).toBe(1);
     expect(written.size).toBe(0);
   });
+});
+
+describe("ending dev from a terminal", () => {
+  it("ends at once on a second Ctrl-C, and takes a server that ignores the first with it", async () => {
+    const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
+    const bin = fileURLToPath(new URL("../../dist/bin.js", import.meta.url));
+    const root = mkdtempSync(join(example, ".dev-interrupt-"));
+    try {
+      mkdirSync(join(root, "src"));
+      writeFileSync(join(root, "package.json"), "{}");
+      writeFileSync(
+        join(root, "src", "server.ts"),
+        'import { writeFileSync } from "node:fs";\nprocess.on("SIGTERM", () => {});\nwriteFileSync(new URL("../server.pid", import.meta.url), String(process.pid));\nsetInterval(() => {}, 1000);\n',
+      );
+      const dev = spawn(process.execPath, [bin, "dev", "--cwd", root], { stdio: "ignore" });
+      const exited = new Promise<void>((resolve) => dev.once("exit", () => resolve()));
+      const pidFile = join(root, "server.pid");
+      for (let tries = 0; tries < 200 && !existsSync(pidFile); tries += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      const pid = Number(readFileSync(pidFile, "utf8"));
+      dev.kill("SIGINT");
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      dev.kill("SIGINT");
+      const second = Date.now();
+      await exited;
+      // At once: well inside the grace a first Ctrl-C gives the server.
+      expect(Date.now() - second).toBeLessThan(1500);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      // Killed is enough: a container's first process may never reap it, leaving a zombie.
+      const status = `/proc/${String(pid)}/status`;
+      const running = (): boolean => {
+        if (existsSync(status)) return !/^State:\s+Z/m.test(readFileSync(status, "utf8"));
+        try {
+          process.kill(pid, 0);
+          return true;
+        } catch {
+          return false;
+        }
+      };
+      expect(running()).toBe(false);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }, 30000);
 });

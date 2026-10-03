@@ -42,7 +42,29 @@ test.afterAll(async () => {
 let consumer: App | undefined;
 
 test("two assemblies that use the same class name keep their own styles", async ({ page }) => {
+  const failed: string[] = [];
+  page.on("response", (response) => {
+    if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) {
+      failed.push(`${String(response.status())} ${response.url()}`);
+    }
+  });
   await page.goto(`${origin}/`);
+  // A nested rule is scoped once, and a file the stylesheet names was built with it.
+  await expect(page.locator("#notice-inner")).toHaveCSS("color", "rgb(0, 150, 0)");
+  await expect(page.locator("#badge-title")).toHaveCSS(
+    "background-image",
+    /url\(".*\/_assemblejs\/assets\/styles\/files\/dot-[0-9a-f]{8}\.svg"\)/,
+  );
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        performance
+          .getEntriesByType("resource")
+          .some((entry) => entry.name.includes("/styles/files/dot-")),
+      ),
+    )
+    .toBe(true);
+  expect(failed).toEqual([]);
   await expect(page.locator("#notice-title")).toHaveCSS("color", "rgb(200, 0, 0)");
   await expect(page.locator("#badge-title")).toHaveCSS("color", "rgb(0, 0, 200)");
   // `:scope` named the envelope itself.

@@ -19,20 +19,34 @@ describe("an address inside the server's own network", () => {
       "fd00::1",
       "fe80::1",
       "::ffff:10.0.0.1",
+      "::ffff:7f00:1",
+      "0:0:0:0:0:ffff:7f00:1",
+      "0000:0000:0000:0000:0000:ffff:127.0.0.1",
+      "0:0:0:0:0:0:0:1",
+      "FE80::1",
+      "fec0::1",
+      "64:ff9b::a00:1",
+      "198.18.0.1",
+      "192.0.0.1",
+      "224.0.0.1",
+      "240.0.0.1",
+      "255.255.255.255",
     ]) {
-      expect(isPrivateAddress(address)).toBe(true);
+      expect(isPrivateAddress(address), address).toBe(true);
     }
   });
 
   it("is not a public address, nor anything that is not an address", () => {
     for (const address of [
       "93.184.216.34",
+      "::ffff:5db8:d822",
+      "100.128.0.1",
       "172.32.0.1",
       "192.169.0.1",
       "2606:4700::1111",
       "example.com",
     ]) {
-      expect(isPrivateAddress(address)).toBe(false);
+      expect(isPrivateAddress(address), address).toBe(false);
     }
   });
 });

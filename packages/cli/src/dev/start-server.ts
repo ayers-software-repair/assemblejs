@@ -8,17 +8,18 @@ import type { RunningServer } from "./running-server.js";
 /**
  * Starts `dist/server.js` under plain node, as production does, in development mode unless the
  * environment says otherwise. Its output is passed through line by line, so what the server logs
- * reads in the same terminal as what the build said.
+ * reads in the same terminal as what the build said. Stopping asks it to end, and after
+ * `graceMs` makes it, so a server that ignores the request cannot hold dev open.
  */
-export function startServer(root: string, io: Io): RunningServer {
+export function startServer(root: string, io: Io, graceMs = 3000): RunningServer {
   const child = spawn(process.execPath, [join(root, "dist", "server.js")], {
     cwd: root,
     env: { ASSEMBLEJS_MODE: "development", ...process.env },
     stdio: ["ignore", "pipe", "pipe"],
   });
-  // A last resort: if this process exits however it exits, the server it started goes with it.
+  // A last resort: if this process exits, the server it started goes with it, at once.
   const orphaned = (): void => {
-    child.kill();
+    child.kill("SIGKILL");
   };
   process.once("exit", orphaned);
   const exited = new Promise<void>((resolve) =>
@@ -48,8 +49,11 @@ export function startServer(root: string, io: Io): RunningServer {
   return {
     ready,
     stop: async () => {
-      if (child.exitCode === null && child.signalCode === null) child.kill();
+      if (child.exitCode !== null || child.signalCode !== null) return;
+      child.kill();
+      const forced = setTimeout(() => child.kill("SIGKILL"), graceMs);
       await exited;
+      clearTimeout(forced);
     },
   };
 }

@@ -2,4 +2,6 @@
   color: rgb(0, 0, 200);
   /* Declared by the notice assembly, not this one. */
   animation: pulse 1s infinite alternate;
+  /* A file beside the stylesheet, carried into the build with it. */
+  background-image: url(./dot.svg);
 }

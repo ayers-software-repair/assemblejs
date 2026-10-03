@@ -44,4 +44,12 @@ describe("what would stop a build, found before the bundler runs", () => {
       message: expect.stringMatching(/is its component/),
     });
   });
+
+  it("includes a stylesheet the build cannot carry into dist/ intact", () => {
+    const css = join(mkdtempSync(join(tmpdir(), "css-")), "a.css");
+    writeFileSync(css, ".a { color: red");
+    expect(buildProblems(example, [{ ...assembly("html"), styles: [css] }])).toContainEqual(
+      expect.objectContaining({ rule: "an-assembly-owns-its-styles" }),
+    );
+  });
 });

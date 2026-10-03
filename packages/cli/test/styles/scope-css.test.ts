@@ -46,4 +46,52 @@ describe("scoping an assembly's stylesheet", () => {
     expect(css).toContain("@page { margin: 1cm }");
     expect(css).not.toContain("data-name");
   });
+
+  it("scopes a nested rule through the rule it is nested in, never twice", () => {
+    expect(scope(".card { color: red; .t { color: blue } & .u { color: green } }")).toBe(
+      'assembly-root[data-name="cart"] .card { color: red; .t { color: blue } & .u { color: green } }',
+    );
+    expect(scope(".card { @media (min-width: 1px) { .t { color: blue } } }")).not.toContain(
+      "{ assembly-root",
+    );
+  });
+
+  it("keeps a :scope inside :not() or :is() within the assembly", () => {
+    expect(scope("div:not(:scope) { outline: 0 }")).toBe(
+      'assembly-root[data-name="cart"] div:not(assembly-root[data-name="cart"]) { outline: 0 }',
+    );
+    expect(scope(":is(:scope, .zz) .leak { color: red }")).toBe(
+      'assembly-root[data-name="cart"] :is(assembly-root[data-name="cart"], .zz) .leak { color: red }',
+    );
+  });
+
+  it("reads a selector that starts at the document or the shadow host as the envelope", () => {
+    for (const start of [":root", "html", "body", "BODY", ":host"]) {
+      expect(scope(`${start} { margin: 0 }`), start).toBe(
+        'assembly-root[data-name="cart"] { margin: 0 }',
+      );
+    }
+    expect(scope("body .a { margin: 0 }")).toBe('assembly-root[data-name="cart"] .a { margin: 0 }');
+  });
+
+  it("scopes @container, and leaves @scope's own :scope to @scope", () => {
+    expect(scope("@container (min-width: 1px) { .a { color: red } }")).toContain(
+      'assembly-root[data-name="cart"] .a',
+    );
+    expect(scope("@scope (.card) { :scope { color: red } }")).toBe(
+      '@scope (.card) { assembly-root[data-name="cart"] :scope { color: red } }',
+    );
+  });
+
+  it("leaves keyframes alone however the at-rule is spelled", () => {
+    for (const at of ["@KEYFRAMES", "@-webkit-keyframes"]) {
+      expect(scope(`${at} p { from { opacity: 0 } }`), at).not.toContain("data-name");
+    }
+  });
+
+  it("escapes a name that would break out of the attribute selector", () => {
+    expect(scopeCss(".a {}", 'x"] , body [y="', "x.css")).toContain(
+      'assembly-root[data-name="x\\"] , body [y=\\""] .a',
+    );
+  });
 });

@@ -127,4 +127,12 @@ export const RULES: readonly Rule[] = [
       "Scaffolding over an existing project overwrites the author's files with a starter's, and a tool scoped to one root never reaches outside it.",
     smell: "Asking to create a project where a package.json already is.",
   },
+  {
+    id: "an-assembly-owns-its-styles",
+    rule: "An assembly's styles are its own .css files and its components' <style>, scoped to it at build time, with every file they reference built beside them.",
+    because:
+      "The stylesheet is served from the build, not from the assembly's directory, so a reference the build did not carry along points at nothing, and a stylesheet it cannot parse cannot be scoped.",
+    smell:
+      "A relative @import, a url() naming a file that is not there, or CSS the build reports it cannot parse.",
+  },
 ];

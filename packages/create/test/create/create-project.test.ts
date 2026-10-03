@@ -8,7 +8,7 @@ const fake = () => {
   const written = new Map<string, string>();
   const errors: string[] = [];
   const io: Io = {
-    write: (path, contents) => void written.set(path.replaceAll("\\", "/"), contents),
+    write: (path, contents) => void written.set(path.replaceAll("\\", "/"), String(contents)),
     exists: () => false,
     log: () => undefined,
     error: (line) => errors.push(line),

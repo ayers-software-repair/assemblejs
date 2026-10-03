@@ -9,14 +9,15 @@ import { startServer } from "./start-server.js";
 import { watchSources } from "./watch-sources.js";
 
 /**
- * Builds the project, runs the built server, and on every change to `src/` builds again and
- * restarts it: the same build and the same `node dist/server.js` production runs, so nothing
+ * Builds the project, runs the built server, and on every change to `src/` or to
+ * `assemblejs.config.ts` builds again and restarts it: the same build and the same `node dist/server.js` production runs, so nothing
  * that works here can fail there for a reason dev hid.
  *
  * A build that fails, or throws, leaves the last good server running and says why; the next save
  * tries again. Each step ends once the server is spawned, never waiting on what the server
  * prints, so a server that is slow to listen or never says so holds nothing up. When the signal
- * aborts (Ctrl-C at a terminal) the server is stopped first, then the command ends.
+ * aborts (Ctrl-C at a terminal) the server is stopped first, then the command ends. Only a server
+ * that exits on its own is reported as stopped; one dev stopped itself is not.
  */
 export async function runDev(
   root: string,
@@ -33,7 +34,9 @@ export async function runDev(
       io.error(server === undefined ? "waiting for a fix" : "the last good build is still running");
       return;
     }
-    await server?.stop();
+    const previous = server;
+    server = undefined;
+    await previous?.stop();
     if (signal.aborted) return;
     const started = startServer(root, io);
     server = started;
@@ -54,14 +57,22 @@ export async function runDev(
     return 1;
   }
   await rebuild();
-  const stop = watchSources(join(root, "src"), () => void rebuild());
+  const stops = [
+    watchSources(join(root, "src"), () => void rebuild()),
+    watchSources(root, () => void rebuild(), 100, "assemblejs.config.ts"),
+  ];
   await new Promise<void>((resolve) => {
     if (signal.aborted) resolve();
     else signal.addEventListener("abort", () => resolve(), { once: true });
   });
-  stop();
-  await server?.stop();
+  for (const stop of stops) stop();
+  const ending = async (): Promise<void> => {
+    const last = server;
+    server = undefined;
+    await last?.stop();
+  };
+  await ending();
   await queue;
-  await server?.stop();
+  await ending();
   return 0;
 }

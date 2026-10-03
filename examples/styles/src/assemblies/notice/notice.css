@@ -15,3 +15,10 @@
     opacity: 0.5;
   }
 }
+
+/* Nested, without `&`: scoped once, through the rule it sits in. */
+.card {
+  .inner {
+    color: rgb(0, 150, 0);
+  }
+}
