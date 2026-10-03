@@ -73,10 +73,7 @@ describe("add assembly", () => {
   it("writes the assembly and nothing else", () => {
     const { io, written, logs } = fake();
     expect(run(["add", "assembly", "cart", "--renderer", "svelte"], io)).toBe(0);
-    expect([...written.keys()].sort()).toEqual([
-      "src/assemblies/cart/cart.css",
-      "src/assemblies/cart/cart.svelte",
-    ]);
+    expect([...written.keys()].sort()).toEqual(["src/assemblies/cart/cart.svelte"]);
     // The one thing it does NOT touch is the author's own server file.
     expect([...written.keys()].some((path) => path.includes("server"))).toBe(false);
     expect(logs.join()).toContain(`<assembly name="cart">`);

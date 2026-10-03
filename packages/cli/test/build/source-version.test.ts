@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, renameSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -19,5 +19,15 @@ describe("the version of a build's output", () => {
     expect(sourceVersion(project("<p>a</p>"))).toBe(sourceVersion(project("<p>a</p>")));
     expect(sourceVersion(project("<p>a</p>"))).not.toBe(sourceVersion(project("<p>b</p>")));
     expect(sourceVersion(project("<p>a</p>"))).toMatch(/^[0-9a-f]{12}$/);
+  });
+
+  it("changes when a file moves, even with its content the same", () => {
+    const moved = project("<p>a</p>");
+    mkdirSync(join(moved, "src", "assemblies", "b"));
+    renameSync(
+      join(moved, "src", "assemblies", "a", "a.html"),
+      join(moved, "src", "assemblies", "b", "b.html"),
+    );
+    expect(sourceVersion(moved)).not.toBe(sourceVersion(project("<p>a</p>")));
   });
 });

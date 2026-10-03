@@ -5,23 +5,31 @@ import { assemblyFiles } from "@assemblejs/cli";
 
 describe("what a new assembly is made of", () => {
   it("names the view file so its framework is visible from a directory listing", () => {
-    expect(Object.keys(assemblyFiles("cart", "svelte") ?? {})).toContain(
+    expect(Object.keys(assemblyFiles("cart", "svelte") ?? {})).toEqual([
       "src/assemblies/cart/cart.svelte",
-    );
-    expect(Object.keys(assemblyFiles("cart", "react") ?? {})).toContain(
+    ]);
+    expect(Object.keys(assemblyFiles("cart", "react") ?? {})).toEqual([
       "src/assemblies/cart/cart.react.tsx",
-    );
+    ]);
   });
 
-  it("is a view and its styles, and nothing to register anywhere", () => {
-    const files = assemblyFiles("cart", "html") ?? {};
-    expect(Object.keys(files).sort()).toEqual([
-      "src/assemblies/cart/cart.css",
+  it("writes each view in its own framework's idiom", () => {
+    const svelte = Object.values(assemblyFiles("cart-item", "svelte") ?? {})[0] ?? "";
+    expect(svelte).toContain("$props()");
+    expect(svelte).not.toContain("export default function");
+    const react = Object.values(assemblyFiles("cart-item", "react") ?? {})[0] ?? "";
+    // A React component's name starts with a capital, or React treats it as an html tag.
+    expect(react).toContain("export default function CartItem(");
+  });
+
+  it("is one view and nothing to register anywhere", () => {
+    expect(Object.keys(assemblyFiles("cart", "html") ?? {})).toEqual([
       "src/assemblies/cart/cart.html",
     ]);
   });
 
   it("is nothing at all for a renderer it does not know", () => {
     expect(assemblyFiles("cart", "angular")).toBeUndefined();
+    expect(assemblyFiles("cart", "constructor")).toBeUndefined();
   });
 });

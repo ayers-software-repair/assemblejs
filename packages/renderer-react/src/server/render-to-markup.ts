@@ -15,7 +15,7 @@ import type { AssemblyProps } from "../props/assembly-props.js";
  * check downstream, so the page looks fine and is wrong.
  *
  * The component renders inside the same events context it hydrates inside, holding the server's
- * events, so a component that calls \`useEvents()\` renders on the server as it does in the
+ * events, so a component that calls `useEvents()` renders on the server as it does in the
  * browser instead of failing for want of a page.
  */
 export function renderToMarkup(

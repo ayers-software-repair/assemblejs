@@ -20,17 +20,8 @@ const found = (
   styles: [],
   ...over,
 });
-const generate = (
-  assemblies: readonly DiscoveredAssembly[],
-  script?: string,
-  mounts: string[] = [],
-) =>
-  generateRegistry(assemblies, {
-    from,
-    script,
-    declaresMount: new Set(mounts),
-    packages: { react: "@assemblejs/renderer-react" },
-  });
+const generate = (assemblies: readonly DiscoveredAssembly[], script?: string) =>
+  generateRegistry(assemblies, { from, script, packages: { react: "@assemblejs/renderer-react" } });
 
 describe("generating the registry the built server imports", () => {
   it("imports every view by name, so the graph is static", () => {
@@ -77,14 +68,19 @@ describe("generating the registry the built server imports", () => {
     expect(source).not.toContain('mount: "none"');
   });
 
-  it("reads a view's own mount only where the view declares one", () => {
-    const source = generate(
-      [found("hi", "hi.react.tsx", "react"), found("yo", "yo.react.tsx", "react")],
-      undefined,
-      ["hi"],
-    );
+  it("reads a framework view's own mount, and never an html view's", () => {
+    const source = generate([
+      found("hi", "hi.react.tsx", "react"),
+      found("cart", "cart.html", "html"),
+    ]);
     expect(source).toContain("mount: view_hi.mount");
-    expect(source).not.toContain("view_yo.mount");
+    expect(source).not.toContain("view_cart.mount");
+  });
+
+  it("gives two assemblies whose names differ only in a hyphen two imports", () => {
+    const source = generate([found("x-1", "x-1.html", "html"), found("x1", "x1.html", "html")]);
+    expect(source).toContain("import view_x_1 from");
+    expect(source).toContain("import view_x1 from");
   });
 
   it("runs an assembly's service before it renders", () => {

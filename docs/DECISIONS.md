@@ -672,3 +672,34 @@ It was green for a reason it did not claim on its first run: it moved the comman
 project's development dependencies itself, so a starter that installed it at run time still
 passed. It now rewrites each dependency where the starter put it, and was watched red on a
 starter that lists the command line as a production dependency.
+
+## 2026-10-03: what verifying the build found, and problems as structures
+
+The verifying agent found one defect that served wrong content: generated identifiers were
+camel-cased, so `x-1` and `x1` both became `view_x1` and one assembly was silently served with
+the other's markup. A name holds only lower case letters, digits and hyphens, so each hyphen is
+now an underscore, which gives every name its own identifier. Also fixed from that report:
+
+- `serverEvents().send` drops a message instead of refusing it. A Svelte component that sends
+  from its top-level script runs that script again when it hydrates, so refusing on the server
+  made a component that works in the browser vanish from the page.
+- The client entry is found by its name in the bundler's metafile, not by being listed first,
+  because each island's chunk names its own module as an entry point too.
+- `.assemblejs/` and `dist/` are removed whole before a build, so nothing a previous build wrote
+  outlives what made it.
+- A framework view's `mount` is read from its module, always, instead of from a line pattern in
+  its source that a comment or a string could satisfy; a module without one reads as undefined.
+- The scaffold writes only renderers the build can build (html, React, Svelte), each in its own
+  idiom (the Svelte view was JSX, and the React component's name started lower case), and no
+  stylesheet until stylesheets are built; `build` names the assemblies whose styles it leaves
+  out, and the B-15 row says so.
+- `lazyRenderer` warns about an assembly it has no module for, as the runtime does for a
+  missing renderer.
+
+**Problems are structures now.** Discovery and the build's checks report each problem as
+`{ path, rule, message, fix }` instead of a sentence, because DESIGN 13.5 requires the agent
+surface to "refuse with a fix, never with an error string", and the command line prints the same
+two halves. The rule ids are the agent surface's rules, so `explain` answers why. The command
+logic B-09c's tools reach lands with it: `planAssembly` (what adding one would write, or why
+not), `placeAssembly` (a template with a placement at a named position), and `checkProject`
+(every finding knowable without building).

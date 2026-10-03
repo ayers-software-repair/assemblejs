@@ -29,15 +29,17 @@ describe("what would stop a build, found before the bundler runs", () => {
   it("names the package a project is missing", () => {
     const root = mkdtempSync(join(tmpdir(), "bare-"));
     writeFileSync(join(root, "package.json"), "{}");
-    expect(buildProblems(root, [assembly("react")]).join()).toMatch(
-      /install @assemblejs\/renderer-react/,
-    );
+    expect(buildProblems(root, [assembly("react")])[0]).toMatchObject({
+      rule: "a-view-needs-its-renderer",
+      fix: "install @assemblejs/renderer-react",
+    });
   });
 
   it("refuses a renderer this version cannot build, and a framework view with a .client.ts", () => {
-    expect(buildProblems(example, [assembly("angular")]).join()).toMatch(/cannot build yet/);
-    expect(buildProblems(example, [assembly("react", "a.client.ts")]).join()).toMatch(
-      /is its component/,
-    );
+    expect(buildProblems(example, [assembly("angular")])[0]?.message).toMatch(/cannot build yet/);
+    expect(buildProblems(example, [assembly("react", "a.client.ts")])[0]).toMatchObject({
+      rule: "one-framework-per-assembly",
+      message: expect.stringMatching(/is its component/),
+    });
   });
 });

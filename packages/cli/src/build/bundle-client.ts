@@ -48,8 +48,9 @@ export async function bundleClient(
     chunkNames: "chunks/[name]-[hash]",
     metafile: true,
   });
+  // By name, not by position: each island's chunk names its own module as its entry point too.
   const entry = Object.entries(result.metafile.outputs).find(
-    ([, output]) => output.entryPoint !== undefined,
+    ([path, output]) => output.entryPoint === ".assemblejs/client.ts" && path.endsWith(".js"),
   )?.[0];
   if (entry === undefined) throw new Error("the browser bundle produced no entry");
   return `${ASSET_ROUTE_PREFIX}/${relative(outdir, resolve(root, entry)).split("\\").join("/")}`;

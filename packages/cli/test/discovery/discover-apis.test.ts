@@ -17,7 +17,11 @@ describe("discovering apis", () => {
       "cart-items.api.ts",
       "time.api.ts",
     ]);
-    expect(problems.join()).toMatch(/"Bad\.api\.ts" is not a usable api file name/);
+    expect(problems[0]).toMatchObject({
+      rule: "an-api-file-is-an-api",
+      message: expect.stringMatching(/"Bad\.api\.ts" is not a usable api file name/),
+      fix: 'rename it to "bad.api.ts"',
+    });
   });
 
   it("is empty for a project with no api directory", () => {

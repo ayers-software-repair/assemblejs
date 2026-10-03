@@ -42,7 +42,9 @@ describe("the project's whole shape", () => {
 
   it("carries the problems rather than hiding them behind an empty list", () => {
     mkdirSync(join(dir, "src", "assemblies", "Broken"), { recursive: true });
-    expect(describeProject(root).problems.join()).toContain("Broken");
+    const [problem] = describeProject(root).problems;
+    expect(problem?.message).toContain("Broken");
+    expect(problem?.fix).toBe('rename the directory to "broken"');
   });
 
   it("is an empty project, not a broken one, when nothing has been written yet", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, readFileSync, rmSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, rmSync } from "node:fs";
+import { join } from "node:path";
 import { build } from "esbuild";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
@@ -13,7 +13,6 @@ import { generateRegistry } from "../generate/generate-registry.js";
 import type { Io } from "../io/io.js";
 import { buildProblems } from "./build-problems.js";
 import { bundleClient } from "./bundle-client.js";
-import { declaresMount } from "./declares-mount.js";
 import { describeBuildFailure } from "./describe-build-failure.js";
 import { loadSvelteCompiler } from "./load-svelte-compiler.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
@@ -40,32 +39,39 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     ...apis.problems,
     ...buildProblems(root, found.assemblies),
   ];
-  if (!existsSync(join(src, "server.ts"))) problems.push("there is no src/server.ts to build");
+  if (!existsSync(join(src, "server.ts"))) {
+    problems.push({
+      path: join(src, "server.ts"),
+      rule: "the-server-file-never-grows",
+      message: "there is no src/server.ts to build",
+      fix: "add the server file `assemblejs new` writes, which hands createServer the generated project",
+    });
+  }
   const needsSvelte = found.assemblies.some((assembly) => assembly.renderer === "svelte");
   const svelte = needsSvelte ? await loadSvelteCompiler(root) : undefined;
   if (needsSvelte && svelte === undefined) {
-    problems.push("this project has Svelte assemblies; install svelte");
+    problems.push({
+      path: join(root, "package.json"),
+      rule: "a-view-needs-its-renderer",
+      message: "this project has Svelte assemblies and svelte is not installed",
+      fix: "install svelte",
+    });
   }
   if (problems.length > 0) {
-    for (const problem of problems) io.error(problem);
+    for (const problem of problems) io.error(`${problem.message}: ${problem.fix}`);
     return 1;
   }
 
   const generated = join(root, ".assemblejs");
+  // Both are rewritten whole, so nothing a previous build wrote can outlive what made it.
   rmSync(join(root, "dist"), { recursive: true, force: true });
-  rmSync(join(generated, "client"), { recursive: true, force: true });
+  rmSync(generated, { recursive: true, force: true });
   const browser = found.assemblies.filter(
     (assembly) => assembly.renderer !== "html" || assembly.client !== undefined,
   );
 
   try {
     const script = browser.length === 0 ? undefined : await bundleClient(root, browser, svelte, io);
-    const mounts = new Set(
-      found.assemblies
-        .filter((assembly) => assembly.renderer !== "html")
-        .filter((assembly) => declaresMount(readFileSync(resolve(root, assembly.view), "utf8")))
-        .map((assembly) => assembly.name),
-    );
     const packages = Object.fromEntries(
       Object.values(RENDERER_PACKAGES).map((known) => [known.name, known.package]),
     );
@@ -74,7 +80,6 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       generateRegistry(found.assemblies, {
         from: generated,
         script,
-        declaresMount: mounts,
         packages,
       }),
     );
@@ -98,6 +103,12 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     return 1;
   }
 
+  const styled = found.assemblies.filter((assembly) => assembly.styles.length > 0);
+  if (styled.length > 0) {
+    io.log(
+      `not built yet: the stylesheets of ${styled.map((assembly) => assembly.name).join(", ")}; they are included once styles are scoped per assembly`,
+    );
+  }
   io.log(
     `built ${found.assemblies.length} assembly(s), ${pages.pages.length} page(s), ${apis.apis.length} api(s) into dist/`,
   );

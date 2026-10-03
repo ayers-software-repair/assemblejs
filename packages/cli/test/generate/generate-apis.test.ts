@@ -10,9 +10,9 @@ describe("generating the apis the built server imports", () => {
       "/p/.assemblejs",
     );
     expect(source).toContain('import api_time from "../src/api/time.api.js";');
-    expect(source).toContain('import api_cartItems from "../src/api/cart-items.api.js";');
+    expect(source).toContain('import api_cart_items from "../src/api/cart-items.api.js";');
     expect(source).toContain(
-      "export const apis: readonly ApiDefinition[] = [api_time, api_cartItems];",
+      "export const apis: readonly ApiDefinition[] = [api_time, api_cart_items];",
     );
   });
 

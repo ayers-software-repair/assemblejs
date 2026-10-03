@@ -1,6 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readdirSync } from "node:fs";
+import type { ProjectProblem } from "./project-problem.js";
+import { suggestName } from "./suggest-name.js";
 
 const API = /^[a-z][a-z0-9-]*\.api\.ts$/;
 
@@ -11,7 +13,7 @@ const API = /^[a-z][a-z0-9-]*\.api\.ts$/;
  */
 export function discoverApis(root: string): {
   readonly apis: readonly string[];
-  readonly problems: readonly string[];
+  readonly problems: readonly ProjectProblem[];
 } {
   let entries: string[];
   try {
@@ -21,11 +23,16 @@ export function discoverApis(root: string): {
   }
   const at = root.replaceAll("\\", "/");
   const apis: string[] = [];
-  const problems: string[] = [];
+  const problems: ProjectProblem[] = [];
   for (const file of entries) {
     if (API.test(file)) apis.push(`${at}/${file}`);
     else if (file.endsWith(".api.ts")) {
-      problems.push(`"${file}" is not a usable api file name; lower case, starting with a letter`);
+      problems.push({
+        path: `${at}/${file}`,
+        rule: "an-api-file-is-an-api",
+        message: `"${file}" is not a usable api file name; lower case, starting with a letter`,
+        fix: `rename it to "${suggestName(file.slice(0, -".api.ts".length))}.api.ts"`,
+      });
     }
   }
   return { apis, problems };

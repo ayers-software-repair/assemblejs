@@ -18,9 +18,10 @@ describe("the events an assembly holds while rendering on the server", () => {
     expect(serverEvents().last("counted")).toBeUndefined();
   });
 
-  it("refuses to send, by name, because there is no page to send to", () => {
-    expect(() => serverEvents().send("counted", { count: 1 })).toThrow(
-      /events.send\("counted"\) was called while rendering on the server/,
-    );
+  it("drops a message sent while rendering, which hydration sends again", () => {
+    const message = serverEvents().send("ready", { at: 1 });
+    expect(message.topic).toBe("ready");
+    expect(message.to).toBe("all");
+    expect(message.from.id).toBe("");
   });
 });

@@ -3,6 +3,8 @@
 import { readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { DiscoveredPage } from "./discovered-page.js";
+import type { ProjectProblem } from "./project-problem.js";
+import { suggestName } from "./suggest-name.js";
 
 const NAME = /^[a-z][a-z0-9-]*$/;
 
@@ -16,10 +18,10 @@ const NAME = /^[a-z][a-z0-9-]*$/;
  */
 export function discoverPages(root: string): {
   readonly pages: readonly DiscoveredPage[];
-  readonly problems: readonly string[];
+  readonly problems: readonly ProjectProblem[];
 } {
   const pages: DiscoveredPage[] = [];
-  const problems: string[] = [];
+  const problems: ProjectProblem[] = [];
 
   let entries: string[];
   try {
@@ -31,16 +33,26 @@ export function discoverPages(root: string): {
   for (const name of entries) {
     const directory = join(root, name);
     if (!statSync(directory).isDirectory()) continue;
+    const at = `${root}/${name}`.replaceAll("\\", "/");
     if (!NAME.test(name)) {
-      problems.push(`page "${name}" is not a usable name; lower case, starting with a letter`);
+      problems.push({
+        path: at,
+        rule: "a-directory-is-a-page",
+        message: `page "${name}" is not a usable name; lower case, starting with a letter`,
+        fix: `rename the directory to "${suggestName(name)}"`,
+      });
       continue;
     }
     const files = readdirSync(directory);
     if (!files.includes(`${name}.html`)) {
-      problems.push(`page "${name}" has no template; it needs ${name}/${name}.html`);
+      problems.push({
+        path: at,
+        rule: "a-directory-is-a-page",
+        message: `page "${name}" has no template`,
+        fix: `add ${name}/${name}.html, the whole document the page serves`,
+      });
       continue;
     }
-    const at = `${root}/${name}`.replaceAll("\\", "/");
     pages.push({
       name,
       route: name === "home" ? "/" : `/${name}`,

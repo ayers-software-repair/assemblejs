@@ -9,16 +9,19 @@ import type { Events } from "./events.js";
  *
  * Nothing can be heard: a subscription is accepted and never called, because the code that
  * subscribes (an effect) does not run during a server render anyway. Nothing has been sent, so
- * `last` is always undefined. Sending refuses, by name: a message sent while rendering would
- * reach no one, and a render that relies on one is a render that is wrong in the browser too.
+ * `last` is always undefined. A message sent here reaches no one and is dropped, not refused:
+ * code that sends while a component initialises (a Svelte component's top-level script) runs
+ * again when the component hydrates, and that is the send the page receives.
  */
 export function serverEvents(): Events {
   return {
-    send: (topic) => {
-      throw new Error(
-        `events.send("${topic}") was called while rendering on the server, where there is no page to send to. Send from an event handler or an effect, which run in the browser.`,
-      );
-    },
+    send: (topic, payload, to = "all") => ({
+      topic,
+      payload,
+      to,
+      from: { id: "", name: "", view: "" },
+      seq: 0,
+    }),
     on: () => () => undefined,
     last: () => undefined,
   };

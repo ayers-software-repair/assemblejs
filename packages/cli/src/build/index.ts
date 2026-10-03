@@ -8,7 +8,6 @@ export { loadSvelteCompiler } from "./load-svelte-compiler.js";
 export { sveltePlugin } from "./svelte-plugin.js";
 export { sharedOptions } from "./shared-options.js";
 export { sourceVersion } from "./source-version.js";
-export { declaresMount } from "./declares-mount.js";
 export { buildProblems } from "./build-problems.js";
 export { describeBuildFailure } from "./describe-build-failure.js";
 export { bundleClient } from "./bundle-client.js";

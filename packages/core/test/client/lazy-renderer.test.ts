@@ -66,10 +66,12 @@ describe("loading each assembly's module when it mounts", () => {
     expect(calls).toEqual(["mount counter {}", "unmount counter"]);
   });
 
-  it("does nothing for an assembly with no module, which is static", async () => {
+  it("warns and does nothing for an assembly this build has no module for", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     const renderer = lazyRenderer({});
     const handle = renderer.mount(document.createElement("div"), {}, context("constructor"));
     expect(() => handle.unmount()).not.toThrow();
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining('"constructor"'));
   });
 
   it("reports a module that fails to load against the assembly, and does not throw", async () => {

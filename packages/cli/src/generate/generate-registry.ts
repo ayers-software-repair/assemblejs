@@ -10,8 +10,10 @@ import { importPath } from "./import-path.js";
  *
  * Every view is imported by name, so the built server has a static import graph and nothing
  * globs a directory at run time. A framework view is wired to its renderer's `renderToMarkup`;
- * a plain html view is its own markup. An assembly with a browser half links the build's client
- * entry; one without is declared `none`, so it ships no JavaScript at all.
+ * a plain html view is its own markup. A framework view's own `mount` export, when it has one,
+ * says when its browser half runs; a module without one reads as undefined, the default. An
+ * assembly with a browser half links the build's client entry; one without is declared `none`,
+ * so it ships no JavaScript at all.
  */
 export function generateRegistry(
   assemblies: readonly DiscoveredAssembly[],
@@ -20,8 +22,6 @@ export function generateRegistry(
     readonly from: string;
     /** The url of the build's client entry, when the build has one. */
     readonly script: string | undefined;
-    /** Assemblies whose view module exports its own `mount`. */
-    readonly declaresMount: ReadonlySet<string>;
     /** Renderer name to the package that renders it on the server. */
     readonly packages: Readonly<Record<string, string>>;
   },
@@ -53,7 +53,7 @@ export function generateRegistry(
     const parts = [`name: "${assembly.name}"`, `views: { default: { ${fields.join(", ")} } }`];
     const browser = !html || assembly.client !== undefined;
     if (!browser) parts.push(`mount: "none"`);
-    else if (!html && options.declaresMount.has(assembly.name)) parts.push(`mount: ${view}.mount`);
+    else if (!html) parts.push(`mount: ${view}.mount`);
     if (browser && options.script !== undefined) {
       parts.push(`assets: { css: [], js: [${JSON.stringify(options.script)}] }`);
     }

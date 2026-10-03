@@ -34,8 +34,10 @@ describe("discovering pages", () => {
       project({ about: ["index.html"], Bad: ["Bad.html"] }),
     );
     expect(pages).toEqual([]);
-    expect(problems.join()).toMatch(/"about" has no template/);
-    expect(problems.join()).toMatch(/"Bad" is not a usable name/);
+    const messages = problems.map((problem) => problem.message).join("\n");
+    expect(messages).toMatch(/"about" has no template/);
+    expect(messages).toMatch(/"Bad" is not a usable name/);
+    expect(problems.every((problem) => problem.rule === "a-directory-is-a-page")).toBe(true);
   });
 
   it("is empty, not broken, for a project with no pages directory", () => {

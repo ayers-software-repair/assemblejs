@@ -13,7 +13,7 @@ import { render } from "svelte/server";
  * fragment would be writing outside the boundary the whole design draws.
  *
  * It does not catch. A failed render throws and the composer falls back. The component gets the
- * server's events as the same prop it hydrates with, so it reads \`events\` without asking which
+ * server's events as the same prop it hydrates with, so it reads `events` without asking which
  * side it is on.
  */
 export function renderToMarkup(component: unknown, input: MarkupInput): string {

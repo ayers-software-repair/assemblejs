@@ -16,8 +16,14 @@ describe("finding a package the project installed", () => {
     expect(findPackage(project, "@scope/pkg")).toBe(join(top, "node_modules", "@scope", "pkg"));
   });
 
-  it("is undefined when no directory above has it, whatever NODE_PATH holds", () => {
+  it("is undefined when no directory above has it, though node itself might resolve it", () => {
     const project = mkdtempSync(join(tmpdir(), "find-none-"));
     expect(findPackage(project, "@assemblejs/renderer-react")).toBeUndefined();
+  });
+
+  it("does not count a directory without a package manifest as a package", () => {
+    const project = mkdtempSync(join(tmpdir(), "find-empty-"));
+    mkdirSync(join(project, "node_modules", "half-installed"), { recursive: true });
+    expect(findPackage(project, "half-installed")).toBeUndefined();
   });
 });

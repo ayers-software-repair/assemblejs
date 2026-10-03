@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { discoverAssemblies } from "@assemblejs/cli";
+import type { ProjectProblem } from "@assemblejs/cli";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 
@@ -19,7 +20,8 @@ export function describeProject(root: ProjectRoot): {
     hasClient: boolean;
   }[];
   readonly renderers: readonly string[];
-  readonly problems: readonly string[];
+  /** Each with the file, the rule it breaks and the fix, never a sentence to parse. */
+  readonly problems: readonly ProjectProblem[];
 } {
   const { assemblies, problems } = discoverAssemblies(withinRoot(root, "src", "assemblies"));
   return {

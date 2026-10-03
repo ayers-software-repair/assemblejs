@@ -1,12 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { spawn } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { buildProject, realIo } from "@assemblejs/cli";
+import { afterAll } from "vitest";
+import { buildProject, planAssembly, projectFiles, realIo } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
@@ -77,5 +78,59 @@ describe("building a project", () => {
     const { io, errors } = capture();
     expect(await buildProject(root, io)).toBe(1);
     expect(errors.join()).toMatch(/server\.ts:1/);
+  });
+
+  it("refuses a Svelte assembly when Svelte is not installed", async () => {
+    const root = mkdtempSync(join(tmpdir(), "no-svelte-"));
+    mkdirSync(join(root, "src", "assemblies", "a"), { recursive: true });
+    writeFileSync(join(root, "package.json"), "{}");
+    writeFileSync(join(root, "src", "assemblies", "a", "a.svelte"), "<p>a</p>");
+    const { io, errors } = capture();
+    expect(await buildProject(root, io)).toBe(1);
+    expect(errors.join()).toMatch(/svelte is not installed: install svelte/);
+  });
+});
+
+// Nested in the example, so a scaffolded project resolves the workspace's packages as an
+// installed one would.
+const scaffolded = mkdtempSync(join(example, ".dev-scaffold-"));
+afterAll(() => rmSync(scaffolded, { recursive: true, force: true }));
+
+describe("building what the command line scaffolds", () => {
+  it("builds a new project with a React, a Svelte and a scripted html assembly added", async () => {
+    for (const [path, contents] of Object.entries(projectFiles("scaffolded"))) {
+      realIo.write(join(scaffolded, path), contents);
+    }
+    for (const [name, renderer] of [
+      ["cart-item", "react"],
+      ["counter", "svelte"],
+      ["form", "html"],
+    ] as const) {
+      const plan = planAssembly(name, renderer, false);
+      if ("problem" in plan) throw new Error(plan.problem.message);
+      for (const [path, contents] of Object.entries(plan.files)) {
+        realIo.write(join(scaffolded, path), contents);
+      }
+    }
+    realIo.write(
+      join(scaffolded, "src", "assemblies", "form", "form.client.ts"),
+      "export default { mount: () => ({ unmount: () => undefined }) };\n",
+    );
+    realIo.write(join(scaffolded, "src", "assemblies", "form", "form.css"), "p { color: red; }\n");
+    mkdirSync(join(scaffolded, "dist"), { recursive: true });
+    writeFileSync(join(scaffolded, "dist", "stale.js"), "");
+
+    const { io, errors, logs } = capture();
+    expect(await buildProject(scaffolded, io)).toBe(0);
+    expect(errors).toEqual([]);
+    // A stylesheet the build does not include yet is said out loud, not dropped in silence.
+    expect(logs.join()).toMatch(/not built yet: the stylesheets of form/);
+    // Nothing a previous build wrote outlives it.
+    expect(existsSync(join(scaffolded, "dist", "stale.js"))).toBe(false);
+    // The scripted html assembly has a browser half like the framework ones.
+    expect(existsSync(join(scaffolded, ".assemblejs", "client", "form.ts"))).toBe(true);
+    expect(readFileSync(join(scaffolded, ".assemblejs", "assemblies.ts"), "utf8")).toMatch(
+      /name: "form".*assets: \{ css: \[\], js: \[/,
+    );
   });
 });

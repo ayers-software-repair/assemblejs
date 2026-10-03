@@ -107,6 +107,13 @@ the record of what was read, and they stay in the private estate document store,
 
 ## Blocked, needs the owner (one admin click each)
 
+- [ ] **Package metadata against `CLAUDE.md`'s identity law.** Found 2026-10-03 by a verifying
+      agent, present since B-02 and passed by every gate: each `packages/*/package.json` carries
+      `"author"` (the law says author credit is the root `package.json` only) and its
+      `repository` and `bugs` urls name the GitHub organization (the law says the organization
+      name appears in no package.json). Not changed here: the repository url is what npm
+      provenance checks against, so which way to resolve it is the owner's call.
+
 - [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
       and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:
 all`, both branches carry the workflow files, and `actions/runs` reports `total_count=0`.
@@ -144,7 +151,7 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-07 the browser runtime and the four mount modes
 - [x] B-08 events: typed, addressable, replay opt-in, teardown exact
 - [x] B-09 the CLI and create: discovery, templates, non-interactive; new, add, the
-      non-interactive bin; pages served by core; `build` (esbuild owned by the CLI,
+      non-interactive bin (the earlier `generate` verb is retired, build writes every module); pages served by core; `build` (esbuild owned by the CLI,
       `dist/server.js` under plain node); `dev`; `@assemblejs/create`. Proof: `pnpm proof:create`
       (packed tarballs, the starter run from its tarball, built, dev dependencies pruned, served)
 - [x] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
@@ -170,6 +177,8 @@ starts. Until the owner enables Actions, every proof is local only.
       2026-10-03, "page parameters held back").
 - [ ] B-14 auth and the default policy
 - [ ] B-15 styles: scoping, Shadow DOM opt-in, the documented holes
+      Until then the build includes no stylesheet: a `.css` beside a view, and a Svelte
+      component's `<style>`, are left out, and `build` says which assemblies have one.
 - [ ] B-16 the remaining four framework renderers
 - [ ] B-17 the template engines
 - [ ] B-18 real-time over server-sent events

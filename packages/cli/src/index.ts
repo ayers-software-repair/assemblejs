@@ -5,5 +5,6 @@ export * from "./generate/index.js";
 export * from "./build/index.js";
 export * from "./dev/index.js";
 export * from "./commands/index.js";
+export * from "./check/index.js";
 export * from "./io/index.js";
 export * from "./run/index.js";

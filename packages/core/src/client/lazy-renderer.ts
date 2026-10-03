@@ -12,7 +12,9 @@ import type { MountHandle } from "./mount-handle.js";
  * with `visible` pays for it only on scroll. The handle is returned at once and the mount
  * happens when the module arrives; an unmount before then means it never happens at all.
  *
- * An assembly with no module is static and gets a handle that does nothing. A module that fails
+ * An assembly with no module in this build gets a handle that does nothing, and a warning, the
+ * same as the runtime gives an assembly whose renderer is missing: a static assembly never gets
+ * here, because it is declared `none` and never mounted. A module that fails
  * to load or a mount that throws is reported against the assembly's name and leaves it as the
  * markup the server sent, the same as the runtime does for any other mount that fails.
  */
@@ -22,7 +24,12 @@ export function lazyRenderer(
   return {
     mount(element, data, context) {
       const load = Object.hasOwn(modules, context.name) ? modules[context.name] : undefined;
-      if (load === undefined) return { unmount: () => undefined };
+      if (load === undefined) {
+        console.warn(
+          `assemblejs: no module in this build for "${context.name}", so it was left as the markup the server sent`,
+        );
+        return { unmount: () => undefined };
+      }
 
       let inner: MountHandle | undefined;
       let gone = false;

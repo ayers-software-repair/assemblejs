@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join, resolve } from "node:path";
 import { buildProject } from "../build/build-project.js";
-import { assemblyFiles } from "../commands/assembly-files.js";
+import { planAssembly } from "../commands/plan-assembly.js";
 import { projectFiles } from "../commands/project-files.js";
 import { RENDERERS } from "../commands/renderers.js";
 import { runDev } from "../dev/run-dev.js";
@@ -18,8 +18,6 @@ const USAGE = `assemblejs <command>
 
   --renderer   one of: ${RENDERERS.join(", ")}   (default html)
   --cwd        where to work (default: here)`;
-
-const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
  * The whole command line, as a function of its arguments and its io.
@@ -83,29 +81,21 @@ function addAssembly(rest: readonly string[], renderer: string, cwd: string, io:
     io.error(`add what? try: assemblejs add assembly <name>`);
     return 2;
   }
-  if (name === undefined || !NAME.test(name)) {
-    io.error(`"${name ?? ""}" is not a usable assembly name; lower case, starting with a letter`);
-    return 2;
+  const plan = planAssembly(
+    name ?? "",
+    renderer,
+    io.exists(join(cwd, "src", "assemblies", name ?? "")),
+  );
+  if ("problem" in plan) {
+    io.error(`${plan.problem.message}: ${plan.problem.fix}`);
+    return plan.usage ? 2 : 1;
   }
-  if (!RENDERERS.includes(renderer)) {
-    io.error(`unknown renderer "${renderer}"; one of: ${RENDERERS.join(", ")}`);
-    return 2;
-  }
-  const files = assemblyFiles(name, renderer);
-  if (files === undefined) {
-    io.error(`unknown renderer "${renderer}"`);
-    return 2;
-  }
-  if (io.exists(join(cwd, "src", "assemblies", name))) {
-    io.error(`assembly "${name}" already exists`);
-    return 1;
-  }
-  for (const [path, contents] of Object.entries(files)) {
+  for (const [path, contents] of Object.entries(plan.files)) {
     io.write(join(cwd, path), contents);
     io.log(`wrote ${path}`);
   }
   // The one thing that is NOT written: the author's own server file. It never grows.
-  io.log(`\nadd it to a page with <assembly name="${name}"></assembly>`);
+  io.log(`\nadd it to a page with ${plan.tag}`);
   return 0;
 }
 
