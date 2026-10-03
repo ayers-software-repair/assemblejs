@@ -638,3 +638,18 @@ The proof B-11 named now runs from a real build: `browser/built.browser.ts` buil
 clicks the Svelte assembly in Chromium until the React one hears it. It was watched red on islands
 that never mount, a registry that links no script, and a React server render without its events.
 `ASSEMBLEJS_CHROMIUM` names the browser binary when the one Playwright expects is not installed.
+
+## 2026-10-03: dev is the production build, rebuilt on change
+
+Expected, from DESIGN 11: `dev` runs the bundler in middleware mode, which is where hot reloading
+comes from. Found: the build is esbuild owned by the command line and the server has no bundler
+seam, by the same section's rule, so there is no middleware to run it in. `dev` instead runs
+exactly what production runs: `build`, then `node dist/server.js` in development mode, and on
+every change under `src/` (one rebuild per burst of changes) builds again and restarts. A build
+that fails leaves the last good server answering and says why. Nothing that works under `dev`
+can fail in production for a reason `dev` hid, which a separate dev pipeline cannot promise.
+
+What it does not do yet is refresh the browser: the page reloads by hand. A reload pushed to the
+page wants the server-sent events B-18 builds, under the framework's own prefix and only in
+development, so it is a ledger row after B-18 rather than a second channel invented now. DESIGN 11
+is updated to say what `dev` does.

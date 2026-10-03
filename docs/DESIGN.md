@@ -573,9 +573,10 @@ by nature and are not scoped. Nothing pretends otherwise.
 - Asset roots resolve from **resolved module paths**, never from string arithmetic over a
   directory name, so an install layout the author did not anticipate cannot silently produce a
   path that does not exist.
-- The bundler is a development and build-time tool owned by the CLI. `assemblejs dev` runs it in
-  middleware mode, which is where hot reloading comes from; `assemblejs build` emits the server
-  and the client assets; neither leaves a trace in the running server.
+- The bundler is a development and build-time tool owned by the CLI. `assemblejs dev` runs the
+  same build and the same `node dist/server.js` as production, and rebuilds and restarts on every
+  change; `assemblejs build` emits the server and the client assets; neither leaves a trace in
+  the running server.
 - The dev server binds loopback by default. Devtools are development-only, read-only over HTTP,
   and a boot assertion refuses to start if any route under the devtools prefix accepts anything
   but `GET` or `HEAD`.

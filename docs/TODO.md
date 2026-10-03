@@ -21,7 +21,7 @@ ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are 
 served the assembly endpoints but no PAGES - nothing turned a template into a composed document
 or linked a browser runtime - and B-09's proof (create, build, `node dist/server.js`) needs both.
 So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild owned by the
-CLI, the server bundle keeps packages external so it runs with no bundler), then `dev`, then
+CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof. Then B-09c, then B-13 onward in ledger order.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-09 -> B-09c -> B-13 (remote; carries recorded
@@ -146,7 +146,8 @@ starts. Until the owner enables Actions, every proof is local only.
       from a build's directory and hoisted into each page, templates checked at boot), and
       `build` (esbuild owned by the CLI; `dist/server.js` runs under plain node; the day-one
       proof runs from a real build in Chromium).
-      Left: `dev`, and `@assemblejs/create` so `npm create @assemblejs` works.
+      and `dev` (the same build and `node dist/server.js`, rebuilt and restarted on change).
+      Left: `@assemblejs/create` so `npm create @assemblejs` works, and the tarball proof.
 - [x] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
       Landed: the project-root guard, the queryable rules, render_assembly, compose_page,
       explain, the project and rules resources, and the stdio server, all driven end to end
@@ -173,6 +174,9 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-16 the remaining four framework renderers
 - [ ] B-17 the template engines
 - [ ] B-18 real-time over server-sent events
+- [ ] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
+      development only and under the framework's prefix (DECISIONS, 2026-10-03, "dev is the
+      production build").
 - [ ] B-19 devtools, read-only, with the boot assertion
 - [ ] B-20 the check, perf and deploy verbs
 - [ ] B-21 the conformance harness and its first specs

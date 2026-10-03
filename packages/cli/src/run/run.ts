@@ -5,6 +5,7 @@ import { buildProject } from "../build/build-project.js";
 import { assemblyFiles } from "../commands/assembly-files.js";
 import { projectFiles } from "../commands/project-files.js";
 import { RENDERERS } from "../commands/renderers.js";
+import { runDev } from "../dev/run-dev.js";
 import type { Io } from "../io/io.js";
 
 const USAGE = `assemblejs <command>
@@ -12,6 +13,7 @@ const USAGE = `assemblejs <command>
   new <directory>              scaffold a project that runs
   add assembly <name> [--renderer <name>]
                                add an assembly; a directory IS an assembly
+  dev                          build, run, and rebuild on every change
   build                        build dist/server.js and its browser files
 
   --renderer   one of: ${RENDERERS.join(", ")}   (default html)
@@ -50,6 +52,7 @@ export function run(argv: readonly string[], io: Io): number | Promise<number> {
   if (command === "new") return newProject(rest[0], cwd, io);
   if (command === "add") return addAssembly(rest, flags.get("renderer") ?? "html", cwd, io);
   if (command === "build") return buildProject(resolve(cwd), io);
+  if (command === "dev") return runDev(resolve(cwd), io, interrupted());
 
   io.error(`unknown command "${command}"`);
   io.error(USAGE);
@@ -104,4 +107,13 @@ function addAssembly(rest: readonly string[], renderer: string, cwd: string, io:
   // The one thing that is NOT written: the author's own server file. It never grows.
   io.log(`\nadd it to a page with <assembly name="${name}"></assembly>`);
   return 0;
+}
+
+/** Aborts on Ctrl-C or a supervisor's stop, so a long-running command can end cleanly. */
+function interrupted(): AbortSignal {
+  const controller = new AbortController();
+  for (const name of ["SIGINT", "SIGTERM"] as const) {
+    process.once(name, () => controller.abort());
+  }
+  return controller.signal;
 }
