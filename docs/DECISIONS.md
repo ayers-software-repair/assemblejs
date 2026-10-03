@@ -1294,3 +1294,28 @@ boot assertion that nothing under their prefix accepts a write. The design names
   page's policy allows, no form, script or button) and `project.json`. `examples/two-frameworks`
   hands it over, and the dev browser proof opens it in Chromium with no console error.
 - The project scaffold does not add devtools; a project opts in with one import and one option.
+
+## 2026-10-03: verifying B-19
+
+The rung's verifier found, and this round fixed:
+
+- **The boot assertion was read before the router was ready**, when a plugin's routes are not yet
+  mounted, so a write a plugin mounted under the prefix would have passed. It is read after
+  `ready()` now, the app closed and the boot refused; a test mounts a write through a plugin.
+- **The browser proof ran against whatever devtools build was on disk**, as the suite's setup did
+  not build the package: a stale build passed, a fresh clone failed. The setup builds it.
+- **Devtools were readable through DNS rebinding:** in development with no credentials, a page on
+  another site that points its own name at 127.0.0.1 could read the recent failures and their
+  stacks. Devtools answer only a request whose Host is this machine's loopback.
+- **A devtools route that writes booted in production**, where nothing is mounted for the router
+  to see; it is refused there by the declaration check, so a project boots in both modes or in
+  neither. The reload paths under the prefix are reserved, and each recorded failure is bounded.
+- **The doctype pattern backtracked** on a template opening with a run of comments, doubling in
+  time per comment on every request; each comment is matched without looking past its end.
+- **Recorded, not changed:** the stall rule drops a client whose queue does not drain within
+  thirty seconds, so a snapshot that takes longer than that to reach a slow client is sent again
+  after it reconnects; what a stalled client holds meanwhile is what the stream sent in that time,
+  as DESIGN 3.6 now says. What `last` keeps grows with the distinct addresses a topic is sent to.
+  Equivalent mutants: closing the app on a refused boot (nothing listens yet), clearing the stall
+  timer on close (it finds the stream already closed), recording failures in production (nothing
+  reads them there). Package metadata naming the GitHub organization is the owner's open row.

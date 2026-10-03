@@ -57,6 +57,21 @@ describe("devtools, mounted", () => {
     expect(response.body).toBe("mode development");
   });
 
+  it("answer only a request addressed to this machine, not a site that rebound its name to it", async () => {
+    const { server } = await start("development");
+    const url = `${DEVTOOLS_ROUTE_PREFIX}/`;
+    for (const host of ["localhost:3000", "127.0.0.1:3000", "[::1]:3000"]) {
+      expect(
+        (await server.inject({ method: "GET", url, headers: { host } })).statusCode,
+        host,
+      ).toBe(200);
+    }
+    expect(
+      (await server.inject({ method: "GET", url, headers: { host: "evil.example" } })).statusCode,
+    ).toBe(404);
+    expect(seen).toHaveLength(3);
+  });
+
   it("are not mounted at all in production", async () => {
     const { server } = await start("production");
     expect(

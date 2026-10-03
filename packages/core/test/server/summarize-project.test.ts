@@ -29,7 +29,7 @@ describe("the project as devtools may read it", () => {
         defineApi({ path: "/live", stream: () => undefined }),
         defineApi({ path: "/x", method: "POST", handle: () => null }),
       ],
-      remotes: [{ origin: "https://shop.example.com" }],
+      remotes: [{ origin: "https://shop.example.com", forward: ["cookie"] }],
     });
     expect(summary).toEqual({
       mode: "development",

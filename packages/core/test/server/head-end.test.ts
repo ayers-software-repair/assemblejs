@@ -15,6 +15,11 @@ describe("where something for a document's head goes", () => {
     );
   });
 
+  // Every page request reads this, so a run of comments must not cost time doubling per comment.
+  it("reads a template that opens with many comments and has no doctype at once", () => {
+    expect(headEnd(`${"<!-- c -->".repeat(40)}<p>x</p>`)).toBe(0);
+  });
+
   it("is the very start of a template with neither", () => {
     expect(headEnd("<p>x</p>")).toBe(0);
   });

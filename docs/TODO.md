@@ -270,6 +270,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] B-19 devtools, read-only, with the boot assertion: handed to the server as data, mounted
       in development only; boot refuses any route under the prefix that writes, proved with a
       POST; `@assemblejs/devtools` serves an overview and `project.json`
+- [x] The verification of B-19: the assertion read after the router is ready, the setup builds
+      devtools, devtools answer only loopback, a write refused in production too
 - [ ] B-20 the check, perf and deploy verbs
 - [ ] B-21 the conformance harness and its first specs
 - [ ] B-22 conformance breadth, batch one

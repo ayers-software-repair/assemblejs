@@ -13,6 +13,13 @@ describe("the failures a process logged most recently", () => {
     expect(failures.list().map((entry) => entry.correlationId)).toEqual(["2", "3"]);
   });
 
+  it("bounds each line, whatever was thrown", () => {
+    const failures = recentFailures();
+    failures.record({ correlationId: "1", message: "m".repeat(20_000), stack: "s".repeat(20_000) });
+    const [kept] = failures.list();
+    expect([kept?.message.length, kept?.stack?.length]).toEqual([8192, 8192]);
+  });
+
   it("answers a copy, which a reader cannot change", () => {
     const failures = recentFailures();
     failures.record(line(1));

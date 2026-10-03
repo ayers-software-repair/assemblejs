@@ -28,6 +28,8 @@ export default function buildExamples() {
       "@assemblejs/renderer-solid",
       "--filter",
       "@assemblejs/renderer-lit",
+      "--filter",
+      "@assemblejs/devtools",
       "build",
     ],
     { cwd: root, stdio: "pipe" },

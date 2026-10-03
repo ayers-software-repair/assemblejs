@@ -304,8 +304,9 @@ stream opens while assemblies are still loading, so one that mounts later reads 
 with `events.last`, and only what it would have been delivered.
 The page's own runtime opens the stream its head names; a remote's runtime never does, and an
 assembly placed from another server is on that server's bus, which the stream does not reach.
-A stream answers GET and not HEAD, writes a comment while quiet, drops a connection whose client
-takes nothing it is sent for thirty seconds, and is closed before the server stops. Over HTTP/1.1
+A stream answers GET and not HEAD, writes a comment while quiet, drops a connection whose queue,
+once past what the socket takes at once, does not drain within thirty seconds (what it holds
+meanwhile is what the stream sent in that time), and is closed before the server stops. Over HTTP/1.1
 a browser holds six connections per origin, and every open page with a stream holds one of them
 (two in development, with the reload stream): beyond six such tabs, the next page waits. A page naming a stream that is
 not one of the server's streaming apis (a query after the path is the stream's own), or naming
@@ -641,7 +642,8 @@ root. Nothing pretends otherwise.
   routes, settings; no function, credential or template source) and the failures the process
   logged most recently. In production the server mounts none of them, so a project hands them
   over unconditionally; `@assemblejs/devtools` supplies an overview page and the same reading as
-  JSON.
+  JSON. Devtools answer only a request addressed to this machine's loopback, so a page on another
+  site that points its own name at 127.0.0.1 reads nothing from them.
 
 ---
 

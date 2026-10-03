@@ -22,6 +22,19 @@ describe("routes that write under the devtools prefix", () => {
     ]);
   });
 
+  it("include one a plugin mounts, which is seen once the router is ready", async () => {
+    const app = Fastify({ logger: false });
+    const writes = devtoolsWrites(app);
+    await app.register(async (scope) => void scope.post("/run", answer), {
+      prefix: DEVTOOLS_ROUTE_PREFIX,
+    });
+    await app.ready();
+    await app.close();
+    expect(writes()).toEqual([
+      `POST "${DEVTOOLS_ROUTE_PREFIX}/run" is under the devtools prefix, where nothing may write`,
+    ]);
+  });
+
   // B-19's proof: a POST registered under the prefix, and boot refusing.
   it("refuse the server before it listens", async () => {
     const run = { method: "POST", path: "/run", respond: answer } as unknown as DevtoolsRoute;

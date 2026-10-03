@@ -74,7 +74,9 @@ export async function createServer(options: ServerOptions): Promise<App> {
       options.publicRoutes ?? [],
       options.contentSecurityPolicy,
     ),
-    ...(options.devtools === undefined ? [] : devtoolsProblems(options.devtools)),
+    ...(options.devtools === undefined
+      ? []
+      : devtoolsProblems(options.devtools, config.mode === "development")),
   ];
   if (problems.length > 0) throw new BootError(problems);
 
@@ -218,13 +220,13 @@ export async function createServer(options: ServerOptions): Promise<App> {
       failures: failures.list,
     });
   }
-  // Nothing under the devtools prefix may write, in any mode: refused before anything listens.
+  // Read once the router is ready, as a plugin's routes are mounted only then: nothing under the
+  // devtools prefix may write, refused before anything listens.
+  await app.ready();
   if (writes().length > 0) {
     await app.close();
     throw new BootError(writes());
   }
-
-  await app.ready();
 
   return {
     fastify: app,
