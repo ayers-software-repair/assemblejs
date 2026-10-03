@@ -25,7 +25,7 @@ describe("what adding an assembly would write", () => {
       usage: true,
       problem: {
         rule: "a-view-needs-its-renderer",
-        fix: "use one of: html, preact, react, svelte, vue",
+        fix: "use one of: html, preact, react, solid, svelte, vue",
       },
     });
   });

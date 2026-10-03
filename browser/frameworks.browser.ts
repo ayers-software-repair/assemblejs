@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
 // server-rendered, hydrated by its own renderer, and talks to the others over the page's bus,
 // so every framework proves both halves of its renderer and the events binding at once.
 const example = fileURLToPath(new URL("../examples/frameworks/", import.meta.url));
-const FRAMEWORKS = ["react", "svelte", "preact", "vue"] as const;
+const FRAMEWORKS = ["react", "svelte", "preact", "vue", "solid"] as const;
 
 let server: ChildProcess | undefined;
 let origin = "";

@@ -223,7 +223,9 @@ starts. Until the owner enables Actions, every proof is local only.
   - [x] `renderer-vue`: `.vue` single-file components compiled with the project's own Vue
         (`<script setup>` with its template inlined, or a separate render function; `<style
 scoped>` under one id on both sides), an app per assembly, `useEvents()` by injection
-  - [ ] `renderer-solid`
+  - [x] `renderer-solid`: `.solid.tsx` compiled by Solid's own Babel preset, which the renderer
+        carries, for the server and hydratable for the browser; each mount adopts its markup by
+        its own hydration keys, and the events by context
   - [ ] `renderer-lit`
   - [ ] the page carrying all six, in Chromium
 - [ ] B-17 the template engines

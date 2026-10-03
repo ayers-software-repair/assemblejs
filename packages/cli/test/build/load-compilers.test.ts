@@ -21,8 +21,12 @@ const assembly = (renderer: string): DiscoveredAssembly => ({
 describe("loading the compilers a project's views need", () => {
   it("loads each one used, and only those", async () => {
     const example = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));
-    const both = await loadCompilers(example, [assembly("svelte"), assembly("vue")]);
-    expect(Object.keys(both.compilers).sort()).toEqual(["svelte", "vue"]);
+    const both = await loadCompilers(example, [
+      assembly("svelte"),
+      assembly("vue"),
+      assembly("solid"),
+    ]);
+    expect(Object.keys(both.compilers).sort()).toEqual(["solid", "svelte", "vue"]);
     expect(both.problems).toEqual([]);
     expect((await loadCompilers(example, [assembly("react")])).compilers).toEqual({});
   });

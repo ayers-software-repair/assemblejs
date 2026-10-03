@@ -4,6 +4,7 @@ import { join } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import type { Compilers } from "./compilers.js";
+import { loadSolidCompiler } from "./load-solid-compiler.js";
 import { loadSvelteCompiler } from "./load-svelte-compiler.js";
 import { loadVueCompiler } from "./load-vue-compiler.js";
 
@@ -20,10 +21,12 @@ export async function loadCompilers(
     assemblies.some((assembly) => assembly.renderer === renderer);
   const svelte = uses("svelte") ? await loadSvelteCompiler(root) : undefined;
   const vue = uses("vue") ? await loadVueCompiler(root) : undefined;
+  const solid = uses("solid") ? await loadSolidCompiler(root) : undefined;
   const problems: ProjectProblem[] = [];
   for (const [name, used, loaded] of [
     ["svelte", uses("svelte"), svelte],
     ["vue", uses("vue"), vue],
+    ["@assemblejs/renderer-solid", uses("solid"), solid],
   ] as const) {
     if (used && loaded === undefined) {
       problems.push({
@@ -38,6 +41,7 @@ export async function loadCompilers(
     compilers: {
       ...(svelte === undefined ? {} : { svelte }),
       ...(vue === undefined ? {} : { vue }),
+      ...(solid === undefined ? {} : { solid }),
     },
     problems,
   };

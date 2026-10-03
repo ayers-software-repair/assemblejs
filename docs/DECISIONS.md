@@ -985,3 +985,24 @@ A fresh review of the two fix commits found, and this round fixed:
   the content, and that window is accepted.
 - **Found in passing:** an earlier round's test edits made by text replacement had silently not
   applied where formatting had moved the text; every replacement now asserts it matched.
+
+## 2026-10-03: Solid
+
+`@assemblejs/renderer-solid`: `renderToString` and `hydrate` from `solid-js/web`, the events in a
+Solid context, `useEvents()` and `Slot`. Settled here:
+
+- **Solid's JSX is compiled by Solid's preset, which the renderer carries.** Solid compiles JSX
+  into DOM creation and string building; no automatic runtime can stand in for it. The renderer
+  ships a `./compiler` entry wrapping Babel 7 and `babel-preset-solid` as plain dependencies (Solid
+  stays its one peer), and the build loads the project's copy as it loads the Svelte and Vue
+  compilers. esbuild strips a file's types first, keeping its JSX, so no TypeScript preset is
+  needed. A component in a Solid assembly's directory compiles as Solid like the view does.
+- **Each mount gets a fresh hydration state.** Found: Solid keeps hydration state on
+  `globalThis._$HY`, which its page bootstrap creates with an inline script the default policy
+  refuses, and marks hydration done after the first hydration or the first delegated event, so
+  every later island would have been re-rendered rather than adopted. The browser half creates
+  that state and clears the done flag on each mount; a test hydrates two counters in turn and
+  requires both to keep the server's elements.
+- **One markup fixture holds both halves.** The server and browser halves run on two builds of
+  Solid, so the server test requires `renderToMarkup` to produce exactly the markup the browser
+  test hydrates, in separate vitest projects resolving each build.

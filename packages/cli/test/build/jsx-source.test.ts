@@ -19,6 +19,7 @@ describe("the JSX runtime a file compiles through", () => {
   it("is the one a file names", () => {
     expect(jsxSource("/p/src/lib/button.preact.tsx", assemblies)).toBe("preact");
     expect(jsxSource("/p/src/assemblies/cart/inner.react.jsx", assemblies)).toBe("react");
+    expect(jsxSource("/p/src/lib/list.solid.tsx", assemblies)).toBe("solid");
   });
 
   it("is its assembly's, for a component that names none", () => {

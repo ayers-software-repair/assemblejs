@@ -21,7 +21,7 @@ export function sharedOptions(options: {
   readonly onCss?: (file: string, css: string) => void;
 }): BuildOptions {
   const { compilers, side, onCss } = options;
-  const plugins = [jsxPlugin(options.assemblies)];
+  const plugins = [jsxPlugin(options.assemblies, side, compilers.solid)];
   if (compilers.svelte !== undefined) plugins.push(sveltePlugin(compilers.svelte, side, onCss));
   if (compilers.vue !== undefined)
     plugins.push(vuePlugin(compilers.vue, options.root, side, onCss));

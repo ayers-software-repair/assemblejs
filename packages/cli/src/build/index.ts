@@ -11,6 +11,8 @@ export type { VueCompiler } from "./vue-compiler.js";
 export { loadVueCompiler } from "./load-vue-compiler.js";
 export { compileVue } from "./compile-vue.js";
 export { vuePlugin } from "./vue-plugin.js";
+export type { SolidCompile } from "./solid-compile.js";
+export { loadSolidCompiler } from "./load-solid-compiler.js";
 export type { Compilers } from "./compilers.js";
 export { loadCompilers } from "./load-compilers.js";
 export { jsxSource } from "./jsx-source.js";

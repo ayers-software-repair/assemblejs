@@ -3,13 +3,17 @@
 import { basename, isAbsolute, relative, sep } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 
-// The frameworks whose views are JSX compiled through an automatic runtime, by the package that
-// holds it.
-const RUNTIMES: Readonly<Record<string, string>> = { react: "react", preact: "preact" };
+// The frameworks whose views are JSX, by what compiles them: the package holding an automatic
+// runtime, or `solid`, whose JSX only Solid's own compiler reads.
+const RUNTIMES: Readonly<Record<string, string>> = {
+  react: "react",
+  preact: "preact",
+  solid: "solid",
+};
 
 /**
- * The package whose JSX runtime compiles a `.tsx` or `.jsx` file. A file that names its framework
- * (`cart.preact.tsx`) says so itself; one that does not takes the framework of the assembly whose
+ * What compiles a `.tsx` or `.jsx` file: the package whose JSX runtime it uses, or `solid`. A file
+ * that names its framework (`cart.preact.tsx`) says so itself; one that does not takes the framework of the assembly whose
  * directory holds it, so a Preact view's own components compile as Preact; anything else is React.
  */
 export function jsxSource(file: string, assemblies: readonly DiscoveredAssembly[]): string {

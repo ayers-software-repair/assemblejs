@@ -5,4 +5,4 @@
  * Every renderer the command can scaffold a view for, which is every renderer the build can
  * build: a scaffold that does not build is the first thing a new author would meet.
  */
-export const RENDERERS: readonly string[] = ["html", "preact", "react", "svelte", "vue"];
+export const RENDERERS: readonly string[] = ["html", "preact", "react", "solid", "svelte", "vue"];

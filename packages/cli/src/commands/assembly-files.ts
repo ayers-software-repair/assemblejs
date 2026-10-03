@@ -27,6 +27,15 @@ export default function ${pascal(name)}({ data }: AssemblyProps) {
 }
 `,
   ],
+  solid: (name) => [
+    `${name}.solid.tsx`,
+    `import type { AssemblyProps } from "@assemblejs/renderer-solid";
+
+export default function ${pascal(name)}(props: AssemblyProps) {
+  return <p>${name} {Object.keys(props.data).length}</p>;
+}
+`,
+  ],
   svelte: (name) => [
     `${name}.svelte`,
     `<script lang="ts">
