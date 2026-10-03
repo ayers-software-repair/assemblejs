@@ -13,8 +13,8 @@ owner does every release himself, from his own sessions, so nothing here publish
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
 micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
 published as `@assemblejs/*`. `docs/DESIGN.md` is the contract, `docs/PLAN.md` the frozen rung
-ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE except B-09c
-(agent tools `create_project`, `add_assembly`, `place_assembly`, `check` left). The browser suite
+ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE, B-09 and
+B-09c included. The browser suite
 (`pnpm test:browser`) is outside `pnpm check`; on a machine whose Chromium is not the one this
 Playwright expects, `ASSEMBLEJS_CHROMIUM` names the binary.
 
@@ -25,9 +25,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-09c, the four agent tools, then B-13 onward in ledger order.
+**THE EXACT NEXT STEP:** B-13, remote assemblies, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** B-09c -> B-13 (remote; carries recorded
+**ORDER AND DEPENDENCIES of the open rows:** B-13 (remote; carries recorded
 debt: `Limits.maxBytes` has no reader, and pages refuse a `url` placement at boot until it lands)
 -> B-14 auth -> B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
@@ -158,9 +158,10 @@ starts. Until the owner enables Actions, every proof is local only.
       Landed: the project-root guard, the queryable rules, render_assembly, compose_page,
       explain, the project and rules resources, and the stdio server, all driven end to end
       through the real protocol in the tests.
-- [ ] B-09c the remaining agent tools: create_project, add_assembly, place_assembly and check,
-      which are the command line's own logic reached through the same seam. Owed once `add`
-      and `check` have a shape the protocol can hand back as structures.
+- [x] B-09c the remaining agent tools: create_project, add_assembly, place_assembly and check,
+      the command line's own logic (planAssembly, placeAssembly, checkProject) reached through
+      the same seam, every refusal a structure with its file, rule and fix. Proof: an agent
+      creates, adds, places, composes and checks through the protocol alone
 - [x] B-10 the first framework renderer: @assemblejs/renderer-react
 - [x] B-11 the second framework renderer and the day-one proof: Svelte, and two frameworks sharing an event on one page in a real browser
 - [x] B-12 services and apis: the service model (return not mutate, `after` not priority,

@@ -1,5 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { RULES } from "@assemblejs/mcp";
 
@@ -27,5 +30,24 @@ describe("what the framework knows", () => {
     ]) {
       expect(ids).toContain(needed);
     }
+  });
+
+  it("answers every rule a problem anywhere in the command line names, so explain never misses", () => {
+    const ids = new Set(RULES.map((rule) => rule.id));
+    const named = new Set<string>();
+    const walk = (at: string): void => {
+      for (const entry of readdirSync(at, { withFileTypes: true })) {
+        const path = join(at, entry.name);
+        if (entry.isDirectory()) walk(path);
+        else
+          for (const match of readFileSync(path, "utf8").matchAll(/rule: "([a-z-]+)"/g)) {
+            named.add(match[1] ?? "");
+          }
+      }
+    };
+    walk(fileURLToPath(new URL("../../../cli/src/", import.meta.url)));
+    walk(fileURLToPath(new URL("../../src/author/", import.meta.url)));
+    expect(named.size).toBeGreaterThan(5);
+    expect([...named].filter((id) => !ids.has(id))).toEqual([]);
   });
 });

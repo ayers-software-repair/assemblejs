@@ -84,4 +84,47 @@ export const RULES: readonly Rule[] = [
       "A framework that defaults a password ships one password to everybody who installs it.",
     smell: "Any credential with a fallback value.",
   },
+  {
+    id: "a-directory-is-a-page",
+    rule: "A directory under src/pages IS a page: <name>/<name>.html is the page at /<name>, home at /.",
+    because:
+      "The same reason a directory is an assembly: a route table restating the directory tree is a second place to keep in step, and the one two people adding pages both edit.",
+    smell: "A page template with no directory of its own, or a list of routes in authored code.",
+  },
+  {
+    id: "an-api-file-is-an-api",
+    rule: "A file src/api/<name>.api.ts default-exports one api, and the name says it is one.",
+    because:
+      "The build finds apis by their file name. A file that looks like one and is not named like one is left out of the build with nothing saying so.",
+    smell: "An api file in another directory, or one whose name has capitals.",
+  },
+  {
+    id: "a-view-needs-its-renderer",
+    rule: "A view builds only when its renderer is one the build knows and its package is installed.",
+    because:
+      "A view the build cannot render would otherwise fail on the first request instead of at build time, where the author is looking.",
+    smell:
+      "A framework view in a project that does not depend on that framework's renderer package.",
+  },
+  {
+    id: "a-placement-names-an-assembly",
+    rule: "Every <assembly name=...> in a page template names an assembly that exists.",
+    because:
+      "A placement with nothing behind it is a blank space a visitor finds. The server refuses to start rather than serve one, and check says so before it gets that far.",
+    smell: "A template placing a name no directory under src/assemblies has.",
+  },
+  {
+    id: "the-server-file-never-grows",
+    rule: "src/server.ts hands createServer the generated project and does nothing else.",
+    because:
+      "Everything the server serves is found on disk by the build. A server file that registers things is a second registry, and the first thing two people adding assemblies both edit.",
+    smell: "An import of an assembly, a page or an api in src/server.ts.",
+  },
+  {
+    id: "one-project-per-root",
+    rule: "The agent surface works on one project root, and create_project scaffolds into it only while it holds no project.",
+    because:
+      "Scaffolding over an existing project overwrites the author's files with a starter's, and a tool scoped to one root never reaches outside it.",
+    smell: "Asking to create a project where a package.json already is.",
+  },
 ];

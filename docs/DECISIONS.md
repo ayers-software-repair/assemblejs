@@ -703,3 +703,22 @@ two halves. The rule ids are the agent surface's rules, so `explain` answers why
 logic B-09c's tools reach lands with it: `planAssembly` (what adding one would write, or why
 not), `placeAssembly` (a template with a placement at a named position), and `checkProject`
 (every finding knowable without building).
+
+## 2026-10-03: the agent surface can build, not only look
+
+B-09c: `create_project`, `add_assembly`, `place_assembly` and `check`. Each is the command line's
+own decision (`projectFiles`, `planAssembly`, `placeAssembly`, `checkProject`) bound to the
+protocol, writes only through the project-root guard, and answers with every file it wrote and
+the state that resulted. Each refusal is a `{ path, rule, message, fix }` structure, and a test
+walks the command line's source and the agent surface's to require that every rule a problem
+names is one `explain` answers; six rules were added for that.
+
+`place_assembly` takes a page by name and a position by name (`at` start or end, `after` or
+`before` a placed assembly), never a line number, so it means the same thing after someone else
+edited the file. Asked for a page or an assembly that does not exist, it lists the ones that do
+and changes nothing. `create_project` scaffolds into the root only while it holds no project.
+
+The proof B-09b named, which needed these tools, now runs: through the server's own protocol and
+never touching a file directly, an agent creates a project, adds an assembly, places it after the
+one the starter placed, composes the page and finds its markup in the html, and checks the
+project clean.
