@@ -36,6 +36,17 @@ export default function ${pascal(name)}({ data }: AssemblyProps) {
 <p>${name} {Object.keys(data).length}</p>
 `,
   ],
+  vue: (name) => [
+    `${name}.vue`,
+    `<script setup lang="ts">
+defineProps<{ data: Record<string, unknown> }>();
+</script>
+
+<template>
+  <p>${name} {{ Object.keys(data).length }}</p>
+</template>
+`,
+  ],
 };
 
 /**

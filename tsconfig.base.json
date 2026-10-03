@@ -26,7 +26,9 @@
       "@assemblejs/renderer-react": ["./packages/renderer-react/src/index.ts"],
       "@assemblejs/renderer-react/client": ["./packages/renderer-react/src/client/index.ts"],
       "@assemblejs/renderer-svelte": ["./packages/renderer-svelte/src/index.ts"],
-      "@assemblejs/renderer-svelte/client": ["./packages/renderer-svelte/src/client/index.ts"]
+      "@assemblejs/renderer-svelte/client": ["./packages/renderer-svelte/src/client/index.ts"],
+      "@assemblejs/renderer-vue": ["./packages/renderer-vue/src/index.ts"],
+      "@assemblejs/renderer-vue/client": ["./packages/renderer-vue/src/client/index.ts"]
     }
   }
 }

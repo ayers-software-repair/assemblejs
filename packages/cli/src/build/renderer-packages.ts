@@ -11,4 +11,5 @@ export const RENDERER_PACKAGES: Readonly<Record<string, RendererPackage>> = {
   preact: { name: "preact", package: "@assemblejs/renderer-preact" },
   react: { name: "react", package: "@assemblejs/renderer-react" },
   svelte: { name: "svelte", package: "@assemblejs/renderer-svelte" },
+  vue: { name: "vue", package: "@assemblejs/renderer-vue" },
 };

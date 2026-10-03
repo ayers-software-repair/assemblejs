@@ -26,6 +26,14 @@ describe("what would stop a build, found before the bundler runs", () => {
     ).toEqual([]);
   });
 
+  it("names a compiled framework a project has views for and has not installed", () => {
+    const root = mkdtempSync(join(tmpdir(), "bare-"));
+    writeFileSync(join(root, "package.json"), "{}");
+    expect(buildProblems(root, [assembly("vue")])).toContainEqual(
+      expect.objectContaining({ fix: "install vue" }),
+    );
+  });
+
   it("names the package a project is missing", () => {
     const root = mkdtempSync(join(tmpdir(), "bare-"));
     writeFileSync(join(root, "package.json"), "{}");

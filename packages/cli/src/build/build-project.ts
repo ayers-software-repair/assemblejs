@@ -15,7 +15,7 @@ import { writeStyles } from "../styles/write-styles.js";
 import { buildProblems } from "./build-problems.js";
 import { bundleClient } from "./bundle-client.js";
 import { describeBuildFailure } from "./describe-build-failure.js";
-import { loadSvelteCompiler } from "./load-svelte-compiler.js";
+import { loadCompilers } from "./load-compilers.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 import { sharedOptions } from "./shared-options.js";
 import { sourceVersion } from "./source-version.js";
@@ -40,16 +40,10 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     ...apis.problems,
     ...buildProblems(root, found.assemblies),
   ];
-  const needsSvelte = found.assemblies.some((assembly) => assembly.renderer === "svelte");
-  const svelte = needsSvelte ? await loadSvelteCompiler(root) : undefined;
-  if (needsSvelte && svelte === undefined && problems.length === 0) {
-    problems.push({
-      path: join(root, "package.json"),
-      rule: "a-view-needs-its-renderer",
-      message: "the project's svelte package has no compiler this build can load",
-      fix: "reinstall svelte",
-    });
-  }
+  const { compilers, problems: unloaded } = await loadCompilers(root, found.assemblies);
+  // A framework that is not installed at all is already reported; one installed whose compiler
+  // cannot be loaded is reported here.
+  if (problems.length === 0) problems.push(...unloaded);
   if (problems.length > 0) {
     for (const problem of problems) io.error(`${problem.message}: ${problem.fix}`);
     return 1;
@@ -68,7 +62,9 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     const script =
       browser.length === 0
         ? undefined
-        : await bundleClient(root, browser, svelte, io, (file, css) => componentCss.set(file, css));
+        : await bundleClient(root, browser, compilers, io, (file, css) =>
+            componentCss.set(file, css),
+          );
     const styles = writeStyles(root, found.assemblies, componentCss, io);
     const packages = Object.fromEntries(
       Object.values(RENDERER_PACKAGES).map((known) => [known.name, known.package]),
@@ -93,7 +89,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       }),
     );
     await build({
-      ...sharedOptions({ root, side: "server", assemblies: found.assemblies, svelte }),
+      ...sharedOptions({ root, side: "server", assemblies: found.assemblies, compilers }),
       entryPoints: [join(src, "server.ts")],
       platform: "node",
       format: "esm",

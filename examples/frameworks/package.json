@@ -14,10 +14,12 @@
     "@assemblejs/renderer-preact": "workspace:*",
     "@assemblejs/renderer-react": "workspace:*",
     "@assemblejs/renderer-svelte": "workspace:*",
+    "@assemblejs/renderer-vue": "workspace:*",
     "preact": "11.0.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "svelte": "5.57.0"
+    "svelte": "5.57.0",
+    "vue": "3.5.43"
   },
   "devDependencies": {
     "@assemblejs/cli": "workspace:*"

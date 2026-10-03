@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
 // server-rendered, hydrated by its own renderer, and talks to the others over the page's bus,
 // so every framework proves both halves of its renderer and the events binding at once.
 const example = fileURLToPath(new URL("../examples/frameworks/", import.meta.url));
-const FRAMEWORKS = ["react", "svelte", "preact"] as const;
+const FRAMEWORKS = ["react", "svelte", "preact", "vue"] as const;
 
 let server: ChildProcess | undefined;
 let origin = "";
@@ -74,3 +74,11 @@ for (const framework of FRAMEWORKS) {
     expect(errors).toEqual([]);
   });
 }
+
+test("a Vue component's scoped style applies to the markup it hydrated", async ({ page }) => {
+  await page.goto(`${origin}/`);
+  // Scoped under one id in both bundles, built apart, or the server's markup would not match it.
+  await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
+  await page.locator("#vue-bump").click();
+  await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
+});

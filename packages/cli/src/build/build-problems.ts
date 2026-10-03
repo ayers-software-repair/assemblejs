@@ -28,16 +28,22 @@ export function buildProblems(
       fix: "add the server file `assemblejs new` writes, which hands createServer the generated project",
     });
   }
-  if (
-    assemblies.some((assembly) => assembly.renderer === "svelte") &&
-    findPackage(root, "svelte") === undefined
-  ) {
-    problems.push({
-      path: join(root, "package.json"),
-      rule: "a-view-needs-its-renderer",
-      message: "this project has Svelte assemblies and svelte is not installed",
-      fix: "install svelte",
-    });
+  // The frameworks whose views the build compiles with the project's own compiler.
+  for (const [renderer, framework, named] of [
+    ["svelte", "svelte", "Svelte"],
+    ["vue", "vue", "Vue"],
+  ] as const) {
+    if (
+      assemblies.some((assembly) => assembly.renderer === renderer) &&
+      findPackage(root, framework) === undefined
+    ) {
+      problems.push({
+        path: join(root, "package.json"),
+        rule: "a-view-needs-its-renderer",
+        message: `this project has ${named} assemblies and ${framework} is not installed`,
+        fix: `install ${framework}`,
+      });
+    }
   }
   for (const assembly of assemblies) {
     if (assembly.renderer === "html") continue;

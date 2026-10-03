@@ -213,7 +213,9 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-16 the remaining four framework renderers, proved on one page (`examples/frameworks`)
   - [x] `renderer-preact`: `.preact.tsx`, server render, hydration (shadow roots included), the
         events hook; each JSX file compiles through its own framework's runtime
-  - [ ] `renderer-vue`
+  - [x] `renderer-vue`: `.vue` single-file components compiled with the project's own Vue
+        (`<script setup>` with its template inlined, or a separate render function; `<style
+scoped>` under one id on both sides), an app per assembly, `useEvents()` by injection
   - [ ] `renderer-solid`
   - [ ] `renderer-lit`
   - [ ] the page carrying all six, in Chromium

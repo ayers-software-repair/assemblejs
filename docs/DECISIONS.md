@@ -929,3 +929,24 @@ own machinery, not a framework the author chose.
 - **Package metadata follows the existing renderers'** (author, repository on the GitHub
   organization), which the owner flag on package metadata already covers; a new package did not
   fork the convention ahead of that ruling.
+
+## 2026-10-03: Vue
+
+`@assemblejs/renderer-vue`: every assembly is its own Vue app, created for hydration in the
+browser and rendered with `vue/server-renderer` on the server, the events provided under one
+injection key and read with `useEvents()` from `setup`. Settled here:
+
+- **The build compiles `.vue` with the project's own `vue/compiler-sfc`**, loaded as the Svelte
+  compiler is, so a component compiles with the Vue its runtime will be. A `<script setup>`
+  has its template inlined (a string-building render for the server, a hydrating one for the
+  browser); any other component gets a render function compiled from its template. A named
+  export beside the default (`mount`, `shadow`) is read as from any framework view.
+- **A component's scope id is a hash of its path in the project**, so the server and browser
+  bundles, built apart, agree, and `<style scoped>` matches the markup it hydrated. Its CSS
+  joins the assembly's stylesheet like a Svelte component's.
+- **A render error rejects.** Vue on its own warns about a component that throws during a server
+  render and sends what it had; the app's error handler rethrows, so the placement falls back
+  as any renderer's failure does.
+- **The compilers are one bundle** (`Compilers`, `loadCompilers`), and a compiled framework
+  the project has views for but has not installed is one table in `buildProblems`, so Solid's
+  compiler joins them without another branch in the build.

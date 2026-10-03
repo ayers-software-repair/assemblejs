@@ -29,7 +29,7 @@
     "examples/frameworks": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
-      "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte"]
+      "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte", "vue"]
     }
   }
 }

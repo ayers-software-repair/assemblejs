@@ -22,6 +22,8 @@ export default function buildExamples() {
       "@assemblejs/renderer-svelte",
       "--filter",
       "@assemblejs/renderer-preact",
+      "--filter",
+      "@assemblejs/renderer-vue",
       "build",
     ],
     { cwd: root, stdio: "pipe" },

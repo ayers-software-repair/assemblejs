@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { bundleClient, discoverAssemblies, loadSvelteCompiler, realIo } from "@assemblejs/cli";
+import { bundleClient, discoverAssemblies, loadCompilers, realIo } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 
@@ -13,7 +13,8 @@ describe("bundling the browser halves", () => {
     const { assemblies } = discoverAssemblies(join(example, "src", "assemblies"));
     const browser = assemblies.filter((assembly) => assembly.renderer !== "html");
     const quiet = { ...realIo, log: () => undefined };
-    const url = await bundleClient(example, browser, await loadSvelteCompiler(example), quiet);
+    const { compilers } = await loadCompilers(example, browser);
+    const url = await bundleClient(example, browser, compilers, quiet);
     expect(url).toMatch(/^\/_assemblejs\/assets\/client-[A-Z0-9]+\.js$/);
     const entry = join(example, "dist", "client", url.slice("/_assemblejs/assets/".length));
     expect(existsSync(entry)).toBe(true);

@@ -7,9 +7,9 @@ import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { generateClientEntry } from "../generate/generate-client-entry.js";
 import { generateClientModule } from "../generate/generate-client-module.js";
 import type { Io } from "../io/io.js";
+import type { Compilers } from "./compilers.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 import { sharedOptions } from "./shared-options.js";
-import type { SvelteCompile } from "./svelte-compile.js";
 
 /**
  * Writes each assembly's browser half as its own module and bundles them behind one entry, split
@@ -18,7 +18,7 @@ import type { SvelteCompile } from "./svelte-compile.js";
 export async function bundleClient(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
-  svelte: SvelteCompile | undefined,
+  compilers: Compilers,
   io: Io,
   onCss?: (file: string, css: string) => void,
 ): Promise<string> {
@@ -41,7 +41,7 @@ export async function bundleClient(
       root,
       side: "client",
       assemblies,
-      svelte,
+      compilers,
       ...(onCss === undefined ? {} : { onCss }),
     }),
     entryPoints: [join(generated, "client.ts")],
