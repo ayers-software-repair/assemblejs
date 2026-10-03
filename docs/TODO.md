@@ -27,10 +27,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** `dev` refreshing the browser over B-18's stream, then B-19, then
-onward in ledger order.
+**THE EXACT NEXT STEP:** B-19, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** dev refresh -> B-19 devtools
+**ORDER AND DEPENDENCIES of the open rows:** B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
@@ -263,7 +262,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       a Svelte assembly over one connection
 - [x] The verification of B-18: early messages kept per topic, back-pressure, `defineApi`
       strict again, a stream with nothing to open it refused at boot, HEAD refused
-- [ ] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
+- [x] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
       development only and under the framework's prefix (DECISIONS, 2026-10-03, "dev is the
       production build").
 - [ ] B-19 devtools, read-only, with the boot assertion

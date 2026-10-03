@@ -1230,3 +1230,16 @@ The rung's verifier found, and this round fixed:
 - Recorded, not changed: without `reply.hijack()` nothing observable differs, but the router's
   documentation requires it before writing to the raw response, so it stays. A failing stream's
   correlation id reaches only the log, and its page reconnects every few seconds, a line each.
+
+## 2026-10-03: dev reloads the page
+
+Expected, from "dev is the production build" above: a reload pushed to the page over B-18's
+server-sent events, under the framework's prefix and only in development. Built so: a server in
+development mode serves `/_assemblejs/dev/reload.js` and the stream `/_assemblejs/dev/reload`,
+which tells each connection one boot id per process, and links the script into every page. `dev`
+restarts the server after each rebuild; the page's event source reconnects to the new process,
+hears a new boot and reloads. A script file rather than the page's runtime, because a page whose
+assemblies ship no JavaScript has no runtime and must reload all the same, and the policy runs no
+inline script. The page's own stream is untouched: in development a page holds two connections,
+its own and this one. Proof: `browser/dev.browser.ts` runs `assemblejs dev` on a copy of an
+example, edits a view, and the open page shows the edit with no hand on the browser.

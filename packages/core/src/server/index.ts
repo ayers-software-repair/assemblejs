@@ -12,6 +12,8 @@ export { apiProblems } from "./api-problems.js";
 export { bootProblems } from "./boot-problems.js";
 export { registerApis } from "./register-apis.js";
 export { registerStreams } from "./register-streams.js";
+export { DEV_RELOAD_SOURCE } from "./dev-reload-source.js";
+export { registerDevReload } from "./register-dev-reload.js";
 export { OWN_DATA_SOURCE } from "./own-data-source.js";
 export { serviceSource } from "./service-source.js";
 export { viewSchema } from "./view-schema.js";

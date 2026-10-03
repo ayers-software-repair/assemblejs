@@ -28,6 +28,7 @@ import { queryOf } from "./query-of.js";
 import { readCompositionHeaders } from "./read-composition-headers.js";
 import { registerApis } from "./register-apis.js";
 import { registerAssets } from "./register-assets.js";
+import { registerDevReload } from "./register-dev-reload.js";
 import { registerFailures } from "./register-failures.js";
 import { registerPages } from "./register-pages.js";
 import { registerStreams } from "./register-streams.js";
@@ -182,7 +183,9 @@ export async function createServer(options: ServerOptions): Promise<App> {
     remotes,
     cache: createMemoryCache(),
     log,
+    reload: config.mode === "development",
   });
+  if (config.mode === "development") registerDevReload(app, log);
 
   await app.ready();
 

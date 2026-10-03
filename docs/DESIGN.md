@@ -624,7 +624,9 @@ root. Nothing pretends otherwise.
 - The bundler is a development and build-time tool owned by the CLI. `assemblejs dev` runs the
   same build and the same `node dist/server.js` as production, and rebuilds and restarts on every
   change; `assemblejs build` emits the server and the client assets; neither leaves a trace in
-  the running server.
+  the running server. A server in development mode links one more script into every page, from
+  `/_assemblejs/dev/`, which listens on a stream for the server's boot and reloads the page when
+  it hears a new one, so a page follows `dev` across each restart; in production neither exists.
 - The dev server binds loopback by default. Devtools are development-only, read-only over HTTP,
   and a boot assertion refuses to start if any route under the devtools prefix accepts anything
   but `GET` or `HEAD`.

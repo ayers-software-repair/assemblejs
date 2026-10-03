@@ -12,3 +12,5 @@ export { FRAMEWORK_ROUTE_PREFIX } from "./framework-route-prefix.js";
 export { DEFAULT_VIEW } from "./default-view.js";
 export { ASSET_ROUTE_PREFIX } from "./asset-route-prefix.js";
 export { STREAM_META_NAME } from "./stream-meta-name.js";
+export { DEV_RELOAD_STREAM } from "./dev-reload-stream.js";
+export { DEV_RELOAD_SCRIPT } from "./dev-reload-script.js";

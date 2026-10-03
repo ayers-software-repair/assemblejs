@@ -14,6 +14,7 @@ import type { PageDefinition } from "../page/page-definition.js";
 import { parseContentUrl } from "../remote/parse-content-url.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
 import type { RemoteTransport } from "../remote/remote-transport.js";
+import { DEV_RELOAD_SCRIPT } from "../vocab/dev-reload-script.js";
 import { hoistAssets } from "./hoist-assets.js";
 import { linkStream } from "./link-stream.js";
 import { pageFetch } from "./page-fetch.js";
@@ -40,6 +41,8 @@ export function registerPages(
     readonly remotes: readonly RemoteDefinition[];
     readonly cache: ContentCache;
     readonly log: (line: LogLine) => void;
+    /** Links the script that reloads a page in development into every page. */
+    readonly reload?: boolean;
   },
 ): void {
   const { assemblies, log } = options;
@@ -79,7 +82,10 @@ export function registerPages(
         return reply.code(503).send(renderFailure(correlationId));
       }
 
-      const assets: { css: string[]; js: string[] } = { css: [], js: [] };
+      const assets: { css: string[]; js: string[] } = {
+        css: [],
+        js: options.reload === true ? [DEV_RELOAD_SCRIPT] : [],
+      };
       for (const diagnostic of composed.diagnostics) {
         // A placement that fell back still served a page, so nothing else would ever say it
         // failed. Its envelope carries this id; the log line is what the id finds.

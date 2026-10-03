@@ -7,6 +7,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LogLine } from "@assemblejs/core";
 import {
   DEFAULT_LIMITS,
+  DEV_RELOAD_SCRIPT,
   createMemoryCache,
   createRemoteTransport,
   createServer,
@@ -162,6 +163,25 @@ describe("a page, mounted", () => {
     const { correlationId } = (response.json() as { error: { correlationId: string } }).error;
     expect(correlationId).not.toBe("");
     expect(logged.some((line) => line.correlationId === correlationId)).toBe(true);
+  });
+});
+
+describe("a page in development", () => {
+  it("links and serves the script that reloads it after a restart, and only in development", async () => {
+    for (const mode of ["development", "production"] as const) {
+      const server = await createServer({
+        config: { mode, host: "127.0.0.1", port: 0, auth: undefined },
+        assemblies: [{ name: "hello", views: hello.views }],
+        pages: [{ route: "/", template: '<body><assembly name="hello"></assembly></body>' }],
+        log: () => undefined,
+      });
+      const page = (await server.inject({ method: "GET", url: "/" })).body;
+      const script = await server.inject({ method: "GET", url: DEV_RELOAD_SCRIPT });
+      await server.close();
+      expect([page.includes(`src="${DEV_RELOAD_SCRIPT}"`), script.statusCode], mode).toEqual(
+        mode === "development" ? [true, 200] : [false, 404],
+      );
+    }
   });
 });
 
