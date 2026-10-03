@@ -6,6 +6,9 @@
   let ready = $state(false);
   onMount(() => {
     ready = true;
+    // The stream may have sent the current price before this assembly mounted.
+    const last = events.last("price");
+    if (last !== undefined) price = JSON.stringify(last.payload);
     return events.on("price", (message) => (price = JSON.stringify(message.payload)));
   });
 </script>

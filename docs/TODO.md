@@ -261,6 +261,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] B-18 real-time over server-sent events: a streaming api, a page naming its one stream,
       the runtime delivering each message onto the bus; in Chromium, one push reaches a React and
       a Svelte assembly over one connection
+- [x] The verification of B-18: early messages kept per topic, back-pressure, `defineApi`
+      strict again, a stream with nothing to open it refused at boot, HEAD refused
 - [ ] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
       development only and under the framework's prefix (DECISIONS, 2026-10-03, "dev is the
       production build").

@@ -1,12 +1,14 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { FastifyInstance } from "fastify";
-import type { DataApi } from "../api/data-api.js";
+import type { ApiDefinition } from "../api/api-definition.js";
+import { isStreamApi } from "../api/is-stream-api.js";
 import type { JsonValue } from "../json/json-value.js";
 import { queryOf } from "./query-of.js";
 
 /**
- * Mounts each api as a route that replies JSON.
+ * Mounts each api that answers with data as a route that replies JSON; a streaming api is left
+ * to `registerStreams`.
  *
  * The reply is serialised here rather than handed to the router, because the router sends a bare
  * string as plain text: a handler that returns `"ok"` answers the JSON string `"ok"`, the same
@@ -14,8 +16,9 @@ import { queryOf } from "./query-of.js";
  * empty body labelled JSON. A handler that throws reaches the server's one error handler, so its
  * message never reaches a body.
  */
-export function registerApis(app: FastifyInstance, apis: readonly DataApi[]): void {
+export function registerApis(app: FastifyInstance, apis: readonly ApiDefinition[]): void {
   for (const api of apis) {
+    if (isStreamApi(api)) continue;
     app.route({
       method: api.method ?? "GET",
       url: api.path,

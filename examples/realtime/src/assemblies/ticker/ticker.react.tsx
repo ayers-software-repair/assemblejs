@@ -9,6 +9,9 @@ export default function Ticker() {
   const [ready, setReady] = useState(false);
   useEffect(() => {
     setReady(true);
+    // The stream may have sent the current price before this assembly mounted.
+    const last = events.last("price");
+    if (last !== undefined) setPrice(JSON.stringify(last.payload));
     return events.on("price", (message) => setPrice(JSON.stringify(message.payload)));
   }, [events]);
   return (

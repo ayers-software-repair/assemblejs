@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import type { FastifyInstance } from "fastify";
-import { afterEach, describe, expect, it } from "vitest";
-import { defineApi, registerStreams } from "@assemblejs/core";
-import type { LogLine, StreamApi, StreamContext } from "@assemblejs/core";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { defineApi, registerAccess, registerStreams } from "@assemblejs/core";
+import type { ApiDefinition, LogLine, StreamContext } from "@assemblejs/core";
 
 let app: FastifyInstance | undefined;
 afterEach(async () => {
@@ -14,14 +14,16 @@ afterEach(async () => {
 
 /** Listens with the given streams, and answers its origin and the log it wrote. */
 const serve = async (
-  streams: readonly StreamApi[],
+  streams: readonly ApiDefinition[],
   heartbeat?: number,
   force: boolean | "idle" = true,
+  before: (app: FastifyInstance) => void = () => undefined,
 ) => {
   const logged: LogLine[] = [];
   // Node's fetch can hold a spare connection that never sends a request, which a server that
   // closes only idle connections waits out; this stops the test's server, not the stream, at once.
   app = Fastify({ logger: false, forceCloseConnections: force });
+  before(app);
   registerStreams(app, streams, (line) => logged.push(line), heartbeat);
   const origin = await app.listen({ port: 0, host: "127.0.0.1" });
   return { origin, logged };
@@ -61,6 +63,7 @@ describe("a streaming api, mounted", () => {
     const response = await fetch(`${origin}/ticks`);
     expect(response.headers.get("content-type")).toBe("text/event-stream; charset=utf-8");
     expect(response.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(response.headers.get("cache-control")).toBe("no-cache, no-transform");
     const text = await readUntil(response, "cart");
     expect(text).toContain('data: {"topic":"tick","payload":{"n":1,"text":"two\\nlines"}}\n\n');
     expect(text).toContain('data: {"topic":"tick","payload":2,"to":{"name":"cart"}}\n\n');
@@ -112,5 +115,58 @@ describe("a streaming api, mounted", () => {
     app = undefined;
     expect(context.signal.aborted).toBe(true);
     expect(await ended).toBe(": open\n\n");
+  });
+
+  it("answers no HEAD request, which carries no body and so would open a stream forever", async () => {
+    let opened = 0;
+    const { origin } = await serve([
+      defineApi({ path: "/live", stream: () => void (opened += 1) }),
+    ]);
+    expect((await fetch(`${origin}/live`, { method: "HEAD" })).status).toBe(404);
+    expect(opened).toBe(0);
+  });
+
+  it("closes a connection whose client stops reading, rather than holding what it is sent", async () => {
+    const { given, give } = handOut();
+    const { origin } = await serve([defineApi({ path: "/flood", stream: give })]);
+    await fetch(`${origin}/flood`);
+    const context = await given;
+    const chunk = "x".repeat(100_000);
+    for (let sent = 0; sent < 200 && !context.signal.aborted; sent += 1) {
+      context.send("chunk", chunk);
+    }
+    expect(context.signal.aborted).toBe(true);
+  });
+
+  it("stops writing its heartbeat once the connection has closed", async () => {
+    const started = vi.spyOn(globalThis, "setInterval");
+    const cleared = vi.spyOn(globalThis, "clearInterval");
+    const { given, give } = handOut();
+    const { origin } = await serve([defineApi({ path: "/beat", stream: give })], 20);
+    const controller = new AbortController();
+    await fetch(`${origin}/beat`, { signal: controller.signal });
+    const context = await given;
+    const beat = started.mock.results.find((_, at) => started.mock.calls[at]?.[1] === 20)?.value;
+    controller.abort();
+    await new Promise<void>((resolve) => context.signal.addEventListener("abort", () => resolve()));
+    expect(beat).toBeDefined();
+    expect(cleared).toHaveBeenCalledWith(beat);
+    started.mockRestore();
+    cleared.mockRestore();
+  });
+
+  it("is behind the same access decision as every other route", async () => {
+    const policy = {
+      basic: { user: "u", password: "p" },
+      authenticate: undefined,
+      publicRoutes: [],
+    };
+    const { origin } = await serve(
+      [defineApi({ path: "/private", stream: () => undefined })],
+      undefined,
+      true,
+      (server) => registerAccess(server, policy, "default-src 'self'"),
+    );
+    expect((await fetch(`${origin}/private`)).status).toBe(401);
   });
 });

@@ -49,12 +49,7 @@
         "src/pages/*/*.page.ts"
       ],
       "project": ["src/**/*.{ts,tsx,svelte}"],
-      "ignoreDependencies": [
-        "@assemblejs/renderer-react",
-        "@assemblejs/renderer-svelte",
-        "svelte",
-        "react-dom"
-      ]
+      "ignoreDependencies": ["@assemblejs/renderer-svelte"]
     }
   }
 }

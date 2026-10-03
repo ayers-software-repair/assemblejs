@@ -9,7 +9,8 @@ export default defineApi({
   path: "/api/push",
   method: "POST",
   handle: ({ body }) => {
-    for (const send of priceFeed) send("price", body ?? null);
-    return { reached: priceFeed.size } satisfies JsonValue;
+    priceFeed.latest = body ?? null;
+    for (const send of priceFeed.listening) send("price", priceFeed.latest);
+    return { reached: priceFeed.listening.size } satisfies JsonValue;
   },
 });

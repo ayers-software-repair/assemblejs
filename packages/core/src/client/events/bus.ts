@@ -11,6 +11,11 @@ export interface Bus {
    * others, which is what makes forgetting to unsubscribe impossible rather than discouraged.
    */
   forAssembly(sender: EventSender): { readonly events: Events; readonly release: () => void };
+  /**
+   * Keeps a topic's last message from now on, as the topics the bus was created to replay are
+   * kept, for an assembly that reads it with `last` after it was sent.
+   */
+  keep(topic: string): void;
   /** How many handlers are subscribed, for a leak test to assert against. */
   readonly size: number;
 }

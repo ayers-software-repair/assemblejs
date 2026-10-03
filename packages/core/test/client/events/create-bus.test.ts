@@ -160,4 +160,15 @@ describe("a handler that changes the subscriptions while it runs", () => {
     bus.forAssembly(catalogue).events.send("t", {});
     expect(later).toHaveBeenCalledOnce();
   });
+
+  it("keeps a topic's last message from the moment it is told to, and no other topic's", () => {
+    const bus = createBus();
+    const { events } = bus.forAssembly({ id: "a", name: "a", view: "default" });
+    events.send("price", 1);
+    bus.keep("price");
+    events.send("price", 2);
+    events.send("stock", 3);
+    expect(events.last("price")?.payload).toBe(2);
+    expect(events.last("stock")).toBeUndefined();
+  });
 });

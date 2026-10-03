@@ -48,9 +48,11 @@ test("a server push reaches a React and a Svelte assembly through the page's bus
   });
 
   await page.goto(`${origin}/`);
+  // The stream sends the current price as the page connects, while the assemblies are still
+  // loading; each reads it once mounted, so none misses the first message.
   for (const id of ["#react-price", "#svelte-price"]) {
     await expect(page.locator(id)).toHaveAttribute("data-ready", "");
-    await expect(page.locator(id)).toHaveText("waiting");
+    await expect(page.locator(id)).toHaveText('{"price":0}');
   }
   // The page's connection may still be opening: push until the server says a page heard it.
   await expect

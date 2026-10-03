@@ -30,6 +30,12 @@ describe("linking a page's browser files", () => {
     );
   });
 
+  it("keeps the doctype first in a template with no head", () => {
+    expect(hoistAssets("<!doctype html><main></main>", { css: ["/a.css"], js: [] })).toBe(
+      '<!doctype html><link rel="stylesheet" href="/a.css"><main></main>',
+    );
+  });
+
   it("uses the last closing body tag, not one quoted earlier in the document", () => {
     const quoted = "<body><pre>&lt;/body&gt; </body></pre></body>";
     expect(

@@ -152,11 +152,37 @@ describe("what is checked about pages before anything listens", () => {
       defineApi({ path: "/data", handle: () => null }),
       defineApi({ path: "/rooms/:room", stream: () => undefined }),
     ];
+    const scripted = defineAssembly({ ...hello, assets: { css: [], js: ["/client.js"] } });
     const streaming = (stream: string) => [{ ...page("/"), stream }];
-    expect(pageProblems(streaming("/live"), [hello], apis)).toEqual([]);
+    // A query is the stream's own to read; the path is what names it.
+    for (const stream of ["/live", "/live?room=a"]) {
+      expect(pageProblems(streaming(stream), [scripted], apis), stream).toEqual([]);
+    }
     for (const stream of ["/data", "/nowhere", "/rooms/:room"]) {
-      expect(pageProblems(streaming(stream), [hello], apis).join(), stream).toMatch(
+      expect(pageProblems(streaming(stream), [scripted], apis).join(), stream).toMatch(
         /opens the stream .*, which is not the path of a streaming api without parameters/,
+      );
+    }
+  });
+
+  it("refuses a stream nothing on the page would open", () => {
+    const apis = [defineApi({ path: "/live", stream: () => undefined })];
+    const still = defineAssembly({ ...hello, mount: "none", assets: { css: [], js: ["/c.js"] } });
+    const remotes = [{ origin: "https://shop.example.com" }];
+    const remotely = {
+      ...page("/"),
+      stream: "/live",
+      place: { hello: { url: "https://shop.example.com/assembly/hello/" } },
+    };
+    // No browser half, one that never mounts, and one placed from another server, whose own
+    // runtime opens no stream of this page's.
+    for (const [pages, assemblies] of [
+      [[{ ...page("/"), stream: "/live" }], [hello]],
+      [[{ ...page("/"), stream: "/live" }], [still]],
+      [[remotely], [defineAssembly({ ...hello, assets: { css: [], js: ["/c.js"] } })]],
+    ] as const) {
+      expect(pageProblems(pages, assemblies, apis, remotes).join()).toMatch(
+        /opens a stream and places no assembly of this server's with a browser half/,
       );
     }
   });

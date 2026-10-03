@@ -8,4 +8,6 @@ export interface DataApi {
   readonly path: string;
   readonly method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   handle(context: ApiContext): JsonValue | Promise<JsonValue>;
+  /** A data api does not stream: a definition with both a handler and a stream is refused. */
+  readonly stream?: never;
 }

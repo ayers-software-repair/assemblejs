@@ -16,4 +16,10 @@ describe("naming a page's stream in its document", () => {
     );
     expect(linkStream("<head></head>", undefined)).toBe("<head></head>");
   });
+
+  it("keeps the doctype first in a template with no head", () => {
+    expect(linkStream("<!doctype html><title>x</title>", "/live")).toBe(
+      '<!doctype html><meta name="assemblejs-stream" content="/live"><title>x</title>',
+    );
+  });
 });

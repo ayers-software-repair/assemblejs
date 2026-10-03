@@ -12,6 +12,8 @@ const SERVER: EventSender = { id: "server", name: "server", view: "stream" };
 /**
  * Opens a page's one stream and delivers each message onto its bus, where assemblies receive it
  * exactly like any other event: nothing in an assembly knows the message came from the network.
+ * Each topic the stream sends keeps its last message, because the stream opens while assemblies
+ * are still loading: one that subscribes after a message arrived reads it with `last`.
  * A message that does not parse is dropped. The browser's event source reconnects on its own;
  * the returned close ends the connection. The server only sends, so it holds nothing on the bus.
  */
@@ -24,7 +26,9 @@ export function connectStream(
   const { events } = bus.forAssembly(SERVER);
   source.onmessage = (event) => {
     const message = readStreamMessage(String(event.data));
-    if (message !== undefined) events.send(message.topic, message.payload, message.to ?? "all");
+    if (message === undefined) return;
+    bus.keep(message.topic);
+    events.send(message.topic, message.payload, message.to ?? "all");
   };
   return () => source.close();
 }

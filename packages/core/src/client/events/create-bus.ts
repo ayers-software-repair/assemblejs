@@ -42,6 +42,10 @@ export function createBus(replay: readonly string[] = []): Bus {
       return subscriptions.size;
     },
 
+    keep(topic: string) {
+      keeps.add(topic);
+    },
+
     forAssembly(sender: EventSender) {
       // Held per assembly, so release removes exactly what this assembly added and nothing else.
       const mine = new Set<Subscription>();

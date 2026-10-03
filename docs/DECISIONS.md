@@ -1148,8 +1148,7 @@ the source and found, and this round fixed:
 
 - **The Vue "production" test project ran Vue's development build.** Expected: a project's
   `NODE_ENV` selects the build. Found: Vue picks its build when first loaded, before a test
-  project's environment applies. Each build is now a run of its own (`NODE_ENV=production vitest
-run` in the package's test script), and a test proves the build each run loaded. The old
+  project's environment applies. Each build is now a run of its own (`NODE_ENV=production vitest run` in the package's test script), and a test proves the build each run loaded. The old
   rethrowing handler now fails the production run, as it fails a production server.
 - **Solid's registry carry-over** ran only after a successful hydration, kept detached nodes, and
   could hand a placement mounted again its old markup. It now runs in a `finally`, carries only
@@ -1197,6 +1196,37 @@ and is found at its first render, where its placement falls back.
   fetch can also hold a spare connection that sends no request, which the tests' own servers
   close by force; that is the test client, not the stream.
 - Equivalent mutant recorded: skipping a send after the connection closed changes nothing a test
-  can see, as Node drops a write after the end; the check stays, so a closed stream does no work.
+  can see, because the router listens for the response's errors, and a write after the end, which
+  raw Node raises as an error nothing would catch, reaches that listener; the check stays, so a
+  closed stream does no work and depends on no one else's listener.
 - Proof: `browser/realtime.browser.ts`, from `examples/realtime`: one push reaches a React and a
   Svelte assembly through the bus, over exactly one connection.
+
+## 2026-10-03: verifying B-18
+
+The rung's verifier found, and this round fixed:
+
+- **A message the stream sent before an assembly subscribed was lost.** Found: the stream opens
+  as the runtime starts, assemblies load by dynamic import and subscribe after they render, and a
+  stream that sends its current value on connect (the usual pattern) reached one assembly in ten.
+  Each topic the stream sends now keeps its last message (`bus.keep`), and an assembly reads what
+  it missed with `events.last`. The browser proof now sends the current price on connect and
+  needs both assemblies to show it, five runs of five; without the keep it fails every run.
+- **No back-pressure:** a client that stopped reading held every message since in the server's
+  memory. A connection with a megabyte unsent is closed; its page reconnects and starts again
+  from what the stream sends then.
+- **`defineApi` had stopped refusing a misspelt property**, as a generic signature turns off the
+  excess-property check: `mehtod: "POST"` mounted the route as GET. It is typed as the definition
+  again, and a data api's `stream?: never` refuses a definition with both. The register functions
+  each take every api and mount their own kind.
+- **A stream named and never opened, or never heard:** a page whose placements have no browser
+  half of this server's has no runtime to open its stream, which is now a boot error; an
+  assembly placed from another server is on that server's bus, which DESIGN 3.6 now says.
+- **Smaller:** a HEAD request opened a stream and never answered (no HEAD route now); a
+  template with a doctype and no head got the stream's element, and its stylesheets, before the
+  doctype (both now go after it); a stream path with a query is accepted, the query being the
+  stream's own; tests now hold the heartbeat's end, the cache header and the access decision on a
+  stream route.
+- Recorded, not changed: without `reply.hijack()` nothing observable differs, but the router's
+  documentation requires it before writing to the raw response, so it stays. A failing stream's
+  correlation id reaches only the log, and its page reconnects every few seconds, a line each.

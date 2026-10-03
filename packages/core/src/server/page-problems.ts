@@ -22,7 +22,8 @@ import { routeKey } from "./route-key.js";
  * blank space a visitor discovers. The same goes for policy written for a placement the template
  * does not make: it would be read by nothing, and the author would believe it applied. And a
  * placement from another server cannot sit inside one of the page's forms. A page's stream must be
- * one of this server's streaming apis.
+ * one of this server's streaming apis, opened by an assembly of this server's that runs in the
+ * browser.
  */
 export function pageProblems(
   pages: readonly PageDefinition[],
@@ -61,7 +62,8 @@ export function pageProblems(
     if (reserved !== undefined) {
       problems.push(`${at} is under "${reserved}/", which the framework reserves`);
     }
-    if (page.stream !== undefined && !streams.has(page.stream)) {
+    // A query is the stream's own, read from its context; the path names the stream.
+    if (page.stream !== undefined && !streams.has(page.stream.split("?")[0] ?? "")) {
       problems.push(
         `${at} opens the stream "${page.stream}", which is not the path of a streaming api without parameters`,
       );
@@ -110,6 +112,21 @@ export function pageProblems(
           `${at} places "${placement.name}" with a view "${placement.view}" it does not have`,
         );
       }
+    }
+
+    // The page's own runtime opens its stream, and is on the page only for an assembly of this
+    // server's that has a browser half: without one, the stream is named and never opened.
+    const opened = placements.some((placement) => {
+      const assembly =
+        place[placement.name]?.url === undefined ? byName.get(placement.name) : undefined;
+      return (
+        assembly !== undefined && assembly.mount !== "none" && (assembly.assets?.js.length ?? 0) > 0
+      );
+    });
+    if (page.stream !== undefined && !opened) {
+      problems.push(
+        `${at} opens a stream and places no assembly of this server's with a browser half, so nothing would open it`,
+      );
     }
 
     const placed = new Set(placements.map((placement) => placement.name));

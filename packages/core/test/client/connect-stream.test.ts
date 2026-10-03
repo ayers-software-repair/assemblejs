@@ -35,4 +35,14 @@ describe("connecting a page's stream to its bus", () => {
     close();
     expect(stream.closed()).toBe(1);
   });
+
+  // The stream opens while assemblies are still loading, so one may subscribe after a message.
+  it("keeps each topic it sends, for an assembly that mounts after the message arrived", () => {
+    const bus = createBus();
+    const stream = fakeStream();
+    connectStream("/live", bus, stream.open);
+    stream.source.emit('{"topic":"price","payload":7}');
+    const late = bus.forAssembly({ id: "late-1", name: "late", view: "default" });
+    expect(late.events.last("price")?.payload).toBe(7);
+  });
 });

@@ -27,6 +27,7 @@ export { pageProblems } from "./page-problems.js";
 export { assetProblems } from "./asset-problems.js";
 export { listAssets } from "./list-assets.js";
 export { liveClosingTags } from "./live-closing-tags.js";
+export { headEnd } from "./head-end.js";
 export { hoistAssets } from "./hoist-assets.js";
 export { linkStream } from "./link-stream.js";
 export { renderLocal } from "./render-local.js";

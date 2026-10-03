@@ -3,11 +3,13 @@
 import { defineApi } from "@assemblejs/core";
 import { priceFeed } from "./price-feed.js";
 
-// Each page's one connection joins the feed, and leaves it when the page goes away.
+// Each page's one connection starts from the latest price, joins the feed, and leaves it when the
+// page goes away.
 export default defineApi({
   path: "/api/prices",
   stream: ({ send, signal }) => {
-    priceFeed.add(send);
-    signal.addEventListener("abort", () => priceFeed.delete(send));
+    send("price", priceFeed.latest);
+    priceFeed.listening.add(send);
+    signal.addEventListener("abort", () => priceFeed.listening.delete(send));
   },
 });

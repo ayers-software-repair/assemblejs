@@ -299,9 +299,14 @@ export default definePage({ stream: "/api/prices" });
 
 Each message is one `data:` line of JSON, `{ topic, payload, to? }`, which cannot be broken by a
 line break in the payload. It arrives on the bus from the sender `{ id: "server" }`, an id no
-placement can have. The page's own runtime opens the stream its head names; a remote's runtime
-never does. A stream answers GET, writes a comment while quiet, and is closed before the server
-stops. A page naming a stream that is not one of the server's streaming apis is a boot error.
+placement can have, and each topic the stream sends keeps its last message: the stream opens while
+assemblies are still loading, so one that mounts later reads what it missed with `events.last`.
+The page's own runtime opens the stream its head names; a remote's runtime never does, and an
+assembly placed from another server is on that server's bus, which the stream does not reach.
+A stream answers GET and not HEAD, writes a comment while quiet, closes a connection whose client
+lets a megabyte go unsent, and is closed before the server stops. A page naming a stream that is
+not one of the server's streaming apis (a query after the path is the stream's own), or naming
+one with no assembly of this server's that runs in the browser to open it, is a boot error.
 
 There is no WebSocket in core.
 
