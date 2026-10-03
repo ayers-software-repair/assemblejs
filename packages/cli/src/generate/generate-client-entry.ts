@@ -4,11 +4,14 @@ import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { GENERATED_HEADER } from "./generated-header.js";
 
 /**
- * The page's one script: the runtime, started with a browser half that loads each assembly's
- * own module by name the first time it mounts, owning the envelopes from the origin it was
- * served from.
+ * The page's one script: any setup a framework needs loaded first, then the runtime, started
+ * with a browser half that loads each assembly's own module by name the first time it mounts,
+ * owning the envelopes from the origin it was served from.
  */
-export function generateClientEntry(assemblies: readonly DiscoveredAssembly[]): string {
+export function generateClientEntry(
+  assemblies: readonly DiscoveredAssembly[],
+  setups: readonly string[] = [],
+): string {
   const modules = assemblies
     .map(
       (assembly) =>
@@ -19,7 +22,12 @@ export function generateClientEntry(assemblies: readonly DiscoveredAssembly[]): 
     .sort()
     .map((renderer) => `${JSON.stringify(renderer)}: renderer`)
     .join(", ");
-  return `${GENERATED_HEADER}import { lazyRenderer, start } from "@assemblejs/core/client";
+  // Static imports first: they load before this module's own code and before any assembly's
+  // module, so a framework that needs something installed before it loads gets it.
+  const setup = [...new Set(setups)]
+    .map((module) => `import ${JSON.stringify(module)};\n`)
+    .join("");
+  return `${GENERATED_HEADER}${setup}import { lazyRenderer, start } from "@assemblejs/core/client";
 
 const renderer = lazyRenderer({
 ${modules}

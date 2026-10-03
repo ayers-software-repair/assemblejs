@@ -74,6 +74,14 @@ describe("discovering assemblies", () => {
     });
   });
 
+  it("reads files of the view's framework beside it as its own components, not views", () => {
+    assembly("cart", ["cart.lit.ts", "price.lit.ts", "cart.client.ts"]);
+    const { assemblies, problems } = discoverAssemblies(root);
+    expect(problems).toEqual([]);
+    expect(assemblies[0]?.view).toBe(`${root}/cart/cart.lit.ts`);
+    expect(assemblies[0]?.renderer).toBe("lit");
+  });
+
   it("reports a directory whose name could never be an assembly", () => {
     assembly("Cart", ["cart.html"]);
     assembly("cart name", ["cart.html"]);

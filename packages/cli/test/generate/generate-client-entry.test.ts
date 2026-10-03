@@ -34,4 +34,18 @@ describe("the page's one script", () => {
       'start({ renderers: { "react": renderer, "svelte": renderer }, origin: new URL(import.meta.url).origin });',
     );
   });
+
+  it("imports a framework's setup first, before the runtime and every assembly, once", () => {
+    const source = generateClientEntry(
+      [],
+      ["@assemblejs/renderer-lit/hydration-support", "@assemblejs/renderer-lit/hydration-support"],
+    );
+    const body = source.slice(source.search(/^import/m));
+    expect(
+      body.startsWith(
+        'import "@assemblejs/renderer-lit/hydration-support";\nimport { lazyRenderer',
+      ),
+    ).toBe(true);
+    expect(source.match(/hydration-support/g)).toHaveLength(1);
+  });
 });

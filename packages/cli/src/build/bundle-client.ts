@@ -33,7 +33,11 @@ export async function bundleClient(
       ),
     );
   }
-  io.write(join(generated, "client.ts"), generateClientEntry(assemblies));
+  const setups = assemblies.flatMap((assembly) => {
+    const setup = RENDERER_PACKAGES[assembly.renderer]?.browserSetup;
+    return setup === undefined ? [] : [setup];
+  });
+  io.write(join(generated, "client.ts"), generateClientEntry(assemblies, setups));
 
   const outdir = join(root, "dist", "client");
   const result = await build({

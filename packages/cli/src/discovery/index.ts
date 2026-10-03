@@ -7,6 +7,7 @@ export { suggestName } from "./suggest-name.js";
 export { isDirectory } from "./is-directory.js";
 export type { DiscoveredAssembly } from "./discovered-assembly.js";
 export { rendererForView } from "./renderer-for-view.js";
+export { pickView } from "./pick-view.js";
 export { discoverAssemblies } from "./discover-assemblies.js";
 export type { DiscoveredPage } from "./discovered-page.js";
 export { discoverPages } from "./discover-pages.js";

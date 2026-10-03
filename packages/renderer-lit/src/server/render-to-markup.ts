@@ -5,6 +5,7 @@ import { serverEvents } from "@assemblejs/core/client";
 import { render } from "@lit-labs/ssr";
 import { collectResultSync } from "@lit-labs/ssr/lib/render-result.js";
 import type { LitView } from "../props/lit-view.js";
+import { StylelessElementRenderer } from "./styleless-element-renderer.js";
 
 /**
  * Renders a Lit view to the markup the server sends: its template with the markers hydration
@@ -20,9 +21,8 @@ import type { LitView } from "../props/lit-view.js";
  */
 export function renderToMarkup(view: LitView, input: MarkupInput): string {
   return collectResultSync(
-    render(view({ data: input.data, children: input.children, events: serverEvents() })),
-  ).replace(SHADOW_STYLE, "$1");
+    render(view({ data: input.data, children: input.children, events: serverEvents() }), {
+      elementRenderers: [StylelessElementRenderer],
+    }),
+  );
 }
-
-// The `<style>` Lit writes first in an element's declarative shadow root.
-const SHADOW_STYLE = /(<template shadowroot="open" shadowrootmode="open">)<style>[^<]*<\/style>/g;

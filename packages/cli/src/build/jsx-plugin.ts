@@ -11,7 +11,8 @@ import type { SolidCompile } from "./solid-compile.js";
  * Compiles each JSX file through its own framework's runtime, by naming that runtime at the top
  * of the file as esbuild reads it, so React and Preact assemblies build side by side in one
  * bundle without either borrowing the other's runtime. A Solid file has its types stripped and
- * its JSX compiled by the project's Solid compiler for the side being built.
+ * its decorators lowered, which Solid's compiler does not read, and its JSX compiled by the
+ * project's Solid compiler for the side being built.
  *
  * A file that neither names its framework nor sits in an assembly's directory (a component shared
  * from elsewhere in the project) takes the framework of whatever imports it; one imported from
@@ -70,7 +71,7 @@ export function jsxPlugin(
               `${args.path} is Solid, and @assemblejs/renderer-solid is not installed`,
             );
           }
-          const stripped = await transform(source, { loader, jsx: "preserve" });
+          const stripped = await transform(source, { loader, jsx: "preserve", target: "es2022" });
           return { contents: solid(stripped.code, { filename: args.path, side }), loader: "js" };
         }
         // On the first line, so every line of the file keeps its number in a diagnostic.

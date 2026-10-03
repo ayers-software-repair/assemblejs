@@ -9,8 +9,9 @@ import { EventsContext } from "./events-context.js";
 
 /**
  * Turns a Solid component into the browser half of a renderer: it adopts the markup the server
- * sent by its hydration keys, in the envelope or the assembly's own shadow root, and the handle
- * disposes everything it created.
+ * sent by its hydration keys, prefixed with this placement's id as the server half prefixed them,
+ * in the envelope or the assembly's own shadow root, and the handle disposes everything it
+ * created.
  *
  * Solid keeps its hydration state on `globalThis._$HY`, which its own page bootstrap creates with
  * an inline script the page's policy refuses, and marks hydration done (there, and on its shared
@@ -29,6 +30,10 @@ export function hydrate(component: Component<AssemblyProps>): ClientRenderer {
         done: false,
       };
       sharedConfig.done = false;
+      // The nodes another island has not claimed yet (a lazy part still loading) stay claimable:
+      // hydrating this one replaces the registry, so they are carried over into it. Their keys
+      // carry that island's id, which no other placement on the page shares.
+      const previous = sharedConfig.registry;
       const dispose = hydrateInto(
         () =>
           createComponent(EventsContext.Provider, {
@@ -38,7 +43,9 @@ export function hydrate(component: Component<AssemblyProps>): ClientRenderer {
             },
           }),
         element,
+        { renderId: context.id },
       );
+      for (const [key, node] of previous ?? []) sharedConfig.registry?.set(key, node);
       return { unmount: () => dispose() };
     },
   };

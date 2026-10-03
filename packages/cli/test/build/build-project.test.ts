@@ -150,6 +150,39 @@ describe("building what the command line scaffolds", { timeout: 60_000 }, () => 
   });
 });
 
+// Nested in the example that installs every framework, as the one above is in its own.
+const frameworks = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));
+const everyFramework = mkdtempSync(join(frameworks, ".dev-scaffold-"));
+afterAll(() => rmSync(everyFramework, { recursive: true, force: true }));
+
+describe("building what the command line scaffolds, in Solid and Lit", { timeout: 60_000 }, () => {
+  it("builds each through its own renderer, and serves the markup each hydrates", async () => {
+    for (const [path, contents] of Object.entries(projectFiles("every-framework"))) {
+      realIo.write(join(everyFramework, path), contents);
+    }
+    for (const [name, renderer] of [
+      ["ticker", "solid"],
+      ["badge", "lit"],
+    ] as const) {
+      const plan = planAssembly(name, renderer, false);
+      if ("problem" in plan) throw new Error(plan.problem.message);
+      for (const [path, contents] of Object.entries(plan.files)) {
+        realIo.write(join(everyFramework, path), contents);
+      }
+    }
+    const { io, errors } = capture();
+    expect(await buildProject(everyFramework, io)).toBe(0);
+    expect(errors).toEqual([]);
+    // Solid's own compiler wrote the hydration keys; Lit's server half wrote its part markers.
+    expect(await serve(everyFramework, "/assembly/ticker/")).toMatch(/data-hk="[0-9a-f-]+"/);
+    expect(await serve(everyFramework, "/assembly/badge/")).toContain("<!--lit-part");
+    // Lit's hydration support is installed before anything else in the browser entry.
+    const entry = readFileSync(join(everyFramework, ".assemblejs", "client.ts"), "utf8");
+    expect(entry).toMatch(/^import "@assemblejs\/renderer-lit\/hydration-support";$/m);
+    expect(entry.indexOf("hydration-support")).toBeLessThan(entry.indexOf("badge"));
+  });
+});
+
 describe("building a project with styles and no browser script", { timeout: 60_000 }, () => {
   it("serves its stylesheets all the same", async () => {
     const root = mkdtempSync(join(example, ".dev-styles-"));

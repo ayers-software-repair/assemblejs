@@ -34,9 +34,15 @@ describe("loading the compilers a project's views need", () => {
   it("reports a framework whose compiler cannot be loaded", async () => {
     const root = mkdtempSync(join(tmpdir(), "no-compiler-"));
     writeFileSync(join(root, "package.json"), "{}");
-    const { problems } = await loadCompilers(root, [assembly("vue")]);
-    expect(problems).toEqual([
-      expect.objectContaining({ fix: "reinstall vue", rule: "a-view-needs-its-renderer" }),
+    const { problems } = await loadCompilers(root, [
+      assembly("svelte"),
+      assembly("vue"),
+      assembly("solid"),
     ]);
+    expect(problems).toEqual(
+      ["svelte", "vue", "@assemblejs/renderer-solid"].map((name) =>
+        expect.objectContaining({ fix: `reinstall ${name}`, rule: "a-view-needs-its-renderer" }),
+      ),
+    );
   });
 });

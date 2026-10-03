@@ -10,7 +10,13 @@ import type { AssemblyProps } from "../props/assembly-props.js";
 
 /**
  * Renders a Solid component to the markup the server sends, with the hydration keys the browser
- * half adopts it by.
+ * half adopts it by, prefixed with the placement's id so no two islands share one.
+ *
+ * Rendering is synchronous, because an assembly's data comes from its services: a resource is
+ * fetched in the browser, the server sending its Suspense fallback, and a lazy component renders
+ * on the server only once its module is loaded, which a server does by preloading it. The inline
+ * script Solid writes for its own bootstrap is left out: the page's policy refuses it, and for an
+ * error a boundary caught it carries the error's message and the server's stack.
  *
  * It does not catch: a failed render throws, the composer catches it, and the placement falls
  * back. The component renders inside the same events context it hydrates inside, holding the
@@ -18,12 +24,19 @@ import type { AssemblyProps } from "../props/assembly-props.js";
  * browser.
  */
 export function renderToMarkup(component: Component<AssemblyProps>, input: MarkupInput): string {
-  return renderToString(() =>
-    createComponent(EventsContext.Provider, {
-      value: serverEvents(),
-      get children() {
-        return createComponent(component, { data: input.data, children: input.children });
-      },
-    }),
+  const html = renderToString(
+    () =>
+      createComponent(EventsContext.Provider, {
+        value: serverEvents(),
+        get children() {
+          return createComponent(component, { data: input.data, children: input.children });
+        },
+      }),
+    { renderId: input.id ?? "" },
   );
+  return html.replace(SOLID_SCRIPT, "");
 }
+
+// The data a Solid render serializes for the browser, which the browser half does not read.
+const SOLID_SCRIPT =
+  /<script>(?:(?!<\/script>)[\s\S])*?(?:\$R|_\$HY)(?:(?!<\/script>)[\s\S])*<\/script>/g;

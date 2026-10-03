@@ -6,4 +6,9 @@ export interface RendererPackage {
   readonly name: string;
   /** Exports `renderToMarkup(view, input)`, and `hydrate(view)` from its `/client` entry. */
   readonly package: string;
+  /**
+   * A module of the package the page must load before any assembly's own, when the framework
+   * needs one installed first (Lit's hydration support).
+   */
+  readonly browserSetup?: string;
 }

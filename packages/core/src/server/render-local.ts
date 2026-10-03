@@ -22,7 +22,7 @@ export async function renderLocal(
     throw new Error(`assembly "${assembly.name}" has no view "${view}"`);
   }
   const data = await resolveData(declared, { query, params: {} });
-  const markup = await declared.markup({ data, children: {} });
+  const markup = await declared.markup({ data, children: {}, id });
   return renderEnvelope({
     id,
     name: assembly.name,

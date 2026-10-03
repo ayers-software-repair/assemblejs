@@ -3,7 +3,8 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/client/index.ts"],
+  // The hydration support is an entry of its own, so a build can load it before anything else.
+  entry: ["src/index.ts", "src/client/index.ts", "src/client/hydration-support.ts"],
   format: ["esm"],
   target: "node22",
   dts: { compilerOptions: { ignoreDeprecations: "6.0" } },

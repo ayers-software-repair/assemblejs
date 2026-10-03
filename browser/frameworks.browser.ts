@@ -4,12 +4,25 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
 
 // B-16 IN A REAL BROWSER, FROM A REAL BUILD: one assembly per framework on one page. Each is
 // server-rendered, hydrated by its own renderer, and talks to the others over the page's bus,
 // so every framework proves both halves of its renderer and the events binding at once.
 const example = fileURLToPath(new URL("../examples/frameworks/", import.meta.url));
 const FRAMEWORKS = ["react", "svelte", "preact", "vue", "solid", "lit"] as const;
+
+// Holds the page's one script until released, so a test can capture what the server sent before
+// anything hydrates it, and later tell an adopted element from a replacement.
+const holdScript = async (page: Page): Promise<() => void> => {
+  let release = (): void => undefined;
+  const held = new Promise<void>((resolve) => (release = resolve));
+  await page.route(/\/_assemblejs\/assets\/client-[^/]+\.js$/, async (route) => {
+    await held;
+    await route.continue();
+  });
+  return release;
+};
 
 let server: ChildProcess | undefined;
 let origin = "";
@@ -51,17 +64,16 @@ for (const framework of FRAMEWORKS) {
         errors.push(`${String(response.status())} ${response.url()}`);
       }
     });
-    await page.goto(`${origin}/`);
+    const release = await holdScript(page);
+    await page.goto(`${origin}/`, { waitUntil: "commit" });
     const bump = page.locator(`#${framework}-bump`);
-    // Server-rendered: the markup is there before any script runs, and hydration keeps it.
+    // Server-rendered: the markup is there, and captured, before the script that hydrates it runs.
     await expect(bump).toHaveText(`${framework} 0`);
+    await bump.evaluate((element) => ((window as unknown as { kept: Element }).kept = element));
+    release();
+    // Every island's own module fetched, after which each mounts at once.
+    await page.waitForLoadState("networkidle");
     await expect(page.locator("script[data-assembly]")).toHaveCount(0);
-    const before = await bump.evaluate((element) => {
-      (window as unknown as { kept: Element }).kept = element;
-      return true;
-    });
-    expect(before).toBe(true);
-
     await bump.click();
     await expect(bump).toHaveText(`${framework} 1`);
     // The same element the server sent, adopted rather than replaced.

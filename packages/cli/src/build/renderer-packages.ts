@@ -8,7 +8,11 @@ import type { RendererPackage } from "./renderer-package.js";
  * build yet, which the build says rather than emitting something that will not render.
  */
 export const RENDERER_PACKAGES: Readonly<Record<string, RendererPackage>> = {
-  lit: { name: "lit", package: "@assemblejs/renderer-lit" },
+  lit: {
+    name: "lit",
+    package: "@assemblejs/renderer-lit",
+    browserSetup: "@assemblejs/renderer-lit/hydration-support",
+  },
   preact: { name: "preact", package: "@assemblejs/renderer-preact" },
   react: { name: "react", package: "@assemblejs/renderer-react" },
   solid: { name: "solid", package: "@assemblejs/renderer-solid" },

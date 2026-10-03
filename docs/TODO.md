@@ -212,7 +212,7 @@ starts. Until the owner enables Actions, every proof is local only.
       two of them an error; unsupported Vue SFC parts are build errors and `v-bind()` reaches the
       server render; `check` reads a declaration's default export with a parser; a selector
       reaching a sibling of the envelope is a style problem
-- [ ] The Solid and Lit review's findings: Lit hydration lost when another module loads `lit`
+- [x] The Solid and Lit review's findings: Lit hydration lost when another module loads `lit`
       first; Solid islands sharing one hydration registry and key space (render ids); the
       browser proof capturing elements after hydration rather than before; the Lit style
       removal's brittle pattern; Solid's resource scripts and async limits; TypeScript decorators

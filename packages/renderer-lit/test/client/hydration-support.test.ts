@@ -41,8 +41,10 @@ describe("Lit's support for hydrating server-rendered elements", () => {
     const directory = join(process.cwd(), "src", "client");
     for (const file of readdirSync(directory)) {
       // A type-only import is erased from the build and loads nothing.
+      // Lit's template layer (`lit/html.js`) is allowed; `lit`, its element base and its
+      // decorators are not, imported, re-exported or loaded bare.
       expect(readFileSync(join(directory, file), "utf8"), file).not.toMatch(
-        /^import (?!type )[^;]*from "lit(-element)?";/m,
+        /^(?:import|export)(?! type )[^;]*?["'](?:lit|lit\/decorators[^"']*|lit-element[^"']*|@lit\/reactive-element[^"']*)["']/m,
       );
     }
   });

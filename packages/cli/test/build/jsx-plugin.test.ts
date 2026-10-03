@@ -72,6 +72,28 @@ describe("compiling each JSX file through its own framework's runtime", () => {
     expect(client).not.toContain("jsx-runtime");
   });
 
+  // Solid's compiler reads JavaScript, not decorators, so the type strip ahead of it lowers them.
+  it("compiles a Solid view whose file uses decorators", async () => {
+    const example = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));
+    const solid = await loadSolidCompiler(example);
+    const root = mkdtempSync(join(tmpdir(), "solid-decorated-"));
+    writeFileSync(
+      join(root, "d.solid.tsx"),
+      "const named = (value: unknown, _context: ClassDecoratorContext) => value;\n" +
+        "@named class Store { total = 1; }\n" +
+        "export default () => <p>{new Store().total}</p>;",
+    );
+    const result = await build({
+      entryPoints: [join(root, "d.solid.tsx")],
+      bundle: true,
+      write: false,
+      format: "esm",
+      external: ["solid-js", "solid-js/web"],
+      plugins: [jsxPlugin([], "client", solid)],
+    });
+    expect(result.outputFiles[0]?.text).toContain("getNextElement");
+  });
+
   it("refuses a Solid view when the project has no Solid compiler", async () => {
     const root = mkdtempSync(join(tmpdir(), "solid-none-"));
     writeFileSync(join(root, "v.solid.tsx"), "export default () => <p />;");

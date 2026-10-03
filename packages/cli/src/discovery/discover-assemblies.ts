@@ -4,6 +4,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { DiscoveredAssembly } from "./discovered-assembly.js";
 import { isDirectory } from "./is-directory.js";
+import { pickView } from "./pick-view.js";
 import type { ProjectProblem } from "./project-problem.js";
 import { rendererForView } from "./renderer-for-view.js";
 import { suggestName } from "./suggest-name.js";
@@ -72,17 +73,17 @@ export function discoverAssemblies(root: string): {
       );
       continue;
     }
-    if (views.length > 1) {
+    const view = pickView(name, views);
+    if (view === undefined) {
       problems.push({
         path: at,
         rule: "one-framework-per-assembly",
         message: `"${name}" has more than one view file: ${views.join(", ")}`,
-        fix: "keep one view; a second framework is a second assembly",
+        fix: `name the view after the assembly and write its components in the same framework; a second framework is a second assembly`,
       });
       continue;
     }
 
-    const view = views[0] as string;
     const client = files.find((file) => file.endsWith(".client.ts"));
     const service = files.find((file) => file === `${name}.service.ts`);
     assemblies.push({

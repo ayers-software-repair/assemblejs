@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { ClientRenderer, JsonObject, MountContext } from "@assemblejs/core/client";
 import { hydrate as hydrateLit } from "@lit-labs/ssr-client";
-// lit-html, never lit: the browser half must not load Lit's element base before the view does,
-// or that base registers with Lit's hydration support before this package has adapted it.
-import { nothing, render } from "lit-html";
+// Lit's template layer, never `lit` itself: the browser half must not load Lit's element base
+// before the view does, or that base registers with Lit's hydration support before this package
+// has adapted it.
+import { nothing, render } from "lit/html.js";
 import type { LitView } from "../props/lit-view.js";
 
 /**

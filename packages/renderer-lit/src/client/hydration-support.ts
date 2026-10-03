@@ -6,9 +6,10 @@ import type { CSSResultOrNative } from "lit";
 type Installer = (lit: { readonly LitElement: { readonly prototype: object } }) => void;
 
 /**
- * Lit's support for hydrating elements a server rendered, installed before any Lit element is
- * defined, as it must be: this module is the browser half's first import, and nothing in the
- * browser half loads Lit's element base, so the first to load it is the view, after this.
+ * Lit's support for hydrating elements a server rendered, installed before Lit's element base
+ * loads, as it must be. A build imports this first in the page's entry, before any assembly's
+ * own module, so no module that loads `lit` can come first; it is also the browser half's first
+ * import, for a page assembled some other way.
  *
  * Lit's support reuses the shadow root the server sent without adopting the element's styles,
  * which arrived as an inline `<style>` the page's policy refuses. So an element that hydrates

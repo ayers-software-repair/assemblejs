@@ -46,4 +46,15 @@ describe("rendering an assembly in this process", () => {
       '<template shadowrootmode="open"><p>card</p><link rel="stylesheet" href="/_assemblejs/assets/styles/card-1.css"></template>',
     );
   });
+
+  it("gives the view the placement's id, the one its envelope carries", async () => {
+    let given: string | undefined;
+    const echo = defineAssembly({
+      name: "echo",
+      views: { default: { renderer: "html", markup: (input) => ((given = input.id), "<p></p>") } },
+    });
+    const html = await renderLocal(echo, "default", "b5c1", new URLSearchParams());
+    expect(given).toBe("b5c1");
+    expect(html).toContain('data-id="b5c1"');
+  });
 });

@@ -2,3 +2,4 @@
 // SPDX-License-Identifier: Apache-2.0
 export { renderToMarkup } from "./render-to-markup.js";
 export { litRenderer } from "./lit-renderer.js";
+export { StylelessElementRenderer } from "./styleless-element-renderer.js";

@@ -1075,3 +1075,43 @@ A fresh review of Preact, Vue and the third round found, and this round fixed:
 - **Smaller:** a stylesheet's `url()` is rewritten inside that `url()` alone; a root-relative
   href padded with control characters is rewritten as the browser reads it; Preact's peer range
   is the version tested.
+
+## 2026-10-03: the Solid and Lit review
+
+A fresh review of the Solid and Lit renderers found, and this round fixed:
+
+- **Lit lost hydration when anything loaded `lit` before its support module.** Found: the
+  support patches `LitElement` and must run before any element class is defined, and the bundler
+  hoisted the renderer's own `lit` imports ahead of it. The support is its own entry,
+  `@assemblejs/renderer-lit/hydration-support`, which a renderer package names as its
+  `browserSetup` and the generated browser entry imports before anything else; the browser half
+  imports only `lit/html.js`, and the package's side effects keep its shared chunks. A
+  `lit-early` assembly on the frameworks page loads `lit` from its own script as the regression.
+- **Solid islands shared one hydration registry and one key space.** Each placement renders and
+  hydrates with its own render id, so its keys carry its id: core's markup input now carries the
+  placement id, the one the envelope holds and the browser half is mounted with. Mounting an
+  island replaces Solid's registry, so nodes another island has not claimed yet (a lazy part
+  whose module arrives later) are carried over. Placement ids on one page are composer UUIDs,
+  so no island's prefix is another's.
+- **Solid's inline bootstrap script is left out of the server's markup.** Found: for an error a
+  boundary caught, it carried the error's message and the server's stack; the page's policy
+  refuses it in any case. Rendering stays synchronous: a resource is fetched in the browser,
+  the server sending its Suspense fallback, and a lazy component renders on the server once
+  preloaded.
+- **Lit's styles are left out by an element renderer, not a pattern over its output**, and
+  arrive as constructed sheets on hydration, which the policy allows.
+- **The browser proofs capture the server's elements before any script runs**, by holding the
+  browser entry until they are captured.
+- **A Solid file's decorators are lowered before Solid's compiler**, which does not read them.
+- **Solid and Lit scaffolds are built and served in the unit suite**, which kills four mutants
+  that survived it (the missing-compiler problem, the compiler's type check, the compiler handed
+  to the build, the Lit scaffold's name).
+- **Files of the view's framework beside it are its components, not second views.** Expected:
+  one view file per assembly. Found: `price.lit.ts` beside `cart.lit.ts`, or `row.svelte` beside
+  `cart.svelte`, was refused as a second framework. Among several, the view is the file named
+  after the assembly and the rest must share its framework.
+- **Smaller:** peer ranges are the versions tested; a dead bundler option is gone.
+
+Equivalent mutant recorded: in carrying Solid's registry over, skipping keys the new registry
+already holds changes nothing, because no two placements share a key prefix; the check was
+removed rather than kept untested.
