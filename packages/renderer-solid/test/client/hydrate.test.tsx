@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { onMount } from "solid-js";
+import { onMount, sharedConfig } from "solid-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createBus } from "@assemblejs/core/client";
 import { hydrate, useEvents } from "@assemblejs/renderer-solid/client";
@@ -120,5 +120,45 @@ describe("hydrating a Solid assembly", () => {
     mountInto("c");
     await vi.waitFor(() => expect(server?.hasAttribute("data-live")).toBe(true));
     expect(element.querySelector("span")).toBe(server);
+  });
+
+  it("keeps a lazy part's server node claimable when the next island fails to hydrate", async () => {
+    const element = document.createElement("assembly-root");
+    element.innerHTML = LATE_MARKUP;
+    document.body.append(element);
+    const server = element.querySelector("span");
+    mount(LateIsland, element, "a");
+    const broken = document.createElement("assembly-root");
+    broken.innerHTML = "<p>markup with none of its keys</p>";
+    document.body.append(broken);
+    expect(() => mount(() => <section>other</section>, broken, "c")).toThrow(/Hydration/);
+    await vi.waitFor(() => expect(server?.hasAttribute("data-live")).toBe(true));
+    expect(element.querySelector("span")).toBe(server);
+  });
+
+  it("adopts the fresh markup of a placement mounted again before its lazy part arrives", async () => {
+    const element = document.createElement("assembly-root");
+    element.innerHTML = LATE_MARKUP;
+    document.body.append(element);
+    const stale = element.querySelector("span");
+    mount(LateIsland, element, "a").unmount();
+    element.innerHTML = LATE_MARKUP;
+    const fresh = element.querySelector("span");
+    mount(LateIsland, element, "a");
+    await vi.waitFor(() => expect(fresh?.hasAttribute("data-live")).toBe(true));
+    expect(stale?.hasAttribute("data-live")).toBe(false);
+  });
+
+  // A node an island left unclaimed and the page then removed is not kept for the page's life.
+  it("lets go of server nodes no longer in the page", () => {
+    const element = document.createElement("assembly-root");
+    element.innerHTML = LATE_MARKUP;
+    document.body.append(element);
+    mount(LateIsland, element, "a").unmount();
+    element.remove();
+    mountInto("c");
+    expect([...(sharedConfig.registry?.values() ?? [])].every((node) => node.isConnected)).toBe(
+      true,
+    );
   });
 });

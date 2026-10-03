@@ -15,9 +15,10 @@ import type { SolidCompile } from "./solid-compile.js";
  * project's Solid compiler for the side being built.
  *
  * A file that neither names its framework nor sits in an assembly's directory (a component shared
- * from elsewhere in the project) takes the framework of whatever imports it; one imported from
- * two frameworks is an error naming both, as one file cannot compile two ways; one nothing
- * decides is React. Files the project did not write are left to the default.
+ * from elsewhere in the project) takes the framework of whatever imports it by a relative path;
+ * one imported from two frameworks is an error naming both, as one file cannot compile two ways;
+ * one nothing decides, one reached through a path alias among them, is React. Files the project
+ * did not write are left to the default.
  */
 export function jsxPlugin(
   assemblies: readonly DiscoveredAssembly[],

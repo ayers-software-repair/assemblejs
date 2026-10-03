@@ -42,7 +42,7 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run",
+    "test": "vitest run && NODE_ENV=production vitest run",
     "lint": "eslint src test",
     "check:publish": "publint && attw --pack . --profile esm-only"
   },

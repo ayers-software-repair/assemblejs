@@ -36,6 +36,7 @@ describe("rendering a Lit element's shadow root without its inline style", () =>
       { data: {}, children: {} },
     );
     expect(out).not.toContain("<style>");
+    expect(out).not.toContain("</style>");
     expect(out.match(/<p>quoted<\/p>/g)).toHaveLength(2);
     expect(out).toContain("<p>closed</p>");
   });

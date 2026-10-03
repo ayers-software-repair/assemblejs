@@ -44,7 +44,7 @@ describe("Lit's support for hydrating server-rendered elements", () => {
       // Lit's template layer (`lit/html.js`) is allowed; `lit`, its element base and its
       // decorators are not, imported, re-exported or loaded bare.
       expect(readFileSync(join(directory, file), "utf8"), file).not.toMatch(
-        /^(?:import|export)(?! type )[^;]*?["'](?:lit|lit\/decorators[^"']*|lit-element[^"']*|@lit\/reactive-element[^"']*)["']/m,
+        /^(?:import|export)(?! type )[^;]*?["'](?:lit|lit\/index\.js|lit\/decorators[^"']*|lit-element[^"']*|@lit\/reactive-element[^"']*)["']/m,
       );
     }
   });

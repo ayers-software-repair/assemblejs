@@ -59,6 +59,23 @@ describe("rendering a Solid assembly on the server", () => {
     expect(caught).not.toContain("server secret");
   });
 
+  it("leaves an assembly's own script where it wrote it", () => {
+    const Scripted = () => (
+      <div>
+        <script>{"window.$Rates = 1;"}</script>
+        <script>{'(self.$R=self.$R||{})["own"]=[];'}</script>
+        <p>rates</p>
+      </div>
+    );
+    expect(renderToMarkup(Scripted, { data: {}, children: {}, id: "a" })).toContain(
+      "<script>window.$Rates = 1;</script>",
+    );
+    // Only Solid's own, after the markup, is left out, however much another resembles it.
+    expect(renderToMarkup(Scripted, { data: {}, children: {}, id: "a" })).toContain(
+      '<script>(self.$R=self.$R||{})["own"]=[];</script>',
+    );
+  });
+
   it("escapes what it renders, because Solid does", () => {
     const Danger = (props: AssemblyProps) => <p>{String(props.data["text"])}</p>;
     const html = renderToMarkup(Danger, {

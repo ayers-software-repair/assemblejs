@@ -1,12 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   defineAsyncComponent,
   defineComponent,
   h,
   onServerPrefetch,
   Suspense,
+  warn,
   watchEffect,
 } from "vue";
 import type { PropType } from "vue";
@@ -22,6 +23,17 @@ const Cart = defineComponent({
 });
 
 describe("rendering a Vue assembly on the server", () => {
+  // The production run is worth having only if it loads Vue's production build, whose warn is
+  // a no-op and whose error handling only reports.
+  it("runs against the build the run names", () => {
+    const logged = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    warn("which build");
+    expect(logged.mock.calls.length > 0).toBe(
+      process.env["ASSEMBLEJS_VUE_BUILD"] === "development",
+    );
+    logged.mockRestore();
+  });
+
   it("produces the markup the server sends", async () => {
     expect(await renderToMarkup(Cart, { data: { total: 2 }, children: {} })).toBe(
       "<p>Items: 2</p>",

@@ -217,6 +217,9 @@ starts. Until the owner enables Actions, every proof is local only.
       browser proof capturing elements after hydration rather than before; the Lit style
       removal's brittle pattern; Solid's resource scripts and async limits; TypeScript decorators
       in Solid files; Solid and Lit scaffolds built in the unit suite; peer ranges and pins
+- [x] The verification of the Solid and Lit round: Vue's production build really under test,
+      Solid's registry carried over safely and its script matched exactly, the inert `lit-early`
+      fixture removed, the Lit guards and peer ranges tightened
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").

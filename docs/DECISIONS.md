@@ -1085,19 +1085,19 @@ A fresh review of the Solid and Lit renderers found, and this round fixed:
   hoisted the renderer's own `lit` imports ahead of it. The support is its own entry,
   `@assemblejs/renderer-lit/hydration-support`, which a renderer package names as its
   `browserSetup` and the generated browser entry imports before anything else; the browser half
-  imports only `lit/html.js`, and the package's side effects keep its shared chunks. A
-  `lit-early` assembly on the frameworks page loads `lit` from its own script as the regression.
+  imports only `lit/html.js`, and the package's side effects keep its shared chunks.
 - **Solid islands shared one hydration registry and one key space.** Each placement renders and
   hydrates with its own render id, so its keys carry its id: core's markup input now carries the
   placement id, the one the envelope holds and the browser half is mounted with. Mounting an
   island replaces Solid's registry, so nodes another island has not claimed yet (a lazy part
-  whose module arrives later) are carried over. Placement ids on one page are composer UUIDs,
-  so no island's prefix is another's.
+  whose module arrives later) and that are still in the page are carried over, even when that
+  hydration throws. Placement ids on one page are composer UUIDs, so no island's prefix is
+  another's.
 - **Solid's inline bootstrap script is left out of the server's markup.** Found: for an error a
   boundary caught, it carried the error's message and the server's stack; the page's policy
-  refuses it in any case. Rendering stays synchronous: a resource is fetched in the browser,
-  the server sending its Suspense fallback, and a lazy component renders on the server once
-  preloaded.
+  refuses it in any case. Rendering stays synchronous: a resource is not rendered on the
+  server, which sends its Suspense fallback, and hydrating that fallback is not supported; a
+  lazy component renders on the server once preloaded.
 - **Lit's styles are left out by an element renderer, not a pattern over its output**, and
   arrive as constructed sheets on hydration, which the policy allows.
 - **The browser proofs capture the server's elements before any script runs**, by holding the
@@ -1111,10 +1111,6 @@ A fresh review of the Solid and Lit renderers found, and this round fixed:
   `cart.svelte`, was refused as a second framework. Among several, the view is the file named
   after the assembly and the rest must share its framework.
 - **Smaller:** peer ranges are the versions tested; a dead bundler option is gone.
-
-Equivalent mutant recorded: in carrying Solid's registry over, skipping keys the new registry
-already holds changes nothing, because no two placements share a key prefix; the check was
-removed rather than kept untested.
 
 ## 2026-10-03: B-17, the template languages
 
@@ -1139,3 +1135,29 @@ removed rather than kept untested.
   as its rendered markup, which is exactly the approximation it exists to refuse. It previews
   html alone and refuses the rest with the reason.
 - `examples/templates` places one assembly per language, with a service's data, on one page.
+
+## 2026-10-03: verifying the Solid and Lit round
+
+An independent verifier checked the fourth review's and the Solid and Lit review's commits at
+the source and found, and this round fixed:
+
+- **The Vue "production" test project ran Vue's development build.** Expected: a project's
+  `NODE_ENV` selects the build. Found: Vue picks its build when first loaded, before a test
+  project's environment applies. Each build is now a run of its own (`NODE_ENV=production vitest
+run` in the package's test script), and a test proves the build each run loaded. The old
+  rethrowing handler now fails the production run, as it fails a production server.
+- **Solid's registry carry-over** ran only after a successful hydration, kept detached nodes, and
+  could hand a placement mounted again its old markup. It now runs in a `finally`, carries only
+  nodes still in the page, and a failed island no longer ends hydration for the rest. The
+  equivalent mutant recorded in the round above was not equivalent; that note is withdrawn.
+- **Solid's script is matched exactly:** the one script Solid appends, by its header, at the end
+  of the markup; an assembly's own script, however similar, stays.
+- **The `lit-early` fixture regressed nothing** (assemblies load by dynamic import, after the
+  entry's setup) and is removed; the ordering is held by the entry generator's tests and the
+  browser proofs.
+- **Smaller:** a stray `</style>` in a Lit shadow root is now a failure; the Lit import guard
+  covers `lit/index.js`; Lit's and Preact's peer ranges are the versions tested (`^3.3.3`,
+  `^11.0.0`); a shared JSX component takes its importer's framework only through a relative
+  import, as documented.
+- Not changed: `app.test.ts` in core spawns the built `dist/`, so a package-local run needs a
+  build first; `pnpm check` builds before it tests.

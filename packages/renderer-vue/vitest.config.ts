@@ -14,19 +14,18 @@ const alias = {
 };
 
 // The server tests run against both of Vue's builds: its development build throws where its
-// production build only reports, and a server in production runs the second.
+// production build only reports, and a server in production runs the second. Vue picks its build
+// from NODE_ENV when it is first loaded, before a test project's own environment applies, so each
+// build is a run of its own: the package's test script runs this once, then again in production.
+const production = process.env.NODE_ENV === "production";
+
 export default defineConfig({
-  test: {
-    projects: [
-      { resolve: { alias }, test: { name: "development" } },
-      {
-        resolve: { alias },
-        test: {
-          name: "production",
-          include: ["test/server/**/*.test.ts"],
-          env: { NODE_ENV: "production" },
-        },
-      },
-    ],
-  },
+  resolve: { alias },
+  test: production
+    ? {
+        name: "production",
+        include: ["test/server/**/*.test.ts"],
+        env: { ASSEMBLEJS_VUE_BUILD: "production" },
+      }
+    : { name: "development", env: { ASSEMBLEJS_VUE_BUILD: "development" } },
 });

@@ -31,21 +31,33 @@ export function hydrate(component: Component<AssemblyProps>): ClientRenderer {
       };
       sharedConfig.done = false;
       // The nodes another island has not claimed yet (a lazy part still loading) stay claimable:
-      // hydrating this one replaces the registry, so they are carried over into it. Their keys
-      // carry that island's id, which no other placement on the page shares.
+      // hydrating this one replaces the registry, so they are carried over into it, even when
+      // this hydration throws. A node no longer in the page stays behind, so a placement mounted
+      // again adopts its fresh markup and nothing an unmounted island left is kept.
       const previous = sharedConfig.registry;
-      const dispose = hydrateInto(
-        () =>
-          createComponent(EventsContext.Provider, {
-            value: context.events,
-            get children() {
-              return createComponent(component, { data, children: {} });
-            },
-          }),
-        element,
-        { renderId: context.id },
-      );
-      for (const [key, node] of previous ?? []) sharedConfig.registry?.set(key, node);
+      let dispose: () => void;
+      try {
+        dispose = hydrateInto(
+          () =>
+            createComponent(EventsContext.Provider, {
+              value: context.events,
+              get children() {
+                return createComponent(component, { data, children: {} });
+              },
+            }),
+          element,
+          { renderId: context.id },
+        );
+      } catch (error) {
+        // Solid ends hydration for the whole page on a mismatch; this island failing does not
+        // end it for the others still waiting on a lazy part.
+        sharedConfig.done = false;
+        throw error;
+      } finally {
+        for (const [key, node] of previous ?? []) {
+          if (node.isConnected) sharedConfig.registry?.set(key, node);
+        }
+      }
       return { unmount: () => dispose() };
     },
   };
