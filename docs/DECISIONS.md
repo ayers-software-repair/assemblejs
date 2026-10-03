@@ -950,3 +950,38 @@ injection key and read with `useEvents()` from `setup`. Settled here:
 - **The compilers are one bundle** (`Compilers`, `loadCompilers`), and a compiled framework
   the project has views for but has not installed is one table in `buildProblems`, so Solid's
   compiler joins them without another branch in the build.
+
+## 2026-10-03: the third review
+
+A fresh review of the two fix commits found, and this round fixed:
+
+- **A stylesheet reference could publish any file on the host.** `url(../../../etc/passwd)` was
+  copied into the public build (and assets are public under access control). A reference must
+  now resolve, links followed, inside its assembly's own directory: anything else is a problem
+  `build` and `check` report, and the copy refuses it regardless. Proved against the reviewer's
+  exact case.
+- **`check` reads declarations as literals, not by regex.** The source is compiled to plain
+  JavaScript by esbuild, which drops types and comments, and a small reader keeps literal
+  objects, arrays and strings, marking anything computed unknown. Nested policy objects, either
+  quote, template literals and an origin named only in a comment now read correctly.
+- **`dev` ends on SIGHUP**, a closed terminal, taking its server with it.
+- **The scanner's Chromium proof claimed more than it ran.** It now parses what the transport
+  emits (the marked answer), requires every envelope in it to carry the remote's origin, and runs
+  in every context that holds flow content (div, li, td, dd, section, span, label), in template
+  content and in a declarative shadow root. Inside `<p>`, `<a>` or `<button>` the parser moves
+  block markup out of any assembly, local or remote, which is the page's to avoid, and ownership
+  holds there regardless because every envelope is stamped. Each guard the reviewer's mutants
+  survived has a test only it fails, and the generator emits the balanced pairs random tokens
+  rarely form. The earlier entry's "each context a placement sits in" is narrowed to this.
+- **The private-range list adds the IPv6 ranges that carry an IPv4 address** (IPv4-compatible,
+  SIIT, 6to4, Teredo) and the discard, documentation, benchmarking and ORCHID ranges. The
+  earlier "every reserved range" is narrowed to the ranges the code names.
+- **Smaller:** a name starting with dots is a name, not a step out of a directory, in every
+  containment check; a root-relative `href` padded with whitespace is rewritten as the browser
+  reads it; `html.dark .a` keeps the document condition and `:host(.on)` names the envelope with
+  `.on`; the dev tests always stop their servers. The cache key varies on the union of the
+  page's forwarded headers, which fragments entries for placements that ignore one but leaks
+  nothing; the manifest is fetched from the origin whose address was checked moments before for
+  the content, and that window is accepted.
+- **Found in passing:** an earlier round's test edits made by text replacement had silently not
+  applied where formatting had moved the text; every replacement now asserts it matched.

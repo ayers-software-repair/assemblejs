@@ -42,6 +42,20 @@ describe("stamping a remote's answer with its origin", () => {
     expect("html" in marked && marked.html).toContain("href=//cdn.example/y.css");
   });
 
+  it("reads a root path as the browser does, padded or quoted, and keeps it in its attribute", () => {
+    for (const [href, expected] of [
+      ['" /a.css"', 'href="https://a.example.com/a.css"'],
+      ['"\n/a.css "', 'href="https://a.example.com/a.css"'],
+      [`'/a".css'`, 'href="https://a.example.com/a&quot;.css"'],
+    ] as const) {
+      const marked = markRemote(
+        `<assembly-root data-name="p"><link rel="stylesheet" href=${href}></assembly-root>`,
+        origin,
+      );
+      expect("html" in marked && marked.html, href).toContain(expected);
+    }
+  });
+
   it("refuses an answer that is not one envelope, and says why", () => {
     for (const html of [
       "<p>x</p>",

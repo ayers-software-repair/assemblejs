@@ -8,6 +8,7 @@ import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { declaredOrigins } from "./declared-origins.js";
 import { remotePlacements } from "./remote-placements.js";
 
 /**
@@ -32,7 +33,9 @@ export function checkProject(root: string): readonly ProjectProblem[] {
   ];
 
   const configFile = join(root, "assemblejs.config.ts");
-  const config = existsSync(configFile) ? readFileSync(configFile, "utf8") : "";
+  const origins = existsSync(configFile)
+    ? declaredOrigins(readFileSync(configFile, "utf8"))
+    : new Set<string>();
   for (const page of pages.pages) {
     const remote =
       page.declaration === undefined
@@ -53,7 +56,7 @@ export function checkProject(root: string): readonly ProjectProblem[] {
     for (const placement of placements) {
       if (remote.has(placement.name)) {
         const origin = originOf(remote.get(placement.name));
-        if (origin === undefined || config.includes(`"${origin}"`)) continue;
+        if (origin === undefined || origins.has(origin)) continue;
         problems.push({
           path: page.declaration ?? page.template,
           rule: "a-placement-names-an-assembly",

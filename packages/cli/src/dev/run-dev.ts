@@ -10,8 +10,9 @@ import { watchSources } from "./watch-sources.js";
 
 /**
  * Builds the project, runs the built server, and on every change to `src/` or to
- * `assemblejs.config.ts` builds again and restarts it: the same build and the same `node dist/server.js` production runs, so nothing
- * that works here can fail there for a reason dev hid.
+ * `assemblejs.config.ts` builds again and restarts it: the same build and the same
+ * `node dist/server.js` production runs, so nothing that works here can fail there for a reason
+ * dev hid.
  *
  * A build that fails, or throws, leaves the last good server running and says why; the next save
  * tries again. Each step ends once the server is spawned, never waiting on what the server

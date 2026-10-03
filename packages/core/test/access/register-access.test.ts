@@ -4,8 +4,9 @@ import { mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createServer, defineApi, defineAssembly } from "@assemblejs/core";
+import { createServer, defineApi, defineAssembly, registerAccess } from "@assemblejs/core";
 import type { App } from "@assemblejs/core";
 
 const config = (auth?: { user: string; password: string }) => ({
@@ -185,5 +186,22 @@ describe("refusing to be built with two deciders", () => {
     await expect(
       createServer({ config: config(), assemblies: [], contentSecurityPolicy: " " }),
     ).rejects.toThrow(/policy is blank/);
+  });
+});
+
+describe("the policy on an html answer", () => {
+  it("is there whatever case the content type is written in", async () => {
+    const bare = Fastify();
+    registerAccess(
+      bare,
+      { basic: undefined, authenticate: undefined, publicRoutes: [] },
+      "default-src 'self'",
+    );
+    bare.get("/shouting", async (_request, reply) =>
+      reply.header("content-type", "Text/HTML").send("<p>a</p>"),
+    );
+    const answer = await bare.inject({ method: "GET", url: "/shouting" });
+    expect(answer.headers["content-security-policy"]).toBe("default-src 'self'");
+    await bare.close();
   });
 });

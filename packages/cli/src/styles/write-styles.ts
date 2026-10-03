@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { isAbsolute, join, relative, sep } from "node:path";
 import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { Io } from "../io/io.js";
@@ -38,7 +38,7 @@ export function writeStyles(
   };
   const within = (directory: string, file: string): boolean => {
     const step = relative(directory, file);
-    return step !== "" && !step.startsWith("..");
+    return step !== "" && step !== ".." && !step.startsWith(`..${sep}`) && !isAbsolute(step);
   };
   const components = [...componentCss.entries()].sort(([a], [b]) => (a < b ? -1 : 1));
   const shared = components
@@ -48,7 +48,7 @@ export function writeStyles(
   for (const assembly of assemblies) {
     const sources = assembly.styles.map((file) => ({
       file,
-      css: carryReferences(readFileSync(file, "utf8"), file, root, io),
+      css: carryReferences(readFileSync(file, "utf8"), file, assembly.directory, root, io),
     }));
     const tail = [
       ...components.filter(([file]) => within(assembly.directory, file)).map(([, css]) => css),

@@ -7,6 +7,8 @@ import { createRemoteTransport } from "@assemblejs/core";
 import type { AssemblyRequest, LogLine } from "@assemblejs/core";
 
 // A remote server that misbehaves on purpose, one route per way a remote can be wrong.
+// The version the versioned route answers with, changed by the test that reads it.
+let version = "v1";
 // Manifest reads by path, so a read another test started in the background is never counted.
 const manifestReads = new Map<string, number>();
 const remote = createHttpServer((request, response) => {
@@ -29,6 +31,14 @@ const remote = createHttpServer((request, response) => {
     case "/assembly/once/default/manifest/":
       response.writeHead(200, { "content-type": "application/json" });
       response.end(JSON.stringify({ assets: { css: [], js: ["/_assemblejs/assets/r.js"] } }));
+      return;
+    case "/assembly/versioned/":
+      response.writeHead(200, { "content-type": "text/html", "assembly-version": version });
+      response.end(envelope("versioned"));
+      return;
+    case "/assembly/versioned/default/manifest/":
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end(JSON.stringify({ assets: { css: [], js: [`/${version}.js`] } }));
       return;
     case "/assembly/hanging/":
       response.writeHead(200, { "content-type": "text/html", "assembly-version": "h1" });
@@ -262,5 +272,16 @@ describe("reaching an assembly on another server", () => {
     expect(await reaching.fetch(`${origin}/assembly/htmlx/`, request())).toMatchObject({
       reason: "content-type",
     });
+  });
+
+  it("reads the manifest again when the remote's output changes version", async () => {
+    const reaching = transport();
+    const url = `${origin}/assembly/versioned/`;
+    await reaching.fetch(url, request());
+    expect((await reaching.assets(url))?.js).toEqual([`${origin}/v1.js`]);
+    version = "v2";
+    await reaching.fetch(url, request());
+    expect((await reaching.assets(url))?.js).toEqual([`${origin}/v2.js`]);
+    expect(manifestReads.get("/assembly/versioned/default/manifest/")).toBe(2);
   });
 });

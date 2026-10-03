@@ -5,12 +5,14 @@ import { dirname, resolve } from "node:path";
 import postcss, { CssSyntaxError } from "postcss";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { insideDirectory } from "./inside-directory.js";
 import { styleReferences } from "./style-references.js";
 
 /**
  * Everything in the assemblies' stylesheets the build could not carry into `dist/` intact: CSS
  * it cannot parse, and so cannot scope; an `@import` of a file beside it, which the served sheet
- * could not reach; and a `url()` naming a file that is not there. `build` and `check` both report
+ * could not reach; a `url()` naming a file that is not there, or one outside the assembly's own
+ * directory, which the build would otherwise publish. `build` and `check` both report
  * these, before anything is bundled.
  */
 export function styleProblems(
@@ -45,13 +47,21 @@ export function styleProblems(
       root.walkDecls((declaration) => {
         for (const reference of styleReferences(declaration.value)) {
           const target = resolve(dirname(file), reference.split(/[?#]/)[0] ?? "");
-          if (existsSync(target)) continue;
-          problems.push({
-            path: file,
-            rule: "an-assembly-owns-its-styles",
-            message: `"${assembly.name}" names ${reference}, and there is no such file`,
-            fix: `add ${reference} beside the stylesheet, or correct the url`,
-          });
+          if (!existsSync(target)) {
+            problems.push({
+              path: file,
+              rule: "an-assembly-owns-its-styles",
+              message: `"${assembly.name}" names ${reference}, and there is no such file`,
+              fix: `add ${reference} beside the stylesheet, or correct the url`,
+            });
+          } else if (!insideDirectory(assembly.directory, target)) {
+            problems.push({
+              path: file,
+              rule: "an-assembly-owns-its-styles",
+              message: `"${assembly.name}" names ${reference}, which is outside its own directory`,
+              fix: `move the file into src/assemblies/${assembly.name}/, where the build may publish it`,
+            });
+          }
         }
       });
     }

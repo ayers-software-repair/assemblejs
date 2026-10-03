@@ -37,6 +37,7 @@ describe("start tags the browser would answer by closing an element itself", () 
   it("refuses the elements that close one of their own kind", () => {
     expect(startTagRefusal("a", [root, "a", "span"])).toMatch(/inside a <a>/);
     expect(startTagRefusal("button", [root, "button"])).toMatch(/inside a <button>/);
+    expect(startTagRefusal("form", [root, "form", "div"])).toMatch(/inside a <form>/);
     expect(startTagRefusal("h2", [root, "h1"])).toMatch(/inside a <h1>/);
     expect(startTagRefusal("option", [root, "select", "option"])).toMatch(/<option> inside/);
     expect(startTagRefusal("optgroup", [root, "select", "optgroup"])).toMatch(/<optgroup>/);

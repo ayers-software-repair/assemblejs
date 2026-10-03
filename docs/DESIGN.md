@@ -570,7 +570,12 @@ independently written assemblies cannot collide. Shadow DOM is a per-assembly op
 isolation.
 
 Every file a stylesheet names beside it is built with it, and one it cannot carry (a relative
-`@import`, a missing file) is a build problem, not a broken link found later.
+`@import`, a missing file, a file outside the assembly's own directory) is a build problem, not a
+broken link found later or a file published by accident.
+
+A selector that starts at the document (`:root`, `html`, `body`) starts at the envelope instead;
+one that says more about the document (`html.dark`) stays a condition on it, with the envelope
+inside. A selector that needs the document anywhere but at its start matches nothing.
 
 Stated plainly rather than implied: `@keyframes`, `@font-face`, `@import` and `@page` are global
 by nature and are not scoped. A nested assembly sits inside its parent's envelope, so a parent's

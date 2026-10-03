@@ -46,7 +46,8 @@ export function markRemote(
 function fromOrigin(attribute: ScannedAttribute, origin: string): ScannedAttribute {
   if (attribute.name !== "href") return attribute;
   const value = /^href\s*=\s*(["']?)(.*)\1$/is.exec(attribute.source);
-  const path = value?.[2] ?? "";
+  // The browser strips leading and trailing ASCII whitespace from a url before resolving it.
+  const path = (value?.[2] ?? "").replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, "");
   if (!path.startsWith("/") || path.startsWith("//")) return attribute;
   return {
     name: "href",

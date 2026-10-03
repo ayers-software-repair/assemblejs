@@ -57,6 +57,8 @@ describe("reading a remote's answer as the browser will", () => {
       "</p>",
       "<b></i></b>",
       "<div></span></div>",
+      "<b></i>",
+      "<div></p>",
       "</ assembly-root>",
     ]) {
       expect(refused(wrap(inner)), inner).toBe(true);
@@ -66,7 +68,8 @@ describe("reading a remote's answer as the browser will", () => {
   it("refuses comments and raw text the browser ends somewhere else", () => {
     for (const inner of [
       "<!-->",
-      "<!--->",
+      // The browser ends this comment at once; a reader looking for the next "-->" would not.
+      "<!---><b>x<!-- -->",
       "<!-- a --!><b>-->",
       "<!-- open",
       "<script><!--<script></script>",
@@ -84,7 +87,8 @@ describe("reading a remote's answer as the browser will", () => {
       "<body>",
       "<html>",
       "<head>",
-      "<plaintext>",
+      // Closed or not: the browser reads everything after it as text, the page included.
+      "<plaintext></plaintext>",
       "<iframe></iframe>",
       "<noscript></noscript>",
     ]) {
@@ -96,6 +100,7 @@ describe("reading a remote's answer as the browser will", () => {
     expect(refused(wrap("<svg/><p>after</p>"))).toBe(false);
     expect(refused(wrap("<math><mi>x</mi></math>"))).toBe(false);
     expect(refused(wrap("<svg><p>x</p></svg>"))).toBe(true);
+    expect(refused(wrap('<svg><font color="red"></font></svg>'))).toBe(true);
     expect(refused(wrap("<svg><style></svg><div></style></svg>"))).toBe(true);
     expect(refused(wrap("<svg><assembly-root></assembly-root></svg>"))).toBe(true);
     // An integration point hands content back to HTML.

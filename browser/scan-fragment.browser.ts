@@ -1,26 +1,50 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { expect, test } from "@playwright/test";
-import { scanFragment } from "../packages/core/dist/index.js";
+import { markRemote } from "../packages/core/dist/index.js";
 
 // THE SCANNER AGAINST THE BROWSER IT STANDS IN FOR. A remote's answer is accepted only when it
-// stays inside its envelope wherever a page can place it; whether it does is the browser's
-// parser's call, not the scanner's. So fragments are generated from the tags and comments where
-// the two could disagree, and every one the scanner accepts is parsed by Chromium in each
-// context a placement legitimately sits in. Seeded, so a failure names a fragment that
-// reproduces.
+// stays inside its envelope wherever a placement may hold flow content; whether it does is the
+// browser's parser's call, not the scanner's. So fragments are generated from the tags and
+// comments where the two could disagree, and every one the scanner accepts is marked as the
+// transport marks it and parsed by Chromium in each such context, a declarative shadow root
+// included. Inside `<p>`, `<a>` or `<button>` the parser moves block markup out of any assembly,
+// local or remote, which is the page's to avoid; ownership holds there all the same, because
+// every envelope in an answer carries its origin, which this also requires. Seeded, so a failure
+// names a fragment that reproduces.
 const NAMES = (
   "div p li ul ol td tr table tbody a b i svg math foreignObject title style script template " +
   "select option button h1 h2 form textarea assembly-root dd dt dl ruby rt rb br img span nobr " +
-  "em pre caption colgroup col mi desc"
+  "em pre caption colgroup col mi desc plaintext font form template mtext mglyph image select"
 ).split(" ");
-const OTHER = ["t", " ", "<", "&lt;", "</ x>", '<x y="<div>">', "</p >"];
-const COMMENTS = ["<!-- c -->", "<!---->", "<!-->", "<!--x--!>", "<!--[-->"];
+const OTHER = [
+  "t",
+  " ",
+  "<",
+  "&lt;",
+  "</ x>",
+  '<x y="<div>">',
+  "</p >",
+  '<font color="red">',
+  "<a=b>",
+  "<p a=b=c>",
+  "\u0000",
+  "\r",
+  // Balanced pairs random tokens would rarely form, so the cases that need them are generated.
+  "<assembly-root data-nested></assembly-root>",
+  "<plaintext></plaintext>",
+  '<svg><font color="red"></font></svg>',
+  "<form></form>",
+];
+const COMMENTS = ["<!-- c -->", "<!---->", "<!-->", "<!--->", "<!--x--!>", "<!--[-->"];
 const CONTEXTS: ReadonlyArray<readonly [string, string]> = [
   ["<div id=ctx>", "</div>"],
   ["<ul><li id=ctx>", "</li></ul>"],
   ["<table><tbody><tr><td id=ctx>", "</td></tr></tbody></table>"],
   ["<dl><dd id=ctx>", "</dd></dl>"],
+  ["<section id=ctx>", "</section>"],
+  ["<span id=ctx>", "</span>"],
+  ["<label id=ctx>", "</label>"],
 ];
 
 const generator = (seed: number) => {
@@ -42,18 +66,26 @@ const generator = (seed: number) => {
     `<assembly-root data-probe>${Array.from({ length: 1 + Math.floor(next() * 8) }, token).join("")}</assembly-root>`;
 };
 
-test("every answer the scanner accepts stays inside its envelope in Chromium", async ({ page }) => {
+test("every answer the scanner accepts stays inside its envelope in Chromium, stamped", async ({
+  page,
+}) => {
+  const origin = "https://remote.example";
   const fragment = generator(20261003);
   const accepted: string[] = [];
   for (let tried = 0; tried < 100_000; tried += 1) {
-    const html = fragment();
-    if (typeof scanFragment(html) !== "string") accepted.push(html);
+    const marked = markRemote(fragment(), origin);
+    if ("html" in marked) accepted.push(marked.html);
   }
   // Enough accepted fragments that the comparison means something.
   expect(accepted.length).toBeGreaterThan(1000);
   const escaped = await page.evaluate(
-    ({ accepted, contexts }) => {
+    ({ accepted, contexts, origin }) => {
       const out: string[] = [];
+      // Every envelope there is carries the remote's origin, and they all sit in the outer one.
+      const owned = (root: ParentNode, envelope: Element): boolean =>
+        [...root.querySelectorAll("assembly-root")].every(
+          (found) => envelope.contains(found) && found.getAttribute("data-remote") === origin,
+        );
       for (const html of accepted) {
         for (const [open, close] of contexts) {
           const doc = new DOMParser().parseFromString(
@@ -68,13 +100,42 @@ test("every answer the scanner accepts stays inside its envelope in Chromium", a
             children.length === 2 &&
             children[0] === envelope &&
             children[1] === doc.getElementById("sentinel") &&
-            [...doc.querySelectorAll("assembly-root")].every((found) => envelope.contains(found));
+            owned(doc, envelope);
           if (!inside) out.push(`${open} ${html}`);
+        }
+        // Inside template content, and inside a declarative shadow root.
+        const template = new DOMParser().parseFromString(
+          `<!doctype html><body><template id=t>${html}<b id=sentinel></b></template>`,
+          "text/html",
+        );
+        const content = (template.getElementById("t") as HTMLTemplateElement | null)?.content;
+        const inTemplate = content === undefined ? [] : [...content.childNodes];
+        if (
+          content === undefined ||
+          inTemplate.length !== 2 ||
+          !(inTemplate[0] instanceof Element) ||
+          !owned(content, inTemplate[0])
+        ) {
+          out.push(`template ${html}`);
+        }
+        const shadowed = Document.parseHTMLUnsafe(
+          `<!doctype html><body><div id=host><template shadowrootmode="open">${html}<b id=sentinel></b></template></div>`,
+        );
+        const shadow = shadowed.getElementById("host")?.shadowRoot;
+        const inShadow = shadow === null || shadow === undefined ? [] : [...shadow.childNodes];
+        if (
+          shadow === null ||
+          shadow === undefined ||
+          inShadow.length !== 2 ||
+          !(inShadow[0] instanceof Element) ||
+          !owned(shadow, inShadow[0])
+        ) {
+          out.push(`shadow ${html}`);
         }
       }
       return out;
     },
-    { accepted, contexts: CONTEXTS },
+    { accepted, contexts: CONTEXTS, origin },
   );
   expect(escaped).toEqual([]);
 });

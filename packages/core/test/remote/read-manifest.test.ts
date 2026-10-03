@@ -17,6 +17,11 @@ const answers: Record<string, readonly [string, string]> = {
 const server = createServer((request, response) => {
   const answer = answers[request.url ?? ""];
   if (request.url === "/slow") return;
+  if (request.url === "/moved") {
+    response.writeHead(302, { location: "/ok" });
+    response.end();
+    return;
+  }
   if (answer === undefined) {
     response.writeHead(404);
     response.end();
@@ -52,5 +57,7 @@ describe("reading a remote assembly's manifest", () => {
     expect(await read("/ok", 10)).toMatch(/larger than 10 bytes/);
     expect(await read("/broken")).toMatch(/not JSON/);
     expect(typeof (await read("/slow"))).toBe("string");
+    // A redirect leaves the remote after it was checked, so it is refused, never followed.
+    expect(typeof (await read("/moved"))).toBe("string");
   });
 });

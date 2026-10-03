@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { basename, relative } from "node:path";
+import { basename, isAbsolute, relative, sep } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 
 // The frameworks whose views are JSX compiled through an automatic runtime, by the package that
@@ -17,7 +17,7 @@ export function jsxSource(file: string, assemblies: readonly DiscoveredAssembly[
   if (infix !== undefined && Object.hasOwn(RUNTIMES, infix)) return RUNTIMES[infix] ?? "react";
   const owner = assemblies.find((assembly) => {
     const step = relative(assembly.directory, file);
-    return step !== "" && !step.startsWith("..");
+    return step !== "" && step !== ".." && !step.startsWith(`..${sep}`) && !isAbsolute(step);
   });
   const framework = owner?.renderer ?? "react";
   return Object.hasOwn(RUNTIMES, framework) ? (RUNTIMES[framework] ?? "react") : "react";

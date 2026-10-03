@@ -178,7 +178,8 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] The second B-13 review's remote and root findings, each with a test watched failing: a
       cached answer now varies on the forwarded headers; a remote answer is read by a scanner
       that follows the browser's tokenizer and tree rules and refuses what it cannot read
-      exactly (proved against Chromium over 100,000 seeded fragments), every envelope in it is
+      exactly (proved against Chromium over 100,000 seeded fragments, in every context that holds
+      flow content, template content and a shadow root included), every envelope in it is
       stamped with its origin, and the runtime takes an envelope's owner from its nearest
       marked ancestor; the root guard follows dangling links; the manifest is read beside the
       content under the cap, JSON only, its files on the remote's own origin
@@ -186,8 +187,8 @@ starts. Until the owner enables Actions, every proof is local only.
       another server against the remotes `assemblejs.config.ts` declares; `dev` stops a server
       that ignores SIGTERM after a grace, a second Ctrl-C ends it at once and takes the server
       with it, a server dev stopped itself is not reported as stopping, and the config is
-      watched; the private-range check is a block list covering every reserved range and every
-      spelling of an IPv6 address
+      watched; the private-range check is a block list of the reserved and address-carrying
+      ranges it names, reading every spelling of an IPv6 address
 - [x] The B-15 review's findings: a nested rule is scoped through its parent; `:scope` inside
       `:not()` or `:is()` stays inside the assembly; `:root`, `html`, `body` and `:host` name
       the envelope; `@scope`'s own `:scope` is left to it; every Svelte component in an
@@ -196,6 +197,12 @@ starts. Until the owner enables Actions, every proof is local only.
       the build cannot parse is a structured problem `check` reports too; the default policy's
       refusal of inline styles is documented (DESIGN 5.2); an html-only project with styles is
       proved to serve them
+- [x] The third review's findings: a stylesheet reference leading out of its assembly's
+      directory (by `../` or a link) is a problem, never a published file; `check` reads page
+      declarations and the config as literals through esbuild rather than by regex; `dev` ends
+      on SIGHUP; the scanner's Chromium proof marks what it parses, requires every envelope
+      stamped, and runs in more contexts, with a test only each guard fails; `html.dark` stays a
+      condition on the document and `:host()` names the envelope with its selector
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").

@@ -24,6 +24,8 @@ describe("the JSX runtime a file compiles through", () => {
   it("is its assembly's, for a component that names none", () => {
     expect(jsxSource("/p/src/assemblies/cart/parts/row.tsx", assemblies)).toBe("preact");
     expect(jsxSource("/p/src/assemblies/shop/row.tsx", assemblies)).toBe("react");
+    // A name starting with dots is a name, not a step out of the directory.
+    expect(jsxSource("/p/src/assemblies/cart/..row.tsx", assemblies)).toBe("preact");
   });
 
   it("is React for anything else", () => {

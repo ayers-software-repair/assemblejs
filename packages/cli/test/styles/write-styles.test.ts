@@ -101,6 +101,7 @@ describe("writing each assembly's stylesheet", () => {
       new Map([
         [found.view, ".own.svelte-a{}"],
         [join(found.directory, "parts", "child.svelte"), ".kid.svelte-b{}"],
+        [join(root, "src", "assemblies", "list", "..dotted.svelte"), ".dotted.svelte-e{}"],
         [join(root, "src", "lib", "button.svelte"), ".shared.svelte-c{}"],
         [join(root, "src", "assemblies", "list", "row.svelte"), ".row.svelte-d{}"],
       ]),
@@ -118,6 +119,8 @@ describe("writing each assembly's stylesheet", () => {
     expect(cart).not.toContain(".row.svelte-d{}");
     // Shared components go with Svelte assemblies only; an html assembly keeps its own.
     expect(read(sheets.get("list")?.scoped)).not.toContain(".shared.svelte-c{}");
+    // A name starting with dots is in its directory, not a step out of it.
+    expect(read(sheets.get("list")?.scoped)).toContain(".dotted.svelte-e{}");
   });
 
   it("carries the files a stylesheet names into the build", () => {

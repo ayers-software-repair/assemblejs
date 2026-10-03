@@ -4,8 +4,10 @@ import { BlockList, isIP } from "node:net";
 
 // Everything that is not out on the public internet: unspecified, private, shared, loopback,
 // link-local, protocol assignments, documentation, benchmarking, multicast, reserved and
-// broadcast for IPv4; unspecified, loopback, unique-local, link-local, site-local, multicast and
-// the NAT64 prefixes, which lead to IPv4 addresses of any kind, for IPv6.
+// broadcast for IPv4; for IPv6, unspecified, loopback, unique-local, link-local, site-local,
+// multicast, documentation, benchmarking, discard and ORCHID, and every prefix that carries an
+// IPv4 address inside it (IPv4-compatible, SIIT, NAT64, 6to4, Teredo), because the address it
+// leads to may be any of the IPv4 ones above.
 const INSIDE = new BlockList();
 for (const [network, prefix] of [
   ["0.0.0.0", 8],
@@ -34,6 +36,15 @@ for (const [network, prefix] of [
   ["ff00::", 8],
   ["64:ff9b::", 96],
   ["64:ff9b:1::", 48],
+  ["::", 96],
+  ["::ffff:0:0:0", 96],
+  ["100::", 64],
+  ["2001::", 32],
+  ["2001:2::", 48],
+  ["2001:10::", 28],
+  ["2001:20::", 28],
+  ["2001:db8::", 32],
+  ["2002::", 16],
 ] as const) {
   INSIDE.addSubnet(network, prefix, "ipv6");
 }

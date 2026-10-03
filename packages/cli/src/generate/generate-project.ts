@@ -4,8 +4,8 @@ import { GENERATED_HEADER } from "./generated-header.js";
 
 /**
  * The one module the author's server file imports: everything the build found, the policy the
- * project's config declares (remotes, access, the content security policy), the version of this build's output, and where its browser files
- * are. The asset directory is resolved from the built module's own url, never from a working
+ * project's config declares (remotes, access, the content security policy), the version of this
+ * build's output, and where its browser files are. The asset directory is resolved from the built module's own url, never from a working
  * directory, so the server finds its files wherever it is started from.
  */
 export function generateProject(options: {

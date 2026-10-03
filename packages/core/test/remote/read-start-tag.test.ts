@@ -28,6 +28,8 @@ describe("reading one start tag as the browser's tokenizer does", () => {
     for (const html of [
       "<p",
       '<a"b>',
+      "<a=b>",
+      "<p a=b=c>",
       '<p title="open>',
       '<p a"b=1>',
       "<p a=b'c>",

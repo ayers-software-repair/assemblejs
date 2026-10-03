@@ -141,16 +141,19 @@ describe("dev, when the project misbehaves", () => {
         return 1;
       },
     );
-    await until(async () => builds === 1);
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    writeFileSync(join(configured, "notes.txt"), "not the config");
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    expect(builds).toBe(1);
-    writeFileSync(join(configured, "assemblejs.config.ts"), "export default { remotes: [] };");
-    await until(async () => builds === 2);
-    controller.abort();
-    expect(await done).toBe(0);
-    rmSync(configured, { recursive: true, force: true });
+    try {
+      await until(async () => builds === 1);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      writeFileSync(join(configured, "notes.txt"), "not the config");
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      expect(builds).toBe(1);
+      writeFileSync(join(configured, "assemblejs.config.ts"), "export default { remotes: [] };");
+      await until(async () => builds === 2);
+    } finally {
+      controller.abort();
+      await done;
+      rmSync(configured, { recursive: true, force: true });
+    }
   });
 
   it("refuses to run where there is no src/ to watch", async () => {

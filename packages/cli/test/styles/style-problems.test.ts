@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -45,5 +45,13 @@ describe("what the build cannot carry from an assembly's stylesheets", () => {
       '"cart" imports ./more.css, which the built stylesheet cannot reach',
       '"cart" names ./gone.png, and there is no such file',
     ]);
+  });
+
+  it("reports a url() leading outside the assembly's directory, by ../ or by a link", () => {
+    const outside = withCss(".a { background: url(../../../../../../../../../../../etc/passwd) }");
+    expect(styleProblems([outside])[0]?.message).toMatch(/outside its own directory/);
+    const linked = withCss(".a { background: url(linked.txt) }");
+    symlinkSync("/etc/hostname", join(linked.directory, "linked.txt"));
+    expect(styleProblems([linked])[0]?.message).toMatch(/outside its own directory/);
   });
 });

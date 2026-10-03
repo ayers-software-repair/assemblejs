@@ -40,6 +40,11 @@ describe("resolving a path inside the project", () => {
     expect(() => withinRoot(root, "../app-other/file")).toThrow(OutsideRootError);
   });
 
+  it("allows a name that merely starts with dots", () => {
+    expect(withinRoot(root, "..foo")).toBe("/home/dev/app/..foo");
+    expect(withinRoot(root, "a/..b")).toBe("/home/dev/app/a/..b");
+  });
+
   it("allows the root itself", () => {
     expect(withinRoot(root, ".")).toBe("/home/dev/app");
   });
@@ -77,5 +82,16 @@ describe("resolving a path inside the project", () => {
     const real = resolveRoot(dir);
     expect(withinRoot(real, "alias", "x.html")).toBe(join(dir, "alias", "x.html"));
     expect(() => withinRoot(real, "loop-a", "x.html")).toThrow(OutsideRootError);
+  });
+
+  it("works from a root reached through a link, and still refuses what leads out", () => {
+    const real = mkdtempSync(join(tmpdir(), "within-real-"));
+    const outside = mkdtempSync(join(tmpdir(), "outside-"));
+    const alias = join(mkdtempSync(join(tmpdir(), "within-alias-")), "app");
+    symlinkSync(real, alias);
+    symlinkSync(outside, join(real, "out"));
+    const root = resolveRoot(alias);
+    expect(withinRoot(root, "src", "x.html")).toBe(join(alias, "src", "x.html"));
+    expect(() => withinRoot(root, "out", "x.html")).toThrow(OutsideRootError);
   });
 });

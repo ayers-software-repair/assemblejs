@@ -118,10 +118,13 @@ describe("add assembly", () => {
 });
 
 describe("ending dev from a terminal", () => {
-  it("ends at once on a second Ctrl-C, and takes a server that ignores the first with it", async () => {
-    const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
-    const bin = fileURLToPath(new URL("../../dist/bin.js", import.meta.url));
+  const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
+  const bin = fileURLToPath(new URL("../../dist/bin.js", import.meta.url));
+  // Starts dev on a project whose server ignores SIGTERM, sends the signals, and answers how long
+  // dev took to end after the last one and whether the server outlived it.
+  const endDev = async (signals: readonly NodeJS.Signals[]) => {
     const root = mkdtempSync(join(example, ".dev-interrupt-"));
+    let pid = 0;
     try {
       mkdirSync(join(root, "src"));
       writeFileSync(join(root, "package.json"), "{}");
@@ -135,14 +138,15 @@ describe("ending dev from a terminal", () => {
       for (let tries = 0; tries < 200 && !existsSync(pidFile); tries += 1) {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
-      const pid = Number(readFileSync(pidFile, "utf8"));
-      dev.kill("SIGINT");
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      dev.kill("SIGINT");
-      const second = Date.now();
+      pid = Number(readFileSync(pidFile, "utf8"));
+      let last = Date.now();
+      for (const [at, signal] of signals.entries()) {
+        if (at > 0) await new Promise((resolve) => setTimeout(resolve, 300));
+        last = Date.now();
+        dev.kill(signal);
+      }
       await exited;
-      // At once: well inside the grace a first Ctrl-C gives the server.
-      expect(Date.now() - second).toBeLessThan(1500);
+      const took = Date.now() - last;
       await new Promise((resolve) => setTimeout(resolve, 300));
       // Killed is enough: a container's first process may never reap it, leaving a zombie.
       const status = `/proc/${String(pid)}/status`;
@@ -155,9 +159,27 @@ describe("ending dev from a terminal", () => {
           return false;
         }
       };
-      expect(running()).toBe(false);
+      return { took, running: running() };
     } finally {
+      // Whatever the outcome, a test never leaves a server behind.
+      try {
+        if (pid > 0) process.kill(pid, "SIGKILL");
+      } catch {
+        // Already gone.
+      }
       rmSync(root, { recursive: true, force: true });
     }
+  };
+
+  it("ends at once on a second Ctrl-C, and takes a server that ignores the first with it", async () => {
+    const { took, running } = await endDev(["SIGINT", "SIGINT"]);
+    // At once: well inside the grace a first Ctrl-C gives the server.
+    expect(took).toBeLessThan(1500);
+    expect(running).toBe(false);
+  }, 30000);
+
+  it("ends when its terminal closes, and takes the server with it", async () => {
+    const { running } = await endDev(["SIGHUP"]);
+    expect(running).toBe(false);
   }, 30000);
 });

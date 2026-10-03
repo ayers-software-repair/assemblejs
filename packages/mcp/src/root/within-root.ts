@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { relative, resolve } from "node:path";
+import { isAbsolute, relative, resolve, sep } from "node:path";
 import { followLinks } from "./follow-links.js";
 import { OutsideRootError } from "./outside-root-error.js";
 import type { ProjectRoot } from "./project-root.js";
@@ -34,5 +34,5 @@ export function withinRoot(root: ProjectRoot, ...segments: readonly string[]): s
 
 function inside(root: string, target: string): boolean {
   const step = relative(root, target);
-  return step === "" || !(step.startsWith("..") || resolve(step) === step);
+  return step === "" || !(step === ".." || step.startsWith(`..${sep}`) || isAbsolute(step));
 }

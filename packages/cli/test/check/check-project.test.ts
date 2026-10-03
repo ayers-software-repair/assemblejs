@@ -65,10 +65,18 @@ describe("checking a project", () => {
       "src/server.ts": "",
       "src/pages/home/home.html": '<body><assembly name="cart"></assembly></body>',
       "src/pages/home/home.page.ts": `export default { place: { cart: { url: "${origin}/assembly/cart/" } } };`,
+      // An origin named only in a comment is not a declared one.
       "assemblejs.config.ts":
-        'export default { remotes: [{ origin: "https://shop.example.com" }] };',
+        "// { origin: 'https://other.example.com' }\nexport default { remotes: [{ origin: 'https://shop.example.com' }] };",
     });
     expect(checkProject(project(page("https://shop.example.com")))).toEqual([]);
+    // A url built at run time is not read, so it is not reported either way.
+    const computed = {
+      ...page("https://shop.example.com"),
+      "src/pages/home/home.page.ts":
+        "const base = process.env.SHOP;\nexport default { place: { cart: { url: `${base}/assembly/cart/` } } };",
+    };
+    expect(checkProject(project(computed))).toEqual([]);
     expect(checkProject(project(page("https://other.example.com")))).toEqual([
       expect.objectContaining({
         path: "src/pages/home/home.page.ts",
