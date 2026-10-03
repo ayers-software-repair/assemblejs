@@ -50,8 +50,8 @@ console.log(\`listening \${url}\`);
 
     "README.md": `# ${name}
 
-    pnpm install
-    pnpm dev
+    npm install
+    npm run dev
 
 A directory under \`src/assemblies\` is an assembly and a directory under \`src/pages\` is a page.
 There is nothing to register: \`src/server.ts\` does not grow when you add either. Place an

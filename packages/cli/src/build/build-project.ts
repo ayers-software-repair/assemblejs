@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { build } from "esbuild";
 import { discoverApis } from "../discovery/discover-apis.js";
@@ -39,22 +39,14 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     ...apis.problems,
     ...buildProblems(root, found.assemblies),
   ];
-  if (!existsSync(join(src, "server.ts"))) {
-    problems.push({
-      path: join(src, "server.ts"),
-      rule: "the-server-file-never-grows",
-      message: "there is no src/server.ts to build",
-      fix: "add the server file `assemblejs new` writes, which hands createServer the generated project",
-    });
-  }
   const needsSvelte = found.assemblies.some((assembly) => assembly.renderer === "svelte");
   const svelte = needsSvelte ? await loadSvelteCompiler(root) : undefined;
-  if (needsSvelte && svelte === undefined) {
+  if (needsSvelte && svelte === undefined && problems.length === 0) {
     problems.push({
       path: join(root, "package.json"),
       rule: "a-view-needs-its-renderer",
-      message: "this project has Svelte assemblies and svelte is not installed",
-      fix: "install svelte",
+      message: "the project's svelte package has no compiler this build can load",
+      fix: "reinstall svelte",
     });
   }
   if (problems.length > 0) {
@@ -107,7 +99,11 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     return 1;
   }
 
-  const styled = found.assemblies.filter((assembly) => assembly.styles.length > 0);
+  const styled = found.assemblies.filter(
+    (assembly) =>
+      assembly.styles.length > 0 ||
+      (assembly.renderer === "svelte" && /<style[\s>]/i.test(readFileSync(assembly.view, "utf8"))),
+  );
   if (styled.length > 0) {
     io.log(
       `not built yet: the stylesheets of ${styled.map((assembly) => assembly.name).join(", ")}; they are included once styles are scoped per assembly`,

@@ -1,11 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 import { buildProject } from "../build/build-project.js";
 import { planAssembly } from "../commands/plan-assembly.js";
 import { projectFiles } from "../commands/project-files.js";
 import { RENDERERS } from "../commands/renderers.js";
 import { runDev } from "../dev/run-dev.js";
+import { suggestName } from "../discovery/suggest-name.js";
 import type { Io } from "../io/io.js";
 
 const USAGE = `assemblejs <command>
@@ -18,6 +19,8 @@ const USAGE = `assemblejs <command>
 
   --renderer   one of: ${RENDERERS.join(", ")}   (default html)
   --cwd        where to work (default: here)`;
+
+const PACKAGE = /^[a-z][a-z0-9-]*$/;
 
 /**
  * The whole command line, as a function of its arguments and its io.
@@ -62,16 +65,22 @@ function newProject(directory: string | undefined, cwd: string, io: Io): number 
     io.error("new needs a directory: assemblejs new my-app");
     return 2;
   }
+  const name = basename(directory);
+  if (!PACKAGE.test(name)) {
+    io.error(`"${name}" cannot name a package; lower case with hyphens: try ${suggestName(name)}`);
+    return 2;
+  }
   const root = join(cwd, directory);
   if (io.exists(root)) {
     io.error(`${directory} already exists`);
     return 1;
   }
-  for (const [path, contents] of Object.entries(projectFiles(directory))) {
+  for (const [path, contents] of Object.entries(projectFiles(name))) {
     io.write(join(root, path), contents);
     io.log(`wrote ${join(directory, path)}`);
   }
-  io.log(`\n  cd ${directory}\n  pnpm install\n  pnpm dev`);
+  const manager = (process.env["npm_config_user_agent"] ?? "npm").split("/")[0] ?? "npm";
+  io.log(`\n  cd ${directory}\n  ${manager} install\n  ${manager} run dev`);
   return 0;
 }
 

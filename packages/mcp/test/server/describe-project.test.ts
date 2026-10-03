@@ -45,6 +45,7 @@ describe("the project's whole shape", () => {
     const [problem] = describeProject(root).problems;
     expect(problem?.message).toContain("Broken");
     expect(problem?.fix).toBe('rename the directory to "broken"');
+    expect(problem?.path).toBe("src/assemblies/Broken");
   });
 
   it("is an empty project, not a broken one, when nothing has been written yet", () => {

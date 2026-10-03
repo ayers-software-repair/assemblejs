@@ -1,20 +1,43 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { findPackage } from "./find-package.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 
 /**
- * Everything that would stop a project building, found before the bundler runs: a view whose
- * renderer this version cannot build, a renderer package the project has not installed, and a
- * framework view with a `.client.ts`, whose browser behaviour is its component already.
+ * Everything that would stop a project building, found before the bundler runs: no server file,
+ * a view whose renderer this version cannot build, a renderer package or the Svelte compiler the
+ * project has not installed, and a framework view with a `.client.ts`, whose browser behaviour is
+ * its component already. `check` reports the same list, so it never answers clean for a project
+ * `build` would refuse.
  */
 export function buildProblems(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
 ): readonly ProjectProblem[] {
   const problems: ProjectProblem[] = [];
+  if (!existsSync(join(root, "src", "server.ts"))) {
+    problems.push({
+      path: join(root, "src", "server.ts"),
+      rule: "the-server-file-never-grows",
+      message: "there is no src/server.ts to build",
+      fix: "add the server file `assemblejs new` writes, which hands createServer the generated project",
+    });
+  }
+  if (
+    assemblies.some((assembly) => assembly.renderer === "svelte") &&
+    findPackage(root, "svelte") === undefined
+  ) {
+    problems.push({
+      path: join(root, "package.json"),
+      rule: "a-view-needs-its-renderer",
+      message: "this project has Svelte assemblies and svelte is not installed",
+      fix: "install svelte",
+    });
+  }
   for (const assembly of assemblies) {
     if (assembly.renderer === "html") continue;
     const known = Object.hasOwn(RENDERER_PACKAGES, assembly.renderer)

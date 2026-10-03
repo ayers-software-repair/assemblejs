@@ -1,8 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readdirSync, statSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { DiscoveredPage } from "./discovered-page.js";
+import { isDirectory } from "./is-directory.js";
 import type { ProjectProblem } from "./project-problem.js";
 import { suggestName } from "./suggest-name.js";
 
@@ -32,7 +33,7 @@ export function discoverPages(root: string): {
 
   for (const name of entries) {
     const directory = join(root, name);
-    if (!statSync(directory).isDirectory()) continue;
+    if (!isDirectory(directory)) continue;
     const at = `${root}/${name}`.replaceAll("\\", "/");
     if (!NAME.test(name)) {
       problems.push({

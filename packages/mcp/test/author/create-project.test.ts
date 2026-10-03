@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, mkdtempSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -27,5 +27,14 @@ describe("scaffolding a project through the agent surface", () => {
       fix: 'call it "my-shop"',
     });
     expect(existsSync(join(empty, "package.json"))).toBe(false);
+  });
+
+  it("refuses a root holding any file the starter would write, package.json or not", () => {
+    const dir = mkdtempSync(join(tmpdir(), "mcp-create-"));
+    mkdirSync(join(dir, "src"));
+    writeFileSync(join(dir, "src", "server.ts"), "// the author's own");
+    const answer = createProject(resolveRoot(dir), "shop");
+    expect(answer.ok).toBe(false);
+    expect(readFileSync(join(dir, "src", "server.ts"), "utf8")).toBe("// the author's own");
   });
 });

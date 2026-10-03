@@ -49,4 +49,17 @@ describe("putting a placement into a page template", () => {
       template: '<main></main><assembly name="cart"></assembly>\n',
     });
   });
+
+  it("finds the body a reader would, past comments, scripts, case and quoted attributes", () => {
+    const tricky =
+      '<!-- <body> --><html><BODY data-a=">"><script>var s="</body>"</script>\n</BODY></html>';
+    const start = place({ at: "start" }, tricky);
+    expect("template" in start && start.template).toContain(
+      '<BODY data-a=">">\n<assembly name="cart"></assembly><script>',
+    );
+    const end = place({ at: "end" }, tricky);
+    expect("template" in end && end.template).toContain(
+      '<assembly name="cart"></assembly>\n</BODY>',
+    );
+  });
 });

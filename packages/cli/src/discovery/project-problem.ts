@@ -1,6 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import type { RuleId } from "./rule-id.js";
+
 /**
  * Something wrong with a project, as a structure: where, which rule, what, and what would fix it.
  *
@@ -11,7 +13,7 @@ export interface ProjectProblem {
   /** The file or directory at fault, relative to wherever the caller looked. */
   readonly path: string;
   /** The id of the rule it breaks, which `explain` answers. */
-  readonly rule: string;
+  readonly rule: RuleId;
   readonly message: string;
   readonly fix: string;
 }

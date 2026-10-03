@@ -1,5 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { mkdirSync, mkdtempSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { OutsideRootError, resolveRoot, withinRoot } from "@assemblejs/mcp";
 
@@ -39,5 +42,19 @@ describe("resolving a path inside the project", () => {
 
   it("allows the root itself", () => {
     expect(withinRoot(root, ".")).toBe("/home/dev/app");
+  });
+
+  it("refuses a path that a link inside the root carries outside it", () => {
+    const dir = mkdtempSync(join(tmpdir(), "within-link-"));
+    const outside = mkdtempSync(join(tmpdir(), "outside-"));
+    mkdirSync(join(dir, "src"));
+    symlinkSync(outside, join(dir, "src", "assemblies"));
+    const real = resolveRoot(dir);
+    expect(() => withinRoot(real, "src", "assemblies", "leak", "leak.html")).toThrow(
+      OutsideRootError,
+    );
+    expect(withinRoot(real, "src", "pages", "home.html")).toBe(
+      join(dir, "src", "pages", "home.html"),
+    );
   });
 });

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -103,5 +103,11 @@ describe("discovering assemblies", () => {
     const { assemblies, problems } = discoverAssemblies(root);
     expect(problems).toEqual([]);
     expect(assemblies[0]?.view).toMatch(/cart\.html$/);
+  });
+
+  it("passes over a dangling link in the tree, rather than crashing the build or dev", () => {
+    assembly("cart", ["cart.html"]);
+    symlinkSync(join(root, "nowhere"), join(root, "dangling"));
+    expect(discoverAssemblies(root).assemblies.map((found) => found.name)).toEqual(["cart"]);
   });
 });

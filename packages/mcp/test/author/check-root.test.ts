@@ -10,6 +10,8 @@ describe("checking through the agent surface", () => {
   it("answers ok for a project with nothing wrong", () => {
     const dir = mkdtempSync(join(tmpdir(), "mcp-check-"));
     writeFileSync(join(dir, "package.json"), "{}");
+    mkdirSync(join(dir, "src"));
+    writeFileSync(join(dir, "src", "server.ts"), "");
     expect(checkRoot(resolveRoot(dir))).toMatchObject({ ok: true, problems: [] });
   });
 

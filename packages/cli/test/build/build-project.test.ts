@@ -117,6 +117,8 @@ describe("building what the command line scaffolds", () => {
       "export default { mount: () => ({ unmount: () => undefined }) };\n",
     );
     realIo.write(join(scaffolded, "src", "assemblies", "form", "form.css"), "p { color: red; }\n");
+    const counter = join(scaffolded, "src", "assemblies", "counter", "counter.svelte");
+    realIo.write(counter, `${readFileSync(counter, "utf8")}\n<style>p { color: red; }</style>\n`);
     mkdirSync(join(scaffolded, "dist"), { recursive: true });
     writeFileSync(join(scaffolded, "dist", "stale.js"), "");
 
@@ -124,7 +126,7 @@ describe("building what the command line scaffolds", () => {
     expect(await buildProject(scaffolded, io)).toBe(0);
     expect(errors).toEqual([]);
     // A stylesheet the build does not include yet is said out loud, not dropped in silence.
-    expect(logs.join()).toMatch(/not built yet: the stylesheets of form/);
+    expect(logs.join()).toMatch(/not built yet: the stylesheets of counter, form/);
     // Nothing a previous build wrote outlives it.
     expect(existsSync(join(scaffolded, "dist", "stale.js"))).toBe(false);
     // The scripted html assembly has a browser half like the framework ones.

@@ -751,3 +751,31 @@ B-13 lands DESIGN 5.1 and 2.3 as written, with these settled where the design le
   the body streams, which closes the debt B-03 recorded.
 - The browser suite builds the packages and the example once, in a global setup, so the tests
   that serve the example never race each other building it.
+
+## 2026-10-03: what verifying dev, create and the agent tools found
+
+The verifying agent found `dev` could lose its server: it waited inside its build queue for the
+server to print `listening`, so a server that said something else, or was slow to listen, held
+every rebuild and the first Ctrl-C, and the second orphaned it; and anything the build threw (a
+dangling link under `src/assemblies` made discovery throw) rejected the queue and ended `dev`
+with the server still running. `dev` now ends each step once the server is spawned, catches and
+reports whatever a step throws, stops the server before anything else when it is stopped, kills
+it if its own process exits, and refuses to start where there is no `src/` to watch. Discovery
+passes over a path it cannot stat.
+
+On the agent surface: `create_project` judged an existing project by `package.json` alone and
+overwrote an author's `src/server.ts` where there was none, and now refuses a root holding any
+file the starter would write or a `src/`; the root guard compared strings, so a link inside the
+root carried a write outside it, and now resolves the nearest existing part of the path through
+every link; `add_assembly` joined a name onto a path before judging it, and now judges first.
+
+Rule ids are a typed list in the command line (`RULE_IDS`, `RuleId`), so the compiler refuses a
+problem naming a rule the agent surface's `explain` could not answer, and that package's tests
+hold its rules to the list; the regex over source this replaces missed ids held in a constant.
+`check` now reports the two refusals `build` made before bundling (no server file, no Svelte
+compiler) by moving them into the checks both share. `placeAssembly` finds the body outside
+comments, scripts, styles and quoted attributes. The project resource reports paths relative to
+the root as `check` does. The build names Svelte assemblies whose `<style>` it leaves out.
+`new` refuses a directory name that cannot name a package, with one that can, and prints the
+install command of the package manager that ran it. `pnpm proof:create` builds before it packs,
+so its tarballs are the source at that commit, and gives the server thirty seconds to listen.

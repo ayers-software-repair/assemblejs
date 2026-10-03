@@ -62,6 +62,13 @@ describe("new", () => {
     expect(errors.join()).toContain("already exists");
   });
 
+  it("refuses a directory whose name cannot name a package, with one that can", () => {
+    const { io, written, errors } = fake();
+    expect(run(["new", "My App"], io)).toBe(2);
+    expect(written.size).toBe(0);
+    expect(errors.join()).toContain("try my-app");
+  });
+
   it("needs a directory", () => {
     const { io, errors } = fake();
     expect(run(["new"], io)).toBe(2);

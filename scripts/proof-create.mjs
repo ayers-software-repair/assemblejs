@@ -25,7 +25,20 @@ const sh = (command, args, cwd) =>
 const work = mkdtempSync(join(tmpdir(), "assemblejs-proof-"));
 const tarballs = join(work, "tarballs");
 
-step("pack core, cli and create");
+step("build and pack core, cli and create, so the tarballs are the source at this commit");
+sh(
+  "pnpm",
+  [
+    "--filter",
+    "@assemblejs/core",
+    "--filter",
+    "@assemblejs/cli",
+    "--filter",
+    "@assemblejs/create",
+    "build",
+  ],
+  ".",
+);
 for (const name of ["core", "cli", "create"]) {
   sh("pnpm", ["pack", "--pack-destination", tarballs], join("packages", name));
 }
@@ -86,6 +99,10 @@ const server = spawn(process.execPath, ["dist/server.js"], {
 });
 try {
   const origin = await new Promise((resolve, reject) => {
+    setTimeout(
+      () => reject(new Error("dist/server.js did not say it was listening within 30s")),
+      30_000,
+    );
     server.stdout.on("data", (chunk) => {
       process.stdout.write(chunk);
       const found = /listening (http:\/\/\S+)/.exec(String(chunk));

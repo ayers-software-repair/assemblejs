@@ -16,7 +16,17 @@ export function startServer(root: string, io: Io): RunningServer {
     env: { ASSEMBLEJS_MODE: "development", ...process.env },
     stdio: ["ignore", "pipe", "pipe"],
   });
-  const exited = new Promise<void>((resolve) => child.once("exit", () => resolve()));
+  // A last resort: if this process exits however it exits, the server it started goes with it.
+  const orphaned = (): void => {
+    child.kill();
+  };
+  process.once("exit", orphaned);
+  const exited = new Promise<void>((resolve) =>
+    child.once("exit", () => {
+      process.removeListener("exit", orphaned);
+      resolve();
+    }),
+  );
   const ready = new Promise<string | undefined>((resolve) => {
     child.stdout.on("data", (chunk: Buffer) => {
       for (const line of String(chunk)

@@ -19,6 +19,7 @@ const project = (files: Record<string, string>): string => {
 describe("checking a project", () => {
   it("finds nothing wrong with a project that is right", () => {
     const root = project({
+      "src/server.ts": "",
       "src/assemblies/hello/hello.html": "<p>hi</p>",
       "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
     });
@@ -50,5 +51,12 @@ describe("checking a project", () => {
       by("a-placement-names-an-assembly").find((f) => f.path === "src/pages/home/home.html")?.fix,
     ).toBe("add it, or place one that exists: hello");
     expect(by("an-api-file-is-an-api")[0]?.path).toBe("src/api/Bad.api.ts");
+  });
+
+  it("reports what build would refuse before bundling: no server file, no Svelte compiler", () => {
+    const root = project({ "src/assemblies/counter/counter.svelte": "<p>0</p>" });
+    const rules = checkProject(root).map((finding) => [finding.rule, finding.path]);
+    expect(rules).toContainEqual(["the-server-file-never-grows", "src/server.ts"]);
+    expect(rules).toContainEqual(["a-view-needs-its-renderer", "package.json"]);
   });
 });

@@ -10,7 +10,8 @@ const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
  * Scaffolds the smallest project that runs into the project root, through the command line's own
- * files. Only into a root that holds no project yet: scaffolding over one would overwrite the
+ * files. Only into a root that holds no project yet, judged by every file the starter would
+ * write and by `src/`, not by `package.json` alone: scaffolding over one would overwrite the
  * author's files with a starter's.
  */
 export function createProject(root: ProjectRoot, name: string): ToolResult {
@@ -28,7 +29,9 @@ export function createProject(root: ProjectRoot, name: string): ToolResult {
       ],
     };
   }
-  if (existsSync(withinRoot(root, "package.json"))) {
+  const files = projectFiles(name);
+  const present = Object.keys(files).filter((path) => existsSync(withinRoot(root, path)));
+  if (present.length > 0 || existsSync(withinRoot(root, "src"))) {
     return {
       ok: false,
       result: null,
@@ -36,14 +39,14 @@ export function createProject(root: ProjectRoot, name: string): ToolResult {
         {
           path: "package.json",
           rule: "one-project-per-root",
-          message: "this root already holds a project",
+          message: `this root already holds a project: ${present.length > 0 ? present.join(", ") : "src/"}`,
           fix: "add to it with add_assembly instead",
         },
       ],
     };
   }
   const written: string[] = [];
-  for (const [path, contents] of Object.entries(projectFiles(name))) {
+  for (const [path, contents] of Object.entries(files)) {
     realIo.write(withinRoot(root, path), contents);
     written.push(path);
   }

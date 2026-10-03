@@ -33,4 +33,13 @@ describe("adding an assembly through the agent surface", () => {
     addAssembly(resolveRoot(dir), "cart", "html");
     expect(addAssembly(resolveRoot(dir), "cart", "html").ok).toBe(false);
   });
+
+  it("refuses a name that would leave the assemblies directory with its fix, never a throw", () => {
+    const dir = mkdtempSync(join(tmpdir(), "mcp-add-"));
+    for (const name of ["../../../x", "/etc", "a/b"]) {
+      const answer = addAssembly(resolveRoot(dir), name, "html");
+      expect(answer.ok).toBe(false);
+      expect(answer.problems[0]).toMatchObject({ rule: "directory-is-an-assembly" });
+    }
+  });
 });

@@ -1,12 +1,14 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { relative } from "node:path";
 import { discoverAssemblies } from "@assemblejs/cli";
 import type { ProjectProblem } from "@assemblejs/cli";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 
 /**
- * The whole shape of a project in one read.
+ * The whole shape of a project in one read, every path relative to the project root as the
+ * check tool reports them.
  *
  * A resource rather than a command, because an agent that has to ask what exists spends its
  * first three turns finding out.
@@ -29,10 +31,13 @@ export function describeProject(root: ProjectRoot): {
     assemblies: assemblies.map((assembly) => ({
       name: assembly.name,
       renderer: assembly.renderer,
-      view: assembly.view,
+      view: relative(root.path, assembly.view).split("\\").join("/"),
       hasClient: assembly.client !== undefined,
     })),
     renderers: [...new Set(assemblies.map((assembly) => assembly.renderer))].sort(),
-    problems,
+    problems: problems.map((problem) => ({
+      ...problem,
+      path: relative(root.path, problem.path).split("\\").join("/"),
+    })),
   };
 }

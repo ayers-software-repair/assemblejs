@@ -4,8 +4,21 @@ import { findPlacements } from "@assemblejs/core";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import type { PlacementPosition } from "./placement-position.js";
 
-const BODY_OPEN = /<body\b[^>]*>/i;
-const BODY_CLOSE = /<\/body\s*>/i;
+const BODY_OPEN = /<body\b(?:[^>"']|"[^"]*"|'[^']*')*>/gi;
+const BODY_CLOSE = /<\/body\s*>/gi;
+// Text in which a tag is not a tag: a comment, and the contents of a script or a style.
+const INERT = /<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script\s*>|<style\b[\s\S]*?<\/style\s*>/gi;
+
+/** Each match of a tag outside inert text, with where it ends. */
+const live = (html: string, tag: RegExp): Array<{ start: number; end: number }> => {
+  const inert = [...html.matchAll(INERT)].map((match) => [
+    match.index,
+    match.index + match[0].length,
+  ]);
+  return [...html.matchAll(tag)]
+    .filter((match) => !inert.some(([from = 0, to = 0]) => match.index >= from && match.index < to))
+    .map((match) => ({ start: match.index, end: match.index + match[0].length }));
+};
 
 /**
  * A page template with one more placement in it, at a named position, or why it cannot be put
@@ -19,14 +32,23 @@ export function placeAssembly(
   path: string,
 ): { readonly template: string } | { readonly problem: ProjectProblem } {
   const tag = `<assembly name="${name}"></assembly>`;
+  return insert(template, tag, position, path);
+}
+
+function insert(
+  template: string,
+  tag: string,
+  position: PlacementPosition,
+  path: string,
+): { readonly template: string } | { readonly problem: ProjectProblem } {
   if ("at" in position) {
-    const open = BODY_OPEN.exec(template);
-    const close = BODY_CLOSE.exec(template);
     if (position.at === "start") {
-      const at = open === null ? 0 : open.index + open[0].length;
+      const open = live(template, BODY_OPEN)[0];
+      const at = open === undefined ? 0 : open.end;
       return { template: `${template.slice(0, at)}\n${tag}${template.slice(at)}` };
     }
-    const at = close === null ? template.length : close.index;
+    const close = live(template, BODY_CLOSE).at(-1);
+    const at = close === undefined ? template.length : close.start;
     return { template: `${template.slice(0, at)}${tag}\n${template.slice(at)}` };
   }
 

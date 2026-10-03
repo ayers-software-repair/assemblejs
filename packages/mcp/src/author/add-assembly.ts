@@ -12,6 +12,10 @@ import type { ToolResult } from "../server/tool-result.js";
  * commonest half-finished state there is.
  */
 export function addAssembly(root: ProjectRoot, name: string, renderer: string): ToolResult {
+  // The name is judged before it is ever joined onto a path, so "../x" is refused with its fix
+  // rather than reaching the root guard as a path.
+  const judged = planAssembly(name, renderer, false);
+  if ("problem" in judged) return { ok: false, result: null, problems: [judged.problem] };
   const plan = planAssembly(
     name,
     renderer,
