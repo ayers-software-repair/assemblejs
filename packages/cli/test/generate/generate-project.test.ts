@@ -5,7 +5,7 @@ import { generateProject } from "@assemblejs/cli";
 
 describe("generating the one module the server file imports", () => {
   it("carries everything found and the version of this build", () => {
-    const source = generateProject({ version: "9f2c1a3b4c5d", client: false });
+    const source = generateProject({ version: "9f2c1a3b4c5d", client: false, config: false });
     expect(source).toContain("assemblies,\n  pages,\n  apis,");
     expect(source).toContain('version: "9f2c1a3b4c5d",');
     expect(source).not.toContain("assets:");
@@ -13,8 +13,17 @@ describe("generating the one module the server file imports", () => {
   });
 
   it("finds its browser files from the built module's own url, never a working directory", () => {
-    const source = generateProject({ version: "1", client: true });
+    const source = generateProject({ version: "1", client: true, config: false });
     expect(source).toContain('assets: fileURLToPath(new URL("./client/", import.meta.url)),');
     expect(source).not.toContain("process.cwd");
+  });
+
+  it("declares the remotes the project's config names, when it has one", () => {
+    const source = generateProject({ version: "1", client: false, config: true });
+    expect(source).toContain('import config from "../assemblejs.config.js";');
+    expect(source).toContain("remotes: config.remotes ?? [],");
+    expect(generateProject({ version: "1", client: false, config: false })).not.toContain(
+      "remotes",
+    );
   });
 });

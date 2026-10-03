@@ -209,3 +209,41 @@ describe("a placement whose name is also a property of Object", () => {
     expect(diagnostics[0]?.source).toBe("local");
   });
 });
+
+describe("a placement that declared a cache lifetime", () => {
+  it("is answered from its fresh entry, without a request, the second time", async () => {
+    let requests = 0;
+    const store = new Map<string, { html: string }>();
+    const cache = {
+      get: (key: string) => store.get(key),
+      set: (key: string, value: { html: string }) => void store.set(key, value),
+    };
+    const fetch: Fetch = async () => {
+      requests += 1;
+      return { ok: true, html: "<p>A</p>", source: "local" };
+    };
+    const plan = { a: { name: "a", view: "default", deadline: 1000, cache: { ttl: 60_000 } } };
+    const template = `<main><assembly name="a"/></main>`;
+    await compose(options({ template, plan, fetch, cache }));
+    const second = await compose(options({ template, plan, fetch, cache }));
+    expect(requests).toBe(1);
+    expect(second.diagnostics[0]?.source).toBe("cache");
+    // Never for a request carrying a credential, whose answer belongs to one visitor.
+    await compose(options({ template, plan, fetch, cache, headers: { cookie: "s=1" } }));
+    expect(requests).toBe(2);
+  });
+});
+
+describe("the size cap", () => {
+  it("holds whichever transport answered, so a local render is bounded like a remote one", async () => {
+    const { diagnostics, html } = await compose(
+      options({
+        template: `<main><assembly name="a"/></main>`,
+        fetch: byName({ a: `<p>${"x".repeat(100)}</p>` }),
+        limits: { depth: 8, maxBytes: 50 },
+      }),
+    );
+    expect(diagnostics[0]).toMatchObject({ source: "fallback", reason: "too-large" });
+    expect(html).not.toContain("xxxx");
+  });
+});

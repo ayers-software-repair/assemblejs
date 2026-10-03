@@ -106,12 +106,26 @@ describe("what is checked about pages before anything listens", () => {
     expect(text).toMatch(/positive, finite/);
   });
 
-  it("refuses a placement from another server, which this version cannot fetch yet", () => {
-    const remote = {
+  it("refuses a placement from an origin nobody declared, or a url that is not a content endpoint", () => {
+    const remote = (url: string) => ({
       route: "/",
       template: '<assembly name="cart"></assembly>',
-      place: { cart: { url: "https://checkout.example.com/assembly/cart/" } },
-    };
-    expect(pageProblems([remote], [hello], []).join()).toMatch(/cannot fetch yet/);
+      place: { cart: { url } },
+    });
+    const declared = [{ origin: "https://checkout.example.com" }];
+    expect(
+      pageProblems([remote("https://checkout.example.com/assembly/cart/")], [hello], [], declared),
+    ).toEqual([]);
+    expect(
+      pageProblems(
+        [remote("https://evil.example.com/assembly/cart/")],
+        [hello],
+        [],
+        declared,
+      ).join(),
+    ).toMatch(/not a declared remote/);
+    expect(
+      pageProblems([remote("https://checkout.example.com/cart")], [hello], [], declared).join(),
+    ).toMatch(/not an assembly's content endpoint/);
   });
 });

@@ -37,10 +37,15 @@ export function registerAssets(app: FastifyInstance, files: ReadonlyMap<string, 
     const path = request.url.split("?")[0] ?? "";
     const file = files.get(path);
     if (file === undefined) return reply.code(404).send(renderFailure(newCorrelationId()));
-    return reply
-      .header("content-type", TYPES[extname(file)] ?? "application/octet-stream")
-      .header("x-content-type-options", "nosniff")
-      .header("cache-control", "public, max-age=31536000, immutable")
-      .send(await readFile(file));
+    return (
+      reply
+        .header("content-type", TYPES[extname(file)] ?? "application/octet-stream")
+        .header("x-content-type-options", "nosniff")
+        // A page on another origin that places one of this server's assemblies loads these as
+        // module scripts, which a browser fetches with CORS. They are public and immutable.
+        .header("access-control-allow-origin", "*")
+        .header("cache-control", "public, max-age=31536000, immutable")
+        .send(await readFile(file))
+    );
   });
 }

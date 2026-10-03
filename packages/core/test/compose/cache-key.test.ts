@@ -19,4 +19,21 @@ describe("the cache key", () => {
       cacheKey("cart", "default", new URLSearchParams("sku=2")),
     );
   });
+
+  it("keys a placement from another server by its url, never by its local name", () => {
+    const a = cacheKey(
+      "cart",
+      "default",
+      new URLSearchParams(),
+      "https://a.example.com/assembly/cart/",
+    );
+    const b = cacheKey(
+      "cart",
+      "default",
+      new URLSearchParams(),
+      "https://b.example.com/assembly/cart/",
+    );
+    expect(a).not.toBe(b);
+    expect(a).not.toBe(cacheKey("cart", "default", new URLSearchParams()));
+  });
 });

@@ -2,45 +2,72 @@
 // SPDX-License-Identifier: Apache-2.0
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance } from "fastify";
-import type { AssemblyAssets } from "../assembly/assembly-assets.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { compose } from "../compose/compose.js";
+import type { ContentCache } from "../compose/content-cache.js";
 import type { Fetch } from "../compose/fetch.js";
 import { RequiredFailure } from "../compose/required-failure.js";
 import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
 import type { PageDefinition } from "../page/page-definition.js";
+import { parseContentUrl } from "../remote/parse-content-url.js";
+import type { RemoteDefinition } from "../remote/remote-definition.js";
+import type { RemoteTransport } from "../remote/remote-transport.js";
 import { hoistAssets } from "./hoist-assets.js";
+import { pageFetch } from "./page-fetch.js";
 import { pagePlan } from "./page-plan.js";
+import { queryOf } from "./query-of.js";
 
 /**
- * Mounts each page: compose its template through the given transport, link the browser files of
- * every assembly it placed, and answer the document.
+ * Mounts each page: compose its template through one transport that renders local placements in
+ * this process and fetches remote ones, link the browser files of every assembly it placed (a
+ * remote's from its manifest), and answer the document.
  *
- * A required placement that does not answer is the one way a page fails from a child, and it
- * answers 503 with an id, never the cause. Every placement that did not answer is logged against
- * its correlation id, whichever rung of the ladder covered for it.
+ * Of the visitor's request, only the headers a placed remote declared it receives ever reach the
+ * composer. A required placement that does not answer is the one way a page fails from a child,
+ * and it answers 503 with an id, never the cause. Every placement that did not answer is logged
+ * against its correlation id, whichever rung of the ladder covered for it.
  */
 export function registerPages(
   app: FastifyInstance,
-  pages: readonly PageDefinition[],
-  assemblies: ReadonlyMap<string, AssemblyDefinition>,
-  fetch: Fetch,
-  log: (line: LogLine) => void,
+  options: {
+    readonly pages: readonly PageDefinition[];
+    readonly assemblies: ReadonlyMap<string, AssemblyDefinition>;
+    readonly local: Fetch;
+    readonly remote: RemoteTransport;
+    readonly remotes: readonly RemoteDefinition[];
+    readonly cache: ContentCache;
+    readonly log: (line: LogLine) => void;
+  },
 ): void {
-  for (const page of pages) {
+  const { assemblies, log } = options;
+  for (const page of options.pages) {
     const plan = pagePlan(page);
+    const fetch = pageFetch(plan, options.local, options.remote);
+    const forwarded = new Set(
+      Object.values(plan).flatMap((placement) => {
+        const origin =
+          placement.url === undefined ? undefined : parseContentUrl(placement.url)?.origin;
+        return options.remotes.find((remote) => remote.origin === origin)?.forward ?? [];
+      }),
+    );
+
     app.get(page.route, async (request, reply) => {
-      const at = request.url.indexOf("?");
+      const headers: Record<string, string> = {};
+      for (const [name, value] of Object.entries(request.headers)) {
+        if (forwarded.has(name) && typeof value === "string") headers[name] = value;
+      }
       let composed;
       try {
         composed = await compose({
           template: page.template,
           plan,
           fetch,
+          cache: options.cache,
           page: randomUUID(),
-          query: new URLSearchParams(at === -1 ? "" : request.url.slice(at)),
+          query: queryOf(request.url),
+          headers,
           newId: randomUUID,
           now: () => performance.now(),
         });
@@ -62,7 +89,9 @@ export function registerPages(
             stack: undefined,
           });
         }
-        const declared: AssemblyAssets | undefined = assemblies.get(diagnostic.name)?.assets;
+        const url = Object.hasOwn(plan, diagnostic.name) ? plan[diagnostic.name]?.url : undefined;
+        const declared =
+          url === undefined ? assemblies.get(diagnostic.name)?.assets : options.remote.assets(url);
         assets.css.push(...(declared?.css ?? []));
         assets.js.push(...(declared?.js ?? []));
       }

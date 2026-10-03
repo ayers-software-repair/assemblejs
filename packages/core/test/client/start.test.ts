@@ -99,6 +99,28 @@ describe("starting the runtime", () => {
   });
 });
 
+describe("two runtimes on one page", () => {
+  const remote = (id: string, origin: string) =>
+    envelope(id).replace("<assembly-root ", `<assembly-root data-remote="${origin}" `);
+
+  it("mount only the page's own envelopes when no origin is given", () => {
+    document.body.innerHTML = envelope("a") + remote("b", "https://shop.example.com");
+    const { mounts, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect(mounts).toEqual(["a"]);
+  });
+
+  it("mount each envelope with the runtime from its own origin, never twice", () => {
+    document.body.innerHTML = envelope("a") + remote("b", "https://shop.example.com");
+    const local = recorder();
+    const shop = recorder();
+    start({ renderers: { html: local.renderer }, origin: location.origin });
+    start({ renderers: { html: shop.renderer }, origin: "https://shop.example.com" });
+    expect(local.mounts).toEqual(["a"]);
+    expect(shop.mounts).toEqual(["b"]);
+  });
+});
+
 describe("one assembly failing", () => {
   it("is one assembly failing, when its renderer is not registered", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});

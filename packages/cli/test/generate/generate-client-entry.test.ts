@@ -30,6 +30,8 @@ describe("the page's one script", () => {
       assembly("counter", "svelte"),
       assembly("readout", "react"),
     ]);
-    expect(source).toContain('start({ renderers: { "react": renderer, "svelte": renderer } });');
+    expect(source).toContain(
+      'start({ renderers: { "react": renderer, "svelte": renderer }, origin: new URL(import.meta.url).origin });',
+    );
   });
 });

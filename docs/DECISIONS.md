@@ -722,3 +722,32 @@ The proof B-09b named, which needed these tools, now runs: through the server's 
 never touching a file directly, an agent creates a project, adds an assembly, places it after the
 one the starter placed, composes the page and finds its markup in the html, and checks the
 project clean.
+
+## 2026-10-03: remote assemblies
+
+B-13 lands DESIGN 5.1 and 2.3 as written, with these settled where the design left them open.
+
+- **Remotes are policy, declared in `assemblejs.config.ts`** (`defineConfig({ remotes })`), and
+  passed to `createServer` by the generated project module. Host, port and credentials stay in
+  the environment; what this project composes from is a decision, so it is a file.
+- **The private-range rule** is applied to names, because the allowlist already governs origins:
+  a declared host whose address resolves into a loopback, link-local, private, shared or
+  unspecified range is refused, and only an origin declared as an address itself reaches one.
+  The check runs before each request; the resolver's answer and the request's own resolution
+  can differ (a rebinding window), which the exact allowlist and refused redirects bound.
+- **Two runtimes share a page.** A remote fragment's envelope is stamped `data-remote` with its
+  origin; each built client entry starts its runtime with the origin it was served from, and a
+  runtime mounts only the envelopes from that origin. The consumer hoists the remote's script
+  from its manifest, absolutized against the remote, and a built server's assets answer CORS for
+  any origin, because they are public and immutable. Proved in Chromium: a page with no browser
+  code of its own hydrates a Svelte and a React assembly another server rendered, and the click
+  crosses between them on the remote runtime's bus.
+- **The cache answers first.** A placement that declares `cache.ttl` is answered from a fresh
+  entry before anything is dispatched; the design's "second request is a cache hit" needs it,
+  and before this the cache was only a last resort after a failure. A remote placement is keyed
+  by its url: the two-server test found two pages placing different remote assemblies under one
+  local name sharing an entry.
+- **`Limits.maxBytes` is read**, by the composer for every answer and by the remote transport as
+  the body streams, which closes the debt B-03 recorded.
+- The browser suite builds the packages and the example once, in a global setup, so the tests
+  that serve the example never race each other building it.

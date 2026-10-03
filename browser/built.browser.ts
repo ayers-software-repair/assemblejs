@@ -1,22 +1,21 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { execFileSync, spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 
 // THE DAY-ONE PROOF, FROM A REAL BUILD. The fixture tests hand the runtime markup written for
-// them; this one builds the two-framework example with the command line, starts dist/server.js
+// them; this one runs the two-framework example the suite's setup built with the command line,
+// starting dist/server.js
 // with plain node, and drives the page that server composes. What chromium runs here is what a
 // project ships: the composed document, the hoisted module, and each island's own chunk.
 const example = fileURLToPath(new URL("../examples/two-frameworks/", import.meta.url));
-const cli = fileURLToPath(new URL("../packages/cli/dist/bin.js", import.meta.url));
 
 let server: ChildProcess | undefined;
 let origin = "";
 
 test.beforeAll(async () => {
-  execFileSync(process.execPath, [cli, "build"], { cwd: example, stdio: "pipe" });
   const port = String(20000 + Math.floor(Math.random() * 20000));
   server = spawn(process.execPath, ["dist/server.js"], {
     cwd: example,

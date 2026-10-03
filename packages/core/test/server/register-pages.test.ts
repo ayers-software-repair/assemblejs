@@ -1,9 +1,19 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { createServer as createHttpServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LogLine } from "@assemblejs/core";
-import { defineAssembly, localFetch, registerPages } from "@assemblejs/core";
+import {
+  DEFAULT_LIMITS,
+  createMemoryCache,
+  createRemoteTransport,
+  createServer,
+  defineAssembly,
+  localFetch,
+  registerPages,
+} from "@assemblejs/core";
 
 const hello = defineAssembly({
   name: "hello",
@@ -34,9 +44,8 @@ const logged: LogLine[] = [];
 const app = Fastify({ logger: false });
 
 beforeAll(async () => {
-  registerPages(
-    app,
-    [
+  registerPages(app, {
+    pages: [
       {
         route: "/",
         template:
@@ -58,10 +67,17 @@ beforeAll(async () => {
         place: { slow: { required: true, deadline: 20 } },
       },
     ],
-    byName,
-    localFetch(byName, () => undefined),
-    (line) => logged.push(line),
-  );
+    assemblies: byName,
+    local: localFetch(byName, () => undefined),
+    remote: createRemoteTransport({
+      remotes: [],
+      maxBytes: DEFAULT_LIMITS.maxBytes,
+      log: () => undefined,
+    }),
+    remotes: [],
+    cache: createMemoryCache(),
+    log: (line) => logged.push(line),
+  });
   await app.ready();
 });
 afterAll(async () => {
@@ -112,5 +128,116 @@ describe("a page, mounted", () => {
     const { correlationId } = (response.json() as { error: { correlationId: string } }).error;
     expect(correlationId).not.toBe("");
     expect(logged.some((line) => line.correlationId === correlationId)).toBe(true);
+  });
+});
+
+describe("a page placing an assembly from another server", () => {
+  // B-13's proof: two servers in one test.
+  let producer: Awaited<ReturnType<typeof createServer>>;
+  let producerOrigin = "";
+  let consumer: Awaited<ReturnType<typeof createServer>>;
+  let recorder: ReturnType<typeof createHttpServer>;
+  let renders = 0;
+  const heard: string[] = [];
+  const config = { mode: "production" as const, host: "127.0.0.1", port: 0, auth: undefined };
+
+  beforeAll(async () => {
+    producer = await createServer({
+      config,
+      log: () => undefined,
+      assemblies: [
+        defineAssembly({
+          name: "cart",
+          views: {
+            default: {
+              renderer: "html",
+              markup: () => {
+                renders += 1;
+                return `<p>cart ${String(renders)}</p>`;
+              },
+            },
+          },
+        }),
+      ],
+    });
+    const behind = (await producer.listen()).url;
+    // A recording proxy in front of the producer, so the test hears exactly what the consumer sent.
+    recorder = createHttpServer((request, response) => {
+      heard.push(JSON.stringify(request.headers));
+      void fetch(`${behind}${request.url ?? "/"}`).then(async (answer) => {
+        response.writeHead(answer.status, {
+          "content-type": answer.headers.get("content-type") ?? "",
+          "assembly-version": answer.headers.get("assembly-version") ?? "",
+        });
+        response.end(await answer.text());
+      });
+    });
+    await new Promise<void>((resolve) => recorder.listen(0, "127.0.0.1", resolve));
+    producerOrigin = `http://127.0.0.1:${String((recorder.address() as AddressInfo).port)}`;
+    consumer = await createServer({
+      config,
+      log: () => undefined,
+      assemblies: [],
+      remotes: [{ origin: producerOrigin }],
+      pages: [
+        {
+          route: "/",
+          template: '<body><assembly name="cart"></assembly></body>',
+          place: { cart: { url: `${producerOrigin}/assembly/cart/`, cache: { ttl: 60_000 } } },
+        },
+        {
+          route: "/gone",
+          template: '<body><assembly name="cart"></assembly></body>',
+          place: {
+            cart: { url: `${producerOrigin}/assembly/nope/`, fallback: "<p>no cart</p>" },
+          },
+        },
+      ],
+    });
+  });
+  afterAll(async () => {
+    await consumer.close();
+    await new Promise((resolve) => recorder.close(resolve));
+    await producer.close();
+  });
+
+  it("renders it, marked with its origin, and the second request is a cache hit", async () => {
+    const first = await consumer.inject({
+      method: "GET",
+      url: "/",
+      headers: { cookie: "s=hunter2" },
+    });
+    expect(first.body).toContain("<p>cart 1</p>");
+    expect(first.body).toContain(`data-remote="${producerOrigin}"`);
+    const second = await consumer.inject({ method: "GET", url: "/" });
+    expect(second.body).toContain("<p>cart 1</p>");
+    expect(renders).toBe(1);
+  });
+
+  it("never forwards the visitor's cookie", () => {
+    expect(heard.length).toBeGreaterThan(0);
+    expect(heard.join()).not.toContain("hunter2");
+  });
+
+  it("falls back when the remote does not answer", async () => {
+    const response = await consumer.inject({ method: "GET", url: "/gone" });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toContain("<p>no cart</p>");
+  });
+
+  it("refuses to boot a page placing from an origin nobody declared", async () => {
+    await expect(
+      createServer({
+        config,
+        assemblies: [],
+        pages: [
+          {
+            route: "/",
+            template: '<assembly name="cart"></assembly>',
+            place: { cart: { url: `${producerOrigin}/assembly/cart/` } },
+          },
+        ],
+      }),
+    ).rejects.toThrow(/not a declared remote/);
   });
 });

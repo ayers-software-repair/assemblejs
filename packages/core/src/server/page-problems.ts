@@ -5,6 +5,8 @@ import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { findPlacements } from "../compose/find-placements.js";
 import type { PageDefinition } from "../page/page-definition.js";
 import type { PagePlacement } from "../page/page-placement.js";
+import { parseContentUrl } from "../remote/parse-content-url.js";
+import type { RemoteDefinition } from "../remote/remote-definition.js";
 import { isFlatRoute } from "./is-flat-route.js";
 import { reservedPrefix } from "./reserved-prefix.js";
 import { routeKey } from "./route-key.js";
@@ -12,7 +14,9 @@ import { routeKey } from "./route-key.js";
 /**
  * Everything wrong with a set of pages, found before anything listens.
  *
- * A template is read here, at boot, so a name with no assembly behind it is a refusal and not a
+ * A placement from another server must name a declared remote's content endpoint, so an origin
+ * nobody listed is a refusal here rather than a request at render time. A template is read here,
+ * at boot, so a name with no assembly behind it is a refusal and not a
  * blank space a visitor discovers. The same goes for policy written for a placement the template
  * does not make: it would be read by nothing, and the author would believe it applied.
  */
@@ -20,6 +24,7 @@ export function pageProblems(
   pages: readonly PageDefinition[],
   assemblies: readonly AssemblyDefinition[],
   apis: readonly ApiDefinition[],
+  remotes: readonly RemoteDefinition[] = [],
 ): readonly string[] {
   const problems: string[] = [];
   const byName = new Map(assemblies.map((assembly) => [assembly.name, assembly]));
@@ -61,9 +66,16 @@ export function pageProblems(
     for (const placement of placements) {
       const policy = Object.hasOwn(place, placement.name) ? place[placement.name] : undefined;
       if (policy?.url !== undefined) {
-        problems.push(
-          `${at} places "${placement.name}" from another server, which this version cannot fetch yet`,
-        );
+        const target = parseContentUrl(policy.url);
+        if (target === undefined) {
+          problems.push(
+            `${at} places "${placement.name}" from ${policy.url}, which is not an assembly's content endpoint (https://host/assembly/<name>/)`,
+          );
+        } else if (!remotes.some((remote) => remote.origin === target.origin)) {
+          problems.push(
+            `${at} places "${placement.name}" from ${target.origin}, which is not a declared remote`,
+          );
+        }
         continue;
       }
       const assembly = byName.get(placement.name);

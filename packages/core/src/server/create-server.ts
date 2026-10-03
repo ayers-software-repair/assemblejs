@@ -3,9 +3,11 @@
 import Fastify from "fastify";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import { DEFAULT_LIMITS } from "../compose/default-limits.js";
 import { readConfig } from "../config/read-config.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
+import { createRemoteTransport } from "../remote/create-remote-transport.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
@@ -14,6 +16,7 @@ import { assetProblems } from "./asset-problems.js";
 import { BootError } from "./boot-error.js";
 import { bootProblems } from "./boot-problems.js";
 import { buildManifest } from "./build-manifest.js";
+import { createMemoryCache } from "./create-memory-cache.js";
 import { listAssets } from "./list-assets.js";
 import { localFetch } from "./local-fetch.js";
 import { queryOf } from "./query-of.js";
@@ -45,10 +48,11 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const config = options.config ?? readConfig(process.env);
   const apis = options.apis ?? [];
   const pages = options.pages ?? [];
+  const remotes = options.remotes ?? [];
   const files =
     options.assets === undefined ? new Map<string, string>() : listAssets(options.assets);
   const problems = [
-    ...bootProblems(options.assemblies, apis, pages),
+    ...bootProblems(options.assemblies, apis, pages, remotes),
     ...assetProblems(options.assemblies, files),
   ];
   if (problems.length > 0) throw new BootError(problems);
@@ -140,7 +144,15 @@ export async function createServer(options: ServerOptions): Promise<App> {
 
   registerApis(app, apis);
   registerAssets(app, files);
-  registerPages(app, pages, byName, localFetch(byName, log), log);
+  registerPages(app, {
+    pages,
+    assemblies: byName,
+    local: localFetch(byName, log),
+    remote: createRemoteTransport({ remotes, maxBytes: DEFAULT_LIMITS.maxBytes, log }),
+    remotes,
+    cache: createMemoryCache(),
+    log,
+  });
 
   await app.ready();
 

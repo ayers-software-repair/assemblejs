@@ -7,3 +7,5 @@ export type { Config } from "./config.js";
 export { ConfigError } from "./config-error.js";
 export { readConfig } from "./read-config.js";
 export { describeConfig } from "./describe-config.js";
+export type { ProjectConfig } from "./project-config.js";
+export { defineConfig } from "./define-config.js";

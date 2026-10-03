@@ -5,6 +5,7 @@ import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import type { Config } from "../config/config.js";
 import type { LogLine } from "../failure/log-line.js";
 import type { PageDefinition } from "../page/page-definition.js";
+import type { RemoteDefinition } from "../remote/remote-definition.js";
 
 /** Everything a server is built from. */
 export interface ServerOptions {
@@ -15,6 +16,8 @@ export interface ServerOptions {
   readonly apis?: readonly ApiDefinition[];
   /** Routes that render a template which places assemblies. */
   readonly pages?: readonly PageDefinition[];
+  /** The other servers this one may compose from. None, unless declared. */
+  readonly remotes?: readonly RemoteDefinition[];
   /** The directory a build wrote its browser files to, as an absolute path. */
   readonly assets?: string;
   /** The version of this build's output, reported in every manifest. */

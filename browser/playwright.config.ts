@@ -8,6 +8,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: ".",
   testMatch: "**/*.browser.ts",
+  globalSetup: "./build-examples.mjs",
   fullyParallel: true,
   reporter: [["list"]],
   // ASSEMBLEJS_CHROMIUM names a browser binary when the one this Playwright version expects is

@@ -5,7 +5,8 @@ import { GENERATED_HEADER } from "./generated-header.js";
 
 /**
  * The page's one script: the runtime, started with a browser half that loads each assembly's
- * own module by name the first time it mounts.
+ * own module by name the first time it mounts, owning the envelopes from the origin it was
+ * served from.
  */
 export function generateClientEntry(assemblies: readonly DiscoveredAssembly[]): string {
   const modules = assemblies
@@ -24,6 +25,8 @@ const renderer = lazyRenderer({
 ${modules}
 });
 
-start({ renderers: { ${renderers} } });
+// The origin this script came from, so a page that also places another server's assemblies
+// mounts each with the runtime that came from its own server.
+start({ renderers: { ${renderers} }, origin: new URL(import.meta.url).origin });
 `;
 }

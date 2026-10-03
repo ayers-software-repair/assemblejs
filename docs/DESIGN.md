@@ -481,6 +481,15 @@ export default definePage({
 A local placement needs no entry at all. The template alone is enough, which is the point:
 adding a second framework to a page is one file and one tag.
 
+A placement from another server names a declared remote, and the remotes are policy, declared
+once in `assemblejs.config.ts`:
+
+```ts
+export default defineConfig({
+  remotes: [{ origin: "https://checkout.example.com", forward: ["accept-language"] }],
+});
+```
+
 A service returns; it does not mutate:
 
 ```ts

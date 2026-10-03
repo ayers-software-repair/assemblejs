@@ -6,7 +6,8 @@
         "scripts/*.mjs",
         "browser/*.browser.ts",
         "browser/build-fixture.mjs",
-        "browser/fixtures/*.{ts,tsx}"
+        "browser/fixtures/*.{ts,tsx}",
+        "browser/build-examples.mjs"
       ],
       "project": ["scripts/**/*.mjs", "browser/**/*.{ts,tsx,mjs}"],
       "ignoreDependencies": ["@arethetypeswrong/cli", "publint", "sort-package-json", "react-dom"]

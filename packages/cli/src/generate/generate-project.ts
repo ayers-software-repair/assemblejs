@@ -3,14 +3,16 @@
 import { GENERATED_HEADER } from "./generated-header.js";
 
 /**
- * The one module the author's server file imports: everything the build found, the version of
- * this build's output, and where its browser files are. The asset directory is resolved from the
- * built module's own url, never from a working directory, so the server finds its files wherever
- * it is started from.
+ * The one module the author's server file imports: everything the build found, the remotes the
+ * project's config declares, the version of this build's output, and where its browser files
+ * are. The asset directory is resolved from the built module's own url, never from a working
+ * directory, so the server finds its files wherever it is started from.
  */
 export function generateProject(options: {
   readonly version: string;
   readonly client: boolean;
+  /** Whether the project has an assemblejs.config.ts, whose remotes it declares. */
+  readonly config: boolean;
 }): string {
   const assets = options.client
     ? `\n  assets: fileURLToPath(new URL("./client/", import.meta.url)),`
@@ -18,12 +20,12 @@ export function generateProject(options: {
   return `${GENERATED_HEADER}${options.client ? 'import { fileURLToPath } from "node:url";\n' : ""}import type { ServerOptions } from "@assemblejs/core";
 import { apis } from "./apis.js";
 import { assemblies } from "./assemblies.js";
-import { pages } from "./pages.js";
+import { pages } from "./pages.js";${options.config ? '\nimport config from "../assemblejs.config.js";' : ""}
 
 const project: ServerOptions = {
   assemblies,
   pages,
-  apis,
+  apis,${options.config ? "\n  remotes: config.remotes ?? []," : ""}
   version: ${JSON.stringify(options.version)},${assets}
 };
 export default project;

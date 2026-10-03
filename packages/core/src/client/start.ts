@@ -35,6 +35,12 @@ export function start(options: StartOptions): Runtime {
       // the assembly's, so there is nothing to hydrate and mounting it would run a browser half
       // against markup it never produced.
       if (element.hasAttribute("data-failed")) continue;
+      // Two runtimes share a page when it places a remote's assembly: each mounts what came from
+      // its own origin and leaves the other's alone, so no island is mounted twice.
+      const from = element.getAttribute("data-remote");
+      const page = typeof location === "undefined" ? undefined : location.origin;
+      if (options.origin === undefined ? from !== null : (from ?? page) !== options.origin)
+        continue;
 
       const payload = readIsland(element);
       const mode = readMountMode(element);

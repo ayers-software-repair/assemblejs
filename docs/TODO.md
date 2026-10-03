@@ -5,9 +5,10 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-12 is done (apis mounted and checked at boot; data
-schemas deep-merged with a collision refused at boot). Full gate `pnpm check` green on the B-12
-fix commit. A cloud session resumed the ladder on the owner's word ("complete all you can"); the
+**STATE 2026-10-03.** Branch `next`. B-09, B-09c, B-12 and B-13 are done; `pnpm check` is green
+on every landing commit and the browser suite (`pnpm test:browser`) passes. The commits are
+local: GitHub refused this session's push (403, the Claude GitHub App's access to the
+organization), and a bundle of them was written to the session's scratchpad. A cloud session resumed the ladder on the owner's word ("complete all you can"); the
 owner does every release himself, from his own sessions, so nothing here publishes.
 
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
@@ -25,11 +26,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-13, remote assemblies, then onward in ledger order.
+**THE EXACT NEXT STEP:** B-14, auth and the default policy, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** B-13 (remote; carries recorded
-debt: `Limits.maxBytes` has no reader, and pages refuse a `url` placement at boot until it lands)
--> B-14 auth -> B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
+**ORDER AND DEPENDENCIES of the open rows:** B-14 auth -> B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
@@ -169,10 +168,12 @@ starts. Until the owner enables Actions, every proof is local only.
       function both endpoints call, data schemas deep-merged with a field claimed twice refused
       at boot, and the product's apis mounted by createServer on a flat route grammar with
       collisions and reserved prefixes refused at boot
-- [ ] B-13 remote assemblies: allowlist, caps, handshake, cache
-      Owed here: `Limits.maxBytes` is declared and has no reader until the remote
-      transport exists. A verification pass found a 10 MiB fragment composing clean
-      through `maxBytes: 8`, which is correct today and must not be once B-13 lands.
+- [x] B-13 remote assemblies: exact-origin allowlist (`remotes`, from `assemblejs.config.ts`),
+      redirects refused, a declared host resolving into a private range refused, nothing
+      forwarded but declared keys, the 2 MiB text/html one-envelope cap (`Limits.maxBytes` now
+      read, for every transport), the manifest once per version with its assets hoisted, the
+      per-placement cache keyed by url and answering a fresh entry before dispatch. Proof: two
+      servers in one test, and a page hydrating another server's assemblies in Chromium
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").

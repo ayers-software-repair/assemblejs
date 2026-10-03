@@ -18,7 +18,8 @@ import type { SettledPlacement } from "./settled-placement.js";
  * One placement's whole outcome. It never throws except for a placement declared required,
  * because a placement that throws is a page that dies from a child.
  *
- * The ladder, in order: the content that was fetched, then the last good content the cache
+ * A placement that declared a cache lifetime is answered from a fresh entry first. Otherwise the
+ * ladder, in order: the content that was fetched, then the last good content the cache
  * holds, then the declared fallback, then an empty envelope. The cache outranks the fallback
  * because it holds real content this assembly actually produced, and the fallback is what to
  * show when there is none. A fallback and the empty envelope are both wrapped in an envelope
@@ -53,6 +54,17 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     return fallBack(input, id, at("fallback", refusal, input.newId()), refusal);
   }
 
+  // A placement that declared a lifetime is answered from its fresh entry without a request. Never
+  // for a request carrying a credential, whose answer belongs to one visitor.
+  if (
+    (plan?.cache?.ttl ?? 0) > 0 &&
+    input.cache !== undefined &&
+    !carriesCredential(input.headers)
+  ) {
+    const held = input.cache.get(cacheKey(name, view, input.query, plan?.url));
+    if (held !== undefined) return { html: held.html, diagnostic: at("cache") };
+  }
+
   const deadline = plan?.deadline ?? DEFAULT_DEADLINE;
   const controller = new AbortController();
   const request: AssemblyRequest = {
@@ -69,6 +81,11 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
 
   const answer = await race(call(input.fetch, request), deadline, controller);
 
+  // The cap holds whichever transport answered, so a local render is bounded like a remote one.
+  if (answer.ok && new TextEncoder().encode(answer.html).length > input.limits.maxBytes) {
+    const correlationId = input.newId();
+    return fallBack(input, id, at("fallback", "too-large", correlationId), "too-large");
+  }
   if (answer.ok) {
     write(input, answer.html, answer.version);
     return { html: answer.html, diagnostic: at(answer.source) };
@@ -154,7 +171,7 @@ function write(input: SettleInput, html: string, version: string | undefined): v
   if (ttl <= 0 || input.cache === undefined) return;
   if (carriesCredential(input.headers)) return;
   input.cache.set(
-    cacheKey(input.name, input.view, input.query),
+    cacheKey(input.name, input.view, input.query, input.plan?.url),
     version === undefined ? { html } : { html, version },
     ttl,
   );
@@ -170,7 +187,7 @@ function fallBack(
   // content is still held has not failed: the ladder answered it. Throwing first killed pages
   // over an outage the cache was there to absorb.
   if (input.cache !== undefined && !carriesCredential(input.headers)) {
-    const held = input.cache.get(cacheKey(input.name, input.view, input.query));
+    const held = input.cache.get(cacheKey(input.name, input.view, input.query, input.plan?.url));
     if (held !== undefined) {
       return { html: held.html, diagnostic: { ...diagnostic, source: "cache", reason } };
     }

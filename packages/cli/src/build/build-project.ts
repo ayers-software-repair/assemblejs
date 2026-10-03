@@ -87,7 +87,11 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     io.write(join(generated, "apis.ts"), generateApis(apis.apis, generated));
     io.write(
       join(generated, "project.ts"),
-      generateProject({ version: sourceVersion(root), client: script !== undefined }),
+      generateProject({
+        version: sourceVersion(root),
+        client: script !== undefined,
+        config: existsSync(join(root, "assemblejs.config.ts")),
+      }),
     );
     await build({
       ...sharedOptions(root, svelte, "server"),
