@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
 // server-rendered, hydrated by its own renderer, and talks to the others over the page's bus,
 // so every framework proves both halves of its renderer and the events binding at once.
 const example = fileURLToPath(new URL("../examples/frameworks/", import.meta.url));
-const FRAMEWORKS = ["react", "svelte", "preact", "vue", "solid"] as const;
+const FRAMEWORKS = ["react", "svelte", "preact", "vue", "solid", "lit"] as const;
 
 let server: ChildProcess | undefined;
 let origin = "";
@@ -81,4 +81,17 @@ test("a Vue component's scoped style applies to the markup it hydrated", async (
   await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
   await page.locator("#vue-bump").click();
   await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
+});
+
+test("a Lit element's own styles apply once it hydrates, with no inline style refused", async ({
+  page,
+}) => {
+  const refused: string[] = [];
+  page.on("console", (message) => {
+    if (message.text().includes("Content Security Policy")) refused.push(message.text());
+  });
+  await page.goto(`${origin}/`);
+  // Adopted as a constructed sheet into the shadow root the server sent.
+  await expect(page.locator("#lit-bump")).toHaveCSS("color", "rgb(120, 0, 120)");
+  expect(refused).toEqual([]);
 });

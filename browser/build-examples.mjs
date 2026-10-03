@@ -26,6 +26,8 @@ export default function buildExamples() {
       "@assemblejs/renderer-vue",
       "--filter",
       "@assemblejs/renderer-solid",
+      "--filter",
+      "@assemblejs/renderer-lit",
       "build",
     ],
     { cwd: root, stdio: "pipe" },

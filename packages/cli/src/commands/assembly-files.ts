@@ -18,6 +18,14 @@ export default function ${pascal(name)}({ data }: AssemblyProps) {
 }
 `,
   ],
+  lit: (name) => [
+    `${name}.lit.ts`,
+    `import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import { html } from "lit";
+
+export default (props: AssemblyProps) => html\`<p>${name} \${Object.keys(props.data).length}</p>\`;
+`,
+  ],
   preact: (name) => [
     `${name}.preact.tsx`,
     `import type { AssemblyProps } from "@assemblejs/renderer-preact";

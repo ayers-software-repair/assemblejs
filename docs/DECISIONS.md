@@ -1006,3 +1006,31 @@ Solid context, `useEvents()` and `Slot`. Settled here:
 - **One markup fixture holds both halves.** The server and browser halves run on two builds of
   Solid, so the server test requires `renderToMarkup` to produce exactly the markup the browser
   test hydrates, in separate vitest projects resolving each build.
+
+## 2026-10-03: Lit, and B-16 done
+
+`@assemblejs/renderer-lit` completes B-16. Settled here:
+
+- **A Lit view is `cart.lit.ts`, default-exporting a function from the assembly's props to a
+  template.** Lit's unit of interactivity is the element; the view places elements and hands
+  them the assembly's events as a property, which hydration sets. The events arrive as a prop
+  (as in Svelte), because a template function has no context to read them from.
+- **The server half renders with `@lit-labs/ssr`**: the template with the markers hydration
+  reads, each element into a declarative shadow root. The browser half hydrates the template
+  with `@lit-labs/ssr-client`, and each element hydrates its own shadow root when defined, Lit's
+  hydrate support installed first.
+- **Element styles are adopted on hydration, not sent inline.** Found: Lit writes an element's
+  styles as an inline `<style>` in its shadow root, which the default policy refuses (a console
+  error on every page), and its hydrate support then reuses that root without adopting the
+  styles, so the element stayed unstyled. The server half leaves that `<style>` out and the
+  browser half adopts the same styles as constructed sheets when the element hydrates; an
+  element is styled once it hydrates.
+- **The browser half never loads Lit's element base.** Found while proving the above: bundled,
+  all of a package's imports load before any of its code runs, so importing `lit` registered
+  the element base with the hydrate support before this package adapted it. The browser half
+  imports `lit-html` alone (a plain dependency, deduplicated with the project's `lit`), and a
+  test holds its sources to that.
+- **B-16's proof is one page carrying every framework**: `examples/frameworks` places html,
+  React, Svelte, Preact, Vue, Solid and Lit assemblies; in Chromium each is server-rendered,
+  keeps the very element the server sent through hydration, counts, and is heard by every
+  other, with no warning, error or refused resource on the page.

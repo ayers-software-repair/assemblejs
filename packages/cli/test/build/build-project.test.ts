@@ -40,7 +40,9 @@ const serve = async (root: string, path: string): Promise<string> => {
   }
 };
 
-describe("building a project", () => {
+// Each of these bundles a real project and starts the server it built, which on a loaded machine
+// takes longer than a unit test's default allows.
+describe("building a project", { timeout: 60_000 }, () => {
   it("writes a server that plain node starts, composing the page from both frameworks", async () => {
     const { io, logs } = capture();
     expect(await buildProject(example, io)).toBe(0);
@@ -96,7 +98,7 @@ describe("building a project", () => {
 const scaffolded = mkdtempSync(join(example, ".dev-scaffold-"));
 afterAll(() => rmSync(scaffolded, { recursive: true, force: true }));
 
-describe("building what the command line scaffolds", () => {
+describe("building what the command line scaffolds", { timeout: 60_000 }, () => {
   it("builds a new project with a React, a Svelte and a scripted html assembly added", async () => {
     for (const [path, contents] of Object.entries(projectFiles("scaffolded"))) {
       realIo.write(join(scaffolded, path), contents);
@@ -148,7 +150,7 @@ describe("building what the command line scaffolds", () => {
   });
 });
 
-describe("building a project with styles and no browser script", () => {
+describe("building a project with styles and no browser script", { timeout: 60_000 }, () => {
   it("serves its stylesheets all the same", async () => {
     const root = mkdtempSync(join(example, ".dev-styles-"));
     try {

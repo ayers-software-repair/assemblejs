@@ -419,9 +419,9 @@ export type MountHandle = { unmount(): void };
   not a teardown.
 
 The view file's extension picks the renderer. Where an extension is shared, the filename says
-which: `cart.react.tsx`, `cart.preact.tsx`, `cart.solid.tsx`. `cart.svelte`, `cart.vue`,
-`cart.md` and `cart.html` need no infix. A page's frameworks are then visible from a directory
-listing.
+which: `cart.react.tsx`, `cart.preact.tsx`, `cart.solid.tsx`, and `cart.lit.ts` among a
+project's own TypeScript. `cart.svelte`, `cart.vue`, `cart.md` and `cart.html` need no infix. A
+page's frameworks are then visible from a directory listing.
 
 Renderers ship one per package with one real peer dependency, so installing the framework you
 use does not install the five you do not.

@@ -21,6 +21,8 @@
       "@assemblejs/cli": ["./packages/cli/src/index.ts"],
       "@assemblejs/create": ["./packages/create/src/index.ts"],
       "@assemblejs/mcp": ["./packages/mcp/src/index.ts"],
+      "@assemblejs/renderer-lit": ["./packages/renderer-lit/src/index.ts"],
+      "@assemblejs/renderer-lit/client": ["./packages/renderer-lit/src/client/index.ts"],
       "@assemblejs/renderer-preact": ["./packages/renderer-preact/src/index.ts"],
       "@assemblejs/renderer-preact/client": ["./packages/renderer-preact/src/client/index.ts"],
       "@assemblejs/renderer-react": ["./packages/renderer-react/src/index.ts"],

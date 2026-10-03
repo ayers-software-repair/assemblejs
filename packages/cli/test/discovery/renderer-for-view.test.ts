@@ -21,6 +21,13 @@ describe("choosing a renderer from a file name", () => {
     expect(rendererForView("cart.tsx")).toBeUndefined();
   });
 
+  it("reads a Lit view by its name among the project's own TypeScript", () => {
+    expect(rendererForView("cart.lit.ts")).toBe("lit");
+    expect(rendererForView("cart.lit.js")).toBe("lit");
+    expect(rendererForView("cart.client.ts")).toBeUndefined();
+    expect(rendererForView("cart.service.ts")).toBeUndefined();
+  });
+
   it("is not a view when the extension means nothing here", () => {
     expect(rendererForView("cart.css")).toBeUndefined();
     expect(rendererForView("README")).toBeUndefined();

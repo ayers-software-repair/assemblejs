@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-15 are done, with the
+**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-16 are done, with the
 findings of their independent reviews fixed; `pnpm check` is green on every landing commit, on a
 fresh clone as well, and the browser suite (`pnpm test:browser`) passes. The commits are
 local: GitHub refused this session's push (403, the Claude GitHub App's access to the
@@ -27,9 +27,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-16, then onward in ledger order.
+**THE EXACT NEXT STEP:** B-17, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
+**ORDER AND DEPENDENCIES of the open rows:** B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
@@ -217,7 +217,7 @@ starts. Until the owner enables Actions, every proof is local only.
       declarative shadow root with its own unscoped sheet. Proof, in Chromium from the built
       `examples/styles`: two assemblies' `.title` keep their own colours, one's `@keyframes`
       runs in the other, and the shadow assembly keeps a page rule out and still hydrates
-- [ ] B-16 the remaining four framework renderers, proved on one page (`examples/frameworks`)
+- [x] B-16 the remaining four framework renderers, proved on one page (`examples/frameworks`)
   - [x] `renderer-preact`: `.preact.tsx`, server render, hydration (shadow roots included), the
         events hook; each JSX file compiles through its own framework's runtime
   - [x] `renderer-vue`: `.vue` single-file components compiled with the project's own Vue
@@ -226,8 +226,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
   - [x] `renderer-solid`: `.solid.tsx` compiled by Solid's own Babel preset, which the renderer
         carries, for the server and hydratable for the browser; each mount adopts its markup by
         its own hydration keys, and the events by context
-  - [ ] `renderer-lit`
-  - [ ] the page carrying all six, in Chromium
+  - [x] `renderer-lit`: `.lit.ts` views as template functions, server-rendered with
+        `@lit-labs/ssr` (elements into declarative shadow roots) and hydrated with its client;
+        an element's own styles are adopted when it hydrates
+  - [x] the page carrying all six, in Chromium: html, React, Svelte, Preact, Vue, Solid and Lit
+        assemblies, each keeping the element the server sent and heard by every other
 - [ ] B-17 the template engines
 - [ ] B-18 real-time over server-sent events
 - [ ] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,

@@ -16,9 +16,11 @@ const AMBIGUOUS = new Set([".tsx", ".jsx"]);
  *
  * `cart.svelte` needs no infix because the extension is unambiguous. `cart.react.tsx` does,
  * because React, Preact and Solid all write .tsx and a file that does not say which is a file
- * whose framework only the config knows.
+ * whose framework only the config knows; `cart.lit.ts` likewise, among the project's own `.ts`.
  */
 export function rendererForView(fileName: string): string | undefined {
+  // A Lit view is TypeScript or JavaScript like a client or a service file, so its name says so.
+  if (/\.lit\.[jt]s$/.test(fileName)) return "lit";
   const extension = fileName.slice(fileName.lastIndexOf("."));
   if (extension === "" || !fileName.includes(".")) return undefined;
 

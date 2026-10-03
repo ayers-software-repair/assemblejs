@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "lib": ["ES2022", "DOM"],
+    "useDefineForClassFields": false,
+    "experimentalDecorators": false
+  },
+  "include": ["src", "test"]
+}
