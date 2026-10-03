@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
 import { renderToMarkup } from "@assemblejs/renderer-react";
+import { useEvents } from "@assemblejs/renderer-react/client";
 import type { AssemblyProps } from "@assemblejs/renderer-react";
 
 const Cart = ({ data }: AssemblyProps) => <p>Items: {String(data["total"])}</p>;
@@ -34,5 +35,13 @@ describe("rendering a React assembly on the server", () => {
     expect(() => renderToMarkup(Broken, { data: {}, children: {} })).toThrow(
       "this component is broken",
     );
+  });
+
+  it("renders a component that uses its events, as it will hydrate", () => {
+    const Readout = () => {
+      const events = useEvents();
+      return <p>{events.last("counted") === undefined ? "nothing yet" : "heard"}</p>;
+    };
+    expect(renderToMarkup(Readout, { data: {}, children: {} })).toBe("<p>nothing yet</p>");
   });
 });

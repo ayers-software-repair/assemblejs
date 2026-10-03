@@ -3,3 +3,6 @@
 export type { DiscoveredAssembly } from "./discovered-assembly.js";
 export { rendererForView } from "./renderer-for-view.js";
 export { discoverAssemblies } from "./discover-assemblies.js";
+export type { DiscoveredPage } from "./discovered-page.js";
+export { discoverPages } from "./discover-pages.js";
+export { discoverApis } from "./discover-apis.js";

@@ -3,6 +3,7 @@
 import { describe, expect, it } from "vitest";
 import { renderToMarkup } from "@assemblejs/renderer-svelte";
 import Counter from "../fixtures/Counter.svelte";
+import Listener from "../fixtures/Listener.svelte";
 
 describe("rendering a Svelte assembly on the server", () => {
   it("produces the markup the server sends", () => {
@@ -21,5 +22,9 @@ describe("rendering a Svelte assembly on the server", () => {
 
   it("throws rather than returning error markup", () => {
     expect(() => renderToMarkup(null, { data: {}, children: {} })).toThrow();
+  });
+
+  it("hands the component its events, as it will hydrate with them", () => {
+    expect(renderToMarkup(Listener, { data: {}, children: {} })).toContain("<p>nothing yet</p>");
   });
 });

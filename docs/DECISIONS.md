@@ -594,3 +594,47 @@ apis already were. All four are fixed here, with the rest of what it found.
   the failure body; a root-relative asset url outside the asset prefix is a boot refusal because
   nothing serves it; a policy that is not an object is reported rather than thrown on; and the
   immediately-closed directive is recognised in any case, as the self-closing one already was.
+
+## 2026-10-03: the build, and what building a real project exposed
+
+`assemblejs build` is esbuild, owned by `@assemblejs/cli` as a dependency of the command line and
+of nothing the server imports. It writes `dist/server.js`, which plain `node` starts with every
+package external (the framework and the renderers come from the project's own dependencies), and
+`dist/client/`, the browser files. The generated modules the author never opens live in
+`.assemblejs/`: `assemblies.ts`, `pages.ts`, `apis.ts`, `project.ts`, and one browser module per
+assembly behind one entry.
+
+- **One script per page, one module per island.** The entry starts the runtime with a browser
+  half (`lazyRenderer`, in core) that loads an assembly's own module the first time an assembly of
+  that name mounts, so `client:visible` defers the download as well as the mount.
+- **A static assembly ships nothing.** A plain html view with no `.client.ts` is generated as
+  `mount: "none"` and links no script; a page of only static assemblies loads no JavaScript at all.
+- **A framework view says when it mounts** by exporting `mount` beside its component (or from a
+  Svelte module script). The generator reads the source and names the export only where it
+  exists.
+- **Directories are pages too.** `src/pages/<name>/<name>.html` is the page at `/<name>`, `home`
+  at `/`; a `<name>.page.ts` beside it default-exports a `definePage` declaration. An assembly's
+  `<name>.service.ts` default-exports its service; `src/api/<name>.api.ts` its api.
+- **`generate` is gone.** It wrote a registry that could not run (it imported a view file as if it
+  were a definition), and the design's verbs are new, add, dev, build, check and deploy. `build`
+  writes every generated module.
+- **The server file is three statements, not two** (DESIGN 15 is updated): it imports the
+  generated project module, because a library cannot reach its user's generated module without a
+  run-time bundler.
+- **The pre-build checks find packages the bundler's way**, walking `node_modules` upward from
+  the project, never through `NODE_PATH`: a package manager's command shim points `NODE_PATH` at
+  its own store, where node finds packages the project never installed and the bundler then
+  does not.
+
+Building the two-framework example for real exposed a defect B-10 and B-11 could not: their proofs
+hand the runtime markup written for them, so no React component that calls `useEvents()` was ever
+rendered on the server, where it threw for want of a page. Each renderer's server half now renders
+inside the events its browser half mounts with: `serverEvents()` in core, which accepts a
+subscription that never fires, has no last message, and refuses `send` by name. The React package
+is now split so its server and browser entries share one context module.
+
+The proof B-11 named now runs from a real build: `browser/built.browser.ts` builds
+`examples/two-frameworks` with the command line, starts `dist/server.js` under plain node, and
+clicks the Svelte assembly in Chromium until the React one hears it. It was watched red on islands
+that never mount, a registry that links no script, and a React server render without its events.
+`ASSEMBLEJS_CHROMIUM` names the browser binary when the one Playwright expects is not installed.

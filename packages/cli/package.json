@@ -46,6 +46,10 @@
     "lint": "eslint src test",
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "esbuild": "0.28.2"
+  },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
     "@types/node": "26.4.1",

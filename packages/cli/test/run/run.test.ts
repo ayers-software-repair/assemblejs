@@ -21,7 +21,7 @@ describe("the command line", () => {
   // Non-interactive by construction: there is no prompt anywhere, so there is no behaviour that
   // differs between a terminal and a pipe, and nothing to hang in CI when a flag is forgotten.
   it("never asks a question, whatever it is given", () => {
-    for (const argv of [[], ["new"], ["add"], ["add", "assembly"], ["nonsense"]]) {
+    for (const argv of [[], ["new"], ["add"], ["add", "assembly"], ["nonsense"], ["generate"]]) {
       const { io, errors, logs } = fake();
       const code = run(argv, io);
       expect(typeof code).toBe("number");
@@ -50,6 +50,7 @@ describe("new", () => {
       "my-app/README.md",
       "my-app/package.json",
       "my-app/src/assemblies/hello/hello.html",
+      "my-app/src/pages/home/home.html",
       "my-app/src/server.ts",
     ]);
   });

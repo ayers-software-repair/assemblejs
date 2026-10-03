@@ -7,3 +7,4 @@ export type { EventHandler } from "./event-handler.js";
 export type { Events } from "./events.js";
 export type { Bus } from "./bus.js";
 export { createBus } from "./create-bus.js";
+export { serverEvents } from "./server-events.js";

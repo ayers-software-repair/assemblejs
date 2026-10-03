@@ -20,9 +20,8 @@ ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are 
 **THE EXACT NEXT STEP:** B-09. Found on resuming, and logged in `docs/DECISIONS.md`: the server
 served the assembly endpoints but no PAGES - nothing turned a template into a composed document
 or linked a browser runtime - and B-09's proof (create, build, `node dist/server.js`) needs both.
-So B-09 lands in four commits: pages in core (definePage, the composer's local transport, asset
-serving and hoisting, template checks at boot), then `build` (esbuild owned by the CLI; the
-server bundle keeps packages external so it runs with no bundler), then `dev`, then
+So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild owned by the
+CLI, the server bundle keeps packages external so it runs with no bundler), then `dev`, then
 `@assemblejs/create` and the tarball proof. Then B-09c, then B-13 onward in ledger order.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-09 -> B-09c -> B-13 (remote; carries recorded
@@ -144,9 +143,10 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] B-09 the CLI and create: discovery, templates, non-interactive
       Done: discovery, the generated registry, new, add, generate, the non-interactive bin, and
       pages served by core (definePage, the composer's local transport, browser files served
-      from a build's directory and hoisted into each page, templates checked at boot).
-      Left: `build` (the bundler seam), `dev`, and `@assemblejs/create` so
-      `npm create @assemblejs` works. The rung's own proof needs all three.
+      from a build's directory and hoisted into each page, templates checked at boot), and
+      `build` (esbuild owned by the CLI; `dist/server.js` runs under plain node; the day-one
+      proof runs from a real build in Chromium).
+      Left: `dev`, and `@assemblejs/create` so `npm create @assemblejs` works.
 - [x] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
       Landed: the project-root guard, the queryable rules, render_assembly, compose_page,
       explain, the project and rules resources, and the stdio server, all driven end to end

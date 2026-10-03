@@ -742,12 +742,20 @@ no list restating the directory tree, no file two people editing different assem
 to touch. The tool generates a typed import module the author never opens and never commits, so
 the built server still has a static import graph and production never scans a directory.
 
-`server.ts` is two lines and never grows:
+`server.ts` never grows. Its whole job is to hand the server what the build found:
 
 ```ts
-const app = await createServer();
+import { createServer } from "@assemblejs/core";
+import project from "../.assemblejs/project.js";
+
+const app = await createServer(project);
 await app.listen();
 ```
+
+`.assemblejs/project.ts` is the generated module: the assemblies, pages and apis the build
+found on disk, the version of the build's output, and where its browser files are. The import is
+the one line a two-line file cannot avoid, because a library cannot import a module its user's
+build generates without a bundler doing it at run time, which is what section 11 rules out.
 
 Adding an assembly writes the assembly's own files and adds one tag to a page template. That is
 the whole change. This supersedes the earlier recorded shape, where adding an assembly edited

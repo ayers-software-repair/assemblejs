@@ -3,16 +3,16 @@
 import { describe, expect, it } from "vitest";
 import { identifierFor } from "@assemblejs/cli";
 
-describe("naming an assembly in generated code", () => {
+describe("naming an import in generated code", () => {
   it("survives a hyphen, which an identifier cannot carry", () => {
-    expect(identifierFor("cart")).toBe("assembly_cart");
-    expect(identifierFor("hello-react")).toBe("assembly_helloReact");
-    expect(identifierFor("a-b-c")).toBe("assembly_aBC");
+    expect(identifierFor("view", "cart")).toBe("view_cart");
+    expect(identifierFor("view", "hello-react")).toBe("view_helloReact");
+    expect(identifierFor("api", "a-b-c")).toBe("api_aBC");
   });
 
-  it("cannot collide with a keyword or a global, because it is prefixed", () => {
+  it("cannot collide with a keyword or a global, because it is prefixed by its kind", () => {
     for (const name of ["default", "class", "window", "import"]) {
-      expect(identifierFor(name).startsWith("assembly_")).toBe(true);
+      expect(identifierFor("view", name).startsWith("view_")).toBe(true);
     }
   });
 });

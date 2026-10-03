@@ -57,12 +57,15 @@ export function discoverAssemblies(root: string): {
 
     const view = views[0] as string;
     const client = files.find((file) => file.endsWith(".client.ts"));
+    const service = files.find((file) => file === `${name}.service.ts`);
     assemblies.push({
       name,
       directory: `${root}/${name}`.replaceAll("\\", "/"),
       view: `${root}/${name}/${view}`.replaceAll("\\", "/"),
       renderer: rendererForView(view) as string,
       client: client === undefined ? undefined : `${root}/${name}/${client}`.replaceAll("\\", "/"),
+      service:
+        service === undefined ? undefined : `${root}/${name}/${service}`.replaceAll("\\", "/"),
       styles: files
         .filter((file) => file.endsWith(".css"))
         .map((file) => `${root}/${name}/${file}`.replaceAll("\\", "/")),

@@ -1,0 +1,32 @@
+// Copyright Ayers Electronics Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { readdirSync } from "node:fs";
+
+const API = /^[a-z][a-z0-9-]*\.api\.ts$/;
+
+/**
+ * Every api file in a directory, in name order. Each default-exports one `defineApi`. A file
+ * that looks like an api but is not named like one is reported, because it would otherwise be
+ * left out of the build with nothing saying so.
+ */
+export function discoverApis(root: string): {
+  readonly apis: readonly string[];
+  readonly problems: readonly string[];
+} {
+  let entries: string[];
+  try {
+    entries = readdirSync(root).sort();
+  } catch {
+    return { apis: [], problems: [] };
+  }
+  const at = root.replaceAll("\\", "/");
+  const apis: string[] = [];
+  const problems: string[] = [];
+  for (const file of entries) {
+    if (API.test(file)) apis.push(`${at}/${file}`);
+    else if (file.endsWith(".api.ts")) {
+      problems.push(`"${file}" is not a usable api file name; lower case, starting with a letter`);
+    }
+  }
+  return { apis, problems };
+}

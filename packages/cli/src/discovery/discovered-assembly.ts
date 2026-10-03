@@ -12,5 +12,7 @@ export interface DiscoveredAssembly {
   readonly renderer: string;
   /** Optional siblings, relative to the project root. */
   readonly client: string | undefined;
+  /** The assembly's service, relative to the project root, when it has one. */
+  readonly service: string | undefined;
   readonly styles: readonly string[];
 }

@@ -16,6 +16,7 @@ export type { Runtime } from "./runtime.js";
 export type { StartOptions } from "./start-options.js";
 export { start } from "./start.js";
 export type { ClientRenderer } from "./client-renderer.js";
+export { lazyRenderer } from "./lazy-renderer.js";
 export type { MountContext } from "./mount-context.js";
 export type { MountHandle } from "./mount-handle.js";
 export * from "./events/index.js";

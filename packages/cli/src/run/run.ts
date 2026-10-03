@@ -1,11 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { buildProject } from "../build/build-project.js";
 import { assemblyFiles } from "../commands/assembly-files.js";
 import { projectFiles } from "../commands/project-files.js";
 import { RENDERERS } from "../commands/renderers.js";
-import { discoverAssemblies } from "../discovery/discover-assemblies.js";
-import { generateRegistry } from "../generate/generate-registry.js";
 import type { Io } from "../io/io.js";
 
 const USAGE = `assemblejs <command>
@@ -13,7 +12,7 @@ const USAGE = `assemblejs <command>
   new <directory>              scaffold a project that runs
   add assembly <name> [--renderer <name>]
                                add an assembly; a directory IS an assembly
-  generate                     rewrite the module the built server imports
+  build                        build dist/server.js and its browser files
 
   --renderer   one of: ${RENDERERS.join(", ")}   (default html)
   --cwd        where to work (default: here)`;
@@ -27,9 +26,10 @@ const NAME = /^[a-z][a-z0-9-]*$/;
  * behaviour that differs between a terminal and a pipe. A tool that asks questions when it has
  * a terminal is a tool that hangs in CI on the day someone forgets a flag.
  *
- * Returns the exit code rather than calling process.exit, so the tests drive the real command.
+ * Returns the exit code rather than calling process.exit, so the tests drive the real command. A
+ * command that waits on the bundler returns it as a promise.
  */
-export function run(argv: readonly string[], io: Io): number {
+export function run(argv: readonly string[], io: Io): number | Promise<number> {
   const flags = new Map<string, string>();
   const positional: string[] = [];
   for (let index = 0; index < argv.length; index += 1) {
@@ -49,7 +49,7 @@ export function run(argv: readonly string[], io: Io): number {
 
   if (command === "new") return newProject(rest[0], cwd, io);
   if (command === "add") return addAssembly(rest, flags.get("renderer") ?? "html", cwd, io);
-  if (command === "generate") return generate(cwd, io);
+  if (command === "build") return buildProject(resolve(cwd), io);
 
   io.error(`unknown command "${command}"`);
   io.error(USAGE);
@@ -103,14 +103,5 @@ function addAssembly(rest: readonly string[], renderer: string, cwd: string, io:
   }
   // The one thing that is NOT written: the author's own server file. It never grows.
   io.log(`\nadd it to a page with <assembly name="${name}"></assembly>`);
-  return 0;
-}
-
-function generate(cwd: string, io: Io): number {
-  const { assemblies, problems } = discoverAssemblies(join(cwd, "src", "assemblies"));
-  for (const problem of problems) io.error(problem);
-  if (problems.length > 0) return 1;
-  io.write(join(cwd, ".assemblejs", "assemblies.ts"), generateRegistry(assemblies));
-  io.log(`generated .assemblejs/assemblies.ts for ${assemblies.length} assembly(s)`);
   return 0;
 }

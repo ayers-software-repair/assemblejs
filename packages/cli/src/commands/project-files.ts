@@ -23,14 +23,27 @@ export function projectFiles(name: string): Readonly<Record<string, string>> {
 
     ".gitignore": ["node_modules/", "dist/", ".assemblejs/", ""].join("\n"),
 
-    "src/server.ts": `import { createServer, readConfig, describeConfig } from "@assemblejs/core";
-import { assemblies } from "../.assemblejs/assemblies.js";
+    "src/server.ts": `import { createServer, describeConfig, readConfig } from "@assemblejs/core";
+import project from "../.assemblejs/project.js";
 
 const config = readConfig(process.env);
-const app = await createServer({ config, assemblies });
+const app = await createServer({ ...project, config });
 const { url } = await app.listen();
 for (const line of describeConfig(config)) console.log(line);
 console.log(\`listening \${url}\`);
+`,
+
+    "src/pages/home/home.html": `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${name}</title>
+  </head>
+  <body>
+    <assembly name="hello"></assembly>
+  </body>
+</html>
 `,
 
     "src/assemblies/hello/hello.html": `<p>Hello from AssembleJS</p>\n`,
@@ -40,8 +53,9 @@ console.log(\`listening \${url}\`);
     pnpm install
     pnpm dev
 
-A directory under \`src/assemblies\` is an assembly. There is nothing to register: \`src/server.ts\`
-does not grow when you add one.
+A directory under \`src/assemblies\` is an assembly and a directory under \`src/pages\` is a page.
+There is nothing to register: \`src/server.ts\` does not grow when you add either. Place an
+assembly on a page with \`<assembly name="hello"></assembly>\`.
 `,
   };
 }

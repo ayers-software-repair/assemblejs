@@ -37,6 +37,13 @@ describe("discovering assemblies", () => {
     const [found] = discoverAssemblies(root).assemblies;
     expect(found?.client).toMatch(/cart\.client\.ts$/);
     expect(found?.styles).toHaveLength(2);
+    expect(found?.service).toBeUndefined();
+  });
+
+  it("finds the assembly's service by its name, and only that one", () => {
+    assembly("cart", ["cart.svelte", "cart.service.ts", "other.service.ts"]);
+    const [found] = discoverAssemblies(root).assemblies;
+    expect(found?.service).toMatch(/cart\/cart\.service\.ts$/);
   });
 
   it("has no client when the assembly declares none", () => {
