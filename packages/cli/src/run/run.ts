@@ -2,12 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0
 import { basename, join, resolve } from "node:path";
 import { buildProject } from "../build/build-project.js";
+import { runCheck } from "../check/run-check.js";
 import { planAssembly } from "../commands/plan-assembly.js";
 import { projectFiles } from "../commands/project-files.js";
 import { RENDERERS } from "../commands/renderers.js";
+import { runDeploy } from "../deploy/run-deploy.js";
 import { runDev } from "../dev/run-dev.js";
 import { suggestName } from "../discovery/suggest-name.js";
 import type { Io } from "../io/io.js";
+import { runPerf } from "../perf/run-perf.js";
 
 const USAGE = `assemblejs <command>
 
@@ -16,6 +19,9 @@ const USAGE = `assemblejs <command>
                                add an assembly; a directory IS an assembly
   dev                          build, run, and rebuild on every change
   build                        build dist/server.js and its browser files
+  check                        report every problem found without building
+  perf                         build, then weigh what each page sends a visitor
+  deploy                       build, then write deploy/: dist and its dependencies
 
   --renderer   one of: ${RENDERERS.join(", ")}   (default html)
   --cwd        where to work (default: here)`;
@@ -54,6 +60,9 @@ export function run(argv: readonly string[], io: Io): number | Promise<number> {
   if (command === "add") return addAssembly(rest, flags.get("renderer") ?? "html", cwd, io);
   if (command === "build") return buildProject(resolve(cwd), io);
   if (command === "dev") return runDev(resolve(cwd), io, interrupted());
+  if (command === "check") return runCheck(resolve(cwd), io);
+  if (command === "perf") return runPerf(resolve(cwd), io);
+  if (command === "deploy") return runDeploy(resolve(cwd), io);
 
   io.error(`unknown command "${command}"`);
   io.error(USAGE);

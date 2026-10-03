@@ -5,3 +5,4 @@ export type { LiteralValue } from "./literal-value.js";
 export { readDefaultExport } from "./read-default-export.js";
 export { remotePlacements } from "./remote-placements.js";
 export { declaredOrigins } from "./declared-origins.js";
+export { runCheck } from "./run-check.js";

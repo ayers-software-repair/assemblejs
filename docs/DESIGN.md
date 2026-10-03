@@ -630,7 +630,11 @@ root. Nothing pretends otherwise.
 - The bundler is a development and build-time tool owned by the CLI. `assemblejs dev` runs the
   same build and the same `node dist/server.js` as production, and rebuilds and restarts on every
   change; `assemblejs build` emits the server and the client assets; neither leaves a trace in
-  the running server. A server in development mode links one more script into every page, from
+  the running server. `assemblejs check` reports every problem found without building, each with
+  its file, rule and fix; `assemblejs perf` builds, starts the build in production and weighs
+  what each page sends a visitor before anything mounts; `assemblejs deploy` builds and writes
+  `deploy/`, the build and a package.json of the project's dependencies alone, which runs
+  wherever those are installed. None of them publishes or touches a remote. A server in development mode links one more script into every page, from
   under the devtools prefix and carrying the boot of the server that rendered the page, which
   listens on a stream for the server's boot and reloads the page when it hears another, so a page
   follows `dev` across each restart; in production neither exists. A request the server fails

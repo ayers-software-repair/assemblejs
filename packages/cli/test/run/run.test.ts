@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { run } from "@assemblejs/cli";
+import { projectFiles, realIo, run } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
 
 const fake = (existing: readonly string[] = []) => {
@@ -42,6 +43,32 @@ describe("the command line", () => {
   it("prints usage and succeeds when asked for help", () => {
     const { io } = fake();
     expect(run(["help"], io)).toBe(0);
+  });
+});
+
+describe("the verbs that read a project", () => {
+  it("dispatch check, perf and deploy, each named in the usage", async () => {
+    const { io, logs } = fake();
+    run(["help"], io);
+    for (const verb of ["check", "perf", "deploy"]) expect(logs.join("\n")).toContain(`  ${verb} `);
+    const root = mkdtempSync(join(tmpdir(), "verbs-"));
+    for (const [path, contents] of Object.entries(projectFiles("verbs"))) {
+      realIo.write(join(root, path), contents);
+    }
+    expect(await run(["check", "--cwd", root], { ...realIo, log: () => undefined })).toBe(0);
+    expect(
+      await run(["deploy", "--cwd", mkdtempSync(join(tmpdir(), "none-"))], {
+        ...realIo,
+        error: () => undefined,
+      }),
+    ).toBe(1);
+    expect(
+      await run(["perf", "--cwd", mkdtempSync(join(tmpdir(), "none-"))], {
+        ...realIo,
+        error: () => undefined,
+        log: () => undefined,
+      }),
+    ).toBe(1);
   });
 });
 

@@ -1319,3 +1319,25 @@ The rung's verifier found, and this round fixed:
   Equivalent mutants: closing the app on a refused boot (nothing listens yet), clearing the stall
   timer on close (it finds the stream already closed), recording failures in production (nothing
   reads them there). Package metadata naming the GitHub organization is the owner's open row.
+
+## 2026-10-03: B-20, the check, perf and deploy verbs
+
+The plan names the verbs and the proof ("a generated project passes `check`; `deploy` writes a
+build that runs") and the design says no more, so:
+
+- **`check`** prints what `checkProject` finds (the function the agent surface already calls),
+  one problem per line with its file, message, rule and fix, and exits 1 when there is any. It
+  builds and starts nothing. A project `new` writes passes it.
+- **`perf`** builds, starts the built server in production on a port the system gives it, and
+  asks each page for what a visitor's browser would fetch first: the document, the stylesheets
+  and the module scripts it links, each once, weighed as sent and gzipped. It measures the
+  server production runs rather than estimating from files on disk; the chunks an assembly loads
+  when it mounts are not counted, which the report's shape says. Any part not answered with 200
+  fails the command. Size budgets, which would turn these numbers into a gate, are B-25.
+- **`deploy`** builds and writes `deploy/` whole: the build's `dist/` and a package.json with the
+  project's name, version, engines and dependencies, one `start` script and no devDependencies,
+  so installing it brings no bundler. It writes no lockfile, as the project's lockfile describes
+  devDependencies the deploy does not have. It publishes nothing and touches no remote; where the
+  directory goes is the author's. `deploy/` joins the generated project's `.gitignore`.
+- Proof: a generated project passes `check`; a generated project's `deploy/` starts with plain
+  node from inside itself and serves its page.

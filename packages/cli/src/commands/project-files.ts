@@ -21,7 +21,7 @@ export function projectFiles(name: string): Readonly<Record<string, string>> {
       2,
     )}\n`,
 
-    ".gitignore": ["node_modules/", "dist/", ".assemblejs/", ""].join("\n"),
+    ".gitignore": ["node_modules/", "dist/", ".assemblejs/", "deploy/", ""].join("\n"),
 
     "src/server.ts": `import { createServer, describeConfig, readConfig } from "@assemblejs/core";
 import project from "../.assemblejs/project.js";
