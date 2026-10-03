@@ -70,6 +70,18 @@ describe("writing each assembly's stylesheet", () => {
     expect(writeStyles(root, [found], new Map(), realIo).get("cart")?.shadow).toBeUndefined();
   });
 
+  it("writes a template view no shadow sheet either", () => {
+    const root = project();
+    const found = {
+      ...assembly(root, [join(root, "src", "assemblies", "cart", "cart.css")]),
+      view: join(root, "src", "assemblies", "cart", "cart.ejs"),
+      renderer: "ejs",
+    };
+    const styles = writeStyles(root, [found], new Map(), realIo).get("cart");
+    expect(styles?.scoped).toBeDefined();
+    expect(styles?.shadow).toBeUndefined();
+  });
+
   it("writes nothing, and links nothing, for an assembly with no styles", () => {
     const root = project();
     expect(writeStyles(root, [assembly(root, [])], new Map(), realIo).size).toBe(0);

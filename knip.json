@@ -35,6 +35,11 @@
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
       "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte", "vue"]
+    },
+    "examples/templates": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": ["@assemblejs/renderer-templates"]
     }
   }
 }

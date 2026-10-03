@@ -67,7 +67,7 @@ export function buildProblems(
         fix: `install ${known.package}`,
       });
     }
-    if (assembly.client !== undefined) {
+    if (assembly.client !== undefined && known.template !== true) {
       problems.push({
         path: assembly.client,
         rule: "one-framework-per-assembly",

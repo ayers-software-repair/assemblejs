@@ -39,9 +39,11 @@ describe("rendering an assembly for an agent", () => {
     expect(rendered.html).toContain(`<script type="application/json"`);
   });
 
-  it("renders markdown, whose file is also its own output", () => {
+  it("refuses markdown, whose source only its renderer turns into markup", () => {
     assembly("notes", "notes.md", "# Notes");
-    expect(renderAssembly(root, "notes").problems).toEqual([]);
+    const rendered = renderAssembly(root, "notes");
+    expect(rendered.html).toBe("");
+    expect(rendered.problems.join()).toContain("only its renderer turns into markup");
   });
 
   // The expert behaviour: it says what it cannot do and why, rather than approximating.
@@ -51,7 +53,7 @@ describe("rendering an assembly for an agent", () => {
     assembly("counter", "counter.react.tsx", "export default () => null;");
     const rendered = renderAssembly(root, "counter");
     expect(rendered.html).toBe("");
-    expect(rendered.problems.join()).toContain("has to be compiled");
+    expect(rendered.problems.join()).toContain("only its renderer turns into markup");
     expect(rendered.problems.join()).toContain("react");
   });
 

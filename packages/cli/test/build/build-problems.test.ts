@@ -53,6 +53,21 @@ describe("what would stop a build, found before the bundler runs", () => {
     });
   });
 
+  it("names the templates package for a template view, which may have a .client.ts", () => {
+    const root = mkdtempSync(join(tmpdir(), "bare-"));
+    writeFileSync(join(root, "package.json"), "{}");
+    const problems = buildProblems(root, [assembly("pug", "a.client.ts")]);
+    expect(problems).toContainEqual(
+      expect.objectContaining({
+        rule: "a-view-needs-its-renderer",
+        fix: "install @assemblejs/renderer-templates",
+      }),
+    );
+    expect(problems).not.toContainEqual(
+      expect.objectContaining({ rule: "one-framework-per-assembly" }),
+    );
+  });
+
   it("includes a stylesheet the build cannot carry into dist/ intact", () => {
     const css = join(mkdtempSync(join(tmpdir(), "css-")), "a.css");
     writeFileSync(css, ".a { color: red");

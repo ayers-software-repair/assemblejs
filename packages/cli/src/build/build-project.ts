@@ -6,6 +6,7 @@ import { build } from "esbuild";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
+import { isStaticView } from "../discovery/is-static-view.js";
 import { generateApis } from "../generate/generate-apis.js";
 import { generatePages } from "../generate/generate-pages.js";
 import { generateProject } from "../generate/generate-project.js";
@@ -54,7 +55,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
   rmSync(join(root, "dist"), { recursive: true, force: true });
   rmSync(generated, { recursive: true, force: true });
   const browser = found.assemblies.filter(
-    (assembly) => assembly.renderer !== "html" || assembly.client !== undefined,
+    (assembly) => !isStaticView(assembly.renderer) || assembly.client !== undefined,
   );
 
   try {

@@ -1115,3 +1115,27 @@ A fresh review of the Solid and Lit renderers found, and this round fixed:
 Equivalent mutant recorded: in carrying Solid's registry over, skipping keys the new registry
 already holds changes nothing, because no two placements share a key prefix; the check was
 removed rather than kept untested.
+
+## 2026-10-03: B-17, the template languages
+
+- **One package, one render function, five engines.** `@assemblejs/renderer-templates` renders
+  EJS (`.ejs`), Handlebars (`.hbs`), Markdown (`.md`), Nunjucks (`.njk`) and Pug (`.pug`) through
+  `renderTemplate(engine, source, input)`. Each engine is imported the first time a template in
+  its language renders, so the package itself imports none, and each template compiles once. A
+  failed engine load or a failed compile is not remembered, so it fails the same way each time.
+- **A template view is a static view, as html is.** The build reads it as text and the registry
+  renders it on the server; it has no browser half of its own, a `.client.ts` gives it one, and
+  it gets no shadow stylesheet. One CLI concept, `isStaticView`, now answers this for html and
+  the five languages where `"html"` was tested in five places.
+- **`data` is escaped and `children` is HTML.** Each engine's default output escapes; children
+  arrive as safe strings in Handlebars and Nunjucks and are written by the raw form in EJS and
+  Pug. (Core passes no children to a local view yet, so the raw form is held by unit tests.)
+- **A view is one file.** An include, extends or partial throws at render. Found: EJS reads an
+  included file from disk when it is there; an includer that throws now refuses it, held by a
+  test that includes a real file.
+- **Markdown is prose:** it reads no data, places no children, and shows HTML inside it as text;
+  an `.html` view is the place for markup.
+- **The agent surface no longer previews Markdown.** Found: it showed a Markdown view's source
+  as its rendered markup, which is exactly the approximation it exists to refuse. It previews
+  html alone and refuses the rest with the reason.
+- `examples/templates` places one assembly per language, with a service's data, on one page.

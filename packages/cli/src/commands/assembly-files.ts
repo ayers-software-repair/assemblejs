@@ -9,6 +9,14 @@ const pascal = (name: string): string =>
 
 const VIEWS: Readonly<Record<string, (name: string) => readonly [string, string]>> = {
   html: (name) => [`${name}.html`, `<p>${name}</p>\n`],
+  ejs: (name) => [`${name}.ejs`, `<p><%= data.title ?? "${name}" %></p>\n`],
+  handlebars: (name) => [
+    `${name}.hbs`,
+    `<p>{{#if data.title}}{{data.title}}{{else}}${name}{{/if}}</p>\n`,
+  ],
+  markdown: (name) => [`${name}.md`, `# ${name}\n`],
+  nunjucks: (name) => [`${name}.njk`, `<p>{{ data.title or "${name}" }}</p>\n`],
+  pug: (name) => [`${name}.pug`, `p= data.title || "${name}"\n`],
   react: (name) => [
     `${name}.react.tsx`,
     `import type { AssemblyProps } from "@assemblejs/renderer-react";

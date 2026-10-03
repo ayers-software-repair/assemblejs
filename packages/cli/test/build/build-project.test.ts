@@ -183,6 +183,50 @@ describe("building what the command line scaffolds, in Solid and Lit", { timeout
   });
 });
 
+// Nested in the example that installs the templates package.
+const templates = fileURLToPath(new URL("../../../../examples/templates/", import.meta.url));
+
+describe("building what the command line scaffolds, in each template language", () => {
+  it.each([
+    ["ejs", "<p>notice</p>"],
+    ["handlebars", "<p>notice</p>"],
+    ["markdown", "<h1>notice</h1>"],
+    ["nunjucks", "<p>notice</p>"],
+    ["pug", "<p>notice</p>"],
+  ])(
+    "generates, builds and runs a project with a %s assembly",
+    { timeout: 60_000 },
+    async (renderer, markup) => {
+      const root = mkdtempSync(join(templates, ".dev-scaffold-"));
+      try {
+        for (const [path, contents] of Object.entries(projectFiles(renderer))) {
+          realIo.write(join(root, path), contents);
+        }
+        const plan = planAssembly("notice", renderer, false);
+        if ("problem" in plan) throw new Error(plan.problem.message);
+        for (const [path, contents] of Object.entries(plan.files)) {
+          realIo.write(join(root, path), contents);
+        }
+        const home = join(root, "src", "pages", "home", "home.html");
+        writeFileSync(home, readFileSync(home, "utf8").replace("</body>", `${plan.tag}\n</body>`));
+        const { io, errors } = capture();
+        expect(await buildProject(root, io)).toBe(0);
+        expect(errors).toEqual([]);
+        const page = await serve(root, "/");
+        expect(page).toMatch(
+          new RegExp(
+            `<assembly-root data-name="notice"[^>]*data-renderer="${renderer}"[^>]*>${markup}`,
+          ),
+        );
+        // Server markup and nothing more: no browser half, so no script on the page.
+        expect(page).not.toContain('<script type="module"');
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
+});
+
 describe("building a project with styles and no browser script", { timeout: 60_000 }, () => {
   it("serves its stylesheets all the same", async () => {
     const root = mkdtempSync(join(example, ".dev-styles-"));

@@ -1,22 +1,29 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
+import { isStaticView } from "../discovery/is-static-view.js";
+import { TEMPLATE_RENDERERS } from "../discovery/template-renderers.js";
 import type { AssemblyStyles } from "../styles/assembly-styles.js";
 import { GENERATED_HEADER } from "./generated-header.js";
 import { identifierFor } from "./identifier-for.js";
 import { importPath } from "./import-path.js";
+
+// The package every template language renders through, and the name its one render function is
+// imported under.
+const TEMPLATE_PACKAGE = "@assemblejs/renderer-templates";
+const TEMPLATE_RENDER = "render_template";
 
 /**
  * The module the built server imports its assemblies from, and the author never opens.
  *
  * Every view is imported by name, so the built server has a static import graph and nothing
  * globs a directory at run time. A framework view is wired to its renderer's `renderToMarkup`;
- * a plain html view is its own markup. A framework view's own `mount` and `shadow` exports, when
- * it has them, say when its browser half runs and whether it renders in its own shadow root; a
- * module without one reads as undefined, the default; a view in its own shadow root links the
- * stylesheet built for that root instead of the one scoped to its envelope. An
- * assembly with a browser half links the build's client entry; one without is declared `none`,
- * so it ships no JavaScript at all.
+ * a plain html view is its own markup; a template view is its source, rendered by its engine. A
+ * framework view's own `mount` and `shadow` exports, when it has them, say when its browser half
+ * runs and whether it renders in its own shadow root; a module without one reads as undefined,
+ * the default; a view in its own shadow root links the stylesheet built for that root instead of
+ * the one scoped to its envelope. An assembly with a browser half links the build's client
+ * entry; one without is declared `none`, so it ships no JavaScript at all.
  */
 export function generateRegistry(
   assemblies: readonly DiscoveredAssembly[],
@@ -33,15 +40,18 @@ export function generateRegistry(
 ): string {
   const imports: string[] = [];
   const renderers = new Set<string>();
+  let templates: string | undefined;
   const entries = assemblies.map((assembly) => {
     const view = identifierFor("view", assembly.name);
-    const html = assembly.renderer === "html";
+    const html = isStaticView(assembly.renderer);
+    const template = TEMPLATE_RENDERERS.includes(assembly.renderer);
     imports.push(
       html
         ? `import ${view} from "${importPath(options.from, assembly.view)}";`
         : `import * as ${view} from "${importPath(options.from, assembly.view)}";`,
     );
     if (!html) renderers.add(assembly.renderer);
+    if (template) templates = options.packages[assembly.renderer] ?? TEMPLATE_PACKAGE;
 
     const fields = [`renderer: "${assembly.renderer}"`];
     if (assembly.service !== undefined) {
@@ -50,9 +60,11 @@ export function generateRegistry(
       fields.push(`services: [${service}]`);
     }
     fields.push(
-      html
-        ? `markup: () => ${view}`
-        : `markup: (input) => ${identifierFor("render", assembly.renderer)}(${view}.default, input)`,
+      template
+        ? `markup: (input) => ${TEMPLATE_RENDER}("${assembly.renderer}", ${view}, input)`
+        : html
+          ? `markup: () => ${view}`
+          : `markup: (input) => ${identifierFor("render", assembly.renderer)}(${view}.default, input)`,
     );
 
     const parts = [`name: "${assembly.name}"`, `views: { default: { ${fields.join(", ")} } }`];
@@ -77,6 +89,9 @@ export function generateRegistry(
     const from = options.packages[renderer] ?? `@assemblejs/renderer-${renderer}`;
     return `import { renderToMarkup as ${identifierFor("render", renderer)} } from "${from}";`;
   });
+  if (templates !== undefined) {
+    rendererImports.push(`import { renderTemplate as ${TEMPLATE_RENDER} } from "${templates}";`);
+  }
 
   return `${GENERATED_HEADER}
 import type { AssemblyDefinition } from "@assemblejs/core";

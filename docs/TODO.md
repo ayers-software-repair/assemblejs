@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-16 are done, with the
+**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-17 are done, with the
 findings of their independent reviews fixed; `pnpm check` is green on every landing commit, on a
 fresh clone as well, and the browser suite (`pnpm test:browser`) passes. The commits are
 local: GitHub refused this session's push (403, the Claude GitHub App's access to the
@@ -27,9 +27,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-17, then onward in ledger order.
+**THE EXACT NEXT STEP:** B-18, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** B-17 templates -> B-18 SSE -> B-19 devtools
+**ORDER AND DEPENDENCIES of the open rows:** B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
@@ -245,7 +245,10 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         an element's own styles are adopted when it hydrates
   - [x] the page carrying all six, in Chromium: html, React, Svelte, Preact, Vue, Solid and Lit
         assemblies, each keeping the element the server sent and heard by every other
-- [ ] B-17 the template engines
+- [x] B-17 the template engines: EJS, Handlebars, Markdown, Nunjucks and Pug through
+      `@assemblejs/renderer-templates`, each engine imported on first use and each template
+      compiled once; `data` escaped, `children` raw; one project per language scaffolded, built
+      and served, five of five
 - [ ] B-18 real-time over server-sent events
 - [ ] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
       development only and under the framework's prefix (DECISIONS, 2026-10-03, "dev is the

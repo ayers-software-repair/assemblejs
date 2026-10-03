@@ -9,6 +9,10 @@ describe("choosing a renderer from a file name", () => {
     expect(rendererForView("cart.vue")).toBe("vue");
     expect(rendererForView("cart.html")).toBe("html");
     expect(rendererForView("cart.md")).toBe("markdown");
+    expect(rendererForView("cart.ejs")).toBe("ejs");
+    expect(rendererForView("cart.hbs")).toBe("handlebars");
+    expect(rendererForView("cart.njk")).toBe("nunjucks");
+    expect(rendererForView("cart.pug")).toBe("pug");
   });
 
   // React, Preact and Solid all write .tsx. A file that does not say which is a file whose

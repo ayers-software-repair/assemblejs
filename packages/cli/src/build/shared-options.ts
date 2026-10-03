@@ -31,7 +31,15 @@ export function sharedOptions(options: {
     write: true,
     logLevel: "silent",
     jsx: "automatic",
-    loader: { ".html": "text", ".md": "text", ".css": "empty" },
+    loader: {
+      ".html": "text",
+      ".md": "text",
+      ".ejs": "text",
+      ".hbs": "text",
+      ".njk": "text",
+      ".pug": "text",
+      ".css": "empty",
+    },
     plugins,
   };
 }

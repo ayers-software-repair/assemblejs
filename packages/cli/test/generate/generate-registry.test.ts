@@ -131,4 +131,24 @@ describe("generating the registry the built server imports", () => {
       'css: [view_hi.shadow === true ? "/s/hi-1.shadow.css" : "/s/hi-1.css"]',
     );
   });
+
+  it("renders a template view's source by its engine, through the one templates package", () => {
+    const source = generate([
+      found("notes", "notes.md", "markdown"),
+      found("cart", "cart.njk", "nunjucks", { client: "/p/src/assemblies/cart/cart.client.ts" }),
+    ]);
+    expect(source).toContain('import view_notes from "../src/assemblies/notes/notes.md";');
+    expect(
+      source.match(
+        /import \{ renderTemplate as render_template \} from "@assemblejs\/renderer-templates";/g,
+      )?.length,
+    ).toBe(1);
+    expect(source).toContain('markup: (input) => render_template("markdown", view_notes, input)');
+    expect(source).toContain('markup: (input) => render_template("nunjucks", view_cart, input)');
+    // No browser half of its own: none without a .client.ts, the client entry with one.
+    expect(source).toMatch(/name: "notes".*mount: "none"/);
+    expect(source).not.toMatch(/name: "cart".*mount:/);
+    expect(source).not.toContain("view_cart.shadow");
+    expect(source).not.toContain("renderToMarkup");
+  });
 });

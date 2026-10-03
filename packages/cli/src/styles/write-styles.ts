@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { isAbsolute, join, relative, sep } from "node:path";
 import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
+import { isStaticView } from "../discovery/is-static-view.js";
 import type { Io } from "../io/io.js";
 import type { AssemblyStyles } from "./assembly-styles.js";
 import { carryReferences } from "./carry-references.js";
@@ -59,10 +60,9 @@ export function writeStyles(
     const isolated = sources.map((source) => shadowCss(source.css, source.file));
     styles.set(assembly.name, {
       scoped: write(assembly.name, [...scoped, ...tail], ""),
-      shadow:
-        assembly.renderer === "html"
-          ? undefined
-          : write(assembly.name, [...isolated, ...tail], ".shadow"),
+      shadow: isStaticView(assembly.renderer)
+        ? undefined
+        : write(assembly.name, [...isolated, ...tail], ".shadow"),
     });
   }
   return styles;

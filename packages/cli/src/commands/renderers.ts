@@ -6,9 +6,14 @@
  * build: a scaffold that does not build is the first thing a new author would meet.
  */
 export const RENDERERS: readonly string[] = [
+  "ejs",
+  "handlebars",
   "html",
   "lit",
+  "markdown",
+  "nunjucks",
   "preact",
+  "pug",
   "react",
   "solid",
   "svelte",

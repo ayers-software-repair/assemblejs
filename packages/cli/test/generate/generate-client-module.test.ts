@@ -39,4 +39,18 @@ describe("one assembly's browser half, as its own module", () => {
     );
     expect(source).toContain('export { default } from "../../src/assemblies/hi/hi.client.js";');
   });
+
+  it("re-exports a template view's own browser behaviour, as for html", () => {
+    const source = generateClientModule(
+      assembly({
+        renderer: "handlebars",
+        view: "/p/src/assemblies/hi/hi.hbs",
+        client: "/p/src/assemblies/hi/hi.client.ts",
+      }),
+      "/p/.assemblejs/client",
+      "@assemblejs/renderer-templates",
+    );
+    expect(source).toContain('export { default } from "../../src/assemblies/hi/hi.client.js";');
+    expect(source).not.toContain("hydrate");
+  });
 });

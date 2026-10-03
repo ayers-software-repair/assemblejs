@@ -420,8 +420,10 @@ export type MountHandle = { unmount(): void };
 
 The view file's extension picks the renderer. Where an extension is shared, the filename says
 which: `cart.react.tsx`, `cart.preact.tsx`, `cart.solid.tsx`, and `cart.lit.ts` among a
-project's own TypeScript. `cart.svelte`, `cart.vue`, `cart.md` and `cart.html` need no infix. A
-page's frameworks are then visible from a directory listing.
+project's own TypeScript. `cart.svelte`, `cart.vue`, `cart.md` and `cart.html` need no infix,
+and nor do the template languages, `cart.ejs`, `cart.hbs`, `cart.njk` and `cart.pug`, which with
+`cart.md` render through `@assemblejs/renderer-templates`. A page's frameworks are then visible
+from a directory listing.
 
 Renderers ship one per package with one real peer dependency, so installing the framework you
 use does not install the five you do not.

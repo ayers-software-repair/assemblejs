@@ -8,6 +8,10 @@ const BY_EXTENSION: Readonly<Record<string, string>> = {
   ".svelte": "svelte",
   ".vue": "vue",
   ".md": "markdown",
+  ".ejs": "ejs",
+  ".hbs": "handlebars",
+  ".njk": "nunjucks",
+  ".pug": "pug",
 };
 const AMBIGUOUS = new Set([".tsx", ".jsx"]);
 

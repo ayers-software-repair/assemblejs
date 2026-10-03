@@ -11,4 +11,9 @@ export interface RendererPackage {
    * needs one installed first (Lit's hydration support).
    */
   readonly browserSetup?: string;
+  /**
+   * Its views are templates, read as text and rendered by the package's
+   * `renderTemplate(name, source, input)`, with no browser half of their own.
+   */
+  readonly template?: true;
 }

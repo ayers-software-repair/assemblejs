@@ -15,8 +15,8 @@ import type { RenderedAssembly } from "./rendered-assembly.js";
  * agent that has just written an assembly can see what it renders without starting a server,
  * opening a browser, or asking the developer to look. It closes its own loop.
  *
- * A framework view is source that must be compiled, so it is REFUSED with the reason rather
- * than approximated. Showing an agent something that is not what will ship is worse than
+ * A framework or template view is source that only its renderer turns into markup, so it is
+ * REFUSED with the reason rather than approximated. Showing an agent something that is not what will ship is worse than
  * showing it nothing, because it will believe it.
  */
 export function renderAssembly(root: ProjectRoot, name: string): RenderedAssembly {
@@ -46,7 +46,7 @@ export function renderAssembly(root: ProjectRoot, name: string): RenderedAssembl
       html: "",
       data: {},
       problems: [
-        `"${name}" is a ${found.renderer} assembly, which is source that has to be compiled before it renders. Build the project and render it from the running server instead. Showing you an approximation here would be showing you something that is not what ships.`,
+        `"${name}" is a ${found.renderer} assembly, whose view is source that only its renderer turns into markup. Build the project and render it from the running server instead. Showing you the source here would be showing you something that is not what ships.`,
       ],
     };
   }

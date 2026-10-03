@@ -7,7 +7,15 @@ describe("what both bundles agree on", () => {
   it("reads a template as text and leaves stylesheets out until they are scoped", () => {
     const options = sharedOptions({ root: "/p", side: "server", assemblies: [], compilers: {} });
     expect(options.absWorkingDir).toBe("/p");
-    expect(options.loader).toEqual({ ".html": "text", ".md": "text", ".css": "empty" });
+    expect(options.loader).toEqual({
+      ".html": "text",
+      ".md": "text",
+      ".ejs": "text",
+      ".hbs": "text",
+      ".njk": "text",
+      ".pug": "text",
+      ".css": "empty",
+    });
     expect(options.jsx).toBe("automatic");
     expect(options.plugins?.map((plugin) => plugin.name)).toEqual(["assemblejs-jsx"]);
   });
