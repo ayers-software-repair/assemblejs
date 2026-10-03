@@ -232,6 +232,29 @@ describe("a placement that declared a cache lifetime", () => {
     await compose(options({ template, plan, fetch, cache, headers: { cookie: "s=1" } }));
     expect(requests).toBe(2);
   });
+
+  it("never serves one visitor's answer to another who sent a different forwarded header", async () => {
+    const store = new Map<string, { html: string }>();
+    const cache = {
+      get: (key: string) => store.get(key),
+      set: (key: string, value: { html: string }) => void store.set(key, value),
+    };
+    let up = true;
+    const fetch: Fetch = async (request) =>
+      up
+        ? { ok: true, html: `<p>${request.headers["x-user"] ?? ""}</p>`, source: "remote" }
+        : { ok: false, reason: "status", detail: "503", correlationId: "c" };
+    const plan = { a: { name: "a", view: "default", deadline: 1000, cache: { ttl: 60_000 } } };
+    const template = `<main><assembly name="a"/></main>`;
+    const as = (user: string) =>
+      compose(options({ template, plan, fetch, cache, headers: { "x-user": user } }));
+    await as("alice");
+    expect((await as("bob")).html).toBe("<main><p>bob</p></main>");
+    // Nor as the last good content when the next request fails.
+    up = false;
+    expect((await as("carol")).html).not.toContain("alice");
+    expect((await as("alice")).html).toBe("<main><p>alice</p></main>");
+  });
 });
 
 describe("the size cap", () => {

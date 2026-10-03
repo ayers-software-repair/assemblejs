@@ -11,6 +11,7 @@ export interface AssemblyManifest {
   readonly version: string;
   readonly views: readonly string[];
   readonly renderer: string;
+  /** The browser files a page that places this assembly links in its own head. */
   readonly assets: { readonly css: readonly string[]; readonly js: readonly string[] };
   readonly public: boolean;
 }

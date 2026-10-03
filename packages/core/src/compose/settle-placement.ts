@@ -61,7 +61,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     input.cache !== undefined &&
     !carriesCredential(input.headers)
   ) {
-    const held = input.cache.get(cacheKey(name, view, input.query, plan?.url));
+    const held = input.cache.get(keyOf(input));
     if (held !== undefined) return { html: held.html, diagnostic: at("cache") };
   }
 
@@ -170,11 +170,11 @@ function write(input: SettleInput, html: string, version: string | undefined): v
   const ttl = input.plan?.cache?.ttl ?? 0;
   if (ttl <= 0 || input.cache === undefined) return;
   if (carriesCredential(input.headers)) return;
-  input.cache.set(
-    cacheKey(input.name, input.view, input.query, input.plan?.url),
-    version === undefined ? { html } : { html, version },
-    ttl,
-  );
+  input.cache.set(keyOf(input), version === undefined ? { html } : { html, version }, ttl);
+}
+
+function keyOf(input: SettleInput): string {
+  return cacheKey(input.name, input.view, input.query, input.plan?.url, input.headers);
 }
 
 function fallBack(
@@ -187,7 +187,7 @@ function fallBack(
   // content is still held has not failed: the ladder answered it. Throwing first killed pages
   // over an outage the cache was there to absorb.
   if (input.cache !== undefined && !carriesCredential(input.headers)) {
-    const held = input.cache.get(cacheKey(input.name, input.view, input.query, input.plan?.url));
+    const held = input.cache.get(keyOf(input));
     if (held !== undefined) {
       return { html: held.html, diagnostic: { ...diagnostic, source: "cache", reason } };
     }

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync } from "node:fs";
 import { projectFiles, realIo, suggestName } from "@assemblejs/cli";
+import { isOccupied } from "../root/is-occupied.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";
@@ -30,8 +30,8 @@ export function createProject(root: ProjectRoot, name: string): ToolResult {
     };
   }
   const files = projectFiles(name);
-  const present = Object.keys(files).filter((path) => existsSync(withinRoot(root, path)));
-  if (present.length > 0 || existsSync(withinRoot(root, "src"))) {
+  const present = Object.keys(files).filter((path) => isOccupied(withinRoot(root, path)));
+  if (present.length > 0 || isOccupied(withinRoot(root, "src"))) {
     return {
       ok: false,
       result: null,

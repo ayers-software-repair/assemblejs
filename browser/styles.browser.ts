@@ -4,6 +4,8 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { createServer } from "../packages/core/dist/index.js";
+import type { App } from "../packages/core/dist/index.js";
 
 // B-15 IN A REAL BROWSER, FROM A REAL BUILD. Only a real style engine can say whether a scoped
 // selector matches, whether an animation named in one stylesheet runs from another, and whether
@@ -32,9 +34,12 @@ test.beforeAll(async () => {
   });
 });
 
-test.afterAll(() => {
+test.afterAll(async () => {
   server?.kill();
+  await consumer?.close();
 });
+
+let consumer: App | undefined;
 
 test("two assemblies that use the same class name keep their own styles", async ({ page }) => {
   await page.goto(`${origin}/`);
@@ -100,5 +105,40 @@ test("an assembly in its own shadow root is isolated both ways, and still hydrat
       shadow: element.shadowRoot?.querySelectorAll("section").length,
     })),
   ).toEqual({ light: 0, shadow: 1 });
+  expect(errors).toEqual([]);
+});
+
+test("an assembly in its own shadow root, placed from another server, is styled there and nowhere else", async ({
+  page,
+}) => {
+  consumer = await createServer({
+    config: { mode: "production", host: "127.0.0.1", port: 0, auth: undefined },
+    assemblies: [],
+    remotes: [{ origin }],
+    pages: [
+      {
+        route: "/",
+        template:
+          '<!doctype html><html><head><title>consumer</title></head><body><p class="title" id="own">own</p><assembly name="panel"></assembly></body></html>',
+        place: { panel: { url: `${origin}/assembly/panel/` } },
+      },
+    ],
+  });
+  const { url } = await consumer.listen();
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("response", (response) => {
+    if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) {
+      errors.push(`${String(response.status())} ${response.url()}`);
+    }
+  });
+  await page.goto(url);
+  await expect(page.locator("#panel-title")).toHaveCSS("color", "rgb(0, 128, 0)");
+  // The remote's unscoped sheet is linked inside its root only, so the page's own .title keeps
+  // the browser's default colour.
+  await expect(page.locator("#own")).toHaveCSS("color", "rgb(0, 0, 0)");
+  expect(await page.locator('head link[rel="stylesheet"]').count()).toBe(0);
+  await page.locator("#panel-open").click();
+  await expect(page.locator("#panel-open")).toHaveText("Opened 1");
   expect(errors).toEqual([]);
 });

@@ -26,8 +26,8 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** the second B-13 review's findings (the row after B-13 below), then
-B-16, then onward in ledger order.
+**THE EXACT NEXT STEP:** the open review rows after B-13 below (the rest of the second B-13
+review, the B-15 review's findings), then B-16, then onward in ledger order.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
@@ -175,15 +175,24 @@ starts. Until the owner enables Actions, every proof is local only.
       read, for every transport), the manifest once per version with its assets hoisted, the
       per-placement cache keyed by url and answering a fresh entry before dispatch. Proof: two
       servers in one test, and a page hydrating another server's assemblies in Chromium
-- [ ] The second B-13 review's findings, each fixed with a test watched failing first:
-      a cached remote answer keyed without the forwarded headers it varied on (one visitor's
-      answer served to the next); "one envelope" checked by its first and last tag only, and an
-      unmarked or nested envelope in a remote answer mounted by the page runtime; the root guard
-      walked through by a dangling link; a hanging manifest failing a placement whose content
-      arrived, manifest reads uncapped and their assets allowed off the remote's origin; `check`
-      reporting every remote placement as a missing assembly; Ctrl-C in `dev` waiting forever on
-      a server that ignores SIGTERM. Low: the private-range list's gaps, the content type
-      matched by prefix, `dev`'s stop message on every restart, `dev` not watching the config
+- [x] The second B-13 review's remote and root findings, each with a test watched failing: a
+      cached answer now varies on the forwarded headers; a remote answer is read by a scanner
+      that follows the browser's tokenizer and tree rules and refuses what it cannot read
+      exactly (proved against Chromium over 100,000 seeded fragments), every envelope in it is
+      stamped with its origin, and the runtime takes an envelope's owner from its nearest
+      marked ancestor; the root guard follows dangling links; the manifest is read beside the
+      content under the cap, JSON only, its files on the remote's own origin
+- [ ] The rest of the second B-13 review: `check` reporting every remote placement as a missing
+      assembly; Ctrl-C in `dev` waiting forever on a server that ignores SIGTERM. Low: the
+      private-range list's gaps, `dev`'s stop message on every restart, `dev` not watching
+      the config
+- [ ] The B-15 review's open findings: a nested CSS rule without `&` scoped twice and dead;
+      `:scope` inside `:not()` or `:is()` making a rule global; a child Svelte component's
+      `<style>` left out; `url()` and relative `@import` in assembly CSS left pointing at
+      nothing; inline styles refused by the default policy and not documented. Low: `:root`,
+      `html`, `body` and an author's `:host` dead in a scoped sheet; `@scope`'s own `:scope`
+      rewritten; a CSS parse error not a structured problem; an html-only project with styles
+      and no script untested
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").

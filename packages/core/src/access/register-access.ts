@@ -35,7 +35,7 @@ export function registerAccess(
   app.addHook("onSend", async (_request, reply, payload) => {
     void reply.header("x-content-type-options", "nosniff");
     const type = String(reply.getHeader("content-type") ?? "");
-    if (type.startsWith("text/html"))
+    if (type.toLowerCase().startsWith("text/html"))
       void reply.header("content-security-policy", contentSecurityPolicy);
     return payload;
   });

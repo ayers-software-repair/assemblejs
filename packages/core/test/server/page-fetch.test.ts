@@ -27,7 +27,7 @@ describe("the one transport a page's composer is given", () => {
           seen.push(`remote ${req.name} ${url}`);
           return { ok: true, html: "", source: "remote" };
         },
-        assets: () => undefined,
+        assets: async () => undefined,
       },
     );
     await fetch(request("cart"));

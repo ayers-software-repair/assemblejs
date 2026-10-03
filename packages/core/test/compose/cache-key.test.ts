@@ -36,4 +36,20 @@ describe("the cache key", () => {
     expect(a).not.toBe(b);
     expect(a).not.toBe(cacheKey("cart", "default", new URLSearchParams()));
   });
+
+  it("varies on the headers the request carries, whatever order they arrived in", () => {
+    const query = new URLSearchParams();
+    const url = "https://a.example.com/assembly/cart/";
+    const alice = cacheKey("cart", "default", query, url, {
+      "x-user": "alice",
+      "accept-language": "de",
+    });
+    expect(alice).toBe(
+      cacheKey("cart", "default", query, url, { "accept-language": "de", "x-user": "alice" }),
+    );
+    expect(alice).not.toBe(
+      cacheKey("cart", "default", query, url, { "x-user": "bob", "accept-language": "de" }),
+    );
+    expect(alice).not.toBe(cacheKey("cart", "default", query, url));
+  });
 });

@@ -36,8 +36,9 @@ export function start(options: StartOptions): Runtime {
       // against markup it never produced.
       if (element.hasAttribute("data-failed")) continue;
       // Two runtimes share a page when it places a remote's assembly: each mounts what came from
-      // its own origin and leaves the other's alone, so no island is mounted twice.
-      const from = element.getAttribute("data-remote");
+      // its own origin and leaves the other's alone, so no island is mounted twice. An envelope
+      // inside a remote's envelope came from that remote too, marked or not.
+      const from = element.closest("[data-remote]")?.getAttribute("data-remote") ?? null;
       const page = typeof location === "undefined" ? undefined : location.origin;
       if (options.origin === undefined ? from !== null : (from ?? page) !== options.origin)
         continue;

@@ -2,22 +2,54 @@
 // SPDX-License-Identifier: Apache-2.0
 import { escapeAttribute } from "../encode/escape-attribute.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
-
-const OPENING = new RegExp(`^\\s*<${ENVELOPE_ELEMENT}(?=[\\s>])`, "i");
+import { scanFragment } from "./scan-fragment.js";
+import type { ScannedAttribute } from "./scanned-attribute.js";
 
 /**
- * A remote fragment with the origin it came from stamped on its envelope, or undefined when the
- * fragment is not one envelope at all. The browser runtime that owns that origin mounts it, and
- * no other runtime touches it. An envelope that already names an origin keeps it: it was
- * composed by the remote from a server further away.
+ * A remote's answer with the origin it came from stamped on every envelope in it, or why the
+ * answer was refused. The browser runtime that owns that origin mounts those envelopes, and no
+ * other runtime touches them. Every envelope is stamped, not only the outer one, and any origin
+ * the answer already named is replaced: a remote names no origin but its own, so an envelope it
+ * sends can never be mounted by the page's runtime, wherever it ends up in the document.
+ *
+ * A stylesheet the answer links by a path from its own root, as an assembly in its own shadow
+ * root does, is linked from the remote's origin, because on the page that path names the page's.
  */
-export function markRemote(html: string, origin: string): string | undefined {
-  const opening = OPENING.exec(html);
-  if (opening === null) return undefined;
-  if (!html.trimEnd().toLowerCase().endsWith(`</${ENVELOPE_ELEMENT}>`)) return undefined;
-  const at = opening.index + opening[0].length;
-  // A fragment that came from further away already names its own origin, which stays.
-  const tag = html.slice(at, html.indexOf(">", at));
-  if (/\sdata-remote=/i.test(tag)) return html;
-  return `${html.slice(0, at)} data-remote="${escapeAttribute(origin)}"${html.slice(at)}`;
+export function markRemote(
+  html: string,
+  origin: string,
+): { readonly html: string } | { readonly refused: string } {
+  const tags = scanFragment(html);
+  if (typeof tags === "string") return { refused: tags };
+  const stamp = ` data-remote="${escapeAttribute(origin)}"`;
+  let marked = "";
+  let from = 0;
+  for (const tag of tags) {
+    let attributes: readonly ScannedAttribute[];
+    let extra = "";
+    if (tag.name === ENVELOPE_ELEMENT) {
+      attributes = tag.attributes.filter((attribute) => attribute.name !== "data-remote");
+      extra = stamp;
+    } else if (tag.name === "link") {
+      attributes = tag.attributes.map((attribute) => fromOrigin(attribute, origin));
+    } else {
+      continue;
+    }
+    const kept = attributes.map((attribute) => ` ${attribute.source}`).join("");
+    marked += `${html.slice(from, tag.start)}<${tag.name}${extra}${kept}>`;
+    from = tag.end;
+  }
+  return { html: marked + html.slice(from) };
+}
+
+/** An `href` that is a path from the root, made absolute against the origin; others as sent. */
+function fromOrigin(attribute: ScannedAttribute, origin: string): ScannedAttribute {
+  if (attribute.name !== "href") return attribute;
+  const value = /^href\s*=\s*(["']?)(.*)\1$/is.exec(attribute.source);
+  const path = value?.[2] ?? "";
+  if (!path.startsWith("/") || path.startsWith("//")) return attribute;
+  return {
+    name: "href",
+    source: `href="${escapeAttribute(origin)}${path.replaceAll('"', "&quot;")}"`,
+  };
 }

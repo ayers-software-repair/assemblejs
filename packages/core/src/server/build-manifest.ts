@@ -28,7 +28,12 @@ export function buildManifest(
     version,
     views: Object.keys(definition.views),
     renderer: declared.renderer,
-    assets: { css: [...(definition.assets?.css ?? [])], js: [...(definition.assets?.js ?? [])] },
+    // The files a page links for this assembly. One in its own shadow root links its styles
+    // inside that root, so a page that linked them too would spread them over everything else.
+    assets: {
+      css: definition.shadow === true ? [] : [...(definition.assets?.css ?? [])],
+      js: [...(definition.assets?.js ?? [])],
+    },
     public: true,
   };
 }

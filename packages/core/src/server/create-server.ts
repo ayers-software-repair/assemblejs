@@ -11,6 +11,7 @@ import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
 import { createRemoteTransport } from "../remote/create-remote-transport.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
+import { ASSET_ROUTE_PREFIX } from "../vocab/asset-route-prefix.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
 import { accessProblems } from "./access-problems.js";
@@ -57,7 +58,12 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const problems = [
     ...bootProblems(options.assemblies, apis, pages, remotes),
     ...assetProblems(options.assemblies, files),
-    ...accessProblems(config.auth, options.authenticate, options.publicRoutes ?? []),
+    ...accessProblems(
+      config.auth,
+      options.authenticate,
+      options.publicRoutes ?? [],
+      options.contentSecurityPolicy,
+    ),
   ];
   if (problems.length > 0) throw new BootError(problems);
 
@@ -70,13 +76,19 @@ export async function createServer(options: ServerOptions): Promise<App> {
 
   registerFailures(app, log);
   // Before every route: the one decision, and the policy every html answer carries. Health is
-  // always public, because a load balancer that cannot read it takes the server out of service.
+  // always public, because a load balancer that cannot read it takes the server out of service;
+  // so are the built browser files, which a page on another origin loads to hydrate this
+  // server's assemblies, and which hold nothing a visitor's browser is not sent anyway.
   registerAccess(
     app,
     {
       basic: config.auth,
       authenticate: options.authenticate,
-      publicRoutes: [`${FRAMEWORK_ROUTE_PREFIX}/health`, ...(options.publicRoutes ?? [])],
+      publicRoutes: [
+        `${FRAMEWORK_ROUTE_PREFIX}/health`,
+        `${ASSET_ROUTE_PREFIX}/*`,
+        ...(options.publicRoutes ?? []),
+      ],
     },
     options.contentSecurityPolicy ?? contentSecurityPolicy(remotes.map((remote) => remote.origin)),
   );

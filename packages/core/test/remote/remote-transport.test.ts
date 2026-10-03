@@ -7,9 +7,9 @@ describe("the way to reach other servers", () => {
   it("is a fetch per url and the files each remote assembly declared", async () => {
     const transport: RemoteTransport = {
       fetch: async () => ({ ok: true, html: "", source: "remote" }),
-      assets: () => undefined,
+      assets: async () => undefined,
     };
-    expect(transport.assets("https://a.example.com/assembly/cart/")).toBeUndefined();
+    expect(await transport.assets("https://a.example.com/assembly/cart/")).toBeUndefined();
     expect((await transport.fetch("u", {} as never)).ok).toBe(true);
   });
 });

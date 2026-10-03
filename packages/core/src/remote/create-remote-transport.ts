@@ -10,8 +10,10 @@ import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { isPrivateAddress } from "./is-private-address.js";
 import { markRemote } from "./mark-remote.js";
+import { mediaType } from "./media-type.js";
 import { parseContentUrl } from "./parse-content-url.js";
 import { readCapped } from "./read-capped.js";
+import { readManifest } from "./read-manifest.js";
 import type { RemoteDefinition } from "./remote-definition.js";
 import type { RemoteTransport } from "./remote-transport.js";
 
@@ -24,9 +26,12 @@ import type { RemoteTransport } from "./remote-transport.js";
  * own network is refused unless that origin was declared as an address itself. Nothing of the
  * visitor's request is sent but the composition headers and the keys the remote declared. The
  * answer must be one envelope of text/html under the cap; the remote's response headers go no
- * further than here. The manifest is read once per version of the remote's output, and a
- * manifest that cannot be read is a logged warning and a retry, never a failed placement.
+ * further than here. The manifest is read once per version of the remote's output, beside the
+ * content rather than in front of it, and a manifest that cannot be read is a logged warning and
+ * a retry, never a failed placement.
  */
+const MANIFEST_DEADLINE = 1000;
+
 export function createRemoteTransport(options: {
   readonly remotes: readonly RemoteDefinition[];
   readonly maxBytes: number;
@@ -53,42 +58,35 @@ export function createRemoteTransport(options: {
     return { ok: false, reason, detail, correlationId };
   };
 
-  const readManifest = async (
-    manifest: string,
-    origin: string,
-    version: string,
-    signal: AbortSignal,
-  ) => {
-    try {
-      const response = await fetch(manifest, {
-        redirect: "error",
-        signal,
-        headers: { accept: "application/json" },
-      });
-      if (!response.ok) throw new Error(`the manifest answered ${response.status}`);
-      const body = (await response.json()) as { assets?: { css?: unknown; js?: unknown } };
-      const absolute = (list: unknown): string[] =>
-        Array.isArray(list)
-          ? list
-              .filter((item): item is string => typeof item === "string")
-              .map((item) => new URL(item, origin).href)
-          : [];
-      return {
-        version,
-        assets: { css: absolute(body.assets?.css), js: absolute(body.assets?.js) },
-      };
-    } catch (error) {
+  // The read in flight for a url, so concurrent first requests ask once between them.
+  const reading = new Map<string, Promise<void>>();
+  const learn = (url: string, manifest: string, origin: string, version: string): void => {
+    if (manifests.get(url)?.version === version || reading.has(url)) return;
+    const read = readManifest({
+      url: manifest,
+      origin,
+      maxBytes: options.maxBytes,
+      deadline: MANIFEST_DEADLINE,
+    }).then((assets) => {
+      reading.delete(url);
+      if (typeof assets !== "string") {
+        manifests.set(url, { version, assets });
+        return;
+      }
       options.log({
         correlationId: newCorrelationId(),
-        message: `remote manifest ${manifest} could not be read, and will be asked for again: ${error instanceof Error ? error.message : String(error)}`,
+        message: `remote manifest ${manifest} could not be read, and will be asked for again: ${assets}`,
         stack: undefined,
       });
-      return undefined;
-    }
+    });
+    reading.set(url, read);
   };
 
   return {
-    assets: (url) => manifests.get(url)?.assets,
+    assets: async (url) => {
+      await reading.get(url);
+      return manifests.get(url)?.assets;
+    },
     fetch: async (url, request) => {
       const target = parseContentUrl(url);
       const remote = target === undefined ? undefined : byOrigin.get(target.origin);
@@ -138,7 +136,7 @@ export function createRemoteTransport(options: {
         await response.body?.cancel();
         return failure("status", `${url} answered ${response.status}`);
       }
-      if (!(response.headers.get("content-type") ?? "").toLowerCase().startsWith("text/html")) {
+      if (mediaType(response.headers.get("content-type")) !== "text/html") {
         await response.body?.cancel();
         return failure(
           "content-type",
@@ -148,14 +146,16 @@ export function createRemoteTransport(options: {
       const body = await readCapped(response, options.maxBytes);
       if (body === undefined)
         return failure("too-large", `${url} answered more than ${options.maxBytes} bytes`);
-      const html = markRemote(body, target.origin);
-      if (html === undefined) return failure("invalid", `${url} did not answer one envelope`);
-
-      const version = response.headers.get("assembly-version") ?? undefined;
-      if (version !== undefined && manifests.get(url)?.version !== version) {
-        const read = await readManifest(target.manifest, target.origin, version, request.signal);
-        if (read !== undefined) manifests.set(url, read);
+      const marked = markRemote(body, target.origin);
+      if ("refused" in marked) {
+        return failure("invalid", `${url} did not answer one envelope: ${marked.refused}`);
       }
+      const { html } = marked;
+
+      // The content has arrived, so the placement is answered now; the manifest is learned
+      // beside it and never holds it.
+      const version = response.headers.get("assembly-version") ?? undefined;
+      if (version !== undefined) learn(url, target.manifest, target.origin, version);
       return version === undefined
         ? { ok: true, html, source: "remote" }
         : { ok: true, html, source: "remote", version };

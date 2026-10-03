@@ -34,7 +34,7 @@ package.json. Every `packages/*/src/**/*.ts` opens with:
 ## Commands
 
     pnpm install
-    pnpm check            # identity, headers, lint, typecheck, test, build, pack: what CI runs
+    pnpm check            # identity, headers, lint, typecheck, build, test, pack: what CI runs
     pnpm --filter @assemblejs/core dev
 
 ## Rules that are hooks, not requests (.claude/hooks/)

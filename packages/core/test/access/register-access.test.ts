@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readFileSync, readdirSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -19,13 +20,22 @@ const hello = defineAssembly({
 });
 const credentials = `Basic ${Buffer.from("ada:pw").toString("base64")}`;
 
+// A built browser file, so the asset route has something to serve.
+const assets = mkdtempSync(join(tmpdir(), "access-assets-"));
+mkdirSync(join(assets, "styles"));
+writeFileSync(join(assets, "styles", "hello-1.css"), "p{}");
+
 let app: App;
 beforeAll(async () => {
   app = await createServer({
+    assets,
     config: config({ user: "ada", password: "pw" }),
     log: () => undefined,
     assemblies: [hello],
-    apis: [defineApi({ path: "/api/open", handle: () => ({ open: true }) })],
+    apis: [
+      defineApi({ path: "/api/open", handle: () => ({ open: true }) }),
+      defineApi({ path: "/api/closed", method: "POST", handle: () => ({ closed: true }) }),
+    ],
     pages: [{ route: "/", template: '<body><assembly name="hello"></assembly></body>' }],
     publicRoutes: ["/api/open"],
     remotes: [{ origin: "https://checkout.example.com" }],
@@ -61,9 +71,24 @@ describe("the one access decision, in front of everything", () => {
     expect((await app.inject({ method: "GET", url: "/no/such/thing" })).statusCode).toBe(401);
   });
 
-  it("lets the declared public routes and the health check through", async () => {
+  it("decides before the body is read, so a malformed body is still a 401", async () => {
+    const refused = await app.inject({
+      method: "POST",
+      url: "/api/closed",
+      headers: { "content-type": "application/json" },
+      payload: "{ not json",
+    });
+    expect(refused.statusCode).toBe(401);
+  });
+
+  it("lets the declared public routes, the health check and the built browser files through", async () => {
     expect((await app.inject({ method: "GET", url: "/api/open" })).statusCode).toBe(200);
     expect((await app.inject({ method: "GET", url: "/_assemblejs/health" })).statusCode).toBe(200);
+    // A page on another origin loads these with no credentials to hydrate this server's assemblies.
+    expect(
+      (await app.inject({ method: "GET", url: "/_assemblejs/assets/styles/hello-1.css" }))
+        .statusCode,
+    ).toBe(200);
   });
 
   it("puts the default policy, with the declared remotes, on every html answer", async () => {
@@ -91,7 +116,7 @@ describe("the one access decision, in front of everything", () => {
     };
     walk(src);
     const deciding = files.filter((file) =>
-      /code\(401\)|decideAccess\(|matchesBasic\(/.test(readFileSync(file, "utf8")),
+      /(code|status)\(40[13]\)|decideAccess\(|matchesBasic\(/.test(readFileSync(file, "utf8")),
     );
     expect(deciding.map((file) => file.slice(src.length)).sort()).toEqual([
       "access/decide-access.ts",
@@ -132,5 +157,33 @@ describe("refusing to be built with two deciders", () => {
       ).statusCode,
     ).toBe(200);
     await custom.close();
+  });
+
+  it("admits only a check that answers true, never one that answers something truthy", async () => {
+    const loose = await createServer({
+      config: config(),
+      log: () => undefined,
+      assemblies: [hello],
+      authenticate: () => "yes" as unknown as boolean,
+    });
+    expect((await loose.inject({ method: "GET", url: "/assembly/hello/" })).statusCode).toBe(401);
+    await loose.close();
+  });
+
+  it("sends the project's own policy in place of the default, and refuses a blank one", async () => {
+    const own = await createServer({
+      config: config(),
+      log: () => undefined,
+      assemblies: [hello],
+      pages: [{ route: "/", template: '<body><assembly name="hello"></assembly></body>' }],
+      contentSecurityPolicy: "default-src 'none'",
+    });
+    expect((await own.inject({ method: "GET", url: "/" })).headers["content-security-policy"]).toBe(
+      "default-src 'none'",
+    );
+    await own.close();
+    await expect(
+      createServer({ config: config(), assemblies: [], contentSecurityPolicy: " " }),
+    ).rejects.toThrow(/policy is blank/);
   });
 });

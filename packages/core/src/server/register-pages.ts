@@ -91,7 +91,9 @@ export function registerPages(
         }
         const url = Object.hasOwn(plan, diagnostic.name) ? plan[diagnostic.name]?.url : undefined;
         const declared =
-          url === undefined ? assemblies.get(diagnostic.name)?.assets : options.remote.assets(url);
+          url === undefined
+            ? assemblies.get(diagnostic.name)?.assets
+            : await options.remote.assets(url);
         // A shadow assembly's styles are linked inside its shadow root, never in the page.
         const shadow = url === undefined && assemblies.get(diagnostic.name)?.shadow === true;
         if (!shadow) assets.css.push(...(declared?.css ?? []));

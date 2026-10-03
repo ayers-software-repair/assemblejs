@@ -7,12 +7,17 @@ import { createRemoteTransport } from "@assemblejs/core";
 import type { AssemblyRequest, LogLine } from "@assemblejs/core";
 
 // A remote server that misbehaves on purpose, one route per way a remote can be wrong.
-let manifestReads = 0;
+// Manifest reads by path, so a read another test started in the background is never counted.
+const manifestReads = new Map<string, number>();
 const remote = createHttpServer((request, response) => {
+  if (request.url?.endsWith("/manifest/") === true) {
+    manifestReads.set(request.url, (manifestReads.get(request.url) ?? 0) + 1);
+  }
   const envelope = (body: string) =>
     `<assembly-root data-name="echo" data-id="x" data-view="default" data-renderer="html">${body}</assembly-root>`;
   switch (request.url) {
     case "/assembly/echo/":
+    case "/assembly/once/":
       response.writeHead(200, {
         "content-type": "text/html; charset=utf-8",
         "assembly-version": "v1",
@@ -21,9 +26,49 @@ const remote = createHttpServer((request, response) => {
       response.end(envelope(JSON.stringify(request.headers)));
       return;
     case "/assembly/echo/default/manifest/":
-      manifestReads += 1;
+    case "/assembly/once/default/manifest/":
       response.writeHead(200, { "content-type": "application/json" });
       response.end(JSON.stringify({ assets: { css: [], js: ["/_assemblejs/assets/r.js"] } }));
+      return;
+    case "/assembly/hanging/":
+      response.writeHead(200, { "content-type": "text/html", "assembly-version": "h1" });
+      response.end(envelope("arrived"));
+      return;
+    case "/assembly/hanging/default/manifest/":
+      return; // never answers
+    case "/assembly/wide/":
+    case "/assembly/wider/":
+      response.writeHead(200, { "content-type": "text/html", "assembly-version": "w1" });
+      response.end(envelope("wide"));
+      return;
+    case "/assembly/wide/default/manifest/":
+    case "/assembly/wider/default/manifest/":
+      response.writeHead(200, { "content-type": "application/json; charset=utf-8" });
+      response.end(
+        JSON.stringify({
+          assets: {
+            css: ["https://evil.example/x.css", "/own.css"],
+            js: [
+              "data:text/javascript,alert(1)",
+              "javascript:alert(1)",
+              "//evil.example/y.js",
+              "/own.js",
+            ],
+          },
+        }),
+      );
+      return;
+    case "/assembly/huge/":
+      response.writeHead(200, { "content-type": "text/html", "assembly-version": "u1" });
+      response.end(envelope("huge"));
+      return;
+    case "/assembly/huge/default/manifest/":
+      response.writeHead(200, { "content-type": "application/json" });
+      response.end(JSON.stringify({ assets: { css: [], js: ["/x".repeat(2000)] } }));
+      return;
+    case "/assembly/htmlx/":
+      response.writeHead(200, { "content-type": "text/htmlx" });
+      response.end(envelope("x"));
       return;
     case "/assembly/redirect/":
       response.writeHead(302, { location: "/assembly/echo/" });
@@ -107,14 +152,14 @@ describe("reaching an assembly on another server", () => {
 
   it("reads the manifest once per version, and links its files absolutely", async () => {
     const reaching = transport();
-    const before = manifestReads;
-    await reaching.fetch(`${origin}/assembly/echo/`, request());
-    await reaching.fetch(`${origin}/assembly/echo/`, request());
-    expect(manifestReads).toBe(before + 1);
-    expect(reaching.assets(`${origin}/assembly/echo/`)).toEqual({
+    await reaching.fetch(`${origin}/assembly/once/`, request());
+    expect(await reaching.assets(`${origin}/assembly/once/`)).toEqual({
       css: [],
       js: [`${origin}/_assemblejs/assets/r.js`],
     });
+    await reaching.fetch(`${origin}/assembly/once/`, request());
+    await reaching.assets(`${origin}/assembly/once/`);
+    expect(manifestReads.get("/assembly/once/default/manifest/")).toBe(1);
   });
 
   it("refuses a redirect, rather than follow it off the allowlist", async () => {
@@ -181,5 +226,41 @@ describe("reaching an assembly on another server", () => {
     expect(!answer.ok && logged.some((line) => line.correlationId === answer.correlationId)).toBe(
       true,
     );
+  });
+
+  it("answers the placement when its content arrives, whatever the manifest is doing", async () => {
+    const started = Date.now();
+    const reaching = transport();
+    const answer = await reaching.fetch(`${origin}/assembly/hanging/`, request());
+    expect(answer.ok && answer.html).toContain("arrived");
+    expect(Date.now() - started).toBeLessThan(500);
+    // The page waits for the manifest within its own deadline, and goes on without it.
+    expect(await reaching.assets(`${origin}/assembly/hanging/`)).toBeUndefined();
+    expect(logged.some((line) => line.message.includes("hanging/default/manifest"))).toBe(true);
+  });
+
+  it("asks once for a manifest that several first requests want at the same time", async () => {
+    const reaching = transport();
+    await Promise.all([1, 2, 3].map(() => reaching.fetch(`${origin}/assembly/wide/`, request())));
+    await reaching.assets(`${origin}/assembly/wide/`);
+    expect(manifestReads.get("/assembly/wide/default/manifest/")).toBe(1);
+  });
+
+  it("links only the manifest's files on the remote's own origin", async () => {
+    const reaching = transport();
+    await reaching.fetch(`${origin}/assembly/wider/`, request());
+    expect(await reaching.assets(`${origin}/assembly/wider/`)).toEqual({
+      css: [`${origin}/own.css`],
+      js: [`${origin}/own.js`],
+    });
+  });
+
+  it("reads a manifest under the cap, and a content type by its media type alone", async () => {
+    const reaching = transport(undefined, 1000);
+    await reaching.fetch(`${origin}/assembly/huge/`, request());
+    expect(await reaching.assets(`${origin}/assembly/huge/`)).toBeUndefined();
+    expect(await reaching.fetch(`${origin}/assembly/htmlx/`, request())).toMatchObject({
+      reason: "content-type",
+    });
   });
 });

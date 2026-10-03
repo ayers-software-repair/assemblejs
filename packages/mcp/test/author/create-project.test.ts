@@ -1,10 +1,17 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { createProject, resolveRoot } from "@assemblejs/mcp";
+import { createProject, OutsideRootError, resolveRoot } from "@assemblejs/mcp";
 
 describe("scaffolding a project through the agent surface", () => {
   it("writes the command line's own project into the root, and says every file it wrote", () => {
@@ -36,5 +43,13 @@ describe("scaffolding a project through the agent surface", () => {
     const answer = createProject(resolveRoot(dir), "shop");
     expect(answer.ok).toBe(false);
     expect(readFileSync(join(dir, "src", "server.ts"), "utf8")).toBe("// the author's own");
+  });
+
+  it("refuses a root holding a link where the starter would write, even one to nothing", () => {
+    const dir = mkdtempSync(join(tmpdir(), "mcp-create-"));
+    const outside = mkdtempSync(join(tmpdir(), "outside-"));
+    symlinkSync(join(outside, "escaped.md"), join(dir, "README.md"));
+    expect(() => createProject(resolveRoot(dir), "shop")).toThrow(OutsideRootError);
+    expect(existsSync(join(outside, "escaped.md"))).toBe(false);
   });
 });

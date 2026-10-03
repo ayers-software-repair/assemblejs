@@ -60,6 +60,15 @@ describe("building a manifest", () => {
     expect(serialised).not.toContain("function");
   });
 
+  it("lists no page styles for an assembly in its own shadow root, which links them there", () => {
+    const isolated = defineAssembly({
+      ...cart,
+      shadow: true,
+      assets: { css: ["/s/cart.shadow.css"], js: ["/c.js"] },
+    });
+    expect(buildManifest(isolated, "default", "1").assets).toEqual({ css: [], js: ["/c.js"] });
+  });
+
   it("refuses a view the assembly does not have", () => {
     expect(() => buildManifest(cart, "nope", "v")).toThrow(/has no view "nope"/);
   });

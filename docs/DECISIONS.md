@@ -831,3 +831,47 @@ B-15 lands DESIGN 10. Expected: the build had a stylesheet to scope. Found: it h
 - **The holes are asserted, not only written down**: the browser proof runs one assembly's
   animation from another's `@keyframes`, and a page rule reaches the light DOM. If either stops
   leaking, the proof goes red and DESIGN 10 is out of date.
+
+## 2026-10-03: the second remote review, and the access and styles review
+
+Two independent reviews read B-13 to B-15 at the source. What they found, and what changed:
+
+- **A cached remote answer varies on the forwarded headers.** Expected: a credential bypass was
+  enough. Found: a header a remote declares in `forward` (a user id, a language) was not part of
+  the cache key, so one visitor's answer was served to the next. The key now carries every
+  forwarded header's value, as an HTTP cache varies on them; credentials still bypass it.
+- **"One envelope" is read the way the browser reads it.** Expected: checking the first and
+  last tag was enough. Found: anything between two envelopes reached the page, and the page's
+  runtime mounted an unmarked or nested envelope from a remote with the page's own renderers. A
+  scan of `<assembly-root>` tags alone would not have held either: a stray `</div>`, a comment
+  the browser ends at `--!>`, or an `<li>` with no list of its own closes elements in the page
+  and carries the rest of the answer out. So the answer is scanned with the browser's tokenizer
+  rules and the tree rules that close elements implicitly, and anything it cannot read exactly
+  is refused rather than guessed; core keeps its single dependency. The browser suite generates
+  100,000 seeded fragments and requires every one the scanner accepts to stay inside its
+  envelope in Chromium in each context a placement sits in; with the tree rules disabled it
+  finds escapes within a few thousand. Every envelope in an answer is stamped with the remote's
+  origin, replacing any it named, and the runtime takes an envelope's owner from its nearest
+  marked ancestor, so ownership no longer depends on where an envelope lands.
+- **The manifest is learned beside the content, never in front of it.** Found: a hanging
+  manifest failed a placement whose content had arrived, and its body was read uncapped, of any
+  type, its files allowed from any origin (`data:`, `javascript:`, another host). It is now read
+  with its own one-second deadline, one read in flight per url, under the cap, as JSON only, and
+  only files on the remote's own origin are kept. The page waits for that read when it links
+  assets, so a slow manifest delays a page by at most that second and fails nothing.
+- **A remote assembly in its own shadow root is styled there and nowhere else.** Found: the
+  consumer hoisted its unscoped sheet into the page head, where it styled everything, and the
+  link inside its root named a path on the consumer's origin. The manifest lists no page styles
+  for a shadow assembly, and a remote answer's `<link href>` given as a path from the root is
+  linked from the remote's origin. Other root-relative urls in remote markup (an `img src`) are
+  not rewritten; a remote that wants them to load on another origin's page writes them absolute.
+- **The root guard follows dangling links.** Found: a link inside the root pointing at nothing
+  outside it read as missing, so its in-root parent was checked and the write went out through
+  it. Every link along a path is now followed, dangling ones included, and the authoring tools
+  judge a place occupied with `lstat`.
+- **Built browser files are public under access control**, as the B-14 entry already said and
+  the server did not do: a page on another origin loads them with no credentials. A blank
+  content security policy is a boot refusal rather than a page with none.
+- **`pnpm check` builds before it tests.** Found: on a fresh clone the command line's tests
+  bundled projects against packages that were not built yet, so CI, which runs `pnpm check`
+  straight after install, would have been red; every green run here had a built tree.

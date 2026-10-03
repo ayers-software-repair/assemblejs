@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, mkdtempSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -41,5 +41,12 @@ describe("adding an assembly through the agent surface", () => {
       expect(answer.ok).toBe(false);
       expect(answer.problems[0]).toMatchObject({ rule: "directory-is-an-assembly" });
     }
+  });
+
+  it("refuses, with its rule, where a link to nothing already holds the assembly's name", () => {
+    const dir = mkdtempSync(join(tmpdir(), "mcp-add-"));
+    mkdirSync(join(dir, "src", "assemblies"), { recursive: true });
+    symlinkSync(join(dir, "nowhere"), join(dir, "src", "assemblies", "evil"));
+    expect(addAssembly(resolveRoot(dir), "evil", "html").ok).toBe(false);
   });
 });

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync } from "node:fs";
 import { planAssembly, realIo } from "@assemblejs/cli";
+import { isOccupied } from "../root/is-occupied.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";
@@ -19,7 +19,7 @@ export function addAssembly(root: ProjectRoot, name: string, renderer: string): 
   const plan = planAssembly(
     name,
     renderer,
-    existsSync(withinRoot(root, "src", "assemblies", name)),
+    isOccupied(withinRoot(root, "src", "assemblies", name)),
   );
   if ("problem" in plan) return { ok: false, result: null, problems: [plan.problem] };
   const written: string[] = [];

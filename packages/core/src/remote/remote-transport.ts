@@ -10,6 +10,9 @@ import type { AssemblyResponse } from "../compose/assembly-response.js";
  */
 export interface RemoteTransport {
   fetch(url: string, request: AssemblyRequest): Promise<AssemblyResponse>;
-  /** The files to link for the assembly at a url, absolute, once its manifest has been read. */
-  assets(url: string): AssemblyAssets | undefined;
+  /**
+   * The files to link for the assembly at a url, absolute, once its manifest has been read; a
+   * read still in flight is waited for, within its own deadline.
+   */
+  assets(url: string): Promise<AssemblyAssets | undefined>;
 }

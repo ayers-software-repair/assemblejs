@@ -57,4 +57,25 @@ describe("resolving a path inside the project", () => {
       join(dir, "src", "pages", "home.html"),
     );
   });
+
+  it("refuses a path through a link that points at nothing outside the root", () => {
+    const dir = mkdtempSync(join(tmpdir(), "within-dangling-"));
+    const outside = mkdtempSync(join(tmpdir(), "outside-"));
+    symlinkSync(join(outside, "escaped.md"), join(dir, "README.md"));
+    symlinkSync(join(outside, "gone"), join(dir, "gone"));
+    const real = resolveRoot(dir);
+    expect(() => withinRoot(real, "README.md")).toThrow(OutsideRootError);
+    expect(() => withinRoot(real, "gone", "deeper", "x.html")).toThrow(OutsideRootError);
+  });
+
+  it("allows a link that leads somewhere else inside the root, and refuses a loop", () => {
+    const dir = mkdtempSync(join(tmpdir(), "within-inner-"));
+    mkdirSync(join(dir, "src"));
+    symlinkSync(join(dir, "src"), join(dir, "alias"));
+    symlinkSync(join(dir, "loop-b"), join(dir, "loop-a"));
+    symlinkSync(join(dir, "loop-a"), join(dir, "loop-b"));
+    const real = resolveRoot(dir);
+    expect(withinRoot(real, "alias", "x.html")).toBe(join(dir, "alias", "x.html"));
+    expect(() => withinRoot(real, "loop-a", "x.html")).toThrow(OutsideRootError);
+  });
 });

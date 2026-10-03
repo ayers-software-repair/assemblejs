@@ -120,13 +120,16 @@ describe("two runtimes on one page", () => {
   });
 
   it("mount each envelope with the runtime from its own origin, never twice", () => {
-    document.body.innerHTML = envelope("a") + remote("b", "https://shop.example.com");
+    // An envelope inside the remote's own belongs to that remote, whether it is marked or not.
+    document.body.innerHTML =
+      envelope("a") +
+      remote("b", "https://shop.example.com").replace(/<\/assembly-root>$/, `${envelope("c")}$&`);
     const local = recorder();
     const shop = recorder();
     start({ renderers: { html: local.renderer }, origin: location.origin });
     start({ renderers: { html: shop.renderer }, origin: "https://shop.example.com" });
     expect(local.mounts).toEqual(["a"]);
-    expect(shop.mounts).toEqual(["b"]);
+    expect(shop.mounts).toEqual(["b", "c"]);
   });
 });
 
@@ -181,10 +184,7 @@ describe("one assembly failing", () => {
 });
 
 describe("mounting again", () => {
-  // Written to exercise the guard and not the side effect. The first version of this test put
-  // the island back nowhere and passed even with the guard deleted, because readIsland removes
-  // the island and the second pass then found nothing to mount. It was green for a reason it
-  // did not claim, which is the same as not testing the guard at all.
+  // The island is put back first, so only the guard, not the island already being read, stops it.
   it("does not mount an assembly twice, even when an island is present again", () => {
     document.body.innerHTML = envelope("a");
     const { mounts, renderer } = recorder();

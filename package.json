@@ -19,7 +19,7 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "changeset": "changeset",
-    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:site && pnpm check:organization && pnpm check:duplication && pnpm check:mirror && pnpm check:versions && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm test && pnpm build && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
+    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:site && pnpm check:organization && pnpm check:duplication && pnpm check:mirror && pnpm check:versions && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm build && pnpm test && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
     "check:emoji": "node scripts/check-emoji.mjs --self-test && node scripts/check-emoji.mjs",
     "check:exports": "node scripts/check-exports.mjs",
     "check:headers": "node scripts/check-headers.mjs",
