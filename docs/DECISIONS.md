@@ -1034,3 +1034,44 @@ Solid context, `useEvents()` and `Slot`. Settled here:
   React, Svelte, Preact, Vue, Solid and Lit assemblies; in Chromium each is server-rendered,
   keeps the very element the server sent through hydration, counts, and is heard by every
   other, with no warning, error or refused resource on the page.
+
+## 2026-10-03: the fourth review
+
+A fresh review of Preact, Vue and the third round found, and this round fixed:
+
+- **A Vue render error could still send a page with a hole, or end the server.** Vue reports a
+  component's error (in setup, render, a child, an async setup, a server prefetch, a watcher)
+  to the app's handler; rethrowing there threw into Vue's own handling, which in its production
+  build only logs and in its development build could leave a rejection nothing handled. The
+  handler now keeps the first error and the render rejects with it once Vue has finished. The
+  server tests run against both of Vue's builds.
+- **DESIGN 12's first rule was never built.** A listening server now logs a rejection nothing
+  handled, or an exception nothing caught, against a correlation id and ends its process,
+  installed once per process. Proved in a real process.
+- **A shadow root's stylesheet follows the markup.** Found: Vue hydrates from a root's first node,
+  met the `<link>` there, reported a mismatch and rendered afresh, dropping the link and
+  duplicating the tree. `examples/shadow` holds one shadow assembly per framework, and in
+  Chromium every one keeps its link, its server element and its colour, and logs nothing.
+- **MathML's mglyph and malignmark stay MathML inside a text integration point**, so a raw-text
+  element there is read as markup by the browser; the scanner now reads it so, and refuses the
+  answers that carried the rest of the page into an envelope. The generator emits those pairs.
+- **A placement from another server inside a page's `<form>` is refused at boot.** A form's end
+  tag in the answer would close the page's form; the page's template is the author's own, so
+  this is knowable there, and refusing forms in every remote answer was not.
+- **A shared JSX file takes the framework of what imports it.** Found: a Preact view's component
+  from outside its directory compiled as React and rendered nothing. One imported from two
+  frameworks is an error naming both. The runtime pragma now shares the file's first line, so
+  every diagnostic keeps its line number.
+- **Vue single-file components:** a block read from another file, a template or stylesheet in
+  another language, CSS modules and JSX in a script are build errors rather than green builds
+  that render wrong, and `v-bind()` in styles reaches the server render of a component with no
+  `<script setup>`.
+- **`check` reads a declaration with a parser.** Found: the hand-written reader took a quote in a
+  regex literal for a string and swallowed the rest of the file, and read objects anywhere. The
+  source is compiled by esbuild and parsed by acorn; only the default export's `place` and the
+  config's `remotes[].origin` are read; a file that cannot be read is a finding, not a throw.
+- **A selector reaching a sibling of the envelope** (`:scope ~ .x`, `body + .x`) is a style
+  problem: scoped, the envelope is the assembly, and its siblings are outside it.
+- **Smaller:** a stylesheet's `url()` is rewritten inside that `url()` alone; a root-relative
+  href padded with control characters is rewritten as the browser reads it; Preact's peer range
+  is the version tested.

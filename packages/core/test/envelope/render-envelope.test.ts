@@ -42,7 +42,7 @@ describe("rendering the envelope", () => {
   it("renders an opted-in assembly inside a declarative shadow root, its styles linked there", () => {
     const html = renderEnvelope(input({ shadow: { css: ["/s/cart.css"] } }));
     expect(html).toContain(
-      '<template shadowrootmode="open"><link rel="stylesheet" href="/s/cart.css"><p>cart</p></template>',
+      '<template shadowrootmode="open"><p>cart</p><link rel="stylesheet" href="/s/cart.css"></template>',
     );
     // The island stays in the light DOM, after the shadow root, where the runtime reads it.
     expect(html).toMatch(/<\/template><script type="application\/json"/);

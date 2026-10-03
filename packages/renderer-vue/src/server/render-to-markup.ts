@@ -11,8 +11,10 @@ import { EVENTS_KEY } from "../client/events-key.js";
  * Renders a Vue component to the markup the server sends.
  *
  * It does not catch: a failed render rejects, the composer catches it, and the placement falls
- * back. Vue would otherwise only warn about an error in a component's render and send what it
- * had, so the app's error handler rethrows it.
+ * back. Vue on its own reports an error in a component (in setup, render, a child, an async
+ * setup, a server prefetch or a watcher) to the app's error handler and goes on rendering what it
+ * has, so the page would arrive whole-looking with a hole in it. The handler here keeps the first
+ * error, and once Vue has finished, the render rejects with it.
  *
  * The component renders with the same injected events it hydrates with, the server's, so a
  * component that calls `useEvents()` renders on the server as in the browser.
@@ -20,8 +22,11 @@ import { EVENTS_KEY } from "../client/events-key.js";
 export async function renderToMarkup(component: Component, input: MarkupInput): Promise<string> {
   const app = createSSRApp(component, { data: input.data, children: input.children });
   app.provide(EVENTS_KEY, serverEvents());
+  let failed: { readonly error: unknown } | undefined;
   app.config.errorHandler = (error) => {
-    throw error;
+    failed ??= { error };
   };
-  return renderToString(app);
+  const html = await renderToString(app);
+  if (failed !== undefined) throw failed.error;
+  return html;
 }

@@ -148,6 +148,55 @@ importers:
         specifier: workspace:*
         version: link:../../packages/core
 
+  examples/shadow:
+    dependencies:
+      '@assemblejs/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@assemblejs/renderer-lit':
+        specifier: workspace:*
+        version: link:../../packages/renderer-lit
+      '@assemblejs/renderer-preact':
+        specifier: workspace:*
+        version: link:../../packages/renderer-preact
+      '@assemblejs/renderer-react':
+        specifier: workspace:*
+        version: link:../../packages/renderer-react
+      '@assemblejs/renderer-solid':
+        specifier: workspace:*
+        version: link:../../packages/renderer-solid
+      '@assemblejs/renderer-svelte':
+        specifier: workspace:*
+        version: link:../../packages/renderer-svelte
+      '@assemblejs/renderer-vue':
+        specifier: workspace:*
+        version: link:../../packages/renderer-vue
+      lit:
+        specifier: 3.3.3
+        version: 3.3.3
+      preact:
+        specifier: 11.0.0
+        version: 11.0.0(preact-render-to-string@6.8.0)
+      react:
+        specifier: 19.2.8
+        version: 19.2.8
+      react-dom:
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
+      solid-js:
+        specifier: 1.9.15
+        version: 1.9.15
+      svelte:
+        specifier: 5.57.0
+        version: 5.57.0(@typescript-eslint/types@8.69.0)
+      vue:
+        specifier: 3.5.43
+        version: 3.5.43(typescript@6.0.3)
+    devDependencies:
+      '@assemblejs/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
+
   examples/styles:
     dependencies:
       '@assemblejs/core':
@@ -197,6 +246,9 @@ importers:
       '@assemblejs/core':
         specifier: workspace:*
         version: link:../core
+      acorn:
+        specifier: 8.18.0
+        version: 8.18.0
       esbuild:
         specifier: 0.28.2
         version: 0.28.2

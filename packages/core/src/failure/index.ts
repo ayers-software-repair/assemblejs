@@ -5,3 +5,4 @@ export type { FailureBody } from "./failure-body.js";
 export { renderFailure } from "./render-failure.js";
 export type { LogLine } from "./log-line.js";
 export { describeFailure } from "./describe-failure.js";
+export { exitOnUnhandled } from "./exit-on-unhandled.js";

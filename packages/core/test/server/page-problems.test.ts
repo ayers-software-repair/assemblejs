@@ -128,4 +128,21 @@ describe("what is checked about pages before anything listens", () => {
       pageProblems([remote("https://checkout.example.com/cart")], [hello], [], declared).join(),
     ).toMatch(/not an assembly's content endpoint/);
   });
+
+  it("refuses a placement from another server inside one of the page's forms", () => {
+    const origin = "https://shop.example.com";
+    const problems = pageProblems(
+      [
+        {
+          route: "/",
+          template: '<form><assembly name="cart"></assembly></form>',
+          place: { cart: { url: `${origin}/assembly/cart/` } },
+        },
+      ],
+      [],
+      [],
+      [{ origin }],
+    );
+    expect(problems.join()).toMatch(/inside a <form>/);
+  });
 });

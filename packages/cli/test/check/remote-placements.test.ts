@@ -5,7 +5,8 @@ import { remotePlacements } from "@assemblejs/cli";
 
 describe("the placements a page declares from another server", () => {
   it("names each placement whose policy has a url, with the url when it is a literal", () => {
-    const source = `export default definePage({
+    const source = `const link = { cart: { url: "https://elsewhere.example/" } };
+    export default definePage({
       place: {
         cart: { retry: { attempts: 2 }, url: "https://shop.example.com/assembly/cart/", deadline: 800 },
         "mini-cart": { deadline: 100, url: 'https://shop.example.com/assembly/mini/' },

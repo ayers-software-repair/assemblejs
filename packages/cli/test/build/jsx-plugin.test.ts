@@ -85,4 +85,61 @@ describe("compiling each JSX file through its own framework's runtime", () => {
       }),
     ).rejects.toThrow(/renderer-solid is not installed/);
   });
+
+  const project = () => {
+    const root = mkdtempSync(join(tmpdir(), "jsx-shared-"));
+    for (const name of ["a", "b", "shared"]) mkdirSync(join(root, name));
+    writeFileSync(join(root, "shared", "badge.tsx"), "export const Badge = () => <i>badge</i>;");
+    writeFileSync(
+      join(root, "a", "a.preact.tsx"),
+      'import { Badge } from "../shared/badge.js";\nexport default () => <p><Badge /></p>;',
+    );
+    writeFileSync(
+      join(root, "b", "b.react.tsx"),
+      'import { Badge } from "../shared/badge.js";\nexport default () => <p><Badge /></p>;',
+    );
+    const assembly = (name: string, renderer: string): DiscoveredAssembly => ({
+      name,
+      directory: join(root, name),
+      view: join(root, name, `${name}.${renderer}.tsx`),
+      renderer,
+      client: undefined,
+      service: undefined,
+      styles: [],
+    });
+    return { root, assemblies: [assembly("a", "preact"), assembly("b", "react")] };
+  };
+  const bundle = (entries: string[], assemblies: DiscoveredAssembly[]) =>
+    build({
+      entryPoints: entries,
+      bundle: true,
+      jsx: "automatic",
+      write: false,
+      logLevel: "silent",
+      format: "esm",
+      outdir: "/out",
+      external: ["react", "preact"],
+      plugins: [jsxPlugin(assemblies, "client")],
+    });
+
+  it("compiles a shared component as the framework of the assembly that imports it", async () => {
+    const { root, assemblies } = project();
+    const out =
+      (await bundle([join(root, "a", "a.preact.tsx")], assemblies)).outputFiles[0]?.text ?? "";
+    expect(out).toContain('from "preact/jsx-runtime"');
+    expect(out).not.toContain('from "react/jsx-runtime"');
+  });
+
+  it("refuses a shared component imported from two frameworks, naming both", async () => {
+    const { root, assemblies } = project();
+    await expect(
+      bundle([join(root, "a", "a.preact.tsx"), join(root, "b", "b.react.tsx")], assemblies),
+    ).rejects.toThrow(/badge\.tsx is imported by preact and react assemblies/);
+  });
+
+  it("keeps every line of a file at its own number in a diagnostic", async () => {
+    const root = mkdtempSync(join(tmpdir(), "jsx-lines-"));
+    writeFileSync(join(root, "bad.react.tsx"), "export const a = 1;\nexport const = ;");
+    await expect(bundle([join(root, "bad.react.tsx")], [])).rejects.toThrow(/bad\.react\.tsx:2:/);
+  });
 });

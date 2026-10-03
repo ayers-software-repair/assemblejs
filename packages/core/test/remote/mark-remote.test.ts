@@ -46,6 +46,7 @@ describe("stamping a remote's answer with its origin", () => {
     for (const [href, expected] of [
       ['" /a.css"', 'href="https://a.example.com/a.css"'],
       ['"\n/a.css "', 'href="https://a.example.com/a.css"'],
+      ['"\u0001/a.css"', 'href="https://a.example.com/a.css"'],
       [`'/a".css'`, 'href="https://a.example.com/a&quot;.css"'],
     ] as const) {
       const marked = markRemote(

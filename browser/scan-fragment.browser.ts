@@ -15,7 +15,9 @@ import { markRemote } from "../packages/core/dist/index.js";
 const NAMES = (
   "div p li ul ol td tr table tbody a b i svg math foreignObject title style script template " +
   "select option button h1 h2 form textarea assembly-root dd dt dl ruby rt rb br img span nobr " +
-  "em pre caption colgroup col mi desc plaintext font form template mtext mglyph image select"
+  "em pre caption colgroup col mi desc plaintext font form template mtext mglyph image select " +
+  "malignmark annotation-xml mo ms mn noscript option optgroup input keygen frameset listing xmp " +
+  "textarea DIV Svg"
 ).split(" ");
 const OTHER = [
   "t",
@@ -35,6 +37,9 @@ const OTHER = [
   "<plaintext></plaintext>",
   '<svg><font color="red"></font></svg>',
   "<form></form>",
+  "<math><mtext><mglyph><style><div></style></mglyph></mtext></math>",
+  "<math><mi><malignmark><textarea><li></textarea></malignmark></mi></math>",
+  "<svg><foreignObject><math><mtext><mglyph><title><p></title></mglyph></mtext></math></foreignObject></svg>",
 ];
 const COMMENTS = ["<!-- c -->", "<!---->", "<!-->", "<!--->", "<!--x--!>", "<!--[-->"];
 const CONTEXTS: ReadonlyArray<readonly [string, string]> = [
@@ -45,6 +50,11 @@ const CONTEXTS: ReadonlyArray<readonly [string, string]> = [
   ["<section id=ctx>", "</section>"],
   ["<span id=ctx>", "</span>"],
   ["<label id=ctx>", "</label>"],
+  ["<b><div id=ctx>", "</div></b>"],
+  ["<table><caption id=ctx>", "</caption></table>"],
+  ["<details id=ctx>", "</details>"],
+  ["<fieldset id=ctx>", "</fieldset>"],
+  ["<main id=ctx>", "</main>"],
 ];
 
 const generator = (seed: number) => {
@@ -70,7 +80,8 @@ test("every answer the scanner accepts stays inside its envelope in Chromium, st
   page,
 }) => {
   const origin = "https://remote.example";
-  const fragment = generator(20261003);
+  // Seeded, and another seed can be named to search further: ASSEMBLEJS_SCAN_SEED=7.
+  const fragment = generator(Number(process.env["ASSEMBLEJS_SCAN_SEED"] ?? "20261003"));
   const accepted: string[] = [];
   for (let tried = 0; tried < 100_000; tried += 1) {
     const marked = markRemote(fragment(), origin);

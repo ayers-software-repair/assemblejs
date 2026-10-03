@@ -103,6 +103,16 @@ describe("reading a remote's answer as the browser will", () => {
     expect(refused(wrap('<svg><font color="red"></font></svg>'))).toBe(true);
     expect(refused(wrap("<svg><style></svg><div></style></svg>"))).toBe(true);
     expect(refused(wrap("<svg><assembly-root></assembly-root></svg>"))).toBe(true);
+    // mglyph and malignmark stay MathML in a text integration point, so raw text is not raw there.
+    for (const inner of [
+      "<math><mtext><mglyph><style><div></style></mglyph></mtext></math>",
+      "<math><mi><malignmark><textarea><div></textarea></malignmark></mi></math>",
+      "<math><mo><mglyph><script><div></script></mglyph></mo></math>",
+      "<math><mtext><mglyph><title><p></title></mglyph></mtext></math>",
+    ]) {
+      expect(refused(wrap(inner)), inner).toBe(true);
+    }
+    expect(refused(wrap("<math><mtext><mglyph></mglyph></mtext></math>"))).toBe(false);
     // An integration point hands content back to HTML.
     expect(refused(wrap("<svg><foreignObject><p>x</p></foreignObject></svg>"))).toBe(false);
   });

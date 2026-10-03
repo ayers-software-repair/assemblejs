@@ -35,13 +35,15 @@ export function renderEnvelope(input: EnvelopeInput): string {
     `<script type="${ISLAND_SCRIPT_TYPE}" data-assembly="${escapeAttribute(input.id)}">` +
     `${island}</script>`;
 
-  // A shadow root's styles are linked inside it, the only place they apply; the island stays in
-  // the light DOM, where the runtime reads it like any other.
+  // A shadow root's styles are linked inside it, the only place they apply, and after the
+  // markup: a framework hydrating the root starts at its first node, and one that met a link there
+  // would take it for a mismatch and render afresh. The island stays in the light DOM, where the
+  // runtime reads it like any other.
   const markup =
     input.shadow === undefined
       ? input.markup
-      : `<template shadowrootmode="open">${input.shadow.css
+      : `<template shadowrootmode="open">${input.markup}${input.shadow.css
           .map((href) => `<link rel="stylesheet" href="${escapeAttribute(href)}">`)
-          .join("")}${input.markup}</template>`;
+          .join("")}</template>`;
   return `<${ENVELOPE_ELEMENT}${opening}>${markup}${script}</${ENVELOPE_ELEMENT}>`;
 }

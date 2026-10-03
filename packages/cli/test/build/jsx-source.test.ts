@@ -29,8 +29,8 @@ describe("the JSX runtime a file compiles through", () => {
     expect(jsxSource("/p/src/assemblies/cart/..row.tsx", assemblies)).toBe("preact");
   });
 
-  it("is React for anything else", () => {
-    expect(jsxSource("/p/src/lib/button.tsx", assemblies)).toBe("react");
-    expect(jsxSource("/p/src/assemblies/cartx/row.tsx", assemblies)).toBe("react");
+  it("is left to the file's importers when neither its name nor its directory decides", () => {
+    expect(jsxSource("/p/src/lib/button.tsx", assemblies)).toBeUndefined();
+    expect(jsxSource("/p/src/assemblies/cartx/row.tsx", assemblies)).toBeUndefined();
   });
 });

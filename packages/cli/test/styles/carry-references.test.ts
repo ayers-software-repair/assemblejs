@@ -49,4 +49,19 @@ describe("carrying the files a stylesheet names into the build", () => {
       ).toThrow(/outside/);
     }
   });
+
+  it("rewrites each url() alone, leaving the same text elsewhere in the value", () => {
+    const root = mkdtempSync(join(tmpdir(), "carry-"));
+    writeFileSync(join(root, "a.png"), "pixels");
+    const css = carryReferences(
+      '.a { background: image-set("a.png" 1x, url(a.png) 2x) }',
+      join(root, "cart.css"),
+      root,
+      root,
+      realIo,
+    );
+    expect(css).toMatch(
+      /image-set\("a\.png" 1x, url\(\/_assemblejs\/assets\/styles\/files\/a-[0-9a-f]{8}\.png\) 2x\)/,
+    );
+  });
 });

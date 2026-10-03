@@ -7,6 +7,7 @@ import type { PageDefinition } from "../page/page-definition.js";
 import type { PagePlacement } from "../page/page-placement.js";
 import { parseContentUrl } from "../remote/parse-content-url.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
+import { insideForm } from "./inside-form.js";
 import { isFlatRoute } from "./is-flat-route.js";
 import { reservedPrefix } from "./reserved-prefix.js";
 import { routeKey } from "./route-key.js";
@@ -18,7 +19,8 @@ import { routeKey } from "./route-key.js";
  * nobody listed is a refusal here rather than a request at render time. A template is read here,
  * at boot, so a name with no assembly behind it is a refusal and not a
  * blank space a visitor discovers. The same goes for policy written for a placement the template
- * does not make: it would be read by nothing, and the author would believe it applied.
+ * does not make: it would be read by nothing, and the author would believe it applied. And a
+ * placement from another server cannot sit inside one of the page's forms.
  */
 export function pageProblems(
   pages: readonly PageDefinition[],
@@ -74,6 +76,13 @@ export function pageProblems(
         } else if (!remotes.some((remote) => remote.origin === target.origin)) {
           problems.push(
             `${at} places "${placement.name}" from ${target.origin}, which is not a declared remote`,
+          );
+        }
+        // A form's end tag in another server's answer would close the page's own form, and the
+        // page's fields after it would leave that form.
+        if (insideForm(page.template, placement.start)) {
+          problems.push(
+            `${at} places "${placement.name}" from another server inside a <form>, where its markup could end the page's form`,
           );
         }
         continue;

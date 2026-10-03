@@ -10,6 +10,7 @@ describe("the parts of a component a build reads", () => {
       scriptSetup: null,
       template: { content: "<p>a</p>" },
       styles: [],
+      cssVars: [],
     };
     expect(descriptor.template?.content).toBe("<p>a</p>");
   });

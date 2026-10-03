@@ -1,7 +1,14 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineComponent, h } from "vue";
+import {
+  defineAsyncComponent,
+  defineComponent,
+  h,
+  onServerPrefetch,
+  Suspense,
+  watchEffect,
+} from "vue";
 import type { PropType } from "vue";
 import { renderToMarkup } from "@assemblejs/renderer-vue";
 import { useEvents } from "@assemblejs/renderer-vue/client";
@@ -45,6 +52,58 @@ describe("rendering a Vue assembly on the server", () => {
     await expect(renderToMarkup(Broken, { data: {}, children: {} })).rejects.toThrow(
       "this component is broken",
     );
+  });
+
+  it("rejects for an error anywhere Vue would otherwise only report it", async () => {
+    const boom = (): never => {
+      throw new Error("boom");
+    };
+    const Child = defineComponent({ setup: () => () => h("b", boom()) });
+    for (const [what, component] of [
+      [
+        "a throwing child",
+        defineComponent({
+          setup: () => () => h("p", [h("i", "before"), h(Child), h("i", "after")]),
+        }),
+      ],
+      ["a throwing setup", defineComponent({ setup: () => boom() })],
+      [
+        "an async setup that rejects",
+        defineComponent({
+          async setup() {
+            await Promise.resolve();
+            return boom();
+          },
+        }),
+      ],
+      [
+        "a server prefetch that rejects",
+        defineComponent({
+          setup() {
+            onServerPrefetch(async () => boom());
+            return () => h("p", "items");
+          },
+        }),
+      ],
+      [
+        "a watcher that throws",
+        defineComponent({
+          setup() {
+            watchEffect(() => boom());
+            return () => h("p", "x");
+          },
+        }),
+      ],
+      [
+        "a suspended child that fails",
+        defineComponent({
+          setup: () => () =>
+            h(Suspense, null, { default: () => h(defineAsyncComponent(async () => boom())) }),
+        }),
+      ],
+    ] as const) {
+      await expect(renderToMarkup(component, { data: {}, children: {} }), what).rejects.toThrow();
+    }
   });
 
   it("renders a component that uses its events, as it will hydrate", async () => {

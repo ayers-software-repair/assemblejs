@@ -9,6 +9,8 @@ import type { Io } from "../io/io.js";
 import { insideDirectory } from "./inside-directory.js";
 import { styleReferences } from "./style-references.js";
 
+const URL_REFERENCE = /url\(\s*(["']?)([^"')]*)\1\s*\)/gi;
+
 /**
  * A stylesheet with every file it names beside it copied into the build and named by the url it
  * is served from. The built sheet is served from the build, not from the assembly's directory,
@@ -25,7 +27,7 @@ export function carryReferences(
 ): string {
   const parsed = postcss.parse(css, { from: file });
   parsed.walkDecls((declaration) => {
-    let value = declaration.value;
+    const served = new Map<string, string>();
     for (const reference of styleReferences(declaration.value)) {
       const [path = "", suffix = ""] = /^([^?#]*)(.*)$/.exec(reference)?.slice(1) ?? [];
       const source = resolve(dirname(file), path);
@@ -36,9 +38,16 @@ export function carryReferences(
       const hash = createHash("sha256").update(bytes).digest("hex").slice(0, 8);
       const name = `${basename(source, extname(source))}-${hash}${extname(source)}`;
       io.write(join(root, "dist", "client", "styles", "files", name), bytes);
-      value = value.replace(reference, `${ASSET_ROUTE_PREFIX}/styles/files/${name}${suffix}`);
+      served.set(reference, `${ASSET_ROUTE_PREFIX}/styles/files/${name}${suffix}`);
     }
-    declaration.value = value;
+    // Rewritten inside each url() alone, so the same text elsewhere in the value is left as is.
+    declaration.value = declaration.value.replace(
+      URL_REFERENCE,
+      (whole, quote: string, reference: string) => {
+        const url = served.get(reference.trim());
+        return url === undefined ? whole : `url(${quote}${url}${quote})`;
+      },
+    );
   });
   return parsed.toString();
 }

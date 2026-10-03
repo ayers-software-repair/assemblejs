@@ -7,6 +7,7 @@ import { registerAccess } from "../access/register-access.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_LIMITS } from "../compose/default-limits.js";
 import { readConfig } from "../config/read-config.js";
+import { exitOnUnhandled } from "../failure/exit-on-unhandled.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
 import { createRemoteTransport } from "../remote/create-remote-transport.js";
@@ -188,6 +189,8 @@ export async function createServer(options: ServerOptions): Promise<App> {
     inject: app.inject.bind(app),
     listen: async () => {
       const url = await app.listen({ host: config.host, port: config.port });
+      // A listening process is a server: a failure nothing handled ends it, logged.
+      exitOnUnhandled(process, log, (code) => process.exit(code));
       return { url };
     },
     close: async () => {

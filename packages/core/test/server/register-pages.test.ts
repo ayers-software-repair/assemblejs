@@ -128,7 +128,7 @@ describe("a page, mounted", () => {
     const response = await app.inject({ method: "GET", url: "/isolated" });
     expect(response.body).toContain("<head></head>");
     expect(response.body).toContain(
-      '<template shadowrootmode="open"><link rel="stylesheet" href="/card.css">',
+      '<p>card</p><link rel="stylesheet" href="/card.css"></template>',
     );
   });
 

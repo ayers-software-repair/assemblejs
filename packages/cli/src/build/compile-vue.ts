@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { VueCompiler } from "./vue-compiler.js";
+import type { VueDescriptor } from "./vue-descriptor.js";
 
 const message = (error: unknown): string =>
   error instanceof Error ? error.message : String(error);
@@ -8,8 +9,9 @@ const message = (error: unknown): string =>
 /**
  * One single-file component compiled for one side: its script with the template rendered into
  * it (a string-building render for the server, a hydrating one for the browser), and its styles,
- * `<style scoped>` scoped by Vue under the same id on both sides so hydration matches. A compile
- * error throws, with Vue's own message, and the build reports it against the file.
+ * `<style scoped>` scoped by Vue under the same id on both sides so hydration matches, its
+ * `v-bind()` variables rendered by the server as by the browser. A compile error throws, with
+ * Vue's own message, and so does a part of the component this build does not compile.
  */
 export function compileVue(
   compiler: VueCompiler,
@@ -19,6 +21,10 @@ export function compileVue(
   const { filename, id, side } = options;
   const { descriptor, errors } = compiler.parse(source, { filename });
   if (errors.length > 0) throw new Error(`${filename}: ${errors.map(message).join("; ")}`);
+  const unsupported = unsupportedParts(descriptor);
+  if (unsupported.length > 0) {
+    throw new Error(`${filename} uses what this build does not compile: ${unsupported.join(", ")}`);
+  }
   const scopeId = `data-v-${id}`;
   const scoped = descriptor.styles.some((style) => style.scoped === true);
   const ssr = side === "server";
@@ -31,7 +37,7 @@ export function compileVue(
       isProd: true,
       genDefaultAs: "_sfc_main",
       inlineTemplate: true,
-      templateOptions: { ssr, ssrCssVars: [], compilerOptions },
+      templateOptions: { ssr, ssrCssVars: descriptor.cssVars, compilerOptions },
     });
     lines.push(script.content);
     bindings = script.bindings;
@@ -49,7 +55,7 @@ export function compileVue(
       scoped,
       isProd: true,
       ssr,
-      ssrCssVars: [],
+      ssrCssVars: descriptor.cssVars,
       compilerOptions: {
         ...compilerOptions,
         ...(bindings === undefined ? {} : { bindingMetadata: bindings }),
@@ -80,4 +86,32 @@ export function compileVue(
     .join("\n");
   const typed = [descriptor.script?.lang, descriptor.scriptSetup?.lang].includes("ts");
   return { code: lines.join("\n"), loader: typed ? "ts" : "js", css };
+}
+
+// What a component may say that this build would otherwise pass over in silence: a block read
+// from another file, a template or stylesheet in another language, CSS modules, and JSX in its
+// script. Each would build green and then render wrong.
+function unsupportedParts(descriptor: VueDescriptor): readonly string[] {
+  const found: string[] = [];
+  for (const [name, block] of [
+    ["<template>", descriptor.template],
+    ["<script>", descriptor.script],
+    ["<script setup>", descriptor.scriptSetup],
+  ] as const) {
+    if (block?.src !== undefined) found.push(`${name.slice(0, -1)} src>`);
+  }
+  if (![undefined, "html"].includes(descriptor.template?.lang)) {
+    found.push(`<template lang="${String(descriptor.template?.lang)}">`);
+  }
+  for (const block of [descriptor.script, descriptor.scriptSetup]) {
+    if (![undefined, "ts", "js"].includes(block?.lang))
+      found.push(`<script lang="${String(block?.lang)}">`);
+  }
+  for (const style of descriptor.styles) {
+    if (style.src !== undefined) found.push("<style src>");
+    if (![undefined, "css"].includes(style.lang))
+      found.push(`<style lang="${String(style.lang)}">`);
+    if (style.module !== undefined && style.module !== false) found.push("<style module>");
+  }
+  return found;
 }

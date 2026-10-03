@@ -43,7 +43,7 @@ describe("rendering an assembly in this process", () => {
     });
     const html = await renderLocal(isolated, "default", "a7f3", new URLSearchParams());
     expect(html).toContain(
-      '<template shadowrootmode="open"><link rel="stylesheet" href="/_assemblejs/assets/styles/card-1.css"><p>card</p></template>',
+      '<template shadowrootmode="open"><p>card</p><link rel="stylesheet" href="/_assemblejs/assets/styles/card-1.css"></template>',
     );
   });
 });

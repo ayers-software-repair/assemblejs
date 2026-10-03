@@ -18,6 +18,9 @@ const REFUSED = new Set(
 const FOREIGN = new Set(["svg", "math"]);
 // Inside SVG or MathML these hand content back to HTML.
 const INTEGRATION = new Set(["foreignobject", "desc", "title", "mi", "mo", "mn", "ms", "mtext"]);
+// MathML's text integration points, inside which these two stay MathML rather than HTML.
+const MATH_TEXT = new Set(["mi", "mo", "mn", "ms", "mtext"]);
+const STAY_MATH = new Set(["mglyph", "malignmark"]);
 
 /**
  * Reads a remote's answer as the browser will, and answers every HTML start tag in it, in order,
@@ -43,6 +46,12 @@ export function scanFragment(html: string): readonly ScannedTag[] | string {
     i = next;
     const top = open.at(-1);
     const foreign = top !== undefined && top.foreign && !INTEGRATION.has(top.name);
+    // Whether a start tag here would still be MathML: anything in foreign content, and mglyph or
+    // malignmark directly in a text integration point, whose content the browser then reads as
+    // markup, never as the raw text the same tag would hold in HTML.
+    const staysForeign = (name: string): boolean =>
+      foreign ||
+      (top !== undefined && top.foreign && MATH_TEXT.has(top.name) && STAY_MATH.has(name));
 
     if (html.startsWith("<!--", i)) {
       if (open.length === 0) return "content outside the envelope";
@@ -77,7 +86,7 @@ export function scanFragment(html: string): readonly ScannedTag[] | string {
       return closed ? "more than one envelope" : "an answer that does not start with an envelope";
     }
     if (REFUSED.has(tag.name)) return `a <${tag.name}> element`;
-    if (foreign) {
+    if (staysForeign(tag.name)) {
       if (/^[a-z]+$/.test(tag.name) && BREAKOUT.has(tag.name)) {
         return `a <${tag.name}> inside SVG or MathML`;
       }

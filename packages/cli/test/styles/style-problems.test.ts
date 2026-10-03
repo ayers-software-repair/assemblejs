@@ -54,4 +54,10 @@ describe("what the build cannot carry from an assembly's stylesheets", () => {
     symlinkSync("/etc/hostname", join(linked.directory, "linked.txt"));
     expect(styleProblems([linked])[0]?.message).toMatch(/outside its own directory/);
   });
+
+  it("reports a selector that reaches a sibling of the envelope, which is outside the assembly", () => {
+    expect(styleProblems([withCss(":scope ~ .note { color: red }")])[0]?.message).toMatch(
+      /sibling of its own envelope with :scope ~ .note/,
+    );
+  });
 });

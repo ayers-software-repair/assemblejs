@@ -80,6 +80,15 @@ describe("scoping an assembly's stylesheet", () => {
     );
   });
 
+  it("drops a following body only when it is bare", () => {
+    expect(scope("html body.x .a { margin: 0 }")).toBe(
+      'assembly-root[data-name="cart"] body.x .a { margin: 0 }',
+    );
+    expect(scope("body body .a { margin: 0 }")).toBe(
+      'assembly-root[data-name="cart"] body .a { margin: 0 }',
+    );
+  });
+
   it("keeps a document start that says more as a condition, with the envelope inside it", () => {
     expect(scope("html.dark .a { color: white }")).toBe(
       'html.dark assembly-root[data-name="cart"] .a { color: white }',

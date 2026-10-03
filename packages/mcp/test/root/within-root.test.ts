@@ -21,6 +21,7 @@ describe("resolving a path inside the project", () => {
   // straight past.
   it("refuses a traversal, however it is spelled", () => {
     for (const attempt of [
+      "..",
       "../secrets",
       "../../etc/passwd",
       "src/../../outside",

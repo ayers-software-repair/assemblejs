@@ -53,4 +53,38 @@ describe("compiling a single-file component", () => {
       }),
     ).toThrow(/z\.vue/);
   });
+
+  it("renders the variables v-bind() reads in its styles on the server, as the browser will", () => {
+    const vars = `<script setup lang="ts">const tone = "red";</script><template><p class="a">x</p></template><style>.a { color: v-bind(tone); }</style>`;
+    const server = compileVue(compiler, vars, { filename: "/p/v.vue", id: "abc", side: "server" });
+    expect(server.code).toMatch(/":--[0-9a-z]+": \(tone\)/);
+    // And a component with no <script setup>, whose template is compiled on its own.
+    const plain = `<script>export default { data: () => ({ tone: "red" }) };</script><template><p class="a">x</p></template><style>.a { color: v-bind(tone); }</style>`;
+    const rendered = compileVue(compiler, plain, {
+      filename: "/p/w.vue",
+      id: "def",
+      side: "server",
+    });
+    expect(rendered.code).toMatch(/--[0-9a-z]+.*tone/);
+  });
+
+  it("refuses what it would otherwise build green and render wrong", () => {
+    for (const [part, source] of [
+      ["<style module>", "<template><p>a</p></template><style module>.a{}</style>"],
+      ['<style lang="scss">', '<template><p>a</p></template><style lang="scss">$c: red;</style>'],
+      ["<style src>", '<template><p>a</p></template><style src="./a.css"></style>'],
+      ["<template src>", '<template src="./a.html"></template>'],
+      ['<template lang="pug">', '<template lang="pug">p a</template>'],
+      ["<script src>", '<script src="./a.ts"></script><template><p>a</p></template>'],
+      [
+        '<script lang="tsx">',
+        '<script setup lang="tsx">const a = 1;</script><template><p>a</p></template>',
+      ],
+    ] as const) {
+      expect(
+        () => compileVue(compiler, source, { filename: "/p/u.vue", id: "u", side: "client" }),
+        part,
+      ).toThrow(part);
+    }
+  });
 });

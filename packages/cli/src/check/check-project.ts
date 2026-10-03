@@ -32,15 +32,29 @@ export function checkProject(root: string): readonly ProjectProblem[] {
     ...buildProblems(root, assemblies.assemblies),
   ];
 
+  // A file that cannot be read is a finding against it, never a throw out of check.
+  const readOr = <T>(file: string, read: (source: string) => T, otherwise: T): T => {
+    try {
+      return read(readFileSync(file, "utf8"));
+    } catch (error) {
+      problems.push({
+        path: file,
+        rule: "a-placement-names-an-assembly",
+        message: `${file} could not be read: ${error instanceof Error ? error.message : String(error)}`,
+        fix: "correct the file so it compiles",
+      });
+      return otherwise;
+    }
+  };
   const configFile = join(root, "assemblejs.config.ts");
   const origins = existsSync(configFile)
-    ? declaredOrigins(readFileSync(configFile, "utf8"))
+    ? readOr(configFile, declaredOrigins, new Set<string>())
     : new Set<string>();
   for (const page of pages.pages) {
     const remote =
       page.declaration === undefined
         ? new Map<string, string | undefined>()
-        : remotePlacements(readFileSync(page.declaration, "utf8"));
+        : readOr(page.declaration, remotePlacements, new Map<string, string | undefined>());
     let placements;
     try {
       placements = findPlacements(readFileSync(page.template, "utf8"));

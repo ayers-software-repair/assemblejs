@@ -85,4 +85,19 @@ describe("checking a project", () => {
       }),
     ]);
   });
+
+  it("reports a page declaration it cannot read as a finding, never a throw", () => {
+    const root = project({
+      "src/server.ts": "",
+      "src/assemblies/hello/hello.html": "<p>hi</p>",
+      "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
+      "src/pages/home/home.page.ts": "export default {",
+    });
+    expect(checkProject(root)).toEqual([
+      expect.objectContaining({
+        path: "src/pages/home/home.page.ts",
+        message: expect.stringMatching(/could not be read/),
+      }),
+    ]);
+  });
 });

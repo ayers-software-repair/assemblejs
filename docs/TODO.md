@@ -203,6 +203,20 @@ starts. Until the owner enables Actions, every proof is local only.
       on SIGHUP; the scanner's Chromium proof marks what it parses, requires every envelope
       stamped, and runs in more contexts, with a test only each guard fails; `html.dark` stays a
       condition on the document and `:host()` names the envelope with its selector
+- [x] The fourth review's findings (Preact, Vue and the third round): a Vue render error rejects
+      in Vue's production build as in its development one; a listening server ends its process,
+      logged, on a failure nothing handled (DESIGN 12, missing since B-06); a shadow root's
+      stylesheet follows the markup, proved hydrating for every framework (`examples/shadow`);
+      MathML's mglyph and malignmark stay MathML in a text integration point; a remote placement
+      inside a page's form is refused at boot; a shared JSX file takes its importers' framework,
+      two of them an error; unsupported Vue SFC parts are build errors and `v-bind()` reaches the
+      server render; `check` reads a declaration's default export with a parser; a selector
+      reaching a sibling of the envelope is a style problem
+- [ ] The Solid and Lit review's findings: Lit hydration lost when another module loads `lit`
+      first; Solid islands sharing one hydration registry and key space (render ids); the
+      browser proof capturing elements after hydration rather than before; the Lit style
+      removal's brittle pattern; Solid's resource scripts and async limits; TypeScript decorators
+      in Solid files; Solid and Lit scaffolds built in the unit suite; peer ranges and pins
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").

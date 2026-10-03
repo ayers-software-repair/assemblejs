@@ -32,7 +32,12 @@ export default function buildExamples() {
     ],
     { cwd: root, stdio: "pipe" },
   );
-  for (const example of ["examples/two-frameworks", "examples/styles", "examples/frameworks"]) {
+  for (const example of [
+    "examples/two-frameworks",
+    "examples/styles",
+    "examples/frameworks",
+    "examples/shadow",
+  ]) {
     execFileSync(process.execPath, ["packages/cli/dist/bin.js", "build", "--cwd", example], {
       cwd: root,
       stdio: "pipe",
