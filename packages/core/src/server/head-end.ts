@@ -3,7 +3,8 @@
 import { liveClosingTags } from "./live-closing-tags.js";
 
 const HEAD_CLOSE = /<\/head\s*>/gi;
-const DOCTYPE = /^\s*<!doctype[^>]*>/i;
+// A doctype, after any whitespace and comments a template opens with.
+const DOCTYPE = /^(?:\s|<!--[\s\S]*?-->)*<!doctype[^>]*>/i;
 
 /**
  * Where something that belongs in a document's head goes: before its first closing head tag, or,

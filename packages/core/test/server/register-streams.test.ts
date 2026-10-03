@@ -15,7 +15,7 @@ afterEach(async () => {
 /** Listens with the given streams, and answers its origin and the log it wrote. */
 const serve = async (
   streams: readonly ApiDefinition[],
-  heartbeat?: number,
+  timing?: { readonly heartbeat?: number; readonly stall?: number },
   force: boolean | "idle" = true,
   before: (app: FastifyInstance) => void = () => undefined,
 ) => {
@@ -24,7 +24,7 @@ const serve = async (
   // closes only idle connections waits out; this stops the test's server, not the stream, at once.
   app = Fastify({ logger: false, forceCloseConnections: force });
   before(app);
-  registerStreams(app, streams, (line) => logged.push(line), heartbeat);
+  registerStreams(app, streams, (line) => logged.push(line), timing);
   const origin = await app.listen({ port: 0, host: "127.0.0.1" });
   return { origin, logged };
 };
@@ -99,7 +99,9 @@ describe("a streaming api, mounted", () => {
   });
 
   it("writes a comment while quiet, so an idle connection is not closed by a proxy", async () => {
-    const { origin } = await serve([defineApi({ path: "/quiet", stream: () => undefined })], 20);
+    const { origin } = await serve([defineApi({ path: "/quiet", stream: () => undefined })], {
+      heartbeat: 20,
+    });
     expect(await readUntil(await fetch(`${origin}/quiet`), ": ping")).toContain(": ping\n\n");
   });
 
@@ -126,23 +128,36 @@ describe("a streaming api, mounted", () => {
     expect(opened).toBe(0);
   });
 
-  it("closes a connection whose client stops reading, rather than holding what it is sent", async () => {
+  it("drops a connection whose client stops reading, rather than holding what it is sent", async () => {
     const { given, give } = handOut();
-    const { origin } = await serve([defineApi({ path: "/flood", stream: give })]);
-    await fetch(`${origin}/flood`);
+    const { origin } = await serve([defineApi({ path: "/flood", stream: give })], { stall: 100 });
+    const response = await fetch(`${origin}/flood`);
     const context = await given;
     const chunk = "x".repeat(100_000);
-    for (let sent = 0; sent < 200 && !context.signal.aborted; sent += 1) {
-      context.send("chunk", chunk);
-    }
-    expect(context.signal.aborted).toBe(true);
+    for (let sent = 0; sent < 200; sent += 1) context.send("chunk", chunk);
+    await new Promise<void>((resolve) => context.signal.addEventListener("abort", () => resolve()));
+    // Destroyed, not ended: what was queued for it is let go rather than sent when it reads.
+    await expect(response.text()).rejects.toThrow();
+  });
+
+  it("keeps a client that takes a large burst in time", async () => {
+    const { given, give } = handOut();
+    const { origin } = await serve([defineApi({ path: "/burst", stream: give })], { stall: 500 });
+    const response = await fetch(`${origin}/burst`);
+    const context = await given;
+    context.send("snapshot", "x".repeat(3_000_000));
+    context.send("after", "end of burst");
+    expect(await readUntil(response, "end of burst")).toContain("end of burst");
+    // Past the stall: drained in time, it is not dropped later either.
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    expect(context.signal.aborted).toBe(false);
   });
 
   it("stops writing its heartbeat once the connection has closed", async () => {
     const started = vi.spyOn(globalThis, "setInterval");
     const cleared = vi.spyOn(globalThis, "clearInterval");
     const { given, give } = handOut();
-    const { origin } = await serve([defineApi({ path: "/beat", stream: give })], 20);
+    const { origin } = await serve([defineApi({ path: "/beat", stream: give })], { heartbeat: 20 });
     const controller = new AbortController();
     await fetch(`${origin}/beat`, { signal: controller.signal });
     const context = await given;

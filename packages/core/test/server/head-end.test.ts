@@ -10,6 +10,9 @@ describe("where something for a document's head goes", () => {
 
   it("is after the doctype of a template with no head, which keeps it out of quirks mode", () => {
     expect(headEnd("\n<!DOCTYPE html><title>x</title>")).toBe("\n<!DOCTYPE html>".length);
+    expect(headEnd("<!-- a --> <!-- b --><!doctype html><p>")).toBe(
+      "<!-- a --> <!-- b --><!doctype html>".length,
+    );
   });
 
   it("is the very start of a template with neither", () => {

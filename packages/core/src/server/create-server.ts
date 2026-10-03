@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { randomUUID } from "node:crypto";
 import Fastify from "fastify";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { contentSecurityPolicy } from "../access/content-security-policy.js";
@@ -75,6 +76,9 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const byName = new Map(options.assemblies.map((assembly) => [assembly.name, assembly]));
 
   const log = options.log ?? writeLogLine;
+  // One id per process, which the pages it renders carry and its reload stream tells, so a page
+  // in development reloads when the server that rendered it has been replaced.
+  const boot = config.mode === "development" ? randomUUID() : undefined;
   const app = Fastify({ logger: false });
 
   registerFailures(app, log);
@@ -183,9 +187,9 @@ export async function createServer(options: ServerOptions): Promise<App> {
     remotes,
     cache: createMemoryCache(),
     log,
-    reload: config.mode === "development",
+    ...(boot === undefined ? {} : { reload: boot }),
   });
-  if (config.mode === "development") registerDevReload(app, log);
+  if (boot !== undefined) registerDevReload(app, log, boot);
 
   await app.ready();
 

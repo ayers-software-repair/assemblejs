@@ -8,6 +8,7 @@ import type { LogLine } from "@assemblejs/core";
 import {
   DEFAULT_LIMITS,
   DEV_RELOAD_SCRIPT,
+  DEV_RELOAD_STREAM,
   createMemoryCache,
   createRemoteTransport,
   createServer,
@@ -176,10 +177,12 @@ describe("a page in development", () => {
         log: () => undefined,
       });
       const page = (await server.inject({ method: "GET", url: "/" })).body;
-      const script = await server.inject({ method: "GET", url: DEV_RELOAD_SCRIPT });
+      const script = (await server.inject({ method: "GET", url: DEV_RELOAD_SCRIPT })).statusCode;
+      const stream = server.fastify.hasRoute({ method: "GET", url: DEV_RELOAD_STREAM });
       await server.close();
-      expect([page.includes(`src="${DEV_RELOAD_SCRIPT}"`), script.statusCode], mode).toEqual(
-        mode === "development" ? [true, 200] : [false, 404],
+      const linked = page.includes(`src="${DEV_RELOAD_SCRIPT}?boot=`);
+      expect([linked, script, stream], mode).toEqual(
+        mode === "development" ? [true, 200, true] : [false, 404, false],
       );
     }
   });

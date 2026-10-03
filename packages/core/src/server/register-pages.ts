@@ -41,8 +41,11 @@ export function registerPages(
     readonly remotes: readonly RemoteDefinition[];
     readonly cache: ContentCache;
     readonly log: (line: LogLine) => void;
-    /** Links the script that reloads a page in development into every page. */
-    readonly reload?: boolean;
+    /**
+     * In development, this server's boot: every page links the script that reloads it, carrying
+     * the boot of the server that rendered it.
+     */
+    readonly reload?: string;
   },
 ): void {
   const { assemblies, log } = options;
@@ -84,7 +87,10 @@ export function registerPages(
 
       const assets: { css: string[]; js: string[] } = {
         css: [],
-        js: options.reload === true ? [DEV_RELOAD_SCRIPT] : [],
+        js:
+          options.reload === undefined
+            ? []
+            : [`${DEV_RELOAD_SCRIPT}?boot=${encodeURIComponent(options.reload)}`],
       };
       for (const diagnostic of composed.diagnostics) {
         // A placement that fell back still served a page, so nothing else would ever say it

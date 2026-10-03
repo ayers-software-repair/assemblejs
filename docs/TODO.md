@@ -265,6 +265,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
       development only and under the framework's prefix (DECISIONS, 2026-10-03, "dev is the
       production build").
+- [x] The verification of dev reload and the B-18 fixes: `last` honours addressing, back-pressure
+      drops only a stalled client, the reload routes under the devtools prefix, the page carries
+      its boot
 - [ ] B-19 devtools, read-only, with the boot assertion
 - [ ] B-20 the check, perf and deploy verbs
 - [ ] B-21 the conformance harness and its first specs

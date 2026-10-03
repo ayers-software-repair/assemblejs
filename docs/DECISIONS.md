@@ -1148,8 +1148,10 @@ the source and found, and this round fixed:
 
 - **The Vue "production" test project ran Vue's development build.** Expected: a project's
   `NODE_ENV` selects the build. Found: Vue picks its build when first loaded, before a test
-  project's environment applies. Each build is now a run of its own (`NODE_ENV=production vitest run` in the package's test script), and a test proves the build each run loaded. The old
-  rethrowing handler now fails the production run, as it fails a production server.
+  project's environment applies. Each build is now a run of its own, the package's test script
+  running `NODE_ENV=production vitest run` after the first, and a test proves the build each run
+  loaded. The old rethrowing handler now fails the production run, as it fails a production
+  server.
 - **Solid's registry carry-over** ran only after a successful hydration, kept detached nodes, and
   could hand a placement mounted again its old markup. It now runs in a `finally`, carries only
   nodes still in the page, and a failed island no longer ends hydration for the rest. The
@@ -1180,8 +1182,8 @@ and is found at its first render, where its placement falls back.
 
 - **A stream is an api with `stream` in place of `handle`.** `ApiDefinition` is now the union of
   a data api and a streaming api, so a project's `*.api.ts` files need nothing new and the
-  generated module is unchanged; `defineApi` answers the definition's own type, so each kind
-  keeps its context's type (overloads would read to the organization gate as three exports).
+  generated module is unchanged; `defineApi` is typed as the definition (first made generic, which
+  dropped the check of misspelt properties; see "verifying B-18").
   A stream runs once per connection with `send` and an `AbortSignal` that aborts when the
   connection closes from either end.
 - **The page names its stream** (`definePage({ stream })`), and the server writes it as a meta
@@ -1213,8 +1215,8 @@ The rung's verifier found, and this round fixed:
   it missed with `events.last`. The browser proof now sends the current price on connect and
   needs both assemblies to show it, five runs of five; without the keep it fails every run.
 - **No back-pressure:** a client that stopped reading held every message since in the server's
-  memory. A connection with a megabyte unsent is closed; its page reconnects and starts again
-  from what the stream sends then.
+  memory. A connection with a megabyte unsent was closed; that measured a burst rather than a
+  stalled client and was replaced, see "verifying dev reload and the B-18 fixes".
 - **`defineApi` had stopped refusing a misspelt property**, as a generic signature turns off the
   excess-property check: `mehtod: "POST"` mounted the route as GET. It is typed as the definition
   again, and a data api's `stream?: never` refuses a definition with both. The register functions
@@ -1235,11 +1237,39 @@ The rung's verifier found, and this round fixed:
 
 Expected, from "dev is the production build" above: a reload pushed to the page over B-18's
 server-sent events, under the framework's prefix and only in development. Built so: a server in
-development mode serves `/_assemblejs/dev/reload.js` and the stream `/_assemblejs/dev/reload`,
-which tells each connection one boot id per process, and links the script into every page. `dev`
+development mode serves a reload script and a reload stream (first under `/_assemblejs/dev/`,
+since under the devtools prefix), which tells each connection one boot id per process, and links
+the script into every page. `dev`
 restarts the server after each rebuild; the page's event source reconnects to the new process,
 hears a new boot and reloads. A script file rather than the page's runtime, because a page whose
 assemblies ship no JavaScript has no runtime and must reload all the same, and the policy runs no
 inline script. The page's own stream is untouched: in development a page holds two connections,
 its own and this one. Proof: `browser/dev.browser.ts` runs `assemblejs dev` on a copy of an
 example, edits a view, and the open page shows the edit with no hand on the browser.
+
+## 2026-10-03: verifying dev reload and the B-18 fixes
+
+The verifier of `dev`'s reload and of the B-18 fix round found, and this round fixed:
+
+- **`last` handed out messages addressed to someone else.** Found: keeping every stream topic
+  kept one message per topic, so a message to `{ name: "cart" }` was what any assembly read back.
+  The bus now keeps one message per topic and address, and `last` answers an assembly the latest
+  one it would have been delivered. DESIGN 9 and decision 7 now say the stream's topics opt in.
+- **Back-pressure measured a burst, not a stalled client.** Found: a response holds what one
+  synchronous burst wrote until the next tick, so a megabyte snapshot to a client that was reading
+  closed the stream, which reconnected and was sent it again. A write the socket cannot take at
+  once now waits for it to drain; one that does not drain in thirty seconds drops the client,
+  destroying its socket rather than ending it, so what was queued is let go.
+- **The reload routes sat beside the devtools prefix**, outside the read-only rule B-19 adds;
+  they are under it now.
+- **A first connection could learn the wrong boot.** Found: a page rendered by a server that then
+  restarted heard the new boot first and never reloaded. The page now links the script with the
+  boot of the server that rendered it, and reloads whenever it hears another.
+- **A doctype after a leading comment** still got the head's elements before it; they now go
+  after it.
+- **Recorded, not changed:** a request the server fails outright is answered with its JSON
+  failure body, which can carry no script, so in development it reloads by hand. Over HTTP/1.1 a
+  browser holds six connections per origin and each page with a stream holds one (two in
+  development), which DESIGN 3.6 now says; HTTP/2 would lift it and needs TLS, which a local
+  development server does not have. Tests now hold the reload stream's absence in production and
+  both reload routes behind the access decision.

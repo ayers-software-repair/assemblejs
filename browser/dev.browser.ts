@@ -45,11 +45,17 @@ test("a page under dev reloads itself after a source file changes", async ({ pag
 
   // The page has heard the first server's boot before anything changes.
   const connected = page.waitForResponse((response) =>
-    response.url().endsWith("/_assemblejs/dev/reload"),
+    response.url().endsWith("/_assemblejs/devtools/reload"),
   );
   await page.goto(`${origin}/`);
   await expect(page.locator("h1")).toHaveText("Two frameworks, one page");
   await connected;
+  // The page carries the boot of the server that rendered it, so it does not reload while that
+  // server answers.
+  let loads = 0;
+  page.on("load", () => (loads += 1));
+  await page.waitForTimeout(1500);
+  expect(loads).toBe(0);
   writeFileSync(join(project, "src", "assemblies", "hello", "hello.html"), "<h1>Rebuilt</h1>\n");
   await expect(page.locator("h1")).toHaveText("Rebuilt", { timeout: 60_000 });
 });

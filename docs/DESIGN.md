@@ -299,12 +299,15 @@ export default definePage({ stream: "/api/prices" });
 
 Each message is one `data:` line of JSON, `{ topic, payload, to? }`, which cannot be broken by a
 line break in the payload. It arrives on the bus from the sender `{ id: "server" }`, an id no
-placement can have, and each topic the stream sends keeps its last message: the stream opens while
-assemblies are still loading, so one that mounts later reads what it missed with `events.last`.
+placement can have, and each topic the stream sends keeps its last message per address: the
+stream opens while assemblies are still loading, so one that mounts later reads what it missed
+with `events.last`, and only what it would have been delivered.
 The page's own runtime opens the stream its head names; a remote's runtime never does, and an
 assembly placed from another server is on that server's bus, which the stream does not reach.
-A stream answers GET and not HEAD, writes a comment while quiet, closes a connection whose client
-lets a megabyte go unsent, and is closed before the server stops. A page naming a stream that is
+A stream answers GET and not HEAD, writes a comment while quiet, drops a connection whose client
+takes nothing it is sent for thirty seconds, and is closed before the server stops. Over HTTP/1.1
+a browser holds six connections per origin, and every open page with a stream holds one of them
+(two in development, with the reload stream): beyond six such tabs, the next page waits. A page naming a stream that is
 not one of the server's streaming apis (a query after the path is the stream's own), or naming
 one with no assembly of this server's that runs in the browser to open it, is a boot error.
 
@@ -579,7 +582,9 @@ const off = events.on("cart:add", handler); // removed automatically on unmount
   instance id, or the page.
 - **Last-value replay is opt-in per topic.** A late-hydrating assembly can see the message it
   missed. There is no unbounded history that nobody reads, and no buffer that is filled and
-  never replayed.
+  never replayed. Every topic the page's stream sends opts in, because the stream opens while
+  assemblies are still loading. What is kept is one message per topic and address, and `last`
+  answers an assembly only a message it would have been delivered.
 - Every event carries the sending assembly's id, stamped by the runtime, not supplied by the
   sender.
 - The public surface is this typed object. Raw event dispatch is never the API.
@@ -625,8 +630,10 @@ root. Nothing pretends otherwise.
   same build and the same `node dist/server.js` as production, and rebuilds and restarts on every
   change; `assemblejs build` emits the server and the client assets; neither leaves a trace in
   the running server. A server in development mode links one more script into every page, from
-  `/_assemblejs/dev/`, which listens on a stream for the server's boot and reloads the page when
-  it hears a new one, so a page follows `dev` across each restart; in production neither exists.
+  under the devtools prefix and carrying the boot of the server that rendered the page, which
+  listens on a stream for the server's boot and reloads the page when it hears another, so a page
+  follows `dev` across each restart; in production neither exists. A request the server fails
+  outright is answered with its failure body, which carries no script, and reloads by hand.
 - The dev server binds loopback by default. Devtools are development-only, read-only over HTTP,
   and a boot assertion refuses to start if any route under the devtools prefix accepts anything
   but `GET` or `HEAD`.
@@ -760,8 +767,9 @@ reason, so nothing has to be remembered.
 6. **The data endpoint calls the same function the content endpoint calls**, rather than
    re-entering the content route with a flag. Re-entry is elegant and it loses the composition
    state the render had, so the two answers can differ.
-7. **Events replay the last value only, opt-in per topic.** It solves the real race, a late
-   island missing an early message, without an unread history.
+7. **Events replay the last value only, opt-in per topic** (each topic the page's stream sends
+   opts in). It solves the real race, a late island missing an early message, without an unread
+   history.
 8. **Islands ship native modules**, not immediately-invoked bundles over a page global. The
    browsers all support it; the global was a bundler workaround.
 9. **Depth and cycles are refused by the parent before dispatch**, not only by the child on
