@@ -4,6 +4,7 @@ import type { AssemblyView } from "../assembly/assembly-view.js";
 import type { JsonObject } from "../json/json-object.js";
 import { runServices } from "../service/run-services.js";
 import type { ServiceContext } from "../service/service-context.js";
+import { viewSchema } from "./view-schema.js";
 
 /**
  * The data an assembly renders with, and the same object its data endpoint answers.
@@ -13,7 +14,9 @@ import type { ServiceContext } from "../service/service-context.js";
  * services as well as a data function, because both forms are resolved here and nowhere else.
  *
  * Services first, then the view's own data on top: the inline form is the more specific of the
- * two, so it wins, the same way a later service wins over an earlier one.
+ * two, so it wins, the same way a later service wins over an earlier one. Where they declare
+ * schemas, no two of them may claim the same field, which boot has already checked; what is
+ * checked here is that every field the composed schema requires came back.
  */
 export async function resolveData(
   view: AssemblyView,
@@ -21,5 +24,11 @@ export async function resolveData(
 ): Promise<JsonObject> {
   const fromServices = await runServices(view.services ?? [], context);
   const own = view.data === undefined ? {} : await view.data({ query: context.query });
-  return { ...fromServices, ...own };
+  const data = { ...fromServices, ...own };
+  for (const field of viewSchema(view).schema.required ?? []) {
+    if (!Object.hasOwn(data, field)) {
+      throw new Error(`data field "${field}" is required and nothing returned it`);
+    }
+  }
+  return data;
 }

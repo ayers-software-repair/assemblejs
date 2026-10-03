@@ -11,5 +11,8 @@ export { BootError } from "./boot-error.js";
 export { apiProblems } from "./api-problems.js";
 export { bootProblems } from "./boot-problems.js";
 export { registerApis } from "./register-apis.js";
+export { viewSchema } from "./view-schema.js";
 export { resolveData } from "./resolve-data.js";
+export { queryOf } from "./query-of.js";
+export { writeLogLine } from "./write-log-line.js";
 export { createServer } from "./create-server.js";

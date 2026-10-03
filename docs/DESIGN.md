@@ -506,8 +506,9 @@ export default defineApi({
 
 One method per definition, `GET` unless `method` says otherwise. The handler is given the
 request's `query`, its route `params` and its parsed `body`, and whatever it returns is the JSON
-reply. A path that is declared twice for one method, does not start with `/`, uses a wildcard, or
-lands under `/assembly/` or `/_assemblejs/` is a boot error.
+reply. A path is literal segments and whole-segment `:parameters`. One that is declared twice for
+one method, does not start with `/`, uses a wildcard or any other pattern, or lands under
+`/assembly/` or `/_assemblejs/` is a boot error.
 
 ---
 

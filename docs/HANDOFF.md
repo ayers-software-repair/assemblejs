@@ -1,7 +1,6 @@
 # Handoff
 
-Current state of the repository for whoever picks it up next. Facts only; history is in git.
+The handoff is the "RESUME HERE" block at the top of `docs/TODO.md`. It is kept there, beside the
+ledger it summarises, so the two cannot disagree; this file only points at it.
 
-- Branch `next` is where every change lands; `main` is promoted from it by pull request.
-- Ladder position: B-01 (repository skeleton and gates). No product code yet.
-- Proof of the current rung: `pnpm check` green locally and in CI on the landing commit.
+Branch `next` is where every change lands; `main` is promoted from it by pull request.

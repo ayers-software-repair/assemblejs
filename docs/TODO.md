@@ -5,41 +5,40 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-09-10.** Branch `next` @ `ead61f3`, pushed, tree clean. Full gate `pnpm check` exit 0
-on this HEAD (367 tests, five packages). Last CODE commit `ab13197`; everything after is docs. The
-seat that built this was stopped mid-ladder on the owner's word; nothing is half-written in the tree.
+**STATE 2026-10-03.** Branch `next`. B-12 is done (apis mounted and checked at boot; data
+schemas deep-merged with a collision refused at boot). Full gate `pnpm check` green on the B-12
+fix commit. A cloud session resumed the ladder on the owner's word ("complete all you can"); the
+owner does every release himself, from his own sessions, so nothing here publishes.
 
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
 micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
 published as `@assemblejs/*`. `docs/DESIGN.md` is the contract, `docs/PLAN.md` the frozen rung
-ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-11 are DONE (49 rows).
-IN FLIGHT: **B-12 partial** - the service model landed (services RETURN, ordered by `after`,
-`resolveData` is the one function both endpoints call); the user-declared api routes are NOT wired.
-**B-09 partial** - `dev`, `build`, `@assemblejs/create` left; **B-09c** - agent tools
-`create_project`, `add_assembly`, `place_assembly`, `check` left.
+ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE except B-09
+(`dev`, `build`, `@assemblejs/create` left) and B-09c (agent tools `create_project`,
+`add_assembly`, `place_assembly`, `check` left).
 
-**THE EXACT FIRST STEP:** finish B-12. `packages/core/src/api/api-definition.ts` is the landed,
-tested contract (`{ path, method?, handle(context) }`); `server-options.ts` has NO `apis` field and
-`create-server.ts` registers no user apis. Add `apis?: readonly ApiDefinition[]`; a `register-apis.ts`
-(own file, own test) mounting each as a fastify route replying JSON; boot-time refusals through the
-existing `boot-problems.ts` for a duplicate (method,path), a path not starting with `/`, and a path
-under `/assembly/` or `/_assemblejs/`; tests via `app.inject`, each watched RED by disabling the
-guard first; align `docs/DESIGN.md` section 8's snippet (shows `GET:` as a field) to the code's
-`method`+`handle`; the curl proof on a REAL listening server bound to 127.0.0.1, output pasted;
-check this row off in the SAME commit. Then close B-09/B-09c, then B-13 onward in ledger order.
+**THE EXACT NEXT STEP:** B-09. Found on resuming, and logged in `docs/DECISIONS.md`: the server
+served the assembly endpoints but no PAGES - nothing turned a template into a composed document
+or linked a browser runtime - and B-09's proof (create, build, `node dist/server.js`) needs both.
+So B-09 lands in four commits: pages in core (definePage, the composer's local transport, asset
+serving and hoisting, template checks at boot), then `build` (esbuild owned by the CLI; the
+server bundle keeps packages external so it runs with no bundler), then `dev`, then
+`@assemblejs/create` and the tarball proof. Then B-09c, then B-13 onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the 37 open rows:** B-12 -> B-09/B-09c -> B-13 (remote; carries recorded
-debt: `Limits.maxBytes` has no reader) -> B-14 auth -> B-15 styles -> B-16 four renderers -> B-17
-templates -> B-18 SSE -> B-19 devtools -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) ->
-B-25 budgets -> B-26 release dry run -> B-27a/B-27b (need the owner's acts). The five house-style
-rows and the six release-notes rows (owner ruled: hand-kept notes for the 1.0.0 train, generated
-later; CHANGELOG<->site drift gate now; changesets kept permanently) can land any time. Site guides
-wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions
-org allowlist (Actions runs NOTHING here yet), branch rulesets, the bird mark, the palette, the
-old npm package deprecation, the first hand publish.
+**ORDER AND DEPENDENCIES of the open rows:** B-09 -> B-09c -> B-13 (remote; carries recorded
+debt: `Limits.maxBytes` has no reader, and pages refuse a `url` placement at boot until it lands)
+-> B-14 auth -> B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
+-> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
+-> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
+any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
+the OIDC role, the Actions org allowlist (Actions runs NOTHING here yet), branch rulesets, the
+bird mark, the palette, the old npm package deprecation, the first publish. Raised with the
+owner, unanswered: whether changesets start before or after the first publish (DECISIONS,
+2026-10-03; `CLAUDE.md` still says every `packages/*/src` change).
 
-**STALE ROW, resolve first, do not assume:** Phase 1's "eleventh (client) dossier verified" still
-says a verifier "is reading now" - its outcome was never recorded.
+**THE CLIENT DOSSIER ROW (Phase 1) cannot be resolved from here.** The dossiers and the reference
+clones live outside this tree by design and a cloud session has neither; its outcome was never
+recorded. It stays open for the owner.
 
 **2. THE HOUSE-STYLE KIT (private `platform` repo, `codestyle/`).** v0.23.0 is tagged and pushed;
 nothing unpushed there. PENDING: the ruling document's section 16 (in the business-site repo,
@@ -98,7 +97,8 @@ the record of what was read, and they stay in the private estate document store,
 - [x] `legacy-additions` dossier
 - [x] `legacy-tests` dossier
 - [x] Ten of the eleven dossiers' load-bearing claims refuted at the source by a second reader
-- [ ] The eleventh (`client`) verified: its first verifier died mid-run, a second is reading now
+- [ ] The eleventh (`client`) verified: its first verifier died mid-run and the second one's
+      outcome was never recorded. Open for the owner: the dossiers are outside this tree.
 - [x] `docs/dossiers/00-BRIEF.md`: the dossiers aggregated into one design brief
 - [x] `docs/dossiers/00-AUDIT.md`: the adversarial defect hunt over the v1, eight lenses, every
       finding refuted by a second reader; 74 raised, 61 survived, fifteen design constraints
@@ -156,8 +156,9 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-11 the second framework renderer and the day-one proof: Svelte, and two frameworks sharing an event on one page in a real browser
 - [x] B-12 services and apis: the service model (return not mutate, `after` not priority,
       ordering settled at boot with duplicates/unknowns/cycles refused), resolveData as the one
-      function both endpoints call, and the product's apis mounted by createServer with their
-      collisions, reserved prefixes and wildcards refused at boot
+      function both endpoints call, data schemas deep-merged with a field claimed twice refused
+      at boot, and the product's apis mounted by createServer on a flat route grammar with
+      collisions and reserved prefixes refused at boot
 - [ ] B-13 remote assemblies: allowlist, caps, handshake, cache
       Owed here: `Limits.maxBytes` is declared and has no reader until the remote
       transport exists. A verification pass found a 10 MiB fragment composing clean

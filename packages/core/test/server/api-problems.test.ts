@@ -59,6 +59,18 @@ describe("what is checked about apis before anything listens", () => {
     expect(apiProblems([defineApi({ path: "/api/*", handle })]).join()).toMatch(/wildcard/);
   });
 
+  it("refuses a parameter that is not a whole segment, and markers that match nothing", () => {
+    for (const path of ["/a/:id?", "/a/:id(^\\d+)", "/a/:b-:c", "/a/::x", "/x?y", "/x#y", "//x"]) {
+      expect(apiProblems([defineApi({ path, handle })]).join()).toMatch(/not a flat path/);
+    }
+  });
+
+  it("accepts the flat grammar, a trailing slash included", () => {
+    for (const path of ["/", "/api/v1.2/items_list/", "/api/:id", "/a/:b/c/:d"]) {
+      expect(apiProblems([defineApi({ path, handle })])).toEqual([]);
+    }
+  });
+
   it("reports every problem, not the first", () => {
     expect(apiProblems([defineApi({ path: "assembly/*", handle })]).length).toBe(2);
   });

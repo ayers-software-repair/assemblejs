@@ -498,10 +498,37 @@ path under `/assembly/` or `/_assemblejs/`, compared without case.
 The reply is serialised by the server rather than handed to the router, because the router sends
 a bare string as plain text: a handler typed to return JSON answers JSON, whatever value it is.
 
+## 2026-10-03: schemas are deep-merged, and a field claimed twice is refused at boot
+
+Expected: B-12 complete once the api routes were wired. Found by the verifying agent: the plan's
+B-12 row and DESIGN section 6 both say composed schemas are deep-merged with a colliding name as a
+startup error, and nothing in the code had a schema at all; the 2026-09-03 entry above had settled
+data collisions as "the later writer wins" without recording that it departed from the plan.
+
+Built as the plan says. A service and a view may each declare a `schema` (`properties`, each a
+JSON Schema, and `required`). A view's composed schema is its services' schemas then its own,
+merged: properties unioned, required lists concatenated, and a field declared by two contributors
+is a boot error naming both, whichever order they would have run in. The schema has a reader: a
+field the composed schema requires that no contributor returned fails the render, so a declared
+shape is enforced at the boundary rather than written down and trusted. Data from contributors
+that declare no schema still merges later-writer-wins; the entry above is right for them, and
+declaring a schema is how an author asks for the stricter rule.
+
+The same verification found, and this commit fixes: a caller's own 4xx (an unsupported body type,
+a malformed body) was reported as a 500; the server's log was a no-op (`logger: false` with every
+failure written to `app.log`), so a correlation id pointed at nothing - failures now go to a
+`log` option, standard error by default; an unknown route answered the router's own description
+of the request; a product route starting with a parameter could answer an unclaimed path under a
+reserved prefix; and an api path outside a flat grammar (an optional or regex parameter, two
+parameters in one segment, a `?` or `#`) was accepted, though it matches differently from how it
+reads or matches nothing.
+
 ## 2026-10-03: no changeset until the first publish
 
 Expected, from `CLAUDE.md`: a changeset on every `packages/*/src` change. Found: every package
 already reads `1.0.0` and nothing has been published, and no rung so far has written one. A
 changeset now would move the first release past the `1.0.0` that B-27b names. Changesets start
 with the first change after the first publish; until then the packages' versions say what the
-first release is, and the release notes say what is in it.
+first release is, and the release notes say what is in it. This sets aside a rule `CLAUDE.md`
+states, so it is raised with the owner rather than settled here, and `CLAUDE.md` is left as he
+wrote it until he answers.

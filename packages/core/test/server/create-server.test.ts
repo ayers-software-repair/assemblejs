@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { BootError, createServer, defineApi, defineAssembly } from "@assemblejs/core";
-import type { App, Config } from "@assemblejs/core";
+import type { App, Config, LogLine } from "@assemblejs/core";
 
 const config: Config = { mode: "production", host: "127.0.0.1", port: 0, auth: undefined };
 
@@ -35,13 +35,21 @@ const exploding = defineAssembly({
   },
 });
 
+const logged: LogLine[] = [];
 let app: App;
 beforeAll(async () => {
   app = await createServer({
     config,
+    log: (line) => logged.push(line),
     assemblies: [hello, exploding],
     apis: [
       defineApi({ path: "/api/time", handle: () => ({ now: "2026-10-03T00:00:00.000Z" }) }),
+      defineApi({
+        path: "/api/items",
+        method: "POST",
+        handle: ({ body }) => ({ body: body ?? null }),
+      }),
+      defineApi({ path: "/:anything", handle: () => ({ shadowed: true }) }),
       defineApi({
         path: "/api/leak",
         handle: () => {
@@ -191,6 +199,14 @@ describe("the error contract", () => {
   });
 });
 
+describe("an unknown route", () => {
+  it("answers the failure body, not the router's own description of the request", async () => {
+    const response = await app.inject({ method: "GET", url: "/no/such/route" });
+    expect(response.statusCode).toBe(404);
+    expect(response.json()).toEqual({ error: { correlationId: expect.any(String) } });
+  });
+});
+
 describe("the framework's own surface", () => {
   it("answers health under the reserved prefix", async () => {
     const response = await app.inject({ method: "GET", url: "/_assemblejs/health" });
@@ -210,6 +226,42 @@ describe("the product's own apis", () => {
     expect(response.statusCode).toBe(500);
     expect(response.body).not.toContain("hunter2");
     expect(response.json()).toEqual({ error: { correlationId: expect.any(String) } });
+  });
+
+  it("log what they threw against the id the caller was told", async () => {
+    const response = await app.inject({ method: "GET", url: "/api/leak" });
+    const { correlationId } = (response.json() as { error: { correlationId: string } }).error;
+    const line = logged.find((entry) => entry.correlationId === correlationId);
+    expect(line?.message).toContain("hunter2");
+  });
+
+  it("keep a caller's own mistake a 4xx rather than reporting it as the server's", async () => {
+    const unsupported = await app.inject({
+      method: "POST",
+      url: "/api/items",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      payload: "a=1",
+    });
+    expect(unsupported.statusCode).toBe(415);
+    const malformed = await app.inject({
+      method: "POST",
+      url: "/api/items",
+      headers: { "content-type": "application/json" },
+      payload: "{bad",
+    });
+    expect(malformed.statusCode).toBe(400);
+    expect(malformed.json()).toEqual({ error: { correlationId: expect.any(String) } });
+  });
+
+  it("cannot answer an unclaimed path under a reserved prefix, even one starting with a parameter", async () => {
+    for (const url of ["/assembly", "/assembly/", "/_assemblejs", "/_assemblejs/nope"]) {
+      const response = await app.inject({ method: "GET", url });
+      expect(response.statusCode).toBe(404);
+      expect(response.body).not.toContain("shadowed");
+    }
+    expect((await app.inject({ method: "GET", url: "/elsewhere" })).json()).toEqual({
+      shadowed: true,
+    });
   });
 });
 

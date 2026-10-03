@@ -14,10 +14,12 @@ import type { App } from "./app.js";
 import { BootError } from "./boot-error.js";
 import { bootProblems } from "./boot-problems.js";
 import { buildManifest } from "./build-manifest.js";
+import { queryOf } from "./query-of.js";
 import { readCompositionHeaders } from "./read-composition-headers.js";
 import { registerApis } from "./register-apis.js";
 import { resolveData } from "./resolve-data.js";
 import type { ServerOptions } from "./server-options.js";
+import { writeLogLine } from "./write-log-line.js";
 
 interface Params {
   readonly name: string;
@@ -27,10 +29,11 @@ interface Params {
 /**
  * Builds the server. Everything that can refuse refuses here, before anything listens.
  *
- * The three endpoints of the assembly contract, and nothing else on `/assembly`. The framework's
- * own routes live under their reserved prefix, so a product route can never collide with one a
- * later version adds. The product's own apis are mounted beside them, refused at boot if one
- * would land under either prefix.
+ * The three endpoints of the assembly contract, and nothing else on `/assembly`: anything else
+ * under either reserved prefix is a 404, whatever product route might otherwise have matched it.
+ * The framework's own routes live under their reserved prefix, so a product route can never
+ * collide with one a later version adds. The product's own apis are mounted beside them, refused
+ * at boot if one would land under either prefix.
  */
 export async function createServer(options: ServerOptions): Promise<App> {
   const apis = options.apis ?? [];
@@ -41,15 +44,25 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const maxDepth = options.maxDepth ?? 8;
   const byName = new Map(options.assemblies.map((assembly) => [assembly.name, assembly]));
 
+  const log = options.log ?? writeLogLine;
   const app = Fastify({ logger: false });
 
   // One error handler. The visitor is told an id; the log holds what actually happened. An
-  // exception's message never reaches a body, whatever threw and wherever.
+  // exception's message never reaches a body, whatever threw and wherever. A request the router
+  // itself refused (an unsupported body type, a malformed or oversized body) keeps its 4xx, so
+  // a caller's mistake is not reported as the server's.
   app.setErrorHandler((error, _request, reply) => {
     const correlationId = newCorrelationId();
-    const line = describeFailure(correlationId, error);
-    app.log.error(line);
-    void reply.code(500).send(renderFailure(correlationId));
+    const status =
+      typeof error === "object" && error !== null && "statusCode" in error
+        ? Number(error.statusCode)
+        : 500;
+    const code = status >= 400 && status < 500 ? status : 500;
+    if (code === 500) log(describeFailure(correlationId, error));
+    void reply.code(code).send(renderFailure(correlationId));
+  });
+  app.setNotFoundHandler((_request, reply) => {
+    void reply.code(404).send(renderFailure(newCorrelationId()));
   });
 
   app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));
@@ -84,11 +97,6 @@ export async function createServer(options: ServerOptions): Promise<App> {
     return read.headers;
   };
 
-  const queryOf = (request: FastifyRequest): URLSearchParams =>
-    new URLSearchParams(
-      request.url.includes("?") ? request.url.slice(request.url.indexOf("?")) : "",
-    );
-
   const content = async (request: FastifyRequest<{ Params: Params }>, reply: FastifyReply) => {
     const resolved = resolve(request, reply);
     if (resolved === undefined) return reply;
@@ -100,7 +108,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
 
     // The same data function the data endpoint calls. One function, two endpoints, so the
     // contract's promise that they never drift is structural rather than a convention.
-    const data = await resolveData(declared, { query: queryOf(request), params: {} });
+    const data = await resolveData(declared, { query: queryOf(request.url), params: {} });
     const markup = await declared.markup({ data, children: {} });
 
     return reply
@@ -129,7 +137,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
       if (resolved === undefined) return reply;
       const declared = resolved.assembly.views[resolved.view];
       if (declared === undefined) return reply;
-      return reply.send(await resolveData(declared, { query: queryOf(request), params: {} }));
+      return reply.send(await resolveData(declared, { query: queryOf(request.url), params: {} }));
     },
   );
 
@@ -141,6 +149,16 @@ export async function createServer(options: ServerOptions): Promise<App> {
       return reply.send(buildManifest(resolved.assembly, resolved.view, version));
     },
   );
+
+  // Static routes outrank parameters, so these answer every unclaimed path under the reserved
+  // prefixes before a product route that starts with a parameter can.
+  for (const prefix of [ASSEMBLY_ROUTE_PREFIX, FRAMEWORK_ROUTE_PREFIX]) {
+    for (const path of [prefix, `${prefix}/*`]) {
+      app.all(path, async (_request, reply) =>
+        reply.code(404).send(renderFailure(newCorrelationId())),
+      );
+    }
+  }
 
   registerApis(app, apis);
 

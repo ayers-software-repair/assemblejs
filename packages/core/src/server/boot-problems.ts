@@ -4,6 +4,7 @@ import type { ApiDefinition } from "../api/api-definition.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { apiProblems } from "./api-problems.js";
+import { viewSchema } from "./view-schema.js";
 
 const NAME = /^[a-z][a-z0-9-]*$/;
 
@@ -35,11 +36,14 @@ export function bootProblems(
     if (assembly.views[DEFAULT_VIEW] === undefined) {
       problems.push(`assembly "${assembly.name}" has no "${DEFAULT_VIEW}" view`);
     }
-    for (const view of Object.keys(assembly.views)) {
+    for (const [view, declared] of Object.entries(assembly.views)) {
       if (!NAME.test(view)) {
         problems.push(
           `assembly "${assembly.name}" has a view "${view}" that is not a usable url segment`,
         );
+      }
+      for (const problem of viewSchema(declared).problems) {
+        problems.push(`assembly "${assembly.name}" view "${view}": ${problem}`);
       }
     }
   }

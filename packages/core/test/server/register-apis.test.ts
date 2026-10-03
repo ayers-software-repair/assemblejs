@@ -25,6 +25,8 @@ beforeAll(async () => {
     }),
     defineApi({ path: "/api/word", handle: () => "ok" }),
     defineApi({ path: "/api/nothing", handle: () => null }),
+    // A plain-JavaScript handler can return nothing whatever the type says.
+    defineApi({ path: "/api/void", handle: (() => undefined) as unknown as () => null }),
   ]);
   await app.ready();
 });
@@ -69,5 +71,7 @@ describe("an api, mounted", () => {
     expect(word.headers["content-type"]).toContain("application/json");
     const nothing = await app.inject({ method: "GET", url: "/api/nothing" });
     expect(nothing.body).toBe("null");
+    const absent = await app.inject({ method: "GET", url: "/api/void" });
+    expect(absent.body).toBe("null");
   });
 });
