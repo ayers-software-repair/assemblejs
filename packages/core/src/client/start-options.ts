@@ -10,7 +10,7 @@ export interface StartOptions {
   readonly root?: ParentNode;
   /**
    * The origin this runtime's script was served from. It mounts the envelopes from that origin:
-   * those with no \`data-remote\` when it is the page's own, those whose \`data-remote\` names it
+   * those with no `data-remote` when it is the page's own, those whose `data-remote` names it
    * when it is a remote's. Absent, it mounts only the page's own.
    */
   readonly origin?: string;

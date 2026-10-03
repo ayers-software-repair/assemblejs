@@ -803,3 +803,31 @@ Settled here:
 - **Same origin by default.** Nothing grants another origin's page access to data; the one
   exception is a built server's assets, which are public, immutable and loaded cross-origin by a
   page that places a remote assembly.
+
+## 2026-10-03: styles are scoped at build time, and a shadow root gets its own sheet
+
+B-15 lands DESIGN 10. Expected: the build had a stylesheet to scope. Found: it had none; every
+`.css` and every Svelte `<style>` was left out (B-09's record). Settled here:
+
+- **Scoping is a selector prefix, `assembly-root[data-name="<name>"]`**, applied with PostCSS to
+  every rule outside `@keyframes`, inside `@media`, `@supports`, `@container` and `@layer` as
+  anywhere else. `:scope` names the envelope itself. A prefix rather than a rewritten class
+  keeps the author's markup as written and needs nothing from the view.
+- **One stylesheet per assembly, named by its content's hash**, holding its `.css` files and then
+  its Svelte component's `<style>` (already scoped by Svelte). It is an asset of the assembly,
+  so a page links only the styles of what it places, and a remote assembly's styles arrive
+  through its manifest like its script.
+- **Shadow DOM is a framework view's `shadow` export**, read like `mount`. An html view has no
+  module to export from, so it cannot opt in; no file convention was invented for it. The
+  envelope carries `<template shadowrootmode="open">`, so the markup is in the shadow root before
+  any script runs, and the island stays in the light DOM where the runtime reads it.
+- **A shadow root gets its own sheet.** Expected: link the scoped sheet inside the root. Found:
+  a selector prefixed with the envelope matches nothing inside a shadow root, so the author's
+  styles would have silently vanished there (the Svelte classes would still apply, hiding it).
+  The build cannot know the opt-in without running the view, so it writes a second, unscoped
+  sheet for every framework view (`:scope` becomes `:host`), and the generated registry chooses
+  between the two by reading the view's `shadow` export when the server starts. The page does
+  not hoist a local shadow assembly's sheet into its head.
+- **The holes are asserted, not only written down**: the browser proof runs one assembly's
+  animation from another's `@keyframes`, and a page rule reaches the light DOM. If either stops
+  leaking, the proof goes red and DESIGN 10 is out of date.

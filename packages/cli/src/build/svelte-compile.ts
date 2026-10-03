@@ -8,4 +8,4 @@
 export type SvelteCompile = (
   source: string,
   options: { readonly filename: string; readonly generate: "client" | "server" },
-) => { readonly js: { readonly code: string } };
+) => { readonly js: { readonly code: string }; readonly css?: { readonly code: string } | null };

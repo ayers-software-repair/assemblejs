@@ -27,4 +27,24 @@ describe("compiling a .svelte file inside the bundler", () => {
     expect(seen).toEqual(["client:<p>hi</p>"]);
     expect(result.outputFiles[0]?.text).toContain("42");
   });
+
+  it("hands a component's own styles on, by file", async () => {
+    const root = mkdtempSync(join(tmpdir(), "svelte-plugin-"));
+    writeFileSync(join(root, "a.svelte"), "<p>hi</p>");
+    const styles: string[] = [];
+    await build({
+      entryPoints: [join(root, "a.svelte")],
+      bundle: true,
+      write: false,
+      format: "esm",
+      plugins: [
+        sveltePlugin(
+          () => ({ js: { code: "export default 1;" }, css: { code: "p.svelte-x{}" } }),
+          "client",
+          (file, css) => styles.push(`${file.endsWith("a.svelte") ? "a" : "?"}:${css}`),
+        ),
+      ],
+    });
+    expect(styles).toEqual(["a:p.svelte-x{}"]);
+  });
 });

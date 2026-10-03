@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
+import type { AssemblyStyles } from "../styles/assembly-styles.js";
 import { GENERATED_HEADER } from "./generated-header.js";
 import { identifierFor } from "./identifier-for.js";
 import { importPath } from "./import-path.js";
@@ -10,8 +11,10 @@ import { importPath } from "./import-path.js";
  *
  * Every view is imported by name, so the built server has a static import graph and nothing
  * globs a directory at run time. A framework view is wired to its renderer's `renderToMarkup`;
- * a plain html view is its own markup. A framework view's own `mount` export, when it has one,
- * says when its browser half runs; a module without one reads as undefined, the default. An
+ * a plain html view is its own markup. A framework view's own `mount` and `shadow` exports, when
+ * it has them, say when its browser half runs and whether it renders in its own shadow root; a
+ * module without one reads as undefined, the default; a view in its own shadow root links the
+ * stylesheet built for that root instead of the one scoped to its envelope. An
  * assembly with a browser half links the build's client entry; one without is declared `none`,
  * so it ships no JavaScript at all.
  */
@@ -22,6 +25,8 @@ export function generateRegistry(
     readonly from: string;
     /** The url of the build's client entry, when the build has one. */
     readonly script: string | undefined;
+    /** Each assembly's stylesheets, by name, for those that have them. */
+    readonly styles?: ReadonlyMap<string, AssemblyStyles>;
     /** Renderer name to the package that renders it on the server. */
     readonly packages: Readonly<Record<string, string>>;
   },
@@ -53,9 +58,17 @@ export function generateRegistry(
     const parts = [`name: "${assembly.name}"`, `views: { default: { ${fields.join(", ")} } }`];
     const browser = !html || assembly.client !== undefined;
     if (!browser) parts.push(`mount: "none"`);
-    else if (!html) parts.push(`mount: ${view}.mount`);
-    if (browser && options.script !== undefined) {
-      parts.push(`assets: { css: [], js: [${JSON.stringify(options.script)}] }`);
+    else if (!html) parts.push(`mount: ${view}.mount`, `shadow: ${view}.shadow`);
+    const styles = options.styles?.get(assembly.name);
+    const css =
+      styles === undefined
+        ? ""
+        : styles.shadow === undefined
+          ? JSON.stringify(styles.scoped)
+          : `${view}.shadow === true ? ${JSON.stringify(styles.shadow)} : ${JSON.stringify(styles.scoped)}`;
+    const js = browser ? options.script : undefined;
+    if (css !== "" || js !== undefined) {
+      parts.push(`assets: { css: [${css}], js: [${js === undefined ? "" : JSON.stringify(js)}] }`);
     }
     return `  { ${parts.join(", ")} },`;
   });

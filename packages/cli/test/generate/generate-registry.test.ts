@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
 import { generateRegistry } from "@assemblejs/cli";
-import type { DiscoveredAssembly } from "@assemblejs/cli";
+import type { AssemblyStyles, DiscoveredAssembly } from "@assemblejs/cli";
 
 const from = "/p/.assemblejs";
 const found = (
@@ -20,8 +20,17 @@ const found = (
   styles: [],
   ...over,
 });
-const generate = (assemblies: readonly DiscoveredAssembly[], script?: string) =>
-  generateRegistry(assemblies, { from, script, packages: { react: "@assemblejs/renderer-react" } });
+const generate = (
+  assemblies: readonly DiscoveredAssembly[],
+  script?: string,
+  styles?: ReadonlyMap<string, AssemblyStyles>,
+) =>
+  generateRegistry(assemblies, {
+    from,
+    script,
+    ...(styles === undefined ? {} : { styles }),
+    packages: { react: "@assemblejs/renderer-react" },
+  });
 
 describe("generating the registry the built server imports", () => {
   it("imports every view by name, so the graph is static", () => {
@@ -74,6 +83,7 @@ describe("generating the registry the built server imports", () => {
       found("cart", "cart.html", "html"),
     ]);
     expect(source).toContain("mount: view_hi.mount");
+    expect(source).toContain("shadow: view_hi.shadow");
     expect(source).not.toContain("view_cart.mount");
   });
 
@@ -95,5 +105,30 @@ describe("generating the registry the built server imports", () => {
     const source = generate([]);
     expect(source).toContain("export const assemblies: readonly AssemblyDefinition[] = [\n\n];");
     expect(source).toContain("GENERATED");
+  });
+
+  it("links an assembly's stylesheet, a static one's included", () => {
+    const source = generate(
+      [found("cart", "cart.html", "html")],
+      undefined,
+      new Map([
+        ["cart", { scoped: "/_assemblejs/assets/styles/cart-1a2b3c4d.css", shadow: undefined }],
+      ]),
+    );
+    expect(source).toContain(
+      'assets: { css: ["/_assemblejs/assets/styles/cart-1a2b3c4d.css"], js: [] }',
+    );
+    expect(source).toContain('mount: "none"');
+  });
+
+  it("links a framework view's shadow sheet when the view opts into its own shadow root", () => {
+    const source = generate(
+      [found("hi", "hi.react.tsx", "react")],
+      undefined,
+      new Map([["hi", { scoped: "/s/hi-1.css", shadow: "/s/hi-1.shadow.css" }]]),
+    );
+    expect(source).toContain(
+      'css: [view_hi.shadow === true ? "/s/hi-1.shadow.css" : "/s/hi-1.css"]',
+    );
   });
 });

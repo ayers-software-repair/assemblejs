@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { build } from "esbuild";
 import { discoverApis } from "../discovery/discover-apis.js";
@@ -11,6 +11,7 @@ import { generatePages } from "../generate/generate-pages.js";
 import { generateProject } from "../generate/generate-project.js";
 import { generateRegistry } from "../generate/generate-registry.js";
 import type { Io } from "../io/io.js";
+import { writeStyles } from "../styles/write-styles.js";
 import { buildProblems } from "./build-problems.js";
 import { bundleClient } from "./bundle-client.js";
 import { describeBuildFailure } from "./describe-build-failure.js";
@@ -63,7 +64,12 @@ export async function buildProject(root: string, io: Io): Promise<number> {
   );
 
   try {
-    const script = browser.length === 0 ? undefined : await bundleClient(root, browser, svelte, io);
+    const componentCss = new Map<string, string>();
+    const script =
+      browser.length === 0
+        ? undefined
+        : await bundleClient(root, browser, svelte, io, (file, css) => componentCss.set(file, css));
+    const styles = writeStyles(root, found.assemblies, componentCss, io);
     const packages = Object.fromEntries(
       Object.values(RENDERER_PACKAGES).map((known) => [known.name, known.package]),
     );
@@ -72,6 +78,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       generateRegistry(found.assemblies, {
         from: generated,
         script,
+        styles,
         packages,
       }),
     );
@@ -81,7 +88,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       join(generated, "project.ts"),
       generateProject({
         version: sourceVersion(root),
-        client: script !== undefined,
+        client: script !== undefined || styles.size > 0,
         config: existsSync(join(root, "assemblejs.config.ts")),
       }),
     );
@@ -99,16 +106,6 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     return 1;
   }
 
-  const styled = found.assemblies.filter(
-    (assembly) =>
-      assembly.styles.length > 0 ||
-      (assembly.renderer === "svelte" && /<style[\s>]/i.test(readFileSync(assembly.view, "utf8"))),
-  );
-  if (styled.length > 0) {
-    io.log(
-      `not built yet: the stylesheets of ${styled.map((assembly) => assembly.name).join(", ")}; they are included once styles are scoped per assembly`,
-    );
-  }
   io.log(
     `built ${found.assemblies.length} assembly(s), ${pages.pages.length} page(s), ${apis.apis.length} api(s) into dist/`,
   );

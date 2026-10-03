@@ -20,6 +20,7 @@ export async function bundleClient(
   assemblies: readonly DiscoveredAssembly[],
   svelte: SvelteCompile | undefined,
   io: Io,
+  onCss?: (file: string, css: string) => void,
 ): Promise<string> {
   const generated = join(root, ".assemblejs");
   for (const assembly of assemblies) {
@@ -36,7 +37,7 @@ export async function bundleClient(
 
   const outdir = join(root, "dist", "client");
   const result = await build({
-    ...sharedOptions(root, svelte, "client"),
+    ...sharedOptions(root, svelte, "client", onCss),
     entryPoints: [join(generated, "client.ts")],
     platform: "browser",
     format: "esm",

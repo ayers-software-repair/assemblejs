@@ -28,14 +28,15 @@ const envelope = (
 const recorder = () => {
   const mounts: string[] = [];
   const unmounts: string[] = [];
+  const into: Array<Element | ShadowRoot> = [];
   const renderer: ClientRenderer = {
     mount: (element, _data, context) => {
       mounts.push(context.name);
-      void element;
+      into.push(element);
       return { unmount: () => unmounts.push(context.name) };
     },
   };
-  return { mounts, unmounts, renderer };
+  return { mounts, unmounts, into, renderer };
 };
 
 beforeEach(() => {
@@ -96,6 +97,14 @@ describe("starting the runtime", () => {
     const { mounts, renderer } = recorder();
     start({ renderers: { html: renderer } });
     expect(mounts).toEqual(["b"]);
+  });
+
+  it("mounts an assembly in its own shadow root inside that root, not beside it", () => {
+    document.body.innerHTML = envelope("a");
+    const shadow = document.querySelector("assembly-root")?.attachShadow({ mode: "open" });
+    const { into, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect(into).toEqual([shadow]);
   });
 });
 

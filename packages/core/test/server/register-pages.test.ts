@@ -31,6 +31,12 @@ const broken = defineAssembly({
     },
   },
 });
+const card = defineAssembly({
+  name: "card",
+  shadow: true,
+  views: { default: { renderer: "html", markup: () => "<p>card</p>" } },
+  assets: { css: ["/card.css"], js: [] },
+});
 const slow = defineAssembly({
   name: "slow",
   views: { default: { renderer: "html", markup: () => new Promise<string>(() => undefined) } },
@@ -39,6 +45,7 @@ const byName = new Map([
   ["hello", hello],
   ["broken", broken],
   ["slow", slow],
+  ["card", card],
 ]);
 const logged: LogLine[] = [];
 const app = Fastify({ logger: false });
@@ -60,6 +67,10 @@ beforeAll(async () => {
         route: "/hard",
         template: '<body><assembly name="broken"></assembly></body>',
         place: { broken: { required: true } },
+      },
+      {
+        route: "/isolated",
+        template: '<html><head></head><body><assembly name="card"></assembly></body></html>',
       },
       {
         route: "/stalled",
@@ -111,6 +122,14 @@ describe("a page, mounted", () => {
     expect(response.statusCode).toBe(503);
     expect(response.body).not.toContain("hunter2");
     expect(response.json()).toEqual({ error: { correlationId: expect.any(String) } });
+  });
+
+  it("links a shadow assembly's styles inside its shadow root, never in the page head", async () => {
+    const response = await app.inject({ method: "GET", url: "/isolated" });
+    expect(response.body).toContain("<head></head>");
+    expect(response.body).toContain(
+      '<template shadowrootmode="open"><link rel="stylesheet" href="/card.css">',
+    );
   });
 
   it("logs every placement that fell back, against the id its envelope carries", async () => {

@@ -7,7 +7,7 @@ import type { ClientRenderer } from "@assemblejs/core/client";
 
 describe("a client renderer", () => {
   it("mounts into the element it is given and returns a handle", () => {
-    let mountedInto: Element | undefined;
+    let mountedInto: Element | ShadowRoot | undefined;
     const element = {} as Element;
     const client: ClientRenderer = {
       mount: (el, _data, _context) => {

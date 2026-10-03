@@ -65,7 +65,9 @@ export function start(options: StartOptions): Runtime {
             const sender = { id: payload.id, name: payload.name, view: payload.view };
             const held = bus.forAssembly(sender);
             releases.push(held.release);
-            const handle = renderer.mount(element, payload.data, {
+            // An assembly that opted into Shadow DOM is mounted inside its shadow root, which the
+            // browser built from the declarative template the server sent.
+            const handle = renderer.mount(element.shadowRoot ?? element, payload.data, {
               ...sender,
               events: held.events,
             });

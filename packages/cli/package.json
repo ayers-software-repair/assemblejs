@@ -48,7 +48,9 @@
   },
   "dependencies": {
     "@assemblejs/core": "workspace:*",
-    "esbuild": "0.28.2"
+    "esbuild": "0.28.2",
+    "postcss": "8.5.28",
+    "postcss-selector-parser": "7.1.6"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",

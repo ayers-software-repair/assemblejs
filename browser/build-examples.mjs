@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 // Runs once before the browser suite: builds the packages the tests import from dist, then the
-// two-framework example with the real command line. Once, so tests that run in parallel never
+// examples with the real command line. Once, so tests that run in parallel never
 // race each other building the same project.
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -24,12 +24,10 @@ export default function buildExamples() {
     ],
     { cwd: root, stdio: "pipe" },
   );
-  execFileSync(
-    process.execPath,
-    ["packages/cli/dist/bin.js", "build", "--cwd", "examples/two-frameworks"],
-    {
+  for (const example of ["examples/two-frameworks", "examples/styles"]) {
+    execFileSync(process.execPath, ["packages/cli/dist/bin.js", "build", "--cwd", example], {
       cwd: root,
       stdio: "pipe",
-    },
-  );
+    });
+  }
 }

@@ -13,9 +13,9 @@ import { hydrate as hydrateSvelte, unmount } from "svelte";
  */
 export function hydrate(component: unknown): ClientRenderer {
   return {
-    mount(element: Element, data: JsonObject, context: MountContext) {
+    mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       const instance = hydrateSvelte(component as Component<Record<string, unknown>>, {
-        target: element as HTMLElement,
+        target: element,
         props: { data, children: {}, events: context.events },
       });
       return { unmount: () => void unmount(instance) };

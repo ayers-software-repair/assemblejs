@@ -33,4 +33,17 @@ describe("rendering an assembly in this process", () => {
       /no view "wide"/,
     );
   });
+
+  it("renders an assembly that opted into Shadow DOM inside its shadow root, with its styles", async () => {
+    const isolated = defineAssembly({
+      name: "card",
+      shadow: true,
+      views: { default: { renderer: "html", markup: () => "<p>card</p>" } },
+      assets: { css: ["/_assemblejs/assets/styles/card-1.css"], js: [] },
+    });
+    const html = await renderLocal(isolated, "default", "a7f3", new URLSearchParams());
+    expect(html).toContain(
+      '<template shadowrootmode="open"><link rel="stylesheet" href="/_assemblejs/assets/styles/card-1.css"><p>card</p></template>',
+    );
+  });
 });

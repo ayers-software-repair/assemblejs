@@ -1,0 +1,17 @@
+:scope {
+  display: block;
+}
+
+.title {
+  color: rgb(200, 0, 0);
+}
+
+/* Global by nature: any assembly on the page can name this animation. */
+@keyframes pulse {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.5;
+  }
+}

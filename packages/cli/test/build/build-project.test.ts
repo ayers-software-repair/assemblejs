@@ -122,17 +122,28 @@ describe("building what the command line scaffolds", () => {
     mkdirSync(join(scaffolded, "dist"), { recursive: true });
     writeFileSync(join(scaffolded, "dist", "stale.js"), "");
 
-    const { io, errors, logs } = capture();
+    const { io, errors } = capture();
     expect(await buildProject(scaffolded, io)).toBe(0);
     expect(errors).toEqual([]);
-    // A stylesheet the build does not include yet is said out loud, not dropped in silence.
-    expect(logs.join()).toMatch(/not built yet: the stylesheets of counter, form/);
+    // Each assembly's styles are built into its own stylesheet and linked from its registry entry:
+    // the .css scoped to the assembly, the Svelte component's own <style> as Svelte scoped it.
+    const registry = readFileSync(join(scaffolded, ".assemblejs", "assemblies.ts"), "utf8");
+    const formCss = /\/_assemblejs\/assets\/styles\/(form-[0-9a-f]{8}\.css)/.exec(registry)?.[1];
+    const counterCss = /\/_assemblejs\/assets\/styles\/(counter-[0-9a-f]{8}\.css)/.exec(
+      registry,
+    )?.[1];
+    expect(
+      readFileSync(join(scaffolded, "dist", "client", "styles", String(formCss)), "utf8"),
+    ).toContain('assembly-root[data-name="form"] p');
+    expect(
+      readFileSync(join(scaffolded, "dist", "client", "styles", String(counterCss)), "utf8"),
+    ).toMatch(/p\.svelte-[a-z0-9]+/);
     // Nothing a previous build wrote outlives it.
     expect(existsSync(join(scaffolded, "dist", "stale.js"))).toBe(false);
     // The scripted html assembly has a browser half like the framework ones.
     expect(existsSync(join(scaffolded, ".assemblejs", "client", "form.ts"))).toBe(true);
     expect(readFileSync(join(scaffolded, ".assemblejs", "assemblies.ts"), "utf8")).toMatch(
-      /name: "form".*assets: \{ css: \[\], js: \[/,
+      /name: "form".*assets: \{ css: \["[^"]+"\], js: \["/,
     );
   });
 });

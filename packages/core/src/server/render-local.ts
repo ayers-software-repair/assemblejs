@@ -31,5 +31,6 @@ export async function renderLocal(
     markup,
     data,
     ...(assembly.mount === undefined ? {} : { mount: assembly.mount }),
+    ...(assembly.shadow === true ? { shadow: { css: assembly.assets?.css ?? [] } } : {}),
   });
 }

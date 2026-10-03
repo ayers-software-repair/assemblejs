@@ -568,7 +568,9 @@ independently written assemblies cannot collide. Shadow DOM is a per-assembly op
 isolation.
 
 Stated plainly rather than implied: `@keyframes`, `@font-face`, `@import` and `@page` are global
-by nature and are not scoped. Nothing pretends otherwise.
+by nature and are not scoped. A nested assembly sits inside its parent's envelope, so a parent's
+descendant selectors reach into it, and a page's own rules reach every assembly not in a shadow
+root. Nothing pretends otherwise.
 
 ---
 

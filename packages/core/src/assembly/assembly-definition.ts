@@ -11,4 +11,9 @@ export interface AssemblyDefinition {
   /** When its browser half runs. `load` unless it says otherwise. */
   readonly mount?: MountMode;
   readonly assets?: AssemblyAssets;
+  /**
+   * Rendered inside its own shadow root, for hard isolation: no page style reaches in, and its
+   * styles, linked inside that root, reach nothing outside it.
+   */
+  readonly shadow?: boolean;
 }

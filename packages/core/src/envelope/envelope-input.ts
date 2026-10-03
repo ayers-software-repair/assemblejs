@@ -24,6 +24,11 @@ export interface EnvelopeInput {
    * logged against, so the envelope on the page names the log line that explains it.
    */
   readonly failed?: string;
-  /** When the browser half runs. Emitted only when it is not the default, \`load\`. */
+  /** When the browser half runs. Emitted only when it is not the default, `load`. */
   readonly mount?: MountMode;
+  /**
+   * Render the markup inside a declarative shadow root, with these stylesheets linked inside it,
+   * where they apply and from where they reach nothing else.
+   */
+  readonly shadow?: { readonly css: readonly string[] };
 }

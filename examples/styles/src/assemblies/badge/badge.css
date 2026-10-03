@@ -1,0 +1,5 @@
+.title {
+  color: rgb(0, 0, 200);
+  /* Declared by the notice assembly, not this one. */
+  animation: pulse 1s infinite alternate;
+}

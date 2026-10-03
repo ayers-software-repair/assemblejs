@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-14 are done; `pnpm check` is green
+**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-15 are done; `pnpm check` is green
 on every landing commit and the browser suite (`pnpm test:browser`) passes. The commits are
 local: GitHub refused this session's push (403, the Claude GitHub App's access to the
 organization), and a bundle of them was written to the session's scratchpad. A cloud session resumed the ladder on the owner's word ("complete all you can"); the
@@ -26,9 +26,10 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-15, styles, then onward in ledger order.
+**THE EXACT NEXT STEP:** the second B-13 review's findings (the row after B-13 below), then
+B-16, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
+**ORDER AND DEPENDENCIES of the open rows:** B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
@@ -174,6 +175,15 @@ starts. Until the owner enables Actions, every proof is local only.
       read, for every transport), the manifest once per version with its assets hoisted, the
       per-placement cache keyed by url and answering a fresh entry before dispatch. Proof: two
       servers in one test, and a page hydrating another server's assemblies in Chromium
+- [ ] The second B-13 review's findings, each fixed with a test watched failing first:
+      a cached remote answer keyed without the forwarded headers it varied on (one visitor's
+      answer served to the next); "one envelope" checked by its first and last tag only, and an
+      unmarked or nested envelope in a remote answer mounted by the page runtime; the root guard
+      walked through by a dangling link; a hanging manifest failing a placement whose content
+      arrived, manifest reads uncapped and their assets allowed off the remote's origin; `check`
+      reporting every remote placement as a missing assembly; Ctrl-C in `dev` waiting forever on
+      a server that ignores SIGTERM. Low: the private-range list's gaps, the content type
+      matched by prefix, `dev`'s stop message on every restart, `dev` not watching the config
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").
@@ -182,9 +192,12 @@ starts. Until the owner enables Actions, every proof is local only.
       both; public routes, health always; a check that throws refuses; the default content
       security policy with the declared remotes on every html answer; same-origin by default.
       Proof: 401 without and 200 with on every kind of route, and a test that one place decides
-- [ ] B-15 styles: scoping, Shadow DOM opt-in, the documented holes
-      Until then the build includes no stylesheet: a `.css` beside a view, and a Svelte
-      component's `<style>`, are left out, and `build` says which assemblies have one.
+- [x] B-15 styles: scoping, Shadow DOM opt-in, the documented holes. Each assembly's `.css` is
+      scoped to its envelope at build time and linked only on pages that place it, its Svelte
+      component's `<style>` with it; a framework view's `shadow` export renders it in a
+      declarative shadow root with its own unscoped sheet. Proof, in Chromium from the built
+      `examples/styles`: two assemblies' `.title` keep their own colours, one's `@keyframes`
+      runs in the other, and the shadow assembly keeps a page rule out and still hydrates
 - [ ] B-16 the remaining four framework renderers
 - [ ] B-17 the template engines
 - [ ] B-18 real-time over server-sent events

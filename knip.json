@@ -20,6 +20,11 @@
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/api/*.api.ts"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
       "ignoreDependencies": ["@assemblejs/renderer-svelte", "svelte"]
+    },
+    "examples/styles": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["@assemblejs/renderer-react"]
     }
   }
 }

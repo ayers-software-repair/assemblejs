@@ -10,5 +10,6 @@ import type { MountHandle } from "./mount-handle.js";
  * misses fails silently.
  */
 export interface ClientRenderer {
-  mount(element: Element, data: JsonObject, context: MountContext): MountHandle;
+  /** The envelope, or the shadow root it opted into, already resolved. */
+  mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext): MountHandle;
 }

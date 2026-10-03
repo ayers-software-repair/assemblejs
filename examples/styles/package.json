@@ -1,0 +1,21 @@
+{
+  "name": "@assemblejs/example-styles",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Two assemblies that use the same class name without colliding, the styles that stay global, and an assembly in its own shadow root.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/renderer-react": "workspace:*",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}
