@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import type { FastifyReply, FastifyRequest } from "fastify";
+import { contentSecurityPolicy } from "../access/content-security-policy.js";
+import { registerAccess } from "../access/register-access.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_LIMITS } from "../compose/default-limits.js";
 import { readConfig } from "../config/read-config.js";
@@ -11,6 +13,7 @@ import { createRemoteTransport } from "../remote/create-remote-transport.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
+import { accessProblems } from "./access-problems.js";
 import type { App } from "./app.js";
 import { assetProblems } from "./asset-problems.js";
 import { BootError } from "./boot-error.js";
@@ -54,6 +57,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const problems = [
     ...bootProblems(options.assemblies, apis, pages, remotes),
     ...assetProblems(options.assemblies, files),
+    ...accessProblems(config.auth, options.authenticate, options.publicRoutes ?? []),
   ];
   if (problems.length > 0) throw new BootError(problems);
 
@@ -65,6 +69,17 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const app = Fastify({ logger: false });
 
   registerFailures(app, log);
+  // Before every route: the one decision, and the policy every html answer carries. Health is
+  // always public, because a load balancer that cannot read it takes the server out of service.
+  registerAccess(
+    app,
+    {
+      basic: config.auth,
+      authenticate: options.authenticate,
+      publicRoutes: [`${FRAMEWORK_ROUTE_PREFIX}/health`, ...(options.publicRoutes ?? [])],
+    },
+    options.contentSecurityPolicy ?? contentSecurityPolicy(remotes.map((remote) => remote.origin)),
+  );
 
   app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));
 

@@ -779,3 +779,27 @@ the root as `check` does. The build names Svelte assemblies whose `<style>` it l
 `new` refuses a directory name that cannot name a package, with one that can, and prints the
 install command of the package manager that ran it. `pnpm proof:create` builds before it packs,
 so its tarballs are the source at that commit, and gives the server thirty seconds to listen.
+
+## 2026-10-03: access is decided once, and the page ships a policy
+
+B-14 lands DESIGN 5.2. `decideAccess` is the one function that decides whether a request may
+proceed, called once, from the first hook every request meets, before routing, parsing or
+rendering; a test reads the server's source and requires that only the access directory decides.
+Settled here:
+
+- **Basic credentials or an `authenticate` check, never both.** Both on is a boot refusal: two
+  controls are two places that decide, and the design's point is one. Basic comes from the
+  environment (B-05); the check, and the public routes, are policy in `assemblejs.config.ts`.
+- **A check that throws is a refusal.** A broken gate is a closed gate.
+- **Health is always public**, because a load balancer that cannot read it takes the server out
+  of service; every other public route is declared, exactly or as a prefix ending `/*`.
+- **A refused request is a 401 with the failure body**, and under basic credentials the
+  challenge a browser answers with a prompt; an unknown path is refused before it is matched.
+- **The default content security policy** is on every html answer: this origin and the declared
+  remotes, nothing inline (the islands are data, not scripts), no plugins, no framing by another
+  origin. A project replaces it with `contentSecurityPolicy`. Proved in Chromium: the built
+  project and the remote page hydrate under it, and a policy forbidding the page's own scripts
+  turns both browser proofs red.
+- **Same origin by default.** Nothing grants another origin's page access to data; the one
+  exception is a built server's assets, which are public, immutable and loaded cross-origin by a
+  page that places a remote assembly.

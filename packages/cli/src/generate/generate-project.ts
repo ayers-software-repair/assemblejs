@@ -3,8 +3,8 @@
 import { GENERATED_HEADER } from "./generated-header.js";
 
 /**
- * The one module the author's server file imports: everything the build found, the remotes the
- * project's config declares, the version of this build's output, and where its browser files
+ * The one module the author's server file imports: everything the build found, the policy the
+ * project's config declares (remotes, access, the content security policy), the version of this build's output, and where its browser files
  * are. The asset directory is resolved from the built module's own url, never from a working
  * directory, so the server finds its files wherever it is started from.
  */
@@ -22,10 +22,10 @@ import { apis } from "./apis.js";
 import { assemblies } from "./assemblies.js";
 import { pages } from "./pages.js";${options.config ? '\nimport config from "../assemblejs.config.js";' : ""}
 
-const project: ServerOptions = {
+const project: ServerOptions = {${options.config ? "\n  ...config," : ""}
   assemblies,
   pages,
-  apis,${options.config ? "\n  remotes: config.remotes ?? []," : ""}
+  apis,
   version: ${JSON.stringify(options.version)},${assets}
 };
 export default project;

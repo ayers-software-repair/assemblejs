@@ -40,7 +40,20 @@ test("a built project's Svelte and React assemblies share a page and an event", 
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto(`${origin}/`);
+  // A script the content security policy blocked is reported here, not thrown.
+  page.on("console", (message) => {
+    if (message.type() === "error" && !message.text().startsWith("Failed to load resource")) {
+      errors.push(message.text());
+    }
+  });
+  // Every resource the page asked for answered; the browser's own site-icon request aside.
+  page.on("response", (response) => {
+    if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) {
+      errors.push(`${String(response.status())} ${response.url()}`);
+    }
+  });
+  const document = await page.goto(`${origin}/`);
+  expect(document?.headers()["content-security-policy"]).toContain("script-src 'self'");
 
   // Server-rendered before any script runs: both frameworks' markup is in the document.
   await expect(page.locator("#bump")).toContainText("Clicked 0");

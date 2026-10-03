@@ -30,6 +30,7 @@ export { localFetch } from "./local-fetch.js";
 export { registerAssets } from "./register-assets.js";
 export { registerFailures } from "./register-failures.js";
 export { remoteProblems } from "./remote-problems.js";
+export { accessProblems } from "./access-problems.js";
 export { createMemoryCache } from "./create-memory-cache.js";
 export { pageFetch } from "./page-fetch.js";
 export { registerPages } from "./register-pages.js";

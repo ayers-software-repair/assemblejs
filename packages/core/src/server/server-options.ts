@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { Authenticate } from "../access/authenticate.js";
 import type { ApiDefinition } from "../api/api-definition.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import type { Config } from "../config/config.js";
@@ -16,6 +17,12 @@ export interface ServerOptions {
   readonly apis?: readonly ApiDefinition[];
   /** Routes that render a template which places assemblies. */
   readonly pages?: readonly PageDefinition[];
+  /** The product's own access check. Not with basic credentials: one place decides. */
+  readonly authenticate?: Authenticate;
+  /** Paths that need no credentials: exact, or a prefix when the entry ends in `/*`. */
+  readonly publicRoutes?: readonly string[];
+  /** Replaces the default content security policy on every html answer. */
+  readonly contentSecurityPolicy?: string;
   /** The other servers this one may compose from. None, unless declared. */
   readonly remotes?: readonly RemoteDefinition[];
   /** The directory a build wrote its browser files to, as an absolute path. */

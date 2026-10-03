@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-09, B-09c, B-12 and B-13 are done; `pnpm check` is green
+**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-14 are done; `pnpm check` is green
 on every landing commit and the browser suite (`pnpm test:browser`) passes. The commits are
 local: GitHub refused this session's push (403, the Claude GitHub App's access to the
 organization), and a bundle of them was written to the session's scratchpad. A cloud session resumed the ladder on the owner's word ("complete all you can"); the
@@ -26,9 +26,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-14, auth and the default policy, then onward in ledger order.
+**THE EXACT NEXT STEP:** B-15, styles, then onward in ledger order.
 
-**ORDER AND DEPENDENCIES of the open rows:** B-14 auth -> B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
+**ORDER AND DEPENDENCIES of the open rows:** B-15 styles -> B-16 four renderers -> B-17 templates -> B-18 SSE -> B-19 devtools
 -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
@@ -177,7 +177,11 @@ starts. Until the owner enables Actions, every proof is local only.
 - [ ] Page route parameters reach the assemblies a page places: the placement request, the
       cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
       2026-10-03, "page parameters held back").
-- [ ] B-14 auth and the default policy
+- [x] B-14 auth and the default policy: one decision (`decideAccess`) in the first hook every
+      request meets; basic credentials from the environment or an `authenticate` check, never
+      both; public routes, health always; a check that throws refuses; the default content
+      security policy with the declared remotes on every html answer; same-origin by default.
+      Proof: 401 without and 200 with on every kind of route, and a test that one place decides
 - [ ] B-15 styles: scoping, Shadow DOM opt-in, the documented holes
       Until then the build includes no stylesheet: a `.css` beside a view, and a Svelte
       component's `<style>`, are left out, and `build` says which assemblies have one.

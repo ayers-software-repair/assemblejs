@@ -18,12 +18,10 @@ describe("generating the one module the server file imports", () => {
     expect(source).not.toContain("process.cwd");
   });
 
-  it("declares the remotes the project's config names, when it has one", () => {
+  it("carries the policy the project's config declares, when it has one", () => {
     const source = generateProject({ version: "1", client: false, config: true });
     expect(source).toContain('import config from "../assemblejs.config.js";');
-    expect(source).toContain("remotes: config.remotes ?? [],");
-    expect(generateProject({ version: "1", client: false, config: false })).not.toContain(
-      "remotes",
-    );
+    expect(source).toContain("...config,");
+    expect(generateProject({ version: "1", client: false, config: false })).not.toContain("config");
   });
 });
