@@ -500,9 +500,14 @@ An api is a route:
 ```ts
 export default defineApi({
   path: "/api/time",
-  GET: () => ({ now: new Date().toISOString() }),
+  handle: () => ({ now: new Date().toISOString() }),
 });
 ```
+
+One method per definition, `GET` unless `method` says otherwise. The handler is given the
+request's `query`, its route `params` and its parsed `body`, and whatever it returns is the JSON
+reply. A path that is declared twice for one method, does not start with `/`, uses a wildcard, or
+lands under `/assembly/` or `/_assemblejs/` is a boot error.
 
 ---
 

@@ -15,6 +15,7 @@ import { BootError } from "./boot-error.js";
 import { bootProblems } from "./boot-problems.js";
 import { buildManifest } from "./build-manifest.js";
 import { readCompositionHeaders } from "./read-composition-headers.js";
+import { registerApis } from "./register-apis.js";
 import { resolveData } from "./resolve-data.js";
 import type { ServerOptions } from "./server-options.js";
 
@@ -28,10 +29,12 @@ interface Params {
  *
  * The three endpoints of the assembly contract, and nothing else on `/assembly`. The framework's
  * own routes live under their reserved prefix, so a product route can never collide with one a
- * later version adds.
+ * later version adds. The product's own apis are mounted beside them, refused at boot if one
+ * would land under either prefix.
  */
 export async function createServer(options: ServerOptions): Promise<App> {
-  const problems = bootProblems(options.assemblies);
+  const apis = options.apis ?? [];
+  const problems = bootProblems(options.assemblies, apis);
   if (problems.length > 0) throw new BootError(problems);
 
   const version = options.version ?? "dev";
@@ -138,6 +141,8 @@ export async function createServer(options: ServerOptions): Promise<App> {
       return reply.send(buildManifest(resolved.assembly, resolved.view, version));
     },
   );
+
+  registerApis(app, apis);
 
   await app.ready();
 

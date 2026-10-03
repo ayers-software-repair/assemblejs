@@ -6,7 +6,7 @@ import type { ApiContext } from "./api-context.js";
 /**
  * A route that serves data to anyone.
  *
- * One method per definition, named as the field. A definition that answered several methods
+ * One method per definition, named by `method` and answered by `handle`. A definition that answered several methods
  * would need a router inside it, and the router already exists one level up.
  */
 export interface ApiDefinition {

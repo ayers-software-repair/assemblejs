@@ -1,18 +1,23 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { ApiDefinition } from "../api/api-definition.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
+import { apiProblems } from "./api-problems.js";
 
 const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
- * Everything wrong with a set of assemblies, found before anything listens.
+ * Everything wrong with a set of assemblies and apis, found before anything listens.
  *
  * Every check that can refuse runs here, so a process that is accepting connections is a
  * process that is configured. A server that throws after `listen` has already told a load
  * balancer it is healthy.
  */
-export function bootProblems(assemblies: readonly AssemblyDefinition[]): readonly string[] {
+export function bootProblems(
+  assemblies: readonly AssemblyDefinition[],
+  apis: readonly ApiDefinition[] = [],
+): readonly string[] {
   const problems: string[] = [];
   const seen = new Set<string>();
 
@@ -38,5 +43,5 @@ export function bootProblems(assemblies: readonly AssemblyDefinition[]): readonl
       }
     }
   }
-  return problems;
+  return [...problems, ...apiProblems(apis)];
 }

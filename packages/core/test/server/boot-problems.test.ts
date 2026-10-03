@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { bootProblems } from "@assemblejs/core";
+import { bootProblems, defineApi } from "@assemblejs/core";
 import type { AssemblyView } from "@assemblejs/core";
 
 const view: AssemblyView = { renderer: "html", data: () => ({}), markup: () => "" };
@@ -37,5 +37,13 @@ describe("what is checked before anything listens", () => {
 
   it("reports every problem, not the first", () => {
     expect(bootProblems([{ name: "Cart", views: { compact: view } }]).length).toBe(2);
+  });
+
+  it("includes what is wrong with the apis, beside what is wrong with the assemblies", () => {
+    const problems = bootProblems(
+      [{ name: "cart", views: { default: view } }],
+      [defineApi({ path: "/_assemblejs/x", handle: () => ({}) })],
+    );
+    expect(problems.join()).toMatch(/reserves/);
   });
 });

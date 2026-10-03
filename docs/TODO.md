@@ -154,11 +154,10 @@ starts. Until the owner enables Actions, every proof is local only.
       and `check` have a shape the protocol can hand back as structures.
 - [x] B-10 the first framework renderer: @assemblejs/renderer-react
 - [x] B-11 the second framework renderer and the day-one proof: Svelte, and two frameworks sharing an event on one page in a real browser
-- [ ] B-12 services and apis
-      Done: the service model (return not mutate, `after` not priority, ordering settled
-      at boot with duplicates/unknowns/cycles refused), the api declaration, and
-      resolveData as the one function both endpoints call.
-      Left: wiring api routes into createServer and the curl proof the rung names.
+- [x] B-12 services and apis: the service model (return not mutate, `after` not priority,
+      ordering settled at boot with duplicates/unknowns/cycles refused), resolveData as the one
+      function both endpoints call, and the product's apis mounted by createServer with their
+      collisions, reserved prefixes and wildcards refused at boot
 - [ ] B-13 remote assemblies: allowlist, caps, handshake, cache
       Owed here: `Limits.maxBytes` is declared and has no reader until the remote
       transport exists. A verification pass found a 10 MiB fragment composing clean

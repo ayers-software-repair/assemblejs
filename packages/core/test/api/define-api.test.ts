@@ -7,6 +7,8 @@ describe("declaring an api", () => {
   it("returns what it was given", async () => {
     const time = defineApi({ path: "/api/time", handle: () => ({ ok: true }) });
     expect(time.path).toBe("/api/time");
-    expect(await time.handle({ query: new URLSearchParams(), params: {} })).toEqual({ ok: true });
+    expect(
+      await time.handle({ query: new URLSearchParams(), params: {}, body: undefined }),
+    ).toEqual({ ok: true });
   });
 });

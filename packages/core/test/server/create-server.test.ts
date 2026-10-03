@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { BootError, createServer, defineAssembly } from "@assemblejs/core";
+import { BootError, createServer, defineApi, defineAssembly } from "@assemblejs/core";
 import type { App, Config } from "@assemblejs/core";
 
 const config: Config = { mode: "production", host: "127.0.0.1", port: 0, auth: undefined };
@@ -37,7 +37,20 @@ const exploding = defineAssembly({
 
 let app: App;
 beforeAll(async () => {
-  app = await createServer({ config, assemblies: [hello, exploding], version: "9f2c1a" });
+  app = await createServer({
+    config,
+    assemblies: [hello, exploding],
+    apis: [
+      defineApi({ path: "/api/time", handle: () => ({ now: "2026-10-03T00:00:00.000Z" }) }),
+      defineApi({
+        path: "/api/leak",
+        handle: () => {
+          throw new Error("connection to postgres://user:hunter2@db refused");
+        },
+      }),
+    ],
+    version: "9f2c1a",
+  });
 });
 afterAll(async () => {
   await app.close();
@@ -185,12 +198,45 @@ describe("the framework's own surface", () => {
   });
 });
 
+describe("the product's own apis", () => {
+  it("are mounted beside the assembly contract and answer JSON", async () => {
+    const response = await app.inject({ method: "GET", url: "/api/time" });
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toEqual({ now: "2026-10-03T00:00:00.000Z" });
+  });
+
+  it("reach the one error handler when they throw, so the message never reaches a body", async () => {
+    const response = await app.inject({ method: "GET", url: "/api/leak" });
+    expect(response.statusCode).toBe(500);
+    expect(response.body).not.toContain("hunter2");
+    expect(response.json()).toEqual({ error: { correlationId: expect.any(String) } });
+  });
+});
+
 describe("refusing to be built", () => {
   // Everything that can refuse refuses before anything listens: a process accepting
   // connections is a process that is configured.
   it("throws before listen, not after", async () => {
     await expect(
       createServer({ config, assemblies: [{ name: "Bad Name", views: {} }] }),
+    ).rejects.toThrow(BootError);
+  });
+
+  it("refuses an api that would collide with another, before anything listens", async () => {
+    const handle = () => ({});
+    await expect(
+      createServer({
+        config,
+        assemblies: [],
+        apis: [defineApi({ path: "/api/x", handle }), defineApi({ path: "/api/x", handle })],
+      }),
+    ).rejects.toThrow(/declared more than once/);
+  });
+
+  it("refuses an api under the framework's reserved prefixes", async () => {
+    const handle = () => ({});
+    await expect(
+      createServer({ config, assemblies: [], apis: [defineApi({ path: "/assembly/x", handle })] }),
     ).rejects.toThrow(BootError);
   });
 });

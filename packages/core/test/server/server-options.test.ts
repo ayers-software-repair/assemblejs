@@ -11,5 +11,6 @@ describe("what a server is built from", () => {
     };
     expect(options.version).toBeUndefined();
     expect(options.maxDepth).toBeUndefined();
+    expect(options.apis).toBeUndefined();
   });
 });

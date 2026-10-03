@@ -481,3 +481,27 @@ comment says view, then face, then global, which means the GLOBAL one wins every
 least specific setting overrides the most specific. Here the order is declaration order with
 `after` honoured, and the later of two writers wins, which is the same rule the fallback ladder
 and the data merge already use.
+
+## 2026-10-03: an api is given its body, and an api route is checked at boot
+
+Expected: the landed `ApiContext` (`query`, `params`) would be enough to mount routes. Found:
+the design says "an api takes a POST" (section 14, item 13), and a POST handler that cannot read
+what was posted is not one. `ApiContext` gains `body: JsonValue | undefined`, the parsed request
+body, absent on a request that carried none.
+
+The boot refusals for an api are four, each one a way for two routes to disagree about which
+matched or for a product route to shadow the framework: the same method and path twice (paths
+that differ only in a parameter's name count as the same, because they match the same requests),
+a path not starting with `/`, a wildcard (routes are a flat table with parameters, item 12), and a
+path under `/assembly/` or `/_assemblejs/`, compared without case.
+
+The reply is serialised by the server rather than handed to the router, because the router sends
+a bare string as plain text: a handler typed to return JSON answers JSON, whatever value it is.
+
+## 2026-10-03: no changeset until the first publish
+
+Expected, from `CLAUDE.md`: a changeset on every `packages/*/src` change. Found: every package
+already reads `1.0.0` and nothing has been published, and no rung so far has written one. A
+changeset now would move the first release past the `1.0.0` that B-27b names. Changesets start
+with the first change after the first publish; until then the packages' versions say what the
+first release is, and the release notes say what is in it.
