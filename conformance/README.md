@@ -21,6 +21,7 @@ projects can be read. It builds the workspace's packages, so two runs at once sh
 It needs the network for the third-party dependencies, and minutes, so it runs on demand rather
 than inside `pnpm check`.
 
-| fixture    | holds the server to                                                  |
-| ---------- | -------------------------------------------------------------------- |
-| `contract` | DESIGN 2: the content, data and manifest endpoints, and the envelope |
+| fixture     | holds the server to                                                                   |
+| ----------- | ------------------------------------------------------------------------------------- |
+| `contract`  | DESIGN 2: the content, data and manifest endpoints, and the envelope                  |
+| `rendering` | DESIGN 7, 9, 3.3 and 12: every renderer through the contract, on one page of them all |

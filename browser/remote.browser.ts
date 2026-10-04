@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { freePort, saidBy } from "./child-server.js";
 import { createServer } from "../packages/core/dist/index.js";
 import type { App } from "../packages/core/dist/index.js";
 
@@ -19,7 +20,7 @@ let consumer: App | undefined;
 let page = "";
 
 test.beforeAll(async () => {
-  const port = String(20000 + Math.floor(Math.random() * 20000));
+  const port = await freePort();
   producer = spawn(process.execPath, ["dist/server.js"], {
     cwd: example,
     env: { ...process.env, ASSEMBLEJS_PORT: port },
@@ -30,7 +31,9 @@ test.beforeAll(async () => {
       const found = /listening (http:\/\/\S+)/.exec(String(chunk));
       if (found?.[1] !== undefined) resolve(found[1]);
     });
-    producer?.on("exit", (code) => reject(new Error(`the producer exited with ${String(code)}`)));
+    producer?.on("exit", (code) =>
+      reject(new Error(`the producer exited with ${String(code)}${saidBy(producer)}`)),
+    );
   });
   consumer = await createServer({
     config: { mode: "production", host: "127.0.0.1", port: 0, auth: undefined },

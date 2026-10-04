@@ -1,0 +1,13 @@
+{
+  "packages": [
+    "core",
+    "cli",
+    "renderer-templates",
+    "renderer-react",
+    "renderer-preact",
+    "renderer-solid",
+    "renderer-svelte",
+    "renderer-vue",
+    "renderer-lit"
+  ]
+}

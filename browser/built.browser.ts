@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { freePort, saidBy } from "./child-server.js";
 
 // THE DAY-ONE PROOF, FROM A REAL BUILD. The fixture tests hand the runtime markup written for
 // them; this one runs the two-framework example the suite's setup built with the command line,
@@ -16,7 +17,7 @@ let server: ChildProcess | undefined;
 let origin = "";
 
 test.beforeAll(async () => {
-  const port = String(20000 + Math.floor(Math.random() * 20000));
+  const port = await freePort();
   server = spawn(process.execPath, ["dist/server.js"], {
     cwd: example,
     env: { ...process.env, ASSEMBLEJS_PORT: port },
@@ -27,7 +28,9 @@ test.beforeAll(async () => {
       const found = /listening (http:\/\/\S+)/.exec(String(chunk));
       if (found?.[1] !== undefined) resolve(found[1]);
     });
-    server?.on("exit", (code) => reject(new Error(`the built server exited with ${String(code)}`)));
+    server?.on("exit", (code) =>
+      reject(new Error(`the built server exited with ${String(code)}${saidBy(server)}`)),
+    );
   });
 });
 

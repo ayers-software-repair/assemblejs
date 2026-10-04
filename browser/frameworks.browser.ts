@@ -5,6 +5,7 @@ import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { freePort, saidBy } from "./child-server.js";
 
 // B-16 IN A REAL BROWSER, FROM A REAL BUILD: one assembly per framework on one page. Each is
 // server-rendered, hydrated by its own renderer, and talks to the others over the page's bus,
@@ -28,7 +29,7 @@ let server: ChildProcess | undefined;
 let origin = "";
 
 test.beforeAll(async () => {
-  const port = String(20000 + Math.floor(Math.random() * 20000));
+  const port = await freePort();
   server = spawn(process.execPath, ["dist/server.js"], {
     cwd: example,
     env: { ...process.env, ASSEMBLEJS_PORT: port },
@@ -39,7 +40,9 @@ test.beforeAll(async () => {
       const found = /listening (http:\/\/\S+)/.exec(String(chunk));
       if (found?.[1] !== undefined) resolve(found[1]);
     });
-    server?.on("exit", (code) => reject(new Error(`the example exited with ${String(code)}`)));
+    server?.on("exit", (code) =>
+      reject(new Error(`the example exited with ${String(code)}${saidBy(server)}`)),
+    );
   });
 });
 

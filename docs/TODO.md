@@ -5,12 +5,12 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-03.** Branch `next`. B-09, B-09c and B-12 through B-21 are done, with the
-findings of their independent reviews fixed; `pnpm check` is green on every landing commit, on a
-fresh clone as well, and the browser suite (`pnpm test:browser`) passes. The commits are
-local: GitHub refused this session's push (403, the Claude GitHub App's access to the
-organization), and a bundle of them was written to the session's scratchpad. A cloud session resumed the ladder on the owner's word ("complete all you can"); the
-owner does every release himself, from his own sessions, so nothing here publishes.
+**STATE 2026-10-04.** Branch `next`. B-09, B-09c and B-12 through B-22 are done, with the
+findings of their independent reviews fixed; `pnpm check` is green on every landing commit, the
+browser suite (`pnpm test:browser`) passes, and `pnpm conformance` passes every fixture. Every
+commit is pushed to `origin/next`. A cloud session resumed the ladder on the owner's word
+("complete all you can"); the owner does every release himself, from his own sessions, so
+nothing here publishes.
 
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
 micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
@@ -27,7 +27,7 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-22, then onward in ledger order.
+**THE EXACT NEXT STEP:** B-23 (DECISIONS 2026-10-04 fixes its scope), then onward in ledger order.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
@@ -285,7 +285,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       wire; the specs refuse a fallback under 200, data in a failure body, a bare envelope
       attribute; `check` refuses every route boot refuses; the harness leaves no server or
       directory; `perf` reads tags as a browser does; tests clean their temporary directories
-- [ ] B-22 conformance breadth, batch one
+- [x] B-22 conformance breadth, batch one: the matrix defined from DESIGN (DECISIONS); every
+      renderer from its tarball through the contract, a static view shipping no script, and a
+      page of all of them containing its one failure (`pnpm conformance`, 15 and 53 of 53)
 - [ ] B-23 conformance breadth, batch two
 - [ ] B-24 conformance breadth, batch three, and the acceptance table
 - [ ] B-25 size budgets, pack check, Scorecard

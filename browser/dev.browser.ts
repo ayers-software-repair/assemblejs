@@ -6,6 +6,7 @@ import { cpSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { freePort, saidBy } from "./child-server.js";
 
 // THE DEV LOOP IN A REAL BROWSER: `assemblejs dev` serves a copy of an example, a source file is
 // edited, and the open page reloads itself onto the rebuilt server, with no hand on the browser.
@@ -30,7 +31,7 @@ test("a page under dev reloads itself after a source file changes", async ({ pag
   project = mkdtempSync(join(example, ".dev-reload-"));
   cpSync(join(example, "src"), join(project, "src"), { recursive: true });
   writeFileSync(join(project, "package.json"), "{}");
-  const port = String(20000 + Math.floor(Math.random() * 20000));
+  const port = await freePort();
   dev = spawn(process.execPath, [join(root, "packages/cli/dist/bin.js"), "dev", "--cwd", project], {
     env: { ...process.env, ASSEMBLEJS_PORT: port },
     stdio: ["ignore", "pipe", "pipe"],
@@ -40,7 +41,7 @@ test("a page under dev reloads itself after a source file changes", async ({ pag
       const found = /listening (http:\/\/\S+)/.exec(String(chunk));
       if (found?.[1] !== undefined) resolve(found[1]);
     });
-    dev?.on("exit", (code) => reject(new Error(`dev exited with ${String(code)}`)));
+    dev?.on("exit", (code) => reject(new Error(`dev exited with ${String(code)}${saidBy(dev)}`)));
   });
 
   // The page has heard the first server's boot before anything changes.

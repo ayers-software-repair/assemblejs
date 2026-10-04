@@ -1440,3 +1440,51 @@ under mutation. It found, and this round fixed:
   `createRequire`, which the deploy's run would report. The deploy's own proof in the cli suite
   still resolves the workspace around it; the run of a deploy installed on its own belongs to
   conformance batch three, where projects install from tarballs.
+
+## 2026-10-04: the conformance matrix, and its three batches
+
+Expected: PLAN's B-22 to B-24 hold "the matrix" green batch by batch.
+
+Found: no document defines the matrix or what a batch holds. Decided here, from DESIGN, so the
+three rungs have a fixed scope rather than one chosen as each is written. The matrix is DESIGN's
+sections that a server answers over HTTP, each held by a fixture (a real project, installed from
+the tarballs) and the specs under `conformance/specs/<fixture>/`:
+
+- **Batch one, B-22: rendering and local composition.** Every renderer shipped (html, the five
+  template languages, the six frameworks) answers DESIGN 2's three endpoints with one envelope
+  naming it, its markup inside and what it was given escaped (DESIGN 7, 5.4); a static view is
+  declared never to mount and names no script, a framework view's script is served (DESIGN 9); a
+  page of all of them places each in the template's order, contains the one that fails, shows a
+  declared fallback, and dies only for a placement declared required (DESIGN 3.3, 12).
+- **Batch two, B-23: across servers.** Two servers from the tarballs: a remote placement, the
+  manifest handshake, every failure a remote can produce (status, type, size, deadline), depth and
+  cycles refused before dispatch, a deferred placement, the cache (DESIGN 3.1 to 3.5, 5.1); the
+  real-time stream (DESIGN 3.6); a project's apis.
+- **Batch three, B-24: trust and the command line, and the acceptance table.** Inbound access,
+  the policy and the boundary (DESIGN 5.2, 5.3); production carries no development surface
+  (devtools, reload); `check` and `deploy` from the installed command line, and the deploy run on
+  its own; then the table of every intent from the predecessor's tests.
+
+- **B-22, batch one, landed.** The `rendering` fixture holds thirteen assemblies, one per view
+  kind and one whose render throws, on three pages: all of them, one with a declared fallback,
+  one with the failing placement required. 53 specs; each kind of claim was watched red on a
+  mutation: the template's order reversed, a declared fallback dropped, Nunjucks escaping off, a
+  static view no longer declared never to mount, a required failure answered 200, a failed
+  render's own endpoint answering 200. The harness grew to several fixtures, packing once and
+  giving each renderer the framework version it is tested against, read from its own package.
+- **Found by the first run, and not a defect:** Preact, Solid and Svelte write a `>` in text as
+  it is, escaping only `<`. Nothing can start an element without a `<`, so the spec accepts
+  either, and its second check, that no value given with markup in it reaches the markup
+  unescaped, is what holds every renderer to escaping.
+- **Found running the browser suite for the rung:** one run of three failed, the styles example
+  "exited with 1" before it listened, and the suite said nothing more. Taking its port before the
+  run reproduced that exactly. Every suite that starts a server picked a random port and piped
+  away its stderr; each now asks the system for a free port, and an early exit carries what the
+  server wrote (watched: the held port now reads as the server's own `node:net` error).
+- **Recorded, not changed: the fallback ladder's order.** DESIGN 3.3 reads fallback, then last
+  good, then the empty envelope; the composer consults the cache before the fallback. Over HTTP
+  the two cannot differ: the server's cache forgets an entry when its lifetime ends, and a fresh
+  entry answers before anything is fetched, so after a failed fetch the cache holds the placement
+  only if a concurrent request wrote it in between. Nothing a conformance spec can send tells the
+  orders apart; a cache that kept entries past their lifetime to absorb an outage would, and that
+  is where the order is to be settled.
