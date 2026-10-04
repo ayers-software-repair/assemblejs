@@ -62,4 +62,14 @@ describe("reading a document's link, script and envelope tags", () => {
       { tag: "link", attributes: { rel: "stylesheet", href: "/after-empty.css" } },
     ]);
   });
+
+  it("reads what a template declaring a shadow root holds, as the browser attaches it", () => {
+    const html =
+      '<assembly-root data-name="box"><template shadowrootmode="open">' +
+      '<link rel="stylesheet" href="/box.shadow.css"><p>box</p></template></assembly-root>';
+    expect(readTags(html)).toEqual([
+      { tag: "assembly-root", attributes: { "data-name": "box" } },
+      { tag: "link", attributes: { rel: "stylesheet", href: "/box.shadow.css" } },
+    ]);
+  });
 });

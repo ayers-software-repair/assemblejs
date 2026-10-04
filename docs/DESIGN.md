@@ -275,12 +275,20 @@ overflow.
 
 A placement declared `defer: true` is not fetched during the page render. The server emits its
 empty envelope with `data-defer`, and the browser runtime fetches the content endpoint after
-load and replaces the envelope's children. Deferring is the answer for a genuinely slow assembly
-that must not hold the page; everything else uses the deadline.
+load, with the envelope's id and the page's own query, and puts the envelope that answers in its
+place, parsed as the page was (a declarative shadow root attached), then mounts it like any
+other. Should that fetch fail, the placement shows what any failed placement shows: its declared
+fallback, carried inert in the placeholder, in the server's failed envelope with its logged id.
+Deferring is the answer for a genuinely slow assembly that must not hold the page; everything
+else uses the deadline.
 
 `defer` and `required` together are a boot error. A deferred assembly's outcome arrives after
 the page has shipped, so it cannot fail the page, and a declaration that says it can is a
-misunderstanding worth catching at boot rather than a rule worth explaining in prose.
+misunderstanding worth catching at boot rather than a rule worth explaining in prose. So is a
+deferral nothing could carry out: one from another server, whose fragment the browser cannot
+fetch across that server's same-origin policy, and one on a page that places no assembly of this
+server's with a browser half, so no runtime is there to fetch it. A deadline or a cache on a
+deferred placement is policy nothing reads, refused like any other.
 
 ### 3.6 Real-time
 

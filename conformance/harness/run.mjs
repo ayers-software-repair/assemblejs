@@ -68,6 +68,18 @@ const read = (name) => {
 const declared = new Map(chosen.map((name) => [name, read(name)]));
 
 const work = mkdtempSync(join(tmpdir(), "assemblejs-conformance-"));
+// The servers running now, for a signal to stop before the harness goes.
+const live = new Set();
+for (const [signal, code] of [
+  ["SIGINT", 130],
+  ["SIGTERM", 143],
+]) {
+  process.once(signal, () => {
+    console.error(`\nconformance: stopped by ${signal}; the projects are in ${work}`);
+    void Promise.all([...live].map((server) => server.stop())).finally(() => process.exit(code));
+  });
+}
+
 const packages = [
   ...new Set([
     "core",
@@ -88,21 +100,16 @@ try {
   throw error;
 }
 
-// The servers running now, for a signal to stop before the harness goes.
-const live = new Set();
-for (const [signal, code] of [
-  ["SIGINT", 130],
-  ["SIGTERM", 143],
-]) {
-  process.once(signal, () => {
-    void Promise.all([...live].map((server) => server.stop())).finally(() => process.exit(code));
-  });
-}
-
 /** Runs one fixture's specs against the servers built from it, answering whether all passed. */
 const conform = async (name, fixture) => {
   const files = readdirSync(join(specs, name)).filter((file) => file.endsWith(".spec.mjs"));
   if (files.length === 0) throw new Error(`conformance/specs/${name}/ holds no spec`);
+  // Every project is built before any port is set aside or any server started, so a port the
+  // harness reserves is held for seconds, not for the minutes a build takes.
+  const roots = fixture.projects.map((project) => {
+    step(`${name}/${project.name}: create, install from the tarballs, and build`);
+    return build(project.dir, join(work, name, project.name), tarball, project.packages);
+  });
   const known = new Map();
   const env = {};
   for (const port of fixture.ports) {
@@ -112,19 +119,27 @@ const conform = async (name, fixture) => {
   }
   const servers = [];
   try {
-    for (const project of fixture.projects) {
-      step(`${name}/${project.name}: create, install from the tarballs, and build`);
-      const root = build(project.dir, join(work, name, project.name), tarball, project.packages);
+    for (const [index, project] of fixture.projects.entries()) {
       step(`${name}/${project.name}: start the built server`);
       const told = Object.fromEntries(
         Object.entries(project.env).map(([key, value]) => [
           key,
-          value.replace(/\{([a-z-]+)\}/g, (whole, named) => known.get(named) ?? whole),
+          value.replace(/\{([a-z-]+)\}/g, (_whole, named) => {
+            const found = known.get(named);
+            if (found === undefined) {
+              throw new Error(
+                `${project.name} names {${named}}, which no earlier project or port is`,
+              );
+            }
+            return found;
+          }),
         ]),
       );
-      const server = await serve(root, told);
-      servers.push(server);
-      live.add(server);
+      // Tracked from the moment it is spawned, so a signal while it starts stops it too.
+      const server = await serve(roots[index], told, (spawned) => {
+        servers.push(spawned);
+        live.add(spawned);
+      });
       console.log(server.origin);
       known.set(project.name, server.origin);
       env[`CONFORMANCE_ORIGIN_${project.name.toUpperCase()}`] = server.origin;

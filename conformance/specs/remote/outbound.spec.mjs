@@ -6,9 +6,11 @@
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { after, before, test } from "node:test";
-import { envelopesOf, get, originOf, portOf } from "../http.mjs";
+import { envelopesOf, get, logged, originOf, portOf } from "../http.mjs";
 
 const seen = [];
+// When each request for the stalled placement arrived, and when its connection was closed.
+const stalls = [];
 const envelope = (request, name, markup) =>
   `<assembly-root data-name="${name}" data-id="${request.headers["assembly-id"]}" data-view="default" data-renderer="html">${markup}</assembly-root>`;
 const hostile = createServer((request, response) => {
@@ -25,6 +27,19 @@ const hostile = createServer((request, response) => {
         "x-hostile": "1",
       })
       .end(envelope(request, "cookie", '<p class="kept">kept</p>'));
+  } else if (path === "/assembly/gone/") {
+    // A well-formed envelope under a status that says it is not content.
+    response
+      .writeHead(404, { "content-type": "text/html; charset=utf-8" })
+      .end(envelope(request, "gone", '<p class="gone">not content</p>'));
+  } else if (path === "/assembly/erred/") {
+    response
+      .writeHead(500, { "content-type": "text/html; charset=utf-8" })
+      .end(envelope(request, "erred", '<p class="erred">not content</p>'));
+  } else if (path === "/assembly/stall/") {
+    const stall = { arrived: Date.now(), closed: undefined };
+    stalls.push(stall);
+    request.socket.once("close", () => (stall.closed = Date.now()));
   } else if (path === "/assembly/seen/") {
     seen.push({ url: request.url, headers: request.headers });
     response
@@ -35,7 +50,13 @@ const hostile = createServer((request, response) => {
   }
 });
 before(() => new Promise((resolve) => hostile.listen(portOf("hostile"), "127.0.0.1", resolve)));
-after(() => new Promise((resolve) => hostile.close(resolve)));
+after(
+  () =>
+    new Promise((resolve) => {
+      hostile.closeAllConnections();
+      hostile.close(resolve);
+    }),
+);
 
 const visit = () =>
   get("/hostile?secret=query", {
@@ -47,11 +68,13 @@ const visit = () =>
 const byName = (page, name) =>
   envelopesOf(page).find((found) => found.attributes["data-name"] === name);
 
-test("an answer that is not html, and a redirect, are failures, the redirect never followed", async () => {
+test("an answer that is not html, not a 2xx, or a redirect is a failure, logged against its id", async () => {
   const page = await (await visit()).text();
-  for (const name of ["typed", "moved"]) {
-    assert.match(byName(page, name)?.attributes["data-failed"] ?? "", /\S+/, name);
+  for (const name of ["typed", "moved", "gone", "erred"]) {
+    const id = byName(page, name)?.attributes["data-failed"];
+    assert.ok(await logged(id, "consumer"), `${name}: ${id}`);
   }
+  assert.ok(!page.includes("not content"), "a 404's or a 500's envelope is never shown");
   assert.ok(!page.includes('{"not":"html"}'));
   assert.ok(!page.includes("rendered by the producer"), "the redirect led nowhere");
 });
@@ -76,4 +99,18 @@ test("nothing of the visitor's is forwarded but what the remote declared", async
   assert.equal(headers["accept-language"], "fr", "a declared key is forwarded");
   assert.match(headers["assembly-id"] ?? "", /^[0-9a-f-]{36}$/);
   assert.match(headers["assembly-page"] ?? "", /^[0-9a-f-]{36}$/);
+});
+
+test("a remote past its deadline is cancelled, its connection closed, not merely ignored", async () => {
+  stalls.length = 0;
+  const started = Date.now();
+  const page = await (await visit()).text();
+  assert.ok(Date.now() - started < 2000, "the page answered on the placement's deadline");
+  assert.ok(await logged(byName(page, "stall")?.attributes["data-failed"], "consumer"));
+  for (let wait = 0; wait < 20 && stalls[0]?.closed === undefined; wait += 1) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  const [stall] = stalls;
+  assert.ok(stall?.closed !== undefined, "the stalled request's connection was never closed");
+  assert.ok(stall.closed - stall.arrived < 1500, `closed after ${stall.closed - stall.arrived}ms`);
 });

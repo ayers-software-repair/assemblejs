@@ -7,7 +7,7 @@ const ATTRIBUTE = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g;
 // A comment (`<!-->` and `<!--->` end at once, as in a browser), or the opening tag of an element
 // whose content loads nothing and everything up to its end, whichever starts first: raw text
 // (script, style, textarea, title), what a browser with scripting on parses as text (noscript),
-// and a template's inert content. A tag written inside any of them is never an element.
+// and a template's inert content, unless it declares a shadow root. A tag written inside any of them is never an element.
 const TEXT =
   /<!--(?:-?>|[\s\S]*?(?:-->|$))|(<(script|style|textarea|title|noscript|template)(?=[\s/>])(?:[^>"']|"[^"]*"|'[^']*')*>)[\s\S]*?(?:<\/\2\s*>|$)/gi;
 const NAMED: Readonly<Record<string, string>> = {
@@ -45,7 +45,15 @@ const decode = (value: string): string =>
 export function readTags(
   html: string,
 ): readonly { readonly tag: string; readonly attributes: Readonly<Record<string, string>> }[] {
-  const elements = html.replace(TEXT, (_whole, open: string | undefined) => open ?? "");
+  // A template that declares a shadow root is not inert: the browser attaches its content, the
+  // stylesheets a shadow assembly links among it.
+  const elements = html.replace(TEXT, (whole: string, open: string | undefined, name?: string) =>
+    open === undefined
+      ? ""
+      : name?.toLowerCase() === "template" && /\sshadowrootmode\s*=/i.test(open)
+        ? whole
+        : open,
+  );
   return [...elements.matchAll(TAG)].map((match) => ({
     tag: (match[1] ?? "").toLowerCase(),
     attributes: Object.fromEntries(

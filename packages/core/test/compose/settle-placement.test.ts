@@ -82,7 +82,7 @@ describe("settling one placement", () => {
 
   it("answers a refusal before dispatch with its fallback, never with cached content", async () => {
     const cache = memory();
-    cache.set("cart/default", { html: "<p>cached</p>" }, 60_000);
+    cache.set("60000|cart/default", { html: "<p>cached</p>" }, 60_000);
     const settled = await settlePlacement(
       input({
         path: ["page/default", "cart/default"],
@@ -119,7 +119,7 @@ describe("settling one placement", () => {
         plan: { name: "cart", view: "default", deadline: 3000, cache: { ttl: 60_000 } },
       }),
     );
-    expect(withTtl.store.get("cart/default")?.html).toBe("<p>cart</p>");
+    expect(withTtl.store.get("60000|cart/default")?.html).toBe("<p>cart</p>");
   });
 
   it("never caches a credentialled response, in either direction", async () => {
@@ -128,7 +128,7 @@ describe("settling one placement", () => {
     await settlePlacement(input({ cache, plan, headers: { authorization: "Bearer x" } }));
     expect(cache.store.size).toBe(0);
 
-    cache.set("cart/default", { html: "<p>someone else</p>" }, 60_000);
+    cache.set("60000|cart/default", { html: "<p>someone else</p>" }, 60_000);
     const settled = await settlePlacement(
       input({ cache, plan, fetch: failing, headers: { cookie: "s=1" } }),
     );

@@ -1534,8 +1534,8 @@ The verifier ran every fixture green, then found, and this round fixed:
   this server never refused one on arrival. The composer now sends the ancestors alone, and the
   content endpoint answers 400 to a path that already holds the assembly, a spec holding both.
 - **`check` let a page share a route with a GET api**, which boot refuses. It reads each api's
-  path from its source, as it reads a page's route. Its claim is now the true one: every route
-  boot refuses. Placement policy (a view the assembly lacks, policy for an unplaced name,
+  path from its source, as it reads a page's route. (Its claim, every route boot refuses, was
+  still false for routes among apis; made true in the round after.) Placement policy (a view the assembly lacks, policy for an unplaced name,
   deferred and required) is still boot's alone, as `check` never claimed it.
 - **The specs passed a server with one constant failure id, and one shipping a script on every
   page.** The harness now keeps what each server writes, and every failure spec finds its id in
@@ -1570,8 +1570,60 @@ The verifier ran every fixture green, then found, and this round fixed:
   its place, and mounts it like any other; anything but one envelope with that id leaves the
   placeholder. A deferred placement from another server, which a browser could not fetch across
   the remote's same-origin policy, and one of an assembly with no browser half, which puts no
-  runtime on the page, are refused at boot. Held by the `rendering` fixture over HTTP and by the
-  frameworks example in a real browser, each watched red with the fill turned off.
+  runtime on the page, are refused at boot. Held by the `rendering` fixture over HTTP (the
+  placeholder, and what its id fetches) and by the frameworks example in a real browser, the
+  browser test watched red with the fill turned off.
 - **Each new spec was watched red on a mutation**: the cache read without a lifetime, no
   stylesheet hoisted, a script on every page, a deferred placement emitting nothing, a constant
   failure id, no cycle refused on arrival, a declared mount mode dropped.
+
+## 2026-10-04: verifying B-23 and the deferred placement
+
+The verifier ran every fixture and the browser suite green, then found, and this round fixed:
+
+- **A deferred assembly in its own shadow root was filled into the light DOM**, unstyled, and its
+  hydration failed: the answer was parsed as plain markup, which never attaches a declarative
+  shadow root. It is now parsed as the page was (`setHTMLUnsafe`, where the browser has it), and
+  a browser test holds a deferred React and Svelte assembly in their shadow roots, styled and
+  hydrated, watched red with the old parsing.
+- **A deferred placement that failed showed nothing and carried no id**, its declared fallback
+  never seen. The placeholder now carries the fallback inert, and a failure shows it in the
+  server's failed envelope with the id its failure is logged against, or marked failed with no
+  id when no answer came. The fill now carries the page's query, as a placement rendered with the
+  page receives it.
+- **The boot refusal of a deferred static assembly was too broad**: another assembly's browser
+  half puts the runtime on the page, which fills it. It now refuses only a page with no runtime
+  at all. A deadline or a cache on a deferred placement, which nothing reads, is refused like any
+  other unread policy. DESIGN 3.5 now says all of this, the refusals included.
+- **Raised with the owner:** the ruling of 2026-09-03 says a deferred assembly's placeholder is
+  filled by the browser after load. Two deferrals cannot be filled as shipped, so boot refuses
+  them rather than ship a placeholder that stays empty: one from another server, whose fragment
+  the browser cannot fetch across that server's same-origin policy, and one on a page with no
+  runtime. Lifting the first means a remote opting into cross-origin fragments, a policy change
+  that is the owner's.
+- **`perf` stopped weighing a shadow assembly's stylesheet**, as the last round made every
+  `template` inert; one declaring a shadow root is not, and is read again.
+- **The remote specs passed a constant failure id, a 4xx accepted as content, a fetch not
+  cancelled at its deadline, and a cache that never forgets.** Every remote failure's id is now
+  found in the consumer's log and is its own; the hostile server answers a 404 and a 500 each
+  carrying a well-formed envelope, and stalls a request whose connection the spec sees closed at
+  the deadline; a short lifetime is seen to pass. Each was watched red on its mutation.
+- **A signal to the harness while a server was starting left it running**, and one during the
+  pack took the default action. A server is tracked from the moment it is spawned, the handlers
+  are installed before the pack, and the kept directory is named (watched: without the tracking,
+  the consumer outlived a SIGTERM sent 30ms into its start). Every project is built before a port
+  is set aside, so a reserved port is held for seconds rather than minutes; an unknown `{name}`
+  in a project's environment is an error.
+- **`check` passed api routes boot refuses**: two that match the same requests, one under a
+  reserved prefix. It reads each api's route and holds it to core's own `apiProblems`.
+  Placement policy (a view the assembly lacks, policy for an unplaced name, the deferral rules)
+  is still boot's alone; that `check` should read it too is a ledger row.
+- **Two pages with different lifetimes shared one cache entry**, the longer one's: the key now
+  carries the lifetime.
+- **The unit tests let four mutations through** (the fill's element check, a fill finishing
+  after its cancel, the envelopes inside a filled one, asking for one placeholder twice); each
+  is now held, watched red.
+- **Recorded, not changed:** a remote placement's identity on the path is the page's name for
+  it, not the remote's own; nothing reads it until an assembly can place another (the open
+  question above), where it is to be settled. The private-range refusal of DESIGN 5.1 needs an
+  undeclared loopback origin, which boot refuses, so it stays held by the transport's unit tests.

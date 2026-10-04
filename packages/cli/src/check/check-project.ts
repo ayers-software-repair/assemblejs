@@ -2,15 +2,16 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { findPlacements, pageRouteProblems, routeKey } from "@assemblejs/core";
+import { apiProblems, findPlacements, pageRouteProblems, routeKey } from "@assemblejs/core";
+import type { ApiDefinition } from "@assemblejs/core";
 import { buildProblems } from "../build/build-problems.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
-import { apiRoute } from "./api-route.js";
 import { declaredOrigins } from "./declared-origins.js";
 import { pageRoute } from "./page-route.js";
+import { readApi } from "./read-api.js";
 import { remotePlacements } from "./remote-placements.js";
 
 /**
@@ -52,17 +53,32 @@ export function checkProject(root: string): readonly ProjectProblem[] {
   const origins = existsSync(configFile)
     ? readOr(configFile, declaredOrigins, new Set<string>())
     : new Set<string>();
-  // Each api's GET route, by what the router matches, so a page at the same route is refused as
-  // the server refuses it at boot. An api file that cannot be read is reported by its own rules.
+  // Each api's route, held to the rules boot holds it to by the same function, and each GET one
+  // kept by what the router matches, so a page at the same route is refused as boot refuses it.
+  // An api file that cannot be read is reported by its own rules.
+  const declaredApis: ApiDefinition[] = [];
   const apiRoutes = new Map<string, string>();
-  for (const api of apis.apis) {
-    let path: string | undefined;
+  for (const file of apis.apis) {
+    let api;
     try {
-      path = apiRoute(api);
+      api = readApi(file);
     } catch {
-      path = undefined;
+      api = undefined;
     }
-    if (path !== undefined) apiRoutes.set(routeKey("GET", path), api);
+    if (api === undefined) continue;
+    // Core reports in declaration order, so what follows the earlier apis' problems is this one's.
+    for (const problem of apiProblems([...declaredApis, api]).slice(
+      apiProblems(declaredApis).length,
+    )) {
+      problems.push({
+        path: file,
+        rule: "an-api-file-is-an-api",
+        message: problem,
+        fix: "give the api a route of its own, starting with /, outside the framework's prefixes",
+      });
+    }
+    declaredApis.push(api);
+    if ((api.method ?? "GET") === "GET") apiRoutes.set(routeKey("GET", api.path), file);
   }
   const routes = new Map<string, string>();
   for (const page of pages.pages) {

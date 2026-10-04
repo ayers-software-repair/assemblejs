@@ -39,14 +39,16 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     ms: now() - started,
   });
 
-  // Not fetched now: an empty envelope marked deferred, with the id the browser fetches it by.
+  // Not fetched now: an empty envelope marked deferred, with the id the browser fetches it by,
+  // and the fallback the page declared, inert, for the browser to show should the fetch fail.
   if (plan?.defer === true) {
     const html = renderEnvelope({
       id,
       name,
       view,
       renderer: "",
-      markup: "",
+      markup:
+        plan.fallback === undefined ? "" : `<template data-fallback>${plan.fallback}</template>`,
       data: {},
       deferred: true,
     });

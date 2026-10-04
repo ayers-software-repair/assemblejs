@@ -17,8 +17,8 @@ framework of its own.
 
 `harness/run.mjs` packs those packages once, and for each project creates it from the starter's
 tarball, installs every package from its tarball (never through a workspace link), builds it
-with the command line it installed, and starts `dist/server.js` under plain node in production,
-keeping everything it writes in a log. It then runs the fixture's specs,
+with the command line it installed, and, once every project of the fixture is built, starts
+each `dist/server.js` under plain node in production, keeping everything it writes in a log. It then runs the fixture's specs,
 `specs/<fixture>/*.spec.mjs`, with node's own test runner. A spec reads the servers' origins, the
 set-aside ports and the logs from its environment, and names the section of DESIGN it holds the
 server to.

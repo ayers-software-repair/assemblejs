@@ -129,21 +129,25 @@ export function pageProblems(
         problems.push(`${at} declares "${name}" both deferred and required`);
       }
       // The browser fills a deferred placement from the page's own origin, with this server's
-      // runtime: another server's fragment is refused by its same-origin policy, and an assembly
-      // with no browser half puts no runtime on the page to fetch it.
+      // runtime: another server's fragment is refused by its same-origin policy, and a page with
+      // no assembly of this server's that runs in the browser has no runtime to fetch it. Its
+      // deadline and cache would be read by nothing, as the browser fetches it after load.
       if (declared.defer === true && declared.url !== undefined) {
         problems.push(
           `${at} defers "${name}" from another server, which the browser could not fetch across origins`,
         );
       }
-      const local = declared.url === undefined ? byName.get(name) : undefined;
+      if (declared.defer === true && declared.url === undefined && !opened) {
+        problems.push(
+          `${at} defers "${name}" and places no assembly of this server's with a browser half, so nothing would fill it`,
+        );
+      }
       if (
         declared.defer === true &&
-        local !== undefined &&
-        (local.mount === "none" || (local.assets?.js.length ?? 0) === 0)
+        (declared.deadline !== undefined || declared.cache !== undefined)
       ) {
         problems.push(
-          `${at} defers "${name}", which has no browser half, so nothing on the page would fill it`,
+          `${at} gives deferred "${name}" a deadline or a cache, which nothing reads: the browser fetches it after load`,
         );
       }
       if (

@@ -11,5 +11,8 @@ export default definePage({
     moved: { url: from(hostile, "moved") },
     cookie: { url: from(hostile, "cookie") },
     seen: { url: from(hostile, "seen") },
+    gone: { url: from(hostile, "gone") },
+    erred: { url: from(hostile, "erred") },
+    stall: { url: from(hostile, "stall"), deadline: 300 },
   },
 });

@@ -92,3 +92,37 @@ for (const framework of FRAMEWORKS) {
     expect(problems).toEqual([]);
   });
 }
+
+test("a deferred assembly in its own shadow root is filled into that root, styled and hydrated", async ({
+  page,
+}) => {
+  const problems: string[] = [];
+  page.on("pageerror", (error) => problems.push(error.message));
+  page.on("console", (message) => {
+    const text = message.text();
+    if (text.startsWith("Failed to load resource")) return;
+    if (message.type() === "error" || message.type() === "warning") problems.push(text);
+  });
+  // Every file the page and its fills asked for answered; the site icon is the browser's own ask.
+  page.on("response", (response) => {
+    if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) {
+      problems.push(`${String(response.status())} ${response.url()}`);
+    }
+  });
+  await page.goto(`${origin}/later`);
+  await expect(page.locator("assembly-root[data-defer]")).toHaveCount(0);
+  for (const framework of ["react", "svelte"]) {
+    const host = page.locator(`assembly-root[data-name="${framework}-box"]`);
+    const bump = page.locator(`#${framework}-bump`);
+    await expect(bump).toHaveCSS("color", "rgb(0, 128, 0)");
+    await bump.click();
+    await expect(bump).toHaveText(`${framework} 1`);
+    expect(
+      await host.evaluate((element) => ({
+        inShadow: element.shadowRoot?.querySelector(".bump") !== null,
+        links: element.shadowRoot?.querySelectorAll('link[rel="stylesheet"]').length,
+      })),
+    ).toEqual({ inShadow: true, links: 1 });
+  }
+  expect(problems).toEqual([]);
+});

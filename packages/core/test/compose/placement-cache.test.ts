@@ -59,4 +59,11 @@ describe("one placement's view of the server's cache", () => {
     placementCache(input(cache, plan)).write("<p>shared</p>", undefined);
     expect(placementCache(input(cache, plan, { cookie: "s=1" })).read()).toBeUndefined();
   });
+
+  it("keeps what each lifetime cached apart, so a shorter one never reads a longer one's", () => {
+    const cache = memory();
+    placementCache(input(cache, { cache: { ttl: 60_000 } })).write("<p>long</p>", undefined);
+    expect(placementCache(input(cache, { cache: { ttl: 1000 } })).read()).toBeUndefined();
+    expect(placementCache(input(cache, { cache: { ttl: 60_000 } })).read()).toBe("<p>long</p>");
+  });
 });

@@ -294,9 +294,17 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       page held to no script; the matrix says what it leaves out; `perf` reads tags as a browser
 - [x] B-23 conformance breadth, batch two: two servers and a hostile third from the tarballs,
       remote placement, script, stylesheet, failures, cache, forwarding, apis, the stream
-      (`pnpm conformance`, 16, 16 and 69 of each)
+      (`pnpm conformance`: contract 16, remote 18, rendering 69)
 - [x] The deferred placement, found missing by B-23: the placeholder the owner ruled the page
       ships, filled by the runtime after load, proved over HTTP and in a real browser
+- [x] The verification of B-23: a deferred shadow assembly filled into its shadow root; a failed
+      fill shows its fallback and its logged id; the page's query carried; boot refuses only a
+      deferral nothing could fill; remote failure ids held, a 4xx, cancellation and expiry held;
+      the harness stops a starting server on a signal; `check` holds apis to core's rules
+- [ ] `check` reads placement policy as boot does: a view the assembly lacks, policy for an
+      unplaced name, the deferral rules (DESIGN 11: every problem found without building)
+- [ ] OWNER: a deferred placement from another server, refused at boot as shipped (DECISIONS,
+      verifying B-23); lifting it means a remote opting into cross-origin fragments
 - [ ] OWNER: how an assembly places a subassembly (DECISIONS 2026-10-04, open); then nested
       composition, and a parent's depth and cycle refusal held across two servers in conformance
 - [ ] B-24 conformance breadth, batch three, and the acceptance table

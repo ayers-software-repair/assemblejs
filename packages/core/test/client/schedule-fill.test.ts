@@ -55,4 +55,42 @@ describe("scheduling a deferred fill", () => {
     expect(runtime.mounted.has("a1")).toBe(true);
     runtime.unmountAll();
   });
+
+  it("hands nothing over when cancelled after the answer is on its way", async () => {
+    let release: (response: Response) => void = () => undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise<Response>((resolve) => (release = resolve))),
+    );
+    const filled = vi.fn();
+    const cancel = scheduleFill(placeholder(), filled);
+    cancel();
+    release(new Response(filledWith, { headers: { "content-type": "text/html" } }));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(filled).not.toHaveBeenCalled();
+  });
+
+  it("mounts what the filled envelope holds, and asks for each placeholder once", async () => {
+    const inner = `<assembly-root data-name="row" data-id="b1" data-view="default" data-renderer="html">${island("b1")}</assembly-root>`;
+    const fetched = vi.fn(
+      async () =>
+        new Response(filledWith.replace("</assembly-root>", `${inner}</assembly-root>`), {
+          headers: { "content-type": "text/html" },
+        }),
+    );
+    vi.stubGlobal("fetch", fetched);
+    placeholder();
+    const mounted: string[] = [];
+    const html: ClientRenderer = {
+      mount: (_element, _data, context) => {
+        mounted.push(context.id);
+        return { unmount: () => undefined };
+      },
+    };
+    const runtime = start({ renderers: { html }, replay: [] });
+    runtime.mount(document);
+    await vi.waitFor(() => expect(mounted.sort()).toEqual(["a1", "b1"]));
+    expect(fetched).toHaveBeenCalledTimes(1);
+    runtime.unmountAll();
+  });
 });

@@ -156,4 +156,19 @@ describe("checking a project", () => {
       }),
     ]);
   });
+
+  it("refuses an api route boot refuses: twice by what the router matches, or reserved", () => {
+    const root = project({
+      "src/server.ts": "",
+      "src/assemblies/hello/hello.html": "<p>hi</p>",
+      "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
+      "src/api/by-id.api.ts": 'export default { path: "/api/a/:id", handle: () => 1 };',
+      "src/api/by-key.api.ts": 'export default { path: "/api/a/:key", handle: () => 1 };',
+      "src/api/own.api.ts": 'export default { path: "/_assemblejs/x", handle: () => 1 };',
+    });
+    const found = checkProject(root).map((problem) => `${problem.path}: ${problem.message}`);
+    expect(found).toHaveLength(2);
+    expect(found.join("\n")).toMatch(/is declared more than once/);
+    expect(found.join("\n")).toMatch(/src\/api\/own\.api\.ts: .*reserves/);
+  });
 });

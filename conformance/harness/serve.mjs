@@ -19,7 +19,11 @@ export const freePort = () =>
     });
   });
 
-export async function serve(root, env = {}) {
+/**
+ * Starts the server, handing `track` the means to stop it the moment it is spawned, and answers
+ * its origin once it listens.
+ */
+export async function serve(root, env = {}, track = () => undefined) {
   const port = String(await freePort());
   const child = spawn(process.execPath, ["dist/server.js"], {
     cwd: root,
@@ -36,6 +40,8 @@ export async function serve(root, env = {}) {
     if (child.exitCode === null && child.signalCode === null) child.kill();
     await exited;
   };
+  const handle = { origin: "", log, stop };
+  track(handle);
   try {
     const origin = await new Promise((resolve, reject) => {
       const timer = setTimeout(
@@ -54,7 +60,8 @@ export async function serve(root, env = {}) {
         reject(new Error(`the server exited with ${code}`));
       });
     });
-    return { origin, stop, log };
+    handle.origin = origin;
+    return handle;
   } catch (error) {
     await stop();
     throw error;

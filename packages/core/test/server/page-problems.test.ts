@@ -106,19 +106,23 @@ describe("what is checked about pages before anything listens", () => {
     expect(text).toMatch(/positive, finite/);
   });
 
-  it("refuses a deferred placement nothing on the page could fill", () => {
-    const deferred = (name: string, url?: string) => ({
-      route: "/",
-      template: `<assembly name="${name}"></assembly>`,
-      place: { [name]: { defer: true, ...(url === undefined ? {} : { url }) } },
-    });
+  it("refuses a deferred placement nothing on the page could fill, or policy it never reads", () => {
     const hydrated = { ...hello, name: "live", assets: { css: [], js: ["/x.js"] } };
     const remotes = [{ origin: "https://other.example" }];
-    const text = (name: string, url?: string) =>
-      pageProblems([deferred(name, url)], [hello, hydrated], [], remotes).join();
-    expect(text("live")).toBe("");
-    expect(text("hello")).toMatch(/defers "hello", which has no browser half/);
-    expect(text("far", "https://other.example/assembly/far/")).toMatch(/across origins/);
+    const text = (template: string, place: Record<string, object>) =>
+      pageProblems([{ route: "/", template, place }], [hello, hydrated], [], remotes).join();
+    const one = (name: string) => `<assembly name="${name}"></assembly>`;
+    expect(text(one("live"), { live: { defer: true } })).toBe("");
+    // Another assembly's browser half puts the runtime on the page, which fills a static one.
+    expect(text(one("live") + one("hello"), { hello: { defer: true } })).toBe("");
+    expect(text(one("hello"), { hello: { defer: true } })).toMatch(/nothing would fill it/);
+    expect(
+      text(one("far"), { far: { defer: true, url: "https://other.example/assembly/far/" } }),
+    ).toMatch(/across origins/);
+    expect(text(one("live"), { live: { defer: true, deadline: 500 } })).toMatch(/nothing reads/);
+    expect(text(one("live"), { live: { defer: true, cache: { ttl: 5 } } })).toMatch(
+      /nothing reads/,
+    );
   });
 
   it("refuses a placement from an origin nobody declared, or a url that is not a content endpoint", () => {
