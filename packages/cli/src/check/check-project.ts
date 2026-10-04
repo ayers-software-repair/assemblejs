@@ -2,12 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { findPlacements, pageRouteProblems } from "@assemblejs/core";
+import { findPlacements, pageRouteProblems, routeKey } from "@assemblejs/core";
 import { buildProblems } from "../build/build-problems.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { apiRoute } from "./api-route.js";
 import { declaredOrigins } from "./declared-origins.js";
 import { pageRoute } from "./page-route.js";
 import { remotePlacements } from "./remote-placements.js";
@@ -51,6 +52,18 @@ export function checkProject(root: string): readonly ProjectProblem[] {
   const origins = existsSync(configFile)
     ? readOr(configFile, declaredOrigins, new Set<string>())
     : new Set<string>();
+  // Each api's GET route, by what the router matches, so a page at the same route is refused as
+  // the server refuses it at boot. An api file that cannot be read is reported by its own rules.
+  const apiRoutes = new Map<string, string>();
+  for (const api of apis.apis) {
+    let path: string | undefined;
+    try {
+      path = apiRoute(api);
+    } catch {
+      path = undefined;
+    }
+    if (path !== undefined) apiRoutes.set(routeKey("GET", path), api);
+  }
   const routes = new Map<string, string>();
   for (const page of pages.pages) {
     const remote =
@@ -83,6 +96,15 @@ export function checkProject(root: string): readonly ProjectProblem[] {
       });
     } else if (route !== undefined) {
       routes.set(route, page.name);
+    }
+    const api = route === undefined ? undefined : apiRoutes.get(routeKey("GET", route));
+    if (api !== undefined) {
+      problems.push({
+        path: at,
+        rule: "a-directory-is-a-page",
+        message: `page "${page.name}" answers at ${route ?? ""}, as the api ${relative(root, api).split("\\").join("/")} does`,
+        fix: "give the page or the api another route",
+      });
     }
     let placements;
     try {

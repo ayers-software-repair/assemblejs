@@ -65,6 +65,15 @@ test("accepts the composition headers a parent sends, the path its ancestors' id
   assert.equal(response.status, 200);
 });
 
+test("refuses on arrival a request whose ancestors already include this assembly (DESIGN 3.4)", async () => {
+  for (const path of ["cart/default", "home/default,cart/default"]) {
+    const response = await get("/assembly/cart/", { "assembly-path": path });
+    assert.equal(response.status, 400, path);
+  }
+  const another = await get("/assembly/cart/", { "assembly-path": "home/default,cart/compact" });
+  assert.equal(another.status, 200, "the same assembly in another view is another identity");
+});
+
 test("answers 404 for an assembly or a view that does not exist", async () => {
   assert.equal((await get("/assembly/nowhere/")).status, 404);
   assert.equal((await get("/assembly/cart/nowhere/")).status, 404);

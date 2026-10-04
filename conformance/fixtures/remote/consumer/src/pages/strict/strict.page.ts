@@ -1,0 +1,13 @@
+// Copyright Ayers Electronics Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { definePage } from "@assemblejs/core";
+
+const producer = process.env.PRODUCER_ORIGIN ?? "";
+const from = (origin: string, name: string): string => `${origin}/assembly/${name}/`;
+
+export default definePage({
+  place: {
+    card: { url: from(producer, "card") },
+    broken: { url: from(producer, "broken"), required: true },
+  },
+});

@@ -60,7 +60,11 @@ export async function measurePage(
   const styles = linkedAs("stylesheet");
   const scripts = [
     ...tags
-      .filter(({ tag, attributes }) => tag === "script" && RUNS.test(attributes["type"] ?? ""))
+      // A browser that runs modules skips a script marked `nomodule`.
+      .filter(
+        ({ tag, attributes }) =>
+          tag === "script" && RUNS.test(attributes["type"] ?? "") && !("nomodule" in attributes),
+      )
       .map(({ attributes }) => attributes["src"] ?? "")
       .filter((src) => src !== ""),
     ...linkedAs("modulepreload"),

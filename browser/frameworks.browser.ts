@@ -110,3 +110,28 @@ test("a Lit element's own styles apply once it hydrates, with no inline style re
   await expect(page.locator("#lit-bump")).toHaveCSS("color", "rgb(120, 0, 120)");
   expect(refused).toEqual([]);
 });
+
+test("a deferred assembly is fetched once the page has loaded, then hydrates like any other", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error" || message.type() === "warning") errors.push(message.text());
+  });
+  const response = await page.request.get(`${origin}/later`);
+  // The page the server sends holds the placeholders, not the assemblies.
+  const sent = await response.text();
+  expect(sent).not.toContain('id="react-bump"');
+  expect(sent.match(/data-defer=""/g)).toHaveLength(2);
+
+  await page.goto(`${origin}/later`);
+  await expect(page.locator("assembly-root[data-defer]")).toHaveCount(0);
+  for (const framework of ["react", "vue"]) {
+    const bump = page.locator(`#${framework}-bump`);
+    await expect(bump).toHaveText(`${framework} 0`);
+    await bump.click();
+    await expect(bump).toHaveText(`${framework} 1`);
+  }
+  expect(errors).toEqual([]);
+});

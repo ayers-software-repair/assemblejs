@@ -128,6 +128,24 @@ export function pageProblems(
       if (declared.defer === true && declared.required === true) {
         problems.push(`${at} declares "${name}" both deferred and required`);
       }
+      // The browser fills a deferred placement from the page's own origin, with this server's
+      // runtime: another server's fragment is refused by its same-origin policy, and an assembly
+      // with no browser half puts no runtime on the page to fetch it.
+      if (declared.defer === true && declared.url !== undefined) {
+        problems.push(
+          `${at} defers "${name}" from another server, which the browser could not fetch across origins`,
+        );
+      }
+      const local = declared.url === undefined ? byName.get(name) : undefined;
+      if (
+        declared.defer === true &&
+        local !== undefined &&
+        (local.mount === "none" || (local.assets?.js.length ?? 0) === 0)
+      ) {
+        problems.push(
+          `${at} defers "${name}", which has no browser half, so nothing on the page would fill it`,
+        );
+      }
       if (
         declared.deadline !== undefined &&
         !(Number.isFinite(declared.deadline) && declared.deadline > 0)

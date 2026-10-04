@@ -34,3 +34,13 @@ for (const name of HYDRATED) {
     }
   });
 }
+
+for (const [name, mode] of [
+  ["visible-label", "visible"],
+  ["idle-label", "idle"],
+]) {
+  test(`${name}: the envelope carries the mount mode its view declared, ${mode}`, async () => {
+    const body = await (await get(`/assembly/${name}/`)).text();
+    assert.equal(attributesOf(body)["data-mount"], mode);
+  });
+}

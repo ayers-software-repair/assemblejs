@@ -21,4 +21,6 @@ export { cacheKey } from "./cache-key.js";
 export { carriesCredential } from "./carries-credential.js";
 export { findPlacements } from "./find-placements.js";
 export { settlePlacement } from "./settle-placement.js";
+export { fallBack } from "./fall-back.js";
+export { placementCache } from "./placement-cache.js";
 export { compose } from "./compose.js";

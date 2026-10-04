@@ -185,13 +185,12 @@ describe("the composition headers", () => {
     expect(JSON.stringify(response.json())).toContain("assembly-depth");
   });
 
-  it("are refused above the depth cap", async () => {
-    const response = await app.inject({
-      method: "GET",
-      url: "/assembly/hello/",
-      headers: { "assembly-depth": "99" },
-    });
-    expect(response.statusCode).toBe(400);
+  it("are refused above the depth cap, and with a path that already holds the assembly", async () => {
+    const cycle = { "assembly-path": "page/default,hello/default" };
+    for (const headers of [{ "assembly-depth": "99" }, cycle]) {
+      const response = await app.inject({ method: "GET", url: "/assembly/hello/", headers });
+      expect(response.statusCode, JSON.stringify(headers)).toBe(400);
+    }
   });
 });
 

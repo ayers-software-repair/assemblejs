@@ -141,4 +141,19 @@ describe("checking a project", () => {
       }),
     ]);
   });
+
+  it("refuses a page at the route a GET api answers", () => {
+    const root = project({
+      "src/server.ts": "",
+      "src/assemblies/hello/hello.html": "<p>hi</p>",
+      "src/pages/about/about.html": '<body><assembly name="hello"></assembly></body>',
+      "src/api/about.api.ts": 'export default { path: "/about", handle: () => ({}) };',
+    });
+    expect(checkProject(root)).toEqual([
+      expect.objectContaining({
+        path: "src/pages/about/about.html",
+        message: 'page "about" answers at /about, as the api src/api/about.api.ts does',
+      }),
+    ]);
+  });
 });

@@ -1455,23 +1455,33 @@ the tarballs) and the specs under `conformance/specs/<fixture>/`:
   naming it, its markup inside and what it was given escaped (DESIGN 7, 5.4); a static view is
   declared never to mount and names no script, a framework view's script is served (DESIGN 9); a
   page of all of them places each in the template's order, contains the one that fails, shows a
-  declared fallback, and dies only for a placement declared required (DESIGN 3.3, 12).
+  declared fallback, and dies only for a placement declared required (DESIGN 3.3, 12); a view
+  that throws in any framework or template language is the server's failure, each failure's id
+  the one it is logged against (DESIGN 7, 12); a declared mount mode reaches the envelope and a
+  page of static views ships no script (DESIGN 9); a deferred placement ships its placeholder
+  (DESIGN 3.5).
 - **Batch two, B-23: across servers.** Two servers from the tarballs: a remote placement, the
-  manifest handshake, every failure a remote can produce (status, type, size, deadline), depth and
-  cycles refused before dispatch, a deferred placement, the cache (DESIGN 3.1 to 3.5, 5.1); the
-  real-time stream (DESIGN 3.6); a project's apis.
+  manifest handshake with its script and its scoped stylesheet (DESIGN 10), every failure a
+  remote can produce (status, type, size, deadline, a redirect), what is forwarded and what comes
+  back, the cache (DESIGN 3.1 to 3.3, 5.1); the real-time stream (DESIGN 3.6); a project's apis.
 - **Batch three, B-24: trust and the command line, and the acceptance table.** Inbound access,
   the policy and the boundary (DESIGN 5.2, 5.3); production carries no development surface
   (devtools, reload); `check` and `deploy` from the installed command line, and the deploy run on
   its own; then the table of every intent from the predecessor's tests.
+- **Not in the matrix, and why.** A parent's depth and cycle refusal across servers needs one
+  assembly to place another, which nothing can yet (the open question below, 2026-10-04). DESIGN
+  4 (configuration), 6 (representation) and 11 (runtime shape) are what the fixtures are built
+  and started with rather than answers to read; DESIGN 8 is the authoring surface the fixtures
+  are written in; DESIGN 13, the agent surface, is not HTTP.
 
 - **B-22, batch one, landed.** The `rendering` fixture holds thirteen assemblies, one per view
   kind and one whose render throws, on three pages: all of them, one with a declared fallback,
   one with the failing placement required. 53 specs; each kind of claim was watched red on a
   mutation: the template's order reversed, a declared fallback dropped, Nunjucks escaping off, a
   static view no longer declared never to mount, a required failure answered 200, a failed
-  render's own endpoint answering 200. The harness grew to several fixtures, packing once and
-  giving each renderer the framework version it is tested against, read from its own package.
+  render's own endpoint answering 200. (The harness change that packs once for several fixtures
+  and gives each renderer its framework landed a commit earlier, with the B-21 round; B-22's own
+  commit said otherwise.)
 - **Found by the first run, and not a defect:** Preact, Solid and Svelte write a `>` in text as
   it is, escaping only `<`. Nothing can start an element without a `<`, so the spec accepts
   either, and its second check, that no value given with markup in it reaches the markup
@@ -1481,13 +1491,10 @@ the tarballs) and the specs under `conformance/specs/<fixture>/`:
   run reproduced that exactly. Every suite that starts a server picked a random port and piped
   away its stderr; each now asks the system for a free port, and an early exit carries what the
   server wrote (watched: the held port now reads as the server's own `node:net` error).
-- **Recorded, not changed: the fallback ladder's order.** DESIGN 3.3 reads fallback, then last
-  good, then the empty envelope; the composer consults the cache before the fallback. Over HTTP
-  the two cannot differ: the server's cache forgets an entry when its lifetime ends, and a fresh
-  entry answers before anything is fetched, so after a failed fetch the cache holds the placement
-  only if a concurrent request wrote it in between. Nothing a conformance spec can send tells the
-  orders apart; a cache that kept entries past their lifetime to absorb an outage would, and that
-  is where the order is to be settled.
+- **Corrected: the fallback ladder's order was observable**, and this entry said it was not. The
+  server holds one cache for every page, and any failing placement read it before its own
+  fallback, so one page showed what another had cached, unmarked. Fixed with the verification of
+  B-22, below.
 
 ## 2026-10-04: open, for the owner: how an assembly places a subassembly
 
@@ -1508,3 +1515,63 @@ the refusal on arrival (a depth past the cap, a malformed path) stays held by th
 fixture. Depth and cycles refused by a parent before dispatch, across two servers, wait for the
 owner's answer and land with it. Raised with the owner; recorded here so the gap is not
 mistaken for a test that was forgotten.
+
+## 2026-10-04: verifying B-22
+
+The verifier ran every fixture green, then found, and this round fixed:
+
+- **One page showed what another page had cached, unmarked.** The server holds one cache for
+  every page, keyed without the page, and a failing placement read it before its own fallback,
+  whether or not it had declared a lifetime. Now only a placement that declared a lifetime reads
+  or writes the cache at all, and the ladder runs in DESIGN 3.3's order: the declared fallback,
+  then the last good content, then the empty envelope. A placement refused before dispatch is
+  never answered from the cache, and a required one is saved only by its own last good content.
+  The ladder is its own module (`fallBack`), the cache rules another (`placementCache`). A spec
+  fills the cache on one page and fails the same assembly on another, watched red on the old
+  order.
+- **`assembly-path` still disagreed with DESIGN**: the composer sent the target in its own path,
+  so a server refusing a path that names it (DESIGN 3.4) would have refused every request; and
+  this server never refused one on arrival. The composer now sends the ancestors alone, and the
+  content endpoint answers 400 to a path that already holds the assembly, a spec holding both.
+- **`check` let a page share a route with a GET api**, which boot refuses. It reads each api's
+  path from its source, as it reads a page's route. Its claim is now the true one: every route
+  boot refuses. Placement policy (a view the assembly lacks, policy for an unplaced name,
+  deferred and required) is still boot's alone, as `check` never claimed it.
+- **The specs passed a server with one constant failure id, and one shipping a script on every
+  page.** The harness now keeps what each server writes, and every failure spec finds its id in
+  the server's own log (DESIGN 12); two failures have two ids. A page of static views alone is
+  held to shipping no script.
+- **The matrix left out what it did not say**: styles (DESIGN 10) join B-23, the declared mount
+  modes and a throwing view in every framework and template language join B-22, and what is not
+  in the matrix is now said, with why.
+- **`perf` read a custom element as the element its name begins with** (`<title-bar>` swallowed
+  the document after it), ended a comment where a browser does not, and counted links a
+  `noscript` or `template` holds and a `nomodule` script. Each now reads as a browser reads it.
+- **The harness left servers running on a signal sent to it alone**: it now stops every server
+  and the specs before it ends, and runs the specs without blocking so the signal is heard. The
+  interrupt test for `perf` now holds the run to its time, watched red at thirty seconds.
+
+## 2026-10-04: B-23, across servers, and the deferred placement it found missing
+
+- **The `remote` fixture is two projects and a third server the spec runs.** A producer (an
+  assembly per behaviour, apis, a stream) and a consumer whose config and pages read the
+  producer's origin from the environment, as a deployment would, and declare a second remote on
+  a port the harness sets aside, where the spec runs a server that misbehaves on purpose. 16
+  specs: a remote placement marked with its origin, its script served to any origin and its
+  stylesheet scoped to its envelope, the page's policy naming the remote; a 500, a 404, an answer
+  past the cap and one past its deadline each contained, a required one failing the page; a
+  lifetime honoured; a JSON answer and a redirect refused, the redirect never followed, the
+  remote's headers discarded, nothing of the visitor's forwarded but the declared key; an api,
+  a stream of one data line per message, refused for HEAD and named in its page's head.
+- **Found by the first run: a deferred placement rendered nothing**, and the browser had nothing
+  to fill. The owner's ruling of 2026-09-03 says the page ships a placeholder the browser fills
+  after load. The composer now emits the empty envelope, marked `data-defer`, and the runtime
+  fetches the content endpoint by that envelope's id once the page has loaded, puts the answer in
+  its place, and mounts it like any other; anything but one envelope with that id leaves the
+  placeholder. A deferred placement from another server, which a browser could not fetch across
+  the remote's same-origin policy, and one of an assembly with no browser half, which puts no
+  runtime on the page, are refused at boot. Held by the `rendering` fixture over HTTP and by the
+  frameworks example in a real browser, each watched red with the fill turned off.
+- **Each new spec was watched red on a mutation**: the cache read without a lifetime, no
+  stylesheet hoisted, a script on every page, a deferred placement emitting nothing, a constant
+  failure id, no cycle refused on arrival, a declared mount mode dropped.

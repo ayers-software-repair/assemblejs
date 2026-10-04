@@ -7,6 +7,7 @@ import { openPageStream } from "./open-page-stream.js";
 import { readIsland } from "./read-island.js";
 import { readMountMode } from "./read-mount-mode.js";
 import type { Runtime } from "./runtime.js";
+import { scheduleFill } from "./schedule-fill.js";
 import { scheduleMount } from "./schedule-mount.js";
 import type { StartOptions } from "./start-options.js";
 
@@ -14,7 +15,8 @@ import type { StartOptions } from "./start-options.js";
  * Starts the page's one runtime.
  *
  * It finds every envelope, reads and removes each island, and mounts each assembly through its
- * renderer's browser half, and opens the page's stream when it names one. Nothing here knows any framework: the whole cross-framework contract
+ * renderer's browser half, fills each deferred one once the page has loaded, and opens the page's
+ * stream when it names one. Nothing here knows any framework: the whole cross-framework contract
  * is one mount call and the handle it returns.
  *
  * One assembly failing is one assembly failing. A missing renderer, a malformed island or a
@@ -28,64 +30,83 @@ export function start(options: StartOptions): Runtime {
   const releases: Array<() => void> = [];
   const bus = createBus(options.replay);
 
-  const mount = (root: ParentNode): void => {
-    for (const element of findEnvelopes(root)) {
-      const id = element.getAttribute("data-id");
-      if (id === null || mounted.has(id)) continue;
-      // A fallback stands in for an assembly that did not render. Its markup is the page's, not
-      // the assembly's, so there is nothing to hydrate and mounting it would run a browser half
-      // against markup it never produced.
-      if (element.hasAttribute("data-failed")) continue;
-      // Two runtimes share a page when it places a remote's assembly: each mounts what came from
-      // its own origin and leaves the other's alone, so no island is mounted twice. An envelope
-      // inside a remote's envelope came from that remote too, marked or not.
-      const from = element.closest("[data-remote]")?.getAttribute("data-remote") ?? null;
-      const page = typeof location === "undefined" ? undefined : location.origin;
-      if (options.origin === undefined ? from !== null : (from ?? page) !== options.origin)
-        continue;
+  const deferring = new Set<string>();
 
-      const payload = readIsland(element);
-      const mode = readMountMode(element);
-      if (mode === "none") continue;
-      if (payload === undefined) continue;
-
-      const rendererName = element.getAttribute("data-renderer") ?? "";
-      const renderer = Object.hasOwn(options.renderers, rendererName)
-        ? options.renderers[rendererName]
-        : undefined;
-      if (renderer === undefined) {
-        console.warn(
-          `assemblejs: no browser renderer registered for "${rendererName}", so the assembly ` +
-            `"${payload.name}" was left as the markup the server sent`,
-        );
-        continue;
-      }
-
-      cancels.push(
-        scheduleMount(element, mode, () => {
-          try {
-            const sender = { id: payload.id, name: payload.name, view: payload.view };
-            const held = bus.forAssembly(sender);
-            releases.push(held.release);
-            // An assembly that opted into Shadow DOM is mounted inside its shadow root, which the
-            // browser built from the declarative template the server sent.
-            const handle = renderer.mount(element.shadowRoot ?? element, payload.data, {
-              ...sender,
-              events: held.events,
-            });
-            mounted.set(id, {
-              id,
-              name: payload.name,
-              view: payload.view,
-              element,
-              handle,
-            });
-          } catch (error) {
-            console.error(`assemblejs: "${payload.name}" did not mount`, error);
-          }
-        }),
-      );
+  const consider = (element: Element): void => {
+    const id = element.getAttribute("data-id");
+    if (id === null || mounted.has(id)) return;
+    // A fallback stands in for an assembly that did not render. Its markup is the page's, not
+    // the assembly's, so there is nothing to hydrate and mounting it would run a browser half
+    // against markup it never produced.
+    if (element.hasAttribute("data-failed")) return;
+    // Two runtimes share a page when it places a remote's assembly: each mounts what came from
+    // its own origin and leaves the other's alone, so no island is mounted twice. An envelope
+    // inside a remote's envelope came from that remote too, marked or not.
+    const from = element.closest("[data-remote]")?.getAttribute("data-remote") ?? null;
+    const page = typeof location === "undefined" ? undefined : location.origin;
+    if (options.origin === undefined ? from !== null : (from ?? page) !== options.origin) return;
+    // A deferred placement's content is fetched after the page loads, then considered like any
+    // envelope the server sent.
+    if (element.hasAttribute("data-defer")) {
+      if (!deferring.has(id)) defer(element, id);
+      return;
     }
+
+    const payload = readIsland(element);
+    const mode = readMountMode(element);
+    if (mode === "none") return;
+    if (payload === undefined) return;
+
+    const rendererName = element.getAttribute("data-renderer") ?? "";
+    const renderer = Object.hasOwn(options.renderers, rendererName)
+      ? options.renderers[rendererName]
+      : undefined;
+    if (renderer === undefined) {
+      console.warn(
+        `assemblejs: no browser renderer registered for "${rendererName}", so the assembly ` +
+          `"${payload.name}" was left as the markup the server sent`,
+      );
+      return;
+    }
+
+    cancels.push(
+      scheduleMount(element, mode, () => {
+        try {
+          const sender = { id: payload.id, name: payload.name, view: payload.view };
+          const held = bus.forAssembly(sender);
+          releases.push(held.release);
+          // An assembly that opted into Shadow DOM is mounted inside its shadow root, which the
+          // browser built from the declarative template the server sent.
+          const handle = renderer.mount(element.shadowRoot ?? element, payload.data, {
+            ...sender,
+            events: held.events,
+          });
+          mounted.set(id, {
+            id,
+            name: payload.name,
+            view: payload.view,
+            element,
+            handle,
+          });
+        } catch (error) {
+          console.error(`assemblejs: "${payload.name}" did not mount`, error);
+        }
+      }),
+    );
+  };
+
+  const mount = (root: ParentNode): void => {
+    for (const element of findEnvelopes(root)) consider(element);
+  };
+
+  const defer = (element: Element, id: string): void => {
+    deferring.add(id);
+    cancels.push(
+      scheduleFill(element, (filled) => {
+        consider(filled);
+        for (const inner of findEnvelopes(filled)) consider(inner);
+      }),
+    );
   };
 
   mount(options.root ?? document);

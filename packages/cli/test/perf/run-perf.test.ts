@@ -120,8 +120,11 @@ describe("the perf verb", { timeout: 60_000 }, () => {
       start: () => ({ ready: Promise.resolve(origin), stop: async () => undefined }),
       signal: controller.signal,
     });
+    const started = Date.now();
     setTimeout(() => controller.abort(), 100);
     expect(await code).toBe(130);
+    // At once, not when the request's own thirty seconds run out.
+    expect(Date.now() - started).toBeLessThan(5_000);
     server.closeAllConnections();
     await new Promise<void>((resolve) => server.close(() => resolve()));
   });

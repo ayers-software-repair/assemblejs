@@ -3,7 +3,7 @@
 // DESIGN 2.2: the data endpoint.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { attributesOf, get, islandOf } from "../http.mjs";
+import { attributesOf, get, islandOf, logged } from "../http.mjs";
 
 test("answers exactly the object the content endpoint put in the island", async () => {
   const response = await get("/assembly/cart/default/api/");
@@ -21,6 +21,10 @@ test("answers a service that throws with 500 and an id, never partial data or th
   const failure = JSON.parse(body);
   assert.match(failure.error.correlationId, /\S+/);
   assert.deepEqual(failure, { error: { correlationId: failure.error.correlationId } });
+  assert.ok(
+    await logged(failure.error.correlationId),
+    "the id is the one the failure is logged against",
+  );
 });
 
 test("renders a fallback from the content endpoint for the same throw, marked with an id", async () => {
@@ -30,5 +34,5 @@ test("renders a fallback from the content endpoint for the same throw, marked wi
   assert.equal(response.headers.get("content-type"), "text/html; charset=utf-8");
   const body = await response.text();
   assert.ok(!body.includes("never shown") && !body.includes("secret"));
-  assert.match(attributesOf(body)["data-failed"] ?? "", /\S+/);
+  assert.ok(await logged(attributesOf(body)["data-failed"]));
 });

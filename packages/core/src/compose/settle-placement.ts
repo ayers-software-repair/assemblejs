@@ -3,14 +3,13 @@
 import { renderEnvelope } from "../envelope/render-envelope.js";
 import type { AssemblyRequest } from "./assembly-request.js";
 import type { AssemblyResponse } from "./assembly-response.js";
-import { cacheKey } from "./cache-key.js";
-import { carriesCredential } from "./carries-credential.js";
 import { DEFAULT_DEADLINE } from "./default-deadline.js";
 import type { Diagnostic } from "./diagnostic.js";
 import type { FailureReason } from "./failure-reason.js";
+import { fallBack } from "./fall-back.js";
 import type { Fetch } from "./fetch.js";
 import { identity } from "./identity.js";
-import { RequiredFailure } from "./required-failure.js";
+import { placementCache } from "./placement-cache.js";
 import type { SettleInput } from "./settle-input.js";
 import type { SettledPlacement } from "./settled-placement.js";
 
@@ -18,14 +17,9 @@ import type { SettledPlacement } from "./settled-placement.js";
  * One placement's whole outcome. It never throws except for a placement declared required,
  * because a placement that throws is a page that dies from a child.
  *
- * A placement that declared a cache lifetime is answered from a fresh entry first. Otherwise the
- * ladder, in order: the content that was fetched, then the last good content the cache
- * holds, then the declared fallback, then an empty envelope. The cache outranks the fallback
- * because it holds real content this assembly actually produced, and the fallback is what to
- * show when there is none. A fallback and the empty envelope are both wrapped in an envelope
- * marked failed with the failure's correlation id, so the one failing placement on a page can
- * be found in the log from the page itself, and every failure has an id even when its transport
- * reported none.
+ * A placement that declared a cache lifetime is answered from a fresh entry first. Otherwise what
+ * was fetched, or on any failure the ladder `fallBack` climbs; every failure has an id even when
+ * its transport reported none.
  */
 export async function settlePlacement(input: SettleInput): Promise<SettledPlacement> {
   const { name, view, plan, now } = input;
@@ -45,25 +39,31 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     ms: now() - started,
   });
 
+  // Not fetched now: an empty envelope marked deferred, with the id the browser fetches it by.
   if (plan?.defer === true) {
-    return { html: "", diagnostic: at("deferred") };
+    const html = renderEnvelope({
+      id,
+      name,
+      view,
+      renderer: "",
+      markup: "",
+      data: {},
+      deferred: true,
+    });
+    return { html, diagnostic: at("deferred") };
   }
 
+  // A placement refused before dispatch is never answered with content, cached or not: the
+  // refusal is the point.
   const refusal = refuseBeforeDispatch(input);
   if (refusal !== undefined) {
-    return fallBack(input, id, at("fallback", refusal, input.newId()), refusal);
+    return fallBack(input, id, at("fallback", refusal, input.newId()), false);
   }
 
-  // A placement that declared a lifetime is answered from its fresh entry without a request. Never
-  // for a request carrying a credential, whose answer belongs to one visitor.
-  if (
-    (plan?.cache?.ttl ?? 0) > 0 &&
-    input.cache !== undefined &&
-    !carriesCredential(input.headers)
-  ) {
-    const held = input.cache.get(keyOf(input));
-    if (held !== undefined) return { html: held.html, diagnostic: at("cache") };
-  }
+  // A placement that declared a lifetime is answered from its fresh entry without a request.
+  const cache = placementCache(input);
+  const cached = cache.read();
+  if (cached !== undefined) return { html: cached, diagnostic: at("cache") };
 
   const deadline = plan?.deadline ?? DEFAULT_DEADLINE;
   const controller = new AbortController();
@@ -73,7 +73,8 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     id,
     page: input.page,
     depth: input.depth + 1,
-    path: [...input.path, identity(name, view)],
+    // The ancestors' identities, innermost last: what the target checks itself against.
+    path: input.path,
     query: input.query,
     headers: input.headers,
     signal: controller.signal,
@@ -84,17 +85,17 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
   // The cap holds whichever transport answered, so a local render is bounded like a remote one.
   if (answer.ok && new TextEncoder().encode(answer.html).length > input.limits.maxBytes) {
     const correlationId = input.newId();
-    return fallBack(input, id, at("fallback", "too-large", correlationId), "too-large");
+    return fallBack(input, id, at("fallback", "too-large", correlationId), true);
   }
   if (answer.ok) {
-    write(input, answer.html, answer.version);
+    cache.write(answer.html, answer.version);
     return { html: answer.html, diagnostic: at(answer.source) };
   }
   return fallBack(
     input,
     id,
     at("fallback", answer.reason, answer.correlationId || input.newId()),
-    answer.reason,
+    true,
   );
 }
 
@@ -164,43 +165,4 @@ async function race(
   } finally {
     if (timer !== undefined) clearTimeout(timer);
   }
-}
-
-function write(input: SettleInput, html: string, version: string | undefined): void {
-  const ttl = input.plan?.cache?.ttl ?? 0;
-  if (ttl <= 0 || input.cache === undefined) return;
-  if (carriesCredential(input.headers)) return;
-  input.cache.set(keyOf(input), version === undefined ? { html } : { html, version }, ttl);
-}
-
-function keyOf(input: SettleInput): string {
-  return cacheKey(input.name, input.view, input.query, input.plan?.url, input.headers);
-}
-
-function fallBack(
-  input: SettleInput,
-  id: string,
-  diagnostic: Diagnostic,
-  reason: FailureReason,
-): SettledPlacement {
-  // The cache is consulted BEFORE required is considered. A required placement whose last good
-  // content is still held has not failed: the ladder answered it. Throwing first killed pages
-  // over an outage the cache was there to absorb.
-  if (input.cache !== undefined && !carriesCredential(input.headers)) {
-    const held = input.cache.get(keyOf(input));
-    if (held !== undefined) {
-      return { html: held.html, diagnostic: { ...diagnostic, source: "cache", reason } };
-    }
-  }
-  if (input.plan?.required === true) throw new RequiredFailure(diagnostic);
-  const html = renderEnvelope({
-    id,
-    name: input.name,
-    view: input.view,
-    renderer: "",
-    markup: input.plan?.fallback ?? "",
-    data: {},
-    failed: diagnostic.correlationId ?? "",
-  });
-  return { html, diagnostic };
 }

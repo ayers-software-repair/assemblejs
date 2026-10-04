@@ -91,7 +91,7 @@ describe("composing a page", () => {
     expect(diagnostics.every((d) => d.reason === "timeout")).toBe(true);
   });
 
-  it("emits nothing for a deferred placement and never reaches it", async () => {
+  it("emits an empty envelope for a deferred placement and never reaches it", async () => {
     let reached = 0;
     const { html, diagnostics } = await compose(
       options({
@@ -103,7 +103,9 @@ describe("composing a page", () => {
       }),
     );
     expect(reached).toBe(1);
-    expect(html).toBe("<main><p>a</p></main>");
+    // DESIGN 3.5: the browser fills it, by the id its envelope carries.
+    expect(html).toMatch(/^<main><p>a<\/p><assembly-root data-name="b" [^>]*data-defer=""><script/);
+    expect(html).not.toContain("<p>b</p>");
     expect(diagnostics[1]?.source).toBe("deferred");
   });
 

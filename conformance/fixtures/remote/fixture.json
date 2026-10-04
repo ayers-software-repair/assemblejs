@@ -1,0 +1,10 @@
+{
+  "ports": ["hostile"],
+  "projects": {
+    "producer": { "packages": ["core", "cli", "renderer-react"] },
+    "consumer": {
+      "packages": ["core", "cli"],
+      "env": { "PRODUCER_ORIGIN": "{producer}", "HOSTILE_ORIGIN": "{hostile}" }
+    }
+  }
+}

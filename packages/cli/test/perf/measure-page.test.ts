@@ -14,7 +14,8 @@ const files: Record<string, string> = {
   "/e.js": "e".repeat(30),
   "/scripts":
     '<script src="/c.js" type="MODULE"></script><script src="/d.js"></script>' +
-    '<link rel="modulepreload" href="/e.js"><script type="application/json" src="/data.json"></script>',
+    '<link rel="modulepreload" href="/e.js"><script type="application/json" src="/data.json"></script>' +
+    '<script nomodule src="/legacy.js"></script>',
   "/authored":
     '<link href="/a.css?x=1&#x26;y=2" rel="stylesheet" /><script src="/c.js" type="module"></script>' +
     '<link rel="stylesheet" href="https://cdn.example/font.css"><assembly-root data-name="cart" data-failed="8f212c16"></assembly-root>',
@@ -70,6 +71,7 @@ describe("measuring a page", () => {
         .reduce((total, size) => total + size, 0),
     });
     expect(asked).not.toContain("/data.json");
+    expect(asked).not.toContain("/legacy.js");
   });
 
   it("abandons a request in flight when it is told to stop", async () => {

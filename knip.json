@@ -27,7 +27,7 @@
       "ignoreDependencies": ["@assemblejs/renderer-react"]
     },
     "examples/frameworks": {
-      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}"],
+      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/pages/*/*.page.ts"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
       "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte", "vue"]
     },

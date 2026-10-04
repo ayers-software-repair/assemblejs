@@ -4,7 +4,7 @@
 // template's order, and the one that fails is marked, contained and never explained to a visitor.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { attributesOf, envelopesOf, get } from "../http.mjs";
+import { attributesOf, envelopesOf, get, logged } from "../http.mjs";
 
 const ORDER = [
   "plain",
@@ -41,7 +41,7 @@ test("the placement that fails is marked with an id, and every other one renders
   for (const envelope of envelopesOf(page)) {
     const failed = envelope.attributes["data-failed"];
     if (envelope.attributes["data-name"] === "broken") {
-      assert.match(failed ?? "", /\S+/);
+      assert.ok(await logged(failed), `the id ${failed} is the one its failure is logged against`);
     } else {
       assert.equal(failed, undefined, envelope.attributes["data-name"]);
       assert.ok(envelope.inner.trim() !== "", envelope.attributes["data-name"]);
@@ -57,7 +57,7 @@ test("a declared fallback is what the failed placement shows, still marked faile
     (envelope) => envelope.attributes["data-name"] === "broken",
   );
   assert.ok(broken !== undefined);
-  assert.match(broken.attributes["data-failed"] ?? "", /\S+/);
+  assert.ok(await logged(broken.attributes["data-failed"]));
   assert.match(broken.inner, /<p class="stand-in">stand-in<\/p>/);
 });
 
@@ -66,7 +66,7 @@ test("a placement declared required fails its page with 503 and an id, nothing e
   assert.equal(response.status, 503);
   const body = await response.text();
   assert.ok(!body.includes("plain html") && !body.includes(CAUSE));
-  assert.match(JSON.parse(body).error.correlationId, /\S+/);
+  assert.ok(await logged(JSON.parse(body).error.correlationId));
 });
 
 test("the failing view's own content endpoint answers its fallback envelope under 500", async () => {
@@ -75,5 +75,38 @@ test("the failing view's own content endpoint answers its fallback envelope unde
   const body = await response.text();
   assert.ok(!body.includes(CAUSE));
   assert.equal(attributesOf(body)["data-name"], "broken");
-  assert.match(attributesOf(body)["data-failed"] ?? "", /\S+/);
+  assert.ok(await logged(attributesOf(body)["data-failed"]));
+});
+
+test("every failure has an id of its own, never one shared by two", async () => {
+  const idOf = async () =>
+    envelopesOf(await (await get("/")).text()).find(
+      (envelope) => envelope.attributes["data-name"] === "broken",
+    )?.attributes["data-failed"];
+  const [first, second] = [await idOf(), await idOf()];
+  assert.ok(first !== undefined && second !== undefined);
+  assert.notEqual(first, second);
+});
+
+test("a declared fallback is shown before what another page's placement cached", async () => {
+  // The first call answers, and the page that declared a lifetime caches it.
+  const kept = await (await get("/keeps")).text();
+  assert.match(kept, /<p class="flaky">flaky, answering<\/p>/);
+  // The second fails: a page that declared no lifetime shows its own fallback, marked failed,
+  // never the other page's cached content.
+  const stood = envelopesOf(await (await get("/stands-in")).text())[0];
+  assert.match(stood?.inner ?? "", /<p class="stand-in">stand-in<\/p>/);
+  assert.ok(await logged(stood?.attributes["data-failed"]));
+  assert.ok(!(stood?.inner ?? "").includes("flaky, answering"));
+});
+
+test("a page of static assemblies alone ships no JavaScript at all", async () => {
+  const page = await (await get("/still")).text();
+  const scripts = [...page.matchAll(/<script\b[^>]*>/g)].map((match) => match[0]);
+  assert.ok(
+    scripts.every((tag) => tag.includes('type="application/json"')),
+    `a script on a static page: ${scripts.join(" ")}`,
+  );
+  const home = await (await get("/")).text();
+  assert.match(home, /<script type="module" src="[^"]+"/, "a page with a framework view has one");
 });

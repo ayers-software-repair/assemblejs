@@ -4,7 +4,7 @@
 // tarball, answers the same three endpoints with the same envelope, and escapes what it is given.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { attributesOf, get, islandOf } from "../http.mjs";
+import { attributesOf, get, islandOf, logged } from "../http.mjs";
 
 const FRAMEWORKS = ["react", "preact", "solid", "svelte", "vue", "lit"];
 const ENGINES = ["ejs", "handlebars", "nunjucks", "pug"];
@@ -66,5 +66,28 @@ for (const view of VIEWS) {
     const manifest = await response.json();
     assert.equal(manifest.renderer, view.renderer);
     assert.equal(manifest.name, view.name);
+  });
+}
+
+// DESIGN 7: no renderer catches. A view that throws reaches the server, which answers its
+// fallback, logged, in every framework and every template language alike.
+for (const name of [
+  "broken-preact",
+  "broken-solid",
+  "broken-svelte",
+  "broken-vue",
+  "broken-lit",
+  "broken-ejs",
+  "broken-handlebars",
+  "broken-nunjucks",
+  "broken-pug",
+]) {
+  test(`${name}: a view that throws is the server's failure, never markup of its own`, async () => {
+    const response = await get(`/assembly/${name}/`);
+    assert.equal(response.status, 500);
+    const body = await response.text();
+    assert.ok(!body.includes("never shown") && !body.includes("fails to render"), body);
+    assert.equal(attributesOf(body)["data-name"], name);
+    assert.ok(await logged(attributesOf(body)["data-failed"]));
   });
 }

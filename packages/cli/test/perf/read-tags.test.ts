@@ -42,4 +42,24 @@ describe("reading a document's link, script and envelope tags", () => {
       { tag: "script", attributes: { type: "module", src: "/real.js" } },
     ]);
   });
+
+  it("does not take a custom element for the element its name begins with", () => {
+    const html =
+      '<title-bar>Hi</title-bar><script-loader src="/no.js"></script-loader>' +
+      '<script type="module" src="/a.js"></script><assembly-root data-name="cart" data-failed="1">';
+    expect(readTags(html)).toEqual([
+      { tag: "script", attributes: { type: "module", src: "/a.js" } },
+      { tag: "assembly-root", attributes: { "data-name": "cart", "data-failed": "1" } },
+    ]);
+  });
+
+  it("ends a comment where a browser does, and reads nothing a noscript or template holds", () => {
+    const html =
+      '<!--><link rel="stylesheet" href="/after-empty.css"><!--->' +
+      '<noscript><link rel="stylesheet" href="/noscript.css"></noscript>' +
+      '<template><script type="module" src="/inert.js"></script></template>';
+    expect(readTags(html)).toEqual([
+      { tag: "link", attributes: { rel: "stylesheet", href: "/after-empty.css" } },
+    ]);
+  });
 });

@@ -7,3 +7,4 @@ export { remotePlacements } from "./remote-placements.js";
 export { declaredOrigins } from "./declared-origins.js";
 export { runCheck } from "./run-check.js";
 export { pageRoute } from "./page-route.js";
+export { apiRoute } from "./api-route.js";

@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-04.** Branch `next`. B-09, B-09c and B-12 through B-22 are done, with the
+**STATE 2026-10-04.** Branch `next`. B-09, B-09c and B-12 through B-23 are done, with the
 findings of their independent reviews fixed; `pnpm check` is green on every landing commit, the
 browser suite (`pnpm test:browser`) passes, and `pnpm conformance` passes every fixture. Every
 commit is pushed to `origin/next`. A cloud session resumed the ladder on the owner's word
@@ -27,7 +27,7 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-23 (DECISIONS 2026-10-04 fixes its scope), then onward in ledger order.
+**THE EXACT NEXT STEP:** B-24 (DECISIONS 2026-10-04 fixes its scope), then onward in ledger order.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
 -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
@@ -288,7 +288,15 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] B-22 conformance breadth, batch one: the matrix defined from DESIGN (DECISIONS); every
       renderer from its tarball through the contract, a static view shipping no script, and a
       page of all of them containing its one failure (`pnpm conformance`, 15 and 53 of 53)
-- [ ] B-23 conformance breadth, batch two
+- [x] The verification of B-22: the cache read only by a placement that declared a lifetime, the
+      ladder in DESIGN's order; `assembly-path` the ancestors alone, a cycle refused on arrival;
+      `check` refuses a page on an api's route; failure ids found in the server's log; a static
+      page held to no script; the matrix says what it leaves out; `perf` reads tags as a browser
+- [x] B-23 conformance breadth, batch two: two servers and a hostile third from the tarballs,
+      remote placement, script, stylesheet, failures, cache, forwarding, apis, the stream
+      (`pnpm conformance`, 16, 16 and 69 of each)
+- [x] The deferred placement, found missing by B-23: the placeholder the owner ruled the page
+      ships, filled by the runtime after load, proved over HTTP and in a real browser
 - [ ] OWNER: how an assembly places a subassembly (DECISIONS 2026-10-04, open); then nested
       composition, and a parent's depth and cycle refusal held across two servers in conformance
 - [ ] B-24 conformance breadth, batch three, and the acceptance table

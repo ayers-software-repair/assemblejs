@@ -7,6 +7,7 @@ import { contentSecurityPolicy } from "../access/content-security-policy.js";
 import { registerAccess } from "../access/register-access.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { DEFAULT_LIMITS } from "../compose/default-limits.js";
+import { identity } from "../compose/identity.js";
 import { readConfig } from "../config/read-config.js";
 import { renderEnvelope } from "../envelope/render-envelope.js";
 import { describeFailure } from "../failure/describe-failure.js";
@@ -17,6 +18,7 @@ import { renderFailure } from "../failure/render-failure.js";
 import { createRemoteTransport } from "../remote/create-remote-transport.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { ASSET_ROUTE_PREFIX } from "../vocab/asset-route-prefix.js";
+import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
 import { accessProblems } from "./access-problems.js";
@@ -156,6 +158,17 @@ export async function createServer(options: ServerOptions): Promise<App> {
     if (resolved === undefined) return reply;
     const headers = composition(request, reply);
     if (headers === undefined) return reply;
+    // A request whose ancestors already include this assembly is a cycle, refused on arrival
+    // whoever sent it, as the composer refuses it before it dispatches.
+    const itself = identity(resolved.assembly.name, resolved.view);
+    if (headers.path.includes(itself)) {
+      return reply.code(400).send({
+        error: {
+          correlationId: newCorrelationId(),
+          headers: [`${COMPOSITION_HEADER.path} already holds ${itself}, a cycle`],
+        },
+      });
+    }
 
     // The same function the composer's local transport calls, which calls the same data
     // function the data endpoint calls: one path from declaration to markup, however reached.

@@ -11,6 +11,8 @@ export { readMountMode } from "./read-mount-mode.js";
 export { readIsland } from "./read-island.js";
 export { findEnvelopes } from "./find-envelopes.js";
 export { scheduleMount } from "./schedule-mount.js";
+export { fillDeferred } from "./fill-deferred.js";
+export { scheduleFill } from "./schedule-fill.js";
 export type { MountedAssembly } from "./mounted-assembly.js";
 export type { Runtime } from "./runtime.js";
 export type { StartOptions } from "./start-options.js";

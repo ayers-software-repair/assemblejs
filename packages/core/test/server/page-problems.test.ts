@@ -106,6 +106,21 @@ describe("what is checked about pages before anything listens", () => {
     expect(text).toMatch(/positive, finite/);
   });
 
+  it("refuses a deferred placement nothing on the page could fill", () => {
+    const deferred = (name: string, url?: string) => ({
+      route: "/",
+      template: `<assembly name="${name}"></assembly>`,
+      place: { [name]: { defer: true, ...(url === undefined ? {} : { url }) } },
+    });
+    const hydrated = { ...hello, name: "live", assets: { css: [], js: ["/x.js"] } };
+    const remotes = [{ origin: "https://other.example" }];
+    const text = (name: string, url?: string) =>
+      pageProblems([deferred(name, url)], [hello, hydrated], [], remotes).join();
+    expect(text("live")).toBe("");
+    expect(text("hello")).toMatch(/defers "hello", which has no browser half/);
+    expect(text("far", "https://other.example/assembly/far/")).toMatch(/across origins/);
+  });
+
   it("refuses a placement from an origin nobody declared, or a url that is not a content endpoint", () => {
     const remote = (url: string) => ({
       route: "/",
