@@ -14,8 +14,10 @@ describe("the packages a built server imports", () => {
       'import { readFileSync } from "node:fs";',
       'import path from "path";',
       'import local from "./local.js";',
+      'import mapped from "#internal/thing.js";',
     ].join("\n");
     expect(serverImports(code)).toEqual([
+      "#internal/thing.js",
       "@assemblejs/core",
       "@assemblejs/renderer-react",
       "lazy-pkg",

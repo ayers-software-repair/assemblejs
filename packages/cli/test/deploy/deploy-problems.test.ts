@@ -20,4 +20,13 @@ describe("what would make a deploy fail where it is installed", () => {
       'linked is "workspace:*", which only its workspace can install: give it a version',
     ]);
   });
+
+  it("names a catalog specifier, and a subpath import nothing in a deploy maps", () => {
+    expect(
+      deployProblems(["#internal"], { dependencies: { pinned: "catalog:", a: "^1.0.0" } }),
+    ).toEqual([
+      "the server imports #internal, a subpath import the build did not resolve, which a deploy does not map: import the file or the package it names",
+      'pinned is "catalog:", which only its workspace can install: give it a version',
+    ]);
+  });
 });

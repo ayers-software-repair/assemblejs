@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { test } from "node:test";
-import { attributesOf, get } from "./contract.mjs";
+import { attributesOf, get } from "../http.mjs";
 
 test("answers 200 with an html fragment that is exactly one envelope", async () => {
   const response = await get("/assembly/cart/");
@@ -45,11 +45,24 @@ test("refuses a malformed composition header with 400, rather than coercing it",
     { "assembly-page": "not-a-uuid" },
     { "assembly-depth": "two" },
     { "assembly-depth": "9999" },
-    { "assembly-path": "not,uuids" },
+    { "assembly-path": "not,identities" },
+    // An instance's id is new on every render, so it can never name a cycle: the path is
+    // ancestors' identities, never their ids.
+    { "assembly-path": randomUUID() },
   ]) {
     const response = await get("/assembly/cart/", headers);
     assert.equal(response.status, 400, JSON.stringify(headers));
   }
+});
+
+test("accepts the composition headers a parent sends, the path its ancestors' identities", async () => {
+  const response = await get("/assembly/cart/", {
+    "assembly-page": randomUUID(),
+    "assembly-id": randomUUID(),
+    "assembly-depth": "2",
+    "assembly-path": "home-hero/default,product-card/compact",
+  });
+  assert.equal(response.status, 200);
 });
 
 test("answers 404 for an assembly or a view that does not exist", async () => {

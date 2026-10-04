@@ -41,6 +41,8 @@ export async function runPerf(
       ASSEMBLEJS_PORT: String(port),
     },
   );
+  // Read afresh each time: an interrupt can arrive while a page is being weighed.
+  const interrupted = (): boolean => signal?.aborted === true;
   const stopped = new Promise<"stopped">((resolve) => {
     if (signal?.aborted === true) resolve("stopped");
     signal?.addEventListener("abort", () => resolve("stopped"), { once: true });
@@ -54,18 +56,20 @@ export async function runPerf(
     }
     let failed = 0;
     for (const page of pages) {
-      if (signal?.aborted === true) return 130;
+      if (interrupted()) return 130;
       try {
         const route = pageRoute(root, page);
         if (route === undefined)
           throw new Error("its route is computed, so only running the project could tell it");
-        const weight = await measurePage(origin, route);
+        const weight = await measurePage(origin, route, signal);
         io.log(formatWeight(weight));
         for (const url of weight.elsewhere) io.log(`  not weighed, from another origin: ${url}`);
         if (weight.fellBack.length > 0) {
           throw new Error(`${route} answered with the fallback of ${weight.fellBack.join(", ")}`);
         }
       } catch (error) {
+        // A request abandoned for an interrupt is the interrupt, not the page's failure.
+        if (interrupted()) return 130;
         failed += 1;
         io.error(`page "${page.name}": ${error instanceof Error ? error.message : String(error)}`);
       }

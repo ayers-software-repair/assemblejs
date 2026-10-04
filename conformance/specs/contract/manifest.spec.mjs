@@ -3,7 +3,7 @@
 // DESIGN 2.3: the manifest.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { get } from "./contract.mjs";
+import { get } from "../http.mjs";
 
 test("answers the named fields and nothing else", async () => {
   const response = await get("/assembly/cart/default/manifest/");

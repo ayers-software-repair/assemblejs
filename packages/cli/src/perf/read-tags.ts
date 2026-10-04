@@ -3,6 +3,10 @@
 
 const TAG = /<(link|script|assembly-root)\b((?:[^>"']|"[^"]*"|'[^']*')*)>/gi;
 const ATTRIBUTE = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g;
+// A comment, or a raw-text element's opening tag and everything up to its end, whichever starts
+// first: a tag written inside either is text to the browser, never an element.
+const TEXT =
+  /<!--[\s\S]*?(?:-->|$)|(<(script|style|textarea|title)\b(?:[^>"']|"[^"]*"|'[^']*')*>)[\s\S]*?(?:<\/\2\s*>|$)/gi;
 const NAMED: Readonly<Record<string, string>> = {
   amp: "&",
   lt: "<",
@@ -11,23 +15,35 @@ const NAMED: Readonly<Record<string, string>> = {
   apos: "'",
 };
 
-/** An attribute's value as the browser reads it, every character reference resolved. */
+// A numeric reference the browser does not turn into its character, it turns into U+FFFD.
+const REPLACEMENT = 0xfffd;
+const codePoint = (value: number): string =>
+  String.fromCodePoint(
+    value === 0 || value > 0x10ffff || (value >= 0xd800 && value <= 0xdfff) ? REPLACEMENT : value,
+  );
+
+/**
+ * An attribute's value as the browser reads it: every numeric reference resolved, and the named
+ * ones markup escapes with. Any other named reference is left as written, which no url this
+ * framework writes contains.
+ */
 const decode = (value: string): string =>
   value.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, ref: string) => {
-    if (ref.startsWith("#x") || ref.startsWith("#X"))
-      return String.fromCodePoint(parseInt(ref.slice(2), 16));
-    if (ref.startsWith("#")) return String.fromCodePoint(Number(ref.slice(1)));
+    if (ref.startsWith("#x") || ref.startsWith("#X")) return codePoint(parseInt(ref.slice(2), 16));
+    if (ref.startsWith("#")) return codePoint(Number(ref.slice(1)));
     return NAMED[ref.toLowerCase()] ?? whole;
   });
 
 /**
  * The link, script and envelope tags of a document, each with its attributes by lower-cased
- * name, in any order and however they are quoted, values decoded as the browser decodes them.
+ * name, in any order and however they are quoted, values decoded. A tag inside a comment or
+ * inside a script's text is not one.
  */
 export function readTags(
   html: string,
 ): readonly { readonly tag: string; readonly attributes: Readonly<Record<string, string>> }[] {
-  return [...html.matchAll(TAG)].map((match) => ({
+  const elements = html.replace(TEXT, (_whole, open: string | undefined) => open ?? "");
+  return [...elements.matchAll(TAG)].map((match) => ({
     tag: (match[1] ?? "").toLowerCase(),
     attributes: Object.fromEntries(
       [...(match[2] ?? "").matchAll(ATTRIBUTE)].map((attribute) => [

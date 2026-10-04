@@ -281,6 +281,10 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] The verification of B-20: `perf` at the declared route, failing a fallback, stopping its
       server on a signal, reading tags as a browser does; `deploy` holds its dependencies to the
       server's imports and keeps a `deploy/` it did not write; devtools check the peer address
+- [x] The verification of B-21: `assembly-path` is ancestors' identities in DESIGN as on the
+      wire; the specs refuse a fallback under 200, data in a failure body, a bare envelope
+      attribute; `check` refuses every route boot refuses; the harness leaves no server or
+      directory; `perf` reads tags as a browser does; tests clean their temporary directories
 - [ ] B-22 conformance breadth, batch one
 - [ ] B-23 conformance breadth, batch two
 - [ ] B-24 conformance breadth, batch three, and the acceptance table

@@ -4,9 +4,13 @@ import { isBuiltin } from "node:module";
 import { parse } from "acorn";
 import type { Node } from "acorn";
 
-/** The package a bare specifier names: its scope and name, without any subpath. */
+/**
+ * The package a bare specifier names: its scope and name, without any subpath. A `#` specifier
+ * is one of the project's own subpath imports, named whole.
+ */
 const packageOf = (specifier: string): string => {
   const parts = specifier.split("/");
+  if (specifier.startsWith("#")) return specifier;
   return specifier.startsWith("@") ? parts.slice(0, 2).join("/") : (parts[0] ?? specifier);
 };
 

@@ -10,6 +10,11 @@ const files: Record<string, string> = {
   "/a.css?x=1&y=2": "p { color: red }",
   "/c.js": "export {};".repeat(100),
   "/missing": '<link rel="stylesheet" href="/gone.css">',
+  "/d.js": "d".repeat(70),
+  "/e.js": "e".repeat(30),
+  "/scripts":
+    '<script src="/c.js" type="MODULE"></script><script src="/d.js"></script>' +
+    '<link rel="modulepreload" href="/e.js"><script type="application/json" src="/data.json"></script>',
   "/authored":
     '<link href="/a.css?x=1&#x26;y=2" rel="stylesheet" /><script src="/c.js" type="module"></script>' +
     '<link rel="stylesheet" href="https://cdn.example/font.css"><assembly-root data-name="cart" data-failed="8f212c16"></assembly-root>',
@@ -18,6 +23,7 @@ const asked: string[] = [];
 const server = createServer((request, response) => {
   asked.push(request.url ?? "");
   const body = files[request.url ?? ""];
+  if (request.url === "/slow") return;
   response.writeHead(body === undefined ? 404 : 200).end(body);
 });
 let origin = "";
@@ -53,5 +59,23 @@ describe("measuring a page", () => {
     expect(weight.scripts).toEqual(bytes(files["/c.js"] ?? ""));
     expect(weight.elsewhere).toEqual(["https://cdn.example/font.css"]);
     expect(weight.fellBack).toEqual(["cart"]);
+  });
+
+  it("weighs every script the browser runs or preloads, and none it does not run", async () => {
+    const weight = await measurePage(origin, "/scripts");
+    expect(weight.scripts).toEqual({
+      bytes: [files["/c.js"], files["/d.js"], files["/e.js"]].join("").length,
+      gzip: [files["/c.js"], files["/d.js"], files["/e.js"]]
+        .map((file) => bytes(file ?? "").gzip)
+        .reduce((total, size) => total + size, 0),
+    });
+    expect(asked).not.toContain("/data.json");
+  });
+
+  it("abandons a request in flight when it is told to stop", async () => {
+    const controller = new AbortController();
+    const measuring = measurePage(origin, "/slow", controller.signal);
+    setTimeout(() => controller.abort(), 50);
+    await expect(measuring).rejects.toThrow();
   });
 });

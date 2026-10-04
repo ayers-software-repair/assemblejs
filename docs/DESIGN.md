@@ -49,6 +49,11 @@ Answers `200` with `Content-Type: text/html; charset=utf-8` and a **fragment**, 
 document: no `<html>`, `<head>` or `<body>`. The fragment is exactly one element, the envelope
 of section 2.4, containing the assembly's markup and its data island.
 
+An assembly that fails to render, or whose service throws, answers `500` with the same kind of
+fragment: its fallback envelope, marked `data-failed` with the correlation id its failure is
+logged against. A composing server reads the status, applies its own fallback policy and caches
+nothing; a bare fetch still reads an envelope.
+
 Request headers, all optional, all prefixed `assembly-`:
 
 | header           | meaning                                                                                                                           |
@@ -56,11 +61,11 @@ Request headers, all optional, all prefixed `assembly-`:
 | `assembly-page`  | Opaque id of the page being composed. Present means "you are a fragment"; absent means "you are the page".                        |
 | `assembly-id`    | The id this instance must stamp on its envelope. The parent allocates it, so the parent can address the result before it arrives. |
 | `assembly-depth` | How many assemblies deep this request is. A server refuses above its cap.                                                         |
-| `assembly-path`  | Comma-separated ids of the ancestors, innermost last. Used to detect a cycle.                                                     |
+| `assembly-path`  | Comma-separated identities of the ancestors, each `name/view`, innermost last. Used to detect a cycle.                            |
 
 Every one of these is validated on arrival against its declared shape (id and page: one uuid;
-depth: an integer within the cap; path: uuids, at most the cap, comma-separated). A malformed
-value is `400`, never a coerced default. They are composition state, so an outside caller may
+depth: an integer within the cap; path: `name/view` identities, at most the cap,
+comma-separated). A malformed value is `400`, never a coerced default. They are composition state, so an outside caller may
 send them and get exactly the behaviour an internal caller gets: there is no privileged variant
 of this route.
 
@@ -255,7 +260,8 @@ them finishes or times out, never later, and never fails because one of them did
 
 ### 3.4 Depth and cycles, checked before dispatch
 
-`assembly-depth` increments per hop; `assembly-path` carries the ancestor ids. Both are checked
+`assembly-depth` increments per hop; `assembly-path` carries the ancestors' identities, each
+`name/view`: an instance's id is new on every render, so only what it is can recur. Both are checked
 by the **parent, before it dispatches**, not only by the child on arrival: a request that would
 exceed `limits.depth` (default 8), or whose target already appears on the path, is never sent.
 The placement takes its fallback and a diagnostic. A server also refuses on arrival, because a

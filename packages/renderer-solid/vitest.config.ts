@@ -33,6 +33,7 @@ const alias = {
 // build hydrates, and each test must run against the one its side really gets.
 export default defineConfig({
   test: {
+    globalSetup: ["../../scripts/test-temp-root.mjs"],
     projects: [
       {
         plugins: [solid("server")],

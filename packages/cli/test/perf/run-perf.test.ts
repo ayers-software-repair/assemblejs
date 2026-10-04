@@ -14,11 +14,20 @@ import type { Io } from "@assemblejs/cli";
 // installed one would.
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 const root = mkdtempSync(join(example, ".dev-perf-"));
-afterAll(() => rmSync(root, { recursive: true, force: true }));
+const made = [root];
+/** A directory for one test, removed with the rest when the file is done. */
+const scratch = (prefix: string): string => {
+  const at = mkdtempSync(join(tmpdir(), prefix));
+  made.push(at);
+  return at;
+};
+afterAll(() => {
+  for (const at of made) rmSync(at, { recursive: true, force: true });
+});
 
 /** A project of one page on disk, for a run whose build and server are stood in for. */
 const pagesOnly = (): string => {
-  const at = mkdtempSync(join(tmpdir(), "pages-"));
+  const at = scratch("pages-");
   realIo.write(join(at, "src", "pages", "home", "home.html"), "<p>home</p>");
   return at;
 };
@@ -88,7 +97,7 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     const controller = new AbortController();
     let stops = 0;
     // No pages at all, so nothing but the interruption itself can end the run.
-    const code = runPerf(mkdtempSync(join(tmpdir(), "no-pages-")), capture().io, {
+    const code = runPerf(scratch("no-pages-"), capture().io, {
       build: async () => 0,
       start: () => ({
         ready: new Promise<string | undefined>(() => undefined),
@@ -99,5 +108,21 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     controller.abort();
     expect(await code).toBe(130);
     expect(stops).toBe(1);
+  });
+
+  it("ends at once when interrupted while a page is still answering", async () => {
+    const server = createServer(() => undefined);
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+    const controller = new AbortController();
+    const code = runPerf(pagesOnly(), capture().io, {
+      build: async () => 0,
+      start: () => ({ ready: Promise.resolve(origin), stop: async () => undefined }),
+      signal: controller.signal,
+    });
+    setTimeout(() => controller.abort(), 100);
+    expect(await code).toBe(130);
+    server.closeAllConnections();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
   });
 });

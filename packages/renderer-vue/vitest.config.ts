@@ -20,6 +20,7 @@ const alias = {
 const production = process.env.NODE_ENV === "production";
 
 export default defineConfig({
+  test: { globalSetup: ["../../scripts/test-temp-root.mjs"] },
   resolve: { alias },
   test: production
     ? {

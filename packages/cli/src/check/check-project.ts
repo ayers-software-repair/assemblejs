@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements, pageRouteProblems } from "@assemblejs/core";
 import { buildProblems } from "../build/build-problems.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
@@ -51,25 +51,38 @@ export function checkProject(root: string): readonly ProjectProblem[] {
   const origins = existsSync(configFile)
     ? readOr(configFile, declaredOrigins, new Set<string>())
     : new Set<string>();
+  const routes = new Map<string, string>();
   for (const page of pages.pages) {
     const remote =
       page.declaration === undefined
         ? new Map<string, string | undefined>()
         : readOr(page.declaration, remotePlacements, new Map<string, string | undefined>());
-    // As the server refuses it at boot: nothing yet carries a page's parameters to its placements.
+    // Every rule the server refuses a route by at boot, from the same function.
     let route: string | undefined = page.route;
     try {
       route = pageRoute(root, page);
     } catch {
       // A declaration that cannot be read is reported once, by the reading of its placements.
     }
-    if (route?.includes(":") === true) {
+    const at = page.declaration ?? page.template;
+    for (const problem of route === undefined ? [] : pageRouteProblems(route)) {
       problems.push({
-        path: page.declaration ?? page.template,
+        path: at,
         rule: "a-directory-is-a-page",
-        message: `page "${page.name}" answers at ${route}, which has a parameter, and nothing yet carries one to the assemblies a page places`,
-        fix: "give the page a route of literal segments",
+        message: problem,
+        fix: "give the page a route of literal segments, starting with /, outside the framework's prefixes",
       });
+    }
+    const first = route === undefined ? undefined : routes.get(route);
+    if (route !== undefined && first !== undefined) {
+      problems.push({
+        path: at,
+        rule: "a-directory-is-a-page",
+        message: `page "${page.name}" answers at ${route}, as page "${first}" already does`,
+        fix: "give one of them another route",
+      });
+    } else if (route !== undefined) {
+      routes.set(route, page.name);
     }
     let placements;
     try {

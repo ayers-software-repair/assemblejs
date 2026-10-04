@@ -33,6 +33,7 @@ export { routeKey } from "./route-key.js";
 export { reservedPrefix } from "./reserved-prefix.js";
 export { pagePlan } from "./page-plan.js";
 export { pageProblems } from "./page-problems.js";
+export { pageRouteProblems } from "./page-route-problems.js";
 export { assetProblems } from "./asset-problems.js";
 export { listAssets } from "./list-assets.js";
 export { liveClosingTags } from "./live-closing-tags.js";

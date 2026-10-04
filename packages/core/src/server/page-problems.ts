@@ -9,8 +9,7 @@ import type { PagePlacement } from "../page/page-placement.js";
 import { parseContentUrl } from "../remote/parse-content-url.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
 import { insideForm } from "./inside-form.js";
-import { isFlatRoute } from "./is-flat-route.js";
-import { reservedPrefix } from "./reserved-prefix.js";
+import { pageRouteProblems } from "./page-route-problems.js";
 import { routeKey } from "./route-key.js";
 
 /**
@@ -48,20 +47,7 @@ export function pageProblems(
 
   for (const page of pages) {
     const at = `page "${page.route}"`;
-    if (!page.route.startsWith("/")) problems.push(`${at} does not start with "/"`);
-    if (page.route.includes("*")) {
-      problems.push(`${at} uses a wildcard; routes are a flat table with parameters`);
-    } else if (page.route.startsWith("/") && !isFlatRoute(page.route)) {
-      problems.push(`${at} is not a flat path of literal segments and whole-segment :parameters`);
-    } else if (page.route.includes("/:")) {
-      problems.push(
-        `${at} has a parameter, which nothing yet carries from a page to the assemblies it places`,
-      );
-    }
-    const reserved = reservedPrefix(page.route);
-    if (reserved !== undefined) {
-      problems.push(`${at} is under "${reserved}/", which the framework reserves`);
-    }
+    problems.push(...pageRouteProblems(page.route));
     // A query is the stream's own, read from its context; the path names the stream.
     if (page.stream !== undefined && !streams.has(page.stream.split("?")[0] ?? "")) {
       problems.push(

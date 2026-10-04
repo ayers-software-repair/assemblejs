@@ -3,7 +3,7 @@
 // DESIGN 2.4: the envelope.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { attributesOf, get, islandOf } from "./contract.mjs";
+import { attributesOf, get, islandOf } from "../http.mjs";
 
 const CANONICAL = ["data-id", "data-name", "data-renderer", "data-view"];
 const WHEN_THEY_APPLY = ["data-defer", "data-failed", "data-mount", "data-remote"];

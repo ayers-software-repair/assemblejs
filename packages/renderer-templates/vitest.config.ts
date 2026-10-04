@@ -6,6 +6,7 @@ import { defineConfig } from "vitest/config";
 const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export default defineConfig({
+  test: { globalSetup: ["../../scripts/test-temp-root.mjs"] },
   resolve: {
     alias: {
       "@assemblejs/renderer-templates": src("./src/index.ts"),

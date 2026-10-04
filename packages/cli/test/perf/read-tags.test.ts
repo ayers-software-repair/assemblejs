@@ -24,4 +24,22 @@ describe("reading a document's link, script and envelope tags", () => {
     const [envelope] = readTags('<assembly-root data-name="a>b" data-failed="1">');
     expect(envelope?.attributes).toEqual({ "data-name": "a>b", "data-failed": "1" });
   });
+
+  it("turns a numeric reference no character answers into U+FFFD rather than throwing", () => {
+    const [link] = readTags('<link href="/a&#x110000;b&#0;c&#xD800;.css">');
+    expect(link?.attributes["href"]).toBe("/a\uFFFDb\uFFFDc\uFFFD.css");
+  });
+
+  it("reads no tag inside a comment or inside a script's or a style's text", () => {
+    const html = [
+      '<!-- <link rel="stylesheet" href="/commented.css"> -->',
+      "<script>document.write('<script src=\"/written.js\"></scr' + 'ipt>')</script>",
+      '<style>/* <link href="/styled.css"> */</style>',
+      '<script type="module" src="/real.js"></script>',
+    ].join("");
+    expect(readTags(html)).toEqual([
+      { tag: "script", attributes: {} },
+      { tag: "script", attributes: { type: "module", src: "/real.js" } },
+    ]);
+  });
 });

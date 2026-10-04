@@ -1396,3 +1396,47 @@ The rung's verifier found, and this round fixed:
   assertion belongs. `perf` takes a free port by asking the system and handing it over, which a
   race could lose, since the configuration refuses port 0; and a parent environment with
   credentials turned on makes every page answer 401, which `perf` reports.
+
+## 2026-10-04: verifying B-21 and the B-20 round
+
+The verifier ran `pnpm conformance` (14 of 14), read the generated project (every `@assemblejs`
+package a real directory from its tarball, none on the registry to fall back to), served a
+deploy installed on its own outside the tree, and watched every guard of the B-20 round go red
+under mutation. It found, and this round fixed:
+
+- **DESIGN said `assembly-path` carries ancestors' ids; the server reads `name/view`.** The
+  server is right: an instance's id is new on every render, so a path of ids can never contain
+  its own target and no cycle could ever be seen. DESIGN 2.1 and 3.4 now say identities, and a
+  spec holds the server to refusing a path of uuids and accepting a path of identities. A server
+  written to the old text would have been refused by this one, with nothing saying why.
+- **The specs passed three servers DESIGN refuses**: one answering the content fallback under
+  200, which a composer would render and cache as content; one whose failure body carries data;
+  one whose envelope carries a bare attribute. Each is now a spec, watched red on that mutation,
+  and DESIGN 2.1 says what B-21 decided: a failed render answers its fallback envelope under 500.
+- **`check` refused only a route with a parameter**, of every route the server refuses at boot.
+  The route rules are now one function in core, `pageRouteProblems`, which boot and `check` both
+  call, and `check` refuses two pages at one route.
+- **The harness could leave a server running**, when one never listened, and never removed its
+  working directory. A server that does not come up is stopped before the failure is reported
+  (watched: without the stop, the fake server outlived the run). A run that passes removes its
+  directory; one that fails keeps it to be read. It resolves the workspace from its own location,
+  runs each fixture's specs from that fixture's directory and refuses a fixture with none.
+- **`perf` read tags a browser does not**: inside a comment or a script's text. It weighed only
+  `type="module"`, exactly as cased, and threw on a numeric reference past the last code point.
+  It now weighs every script a browser runs, classic or module, and each `modulepreload`, turns
+  an impossible reference into U+FFFD as a browser does, and decodes the named references markup
+  escapes with, leaving any other named reference as written (the B-20 entry's "every character
+  reference" was more than it did). An interrupt now abandons a request in flight.
+- **`deploy` passed `catalog:`**, as workspace-only as `workspace:`, and named a subpath import as
+  a package. A `#` import the build left for the runtime is refused: a deploy's package.json does
+  not map it.
+- **Tests left about nine hundred directories in the system's temporary directory.** Every
+  package's suite now runs under one global setup that gives the run a directory of its own,
+  points `os.tmpdir()` into it and removes it at the end (watched: 37 directories left by two
+  test directories without it, none with it). A test that was there twice is there once.
+- **Recorded, not changed:** an interrupt during the build is answered when the build returns,
+  as esbuild takes no signal. `deploy` reads static and dynamic imports, not `require`; the
+  server bundle is ESM and keeps packages external, so a `require` would be the author's own
+  `createRequire`, which the deploy's run would report. The deploy's own proof in the cli suite
+  still resolves the workspace around it; the run of a deploy installed on its own belongs to
+  conformance batch three, where projects install from tarballs.
