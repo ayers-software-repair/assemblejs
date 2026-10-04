@@ -9,6 +9,7 @@ import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { declaredOrigins } from "./declared-origins.js";
+import { pageRoute } from "./page-route.js";
 import { remotePlacements } from "./remote-placements.js";
 
 /**
@@ -55,6 +56,21 @@ export function checkProject(root: string): readonly ProjectProblem[] {
       page.declaration === undefined
         ? new Map<string, string | undefined>()
         : readOr(page.declaration, remotePlacements, new Map<string, string | undefined>());
+    // As the server refuses it at boot: nothing yet carries a page's parameters to its placements.
+    let route: string | undefined = page.route;
+    try {
+      route = pageRoute(root, page);
+    } catch {
+      // A declaration that cannot be read is reported once, by the reading of its placements.
+    }
+    if (route?.includes(":") === true) {
+      problems.push({
+        path: page.declaration ?? page.template,
+        rule: "a-directory-is-a-page",
+        message: `page "${page.name}" answers at ${route}, which has a parameter, and nothing yet carries one to the assemblies a page places`,
+        fix: "give the page a route of literal segments",
+      });
+    }
     let placements;
     try {
       placements = findPlacements(readFileSync(page.template, "utf8"));

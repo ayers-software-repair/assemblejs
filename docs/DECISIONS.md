@@ -1364,3 +1364,35 @@ build that runs") and the design says no more, so:
   same id. It now answers the fallback envelope, marked `data-failed` with the logged id, under a
   500, so a composing server still applies its own policy and caches nothing while a bare fetch
   reads an envelope. Proof: `pnpm conformance`, 14 of 14, after the same specs were red on it.
+
+## 2026-10-03: verifying B-20
+
+The rung's verifier found, and this round fixed:
+
+- **`perf` weighed the route a page's directory implies, not the one its `.page.ts` declares**,
+  so a page at `/store` failed as `/shop` answering 404. It reads the declared route, as `check`
+  now does; a route the file computes is a failure, as only running the project could tell it.
+- **The deploy proof did not prove the deploy runs on its own**, as it resolved packages from the
+  example around it. `deploy` now reads the packages the built server imports and refuses a
+  deploy whose dependencies would not install them: one listed only in devDependencies, one not
+  listed, a `workspace:` specifier. A local `file:` or `link:` dependency is pointed from
+  `deploy/`. The proof checks the server's packages are in the deploy's dependencies, and a
+  dev-only import is refused with nothing written.
+- **`deploy` removed any `deploy/`**, a common name for an author's own infrastructure. It writes
+  a marker, and rewrites only a directory that carries one; it reads package.json before
+  touching anything.
+- **`perf` left its server running when interrupted**, and passed a page whose assembly fell
+  back. It stops the server on a signal and on every return, and a fallback fails the page.
+- **`perf` read only core's exact tags**, and fetched a file from another origin, touching a
+  remote. It reads link and script tags as a browser does (any attribute order, any quoting,
+  every character reference), names a file from another origin without fetching it, and gives
+  each request thirty seconds.
+- **`check` passed a page the server refuses at boot**: a declared route with a parameter.
+- **Devtools trusted the Host header alone**: under a server listening beyond loopback, another
+  machine sending `Host: localhost` read them. The connection's peer must be loopback too. A
+  devtools route declared HEAD now boots in both modes, as the router's assertion reads HEAD.
+- **Recorded, not changed:** the `ready()` move of the B-19 round has no path in today: no option
+  hands a server a plugin, and a server refuses routes once built; it stays as the place the
+  assertion belongs. `perf` takes a free port by asking the system and handing it over, which a
+  race could lose, since the configuration refuses port 0; and a parent environment with
+  credentials turned on makes every page answer 401, which `perf` reports.

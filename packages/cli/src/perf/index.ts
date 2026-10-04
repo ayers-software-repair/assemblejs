@@ -3,6 +3,7 @@
 export type { AssetWeight } from "./asset-weight.js";
 export type { PageWeight } from "./page-weight.js";
 export { weigh } from "./weigh.js";
+export { readTags } from "./read-tags.js";
 export { measurePage } from "./measure-page.js";
 export { formatWeight } from "./format-weight.js";
 export { freePort } from "./free-port.js";

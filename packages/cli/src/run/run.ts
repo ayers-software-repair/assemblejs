@@ -61,7 +61,7 @@ export function run(argv: readonly string[], io: Io): number | Promise<number> {
   if (command === "build") return buildProject(resolve(cwd), io);
   if (command === "dev") return runDev(resolve(cwd), io, interrupted());
   if (command === "check") return runCheck(resolve(cwd), io);
-  if (command === "perf") return runPerf(resolve(cwd), io);
+  if (command === "perf") return runPerf(resolve(cwd), io, { signal: interrupted() });
   if (command === "deploy") return runDeploy(resolve(cwd), io);
 
   io.error(`unknown command "${command}"`);

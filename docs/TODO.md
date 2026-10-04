@@ -278,6 +278,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] B-21 the conformance harness and its first specs: a real project from the packed tarballs,
       DESIGN 2 held from the outside over HTTP (`pnpm conformance`, 14 of 14); the content
       endpoint's fallback for a throwing service, found by the first run, fixed
+- [x] The verification of B-20: `perf` at the declared route, failing a fallback, stopping its
+      server on a signal, reading tags as a browser does; `deploy` holds its dependencies to the
+      server's imports and keeps a `deploy/` it did not write; devtools check the peer address
 - [ ] B-22 conformance breadth, batch one
 - [ ] B-23 conformance breadth, batch two
 - [ ] B-24 conformance breadth, batch three, and the acceptance table

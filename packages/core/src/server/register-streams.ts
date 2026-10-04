@@ -25,8 +25,8 @@ const STALL_MS = 30_000;
  * A stream that throws is logged against a correlation id and its connection closed. A client
  * whose queue, once past what the socket takes at once, does not drain within the stall time is
  * dropped, its socket destroyed and what was queued for it let go; until then it holds what the
- * stream sent meanwhile. The page's event source reconnects either way. Every open stream is closed before the
- * server stops, which would otherwise wait on connections that never end.
+ * stream sent meanwhile. The page's event source reconnects either way. Every open stream is
+ * closed before the server stops, which would otherwise wait on connections that never end.
  */
 export function registerStreams(
   app: FastifyInstance,

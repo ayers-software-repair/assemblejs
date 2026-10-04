@@ -1,6 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdtempSync, rmSync } from "node:fs";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
@@ -12,6 +15,21 @@ import type { Io } from "@assemblejs/cli";
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 const root = mkdtempSync(join(example, ".dev-perf-"));
 afterAll(() => rmSync(root, { recursive: true, force: true }));
+
+/** A project of one page on disk, for a run whose build and server are stood in for. */
+const pagesOnly = (): string => {
+  const at = mkdtempSync(join(tmpdir(), "pages-"));
+  realIo.write(join(at, "src", "pages", "home", "home.html"), "<p>home</p>");
+  return at;
+};
+
+/** A server that answers every request with one document. */
+const stub = async (html: string) => {
+  const server = createServer((_request, response) => response.writeHead(200).end(html));
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  return { origin, close: () => new Promise<void>((resolve) => server.close(() => resolve())) };
+};
 
 const capture = () => {
   const logs: string[] = [];
@@ -26,10 +44,20 @@ describe("the perf verb", { timeout: 60_000 }, () => {
       realIo.write(join(root, path), contents);
     }
     realIo.write(join(root, "src", "assemblies", "hello", "hello.css"), ".hi { color: red }\n");
+    // A page at the route its own file declares, not the one its directory implies.
+    realIo.write(
+      join(root, "src", "pages", "shop", "shop.html"),
+      '<body><assembly name="hello"></assembly></body>',
+    );
+    realIo.write(
+      join(root, "src", "pages", "shop", "shop.page.ts"),
+      'import { definePage } from "@assemblejs/core";\nexport default definePage({ route: "/store" });\n',
+    );
     const { io, logs, errors } = capture();
     expect(await runPerf(root, io)).toBe(0);
     expect(errors).toEqual([]);
     const line = logs.find((entry) => entry.startsWith("/  document"));
+    expect(logs.some((entry) => entry.startsWith("/store  document"))).toBe(true);
     expect(line).toMatch(
       /^\/ {2}document \d+ B \(\d+ B gzip\) {2}styles [1-9]\d* B \(\d+ B gzip\) {2}scripts 0 B \(0 B gzip\)$/,
     );
@@ -37,6 +65,39 @@ describe("the perf verb", { timeout: 60_000 }, () => {
 
   it("fails, and starts nothing, when the build does", async () => {
     const { io } = capture();
-    expect(await runPerf(root, io, async () => 1)).toBe(1);
+    expect(await runPerf(root, io, { build: async () => 1 })).toBe(1);
+  });
+
+  it("fails a page that answered an assembly with its fallback, and stops the server it started", async () => {
+    const { origin, close } = await stub(
+      '<p>page</p><assembly-root data-name="cart" data-failed="8f212c16"></assembly-root>',
+    );
+    let stops = 0;
+    const { io, errors } = capture();
+    const code = await runPerf(pagesOnly(), io, {
+      build: async () => 0,
+      start: () => ({ ready: Promise.resolve(origin), stop: async () => void (stops += 1) }),
+    });
+    await close();
+    expect(code).toBe(1);
+    expect(errors.join()).toMatch(/answered with the fallback of cart/);
+    expect(stops).toBe(1);
+  });
+
+  it("stops the server and ends when it is interrupted", async () => {
+    const controller = new AbortController();
+    let stops = 0;
+    // No pages at all, so nothing but the interruption itself can end the run.
+    const code = runPerf(mkdtempSync(join(tmpdir(), "no-pages-")), capture().io, {
+      build: async () => 0,
+      start: () => ({
+        ready: new Promise<string | undefined>(() => undefined),
+        stop: async () => void (stops += 1),
+      }),
+      signal: controller.signal,
+    });
+    controller.abort();
+    expect(await code).toBe(130);
+    expect(stops).toBe(1);
   });
 });

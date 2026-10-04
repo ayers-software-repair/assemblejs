@@ -17,6 +17,7 @@ export { registerDevReload } from "./register-dev-reload.js";
 export { summarizeProject } from "./summarize-project.js";
 export { recentFailures } from "./recent-failures.js";
 export { loopbackHost } from "./loopback-host.js";
+export { loopbackAddress } from "./loopback-address.js";
 export { devtoolsProblems } from "./devtools-problems.js";
 export { devtoolsWrites } from "./devtools-writes.js";
 export { registerDevtools } from "./register-devtools.js";

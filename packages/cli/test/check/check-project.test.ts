@@ -100,4 +100,36 @@ describe("checking a project", () => {
       }),
     ]);
   });
+
+  it("refuses a page whose declared route has a parameter, as the server refuses it at boot", () => {
+    const root = project({
+      "src/server.ts": "",
+      "src/assemblies/hello/hello.html": "<p>hi</p>",
+      "src/pages/item/item.html": '<body><assembly name="hello"></assembly></body>',
+      "src/pages/item/item.page.ts": 'export default { route: "/items/:id" };',
+    });
+    expect(checkProject(root)).toEqual([
+      expect.objectContaining({
+        path: "src/pages/item/item.page.ts",
+        rule: "a-directory-is-a-page",
+        message: expect.stringMatching(/answers at \/items\/:id, which has a parameter/),
+      }),
+    ]);
+  });
+
+  it("refuses a page whose declared route has a parameter, as the server refuses it at boot", () => {
+    const root = project({
+      "src/server.ts": "",
+      "src/assemblies/hello/hello.html": "<p>hi</p>",
+      "src/pages/item/item.html": '<body><assembly name="hello"></assembly></body>',
+      "src/pages/item/item.page.ts": 'export default { route: "/items/:id" };',
+    });
+    expect(checkProject(root)).toEqual([
+      expect.objectContaining({
+        path: "src/pages/item/item.page.ts",
+        rule: "a-directory-is-a-page",
+        message: expect.stringMatching(/answers at \/items\/:id, which has a parameter/),
+      }),
+    ]);
+  });
 });

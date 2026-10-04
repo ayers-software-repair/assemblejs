@@ -8,9 +8,9 @@ import type { RunningServer } from "./running-server.js";
 /**
  * Starts `dist/server.js` under plain node, as production does, in development mode unless the
  * environment says otherwise; what `env` names is set over both, which is how a caller that
- * measures production fixes the mode and the port. Its output is passed through line by line, so what the server logs
- * reads in the same terminal as what the build said. Stopping asks it to end, and after
- * `graceMs` makes it, so a server that ignores the request cannot hold dev open.
+ * measures production fixes the mode and the port. Its output is passed through line by line,
+ * so what the server logs reads in the same terminal as what the build said. Stopping asks it to
+ * end, and after `graceMs` makes it, so a server that ignores the request cannot hold dev open.
  */
 export function startServer(
   root: string,

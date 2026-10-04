@@ -32,6 +32,9 @@ describe("what is checked about devtools routes before anything listens", () => 
   it("refuses a write where the routes are not mounted, so a project boots in both modes or neither", async () => {
     const post = { ...route("/run"), method: "POST" } as unknown as DevtoolsRoute;
     expect(devtoolsProblems({ routes: [post] }, true)).toEqual([]);
+    // HEAD is a read in both modes, as the router's assertion reads it.
+    const head = { ...route("/head"), method: "HEAD" } as unknown as DevtoolsRoute;
+    expect(devtoolsProblems({ routes: [head] }, false)).toEqual([]);
     expect(devtoolsProblems({ routes: [post] }, false)).toEqual([
       'devtools route "/run" answers POST, and devtools only read',
     ]);

@@ -30,7 +30,7 @@ export function devtoolsProblems(devtools: Devtools, mounted: boolean): readonly
       problems.push(`devtools route "${route.path}" is declared more than once`);
     if (RESERVED.has(route.path))
       problems.push(`devtools route "${route.path}" is the server's own`);
-    if (!mounted && route.method !== "GET") {
+    if (!mounted && !["GET", "HEAD"].includes(String(route.method))) {
       problems.push(
         `devtools route "${route.path}" answers ${String(route.method)}, and devtools only read`,
       );

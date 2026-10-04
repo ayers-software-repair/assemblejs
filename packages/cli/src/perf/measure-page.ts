@@ -2,46 +2,62 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { AssetWeight } from "./asset-weight.js";
 import type { PageWeight } from "./page-weight.js";
+import { readTags } from "./read-tags.js";
 import { weigh } from "./weigh.js";
 
-const STYLESHEET = /<link rel="stylesheet" href="([^"]+)">/g;
-const MODULE = /<script type="module" src="([^"]+)"><\/script>/g;
+// How long one request may take before the page is a failure rather than a wait.
+const TIMEOUT_MS = 30_000;
 
 const sum = (weights: readonly AssetWeight[]): AssetWeight => ({
   bytes: weights.reduce((total, weight) => total + weight.bytes, 0),
   gzip: weights.reduce((total, weight) => total + weight.gzip, 0),
 });
 
-/** The url an attribute names, its entities read back as the browser reads them. */
-const attribute = (value: string): string =>
-  value
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#39;", "'")
-    .replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&amp;", "&");
-
 /**
  * Asks a running server for a page as a visitor's browser would, then for each stylesheet and
- * module script the page links, each once, and weighs what came back. Anything the server does
- * not answer with 200 is a failure, never a weight of nothing.
+ * module script the page links from its own origin, each once, and weighs what came back. A file
+ * from another origin is named, never fetched: measuring touches no other server. Anything not
+ * answered with 200 in time is a failure, never a weight of nothing.
  */
 export async function measurePage(origin: string, route: string): Promise<PageWeight> {
-  const get = async (path: string): Promise<Uint8Array> => {
-    const response = await fetch(new URL(path, origin));
-    if (response.status !== 200) throw new Error(`${path} answered ${response.status}`);
+  const own = new URL(origin).origin;
+  const get = async (url: URL): Promise<Uint8Array> => {
+    const response = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    if (response.status !== 200) throw new Error(`${url.pathname} answered ${response.status}`);
     return new Uint8Array(await response.arrayBuffer());
   };
-  const page = await get(route);
-  const html = new TextDecoder().decode(page);
-  const linked = async (pattern: RegExp): Promise<AssetWeight> => {
-    const urls = new Set([...html.matchAll(pattern)].map((match) => attribute(match[1] ?? "")));
-    return sum(await Promise.all([...urls].map(async (url) => weigh(await get(url)))));
+  const page = await get(new URL(route, own));
+  const tags = readTags(new TextDecoder().decode(page));
+  const elsewhere: string[] = [];
+  const linked = async (urls: readonly string[]): Promise<AssetWeight> => {
+    const local = new Map<string, URL>();
+    for (const url of urls) {
+      const resolved = new URL(url, own);
+      if (resolved.origin === own) local.set(resolved.href, resolved);
+      else elsewhere.push(resolved.href);
+    }
+    return sum(await Promise.all([...local.values()].map(async (url) => weigh(await get(url)))));
   };
+  const styles = tags
+    .filter(
+      ({ tag, attributes }) =>
+        tag === "link" &&
+        (attributes["rel"] ?? "").toLowerCase().split(/\s+/).includes("stylesheet"),
+    )
+    .map(({ attributes }) => attributes["href"] ?? "")
+    .filter((href) => href !== "");
+  const scripts = tags
+    .filter(({ tag, attributes }) => tag === "script" && attributes["type"] === "module")
+    .map(({ attributes }) => attributes["src"] ?? "")
+    .filter((src) => src !== "");
   return {
     route,
     document: weigh(page),
-    styles: await linked(STYLESHEET),
-    scripts: await linked(MODULE),
+    styles: await linked(styles),
+    scripts: await linked(scripts),
+    elsewhere: [...new Set(elsewhere)],
+    fellBack: tags
+      .filter(({ tag, attributes }) => tag === "assembly-root" && "data-failed" in attributes)
+      .map(({ attributes }) => attributes["data-name"] ?? ""),
   };
 }

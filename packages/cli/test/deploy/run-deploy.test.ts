@@ -45,6 +45,7 @@ describe("the deploy verb", { timeout: 60_000 }, () => {
     for (const [path, contents] of Object.entries(projectFiles("shipped"))) {
       realIo.write(join(root, path), contents);
     }
+    realIo.write(join(root, "deploy", ".assemblejs-deploy"), "");
     realIo.write(join(root, "deploy", "stale.txt"), "from an earlier deploy");
     expect(await runDeploy(root, quiet)).toBe(0);
     expect(existsSync(join(root, "deploy", "stale.txt"))).toBe(false);
@@ -53,6 +54,8 @@ describe("the deploy verb", { timeout: 60_000 }, () => {
     ) as Record<string, unknown>;
     expect(manifest["scripts"]).toEqual({ start: "node dist/server.js" });
     expect(manifest).not.toHaveProperty("devDependencies");
+    // Every package the server imports is one the deploy installs.
+    expect(Object.keys(manifest["dependencies"] as object)).toContain("@assemblejs/core");
     expect(await serveDeploy("/")).toContain("Hello from AssembleJS");
   });
 
@@ -63,5 +66,50 @@ describe("the deploy verb", { timeout: 60_000 }, () => {
     writeFileSync(join(broken, "package.json"), "{}");
     expect(await runDeploy(broken, quiet, async () => 1)).toBe(1);
     expect(existsSync(join(broken, "deploy"))).toBe(false);
+  });
+
+  it("never removes a deploy/ a deploy did not write", async () => {
+    const own = mkdtempSync(join(tmpdir(), "own-deploy-"));
+    writeFileSync(join(own, "package.json"), "{}");
+    realIo.write(join(own, "deploy", "k8s", "app.yaml"), "kind: Deployment\n");
+    let built = 0;
+    expect(await runDeploy(own, quiet, async () => (built += 1))).toBe(1);
+    expect(built).toBe(0);
+    expect(readFileSync(join(own, "deploy", "k8s", "app.yaml"), "utf8")).toBe("kind: Deployment\n");
+  });
+
+  it("refuses an unreadable package.json, and one that is not an object, before building", async () => {
+    for (const contents of ["{ bad", "null", "[]", '"x"']) {
+      const at = mkdtempSync(join(tmpdir(), "manifest-"));
+      writeFileSync(join(at, "package.json"), contents);
+      let built = 0;
+      expect(await runDeploy(at, quiet, async () => (built += 1)), contents).toBe(1);
+      expect(built, contents).toBe(0);
+    }
+  });
+
+  it("refuses, writing nothing, a deploy whose server imports a package it would not install", async () => {
+    const at = mkdtempSync(join(example, ".dev-deploy-"));
+    try {
+      for (const [path, contents] of Object.entries(projectFiles("unlisted"))) {
+        realIo.write(join(at, path), contents);
+      }
+      writeFileSync(
+        join(at, "package.json"),
+        JSON.stringify({
+          name: "unlisted",
+          dependencies: {},
+          devDependencies: { "@assemblejs/core": "^1.0.0" },
+        }),
+      );
+      const errors: string[] = [];
+      expect(await runDeploy(at, { ...quiet, error: (line) => errors.push(line) })).toBe(1);
+      expect(errors.join()).toMatch(
+        /imports @assemblejs\/core, which package.json lists only in devDependencies/,
+      );
+      expect(existsSync(join(at, "deploy"))).toBe(false);
+    } finally {
+      rmSync(at, { recursive: true, force: true });
+    }
   });
 });

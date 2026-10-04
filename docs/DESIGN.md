@@ -631,11 +631,14 @@ root. Nothing pretends otherwise.
   same build and the same `node dist/server.js` as production, and rebuilds and restarts on every
   change; `assemblejs build` emits the server and the client assets; neither leaves a trace in
   the running server. `assemblejs check` reports every problem found without building, each with
-  its file, rule and fix; `assemblejs perf` builds, starts the build in production and weighs
-  what each page sends a visitor before anything mounts; `assemblejs deploy` builds and writes
-  `deploy/`, the build and a package.json of the project's dependencies alone, which runs
-  wherever those are installed. None of them publishes or touches a remote. A server in development mode links one more script into every page, from
-  under the devtools prefix and carrying the boot of the server that rendered the page, which
+  its file, rule and fix. `assemblejs perf` builds, starts the build in production and weighs
+  what each page, at the route it is mounted at, sends a visitor from its own origin before
+  anything mounts; a page that falls back fails it. `assemblejs deploy` builds and writes
+  `deploy/`, the build and a package.json of the project's dependencies alone, refused when the
+  server imports a package those would not install, and never over a `deploy/` it did not write.
+  None of them publishes or touches a remote.
+- A server in development mode links one more script into every page, from under the devtools
+  prefix and carrying the boot of the server that rendered the page, which
   listens on a stream for the server's boot and reloads the page when it hears another, so a page
   follows `dev` across each restart; in production neither exists. A request the server fails
   outright is answered with its failure body, which carries no script, and reloads by hand.
@@ -646,8 +649,9 @@ root. Nothing pretends otherwise.
   routes, settings; no function, credential or template source) and the failures the process
   logged most recently. In production the server mounts none of them, so a project hands them
   over unconditionally; `@assemblejs/devtools` supplies an overview page and the same reading as
-  JSON. Devtools answer only a request addressed to this machine's loopback, so a page on another
-  site that points its own name at 127.0.0.1 reads nothing from them.
+  JSON. Devtools answer only a request from this machine's loopback, by where the connection came
+  from and the name it used, so neither another machine nor a page on another site that points
+  its own name at 127.0.0.1 reads anything from them.
 
 ---
 

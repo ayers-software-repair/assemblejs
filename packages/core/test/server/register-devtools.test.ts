@@ -69,6 +69,14 @@ describe("devtools, mounted", () => {
     expect(
       (await server.inject({ method: "GET", url, headers: { host: "evil.example" } })).statusCode,
     ).toBe(404);
+    // Another machine saying Host: localhost to a server listening beyond loopback.
+    const remote = {
+      method: "GET",
+      url,
+      headers: { host: "localhost" },
+      remoteAddress: "203.0.113.5",
+    } as const;
+    expect((await server.inject(remote)).statusCode).toBe(404);
     expect(seen).toHaveLength(3);
   });
 
