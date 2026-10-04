@@ -1488,3 +1488,23 @@ the tarballs) and the specs under `conformance/specs/<fixture>/`:
   only if a concurrent request wrote it in between. Nothing a conformance spec can send tells the
   orders apart; a cache that kept entries past their lifetime to absorb an outage would, and that
   is where the order is to be settled.
+
+## 2026-10-04: open, for the owner: how an assembly places a subassembly
+
+Expected: B-23 holds depth and cycles "refused before dispatch" (DESIGN 3.4) across servers,
+which needs one assembly to place another: a subassembly, in the README's words.
+
+Found: no assembly can. A local render hands its view `children: {}` (DECISIONS, B-17: "core
+passes no children to a local view yet"), and nothing in DESIGN says how an author declares a
+child: DESIGN 7 gives a renderer `children` as rendered strings, keyed by something, and DESIGN 8
+says services run before children are fetched "so a service can shape what its children are
+asked for", but neither says where a child is named (a directive in the view's own markup, which
+a framework view cannot write; a declaration beside the view; a field the service returns),
+what key a view reads it by, or how a service shapes the request. Each answer is a different
+authoring surface, so it is not one to choose in passing.
+
+Decided for now: B-23 holds everything across servers that does not need a subassembly, and
+the refusal on arrival (a depth past the cap, a malformed path) stays held by the `contract`
+fixture. Depth and cycles refused by a parent before dispatch, across two servers, wait for the
+owner's answer and land with it. Raised with the owner; recorded here so the gap is not
+mistaken for a test that was forgotten.

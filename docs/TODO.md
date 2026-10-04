@@ -289,6 +289,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       renderer from its tarball through the contract, a static view shipping no script, and a
       page of all of them containing its one failure (`pnpm conformance`, 15 and 53 of 53)
 - [ ] B-23 conformance breadth, batch two
+- [ ] OWNER: how an assembly places a subassembly (DECISIONS 2026-10-04, open); then nested
+      composition, and a parent's depth and cycle refusal held across two servers in conformance
 - [ ] B-24 conformance breadth, batch three, and the acceptance table
 - [ ] B-25 size budgets, pack check, Scorecard
 - [ ] B-26 the release dry run with provenance

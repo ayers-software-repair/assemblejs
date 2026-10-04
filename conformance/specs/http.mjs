@@ -7,6 +7,20 @@ if (origin === "") throw new Error("CONFORMANCE_ORIGIN names the server under te
 
 export const get = (path, headers = {}) => fetch(new URL(path, origin), { headers });
 
+/** In a fixture of several servers, one of them by its project's name; `origin` is the last. */
+export const originOf = (name) => {
+  const named = process.env[`CONFORMANCE_ORIGIN_${name.toUpperCase()}`] ?? "";
+  if (named === "") throw new Error(`no server named ${name} in this fixture`);
+  return named;
+};
+
+/** A port the harness set aside, by name, for a spec to listen on itself. */
+export const portOf = (name) => {
+  const port = Number(process.env[`CONFORMANCE_PORT_${name.toUpperCase()}`] ?? "");
+  if (!Number.isInteger(port) || port <= 0) throw new Error(`no port named ${name}`);
+  return port;
+};
+
 // Every attribute of an opening tag, a valueless one too, which reads as the empty string.
 const ATTRIBUTE = /\s([^\s=/>"']+)(?:="([^"]*)")?/g;
 const readAttributes = (source) =>
