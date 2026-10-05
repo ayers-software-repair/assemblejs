@@ -2000,15 +2000,15 @@ Found and settled:
   the repository's own examples (`two-frameworks`, `frameworks`, `realtime`, `shadow`,
   `styles`), from what `add` writes (`assembly-files.ts`), or, for the page policy and the
   budgets no example declares, from DESIGN 8 and the tests of `page-placement.ts` and
-  `read-budgets.ts`; every claim from DESIGN 8, 9 and 10 or the code it describes: the props (`data`, `children`, and `events` as a Svelte
-  prop), the service context (`query`, `params`), `useEvents` from each renderer's `client`
-  entry, `on` returning its unsubscribe, `last` for a stream topic, the four mount modes read
-  by `read-mount-mode.ts` with `load` the default, `shadow`, a stylesheet beside the view
-  (`discover-assemblies.ts` takes any `.css` in the directory), where a Vue or Svelte view
-  writes its `mount` export (`view-script.ts`: a plain `<script>` beside `<script setup>`, or
-  `<script module>`), the renderer peer dependencies from each package's `package.json`, and
-  the config names from `read-config.ts`. Declared in `pages.json` (reformatted by prettier on
-  the way), linked from the docs index, not in the footer nav.
+  `read-budgets.ts`; every claim from DESIGN 8, 9 and 10 or the code it describes: the props
+  (`data`, `children`, and `events` as a Svelte prop), the service context (`query`, `params`),
+  `useEvents` from each renderer's `client` entry, `on` returning its unsubscribe, `last` for a
+  stream topic, the four mount modes read by `read-mount-mode.ts` with `load` the default,
+  `shadow`, a stylesheet beside the view (`discover-assemblies.ts` takes any `.css` in the
+  directory), where a Vue or Svelte view writes its `mount` export (`view-script.ts`: a plain
+  `<script>` beside `<script setup>`, or `<script module>`), the renderer peer dependencies from
+  each package's `package.json`, and the config names from `read-config.ts`. Declared in
+  `pages.json`, linked from the docs index, not in the footer nav.
 - **The links are generated.** `scripts/site-links.mjs` reads `pages.json` and rewrites the
   region between `<!-- links -->` and `<!-- /links -->` on every page that has one: the landing
   page first (except on itself), then every `in_nav` page except the page itself, in manifest
