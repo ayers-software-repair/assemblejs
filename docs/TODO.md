@@ -37,10 +37,18 @@ question on 2026-10-05; the rulings entry in DECISIONS lists them and what each 
 
 - `docs/site`: the guides for Preact, Solid, Lit and the template languages landed (commit
   "docs(site): guides for Preact, Solid, Lit and the template languages") from an agent's
-  worktree WITHOUT the separate verification every rung gets. DEBT: a fresh reader checks every
-  code block and claim in `site/docs/{preact,solid,lit,templates}.html` at the source, as the
-  2026-10-05 site entry in DECISIONS describes for the first three guides, and fixes what it
-  finds. Only the site, emoji and identity gates were run on it here.
+  worktree, then verified by a separate reader whose report arrived after the pull-back: all
+  39 code blocks diff verbatim against their sources; five wording findings fixed in the next
+  commit; two inherited claims remain, recorded as the two rows below. Only the site, emoji and
+  identity gates were run on it here.
+- [ ] Six guides and DESIGN 9 say an assembly declared `mount = "none"` "ships no JavaScript
+      at all"; for a framework view the page still carries the runtime and only the assembly's own
+      module is never fetched (generate-registry.ts links the client entry for every framework
+      view; start.ts is where `none` takes effect). Fix the sentence on all six guides and in DESIGN
+      9 at once, or make the build drop the script for a page whose every assembly is `none`.
+- [ ] Six guides show a `definePage({ place: { cart: { deadline: 500, fallback: ... } } })`
+      block that is in no example, test or DESIGN section; put that exact block in a core test or
+      in DESIGN 8 so the guides' "from the examples, the design document or the tests" is literal.
 - `docs/studies/subassembly/reader-core.md` and `reader-renderers.md`: two of three read-only
   design memos for the subassembly rung (core; renderers and the browser runtime), written by
   agents against the code with file:line citations, unverified. The cli/conformance memo and

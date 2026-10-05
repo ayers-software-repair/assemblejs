@@ -61,7 +61,7 @@ export default (props: AssemblyProps) =&gt; html`&lt;p&gt;cart ${Object.keys(pro
       <dd>The template with the markers hydration reads, and every Lit element in it rendered into a
         declarative shadow root, so the page is whole before any script runs. An element's
         <code>static styles</code> are left out of that root, because Lit writes them as an inline
-        <code>&lt;style&gt;</code> and the page's policy refuses one; the browser adopts the same
+        <code>&lt;style&gt;</code> and the page's default policy refuses one; the browser adopts the same
         styles as constructed sheets when the element hydrates, so an element is styled once it
         hydrates.</dd>
     </div>
