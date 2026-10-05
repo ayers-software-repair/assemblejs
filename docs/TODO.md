@@ -32,12 +32,12 @@ CLI, the server bundle keeps packages external so it runs with no bundler), then
 needs no owner is done. B-24b, the acceptance table, B-25b, the Scorecard run, and B-26b, the
 publish dry run with provenance, are the owner's: the table's source is outside this tree and
 the other two are Actions (DECISIONS 2026-10-05). The house-style and release-notes rows wait on
-his word. What the owner was asked is listed in DECISIONS under "open" and "raised".
+his word. The site's guides and generated links are done; its API reference waits on his
+ruling. What the owner was asked is listed in DECISIONS under "open" and "raised".
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
 (done) -> B-26a release dry run (done) -> B-26b/B-27a/B-27b (the owner's). The five house-style
-rows and the six release-notes rows can land any time. Site guides wait for renderers so they
-show real code.
+rows and the six release-notes rows can land any time. The site's guides are written.
 Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions org allowlist (Actions runs NOTHING
 here yet, so the B-25b Scorecard run with it), branch rulesets, the bird mark, the palette, the
 old npm package deprecation, the first publish. Raised with the
@@ -418,20 +418,25 @@ and `/assemblejs/next/` from `next`.
 - [x] `site/install.html` and `site/start.html` from `platform/sitekit/templates/`, instantiated
       by hand as committed pages
 - [x] `site/docs/index.html`: the model, the contract, and where to start
-- [ ] The guides: one per camp (for React devs, for Vue devs, for Svelte devs) and the
-      linear tutorial. Owed once the renderers exist, so a guide can show real code.
+- [x] The guides: one per camp (for React devs, for Vue devs, for Svelte devs) and the
+      linear tutorial, every file shown read from the repository's examples, DESIGN or its
+      tests (DECISIONS 2026-10-05)
 - [x] `site/404.html` from the kit template
 - [x] `site/skin.css`: the role bindings, no structural CSS
 - [x] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
 - [x] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
-- [ ] `scripts/site-links.py`: cross-links generated from `pages.json`, never hand-written
+- [x] `scripts/site-links.mjs`: cross-links generated from `pages.json`, never hand-written;
+      `--check` in `check:site`, self-tested, watched red. Named `.mjs`, not `.py`: every gate
+      in the chain is Node or bash, none Python (DECISIONS 2026-10-05; raised with the owner)
 - [x] A test binding `pages.json` to the deploy, so a required page cannot go missing
 - [x] `.github/workflows/deploy-site.yml`: the pin read from `ayersPlatform`, OIDC to
       `gh-deploy-assemblejs-site`, sync to the shop bucket under the prefix, invalidate that
       prefix only, no `--delete`
 - [x] The `next` branch variant publishing to `/assemblejs/next/`, with every link carrying the
       trailing slash (the prefix router does not redirect a bare second segment)
-- [ ] The API reference generated into `site/docs/api/` at deploy time, never committed
+- [ ] OWNER: the API reference generated into `site/docs/api/` at deploy time, never
+      committed. A deploy-time generator is a build step in a deploy DEPLOY.md defines as
+      "no build"; which generator and where it runs is his (DECISIONS 2026-10-05)
 - [ ] **BLOCKING, the owner's hand:** `RELEASES_PAT` added to this repository's secrets, so
       deploy-site can check the private platform repo out at the pin. Nothing about the site
       publishes until it exists. Also his: the OIDC role and the bucket policy for this prefix.

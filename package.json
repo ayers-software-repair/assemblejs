@@ -30,7 +30,7 @@
     "check:duplication": "jscpd .",
     "check:pack": "node scripts/check-pack.mjs",
     "check:publish": "pnpm -r --filter './packages/*' check:publish",
-    "check:site": "node scripts/check-site.mjs --self-test && node scripts/check-site.mjs",
+    "check:site": "node scripts/check-site.mjs --self-test && node scripts/check-site.mjs && node scripts/site-links.mjs --self-test && node scripts/site-links.mjs --check",
     "check:trailers": "bash scripts/check-trailers.sh --self-test && bash scripts/check-trailers.sh",
     "check:unused": "knip",
     "check:versions": "syncpack lint --dependency-types prod,dev",

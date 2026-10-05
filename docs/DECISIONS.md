@@ -1985,3 +1985,52 @@ Settled here, from what the reading found:
   before this landed: the cause recorded for the old inputs (a refusal, not a silent
   versioning), the tag changesets passes on a first prerelease, the dead `GITHUB_TOKEN` line,
   and "the tarball unchanged" where "the same eight files" is the exact claim.
+
+## 2026-10-05: the site's guides and its generated links; the API reference waits on a ruling
+
+Expected, from the ledger's site rows: the guides "owed once the renderers exist, so a guide can
+show real code"; `scripts/site-links.py`, "cross-links generated from `pages.json`, never
+hand-written"; the API reference "generated into `site/docs/api/` at deploy time, never
+committed". The renderers exist, so the first two are owed now.
+
+Found and settled:
+
+- **Four pages under `site/docs/`**: the tutorial (one project from `npm create` to `deploy`,
+  nine steps) and one guide per camp, React, Vue and Svelte. Every file they show is read from
+  the repository's own examples (`two-frameworks`, `frameworks`, `realtime`, `shadow`,
+  `styles`), from what `add` writes (`assembly-files.ts`), or, for the page policy and the
+  budgets no example declares, from DESIGN 8 and the tests of `page-placement.ts` and
+  `read-budgets.ts`; every claim from DESIGN 8, 9 and 10 or the code it describes: the props (`data`, `children`, and `events` as a Svelte
+  prop), the service context (`query`, `params`), `useEvents` from each renderer's `client`
+  entry, `on` returning its unsubscribe, `last` for a stream topic, the four mount modes read
+  by `read-mount-mode.ts` with `load` the default, `shadow`, a stylesheet beside the view
+  (`discover-assemblies.ts` takes any `.css` in the directory), where a Vue or Svelte view
+  writes its `mount` export (`view-script.ts`: a plain `<script>` beside `<script setup>`, or
+  `<script module>`), the renderer peer dependencies from each package's `package.json`, and
+  the config names from `read-config.ts`. Declared in `pages.json` (reformatted by prettier on
+  the way), linked from the docs index, not in the footer nav.
+- **The links are generated.** `scripts/site-links.mjs` reads `pages.json` and rewrites the
+  region between `<!-- links -->` and `<!-- /links -->` on every page that has one: the landing
+  page first (except on itself), then every `in_nav` page except the page itself, in manifest
+  order, then, on the landing page alone, the `external` entries, joined by the page's own
+  `sep`, with hrefs relative to the page's directory. The rule was read off the four footers
+  written by hand before it, which it reproduces byte for byte; the one change it made was to
+  add "Report an issue" to the landing page, which the manifest declared and no page carried.
+  `--check` is in `check:site`, so a link typed by hand cannot drift and a page added to the
+  manifest reaches every footer; a nav page without a region is refused. The self-test runs
+  first, every time, on a scratch site with a hand-typed region and a nav page without one.
+  Watched red on `install.html` with a link removed by hand.
+- **Named `.mjs`, not `.py` as the row said.** Every gate in `pnpm check` is Node or bash and
+  none is Python, the deploy workflow sets up no Python, and the site check that runs it is
+  Node; a Python generator would be the one tool in the chain that CI could not run. The row's
+  name was carried from another product's pattern, whose script was not readable from here, so
+  the rule above is this repository's own reading of `pages.json`'s `sep` and `in_nav`; raised
+  with the owner in case that product's generator reads them differently.
+- **The API reference is not done.** Generating it at deploy time means a build step
+  (typedoc or like, over the built packages) in `deploy-site.yml`, which DEPLOY.md and the
+  workflow's own comment define as "static pages, no build". Adding one is a change to the
+  deploy's shape, so it is the owner's: which generator, run where, and whether `site/` stops
+  being "the whole site". Raised; the row stays open.
+- `LANDING.md` marked two claims as ahead of the code, the remote transport (B-13) and the
+  agent surface (B-09b); both are built and proved, so the table now names what backs them
+  and the section says no claim is ahead.

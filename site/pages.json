@@ -31,6 +31,34 @@
       "sep": " &middot; ",
       "in_nav": true
     },
+    {
+      "file": "docs/tutorial.html",
+      "url": "docs/tutorial.html",
+      "title": "The tutorial",
+      "sep": " &middot; ",
+      "in_nav": false
+    },
+    {
+      "file": "docs/react.html",
+      "url": "docs/react.html",
+      "title": "For React developers",
+      "sep": " &middot; ",
+      "in_nav": false
+    },
+    {
+      "file": "docs/vue.html",
+      "url": "docs/vue.html",
+      "title": "For Vue developers",
+      "sep": " &middot; ",
+      "in_nav": false
+    },
+    {
+      "file": "docs/svelte.html",
+      "url": "docs/svelte.html",
+      "title": "For Svelte developers",
+      "sep": " &middot; ",
+      "in_nav": false
+    },
     { "file": "404.html", "url": "404.html", "title": "Not found", "in_nav": false }
   ],
   "external": [
