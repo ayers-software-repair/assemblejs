@@ -96,7 +96,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # The product from its own tarballs, over HTTP, as a consumer would have it: the harness
-      # builds the workspace, packs every package, creates each fixture project from the
+      # builds and packs the packages the fixtures install (core, cli, create and the
+      # renderers), creates each fixture project from the
       # starter, installs from the tarballs, starts dist/server.js in production and runs the
       # specs with node's test runner. Kept out of `pnpm check` because it needs the network
       # and minutes; here it runs on every push and pull request.

@@ -2197,7 +2197,7 @@ Expected, from the resume block: a conformance job and node 24. Found: `ci.yml` 
 `pnpm check` on node 22 and 24 and the browser proof on 22; nothing ran the conformance
 harness, which is kept out of `pnpm check` because it needs the network and minutes. Settled: a
 `conformance` job on node 22, the same pinned checkout, pnpm and node actions as the other
-jobs, `pnpm install --frozen-lockfile` then `pnpm conformance` (the harness builds the
-workspace itself). Proved here: `pnpm conformance` on this tree, every spec passed (contract
+jobs, `pnpm install --frozen-lockfile` then `pnpm conformance` (the harness builds and packs the
+packages the fixtures install, core, cli, create and the renderers, itself). Proved here: `pnpm conformance` on this tree, every spec passed (contract
 20, remote 19, rendering 69, trust 44 by the runner's own counts). Actions runs nothing on
 this repository yet, so the job's first green is the owner's to see.

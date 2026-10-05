@@ -474,6 +474,8 @@ and `/assemblejs/next/` from `next`.
 - [ ] `readBudgets` reports `budgets: b` (a literal object behind a name) and `budgets: Infinity` as
       "computed": `readDefaultExport` follows a name for the default export only. Follow it one
       step for `budgets` too, or word the message as "not written as an object".
+- [ ] `deploy-site.yml` uses `aws-actions/configure-aws-credentials@v6` unpinned; every other
+      action in the tree is pinned to a sha. Pin it (found 2026-10-05 by a verifier)
 - [x] CI breadth: a conformance job in ci.yml, proved by a local run of every fixture; node 24
       was already in the matrix. Its first green in Actions is the owner's (DECISIONS 2026-10-05)
 - [x] Three claims brought back to the code: the events unsubscribe comment, readBudgets'
