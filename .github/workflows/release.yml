@@ -2,8 +2,11 @@ name: release
 
 # Publishes to npm by trusted publishing (OIDC). There is no NPM_TOKEN anywhere and there never
 # will be: the trusted publisher on npmjs.com names this repository, this file, and the `release`
-# environment, whose required reviewer gates every run. On `next` the changesets pre mode
-# publishes 1.0.0-next.N under the `next` dist-tag; on `main` a version is published once.
+# environment, whose required reviewer gates every run. With changesets present the action opens
+# the version pull request; with none, and a version npm does not have, it publishes. On `next`
+# that is a prerelease only once the changesets pre mode has been entered (`.changeset/pre.json`,
+# written by `changeset pre enter next`), published under the `next` tag; on `main` a version is
+# published once.
 
 on:
   push:
@@ -49,8 +52,6 @@ jobs:
       - name: Version or publish
         uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
-          publish: pnpm changeset publish
-          commit: "chore: version packages"
-          title: "chore: version packages"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          publish-script: pnpm changeset publish
+          commit-message: "chore: version packages"
+          pr-title: "chore: version packages"

@@ -5,9 +5,10 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-05.** Branch `next`. B-09, B-09c, B-12 through B-23 and B-24a are done, with
-the findings of their independent reviews fixed; `pnpm check` is green on every landing commit,
-the browser suite (`pnpm test:browser`) passes, and `pnpm conformance` passes every fixture.
+**STATE 2026-10-05.** Branch `next`. B-09, B-09c, B-12 through B-23, B-24a, B-25a and B-26a
+are done, with the findings of their independent reviews fixed; `pnpm check` is green on every
+landing commit, the browser suite (`pnpm test:browser`) passes, and `pnpm conformance` passes
+every fixture.
 Every commit is pushed to `origin/next`. A cloud session resumed the ladder on the owner's word
 ("complete all you can"); the owner does every release himself, from his own sessions, so
 nothing here publishes.
@@ -27,13 +28,16 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-26. Every row above it that needs no owner is done. B-24b, the
-acceptance table, and B-25b, the Scorecard run, are the owner's: the table's source is outside
-this tree and the run is Actions (DECISIONS 2026-10-05).
+**THE EXACT NEXT STEP:** nothing on the ladder without the owner. Every row through B-26 that
+needs no owner is done. B-24b, the acceptance table, B-25b, the Scorecard run, and B-26b, the
+publish dry run with provenance, are the owner's: the table's source is outside this tree and
+the other two are Actions (DECISIONS 2026-10-05). The house-style and release-notes rows wait on
+his word. What the owner was asked is listed in DECISIONS under "open" and "raised".
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
-(done) -> B-26 release dry run -> B-27a/B-27b (the owner's). The five house-style rows and the
-six release-notes rows can land any time. Site guides wait for renderers so they show real code.
+(done) -> B-26a release dry run (done) -> B-26b/B-27a/B-27b (the owner's). The five house-style
+rows and the six release-notes rows can land any time. Site guides wait for renderers so they
+show real code.
 Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions org allowlist (Actions runs NOTHING
 here yet, so the B-25b Scorecard run with it), branch rulesets, the bird mark, the palette, the
 old npm package deprecation, the first publish. Raised with the
@@ -333,7 +337,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       by `perf` (DECISIONS 2026-10-05)
 - [ ] OWNER: B-25b the Scorecard run, which is Actions (the org allowlist, above); the binary
       cannot be fetched from a cloud session
-- [ ] B-26 the release dry run with provenance
+- [x] B-26a the release dry run, the local half: changeset status and version, every package
+      packed and every tarball read, the registry asked; the release workflow's inputs corrected
+      to the pinned action's, the pre-mode gap recorded (DECISIONS 2026-10-05)
+- [ ] OWNER: B-26b the publish dry run with provenance from the `release` environment, which is
+      Actions (the org allowlist, above); and whether `next` enters changesets pre mode first
 - [ ] B-27a estate integration and the first prerelease
 - [ ] B-27b the stable publish, after the cold quickstart
 

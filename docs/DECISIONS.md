@@ -1920,3 +1920,68 @@ defineConfig(load())` and `export default { ...base }` could carry budgets `perf
   rules test holding its rules to include every project rule rather than to exactly them (the
   comment on `RULE_IDS` now says so), and the pack check's own packing able to end in a stack
   trace (guarded).
+
+## 2026-10-05: B-26, the release dry run; what it found in the release path
+
+Expected, from PLAN: "Release dry run: changesets version, pack every package, publish dry run
+with provenance from the reviewed environment", proved by "the dry run lists every package and
+the tarball contents are read".
+
+Found: the local half can be run here and was; the provenance half cannot. `npm publish` and
+`pnpm publish`, dry or not, are denied to this session by its settings, and provenance is minted
+by Actions' OIDC token in the `release` environment, which runs nothing on this repository yet
+(the Actions row). Run here, with the output in the session:
+
+- `pnpm changeset status --verbose`: "Some packages have been changed but no changesets were
+  found", exit 1; `pnpm changeset version`: "No unreleased changesets found", exit 1, nothing
+  written. Both as the open 2026-10-03 ruling predicts: no changeset exists yet.
+- Every package packed (`npm pack` into the scratchpad, twelve tarballs, `1.0.0` each) and every
+  tarball listed with `tar -tzf`: 109 entries, every one `package/dist/**`, `package.json`,
+  `README.md`, `LICENSE` or `NOTICE`; no test, map, fixture, config or source. Sizes as the pack
+  check printed them, all under budget. `publint` and `are-the-types-wrong` green on each
+  (`check:publish`, in `pnpm check`).
+- The registry answers 404 for `@assemblejs/core`, `@assemblejs/cli` and `@assemblejs/create`
+  (a control lookup of another package answers), so nothing is published and `1.0.0` is free.
+
+Settled here, from what the reading found:
+
+- **The release workflow could not have run.** `release.yml` passed `publish`, `commit` and
+  `title` to `changesets/action` at its pinned commit, whose `action.yml` (read at that commit)
+  takes `publish-script`, `commit-message` and `pr-title`; the old names are the v1 inputs, and
+  the action's own source at that commit (`src/index.ts`, `src/utils.ts`) refuses them before
+  anything else runs: "The following inputs have been renamed ... Please update your workflow
+  file.", so the job would have failed on every push. Renamed. The `GITHUB_TOKEN` environment
+  line went with them: the action reads its `github-token` input (the workflow token by
+  default) and refuses a `GITHUB_TOKEN` environment that differs from it, so the line did
+  nothing today and would break a custom token tomorrow. The comment at the top of the file
+  now says what the action does, from its source: with changesets, the version pull request;
+  with none and a version npm lacks, it publishes.
+- **Pre mode on `next` is not entered.** The comment claimed `next` publishes `1.0.0-next.N`
+  under the `next` tag; `.changeset/pre.json`, which `changeset pre enter next` writes (read in
+  `@changesets/pre`), does not exist, so a push to `next` with the action working and the
+  trusted publisher set would publish `1.0.0` itself. In pre mode, `changeset publish` (its
+  `getReleaseTag`, read in `@changesets/cli`) passes `--tag next` for a package the registry
+  does not have, and from the second prerelease on publishes to `latest` itself while the
+  package has only prereleases; whether the registry also sets `latest` on a package's first
+  publish is not readable from here and needs a run in Actions. Not entered here: when the
+  first release happens, and under which tag, is the owner's, and this is raised with him with
+  the changesets question.
+- **`@assemblejs/cli`'s `files` named a `templates` directory that does not exist**; the starter
+  is written from code. Removed; the tarball is the same eight files.
+- Read for the first publish and left to the owner, each a setting outside this tree: the
+  trusted publisher is configured per package on npmjs.com, naming `release.yml` and the
+  `release` environment, and whether one can be attached to a package that does not exist yet
+  is his to confirm there; the action creates GitHub releases from each package's
+  `CHANGELOG.md` by default (none exists yet; the planned `RELEASE_NOTES.md` body is the
+  release-notes row's); the version pull request needs the repository setting that lets
+  Actions open pull requests. `changeset publish` runs `pnpm publish`, which packs (rewriting
+  `workspace:*`) and hands the tarball to the `npm` on the path, so the workflow's npm 11.5.1
+  step is the one that mints provenance; the file lists of `npm pack` and `pnpm pack` are the
+  same (checked on the cli).
+- The ledger row splits as B-24 and B-25 did: B-26a, the local dry run, is done; B-26b, the
+  publish dry run with provenance from the reviewed environment, is the owner's and waits on
+  Actions. Raised with him.
+- Verified by a separate agent at the source, the action's code included; its findings fixed
+  before this landed: the cause recorded for the old inputs (a refusal, not a silent
+  versioning), the tag changesets passes on a first prerelease, the dead `GITHUB_TOKEN` line,
+  and "the tarball unchanged" where "the same eight files" is the exact claim.
