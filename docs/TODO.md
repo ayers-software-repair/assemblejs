@@ -5,13 +5,54 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-05.** Branch `next`. B-09, B-09c, B-12 through B-23, B-24a, B-25a and B-26a
-are done, with the findings of their independent reviews fixed; `pnpm check` is green on every
-landing commit, the browser suite (`pnpm test:browser`) passes, and `pnpm conformance` passes
-every fixture.
-Every commit is pushed to `origin/next`. A cloud session resumed the ladder on the owner's word
-("complete all you can"); the owner does every release himself, from his own sessions, so
-nothing here publishes.
+**RESUME HERE (written 2026-10-05, the session pulled back for budget mid fan-out).**
+
+STATE. Branch `next`, every commit pushed to `origin/next`, tree clean, `pnpm check` green on
+every landing commit through `1210023`; the last three commits (`2a884a6`, `90f3069`,
+`e983859`) are docs and site only and were held to the site, emoji, identity and lint gates.
+B-09 through B-23, B-24a, B-25a and B-26a are done, each verified by a separate agent with its
+findings fixed. The owner answered every open question on 2026-10-05: read DECISIONS
+"2026-10-05: the owner's rulings on everything raised this week" before anything else; it
+names what each ruling lands with and in what order.
+
+THE EXACT NEXT STEP is the subassembly rung, the `NEXT:` row in the ladder below: a child is
+placed by `<assembly name>` in a template view and a `Slot` by the same name in a framework
+view (owner's ruling); then nested composition, services shaping a child's request, and
+depth and cycle refusal held across two servers in conformance. Start from
+`docs/studies/subassembly/reader-core.md` and `reader-renderers.md`, two read-only design
+memos with file:line citations, UNVERIFIED: hold every claim to the file it cites, write the
+missing cli/conformance memo and the synthesis (DESIGN 7 and 8 amendments, a bite ladder),
+log the design in DECISIONS, then code it rung by rung with a verifier per rung.
+
+AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
+the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
+are the changesets changelog); the API reference, typedoc at deploy time
+(`docs/studies/typedoc-at-deploy.wip.patch` is an interrupted agent's work: read it, do not
+apply it unread); the three truth fixes (events.ts's unmount comment, readBudgets' "computed"
+wording, the mcp verbs in CLAUDE.md); CI breadth (a conformance job, node 24); the two open
+rows under the site section about `mount = "none"` and the `definePage` block the six guides
+share; the house-style rows, which wait on the owner lifting that hold.
+
+DEBTS AND CORRECTIONS. The guides for Preact, Solid, Lit and the template languages
+(`2a884a6`) came from an agent worktree; a separate reader then verified all 39 code blocks
+verbatim and every claim, and `e983859` applied its two wording fixes. That commit's body lists
+three more fixes (the Markdown scaffold, "eight kinds", the templates page's missing section)
+that were already right in the committed tree; the reader had reviewed an earlier draft. The
+record here is the correction. Two claims the reader found inherited by all six guides are
+the two rows under the site section. No changeset is due for anything above: nothing is
+published, and changesets start after the first publish (ruling).
+
+OWNER-ONLY, unchanged: the Actions organization allowlist (Actions runs nothing here),
+`RELEASES_PAT`, the trusted publisher per package on npmjs.com, the `release` environment's
+reviewer, branch rulesets, the setting that lets Actions open the version pull request;
+B-27a carries the second halves of B-24, B-25 and B-26.
+
+HOW THIS LANE WORKED, so the next one is not slower: implement; tests; watch each claim red by
+a mutation and restore by the inverse edit; conformance or browser proof where one applies;
+the structural gates; `pnpm check` in the background (`pgrep -f "bin/pnpm check$"` then
+`tail --pid`); a verification agent with no stake, its findings fixed; DECISIONS and the TODO
+box in the same commit; `git commit -s -F <draft>`; `git push -u origin next`. Agent
+worktrees under `.claude/worktrees/` break `pnpm lint` (a second tsconfig) until removed.
 
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
 micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
@@ -32,36 +73,6 @@ CLI, the server bundle keeps packages external so it runs with no bundler), then
 DECISIONS 2026-10-05 "rulings"). Every row through B-26 that needs no owner is done; the second
 halves of B-24, B-25 and B-26 are folded into B-27a, the owner's. The owner answered every open
 question on 2026-10-05; the rulings entry in DECISIONS lists them and what each lands with.
-
-**PULLED BACK ON 2026-10-05 FOR BUDGET, mid fan-out. Debts and salvage, in order:**
-
-- `docs/site`: the guides for Preact, Solid, Lit and the template languages landed (commit
-  "docs(site): guides for Preact, Solid, Lit and the template languages") from an agent's
-  worktree, then verified by a separate reader whose report arrived after the pull-back: all
-  39 code blocks diff verbatim against their sources; five wording findings fixed in the next
-  commit; two inherited claims remain, recorded as the two rows below. Only the site, emoji and
-  identity gates were run on it here.
-- [ ] Six guides and DESIGN 9 say an assembly declared `mount = "none"` "ships no JavaScript
-      at all"; for a framework view the page still carries the runtime and only the assembly's own
-      module is never fetched (generate-registry.ts links the client entry for every framework
-      view; start.ts is where `none` takes effect). Fix the sentence on all six guides and in DESIGN
-      9 at once, or make the build drop the script for a page whose every assembly is `none`.
-- [ ] Six guides show a `definePage({ place: { cart: { deadline: 500, fallback: ... } } })`
-      block that is in no example, test or DESIGN section; put that exact block in a core test or
-      in DESIGN 8 so the guides' "from the examples, the design document or the tests" is literal.
-- `docs/studies/subassembly/reader-core.md` and `reader-renderers.md`: two of three read-only
-  design memos for the subassembly rung (core; renderers and the browser runtime), written by
-  agents against the code with file:line citations, unverified. The cli/conformance memo and
-  the synthesis (DESIGN amendments, bite ladder) were never written. Read them as a start, hold
-  every claim to the file it cites, then write the cli memo and the synthesis before any code.
-- `docs/studies/typedoc-at-deploy.wip.patch`: an interrupted agent's uncommitted work on the
-  API reference (typedoc at deploy time, the owner's ruling): typedoc added, deploy-site.yml
-  steps, index.ts doc edits of doubtful standing. Not applied, not checked; a patch to read,
-  not to trust. The rung is still open (its OWNER row below, now the owner's ruling, not a
-  question).
-- Not begun: the release-notes page with the drift gate, the three truth fixes (events.ts's
-  unmount comment, readBudgets' "computed" wording, the mcp verbs in CLAUDE.md), CI breadth
-  (a conformance job, node 24). Each is specified in the 2026-10-05 "rulings" and site entries.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
 (done) -> B-26a release dry run (done) -> the subassembly rung -> B-27a/B-27b (the owner's). The
