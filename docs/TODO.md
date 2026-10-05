@@ -30,7 +30,7 @@ are the changesets changelog); the API reference, typedoc at deploy time
 (`docs/studies/typedoc-at-deploy.wip.patch` is an interrupted agent's work: read it, do not
 apply it unread); the three truth fixes (events.ts's unmount comment, readBudgets' "computed"
 wording, the mcp verbs in CLAUDE.md: done 2026-10-05, DECISIONS "three claims"); CI breadth
-(a conformance job, node 24); the
+(done 2026-10-05: a conformance job; node 24 was already in the matrix); the
 house-style rows, which wait on the owner lifting that hold. The two inherited guide claims
 are fixed (`67bd8bc`, `e920464`).
 
@@ -474,6 +474,8 @@ and `/assemblejs/next/` from `next`.
 - [ ] `readBudgets` reports `budgets: b` (a literal object behind a name) and `budgets: Infinity` as
       "computed": `readDefaultExport` follows a name for the default export only. Follow it one
       step for `budgets` too, or word the message as "not written as an object".
+- [x] CI breadth: a conformance job in ci.yml, proved by a local run of every fixture; node 24
+      was already in the matrix. Its first green in Actions is the owner's (DECISIONS 2026-10-05)
 - [x] Three claims brought back to the code: the events unsubscribe comment, readBudgets'
       "computed" wording, the mcp tools named in CLAUDE.md (DECISIONS 2026-10-05)
 - [x] Six guides and DESIGN 9 said an assembly declared `mount = "none"` "ships no JavaScript
