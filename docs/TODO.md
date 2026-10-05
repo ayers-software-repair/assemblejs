@@ -29,9 +29,9 @@ the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub r
 are the changesets changelog); the API reference, typedoc at deploy time
 (`docs/studies/typedoc-at-deploy.wip.patch` is an interrupted agent's work: read it, do not
 apply it unread); the three truth fixes (events.ts's unmount comment, readBudgets' "computed"
-wording, the mcp verbs in CLAUDE.md); CI breadth (a conformance job, node 24); the two open
-rows under the site section about `mount = "none"` and the `definePage` block the six guides
-share; the house-style rows, which wait on the owner lifting that hold.
+wording, the mcp verbs in CLAUDE.md); CI breadth (a conformance job, node 24); the
+house-style rows, which wait on the owner lifting that hold. The two inherited guide claims
+are fixed (`67bd8bc`, `e920464`).
 
 DEBTS AND CORRECTIONS. The guides for Preact, Solid, Lit and the template languages
 (`2a884a6`) came from an agent worktree; a separate reader then verified all 39 code blocks
