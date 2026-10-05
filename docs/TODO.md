@@ -474,8 +474,8 @@ and `/assemblejs/next/` from `next`.
 - [x] `readBudgets` reported `budgets: b` (a literal object behind a name) and `budgets: Infinity`
       as "computed"; the message is now "not written as an object of parts and bytes", true of
       both, held by the reader's and perf's tests (2026-10-05)
-- [ ] `deploy-site.yml` uses `aws-actions/configure-aws-credentials@v6` unpinned; every other
-      action in the tree is pinned to a sha. Pin it (found 2026-10-05 by a verifier)
+- [x] `deploy-site.yml` used `aws-actions/configure-aws-credentials@v6` unpinned; pinned to the
+      sha of v6.3.0 read with `git ls-remote --tags` (2026-10-05)
 - [x] CI breadth: a conformance job in ci.yml, proved by a local run of every fixture; node 24
       was already in the matrix. Its first green in Actions is the owner's (DECISIONS 2026-10-05)
 - [x] Three claims brought back to the code: the events unsubscribe comment, readBudgets'
