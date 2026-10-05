@@ -144,8 +144,7 @@ export default function SolidCounter() {
       <dt><code>export const mount = "visible"</code></dt>
       <dd>Declared by the view, beside its default export. <code>load</code> mounts at once and is the
         default; <code>idle</code> waits for the browser to be idle; <code>visible</code> waits
-        until the envelope scrolls into view; <code>none</code> never mounts, and the assembly
-        ships no JavaScript at all. A value that is none of the four reads as <code>none</code>,
+        until the envelope scrolls into view; <code>none</code> never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest. A value that is none of the four reads as <code>none</code>,
         so a typo cannot start code running on a page whose author was saying when it should
         run.</dd>
     </div>

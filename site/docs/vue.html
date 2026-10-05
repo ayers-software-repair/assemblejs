@@ -126,8 +126,7 @@ const bump = (): void =&gt; {
       <dd>Written in a plain <code>&lt;script lang="ts"&gt;</code> block beside the <code>&lt;script
         setup&gt;</code>, because a setup script cannot export a name. <code>load</code> mounts at
         once and is the default; <code>idle</code> waits for the browser to be idle;
-        <code>visible</code> waits until the envelope scrolls into view; <code>none</code> never
-        mounts, and the assembly ships no JavaScript at all. <code>export const shadow =
+        <code>visible</code> waits until the envelope scrolls into view; <code>none</code> never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest. <code>export const shadow =
         true</code> in the same block renders it in its own shadow root.
 <pre><code>&lt;script lang="ts"&gt;
 export const mount = "visible";

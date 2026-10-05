@@ -531,6 +531,13 @@ export default definePage({
 
 A local placement needs no entry at all. The template alone is enough, which is the point:
 adding a second framework to a page is one file and one tag.
+When a local placement needs policy, the entry is the same shape without a url:
+
+```ts
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
 
 A placement from another server names a declared remote, and the remotes are policy, declared
 once in `assemblejs.config.ts`:
@@ -591,8 +598,10 @@ each island, and mounts each assembly through its renderer's client half.
              client:visible   mount when the envelope scrolls into view
              client:none      never mount; the assembly is static HTML
 
-Declared per assembly. A static assembly ships no JavaScript at all, which is a mode and not an
-accident.
+Declared per assembly. A static view (html, or a template with no `.client.ts` beside it)
+ships no JavaScript at all, which is a mode and not an accident; a framework view declared
+`none` is left as the server sent it, and the page it is on still carries the runtime for the
+rest.
 
 Events are typed, page-scoped and owned by the assembly:
 
