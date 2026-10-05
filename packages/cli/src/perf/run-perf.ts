@@ -16,8 +16,10 @@ import { measurePage } from "./measure-page.js";
  * and reports what each page sends a visitor before anything mounts, one line per page, at the
  * route the built server mounts it at. What it measures is what production serves, from the
  * server production runs. A page that does not answer, answers an assembly with its fallback, or
- * has a route only running the project could tell, is a failure, and the command exits 1. The
- * server it started is stopped however the command ends, a signal included.
+ * has a route only running the project could tell, is a failure, and the command exits 1. A page
+ * whose route has a parameter has no one url to weigh, so it is reported as not weighed rather
+ * than weighed at a value this command invented. The server it started is stopped however the
+ * command ends, a signal included.
  */
 export async function runPerf(
   root: string,
@@ -61,6 +63,10 @@ export async function runPerf(
         const route = pageRoute(root, page);
         if (route === undefined)
           throw new Error("its route is computed, so only running the project could tell it");
+        if (route.includes("/:")) {
+          io.log(`${route}: not weighed, as a parameter needs a value`);
+          continue;
+        }
         const weight = await measurePage(origin, route, signal);
         io.log(formatWeight(weight));
         for (const url of weight.elsewhere) io.log(`  not weighed, from another origin: ${url}`);

@@ -16,12 +16,13 @@ export async function renderLocal(
   view: string,
   id: string,
   query: URLSearchParams,
+  params: Readonly<Record<string, string>> = {},
 ): Promise<string> {
   const declared = assembly.views[view];
   if (declared === undefined) {
     throw new Error(`assembly "${assembly.name}" has no view "${view}"`);
   }
-  const data = await resolveData(declared, { query, params: {} });
+  const data = await resolveData(declared, { query, params });
   const markup = await declared.markup({ data, children: {}, id });
   return renderEnvelope({
     id,

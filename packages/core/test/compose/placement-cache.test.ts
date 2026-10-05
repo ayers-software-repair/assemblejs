@@ -31,6 +31,7 @@ const input = (
   depth: 0,
   path: [],
   query: new URLSearchParams(),
+  params: {},
   headers,
   newId: () => "id",
   now: () => 0,

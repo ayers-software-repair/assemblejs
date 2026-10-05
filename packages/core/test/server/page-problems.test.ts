@@ -54,8 +54,8 @@ describe("what is checked about pages before anything listens", () => {
     expect(pageProblems([page("/form")], [hello], [api])).toEqual([]);
   });
 
-  it("refuses a page parameter, which nothing yet carries to the assemblies it places", () => {
-    expect(pageProblems([page("/products/:id")], [hello], []).join()).toMatch(/has a parameter/);
+  it("accepts a page parameter, which reaches the assemblies the page places", () => {
+    expect(pageProblems([page("/products/:id")], [hello], [])).toEqual([]);
   });
 
   it("refuses a route outside the flat grammar, before the router can throw on it", () => {

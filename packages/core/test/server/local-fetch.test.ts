@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineAssembly, localFetch } from "@assemblejs/core";
+import { defineAssembly, defineService, localFetch } from "@assemblejs/core";
 import type { AssemblyRequest, LogLine } from "@assemblejs/core";
 
 const hello = defineAssembly({
@@ -28,6 +28,7 @@ const request = (name: string, view = "default"): AssemblyRequest => ({
   depth: 1,
   path: [],
   query: new URLSearchParams(),
+  params: {},
   headers: {},
   signal: new AbortController().signal,
 });
@@ -64,5 +65,29 @@ describe("the composer's local transport", () => {
       expect(logged.at(-1)?.correlationId).toBe(answer.correlationId);
       expect(logged.at(-1)?.message).toContain("hunter2");
     }
+  });
+
+  it("hands the page's parameters to the assembly's services", async () => {
+    const item = defineAssembly({
+      name: "item",
+      views: {
+        default: {
+          renderer: "html",
+          services: [
+            defineService({
+              name: "item",
+              schema: { properties: { sku: { type: "string" } }, required: ["sku"] },
+              run: ({ params }) => ({ sku: params["sku"] ?? "none" }),
+            }),
+          ],
+          markup: ({ data }) => `<p>${String(data["sku"])}</p>`,
+        },
+      },
+    });
+    const own = localFetch(new Map([["item", item]]), () => undefined);
+    const answer = await own({ ...request("item"), params: { sku: "a1" } });
+    expect(answer.ok && answer.html).toContain("<p>a1</p>");
+    const none = await own(request("item"));
+    expect(none.ok && none.html).toContain("<p>none</p>");
   });
 });

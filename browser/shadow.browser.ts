@@ -126,3 +126,20 @@ test("a deferred assembly in its own shadow root is filled into that root, style
   }
   expect(problems).toEqual([]);
 });
+
+test("a deferred placement on a page with a parameter is filled with that parameter", async ({
+  page,
+}) => {
+  const problems: string[] = [];
+  page.on("pageerror", (error) => problems.push(error.message));
+  page.on("response", (response) => {
+    if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) {
+      problems.push(`${String(response.status())} ${response.url()}`);
+    }
+  });
+  await page.goto(`${origin}/item/a-1`);
+  await expect(page.locator("assembly-root[data-defer]")).toHaveCount(0);
+  // What the service was given is what the fill sent: the page's parameter.
+  await expect(page.locator('assembly-root[data-name="tag"] .tag')).toHaveText("a-1");
+  expect(problems).toEqual([]);
+});

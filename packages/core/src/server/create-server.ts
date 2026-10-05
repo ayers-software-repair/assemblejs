@@ -176,7 +176,13 @@ export async function createServer(options: ServerOptions): Promise<App> {
     const id = headers.id ?? newCorrelationId();
     let html: string;
     try {
-      html = await renderLocal(resolved.assembly, resolved.view, id, queryOf(request.url));
+      html = await renderLocal(
+        resolved.assembly,
+        resolved.view,
+        id,
+        queryOf(request.url),
+        headers.params,
+      );
     } catch (error) {
       // The assembly's fallback, marked with the id its failure is logged against: a 500, so a
       // composing server applies its own policy and caches nothing, with an envelope a bare
@@ -211,7 +217,11 @@ export async function createServer(options: ServerOptions): Promise<App> {
       if (resolved === undefined) return reply;
       const declared = resolved.assembly.views[resolved.view];
       if (declared === undefined) return reply;
-      return reply.send(await resolveData(declared, { query: queryOf(request.url), params: {} }));
+      const headers = composition(request, reply);
+      if (headers === undefined) return reply;
+      return reply.send(
+        await resolveData(declared, { query: queryOf(request.url), params: headers.params }),
+      );
     },
   );
 

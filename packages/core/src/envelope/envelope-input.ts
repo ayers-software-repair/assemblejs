@@ -19,6 +19,8 @@ export interface EnvelopeInput {
   readonly remote?: string;
   /** The content has not been fetched yet; the browser fills it after load. */
   readonly deferred?: boolean;
+  /** The page's route parameters, carried on a deferred placeholder for the browser to send. */
+  readonly params?: Readonly<Record<string, string>>;
   /**
    * The render or the fetch failed and this is a fallback: the correlation id the failure was
    * logged against, so the envelope on the page names the log line that explains it.

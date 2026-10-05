@@ -4,9 +4,10 @@ import { describe, expect, it } from "vitest";
 import { pageRouteProblems } from "@assemblejs/core";
 
 describe("a page's route on its own", () => {
-  it("passes a flat route of literal segments", () => {
+  it("passes a flat route of literal segments and whole-segment parameters", () => {
     expect(pageRouteProblems("/")).toEqual([]);
     expect(pageRouteProblems("/shop/basket")).toEqual([]);
+    expect(pageRouteProblems("/products/:id")).toEqual([]);
   });
 
   it("refuses each route the server refuses at boot, naming why", () => {
@@ -14,7 +15,6 @@ describe("a page's route on its own", () => {
       ["shop", /does not start with "\/"/],
       ["/shop/*", /wildcard/],
       ["/a b", /not a flat path/],
-      ["/products/:id", /has a parameter/],
       ["/_assemblejs/x", /reserves/],
       ["/assembly/x", /reserves/],
     ];

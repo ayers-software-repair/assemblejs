@@ -18,7 +18,7 @@ export function placementCache(input: SettleInput): {
   const cache = ttl > 0 && !carriesCredential(input.headers) ? input.cache : undefined;
   // Keyed by its lifetime too, so a page that declared a shorter one is never answered with what a
   // page with a longer one cached.
-  const key = `${ttl}|${cacheKey(input.name, input.view, input.query, input.plan?.url, input.headers)}`;
+  const key = `${ttl}|${cacheKey(input.name, input.view, input.query, input.plan?.url, input.headers, input.params)}`;
   return {
     read: () => cache?.get(key)?.html,
     write: (html, version) =>

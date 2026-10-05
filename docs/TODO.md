@@ -27,9 +27,7 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** the one open row above B-24a that needs no owner (page route
-parameters reach placements, which needs a DECISIONS entry naming the wire shape first), then
-B-25, then B-26. B-24b, the acceptance table, is the owner's: its source is outside this tree
+**THE EXACT NEXT STEP:** B-25, then B-26. Every row above B-24a that needs no owner is done. B-24b, the acceptance table, is the owner's: its source is outside this tree
 (DECISIONS 2026-10-05).
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25 budgets -> B-26
@@ -226,9 +224,9 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] The verification of the Solid and Lit round: Vue's production build really under test,
       Solid's registry carried over safely and its script matched exactly, the inert `lit-early`
       fixture removed, the Lit guards and peer ranges tightened
-- [ ] Page route parameters reach the assemblies a page places: the placement request, the
-      cache key and the remote transport each carry them. Refused at boot until then (DECISIONS,
-      2026-10-03, "page parameters held back").
+- [x] Page route parameters reach the assemblies a page places: the placement request, the
+      cache key and the remote transport each carry them, the last as `assembly-params`; a
+      deferred placeholder carries them for the browser (DECISIONS 2026-10-05)
 - [x] B-14 auth and the default policy: one decision (`decideAccess`) in the first hook every
       request meets; basic credentials from the environment or an `authenticate` check, never
       both; public routes, health always; a check that throws refuses; the default content

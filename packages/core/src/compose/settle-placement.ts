@@ -40,7 +40,8 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
   });
 
   // Not fetched now: an empty envelope marked deferred, with the id the browser fetches it by,
-  // and the fallback the page declared, inert, for the browser to show should the fetch fail.
+  // the page's parameters for it to send, and the fallback the page declared, inert, for the
+  // browser to show should the fetch fail.
   if (plan?.defer === true) {
     const html = renderEnvelope({
       id,
@@ -51,6 +52,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
         plan.fallback === undefined ? "" : `<template data-fallback>${plan.fallback}</template>`,
       data: {},
       deferred: true,
+      params: input.params,
     });
     return { html, diagnostic: at("deferred") };
   }
@@ -78,6 +80,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     // The ancestors' identities, innermost last: what the target checks itself against.
     path: input.path,
     query: input.query,
+    params: input.params,
     headers: input.headers,
     signal: controller.signal,
   };

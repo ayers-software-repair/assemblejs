@@ -52,4 +52,15 @@ describe("the cache key", () => {
     );
     expect(alice).not.toBe(cacheKey("cart", "default", query, url));
   });
+
+  it("separates two different parameters, in any order, and keeps them apart from the query", () => {
+    const query = new URLSearchParams("sku=1");
+    const one = cacheKey("cart", "default", query, undefined, {}, { id: "1", page: "2" });
+    expect(one).toBe(cacheKey("cart", "default", query, undefined, {}, { page: "2", id: "1" }));
+    expect(one).not.toBe(cacheKey("cart", "default", query, undefined, {}, { id: "2", page: "2" }));
+    expect(one).not.toBe(cacheKey("cart", "default", query));
+    expect(cacheKey("cart", "default", new URLSearchParams("id=1"))).not.toBe(
+      cacheKey("cart", "default", new URLSearchParams(), undefined, {}, { id: "1" }),
+    );
+  });
 });

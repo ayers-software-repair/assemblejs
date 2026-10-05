@@ -100,4 +100,41 @@ describe("rendering the envelope", () => {
     expect(html).not.toContain("markup");
     expect(html).not.toContain("remote");
   });
+
+  it("carries the page's parameters on a deferred placeholder, encoded, and nowhere else", () => {
+    const params = { slug: "a b&c", id: "42" };
+    const deferred = renderEnvelope({
+      id: "d1",
+      name: "cart",
+      view: "default",
+      renderer: "",
+      markup: "",
+      data: {},
+      deferred: true,
+      params,
+    });
+    expect(deferred).toContain('data-params="id=42&amp;slug=a+b%26c"');
+    const rendered = renderEnvelope({
+      id: "r1",
+      name: "cart",
+      view: "default",
+      renderer: "html",
+      markup: "<p></p>",
+      data: {},
+      params,
+    });
+    expect(rendered).not.toContain("data-params");
+    expect(
+      renderEnvelope({
+        id: "d2",
+        name: "cart",
+        view: "default",
+        renderer: "",
+        markup: "",
+        data: {},
+        deferred: true,
+        params: {},
+      }),
+    ).not.toContain("data-params");
+  });
 });

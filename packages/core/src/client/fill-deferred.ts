@@ -1,15 +1,17 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
+import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
 
 // The fallback a page declared for a deferred placement, carried inert inside its placeholder.
 const FALLBACK = ":scope > template[data-fallback]";
 
 /**
- * Fetches a deferred placement's content from its own server's content endpoint, with the id its
- * placeholder carries and the page's own query, as a placement rendered with the page is asked,
- * and answers the envelope now in the placeholder's place, to be considered for mounting.
+ * Fetches a deferred placement's content from its own server's content endpoint, with the id and
+ * the page's route parameters its placeholder carries and the page's own query, as a placement
+ * rendered with the page is asked, and answers the envelope now in the placeholder's place, to
+ * be considered for mounting.
  *
  * The answer is parsed as the page itself was, a declarative shadow root attached, where the
  * browser can. On a failure the placement shows what DESIGN 3.3 says a failed one shows: the
@@ -26,9 +28,12 @@ export async function fillDeferred(
   if (name === null || id === null) return undefined;
   const search = element.ownerDocument.defaultView?.location.search ?? "";
   const url = `${ASSEMBLY_ROUTE_PREFIX}/${encodeURIComponent(name)}/${encodeURIComponent(view)}/${search}`;
+  const params = element.getAttribute("data-params");
+  const headers: Record<string, string> = { [COMPOSITION_HEADER.id]: id };
+  if (params !== null && params !== "") headers[COMPOSITION_HEADER.params] = params;
   let answer: Element | undefined;
   try {
-    const response = await fetch(url, { headers: { "assembly-id": id }, signal });
+    const response = await fetch(url, { headers, signal });
     const type = response.headers.get("content-type") ?? "";
     if (type.startsWith("text/html")) answer = envelopeOf(element, await response.text(), id);
     // Anything but a 2xx is a failure, whatever envelope it carries.

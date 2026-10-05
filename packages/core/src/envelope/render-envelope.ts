@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { encodeParams } from "../compose/encode-params.js";
 import { encodeIslandJson } from "../encode/encode-island-json.js";
 import { escapeAttribute } from "../encode/escape-attribute.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
@@ -23,6 +24,9 @@ export function renderEnvelope(input: EnvelopeInput): string {
   ];
   if (input.remote !== undefined) attributes.push(["data-remote", input.remote]);
   if (input.deferred === true) attributes.push(["data-defer", ""]);
+  const params =
+    input.deferred === true && input.params !== undefined ? encodeParams(input.params) : "";
+  if (params !== "") attributes.push(["data-params", params]);
   if (input.failed !== undefined) attributes.push(["data-failed", input.failed]);
   if (input.mount !== undefined && input.mount !== "load") {
     attributes.push(["data-mount", input.mount]);

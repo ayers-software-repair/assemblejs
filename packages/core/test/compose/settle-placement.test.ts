@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
 import { settlePlacement } from "@assemblejs/core";
-import type { ContentCache, Fetch, SettleInput } from "@assemblejs/core";
+import type { AssemblyRequest, ContentCache, Fetch, SettleInput } from "@assemblejs/core";
 
 const answering =
   (html: string): Fetch =>
@@ -25,6 +25,7 @@ const input = (over: Partial<SettleInput> = {}): SettleInput => ({
   depth: 0,
   path: [],
   query: new URLSearchParams(),
+  params: {},
   headers: {},
   newId: () => "id-1",
   now: () => 0,
@@ -271,5 +272,22 @@ describe("a transport that does not behave", () => {
   it("answers when the transport resolves to an object with no ok", async () => {
     const settled = await settlePlacement(input({ fetch: (async () => ({ html: "x" })) as never }));
     expect(settled.diagnostic.reason).toBe("invalid");
+  });
+
+  it("hands the page's parameters to every request, and to a deferred placeholder for the browser", async () => {
+    const asked: AssemblyRequest[] = [];
+    const seen: Fetch = async (request) => {
+      asked.push(request);
+      return { ok: true, html: "<p></p>", source: "local" };
+    };
+    await settlePlacement(input({ fetch: seen, params: { id: "42" } }));
+    expect(asked[0]?.params).toEqual({ id: "42" });
+    const deferred = await settlePlacement(
+      input({
+        plan: { name: "cart", view: "default", deadline: 3000, defer: true },
+        params: { id: "42", slug: "a b" },
+      }),
+    );
+    expect(deferred.html).toMatch(/data-defer="" data-params="id=42&amp;slug=a\+b"/);
   });
 });

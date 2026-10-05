@@ -103,7 +103,6 @@ describe("checking a project", () => {
 
   it("refuses every route the server refuses at boot, each where it is declared", async () => {
     for (const [route, problem] of [
-      ["/items/:id", /has a parameter/],
       ["/shop/*", /wildcard/],
       ["shop", /does not start with "\/"/],
       ["/_assemblejs/x", /reserves/],
@@ -125,21 +124,28 @@ describe("checking a project", () => {
     }
   });
 
-  it("refuses two pages at one route", async () => {
-    const root = project({
-      "src/server.ts": "",
-      "src/assemblies/hello/hello.html": "<p>hi</p>",
-      "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
-      "src/pages/start/start.html": '<body><assembly name="hello"></assembly></body>',
-      "src/pages/start/start.page.ts": 'export default { route: "/" };',
-    });
-    expect(await checkProject(root)).toEqual([
-      expect.objectContaining({
-        path: "src/pages/start/start.page.ts",
-        rule: "a-directory-is-a-page",
-        message: 'page "start" answers at /, as page "home" already does',
-      }),
-    ]);
+  it("refuses two pages at one route, as the router matches it: a parameter's name is not a route", async () => {
+    const at = (home: string, start: string) =>
+      project({
+        "src/server.ts": "",
+        "src/assemblies/hello/hello.html": "<p>hi</p>",
+        "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
+        "src/pages/home/home.page.ts": `export default { ${home} };`,
+        "src/pages/start/start.html": '<body><assembly name="hello"></assembly></body>',
+        "src/pages/start/start.page.ts": `export default { route: "${start}" };`,
+      });
+    for (const [home, start] of [
+      ["", "/"],
+      ['route: "/items/:a"', "/items/:b"],
+    ] as const) {
+      expect(await checkProject(at(home, start))).toEqual([
+        expect.objectContaining({
+          path: "src/pages/start/start.page.ts",
+          rule: "a-directory-is-a-page",
+          message: `page "start" answers at ${start}, as page "home" already does`,
+        }),
+      ]);
+    }
   });
 
   it("refuses a page at the route a GET api answers", async () => {
@@ -186,14 +192,14 @@ describe("reading placement policy as boot does", () => {
     "src/api/time.api.ts": 'export default { path: "/api/time", handle: () => null };',
   };
   const shop = {
-    "assemblejs.config.ts": "export default { remotes: [{ origin: 'https://s.example' }] };",
+    "assemblejs.config.ts": "export default { remotes: [{ origin: 'https://s.ex' }] };",
   };
   // A framework view here has no renderer installed, which build reports on its own.
   const still = {
     "src/assemblies/still/still.react.tsx": 'export const mount = "none";\nexport default () => 0;',
     "src/assemblies/wake/wake.react.tsx": "export default () => 0;",
   };
-  const FAR = "https://s.example/assembly/far/";
+  const FAR = "https://s.ex/assembly/far/";
   const one = (name: string, view?: string) =>
     `<assembly name="${name}"${view === undefined ? "" : ` view="${view}"`}></assembly>`;
   const place = (policy: string) => `export default { place: { ${policy} } };`;
@@ -252,12 +258,7 @@ describe("reading placement policy as boot does", () => {
       [one("hello"), place("hello: null"), hello, /not an object/],
       [one("far"), place(`far: { defer: true, url: "${FAR}" }`), shop, /across origins/],
       [one("far"), place("far: { defer: true, url: process.env.FAR }"), shop, /across origins/],
-      [
-        one("far"),
-        place('far: { url: "https://s.example/far" }'),
-        shop,
-        /not an assembly's content/,
-      ],
+      [one("far"), place('far: { url: "https://s.ex/far" }'), shop, /not an assembly's content/],
       [`<form>${one("far")}</form>`, place(`far: { url: "${FAR}" }`), shop, /inside a <form>/],
       [one("far"), place(`far: { url: "${FAR}" }`), shop, /^$/],
       // A framework view declared never to mount puts no runtime on the page; one not declared does.

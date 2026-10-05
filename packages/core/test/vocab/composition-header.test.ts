@@ -4,9 +4,10 @@ import { describe, expect, it } from "vitest";
 import { COMPOSITION_HEADER } from "@assemblejs/core";
 
 describe("the composition headers", () => {
-  it("are four, all under one prefix", () => {
+  it("are five, all under one prefix", () => {
     const names = Object.values(COMPOSITION_HEADER);
-    expect(names).toHaveLength(4);
+    expect(names).toHaveLength(5);
+    expect(COMPOSITION_HEADER.params).toBe("assembly-params");
     expect(names.every((name) => name.startsWith("assembly-"))).toBe(true);
   });
 

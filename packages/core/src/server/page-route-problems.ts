@@ -15,10 +15,6 @@ export function pageRouteProblems(route: string): readonly string[] {
     problems.push(`${at} uses a wildcard; routes are a flat table with parameters`);
   } else if (route.startsWith("/") && !isFlatRoute(route)) {
     problems.push(`${at} is not a flat path of literal segments and whole-segment :parameters`);
-  } else if (route.includes("/:")) {
-    problems.push(
-      `${at} has a parameter, which nothing yet carries from a page to the assemblies it places`,
-    );
   }
   const reserved = reservedPrefix(route);
   if (reserved !== undefined) {

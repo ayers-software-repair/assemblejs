@@ -140,7 +140,8 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
         fix: "give the page a route of literal segments, starting with /, outside the framework's prefixes",
       });
     }
-    const first = route === undefined ? undefined : routes.get(route);
+    // Keyed as the router matches: two routes that differ only in a parameter's name collide.
+    const first = route === undefined ? undefined : routes.get(routeKey("GET", route));
     if (route !== undefined && first !== undefined) {
       problems.push({
         path: at,
@@ -149,7 +150,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
         fix: "give one of them another route",
       });
     } else if (route !== undefined) {
-      routes.set(route, page.name);
+      routes.set(routeKey("GET", route), page.name);
     }
     const api = route === undefined ? undefined : apiRoutes.get(routeKey("GET", route));
     if (api !== undefined) {

@@ -24,6 +24,8 @@ export interface ComposeOptions {
   /** Ancestor ids, innermost last. A target already on it is a cycle. */
   readonly path?: readonly string[];
   readonly query?: URLSearchParams;
+  /** The page's route parameters, `{ id: "42" }` for `/products/:id`, handed to every placement. */
+  readonly params?: Readonly<Record<string, string>>;
   readonly headers?: Readonly<Record<string, string>>;
   /** Allocates a child's id, so the parent can address the result before it arrives. */
   readonly newId: () => string;

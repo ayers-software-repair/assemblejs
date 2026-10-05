@@ -4,8 +4,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { fillDeferred } from "@assemblejs/core/client";
 
-const placeholder = (fallback = ""): Element => {
-  document.body.innerHTML = `<assembly-root data-name="cart" data-id="a1" data-view="default" data-renderer="" data-defer="">${fallback}<script type="application/json" data-assembly="a1">{}</script></assembly-root>`;
+const placeholder = (fallback = "", attributes = ""): Element => {
+  document.body.innerHTML = `<assembly-root data-name="cart" data-id="a1" data-view="default" data-renderer="" data-defer=""${attributes}>${fallback}<script type="application/json" data-assembly="a1">{}</script></assembly-root>`;
   const element = document.querySelector("assembly-root");
   if (element === null) throw new Error("no placeholder");
   return element;
@@ -77,5 +77,17 @@ describe("filling a deferred placement", () => {
     );
     await expect(fillDeferred(placeholder(), controller.signal)).rejects.toThrow();
     expect(document.querySelector("assembly-root")?.hasAttribute("data-defer")).toBe(true);
+  });
+
+  it("sends the page's parameters its placeholder carries, as the header a parent would send", async () => {
+    const fetched = answer(content);
+    vi.stubGlobal("fetch", fetched);
+    await fill(placeholder("", ' data-params="id=42&amp;slug=a+b"'));
+    expect(fetched).toHaveBeenCalledWith(
+      "/assembly/cart/default/",
+      expect.objectContaining({
+        headers: { "assembly-id": "a1", "assembly-params": "id=42&slug=a+b" },
+      }),
+    );
   });
 });

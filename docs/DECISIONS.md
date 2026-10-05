@@ -1796,3 +1796,50 @@ own engines is not. Settled here:
   fixed above. The cli suite reaches the project's engines through the templates example, which
   resolves to the workspace package's built output, so the suite alone needs that package built
   first; `pnpm check` builds before it tests. Recorded in the ledger's traps.
+
+## 2026-10-05: a page's route parameters reach the assemblies it places
+
+Expected, from the row held back on 2026-10-03: `/products/:id` is the design's own example
+route, and nothing carried a page's parameters to its placements, so boot refused the route.
+
+Found: the request a placement receives had a query and no parameters, the cache key was built
+from the query, a service's context already named `params` and was always given none, and the
+remote transport had no way to send them. Settled here:
+
+- **A page's parameters are composition state, carried like the rest of it.** The router hands
+  them to compose, every placement's request carries them, the local transport hands them to
+  `resolveData` as the services' `params`, and the cache key carries them beside the query, so a
+  different parameter is a different page. Across servers they are the fifth composition header,
+  `assembly-params`, form-encoded in name order, read on arrival like the other four: at most
+  2048 bytes, each name a parameter's and named once, otherwise 400 naming the header. The
+  content and the data endpoints both read it, so the data a fragment is rendered from is what
+  its data endpoint answers. An outside caller may send it and gets what a parent gets: a
+  parameter is what a service is given, never a privilege. DESIGN 2.1, 3.5 and 8 say so.
+- **A deferred placement carries them for the browser.** The placeholder is marked
+  `data-params` with the same encoding, and the fill sends it as the header, so the fill is the
+  request a placement rendered with the page would have received. Proved in Chromium from the
+  shadow example, at `/item/:sku`.
+- **`perf` invents no value for a parameter.** A page whose route has one has no one url to
+  weigh, so it is reported as not weighed, and the command does not fail for it.
+- **Held where it fits under the ceiling.** The composer, the placeholder, the local and remote
+  transports, the header's reading and the browser's fill each have a unit test. The two server
+  wirings, the page route handing the router's parameters to compose and the endpoints reading
+  the header, are held by the `contract` fixture over HTTP, because the unit files for both sit
+  at 300 lines and a test file mirrors one source file; the `remote` fixture holds a parameter
+  crossing to another server's assembly. Watched red: the browser proof with the fill's header
+  dropped (the tag read "none"), the header's reading, the key and the placeholder each under
+  their unit tests.
+- **Found by the verification, and fixed:** `check` keyed two pages' collision on the route as
+  written where boot keys it as the router matches, so two routes differing only in a
+  parameter's name passed `check` and failed boot, a case the old refusal of any parameter had
+  hidden; `check` keys them as boot does now. A parameter named `__proto__` was dropped on the
+  wire, as a plain object's setter swallows it, where the router's own parameters, which have no
+  prototype, kept it; the parameters read from the header have no prototype either now, so a
+  parameter named like a property of every object is a key of its own on both sides, and DESIGN 8
+  says so. A remote declared as forwarding `assembly-params`, or any composition header, let a
+  visitor's header stand in for the composer's; boot refuses such a declaration now, and the
+  transport sets the composition headers over the forwarded ones regardless. Each watched red.
+- **Recorded, not changed:** the router bounds each parameter's value at 100 characters and the
+  header the whole encoding at 2048 bytes, so a route of more than twenty parameters with
+  multibyte values could compose locally and be refused by a remote; a route like that is not
+  one this design describes, and the cap stays where DESIGN 2.1 names it.

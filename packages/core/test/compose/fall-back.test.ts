@@ -28,6 +28,7 @@ const input = (plan: Partial<AssemblyPlan>, cache?: ContentCache): SettleInput =
   depth: 0,
   path: [],
   query: new URLSearchParams(),
+  params: {},
   headers: {},
   newId: () => "id-2",
   now: () => 0,

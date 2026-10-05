@@ -60,7 +60,7 @@ export function registerPages(
       }),
     );
 
-    app.get(page.route, async (request, reply) => {
+    app.get<{ Params: Record<string, string> }>(page.route, async (request, reply) => {
       const headers: Record<string, string> = {};
       for (const [name, value] of Object.entries(request.headers)) {
         if (forwarded.has(name) && typeof value === "string") headers[name] = value;
@@ -74,6 +74,7 @@ export function registerPages(
           cache: options.cache,
           page: randomUUID(),
           query: queryOf(request.url),
+          params: request.params,
           headers,
           newId: randomUUID,
           now: () => performance.now(),

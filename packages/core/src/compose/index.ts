@@ -20,6 +20,8 @@ export { identity } from "./identity.js";
 export { cacheKey } from "./cache-key.js";
 export { carriesCredential } from "./carries-credential.js";
 export { findPlacements } from "./find-placements.js";
+export { encodeParams } from "./encode-params.js";
+export { readParams } from "./read-params.js";
 export { settlePlacement } from "./settle-placement.js";
 export { fallBack } from "./fall-back.js";
 export { placementCache } from "./placement-cache.js";

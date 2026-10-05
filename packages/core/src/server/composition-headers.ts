@@ -11,4 +11,6 @@ export interface CompositionHeaders {
   readonly id: string | undefined;
   readonly depth: number;
   readonly path: readonly string[];
+  /** The page's route parameters, as the parent read them; none for a bare request. */
+  readonly params: Readonly<Record<string, string>>;
 }

@@ -56,16 +56,18 @@ nothing; a bare fetch still reads an envelope.
 
 Request headers, all optional, all prefixed `assembly-`:
 
-| header           | meaning                                                                                                                           |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `assembly-page`  | Opaque id of the page being composed. Present means "you are a fragment"; absent means "you are the page".                        |
-| `assembly-id`    | The id this instance must stamp on its envelope. The parent allocates it, so the parent can address the result before it arrives. |
-| `assembly-depth` | How many assemblies deep this request is. A server refuses above its cap.                                                         |
-| `assembly-path`  | Comma-separated identities of the ancestors, each `name/view`, innermost last. Used to detect a cycle.                            |
+| header            | meaning                                                                                                                           |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `assembly-page`   | Opaque id of the page being composed. Present means "you are a fragment"; absent means "you are the page".                        |
+| `assembly-id`     | The id this instance must stamp on its envelope. The parent allocates it, so the parent can address the result before it arrives. |
+| `assembly-depth`  | How many assemblies deep this request is. A server refuses above its cap.                                                         |
+| `assembly-path`   | Comma-separated identities of the ancestors, each `name/view`, innermost last. Used to detect a cycle.                            |
+| `assembly-params` | The page's route parameters (`/products/:id`), form-encoded (`id=42`), for the services this fragment runs. Absent means none.    |
 
 Every one of these is validated on arrival against its declared shape (id and page: one uuid;
 depth: an integer within the cap; path: `name/view` identities, at most the cap,
-comma-separated). A malformed value is `400`, never a coerced default. They are composition state, so an outside caller may
+comma-separated; params: at most 2048 bytes, each name a parameter's, `[A-Za-z_][A-Za-z0-9_]*`,
+and named once). A malformed value is `400`, never a coerced default. They are composition state, so an outside caller may
 send them and get exactly the behaviour an internal caller gets: there is no privileged variant
 of this route.
 
@@ -274,9 +276,10 @@ overflow.
 ### 3.5 Deferred assemblies
 
 A placement declared `defer: true` is not fetched during the page render. The server emits its
-empty envelope with `data-defer`, and the browser runtime fetches the content endpoint after
-load, with the envelope's id and the page's own query, and puts the envelope that answers in its
-place, parsed as the page was (a declarative shadow root attached), then mounts it like any
+empty envelope with `data-defer`, carrying the page's route parameters as `data-params`, and the
+browser runtime fetches the content endpoint after load, with the envelope's id, those
+parameters as `assembly-params` and the page's own query, and puts the envelope that answers in
+its place, parsed as the page was (a declarative shadow root attached), then mounts it like any
 other. Should that fetch fail, the placement shows what any failed placement shows: its declared
 fallback, carried inert in the placeholder, in the server's failed envelope with its logged id.
 Deferring is the answer for a genuinely slow assembly that must not hold the page; everything
@@ -365,7 +368,8 @@ The composer treats a remote assembly as a third party, because it is one.
 - **Nothing is forwarded by default.** Not cookies, not `authorization`, not `host`, not the
   query string, not `x-forwarded-*`. A remote declares what it needs, per remote, per key:
   `forward: ["accept-language"]`. Forwarding a credential to another company's server is a
-  decision, never a default.
+  decision, never a default. A composition header cannot be declared forwarded: the composer
+  sends those itself, and a visitor must not be able to stand in for it.
 - The response is capped, default 2 MiB, and must be `text/html`. Anything else is a failure.
 - Remote response headers are discarded. Nothing a remote sets reaches the visitor.
 
@@ -548,8 +552,11 @@ export default defineService({
 });
 ```
 
-Returning is testable in isolation, composes without hidden order, and makes the data shape the
-function's return type. Services run in declaration order; one that must follow another says
+A service is given the request's `query` and the route `params` of the page that placed the
+assembly, `{ id: "42" }` for `/products/:id`, which reach it the same way whether the page is on
+this server or another: an object with no prototype, so a parameter named `constructor` is a
+parameter and nothing else. Returning is testable in isolation, composes without hidden order, and
+makes the data shape the function's return type. Services run in declaration order; one that must follow another says
 `after: ["greeting"]`. There is no priority number. Services run **before** children are
 fetched, so a service can shape what its children are asked for.
 

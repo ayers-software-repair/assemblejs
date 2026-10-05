@@ -29,7 +29,13 @@ export function localFetch(
       };
     }
     try {
-      const html = await renderLocal(assembly, request.view, request.id, request.query);
+      const html = await renderLocal(
+        assembly,
+        request.view,
+        request.id,
+        request.query,
+        request.params,
+      );
       return { ok: true, html, source: "local" };
     } catch (error) {
       const correlationId = newCorrelationId();

@@ -128,6 +128,7 @@ const request = (over: Partial<AssemblyRequest> = {}): AssemblyRequest => ({
   depth: 1,
   path: ["home/default"],
   query: new URLSearchParams("secret=1"),
+  params: {},
   headers: { cookie: "session=hunter2", authorization: "Bearer t", "accept-language": "fr" },
   signal: AbortSignal.timeout(2000),
   ...over,
@@ -283,5 +284,15 @@ describe("reaching an assembly on another server", () => {
     await reaching.fetch(url, request());
     expect((await reaching.assets(url))?.js).toEqual([`${origin}/v2.js`]);
     expect(manifestReads.get("/assembly/versioned/default/manifest/")).toBe(2);
+  });
+
+  it("sends the page's parameters as their own header, and no header for none", async () => {
+    const some = await transport().fetch(
+      `${origin}/assembly/echo/`,
+      request({ params: { id: "42", slug: "a b" } }),
+    );
+    expect(some.ok && some.html).toContain('"assembly-params":"id=42&slug=a+b"');
+    const none = await transport().fetch(`${origin}/assembly/echo/`, request());
+    expect(none.ok && none.html).not.toContain("assembly-params");
   });
 });

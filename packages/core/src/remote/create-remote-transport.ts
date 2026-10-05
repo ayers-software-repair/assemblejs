@@ -4,6 +4,7 @@ import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
 import type { AssemblyAssets } from "../assembly/assembly-assets.js";
 import type { AssemblyResponse } from "../compose/assembly-response.js";
+import { encodeParams } from "../compose/encode-params.js";
 import type { FailureReason } from "../compose/failure-reason.js";
 import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
@@ -108,19 +109,22 @@ export function createRemoteTransport(options: {
         }
       }
 
-      const headers: Record<string, string> = {
-        accept: "text/html",
-        [COMPOSITION_HEADER.page]: request.page,
-        [COMPOSITION_HEADER.id]: request.id,
-        [COMPOSITION_HEADER.depth]: String(request.depth),
-      };
-      if (request.path.length > 0) headers[COMPOSITION_HEADER.path] = request.path.join(",");
+      // The declared keys first and the composition state over them, so nothing a visitor sent
+      // can stand in for what the composer says; boot refuses a declaration that names one.
+      const headers: Record<string, string> = {};
       for (const key of remote.forward ?? []) {
         const value = Object.entries(request.headers).find(
           ([name]) => name.toLowerCase() === key,
         )?.[1];
         if (value !== undefined) headers[key] = value;
       }
+      headers.accept = "text/html";
+      headers[COMPOSITION_HEADER.page] = request.page;
+      headers[COMPOSITION_HEADER.id] = request.id;
+      headers[COMPOSITION_HEADER.depth] = String(request.depth);
+      if (request.path.length > 0) headers[COMPOSITION_HEADER.path] = request.path.join(",");
+      const params = encodeParams(request.params);
+      if (params !== "") headers[COMPOSITION_HEADER.params] = params;
 
       let response: Response;
       try {

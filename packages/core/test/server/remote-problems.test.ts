@@ -31,4 +31,16 @@ describe("what is checked about remotes before anything listens", () => {
     expect(remoteProblems([{ origin }, { origin }]).join()).toMatch(/more than once/);
     expect(remoteProblems([{ origin, forward: ["Accept-Language"] }]).join()).toMatch(/lower-case/);
   });
+
+  it("refuses forwarding a composition header, which the composer sends and a visitor must not set", () => {
+    const text = remoteProblems([
+      {
+        origin: "https://shop.example",
+        forward: ["accept-language", "assembly-params", "assembly-depth"],
+      },
+    ]).join();
+    expect(text).toMatch(/"assembly-params", a composition header/);
+    expect(text).toMatch(/"assembly-depth", a composition header/);
+    expect(text).not.toMatch(/accept-language/);
+  });
 });
