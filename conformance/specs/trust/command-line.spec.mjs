@@ -45,6 +45,21 @@ test("check refuses a placement with no assembly behind it, naming the file, the
   }
 });
 
+test("check refuses policy for a name the template never places, where it is declared", () => {
+  const declaration = join(root, "src", "pages", "home", "home.page.ts");
+  writeFileSync(declaration, "export default { place: { stale: { defer: true } } };\n");
+  try {
+    const result = run("check");
+    assert.equal(result.status, 1, result.stdout);
+    assert.match(
+      result.stderr,
+      /^src\/pages\/home\/home\.page\.ts: page "home" declares policy for "stale", which its template never places \(policy-names-a-placement\): declare policy only for a name the template places/m,
+    );
+  } finally {
+    rmSync(declaration, { force: true });
+  }
+});
+
 test("deploy writes a directory that runs on its own, with no bundler and no development dependency", async () => {
   const result = run("deploy");
   assert.equal(result.status, 0, result.stderr);

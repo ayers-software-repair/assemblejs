@@ -4,8 +4,11 @@ import { describe, expect, it } from "vitest";
 import type { LiteralValue } from "@assemblejs/cli";
 
 describe("a value as written in source", () => {
-  it("is a string, an object or an array of them, or null when it is computed", () => {
-    const value: LiteralValue = { remotes: [{ origin: "https://a.example", forward: null }] };
+  it("is a string, a number, a boolean, null, an object or an array of them, or undefined when computed", () => {
+    const value: LiteralValue = {
+      remotes: [{ origin: "https://a.example", forward: undefined, deadline: 800, defer: true }],
+      none: null,
+    };
     expect(JSON.stringify(value)).toContain("https://a.example");
   });
 });

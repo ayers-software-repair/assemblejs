@@ -161,11 +161,16 @@ describe("ending dev from a terminal", () => {
       );
       const dev = spawn(process.execPath, [bin, "dev", "--cwd", root], { stdio: "ignore" });
       const exited = new Promise<void>((resolve) => dev.once("exit", () => resolve()));
+      // Until the file holds a pid: between its creation and its write it exists and is empty,
+      // and a pid read as 0 would name the whole process group, which a signal probe always finds.
       const pidFile = join(root, "server.pid");
-      for (let tries = 0; tries < 200 && !existsSync(pidFile); tries += 1) {
+      const pidIn = (): number =>
+        existsSync(pidFile) ? Number.parseInt(readFileSync(pidFile, "utf8"), 10) : 0;
+      for (let tries = 0; tries < 200 && !(pidIn() > 0); tries += 1) {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
-      pid = Number(readFileSync(pidFile, "utf8"));
+      pid = pidIn();
+      expect(pid).toBeGreaterThan(0);
       let last = Date.now();
       for (const [at, signal] of signals.entries()) {
         if (at > 0) await new Promise((resolve) => setTimeout(resolve, 300));

@@ -27,10 +27,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** the three open rows above B-24a that need no owner (`check` reads
-placement policy as boot does; `build` and `check` compile each template view; page route
-parameters reach placements, which needs a DECISIONS entry naming the wire shape first), then
-B-25, then B-26. B-24b, the acceptance table, is the owner's: its source is outside this tree
+**THE EXACT NEXT STEP:** the two open rows above B-24a that need no owner (`build` and `check`
+compile each template view; page route parameters reach placements, which needs a DECISIONS
+entry naming the wire shape first), then B-25, then B-26. B-24b, the acceptance table, is the owner's: its source is outside this tree
 (DECISIONS 2026-10-05).
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25 budgets -> B-26
@@ -67,7 +66,9 @@ reached HEAD once). Three tests were once green for a reason they did not claim 
 red, always. Svelte 5 hydration cannot run in a DOM shim (reads `Node.prototype` getters): Chromium
 only, the test file says why. syncpack is deliberately `--dependency-types prod,dev`. The
 `client-stays-browser-only` cruiser rule is ANSWERED by moving the file, never loosened. A waiter
-using `pgrep -f` matches its own command line - use a captured PID. `identity()` joins with a
+using `pgrep -f` matches its own command line - use a captured PID, or anchor the pattern with `$`.
+A pid file read the moment it exists can be empty, and a pid of 0 probes the whole process group:
+wait for a pid that parses. `identity()` joins with a
 separator that cannot collide (`a/b`+`c` vs `a`+`b/c`). The `<assembly>` directive matches
 case-insensitively. The commit-msg hook runs commitlint + DCO; CI greps attribution trailers because
 fork PRs run default settings. The house emoji gate refuses a document that QUOTES an emoji -
@@ -305,8 +306,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       fill shows its fallback and its logged id; the page's query carried; boot refuses only a
       deferral nothing could fill; remote failure ids held, a 4xx, cancellation and expiry held;
       the harness stops a starting server on a signal; `check` holds apis to core's rules
-- [ ] `check` reads placement policy as boot does: a view the assembly lacks, policy for an
-      unplaced name, the deferral rules (DESIGN 11: every problem found without building)
+- [x] `check` reads placement policy as boot does: a view the assembly lacks, policy for an
+      unplaced name, the deferral rules, and the stream a page names, by the same functions
+      boot calls (DESIGN 11: every problem found without building; DECISIONS 2026-10-05)
 - [ ] OWNER: a deferred placement from another server, refused at boot as shipped (DECISIONS,
       verifying B-23); lifting it means a remote opting into cross-origin fragments
 - [ ] OWNER: how an assembly places a subassembly (DECISIONS 2026-10-04, open); then nested

@@ -1703,3 +1703,57 @@ shape, so it is raised with him rather than settled.
 - **Not held here, and why:** the private-range refusal and the manifest handshake stay with
   B-23's fixture and the unit tests; DESIGN 4's refusal of a control turned on without its
   credential is configuration, outside the matrix (2026-10-04).
+
+## 2026-10-05: `check` reads placement policy as boot does
+
+Expected, from the ledger row the verifications of B-22 and B-23 left: `check` refuses every page
+boot refuses, placement policy included (DESIGN 11: every problem found without building).
+
+Found: boot's rules for a placement (an assembly or a view that does not exist, policy for a name
+the template never places, policy that is not an object, deferred with required, a deferral from
+another server or on a page with no runtime, a deadline or a cache on a deferral, a deadline that
+is not positive and finite) and for a page's stream (not a streaming api's path without
+parameters, nothing on the page to open it) were written inline in `pageProblems`, and `check`
+read a page declaration only for its remote urls, as strings; a number or a boolean in it read as
+computed. Settled here:
+
+- **One set of rules, two readers.** The placement rules are their own module in core
+  (`placementProblems`, each finding naming the placement and whether the assembly, the view or
+  the policy is wrong), as are the stream rules (`streamProblems`, `streamPaths`) and what they
+  read of an assembly (`PlacedAssembly`: its views, and whether it puts the runtime on the page;
+  `opensRuntime`; `isRemotePolicy`). Boot reads those facts off the definitions the registry
+  built; `check` reads them off the files (one view, `default`; a browser half for a framework
+  view or a static one with a `.client.ts`) and calls the same functions, so both refuse the same
+  page the same way, with a fix beside each finding and two rules the agent surface explains
+  (`policy-names-a-placement`, `a-page-opens-one-stream`).
+- **`check` reads a declaration once** (`readPagePolicy`: the policy of each placement, the
+  placements from another server with their url where it is written, and the stream), and reads
+  literals as written: a number, a negated number, a boolean and a null are literals now, kept
+  as written for the rules to refuse; what is computed reads as undefined rather than null, so a
+  written null is not mistaken for it. What is computed is not reported either way: a computed
+  policy is no policy, a computed deadline or flag is absent from its policy, a computed stream
+  is no stream. A computed url is kept as a mark that the placement is another server's; a
+  written one is held to the url rules boot holds it to, now one function in core
+  (`remotePlacementProblems`: the content endpoint shape, the declared origin, the page's forms).
+- **`check` reads a framework view's own `mount`.** Found by the verification: the registry
+  writes a view's `mount` export into the definition, so a view declaring `mount = "none"` puts
+  no runtime on the page at boot, and `check` had assumed every framework view did. It now reads
+  the export from the view's source (`readViewMount`: a `.ts` or `.tsx` file whole, a Svelte
+  component's module script, a Vue component's plain script), never run; a mount it cannot read,
+  computed or absent, is a view that mounts, as the registry resolves it at run time.
+- **Also found by the verification, and fixed:** the stream-path rule had stopped running for a
+  page whose template cannot be read, which it did before the refactor; the rule now takes
+  "unknown" for whether the runtime is on the page and holds the path alone there, in both
+  readers. The messages are byte for byte what they were; their order is not, and a view named
+  `constructor` is refused now, which a prototype lookup had let through. The agent surface's
+  rule names the policy findings it had left out.
+- Every new rule in `check` was watched red before it was read (the five cases failed with
+  nothing reported), and the factored core rules were watched red under two mutations (the
+  runtime always on the page; no policy ever remote). Proof: the core, cli and mcp suites, the
+  gates, and the `trust` fixture's command-line spec, which runs `check` from the tarballs on a
+  project as written and on two the rules refuse.
+- **Found by the check chain, under load, and fixed:** the test that ends `dev` on a second
+  Ctrl-C read the server's pid file the moment it existed, and between the file's creation and
+  its write it is empty; a pid read as 0 names the whole process group, which a signal probe
+  always finds, so the server read as outliving dev when it had not. The test now waits for a
+  pid it can parse. Recorded in the ledger's traps.

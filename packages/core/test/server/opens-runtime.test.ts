@@ -1,0 +1,27 @@
+// Copyright Ayers Electronics Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { describe, expect, it } from "vitest";
+import { findPlacements, opensRuntime } from "@assemblejs/core";
+import type { PlacedAssembly } from "@assemblejs/core";
+
+const assemblies = new Map<string, PlacedAssembly>([
+  ["still", { views: ["default"], browserHalf: false }],
+  ["live", { views: ["default"], browserHalf: true }],
+]);
+const placing = (template: string) => findPlacements(template);
+
+describe("whether a page carries its own runtime", () => {
+  it("does for a local placement with a browser half, and for nothing else", () => {
+    expect(opensRuntime(placing('<assembly name="live"></assembly>'), {}, assemblies)).toBe(true);
+    expect(opensRuntime(placing('<assembly name="still"></assembly>'), {}, assemblies)).toBe(false);
+    expect(opensRuntime(placing('<assembly name="nope"></assembly>'), {}, assemblies)).toBe(false);
+    expect(opensRuntime([], {}, assemblies)).toBe(false);
+  });
+
+  it("does not for another server's assembly, whose runtime is that server's", () => {
+    const place = { live: { url: "https://other.example/assembly/live/" } };
+    expect(opensRuntime(placing('<assembly name="live"></assembly>'), place, assemblies)).toBe(
+      false,
+    );
+  });
+});

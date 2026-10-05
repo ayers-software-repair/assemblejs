@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 import { readDefaultExport } from "@assemblejs/cli";
 
 describe("reading what a module default-exports without running it", () => {
-  it("reads the argument of the call it is, literals kept and anything computed null", () => {
+  it("reads the argument of the call it is, literals kept and anything computed undefined", () => {
+    // A number, a negated number, a boolean and null are literals too, kept as written.
     const source = `import { definePage } from "@assemblejs/core";
       const quote = /"/;
       const base: string = "https://a.example";
@@ -12,16 +13,22 @@ describe("reading what a module default-exports without running it", () => {
         place: {
           cart: { retry: { attempts: 2 }, url: 'https://shop.example.com/assembly/cart/' },
           search: { url: \`\${base}/assembly/search/\` },
-          plain: { url: \`https://t.example/a/\`, tags: ["a", base] },
+          plain: { url: \`https://t.example/a/\`, tags: ["a", base], defer: true, deadline: -1, none: null },
           ...extra,
           [key]: { url: "x" },
         },
       });`;
     expect(readDefaultExport(source)).toEqual({
       place: {
-        cart: { retry: { attempts: null }, url: "https://shop.example.com/assembly/cart/" },
-        search: { url: null },
-        plain: { url: "https://t.example/a/", tags: ["a", null] },
+        cart: { retry: { attempts: 2 }, url: "https://shop.example.com/assembly/cart/" },
+        search: { url: undefined },
+        plain: {
+          url: "https://t.example/a/",
+          tags: ["a", undefined],
+          defer: true,
+          deadline: -1,
+          none: null,
+        },
       },
     });
   });
@@ -32,7 +39,7 @@ describe("reading what a module default-exports without running it", () => {
       const config = { remotes: [{ origin: "https://real.example" }] };
       export default config;`;
     expect(readDefaultExport(source)).toEqual({ remotes: [{ origin: "https://real.example" }] });
-    expect(readDefaultExport("export const a = 1;")).toBeNull();
+    expect(readDefaultExport("export const a = 1;")).toBeUndefined();
   });
 
   it("throws for a module that cannot be compiled", () => {

@@ -114,6 +114,22 @@ export const RULES: readonly Rule[] = [
     smell: "A template placing a name no directory under src/assemblies has.",
   },
   {
+    id: "policy-names-a-placement",
+    rule: "Policy in a page's declaration is an object per placement its template makes, saying only what the server reads: defer or required, a positive deadline in milliseconds, a cache.",
+    because:
+      "Policy for a name the template never places, or that is not an object, is read by nothing, and the author believes it applies. A deadline that is not a positive, finite number is one the composer cannot wait for. A deferred placement is filled by the browser after load, so a deadline or a cache on it is read by nothing, one from another server cannot be fetched across origins, and one on a page with no runtime is never filled. The server refuses each at boot; check says so first.",
+    smell:
+      "A place entry whose name is not in the template or whose value is not an object, a deadline of zero, or defer beside required, a deadline or a cache.",
+  },
+  {
+    id: "a-page-opens-one-stream",
+    rule: "A page's stream is the path of one of this server's streaming apis, without parameters, on a page that places an assembly of this server's with a browser half.",
+    because:
+      "The page's own runtime opens the stream, by the path as written, and is on the page only for a local assembly that runs in the browser. A stream nothing would open, or a path that is no stream, is a page waiting for messages that never come. The server refuses it at boot; check says so first.",
+    smell:
+      "A stream naming a data api or a path with :parameters, or a page of static views alone.",
+  },
+  {
     id: "the-server-file-never-grows",
     rule: "src/server.ts hands createServer the generated project and does nothing else.",
     because:

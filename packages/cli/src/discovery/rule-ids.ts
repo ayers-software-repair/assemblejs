@@ -14,6 +14,8 @@ export const RULE_IDS = [
   "an-api-file-is-an-api",
   "a-view-needs-its-renderer",
   "a-placement-names-an-assembly",
+  "policy-names-a-placement",
+  "a-page-opens-one-stream",
   "the-server-file-never-grows",
   "one-project-per-root",
   "an-assembly-owns-its-styles",

@@ -1,26 +1,45 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync, readFileSync } from "node:fs";
-import { join, relative } from "node:path";
-import { apiProblems, findPlacements, pageRouteProblems, routeKey } from "@assemblejs/core";
-import type { ApiDefinition } from "@assemblejs/core";
+import { isAbsolute, join, relative } from "node:path";
+import {
+  apiProblems,
+  findPlacements,
+  opensRuntime,
+  pageRouteProblems,
+  placementProblems,
+  remotePlacementProblems,
+  routeKey,
+  streamPaths,
+  streamProblems,
+} from "@assemblejs/core";
+import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
 import { buildProblems } from "../build/build-problems.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
+import { isStaticView } from "../discovery/is-static-view.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { declaredOrigins } from "./declared-origins.js";
+import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
-import { remotePlacements } from "./remote-placements.js";
+import { readPagePolicy } from "./read-page-policy.js";
+import { readViewMount } from "./read-view-mount.js";
+
+const NO_POLICY: PagePolicy = { place: {}, remote: new Map(), stream: undefined };
+const POLICY_FIX =
+  "declare policy only for a name the template places, as the server reads it: defer or required, a positive deadline in milliseconds, a cache only on a placement rendered with the page";
+const STREAM_FIX =
+  "name the path of one of this server's streaming apis, without parameters, on a page that places an assembly of this server's with a browser half";
 
 /**
  * Everything wrong with a project that can be known without building it, each as a structure
  * with the file, the rule and the fix: the tree (assemblies, pages, apis), the renderers it
- * needs, and every page's placements against the assemblies that exist, or, for a placement its
- * page declares from another server, against the remotes `assemblejs.config.ts` declares. In
- * process, no shell, so the command line and the agent surface report the same findings the same
- * way.
+ * needs, every page's placements and policy against the assemblies that exist, by the rules boot
+ * refuses them by, or, for a placement its page declares from another server, against the
+ * remotes `assemblejs.config.ts` declares, and the stream a page names. In process, no shell, so
+ * the command line and the agent surface report the same findings the same way.
  */
 export function checkProject(root: string): readonly ProjectProblem[] {
   const src = join(root, "src");
@@ -28,6 +47,21 @@ export function checkProject(root: string): readonly ProjectProblem[] {
   const pages = discoverPages(join(src, "pages"));
   const apis = discoverApis(join(src, "api"));
   const names = assemblies.assemblies.map((assembly) => assembly.name);
+  // What the placement rules read of each assembly: in a project, one view, and a browser half
+  // for a framework view that does not declare `mount = "none"` for itself, or a static view
+  // with a .client.ts beside it.
+  const placeable = new Map<string, PlacedAssembly>(
+    assemblies.assemblies.map((assembly) => [
+      assembly.name,
+      {
+        views: ["default"],
+        browserHalf: isStaticView(assembly.renderer)
+          ? assembly.client !== undefined
+          : readViewMount(isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view)) !==
+            "none",
+      },
+    ]),
+  );
   const problems: ProjectProblem[] = [
     ...assemblies.problems,
     ...pages.problems,
@@ -80,12 +114,13 @@ export function checkProject(root: string): readonly ProjectProblem[] {
     declaredApis.push(api);
     if ((api.method ?? "GET") === "GET") apiRoutes.set(routeKey("GET", api.path), file);
   }
+  const streams = streamPaths(declaredApis);
   const routes = new Map<string, string>();
   for (const page of pages.pages) {
-    const remote =
+    const policy =
       page.declaration === undefined
-        ? new Map<string, string | undefined>()
-        : readOr(page.declaration, remotePlacements, new Map<string, string | undefined>());
+        ? NO_POLICY
+        : readOr(page.declaration, readPagePolicy, NO_POLICY);
     // Every rule the server refuses a route by at boot, from the same function.
     let route: string | undefined = page.route;
     try {
@@ -122,9 +157,12 @@ export function checkProject(root: string): readonly ProjectProblem[] {
         fix: "give the page or the api another route",
       });
     }
+    const label = `page "${page.name}"`;
+    let template;
     let placements;
     try {
-      placements = findPlacements(readFileSync(page.template, "utf8"));
+      template = readFileSync(page.template, "utf8");
+      placements = findPlacements(template);
     } catch (error) {
       problems.push({
         path: page.template,
@@ -132,30 +170,61 @@ export function checkProject(root: string): readonly ProjectProblem[] {
         message: error instanceof Error ? error.message : String(error),
         fix: 'write each placement as <assembly name="..."></assembly>',
       });
+      // With no placements to read, the stream's path is still held; what would open it is not.
+      for (const message of streamProblems(label, policy.stream, streams, undefined)) {
+        problems.push({ path: at, rule: "a-page-opens-one-stream", message, fix: STREAM_FIX });
+      }
       continue;
     }
+    // The rules boot refuses a page by, from the same functions, with a fix for each. A url
+    // the declaration computes is not read, so it is not held to them either way.
     for (const placement of placements) {
-      if (remote.has(placement.name)) {
-        const origin = originOf(remote.get(placement.name));
-        if (origin === undefined || origins.has(origin)) continue;
+      const url = policy.remote.get(placement.name);
+      if (url === undefined) continue;
+      for (const problem of remotePlacementProblems(label, template, placement, url, origins)) {
         problems.push({
-          path: page.declaration ?? page.template,
+          path: problem.about === "form" ? page.template : at,
           rule: "a-placement-names-an-assembly",
-          message: `page "${page.name}" places "${placement.name}" from ${origin}, which assemblejs.config.ts does not declare as a remote`,
-          fix: `add { origin: "${origin}" } to remotes in assemblejs.config.ts`,
+          message: problem.message,
+          fix:
+            problem.about === "url"
+              ? "write the url as the assembly's content endpoint, https://host/assembly/<name>/"
+              : problem.about === "origin"
+                ? `add { origin: "${originOf(url) ?? url}" } to remotes in assemblejs.config.ts`
+                : "move the placement out of the form, or place a local assembly there",
         });
-        continue;
       }
-      if (names.includes(placement.name)) continue;
-      problems.push({
-        path: page.template,
-        rule: "a-placement-names-an-assembly",
-        message: `page "${page.name}" places "${placement.name}", and there is no such assembly`,
-        fix:
-          names.length === 0
-            ? `add it: assemblejs add assembly ${placement.name}`
-            : `add it, or place one that exists: ${names.join(", ")}`,
-      });
+    }
+    for (const problem of placementProblems(label, placements, policy.place, placeable)) {
+      if (problem.about === "policy") {
+        problems.push({
+          path: at,
+          rule: "policy-names-a-placement",
+          message: problem.message,
+          fix: POLICY_FIX,
+        });
+      } else if (problem.about === "view") {
+        problems.push({
+          path: page.template,
+          rule: "a-placement-names-an-assembly",
+          message: problem.message,
+          fix: 'place it without a view, or with "default", the one view an assembly in a project has',
+        });
+      } else {
+        problems.push({
+          path: page.template,
+          rule: "a-placement-names-an-assembly",
+          message: problem.message,
+          fix:
+            names.length === 0
+              ? `add it: assemblejs add assembly ${problem.name}`
+              : `add it, or place one that exists: ${names.join(", ")}`,
+        });
+      }
+    }
+    const opened = opensRuntime(placements, policy.place, placeable);
+    for (const message of streamProblems(label, policy.stream, streams, opened)) {
+      problems.push({ path: at, rule: "a-page-opens-one-stream", message, fix: STREAM_FIX });
     }
   }
   return problems.map((problem) => ({
