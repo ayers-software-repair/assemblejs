@@ -8,8 +8,8 @@ import type { ToolResult } from "../server/tool-result.js";
  * Runs the checks in process, never a shell, and answers every finding as a structure with the
  * file, the rule and the fix. `explain` answers why any of the rules exists.
  */
-export function checkRoot(root: ProjectRoot): ToolResult {
-  const findings = checkProject(root.path);
+export async function checkRoot(root: ProjectRoot): Promise<ToolResult> {
+  const findings = await checkProject(root.path);
   return {
     ok: findings.length === 0,
     result: { findings },

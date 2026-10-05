@@ -24,9 +24,12 @@ describe("a Handlebars template", () => {
     );
   });
 
-  it("throws on a template it cannot read", async () => {
+  it("throws on a template it cannot read, when compiled and not first when rendered", async () => {
     const compile = await loadHandlebars();
-    expect(() => compile("{{#if}}")(input)).toThrow();
+    expect(() => compile("{{#if data.a}}never closed")).toThrow(/Parse error/);
+    // What fails only with data, a helper the template lacks, still fails when it renders.
+    const missing = compile('{{missing "x"}}');
+    expect(() => missing(input)).toThrow(/Missing helper/);
   });
 
   it("refuses to reach another file, even one that is there", async () => {

@@ -1757,3 +1757,42 @@ computed. Settled here:
   its write it is empty; a pid read as 0 names the whole process group, which a signal probe
   always finds, so the server read as outliving dev when it had not. The test now waits for a
   pid it can parse. Recorded in the ledger's traps.
+
+## 2026-10-05: `build` and `check` compile each template view
+
+Expected, from the ledger row the verification of B-17 left: a template its engine cannot read
+refuses the build rather than falling back at its first render.
+
+Found: Handlebars compiles lazily, on the first render, so of the five engines it alone let an
+unreadable template through `compile`; and `check` was synchronous, where loading a project's
+own engines is not. Settled here:
+
+- **Every template view is compiled, once, before anything is built or served**, by `build` and
+  by `check` (`templateProblems`), with the compiler the project's own
+  `@assemblejs/renderer-templates` loads for its language, found the way the bundler finds a
+  package and imported from the project's copy, never ours, so a template compiles with the
+  engines its server will render it with. One that throws is a problem naming the file and what
+  the engine said on one line, cut where the engine starts advising about options this build
+  does not expose and without the lines that only draw a caret under an excerpt, under a rule
+  of its own (`a-template-view-compiles`), which the agent surface explains; `check` prints the
+  file, `build` the assembly and the message, as it prints every problem. A view that cannot be
+  read, and a package or an engine of it that cannot be loaded, are problems of their own kind,
+  never blamed on the template. A project without the package has nothing to compile with,
+  which the build already reports, so the check says nothing then.
+- **Handlebars parses when it compiles**, the parse handed to compile so it happens once; a
+  template it cannot parse throws then, as in every other engine. What an engine resolves only
+  as it renders still throws then: a value the data has not and, in Handlebars and Nunjucks, a
+  helper or a filter the template lacks, a helper given the wrong number of arguments, and a
+  partial, an include or a parent it names, which a view, being one file, never has. That is
+  what the `rendering` fixture's broken views do, and why they still build. Markdown never
+  throws, so a `.md` view is never reported. The compiler's contract says all of this.
+- **`check` is asynchronous now**, as is the agent surface's `check` tool and the verb, because
+  it loads the project's engines; nothing else about it changed.
+- Watched red: the check made to report nothing, and the eager parse removed, each against its
+  tests. Proof: the cli, mcp and template suites, the gates, and the `rendering` fixture from the
+  tarballs, whose template views fail at render and build as before. The verification found a
+  test leaving directories in the examples tree, read and load failures blamed on the engine,
+  and a broken install rejecting the whole check instead of being one of its findings; each is
+  fixed above. The cli suite reaches the project's engines through the templates example, which
+  resolves to the workspace package's built output, so the suite alone needs that package built
+  first; `pnpm check` builds before it tests. Recorded in the ledger's traps.

@@ -27,9 +27,9 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** the two open rows above B-24a that need no owner (`build` and `check`
-compile each template view; page route parameters reach placements, which needs a DECISIONS
-entry naming the wire shape first), then B-25, then B-26. B-24b, the acceptance table, is the owner's: its source is outside this tree
+**THE EXACT NEXT STEP:** the one open row above B-24a that needs no owner (page route
+parameters reach placements, which needs a DECISIONS entry naming the wire shape first), then
+B-25, then B-26. B-24b, the acceptance table, is the owner's: its source is outside this tree
 (DECISIONS 2026-10-05).
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25 budgets -> B-26
@@ -68,7 +68,9 @@ only, the test file says why. syncpack is deliberately `--dependency-types prod,
 `client-stays-browser-only` cruiser rule is ANSWERED by moving the file, never loosened. A waiter
 using `pgrep -f` matches its own command line - use a captured PID, or anchor the pattern with `$`.
 A pid file read the moment it exists can be empty, and a pid of 0 probes the whole process group:
-wait for a pid that parses. `identity()` joins with a
+wait for a pid that parses. The cli suite reaches the project's template engines through
+`examples/templates`, which resolves to `packages/renderer-templates/dist`: build that package
+before running the cli suite alone (`pnpm check` builds before it tests). `identity()` joins with a
 separator that cannot collide (`a/b`+`c` vs `a`+`b/c`). The `<assembly>` directive matches
 case-insensitively. The commit-msg hook runs commitlint + DCO; CI greps attribution trailers because
 fork PRs run default settings. The house emoji gate refuses a document that QUOTES an emoji -
@@ -258,9 +260,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       and served, five of five
 - [x] The verification of B-17: Nunjucks reads no `views/` directory, the browser filter and
       the templates example held by the unit suite, errors name the template's file
-- [ ] `build` and `check` compile each template view, so a template that cannot compile refuses
+- [x] `build` and `check` compile each template view, so a template that cannot compile refuses
       the build rather than falling back at its first render (DECISIONS, 2026-10-03, "verifying
-      B-17").
+      B-17"; done 2026-10-05, Handlebars parsing when it compiles)
 - [x] B-18 real-time over server-sent events: a streaming api, a page naming its one stream,
       the runtime delivering each message onto the bus; in Chromium, one push reaches a React and
       a Svelte assembly over one connection

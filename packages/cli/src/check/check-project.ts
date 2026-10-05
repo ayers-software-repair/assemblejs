@@ -15,6 +15,7 @@ import {
 } from "@assemblejs/core";
 import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
 import { buildProblems } from "../build/build-problems.js";
+import { templateProblems } from "../build/template-problems.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
@@ -38,10 +39,11 @@ const STREAM_FIX =
  * with the file, the rule and the fix: the tree (assemblies, pages, apis), the renderers it
  * needs, every page's placements and policy against the assemblies that exist, by the rules boot
  * refuses them by, or, for a placement its page declares from another server, against the
- * remotes `assemblejs.config.ts` declares, and the stream a page names. In process, no shell, so
- * the command line and the agent surface report the same findings the same way.
+ * remotes `assemblejs.config.ts` declares, the stream a page names, and every template view
+ * compiled with the project's own engine. In process, no shell, so the command line and the
+ * agent surface report the same findings the same way.
  */
-export function checkProject(root: string): readonly ProjectProblem[] {
+export async function checkProject(root: string): Promise<readonly ProjectProblem[]> {
   const src = join(root, "src");
   const assemblies = discoverAssemblies(join(src, "assemblies"));
   const pages = discoverPages(join(src, "pages"));
@@ -67,6 +69,7 @@ export function checkProject(root: string): readonly ProjectProblem[] {
     ...pages.problems,
     ...apis.problems,
     ...buildProblems(root, assemblies.assemblies),
+    ...(await templateProblems(root, assemblies.assemblies)),
   ];
 
   // A file that cannot be read is a finding against it, never a throw out of check.

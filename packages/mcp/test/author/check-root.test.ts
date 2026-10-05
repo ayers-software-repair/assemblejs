@@ -7,19 +7,19 @@ import { describe, expect, it } from "vitest";
 import { checkRoot, resolveRoot } from "@assemblejs/mcp";
 
 describe("checking through the agent surface", () => {
-  it("answers ok for a project with nothing wrong", () => {
+  it("answers ok for a project with nothing wrong", async () => {
     const dir = mkdtempSync(join(tmpdir(), "mcp-check-"));
     writeFileSync(join(dir, "package.json"), "{}");
     mkdirSync(join(dir, "src"));
     writeFileSync(join(dir, "src", "server.ts"), "");
-    expect(checkRoot(resolveRoot(dir))).toMatchObject({ ok: true, problems: [] });
+    expect(await checkRoot(resolveRoot(dir))).toMatchObject({ ok: true, problems: [] });
   });
 
-  it("answers every finding as a structure with its file, rule and fix", () => {
+  it("answers every finding as a structure with its file, rule and fix", async () => {
     const dir = mkdtempSync(join(tmpdir(), "mcp-check-"));
     writeFileSync(join(dir, "package.json"), "{}");
     mkdirSync(join(dir, "src", "assemblies", "Cart"), { recursive: true });
-    const answer = checkRoot(resolveRoot(dir));
+    const answer = await checkRoot(resolveRoot(dir));
     expect(answer.ok).toBe(false);
     expect(answer.problems[0]).toMatchObject({
       path: "src/assemblies/Cart",

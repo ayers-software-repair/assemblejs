@@ -114,6 +114,13 @@ export const RULES: readonly Rule[] = [
     smell: "A template placing a name no directory under src/assemblies has.",
   },
   {
+    id: "a-template-view-compiles",
+    rule: "A view written in a template language compiles in that language before anything is built or served.",
+    because:
+      "A template its engine cannot read fails on its first render, where the placement falls back and a visitor sees the fallback before the author sees the error. build and check compile every template view with the project's own engine, so the error is found at the desk and names the file.",
+    smell: "An unclosed block or tag in an .ejs, .hbs, .njk or .pug view that build accepted.",
+  },
+  {
     id: "policy-names-a-placement",
     rule: "Policy in a page's declaration is an object per placement its template makes, saying only what the server reads: defer or required, a positive deadline in milliseconds, a cache.",
     because:

@@ -78,6 +78,6 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         "Runs the checks in process and returns every finding with its file, its rule and its fix. Nothing is built and no shell is run.",
       inputSchema: {},
     },
-    () => json(checkRoot(root)),
+    async () => json(await checkRoot(root)),
   );
 }

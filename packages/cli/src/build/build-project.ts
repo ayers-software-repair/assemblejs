@@ -20,6 +20,7 @@ import { loadCompilers } from "./load-compilers.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 import { sharedOptions } from "./shared-options.js";
 import { sourceVersion } from "./source-version.js";
+import { templateProblems } from "./template-problems.js";
 
 /**
  * Builds a project into `dist/`: `dist/server.js`, which `node` starts with no bundler
@@ -40,6 +41,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     ...pages.problems,
     ...apis.problems,
     ...buildProblems(root, found.assemblies),
+    ...(await templateProblems(root, found.assemblies)),
   ];
   const { compilers, problems: unloaded } = await loadCompilers(root, found.assemblies);
   // A framework that is not installed at all is already reported; one installed whose compiler

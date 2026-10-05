@@ -24,21 +24,21 @@ const generated = () => {
 
 describe("the check verb", () => {
   // B-20's proof, its first half: a generated project passes check.
-  it("passes a project the command line generated, and says so", () => {
+  it("passes a project the command line generated, and says so", async () => {
     const { io, logs, errors } = capture();
-    expect(runCheck(generated(), io)).toBe(0);
+    expect(await runCheck(generated(), io)).toBe(0);
     expect(errors).toEqual([]);
     expect(logs).toEqual(["no problems"]);
   });
 
-  it("reports each problem with its file, rule and fix, and fails", () => {
+  it("reports each problem with its file, rule and fix, and fails", async () => {
     const root = generated();
     realIo.write(
       join(root, "src", "pages", "home", "home.html"),
       '<assembly name="nowhere"></assembly>',
     );
     const { io, logs, errors } = capture();
-    expect(runCheck(root, io)).toBe(1);
+    expect(await runCheck(root, io)).toBe(1);
     expect(logs).toEqual([]);
     expect(errors[0]).toMatch(/home\.html: .*nowhere.* \([a-z-]+\): .+/);
     expect(errors.at(-1)).toBe("1 problem(s)");

@@ -17,16 +17,16 @@ const project = (files: Record<string, string>): string => {
 };
 
 describe("checking a project", () => {
-  it("finds nothing wrong with a project that is right", () => {
+  it("finds nothing wrong with a project that is right", async () => {
     const root = project({
       "src/server.ts": "",
       "src/assemblies/hello/hello.html": "<p>hi</p>",
       "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
     });
-    expect(checkProject(root)).toEqual([]);
+    expect(await checkProject(root)).toEqual([]);
   });
 
-  it("reports each finding with the file relative to the project, the rule and the fix", () => {
+  it("reports each finding with the file relative to the project, the rule and the fix", async () => {
     const root = project({
       "src/assemblies/Cart/Cart.html": "",
       "src/assemblies/menu/menu.tsx": "",
@@ -35,7 +35,7 @@ describe("checking a project", () => {
       "src/pages/broken/broken.html": '<assembly nam="hello"></assembly>',
       "src/api/Bad.api.ts": "",
     });
-    const findings = checkProject(root);
+    const findings = await checkProject(root);
     const by = (rule: string) => findings.filter((finding) => finding.rule === rule);
     expect(by("directory-is-an-assembly")[0]).toMatchObject({
       path: "src/assemblies/Cart",
@@ -53,14 +53,14 @@ describe("checking a project", () => {
     expect(by("an-api-file-is-an-api")[0]?.path).toBe("src/api/Bad.api.ts");
   });
 
-  it("reports what build would refuse before bundling: no server file, no Svelte compiler", () => {
+  it("reports what build would refuse before bundling: no server file, no Svelte compiler", async () => {
     const root = project({ "src/assemblies/counter/counter.svelte": "<p>0</p>" });
-    const rules = checkProject(root).map((finding) => [finding.rule, finding.path]);
+    const rules = (await checkProject(root)).map((finding) => [finding.rule, finding.path]);
     expect(rules).toContainEqual(["the-server-file-never-grows", "src/server.ts"]);
     expect(rules).toContainEqual(["a-view-needs-its-renderer", "package.json"]);
   });
 
-  it("reads a placement its page declares from another server, against the declared remotes", () => {
+  it("reads a placement its page declares from another server, against the declared remotes", async () => {
     const page = (origin: string) => ({
       "src/server.ts": "",
       "src/pages/home/home.html": '<body><assembly name="cart"></assembly></body>',
@@ -69,15 +69,15 @@ describe("checking a project", () => {
       "assemblejs.config.ts":
         "// { origin: 'https://other.example.com' }\nexport default { remotes: [{ origin: 'https://shop.example.com' }] };",
     });
-    expect(checkProject(project(page("https://shop.example.com")))).toEqual([]);
+    expect(await checkProject(project(page("https://shop.example.com")))).toEqual([]);
     // A url built at run time is not read, so it is not reported either way.
     const computed = {
       ...page("https://shop.example.com"),
       "src/pages/home/home.page.ts":
         "const base = process.env.SHOP;\nexport default { place: { cart: { url: `${base}/assembly/cart/` } } };",
     };
-    expect(checkProject(project(computed))).toEqual([]);
-    expect(checkProject(project(page("https://other.example.com")))).toEqual([
+    expect(await checkProject(project(computed))).toEqual([]);
+    expect(await checkProject(project(page("https://other.example.com")))).toEqual([
       expect.objectContaining({
         path: "src/pages/home/home.page.ts",
         rule: "a-placement-names-an-assembly",
@@ -86,14 +86,14 @@ describe("checking a project", () => {
     ]);
   });
 
-  it("reports a page declaration it cannot read as a finding, never a throw", () => {
+  it("reports a page declaration it cannot read as a finding, never a throw", async () => {
     const root = project({
       "src/server.ts": "",
       "src/assemblies/hello/hello.html": "<p>hi</p>",
       "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
       "src/pages/home/home.page.ts": "export default {",
     });
-    expect(checkProject(root)).toEqual([
+    expect(await checkProject(root)).toEqual([
       expect.objectContaining({
         path: "src/pages/home/home.page.ts",
         message: expect.stringMatching(/could not be read/),
@@ -101,7 +101,7 @@ describe("checking a project", () => {
     ]);
   });
 
-  it("refuses every route the server refuses at boot, each where it is declared", () => {
+  it("refuses every route the server refuses at boot, each where it is declared", async () => {
     for (const [route, problem] of [
       ["/items/:id", /has a parameter/],
       ["/shop/*", /wildcard/],
@@ -115,7 +115,7 @@ describe("checking a project", () => {
         "src/pages/item/item.html": '<body><assembly name="hello"></assembly></body>',
         "src/pages/item/item.page.ts": `export default { route: ${JSON.stringify(route)} };`,
       });
-      expect(checkProject(root), route).toEqual([
+      expect(await checkProject(root), route).toEqual([
         expect.objectContaining({
           path: "src/pages/item/item.page.ts",
           rule: "a-directory-is-a-page",
@@ -125,7 +125,7 @@ describe("checking a project", () => {
     }
   });
 
-  it("refuses two pages at one route", () => {
+  it("refuses two pages at one route", async () => {
     const root = project({
       "src/server.ts": "",
       "src/assemblies/hello/hello.html": "<p>hi</p>",
@@ -133,7 +133,7 @@ describe("checking a project", () => {
       "src/pages/start/start.html": '<body><assembly name="hello"></assembly></body>',
       "src/pages/start/start.page.ts": 'export default { route: "/" };',
     });
-    expect(checkProject(root)).toEqual([
+    expect(await checkProject(root)).toEqual([
       expect.objectContaining({
         path: "src/pages/start/start.page.ts",
         rule: "a-directory-is-a-page",
@@ -142,14 +142,14 @@ describe("checking a project", () => {
     ]);
   });
 
-  it("refuses a page at the route a GET api answers", () => {
+  it("refuses a page at the route a GET api answers", async () => {
     const root = project({
       "src/server.ts": "",
       "src/assemblies/hello/hello.html": "<p>hi</p>",
       "src/pages/about/about.html": '<body><assembly name="hello"></assembly></body>',
       "src/api/about.api.ts": 'export default { path: "/about", handle: () => ({}) };',
     });
-    expect(checkProject(root)).toEqual([
+    expect(await checkProject(root)).toEqual([
       expect.objectContaining({
         path: "src/pages/about/about.html",
         message: 'page "about" answers at /about, as the api src/api/about.api.ts does',
@@ -157,7 +157,7 @@ describe("checking a project", () => {
     ]);
   });
 
-  it("refuses an api route boot refuses: twice by what the router matches, or reserved", () => {
+  it("refuses an api route boot refuses: twice by what the router matches, or reserved", async () => {
     const root = project({
       "src/server.ts": "",
       "src/assemblies/hello/hello.html": "<p>hi</p>",
@@ -166,7 +166,9 @@ describe("checking a project", () => {
       "src/api/by-key.api.ts": 'export default { path: "/api/a/:key", handle: () => 1 };',
       "src/api/own.api.ts": 'export default { path: "/_assemblejs/x", handle: () => 1 };',
     });
-    const found = checkProject(root).map((problem) => `${problem.path}: ${problem.message}`);
+    const found = (await checkProject(root)).map(
+      (problem) => `${problem.path}: ${problem.message}`,
+    );
     expect(found).toHaveLength(2);
     expect(found.join("\n")).toMatch(/is declared more than once/);
     expect(found.join("\n")).toMatch(/src\/api\/own\.api\.ts: .*reserves/);
@@ -195,29 +197,33 @@ describe("reading placement policy as boot does", () => {
   const one = (name: string, view?: string) =>
     `<assembly name="${name}"${view === undefined ? "" : ` view="${view}"`}></assembly>`;
   const place = (policy: string) => `export default { place: { ${policy} } };`;
-  const page = (template: string, declaration?: string, files: Record<string, string> = hello) =>
-    checkProject(
-      project({
-        "src/server.ts": "",
-        "src/pages/home/home.html": `<body>${template}</body>`,
-        ...(declaration === undefined ? {} : { "src/pages/home/home.page.ts": declaration }),
-        ...files,
-      }),
+  const page = async (
+    template: string,
+    declaration?: string,
+    files: Record<string, string> = hello,
+  ) =>
+    (
+      await checkProject(
+        project({
+          "src/server.ts": "",
+          "src/pages/home/home.html": `<body>${template}</body>`,
+          ...(declaration === undefined ? {} : { "src/pages/home/home.page.ts": declaration }),
+          ...files,
+        }),
+      )
     ).filter((finding) => finding.rule !== "a-view-needs-its-renderer");
-  const said = (template: string, declaration?: string, files?: Record<string, string>) =>
-    page(template, declaration, files)
-      .map((finding) => finding.message)
-      .join();
+  const said = async (template: string, declaration?: string, files?: Record<string, string>) =>
+    (await page(template, declaration, files)).map((finding) => finding.message).join();
 
-  it("reports a view the assembly lacks in the template, and policy where it is declared", () => {
-    expect(page(one("hello", "wide"))).toEqual([
+  it("reports a view the assembly lacks in the template, and policy where it is declared", async () => {
+    expect(await page(one("hello", "wide"))).toEqual([
       expect.objectContaining({
         path: "src/pages/home/home.html",
         rule: "a-placement-names-an-assembly",
         message: expect.stringMatching(/view "wide" it does not have/),
       }),
     ]);
-    const findings = page(one("hello"), place('stale: {}, hello: "soon"'));
+    const findings = await page(one("hello"), place('stale: {}, hello: "soon"'));
     expect(findings).toHaveLength(2);
     for (const finding of findings) {
       expect(finding).toMatchObject({
@@ -229,7 +235,7 @@ describe("reading placement policy as boot does", () => {
     expect(findings.map((f) => f.message).join()).toMatch(/never places.*not an object/);
   });
 
-  it("refuses what boot refuses, by the same rules, and passes what boot passes", () => {
+  it("refuses what boot refuses, by the same rules, and passes what boot passes", async () => {
     for (const [template, declaration, files, expected] of [
       [
         one("hello"),
@@ -258,17 +264,17 @@ describe("reading placement policy as boot does", () => {
       [one("still"), place("still: { defer: true }"), still, /nothing would fill it/],
       [one("still") + one("wake"), place("still: { defer: true }"), still, /^$/],
     ] as const) {
-      expect(said(template, declaration, files), declaration).toMatch(expected);
+      expect(await said(template, declaration, files), declaration).toMatch(expected);
     }
   });
 
-  it("reads nothing it cannot read: a computed policy, deadline or flag is not reported either way", () => {
+  it("reads nothing it cannot read: a computed policy, deadline or flag is not reported either way", async () => {
     const computed =
       "const ms = Number(process.env.MS);\nconst flag = process.env.D === '1';\nexport default { place: { hello: { deadline: ms, defer: flag }, other: policy() } };\nfunction policy() { return {}; }";
-    expect(page(one("hello"), computed)).toEqual([]);
+    expect(await page(one("hello"), computed)).toEqual([]);
   });
 
-  it("holds the stream a page names to a streaming api without parameters, on a page with a runtime", () => {
+  it("holds the stream a page names to a streaming api without parameters, on a page with a runtime", async () => {
     const both = { ...hello, ...live, ...apis };
     const stream = (path: string) => `export default { stream: ${path} };`;
     for (const [template, declaration, expected] of [
@@ -279,9 +285,9 @@ describe("reading placement policy as boot does", () => {
       // A template that cannot be read: the path is still held, what would open it is not.
       ['<assembly nam="x"></assembly>', stream('"/nowhere"'), /streaming api(?!.*would open)/],
     ] as const) {
-      expect(said(template, declaration, both), declaration).toMatch(expected);
+      expect(await said(template, declaration, both), declaration).toMatch(expected);
     }
-    const [finding] = page(one("hello"), stream('"/api/time"'), { ...hello, ...apis });
+    const [finding] = await page(one("hello"), stream('"/api/time"'), { ...hello, ...apis });
     expect(finding).toMatchObject({
       path: "src/pages/home/home.page.ts",
       rule: "a-page-opens-one-stream",
