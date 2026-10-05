@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "The AssembleJS agent surface: an MCP server so an agent builds with the framework the way a developer does.",
   "license": "Apache-2.0",
-  "author": "Zachariah Ayers",
   "homepage": "https://ayers.repair/assemblejs/",
   "repository": {
     "type": "git",

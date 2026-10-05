@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Read-only devtools for an AssembleJS server in development: its assemblies, pages, apis and recent failures.",
   "license": "Apache-2.0",
-  "author": "Zachariah Ayers",
   "homepage": "https://ayers.repair/assemblejs/",
   "repository": {
     "type": "git",

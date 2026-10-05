@@ -1,3 +1,9 @@
 {
-  "publisher": "Ayers Software Repair"
+  "publisher": "Ayers Software Repair",
+  "author": "Someone",
+  "homepage": "https://github.com/ayers-software-repair/elsewhere",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ayers-software-repair/elsewhere.git"
+  }
 }

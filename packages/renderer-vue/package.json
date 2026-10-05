@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Write an AssembleJS assembly in Vue.",
   "license": "Apache-2.0",
-  "author": "Zachariah Ayers",
   "homepage": "https://ayers.repair/assemblejs/",
   "repository": {
     "type": "git",

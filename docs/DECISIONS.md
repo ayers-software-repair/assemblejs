@@ -2081,3 +2081,24 @@ an entry above or a ledger row, and names what lands with it.
 - **The order of work now:** this commit (pre mode and the rulings), then the gate script with
   the metadata and CLAUDE.md changes, then typedoc at deploy time; then stop. The subassembly
   rung is the next session's.
+
+## 2026-10-05: CLAUDE.md's gate paragraph has its check; author lines leave the packages
+
+From the rulings above. `scripts/check-claude-gates.mjs` reads the gate paragraph in CLAUDE.md
+(every backticked `check:*`, `lint`, `typecheck`, `build` or `test` it names) and package.json's
+`check` chain, and fails on a gate named and not run; it runs as `check:claude`, after its own
+self-test, which refuses a paragraph naming a gate the chain lacks and a CLAUDE.md with no such
+paragraph. Watched red on `check:bogus` written into the paragraph. The paragraph now names
+`check:claude` too and says which script checks it, where it claimed a check that did not exist.
+The Packages list names `@assemblejs/mcp`. The identity law's two package.json sentences were held
+by no gate before this (the verifier of this change read `identity-gate.sh` whole: it refused the
+legacy strings and the publisher name, nothing about `author` or the organization's handle, which
+is how twelve author lines passed every gate since B-02). Now they are: the gate's third rule
+refuses `"author"` in any package.json but the root's, its fourth refuses the organization's
+handle on any package.json line but the repository `"url"` and `"bugs"`, and its fixture carries
+both so the self-test watches each rule fire. The twelve lines are gone; credit is the root
+`package.json`; the handle stays on the `repository` and `bugs` urls provenance verifies against.
+The Release section says when changesets start and that `next` is in pre mode, and CONTRIBUTING.md
+and the pull request template, which demanded a changeset per src change, now say the same. The
+gate script's self-test also holds its regex to the bare verbs and its reading to the one
+paragraph, after a verifier showed two mutations it let through.

@@ -116,19 +116,14 @@ the record of what was read, and they stay in the private estate document store,
 
 ## Blocked, needs the owner (one admin click each)
 
-- [ ] **Package metadata against `CLAUDE.md`'s identity law.** Found 2026-10-03 by a verifying
-      agent, present since B-02 and passed by every gate: each `packages/*/package.json` carries
-      `"author"` (the law says author credit is the root `package.json` only) and its
-      `repository` and `bugs` urls name the GitHub organization (the law says the organization
-      name appears in no package.json). Not changed here: the repository url is what npm
-      provenance checks against, so which way to resolve it is the owner's call.
+- [x] **Package metadata against `CLAUDE.md`'s identity law.** Ruled 2026-10-05: the twelve
+      `author` lines are gone from `packages/*/package.json`; `repository` and `bugs` keep the
+      organization's url, which provenance verifies against, and the law now says so
+      (DECISIONS 2026-10-05)
 
-- [ ] **`CLAUDE.md` makes two claims the tree does not bear out** (found 2026-10-05 by this
-      lane; the file is the owner's). Its gate paragraph ends "This paragraph is checked against
-      `package.json`: a gate named here that is not in the `check` chain is a false claim", and
-      no script does that check (`scripts/` has none and `check` runs none). Its Packages list
-      names no `@assemblejs/mcp`, which `packages/mcp` publishes. Either write the script and
-      the line, or strike the claim and add the package.
+- [x] **`CLAUDE.md`'s two claims now hold** (ruled 2026-10-05): `scripts/check-claude-gates.mjs`
+      checks the gate paragraph against the `check` chain as `check:claude`, self-tested and
+      watched red; the Packages list names `@assemblejs/mcp` (DECISIONS 2026-10-05)
 
 - [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
       and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:

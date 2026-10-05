@@ -2,16 +2,21 @@
 # Copyright Ayers Electronics Inc. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-# The identity gate. Two rules, both hard:
+# The identity gate. Four rules, all hard:
 #   1. No forbidden identity string anywhere in the tree (the legacy package name, the legacy
 #      handle, the retired brand, any iCloud address).
 #   2. The publisher law: "Ayers Software Repair" appears on no package-metadata surface
 #      (any package.json). Publisher is Ayers Electronics; copyright is Ayers Electronics Inc.
+#   3. The author law: author credit is the root package.json alone; no other package.json
+#      carries an "author" line.
+#   4. The organization law: the GitHub organization's handle appears in a package.json only on
+#      the repository "url" line and the "bugs" line, which npm provenance verifies against.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PATTERN='zjayers|MeridianVega|asmbl|icloud'
 PUBLISHER='Ayers Software Repair'
+ORGANIZATION='ayers-software-repair'
 
 # THE GATE SCANS WHAT GIT TRACKS, not the working tree.
 # Only a tracked file can be committed, published, or shipped in a tarball; an ignored or
@@ -45,6 +50,14 @@ scan() {
       echo "identity gate: publisher law violated in $manifest" >&2
       fail=1
     fi
+    if [ "$manifest" != "package.json" ] && grep -n '"author"' "$manifest"; then
+      echo "identity gate: author law violated in $manifest (credit is the root package.json alone)" >&2
+      fail=1
+    fi
+    if grep -n "$ORGANIZATION" "$manifest" | grep -vE '"(url|bugs)"'; then
+      echo "identity gate: organization law violated in $manifest (the handle belongs on the repository url and the bugs line only)" >&2
+      fail=1
+    fi
   done < <(printf '%s\n' "$files" | grep -E '(^|/)package\.json$' || true)
   return "$fail"
 }
@@ -65,10 +78,12 @@ if [ "${1:-}" = "--self-test" ]; then
     printf '%s\n' "$output" >&2
     exit 1
   fi
-  printf '%s\n' "$output" | grep -q "publisher law violated" || {
-    echo "identity gate self-test FAILED: the publisher rule never fired on the fixture" >&2
-    printf '%s\n' "$output" >&2
-    exit 1; }
+  for law in publisher author organization; do
+    printf '%s\n' "$output" | grep -q "$law law violated" || {
+      echo "identity gate self-test FAILED: the $law rule never fired on the fixture" >&2
+      printf '%s\n' "$output" >&2
+      exit 1; }
+  done
 
   # A gutted file list is the failure the empty-list refusal exists for; this proves the real
   # list is populated, so the gate that just refused a bad tree is also looking at a real one.
@@ -77,7 +92,7 @@ if [ "${1:-}" = "--self-test" ]; then
     echo "identity gate self-test FAILED: only $count tracked file(s) would be scanned" >&2; exit 1
   fi
 
-  echo "identity gate self-test: refused a known-bad tree on $hits identity match(es) and on the publisher rule, over $count real file(s)"
+  echo "identity gate self-test: refused a known-bad tree on $hits identity match(es) and on the publisher, author and organization rules, over $count real file(s)"
   exit 0
 fi
 

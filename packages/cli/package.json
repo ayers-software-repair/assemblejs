@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "The AssembleJS command line: scaffold a project, add an assembly, build and run it.",
   "license": "Apache-2.0",
-  "author": "Zachariah Ayers",
   "homepage": "https://ayers.repair/assemblejs/",
   "repository": {
     "type": "git",

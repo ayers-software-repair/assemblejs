@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Server-composed micro-frontend runtime: pages assembled from assemblies, each written in one UI framework.",
   "license": "Apache-2.0",
-  "author": "Zachariah Ayers",
   "homepage": "https://ayers.repair/assemblejs/",
   "repository": {
     "type": "git",
