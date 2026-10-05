@@ -2201,3 +2201,13 @@ jobs, `pnpm install --frozen-lockfile` then `pnpm conformance` (the harness buil
 packages the fixtures install, core, cli, create and the renderers, itself). Proved here: `pnpm conformance` on this tree, every spec passed (contract
 20, remote 19, rendering 69, trust 44 by the runner's own counts). Actions runs nothing on
 this repository yet, so the job's first green is the owner's to see.
+
+## 2026-10-05: the object-level budgets wording
+
+The verifier of the "three claims" entry found the same false word one level up: `budgets: b`,
+a literal object behind a name, and `budgets: Infinity` were both reported as "computed",
+because `readDefaultExport` follows a name for the default export alone and hands `readBudgets`
+undefined for either. The message is now "budgets is not written as an object of parts and
+bytes; write it as one", true of both, held by `read-budgets.test.ts` and by `perf` at the
+command level in `run-perf.test.ts`. Following the name one step is left undone: `readDeclared`
+is handed a value, not the program, and a written object is what the design asks for.

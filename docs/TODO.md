@@ -471,9 +471,9 @@ and `/assemblejs/next/` from `next`.
 - [x] `site/skin.css`: the role bindings, no structural CSS
 - [x] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
 - [x] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
-- [ ] `readBudgets` reports `budgets: b` (a literal object behind a name) and `budgets: Infinity` as
-      "computed": `readDefaultExport` follows a name for the default export only. Follow it one
-      step for `budgets` too, or word the message as "not written as an object".
+- [x] `readBudgets` reported `budgets: b` (a literal object behind a name) and `budgets: Infinity`
+      as "computed"; the message is now "not written as an object of parts and bytes", true of
+      both, held by the reader's and perf's tests (2026-10-05)
 - [ ] `deploy-site.yml` uses `aws-actions/configure-aws-credentials@v6` unpinned; every other
       action in the tree is pinned to a sha. Pin it (found 2026-10-05 by a verifier)
 - [x] CI breadth: a conformance job in ci.yml, proved by a local run of every fixture; node 24

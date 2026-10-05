@@ -8,7 +8,7 @@ import { PAGE_PARTS } from "./page-parts.js";
 
 /**
  * The page budgets a project's config declares, read from its source and never run, with
- * everything wrong with them: budgets that are computed, not an object, or not written whole (a
+ * everything wrong with them: budgets not written as an object, or not written whole (a
  * spread or a computed key among them), a part that is not one a page sends, and a budget that
  * is not a whole number of bytes above zero, one not written as a number (computed, or a name
  * such as `Infinity`) included, since a budget `perf`
@@ -49,7 +49,7 @@ function readDeclared(declared: LiteralValue): {
   if (declared === undefined) {
     return {
       budgets: {},
-      problems: ["budgets is computed; write it as an object of parts and bytes"],
+      problems: ["budgets is not written as an object of parts and bytes; write it as one"],
     };
   }
   if (declared === null || typeof declared !== "object" || Array.isArray(declared)) {

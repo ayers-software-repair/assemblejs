@@ -120,7 +120,7 @@ describe("the perf verb", { timeout: 60_000 }, () => {
       ["{ fonts: 1 }", /assemblejs.config.ts: budgets names "fonts"/],
       ["{ document: 0 }", /the budget for document is not a whole number/],
       ["{ document: process.env.D }", /the budget for document is not written as a number/],
-      ["shared", /budgets is computed/],
+      ["shared", /budgets is not written as an object/],
     ] as const) {
       realIo.write(config, `export default { budgets: ${budgets} };\n`);
       const unread = await run();

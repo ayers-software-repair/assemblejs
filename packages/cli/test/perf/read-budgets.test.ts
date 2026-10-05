@@ -36,8 +36,17 @@ describe("the page budgets a config declares", () => {
       "the budget for scripts is not written as a number",
     ]);
     // Computed whole: a shared constant is a budget perf cannot read, never one it has none of.
+    for (const source of [
+      "const b = shared();\nexport default { budgets: b };",
+      "const b = { document: 5 };\nexport default { budgets: b };",
+      "export default { budgets: Infinity };",
+    ]) {
+      expect(readBudgets(source).problems, source).toEqual([
+        "budgets is not written as an object of parts and bytes; write it as one",
+      ]);
+    }
     expect(readBudgets("const b = shared();\nexport default { budgets: b };").problems).toEqual([
-      "budgets is computed; write it as an object of parts and bytes",
+      "budgets is not written as an object of parts and bytes; write it as one",
     ]);
     expect(readBudgets("export default { budgets: { document: 5, ...b } };").problems).toEqual([
       "budgets has a spread or a computed key; write every part as its name and bytes",
