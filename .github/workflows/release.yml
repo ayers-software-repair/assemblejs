@@ -3,10 +3,10 @@ name: release
 # Publishes to npm by trusted publishing (OIDC). There is no NPM_TOKEN anywhere and there never
 # will be: the trusted publisher on npmjs.com names this repository, this file, and the `release`
 # environment, whose required reviewer gates every run. With changesets present the action opens
-# the version pull request; with none, and a version npm does not have, it publishes. On `next`
-# that is a prerelease only once the changesets pre mode has been entered (`.changeset/pre.json`,
-# written by `changeset pre enter next`), published under the `next` tag; on `main` a version is
-# published once.
+# the version pull request; with none, and a version npm does not have, it publishes. `next` is
+# in changesets pre mode (`.changeset/pre.json`, written by `changeset pre enter next`), so what
+# it publishes is `1.0.0-next.N` under the `next` tag; on `main` a version is published once.
+# GitHub releases come from each package's CHANGELOG.md, the action's default.
 
 on:
   push:

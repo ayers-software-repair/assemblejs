@@ -28,16 +28,15 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** nothing on the ladder without the owner. Every row through B-26 that
-needs no owner is done. B-24b, the acceptance table, B-25b, the Scorecard run, and B-26b, the
-publish dry run with provenance, are the owner's: the table's source is outside this tree and
-the other two are Actions (DECISIONS 2026-10-05). The house-style and release-notes rows wait on
-his word. The site's guides and generated links are done; its API reference waits on his
-ruling. What the owner was asked is listed in DECISIONS under "open" and "raised".
+**THE EXACT NEXT STEP:** the subassembly rung (the `NEXT:` row below; owner's ruling in
+DECISIONS 2026-10-05 "rulings"). Every row through B-26 that needs no owner is done; the second
+halves of B-24, B-25 and B-26 are folded into B-27a, the owner's. The owner answered every open
+question on 2026-10-05; the rulings entry in DECISIONS lists them and what each lands with.
 
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
-(done) -> B-26a release dry run (done) -> B-26b/B-27a/B-27b (the owner's). The five house-style
-rows and the six release-notes rows can land any time. The site's guides are written.
+(done) -> B-26a release dry run (done) -> the subassembly rung -> B-27a/B-27b (the owner's). The
+five house-style rows and the release-notes rows can land any time. The site's guides are
+written.
 Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions org allowlist (Actions runs NOTHING
 here yet, so the B-25b Scorecard run with it), branch rulesets, the bird mark, the palette, the
 old npm package deprecation, the first publish. Raised with the
@@ -322,27 +321,27 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] `check` reads placement policy as boot does: a view the assembly lacks, policy for an
       unplaced name, the deferral rules, and the stream a page names, by the same functions
       boot calls (DESIGN 11: every problem found without building; DECISIONS 2026-10-05)
-- [ ] OWNER: a deferred placement from another server, refused at boot as shipped (DECISIONS,
-      verifying B-23); lifting it means a remote opting into cross-origin fragments
-- [ ] OWNER: how an assembly places a subassembly (DECISIONS 2026-10-04, open); then nested
-      composition, and a parent's depth and cycle refusal held across two servers in conformance
+- [x] A deferred placement from another server stays refused at boot: deferral is local, a
+      remote is fetched by the server with its deadline (owner, DECISIONS 2026-10-05 rulings)
+- [ ] NEXT: a subassembly is placed by a directive in the view's markup, `<assembly name>` in a
+      template view and a `Slot` by the same name in a framework view (owner, DECISIONS
+      2026-10-05 rulings); then nested composition, services shaping a child's request, and a
+      parent's depth and cycle refusal held across two servers in conformance
 - [x] B-24a conformance breadth, batch three: trust and the command line, from the tarballs over
       HTTP (`pnpm conformance`: trust 43 of 43, every fixture green); each claim watched red on a
       mutation aimed at it (DECISIONS 2026-10-05)
-- [ ] OWNER: B-24b the acceptance table, every intent from the predecessor's tests mapped to a
-      test here or struck with its reason. Its source is the `legacy-tests` dossier, outside this
-      tree by design, which a cloud session cannot read; the table is written where the dossier is
 - [x] B-25a size budgets and the pack check: every package's tarball under a budget the pack
       check holds and self-tests; a project's pages under the `budgets` its config declares, held
       by `perf` (DECISIONS 2026-10-05)
-- [ ] OWNER: B-25b the Scorecard run, which is Actions (the org allowlist, above); the binary
-      cannot be fetched from a cloud session
 - [x] B-26a the release dry run, the local half: changeset status and version, every package
       packed and every tarball read, the registry asked; the release workflow's inputs corrected
       to the pinned action's, the pre-mode gap recorded (DECISIONS 2026-10-05)
-- [ ] OWNER: B-26b the publish dry run with provenance from the `release` environment, which is
-      Actions (the org allowlist, above); and whether `next` enters changesets pre mode first
-- [ ] B-27a estate integration and the first prerelease
+- [x] `next` in changesets pre mode: `.changeset/pre.json` written by `changeset pre enter next`
+      and committed (owner, DECISIONS 2026-10-05 rulings)
+- [ ] B-27a estate integration and the first prerelease, which now carries the second halves
+      of B-24, B-25 and B-26 (owner, DECISIONS 2026-10-05 rulings): the acceptance table from
+      the `legacy-tests` dossier, the Scorecard run, and the publish dry run with provenance
+      from the `release` environment; all three are Actions or outside this tree
 - [ ] B-27b the stable publish, after the cold quickstart
 
 ## House style / hooks stack (CTO ruled 2026-09-03..09; owner routed it here) — assemblejs's part
@@ -350,8 +349,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 Ruling lives in ayers.repair/docs/CODESTYLE-HOOKS-RULING.md. These are the rows that touch THIS
 repo only. Not begun; the work hold still stands and platform/codestyle is uncommitted upstream.
 
-- [ ] Release-notes DRIFT GATE: a test asserting every `CHANGELOG.md` version heading has a matching
-      `<section id="v...">` in `site/release-notes.html`, structure only never prose, watched red on
+- [ ] Release-notes DRIFT GATE: a test asserting every version heading in the packages'
+      `CHANGELOG.md` files has a matching `<section id="v...">` in `site/release-notes.html`,
+      structure only never prose, watched red on
       an injected version first. Correct whether notes are typed or generated. Ties into the
       release-notes-pattern block below (this repo needs all four surfaces).
 - [ ] Keep changesets permanently (owner ruling: only a per-package bump computes which of five
@@ -380,17 +380,21 @@ VERIFIED HERE TODAY: this repository has NONE of the four surfaces. `RELEASE_NOT
 `site/pages.json`, and `release.yml` has no body generation. So assemblejs adopts all four, where
 howland is said to need three and magpie already has them.
 
-- [ ] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, and the source the release body is
-      generated FROM.
-- [ ] `CHANGELOG.md` at the root: the developer register, hand-kept. A different register from
-      the notes on purpose.
+RULED 2026-10-05 (owner): the GitHub release body is each package's `CHANGELOG.md`, written by
+changesets, the action's default. The rows below are rewritten around that.
+
+- [ ] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, the register the site page is
+      written from. Not the release body.
+- [x] `CHANGELOG.md`: per package, written by changesets from the first changeset after the
+      first publish; never hand-kept at the root (DECISIONS 2026-10-05 rulings)
 - [ ] `site/release-notes.html`: one `<section id="v...">` per version, declared in `pages.json`
       so `check-site.mjs` refuses it going missing.
-- [ ] The GitHub release BODY generated at release time from `RELEASE_NOTES.md` plus the
-      production guide links, gated on DNS resolving rather than on a flag. Never a tracked file:
-      a tracked body is one the next person cutting a release can silently ship without the links.
+- [x] The GitHub release BODY: each package's `CHANGELOG.md` entry, created by the changesets
+      action at publish time (`create-github-releases`, its default); never a tracked file
+      (DECISIONS 2026-10-05 rulings)
 - [ ] THE DRIFT GATE, which is the part that actually holds it together: a test asserting every
-      version heading in `CHANGELOG.md` has a matching `<section id="v...">` in the site page.
+      version heading in the packages' `CHANGELOG.md` files has a matching `<section id="v...">`
+      in the site page.
       STRUCTURE ONLY, never prose — the two deliberately say the same thing in different
       registers and flattening that difference is the failure, not the fix. Watch it red on an
       injected version before trusting it, the way every other gate here was.

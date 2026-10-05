@@ -2034,3 +2034,50 @@ Found and settled:
 - `LANDING.md` marked two claims as ahead of the code, the remote transport (B-13) and the
   agent surface (B-09b); both are built and proved, so the table now names what backs them
   and the section says no claim is ahead.
+
+## 2026-10-05: the owner's rulings on everything raised this week
+
+Asked as plan questions at the end of the session, answered in one sitting. Each ruling closes
+an entry above or a ledger row, and names what lands with it.
+
+- **Changesets start with the first change after the first publish** (closes 2026-10-03,
+  open). Until then the packages' versions say what the first release is. CLAUDE.md's Release
+  section says so in one sentence, written with the gate script below.
+- **`next` enters changesets pre mode now.** `pnpm changeset pre enter next` wrote
+  `.changeset/pre.json` (`mode: "pre"`, `tag: "next"`); committed here. A working `release.yml`
+  on `next` now publishes `1.0.0-next.N` with `--tag next`. Whether the registry also sets
+  `latest` on a package's very first publish is seen on the first run in Actions, not from
+  here.
+- **The release workflow's renamed inputs stay** (`publish-script`, `commit-message`,
+  `pr-title`; the `GITHUB_TOKEN` line gone), as B-26a found them.
+- **The second halves of B-24, B-25 and B-26 fold into B-27a.** The acceptance table, the
+  Scorecard run and the provenance publish are estate integration; the three OWNER rows are
+  struck and B-27a's row names them. PLAN stays frozen.
+- **`scripts/site-links.mjs` stays `.mjs`**, with the rule recorded in the site entry above.
+- **The API reference is typedoc at deploy time.** `deploy-site.yml` gains Node, pnpm, install,
+  build and a typedoc run into `site/docs/api/`; DEPLOY.md's "no build" sentence is rewritten;
+  typedoc becomes a root devDependency. Lands as its own commit.
+- **A subassembly is placed by a directive in the view's markup** (closes 2026-10-04, open):
+  `<assembly name="...">` inside a template view, as a page places one, and a `Slot` bound to
+  the same name in a framework view; the key a view reads a child by is the name. This is the
+  next rung after the commits named here: nested composition, services shaping a child's
+  request, and a parent's depth and cycle refusal held across two servers in conformance.
+- **A deferred placement from another server stays refused at boot.** A remote assembly is
+  fetched by the server with its deadline; deferral is local. The row is struck.
+- **Author lines leave the packages; the repository url stays; the law is amended.** Each
+  `packages/*/package.json` drops `author` (credit is the root `package.json` alone, as the law
+  said); `repository` and `bugs` keep the organization's url because npm provenance verifies
+  the package against it, and CLAUDE.md's identity law names that url as the one allowed
+  mention. Lands with the gate script.
+- **CLAUDE.md's gate paragraph gets the script it claims**, `scripts/check-claude-gates.mjs`,
+  which reads the gates the paragraph names and fails on one absent from the `check` chain,
+  self-tested, in `pnpm check`; the Packages list gains `@assemblejs/mcp`. Lands as its own
+  commit.
+- **GitHub releases come from each package's `CHANGELOG.md`**, the changesets action's
+  default, so `release.yml` keeps `create-github-releases` as it is. The release-notes rows are
+  rewritten around that: `CHANGELOG.md` is per package and written by changesets, not
+  hand-kept at the root; `RELEASE_NOTES.md` and the site page remain the user-facing register;
+  the drift gate maps the packages' changelog headings to the site page's sections.
+- **The order of work now:** this commit (pre mode and the rulings), then the gate script with
+  the metadata and CLAUDE.md changes, then typedoc at deploy time; then stop. The subassembly
+  rung is the next session's.
