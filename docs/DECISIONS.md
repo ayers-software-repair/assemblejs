@@ -1627,3 +1627,79 @@ The verifier ran every fixture and the browser suite green, then found, and this
   it, not the remote's own; nothing reads it until an assembly can place another (the open
   question above), where it is to be settled. The private-range refusal of DESIGN 5.1 needs an
   undeclared loopback origin, which boot refuses, so it stays held by the transport's unit tests.
+
+## 2026-10-05: B-24a, trust and the command line; the acceptance table held back
+
+Expected: PLAN's B-24, "conformance breadth, batch three, and the acceptance table", as one rung.
+
+Found: the table's source is the `legacy-tests` dossier, which lives outside this tree by design
+(gitignored `docs/dossiers/`, absent from a cloud session), and no summary of it exists in DESIGN
+or here. The rung splits: B-24a, the conformance half, lands here; B-24b, the table, is a ledger
+row for the owner, as the client-dossier row is. A split of a rung is a change to the ladder's
+shape, so it is raised with him rather than settled.
+
+- **The `trust` fixture is four projects from the tarballs**, held over HTTP by 43 specs:
+  `guarded` (basic credentials from the environment, a public route exactly and a prefix from the
+  config, an html assembly with a browser half and a stylesheet, a stream, an api that reads a
+  body); `checked` (the product's own check reading a header, one value making it throw, a
+  replaced policy); `open` (no control on, a declared remote nothing places, a service that reads
+  nothing); `plain` (one html assembly on one page, the starter's shape, for the command line).
+  DESIGN 5.2: every kind of route (page, content, data, manifest, api, stream) refused without
+  credentials with the challenge and the failure body alone, and answered with them; an unknown
+  path refused before it is matched; the decision before the body is read, on an api that reads
+  one; health, the built browser files (to any origin) and the declared public routes needing
+  none, the exact one exactly and the prefix for everything under it; a credential in no body;
+  the product's check with no basic challenge, a throwing check refusing and logged against the
+  id the visitor was told, the project's policy replacing the default as written; two deciders
+  refusing to boot. DESIGN 5.3: the island exactly its six named fields; nothing of the query, a
+  cookie, a header's value or name, or a credential in the page; the default policy on every html
+  answer and on no JSON one, naming this origin and the declared remote, nothing inline, no
+  plugin, no wildcard; same origin by default, a page from another origin granted nothing and a
+  preflight granted nothing; every answer `nosniff`. DESIGN 11: nothing under the devtools prefix
+  answering for any method in production, no page linking the reload script, the banner saying
+  production, and the same build in development serving the reload stream and script and linking
+  the script, so their absence is the mode's and not the build's; the devtools themselves are
+  mounted only for a server handed them, which `dev` does, so their absence in either mode is
+  this build's. The command line the project installed: `check` passing the project as written
+  and refusing a placement with no assembly, naming the file, the rule and the whole fix;
+  `deploy` writing a directory that, copied away from the project and installed from its own
+  package.json, runs with no bundler and no development dependency in it.
+- **The harness tells a spec each project's root** (`CONFORMANCE_ROOT_<NAME>`), and the shared
+  helper starts a build under an environment of the spec's own (`started`), answering its origin
+  or its exit and output: how a boot refusal and the development inverse are held from outside.
+  A server that has not listened in 30 seconds is stopped rather than awaited forever, its output
+  is read whole (`close`, not `exit`), and a port another spec file drew in the same moment is
+  tried again on another.
+- **Every spec passed its first run.** Each claim was then watched red by a mutation aimed at
+  it, in five runs of the fixture against a mutated tree, the packages' tarballs included: the
+  page made public and the prefix dropped, and the whole assembly and api surface made public;
+  the check admitting everyone; a seventh island field; the development surface mounted whatever
+  the mode, and never; `check` passing a missing assembly, and reporting a problem of its own;
+  the deploy keeping its development dependencies, and its build copied where the start script
+  does not look; no policy, no `nosniff`, every origin granted, preflights included; the policy
+  forgetting the declared remote, and allowing inline scripts; two deciders unrefused; other
+  credentials than the spec's; the service echoing the query, and the page carrying the
+  request's cookie, a header and the credential; the decision moved after parsing; the user in a
+  refusal's body; the policy on every answer; health not public, and the built browser files not
+  public, and served to this origin alone; the banner lying; no public route under the check; an
+  unmatched path skipping the decision; the basic challenge sent under the product's check; a
+  check that threw logged against nothing. Four claims were split into one test per thing they
+  held, so each could be seen red on its own.
+- **Found by the mutations, and recorded:** the type system refuses a seventh island field at
+  compile time (DESIGN 5.3's own claim), so the mutation had to spread past it; moving the
+  decision to a later hook still refuses an unknown path, because the router runs the root hooks
+  for its not-found handler too, so "before it is matched" was watched red only by skipping the
+  decision for an unmatched request; a project placing a missing assembly cannot be a fixture
+  mutation, as boot refuses it, so the `check` claims were red-tested through `check` itself.
+- **Found by the verification, and fixed:** a check that threw was swallowed and logged nowhere,
+  so a gate broken on every request gave 401s with no trace of why. DESIGN 12 says the visitor
+  sees the id and the log holds the exception; the one decision now hands what the check threw to
+  the server, which logs it against the id the failure body carries, held by a unit test watched
+  red and by the fixture, which finds the id in the server's log. A refusal nothing threw for is
+  not a failure and is logged against nothing, which the fixture holds too. The verification also
+  found a claim the first runs had reached only as a side effect of a mutation aimed elsewhere,
+  a body-reading claim held on a route that read no body, and a development-surface claim that
+  overreached to routes this build never mounts; each is corrected above.
+- **Not held here, and why:** the private-range refusal and the manifest handshake stay with
+  B-23's fixture and the unit tests; DESIGN 4's refusal of a control turned on without its
+  credential is configuration, outside the matrix (2026-10-04).

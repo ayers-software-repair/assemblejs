@@ -119,6 +119,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
       ],
     },
     options.contentSecurityPolicy ?? contentSecurityPolicy(remotes.map((remote) => remote.origin)),
+    log,
   );
 
   app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));

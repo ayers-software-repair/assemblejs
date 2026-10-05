@@ -5,10 +5,10 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-10-04.** Branch `next`. B-09, B-09c and B-12 through B-23 are done, with the
-findings of their independent reviews fixed; `pnpm check` is green on every landing commit, the
-browser suite (`pnpm test:browser`) passes, and `pnpm conformance` passes every fixture. Every
-commit is pushed to `origin/next`. A cloud session resumed the ladder on the owner's word
+**STATE 2026-10-05.** Branch `next`. B-09, B-09c, B-12 through B-23 and B-24a are done, with
+the findings of their independent reviews fixed; `pnpm check` is green on every landing commit,
+the browser suite (`pnpm test:browser`) passes, and `pnpm conformance` passes every fixture.
+Every commit is pushed to `origin/next`. A cloud session resumed the ladder on the owner's word
 ("complete all you can"); the owner does every release himself, from his own sessions, so
 nothing here publishes.
 
@@ -27,10 +27,14 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-24 (DECISIONS 2026-10-04 fixes its scope), then onward in ledger order.
+**THE EXACT NEXT STEP:** the three open rows above B-24a that need no owner (`check` reads
+placement policy as boot does; `build` and `check` compile each template view; page route
+parameters reach placements, which needs a DECISIONS entry naming the wire shape first), then
+B-25, then B-26. B-24b, the acceptance table, is the owner's: its source is outside this tree
+(DECISIONS 2026-10-05).
 
-**ORDER AND DEPENDENCIES of the open rows:** B-22..B-24 conformance (need B-16..B-20) -> B-25 budgets -> B-26 release dry run
--> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
+**ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25 budgets -> B-26
+release dry run -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
 any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
 the OIDC role, the Actions org allowlist (Actions runs NOTHING here yet), branch rulesets, the
 bird mark, the palette, the old npm package deprecation, the first publish. Raised with the
@@ -307,7 +311,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       verifying B-23); lifting it means a remote opting into cross-origin fragments
 - [ ] OWNER: how an assembly places a subassembly (DECISIONS 2026-10-04, open); then nested
       composition, and a parent's depth and cycle refusal held across two servers in conformance
-- [ ] B-24 conformance breadth, batch three, and the acceptance table
+- [x] B-24a conformance breadth, batch three: trust and the command line, from the tarballs over
+      HTTP (`pnpm conformance`: trust 43 of 43, every fixture green); each claim watched red on a
+      mutation aimed at it (DECISIONS 2026-10-05)
+- [ ] OWNER: B-24b the acceptance table, every intent from the predecessor's tests mapped to a
+      test here or struck with its reason. Its source is the `legacy-tests` dossier, outside this
+      tree by design, which a cloud session cannot read; the table is written where the dossier is
 - [ ] B-25 size budgets, pack check, Scorecard
 - [ ] B-26 the release dry run with provenance
 - [ ] B-27a estate integration and the first prerelease

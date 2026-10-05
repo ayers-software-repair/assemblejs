@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // What every spec shares: the server under test, and reading its answers as the contract
 // describes them.
+import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { setTimeout as sleep } from "node:timers/promises";
+import { freePort } from "../harness/serve.mjs";
 export const origin = process.env.CONFORMANCE_ORIGIN ?? "";
 if (origin === "") throw new Error("CONFORMANCE_ORIGIN names the server under test");
 
@@ -37,6 +39,62 @@ export const logged = async (correlationId, name) => {
     await sleep(100);
   }
   return false;
+};
+
+/**
+ * A project's root, by its name, where the command line it installed runs and its build is; the
+ * last project's when no name is given.
+ */
+export const rootOf = (name) => {
+  const root =
+    process.env[name === undefined ? "CONFORMANCE_ROOT" : `CONFORMANCE_ROOT_${name.toUpperCase()}`];
+  if (root === undefined || root === "") throw new Error(`no project named ${name ?? "(last)"}`);
+  return root;
+};
+
+/**
+ * A project's build, started by the spec itself under an environment of its own, on a port the
+ * system gives: its origin once it listens, or undefined for a server that would not, with its
+ * exit code and everything it wrote. One that has not listened within 30s is stopped, so a spec
+ * waiting on its exit never hangs. The spec stops it before it ends.
+ */
+export const started = async (root, env, attempts = 3) => {
+  const port = String(await freePort());
+  const child = spawn(process.execPath, ["dist/server.js"], {
+    cwd: root,
+    env: { ...process.env, ...env, ASSEMBLEJS_PORT: port },
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let output = "";
+  child.stdout.on("data", (chunk) => (output += String(chunk)));
+  child.stderr.on("data", (chunk) => (output += String(chunk)));
+  // Settled once the process has gone and its output is all read: "close", not "exit", as the
+  // streams may still carry the last of what it wrote when it exits.
+  const closed = new Promise((resolve) => child.once("close", resolve));
+  const stop = async () => {
+    if (child.exitCode === null && child.signalCode === null) child.kill();
+    await closed;
+  };
+  const origin = await new Promise((resolve) => {
+    const timer = setTimeout(() => void stop().then(() => resolve(undefined)), 30_000);
+    child.stdout.on("data", (chunk) => {
+      const found = /listening (http:\/\/\S+)/.exec(String(chunk));
+      if (found) {
+        clearTimeout(timer);
+        resolve(found[1]);
+      }
+    });
+    void closed.then(() => {
+      clearTimeout(timer);
+      resolve(undefined);
+    });
+  });
+  // Spec files run at once, and two can draw the same free port in the moment between the probe
+  // and the listen; a port found taken is tried again on another.
+  if (origin === undefined && attempts > 1 && output.includes("EADDRINUSE")) {
+    return started(root, env, attempts - 1);
+  }
+  return { origin, exit: () => closed, output: () => output, stop };
 };
 
 /** A port the harness set aside, by name, for a spec to listen on itself. */

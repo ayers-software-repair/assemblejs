@@ -18,6 +18,9 @@
 // port as CONFORMANCE_PORT_<NAME>, for a server of its own that a project was told about. What
 // each server writes is in a file a spec reads as CONFORMANCE_LOG (the last) or
 // CONFORMANCE_LOG_<NAME>, so it can find a failure's correlation id where the server logged it.
+// Each project's root is CONFORMANCE_ROOT (the last) or CONFORMANCE_ROOT_<NAME>, for a spec
+// that runs the command line the project installed, or starts its build itself under another
+// environment.
 //
 // An interrupt or a termination sent to the harness alone stops every server it started, and the
 // specs, before it ends; one that arrives during a build is heard when that build returns.
@@ -144,8 +147,10 @@ const conform = async (name, fixture) => {
       known.set(project.name, server.origin);
       env[`CONFORMANCE_ORIGIN_${project.name.toUpperCase()}`] = server.origin;
       env[`CONFORMANCE_LOG_${project.name.toUpperCase()}`] = server.log;
+      env[`CONFORMANCE_ROOT_${project.name.toUpperCase()}`] = roots[index];
       env.CONFORMANCE_ORIGIN = server.origin;
       env.CONFORMANCE_LOG = server.log;
+      env.CONFORMANCE_ROOT = roots[index];
     }
     step(`${name}: the specs`);
     // Run without blocking, so a signal to the harness is heard while the specs run.

@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createServer, defineApi, defineAssembly, registerAccess } from "@assemblejs/core";
-import type { App } from "@assemblejs/core";
+import type { App, LogLine } from "@assemblejs/core";
 
 const config = (auth?: { user: string; password: string }) => ({
   mode: "production" as const,
@@ -203,5 +203,37 @@ describe("the policy on an html answer", () => {
     const answer = await bare.inject({ method: "GET", url: "/shouting" });
     expect(answer.headers["content-security-policy"]).toBe("default-src 'self'");
     await bare.close();
+  });
+});
+
+describe("a check that throws", () => {
+  // DESIGN 12: the visitor sees the id, the log holds the exception. A refusal is not a failure
+  // and is logged against nothing; a check that broke is, against the id the visitor was told.
+  it("is logged against the id the visitor was told, with its message, and a refusal is not", async () => {
+    const lines: LogLine[] = [];
+    const broken = await createServer({
+      config: config(),
+      log: (line) => lines.push(line),
+      assemblies: [hello],
+      authenticate: (request) => {
+        if (request.headers["x-team"] === "boom") throw new Error("the directory is down");
+        return request.headers["x-team"] === "shop";
+      },
+    });
+    const refused = await broken.inject({ method: "GET", url: "/assembly/hello/" });
+    expect(refused.statusCode).toBe(401);
+    expect(lines).toEqual([]);
+    const threw = await broken.inject({
+      method: "GET",
+      url: "/assembly/hello/",
+      headers: { "x-team": "boom" },
+    });
+    expect(threw.statusCode).toBe(401);
+    const { correlationId } = (threw.json() as { error: { correlationId: string } }).error;
+    expect(threw.body).not.toContain("the directory is down");
+    expect(lines).toHaveLength(1);
+    expect(lines[0]?.correlationId).toBe(correlationId);
+    expect(lines[0]?.message).toContain("the directory is down");
+    await broken.close();
   });
 });

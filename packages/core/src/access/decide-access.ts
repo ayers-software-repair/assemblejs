@@ -11,14 +11,21 @@ import { matchesBasic } from "./matches-basic.js";
  * second path that can disagree with it. A public route proceeds; with no control on, everything
  * does; otherwise the product's check decides, or the basic credentials do.
  *
- * A check that throws is a refusal, never an admission: a broken gate is a closed gate.
+ * A check that throws is a refusal, never an admission: a broken gate is a closed gate. What it
+ * threw is handed to `failed`, for the caller to log against the id the visitor is told; a
+ * refusal that nothing threw for is not a failure and is handed to nothing.
  */
-export async function decideAccess(request: AccessRequest, policy: AccessPolicy): Promise<boolean> {
+export async function decideAccess(
+  request: AccessRequest,
+  policy: AccessPolicy,
+  failed: (error: unknown) => void = () => undefined,
+): Promise<boolean> {
   if (isPublicRoute(request.path, policy.publicRoutes)) return true;
   if (policy.authenticate !== undefined) {
     try {
       return (await policy.authenticate(request)) === true;
-    } catch {
+    } catch (error) {
+      failed(error);
       return false;
     }
   }
