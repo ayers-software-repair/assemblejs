@@ -17,13 +17,14 @@ const project = (files: Record<string, string>): string => {
 };
 
 describe("checking a project", () => {
+  const right = {
+    "src/server.ts": "",
+    "src/assemblies/hello/hello.html": "<p>hi</p>",
+    "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
+  };
+
   it("finds nothing wrong with a project that is right", async () => {
-    const root = project({
-      "src/server.ts": "",
-      "src/assemblies/hello/hello.html": "<p>hi</p>",
-      "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
-    });
-    expect(await checkProject(root)).toEqual([]);
+    expect(await checkProject(project(right))).toEqual([]);
   });
 
   it("reports each finding with the file relative to the project, the rule and the fix", async () => {
@@ -42,14 +43,14 @@ describe("checking a project", () => {
       fix: 'rename the directory to "cart"',
     });
     expect(by("the-file-name-says-the-framework")[0]?.path).toBe("src/assemblies/menu/menu.tsx");
-    expect(
-      by("a-placement-names-an-assembly")
-        .map((finding) => finding.path)
-        .sort(),
-    ).toEqual(["src/pages/broken/broken.html", "src/pages/home/home.html"]);
-    expect(
-      by("a-placement-names-an-assembly").find((f) => f.path === "src/pages/home/home.html")?.fix,
-    ).toBe("add it, or place one that exists: hello");
+    const placements = by("a-placement-names-an-assembly");
+    expect(placements.map((finding) => finding.path).sort()).toEqual([
+      "src/pages/broken/broken.html",
+      "src/pages/home/home.html",
+    ]);
+    expect(placements.find((f) => f.path === "src/pages/home/home.html")?.fix).toBe(
+      "add it, or place one that exists: hello",
+    );
     expect(by("an-api-file-is-an-api")[0]?.path).toBe("src/api/Bad.api.ts");
   });
 
@@ -86,19 +87,16 @@ describe("checking a project", () => {
     ]);
   });
 
-  it("reports a page declaration it cannot read as a finding, never a throw", async () => {
-    const root = project({
-      "src/server.ts": "",
-      "src/assemblies/hello/hello.html": "<p>hi</p>",
-      "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
-      "src/pages/home/home.page.ts": "export default {",
-    });
+  it("reports a file it cannot read, a page declaration or the config, as one finding", async () => {
+    const root = project({ ...right, "src/pages/home/home.page.ts": "export default {" });
     expect(await checkProject(root)).toEqual([
       expect.objectContaining({
         path: "src/pages/home/home.page.ts",
         message: expect.stringMatching(/could not be read/),
       }),
     ]);
+    const config = project({ ...right, "assemblejs.config.ts": "export default {" });
+    expect((await checkProject(config)).map((f) => f.path)).toEqual(["assemblejs.config.ts"]);
   });
 
   it("refuses every route the server refuses at boot, each where it is declared", async () => {
@@ -109,8 +107,7 @@ describe("checking a project", () => {
       ["/a b", /not a flat path/],
     ] as const) {
       const root = project({
-        "src/server.ts": "",
-        "src/assemblies/hello/hello.html": "<p>hi</p>",
+        ...right,
         "src/pages/item/item.html": '<body><assembly name="hello"></assembly></body>',
         "src/pages/item/item.page.ts": `export default { route: ${JSON.stringify(route)} };`,
       });
@@ -127,9 +124,7 @@ describe("checking a project", () => {
   it("refuses two pages at one route, as the router matches it: a parameter's name is not a route", async () => {
     const at = (home: string, start: string) =>
       project({
-        "src/server.ts": "",
-        "src/assemblies/hello/hello.html": "<p>hi</p>",
-        "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
+        ...right,
         "src/pages/home/home.page.ts": `export default { ${home} };`,
         "src/pages/start/start.html": '<body><assembly name="hello"></assembly></body>',
         "src/pages/start/start.page.ts": `export default { route: "${start}" };`,
@@ -150,34 +145,28 @@ describe("checking a project", () => {
 
   it("refuses a page at the route a GET api answers", async () => {
     const root = project({
-      "src/server.ts": "",
-      "src/assemblies/hello/hello.html": "<p>hi</p>",
+      ...right,
       "src/pages/about/about.html": '<body><assembly name="hello"></assembly></body>',
       "src/api/about.api.ts": 'export default { path: "/about", handle: () => ({}) };',
     });
-    expect(await checkProject(root)).toEqual([
-      expect.objectContaining({
-        path: "src/pages/about/about.html",
-        message: 'page "about" answers at /about, as the api src/api/about.api.ts does',
-      }),
-    ]);
+    const found = await checkProject(root);
+    expect(found.map((f) => f.path)).toEqual(["src/pages/about/about.html"]);
+    expect(found[0]?.message).toBe(
+      'page "about" answers at /about, as the api src/api/about.api.ts does',
+    );
   });
 
   it("refuses an api route boot refuses: twice by what the router matches, or reserved", async () => {
     const root = project({
-      "src/server.ts": "",
-      "src/assemblies/hello/hello.html": "<p>hi</p>",
-      "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
+      ...right,
       "src/api/by-id.api.ts": 'export default { path: "/api/a/:id", handle: () => 1 };',
       "src/api/by-key.api.ts": 'export default { path: "/api/a/:key", handle: () => 1 };',
       "src/api/own.api.ts": 'export default { path: "/_assemblejs/x", handle: () => 1 };',
     });
-    const found = (await checkProject(root)).map(
-      (problem) => `${problem.path}: ${problem.message}`,
-    );
-    expect(found).toHaveLength(2);
-    expect(found.join("\n")).toMatch(/is declared more than once/);
-    expect(found.join("\n")).toMatch(/src\/api\/own\.api\.ts: .*reserves/);
+    const found = (await checkProject(root)).map((p) => `${p.path}: ${p.message}`).join("\n");
+    expect(found.split("\n")).toHaveLength(2);
+    expect(found).toMatch(/is declared more than once/);
+    expect(found).toMatch(/src\/api\/own\.api\.ts: .*reserves/);
   });
 });
 
@@ -267,6 +256,18 @@ describe("reading placement policy as boot does", () => {
     ] as const) {
       expect(await said(template, declaration, files), declaration).toMatch(expected);
     }
+  });
+
+  it("reports a budget perf could not read, where it is declared, without building", async () => {
+    const [finding] = await page(one("hello"), undefined, {
+      ...hello,
+      "assemblejs.config.ts": "export default { budgets: { document: 0 } };",
+    });
+    expect(finding).toMatchObject({
+      path: "assemblejs.config.ts",
+      rule: "a-budget-is-whole-bytes",
+      message: expect.stringMatching(/document is not a whole number/),
+    });
   });
 
   it("reads nothing it cannot read: a computed policy, deadline or flag is not reported either way", async () => {

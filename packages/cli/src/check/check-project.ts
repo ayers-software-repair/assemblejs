@@ -21,6 +21,7 @@ import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { readBudgets } from "../perf/read-budgets.js";
 import { declaredOrigins } from "./declared-origins.js";
 import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
@@ -39,9 +40,10 @@ const STREAM_FIX =
  * with the file, the rule and the fix: the tree (assemblies, pages, apis), the renderers it
  * needs, every page's placements and policy against the assemblies that exist, by the rules boot
  * refuses them by, or, for a placement its page declares from another server, against the
- * remotes `assemblejs.config.ts` declares, the stream a page names, and every template view
- * compiled with the project's own engine. In process, no shell, so the command line and the
- * agent surface report the same findings the same way.
+ * remotes `assemblejs.config.ts` declares, the stream a page names, the budgets that config
+ * declares as `perf` reads them, and every template view compiled with the project's own
+ * engine. In process, no shell, so the command line and the agent surface report the same
+ * findings the same way.
  */
 export async function checkProject(root: string): Promise<readonly ProjectProblem[]> {
   const src = join(root, "src");
@@ -86,10 +88,25 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
       return otherwise;
     }
   };
+  // The config, read once: the remotes it declares, and the budgets `perf` would hold each page
+  // to, refused here as `perf` refuses them, before a build.
   const configFile = join(root, "assemblejs.config.ts");
-  const origins = existsSync(configFile)
-    ? readOr(configFile, declaredOrigins, new Set<string>())
-    : new Set<string>();
+  const config = existsSync(configFile)
+    ? readOr(
+        configFile,
+        (source) => ({ origins: declaredOrigins(source), budgets: readBudgets(source).problems }),
+        { origins: new Set<string>(), budgets: [] },
+      )
+    : { origins: new Set<string>(), budgets: [] };
+  const origins = config.origins;
+  for (const problem of config.budgets) {
+    problems.push({
+      path: configFile,
+      rule: "a-budget-is-whole-bytes",
+      message: problem,
+      fix: "write budgets as { document, styles, scripts }, each a whole number of gzipped bytes above zero",
+    });
+  }
   // Each api's route, held to the rules boot holds it to by the same function, and each GET one
   // kept by what the router matches, so a page at the same route is refused as boot refuses it.
   // An api file that cannot be read is reported by its own rules.

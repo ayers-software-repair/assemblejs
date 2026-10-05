@@ -1,0 +1,14 @@
+{
+  "@assemblejs/cli": 81000,
+  "@assemblejs/core": 75000,
+  "@assemblejs/create": 7000,
+  "@assemblejs/devtools": 8500,
+  "@assemblejs/mcp": 21000,
+  "@assemblejs/renderer-lit": 9200,
+  "@assemblejs/renderer-preact": 8900,
+  "@assemblejs/renderer-react": 9100,
+  "@assemblejs/renderer-solid": 10500,
+  "@assemblejs/renderer-svelte": 7800,
+  "@assemblejs/renderer-templates": 10100,
+  "@assemblejs/renderer-vue": 9000
+}

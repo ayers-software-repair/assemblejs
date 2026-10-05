@@ -10,24 +10,28 @@ import type { LiteralValue } from "./literal-value.js";
 /**
  * What a TypeScript module default-exports, as far as it is written as literals, read without
  * running any of it: the module is compiled to plain JavaScript and parsed, and its default
- * export (or the single argument of the call it is, as in `definePage({ ... })`) is read as
- * literals, anything computed undefined. Undefined too for a module that exports no default.
- * Throws for a module that cannot be compiled or parsed.
+ * export (or the first argument of the one call it is, as in `definePage({ ... })`) is read as
+ * literals, anything computed undefined. A name, exported or passed to that call, is followed
+ * to what it was declared as, a few steps at most. Undefined too for a module that exports no
+ * default. Throws for a module that cannot be compiled or parsed.
  */
 export function readDefaultExport(source: string): LiteralValue {
   const code = transformSync(source, { loader: "ts", format: "esm" }).code;
   const program = parse(code, { ecmaVersion: "latest", sourceType: "module" });
   let exported = defaultExpression(program);
-  // A name exported, or passed on, is followed to what it was declared as, a few steps at most.
-  for (let step = 0; step < 4 && exported?.type === "Identifier"; step += 1) {
-    exported = initialiserOf(program, exported.name);
+  let called = false;
+  for (let step = 0; step < 6 && exported !== undefined; step += 1) {
+    if (exported.type === "Identifier") {
+      exported = initialiserOf(program, exported.name);
+    } else if (exported.type === "CallExpression" && !called) {
+      called = true;
+      const [argument] = exported.arguments;
+      exported = argument?.type === "SpreadElement" ? undefined : argument;
+    } else {
+      break;
+    }
   }
-  if (exported === undefined) return undefined;
-  const value =
-    exported.type === "CallExpression" && exported.arguments[0]?.type !== "SpreadElement"
-      ? exported.arguments[0]
-      : exported;
-  return value === undefined ? undefined : literalOf(value);
+  return exported === undefined ? undefined : literalOf(exported);
 }
 
 function defaultExpression(program: Program): Expression | undefined {

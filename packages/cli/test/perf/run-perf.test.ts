@@ -92,6 +92,48 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     expect(logs.some((entry) => entry.startsWith("/  document"))).toBe(true);
   });
 
+  it("holds each page to the budgets the config declares, and refuses a budget it cannot read before building", async () => {
+    const { origin, close } = await stub(`<p>${"page ".repeat(40)}</p>`);
+    const at = pagesOnly();
+    const config = join(at, "assemblejs.config.ts");
+    const run = async () => {
+      const { io, errors } = capture();
+      let started = 0;
+      const code = await runPerf(at, io, {
+        build: async () => 0,
+        start: () => (
+          (started += 1),
+          { ready: Promise.resolve(origin), stop: async () => undefined }
+        ),
+      });
+      return { code, errors, started };
+    };
+    realIo.write(config, "export default { budgets: { document: 10 } };\n");
+    const over = await run();
+    expect(over.code).toBe(1);
+    expect(over.errors.join()).toMatch(
+      /page "home": document is \d+ B gzipped, over its budget of 10 B/,
+    );
+    realIo.write(config, "export default { budgets: { document: 100000 } };\n");
+    expect((await run()).code).toBe(0);
+    for (const [budgets, said] of [
+      ["{ fonts: 1 }", /assemblejs.config.ts: budgets names "fonts"/],
+      ["{ document: 0 }", /the budget for document is not a whole number/],
+      ["{ document: process.env.D }", /the budget for document is computed/],
+      ["shared", /budgets is computed/],
+    ] as const) {
+      realIo.write(config, `export default { budgets: ${budgets} };\n`);
+      const unread = await run();
+      expect(unread, budgets).toMatchObject({ code: 1, started: 0 });
+      expect(unread.errors.join(), budgets).toMatch(said);
+    }
+    realIo.write(config, "export default {\n");
+    const broken = await run();
+    expect(broken).toMatchObject({ code: 1, started: 0 });
+    expect(broken.errors.join()).toMatch(/assemblejs.config.ts could not be read/);
+    await close();
+  });
+
   it("fails, and starts nothing, when the build does", async () => {
     const { io } = capture();
     expect(await runPerf(root, io, { build: async () => 1 })).toBe(1);

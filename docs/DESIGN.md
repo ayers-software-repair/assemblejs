@@ -493,7 +493,7 @@ src/
       hello-react.service.ts    optional: server data
   api/
     time.api.ts
-assemblejs.config.ts            policy only: remotes, deadlines, renderers, port
+assemblejs.config.ts            policy only: remotes, access, the content policy, budgets
 ```
 
 **A directory under `assemblies/` is an assembly.** There is no registry to maintain, no import
@@ -540,6 +540,10 @@ export default defineConfig({
   remotes: [{ origin: "https://checkout.example.com", forward: ["accept-language"] }],
 });
 ```
+
+So are the page budgets: what each page may send a visitor before anything mounts, in gzipped
+bytes by part (`document`, `styles`, `scripts`), declared as `budgets` in the same file. `perf`
+weighs the production build and holds every page to them; nothing on the server reads them.
 
 A service returns; it does not mutate:
 

@@ -1843,3 +1843,80 @@ remote transport had no way to send them. Settled here:
   header the whole encoding at 2048 bytes, so a route of more than twenty parameters with
   multibyte values could compose locally and be refused by a remote; a route like that is not
   one this design describes, and the cap stays where DESIGN 2.1 names it.
+
+## 2026-10-05: B-25, size budgets and the pack check; the Scorecard run is the owner's
+
+Expected, from PLAN: "Size budgets, pack check, Scorecard", proved by "budgets asserted; a
+Scorecard run".
+
+Found: `perf` measured and nothing held the numbers (B-20); the pack check held what a tarball
+carries and not what it weighs; and the Scorecard workflow exists for Actions, which runs nothing
+on this repository, and its binary is a release on github.com, which this session's proxy
+refuses. Settled here:
+
+- **Every package has a size budget**, in `scripts/size-budgets.json`, in packed bytes as
+  `npm pack --dry-run --json` reports them, and the pack check refuses a tarball over it, a
+  package with none, and a budget for a name that is no package: a package nobody measured grows
+  unnoticed, and a budget is raised on purpose, in a change that says why. Each is set by hand,
+  between a fifth and three tenths above the size the check printed for it on 2026-10-05, to a
+  round hundred: headroom for a feature, not for a second copy of anything; no formula
+  reproduces the twelve numbers and none is claimed. The check's self-test is not a flag but
+  the first thing every run does: a synthetic package shipping `dist/x.test.js`, the first real
+  package a byte over, the second with no budget, each refused by name before the real packs
+  are believed. Fewer than two
+  packages, a budgets file that is missing, cannot be parsed or is not an object, and a pack
+  that fails (no `packages/`, `npm pack` refusing), each end the run with one line and exit 1,
+  never a stack trace (probed in a scratch tree: `null`, `[]`, `"abc"`, no file, one package,
+  none).
+- **A project's pages have budgets too**, declared in `assemblejs.config.ts` as `budgets`, in
+  gzipped bytes by part (`document`, `styles`, `scripts`, one list in `perf/page-parts.ts` that
+  both the reader and the comparison use), read by `perf` and by nothing on the server: policy,
+  where the other policy lives, read from the source as `check` reads it. `perf` holds every
+  page it weighs to them and fails the command for one over; a budget it cannot read, a part a
+  page does not send, a value that is not a whole number of bytes above zero, a computed value,
+  a computed `budgets` object, or one with a spread or a computed key in it, fails it before
+  anything is built, and `check` reports the same under `a-budget-is-whole-bytes`, so the agent
+  surface's `explain` answers it. A page with a parameter in its route is not weighed and so not
+  held. DESIGN 8 says so.
+- **A config that is not one written object must write its budgets.** `export default
+defineConfig(load())` and `export default { ...base }` could carry budgets `perf` cannot see,
+  so, unlike `check`'s reading of remotes and routes (computed is not reported either way,
+  because boot refuses what is wrong), `perf` refuses such a config, and `check` reports it,
+  unless `budgets` is written beside what it brings in, `{}` to say none: budgets are read by
+  `perf` alone, so what is written in `assemblejs.config.ts` is the budget by definition. Every
+  config in the tree (the four conformance fixtures; the examples and the starter write none)
+  is one written object, so none is refused. `readDefaultExport` also follows the name a call
+  is given (`defineConfig(shared)`)
+  to its declaration, one call deep, and a numeric key in an object literal is read as its
+  string, so `budgets: { 5: 10 }` is refused by name.
+- **An object read as a literal says when its keys are not all written.** `literalOf` dropped a
+  spread or a computed key and returned the entries beside it, so `budgets: { ...shared }` read
+  as no budgets at all. Making such an object computed as a whole would lose the `route` of a
+  page declared as `{ ...base, route }`, which `check` would then take for the directory's. So
+  the object keeps its written entries and carries `UNWRITTEN`, a symbol, beside them: a reader
+  that walks the entries (policy, origins, routes) never meets it, and the one reader that must
+  have the whole object, `readBudgets`, asks for it by name.
+- **The Scorecard run is the owner's.** The workflow is in place; until the organization allows
+  Actions on this repository it runs nothing, and the binary cannot be fetched from here. The
+  ledger row splits: budgets and the pack check are done (B-25a), the run stays open under the
+  owner's Actions row (B-25b). A split of a rung is a change to the ladder's shape, so, as with
+  B-24, it is raised with the owner rather than settled; PLAN's row stands until he rules.
+- Watched red: the pack check's self-test with the test-file pattern removed from its allowlist
+  ("FAILED to refuse a known-bad input", exit 1) and every run since; `perf` on a page over
+  budget, a part it does not send, a budget of zero, a computed value, a computed `budgets` and
+  a config that cannot compile, with its refusal disabled against the test that expects each;
+  `readBudgets` with its spread refusal disabled, and with its refusal of a config that is not
+  one written object disabled, against the tests that expect them; `readDefaultExport` with the
+  call's name not followed; `check` with its budgets reading disabled, against the test that
+  expects the finding.
+- Verified by a separate agent twice. The first pass's fourteen findings were fixed: among them
+  a computed `budgets` object escaping `perf` silently, the budgets set wider than the record
+  said, the self-test watching only the budget half of the check, and `check` not reading
+  budgets at all. The second pass found six more in the fixes, fixed before this landed: `check`
+  reporting a config that cannot compile twice (one read now serves remotes and budgets, with a
+  test), the budgets sentence above not matching the file (rewritten to what is true), the
+  perf-level and reader tests short of what "watched red" claimed (added), three more silent
+  escapes (`defineConfig(shared)`, `{ ...base }`, a numeric key; the ruling above), the mcp
+  rules test holding its rules to include every project rule rather than to exactly them (the
+  comment on `RULE_IDS` now says so), and the pack check's own packing able to end in a stack
+  trace (guarded).

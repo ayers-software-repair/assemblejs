@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { Authenticate } from "../access/authenticate.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
+import type { PageBudgets } from "./page-budgets.js";
 
 /**
  * What `assemblejs.config.ts` declares: policy only, the things that are a decision about this
@@ -17,4 +18,6 @@ export interface ProjectConfig {
   readonly publicRoutes?: readonly string[];
   /** Replaces the default content security policy on every html answer. */
   readonly contentSecurityPolicy?: string;
+  /** What each page may send a visitor, gzipped, by part. Read by `perf`, never by the server. */
+  readonly budgets?: PageBudgets;
 }

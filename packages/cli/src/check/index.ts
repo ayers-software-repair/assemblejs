@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 export { checkProject } from "./check-project.js";
+export { UNWRITTEN } from "./unwritten.js";
 export type { LiteralValue } from "./literal-value.js";
 export { literalOf } from "./literal-of.js";
 export { initialiserOf } from "./initialiser-of.js";

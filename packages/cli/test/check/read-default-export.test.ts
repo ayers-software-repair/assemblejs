@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readDefaultExport } from "@assemblejs/cli";
+import { UNWRITTEN, readDefaultExport } from "@assemblejs/cli";
 
 describe("reading what a module default-exports without running it", () => {
   it("reads the argument of the call it is, literals kept and anything computed undefined", () => {
@@ -20,6 +20,7 @@ describe("reading what a module default-exports without running it", () => {
       });`;
     expect(readDefaultExport(source)).toEqual({
       place: {
+        [UNWRITTEN]: true,
         cart: { retry: { attempts: 2 }, url: "https://shop.example.com/assembly/cart/" },
         search: { url: undefined },
         plain: {
@@ -31,6 +32,13 @@ describe("reading what a module default-exports without running it", () => {
         },
       },
     });
+  });
+
+  it("follows the name a call is given to what it was declared as, one call deep", () => {
+    const named =
+      "const shared = { budgets: { document: 1 } };\nexport default defineConfig(shared);";
+    expect(readDefaultExport(named)).toEqual({ budgets: { document: 1 } });
+    expect(readDefaultExport("export default f(g({ a: 1 }));")).toBeUndefined();
   });
 
   it("reads a default export declared as a variable, and nothing that is not exported", () => {

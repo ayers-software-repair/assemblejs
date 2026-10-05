@@ -137,6 +137,14 @@ export const RULES: readonly Rule[] = [
       "A stream naming a data api or a path with :parameters, or a page of static views alone.",
   },
   {
+    id: "a-budget-is-whole-bytes",
+    rule: "A page budget in assemblejs.config.ts is an object of the parts a page sends, document, styles and scripts, each a whole number of gzipped bytes above zero, written as a literal.",
+    because:
+      "perf holds every page to the budgets the config declares and reads them from the source without running it, so a budget that is computed, names a part nothing sends, or is not a whole number of bytes is one no page can be held to. perf refuses it before anything is built; check says so first.",
+    smell:
+      "budgets: { html: 50000 }, a budget of zero or 12.5, or budgets built from an environment variable.",
+  },
+  {
     id: "the-server-file-never-grows",
     rule: "src/server.ts hands createServer the generated project and does nothing else.",
     because:

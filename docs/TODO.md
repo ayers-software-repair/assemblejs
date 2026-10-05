@@ -27,14 +27,16 @@ So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild
 CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
 `@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**THE EXACT NEXT STEP:** B-25, then B-26. Every row above B-24a that needs no owner is done. B-24b, the acceptance table, is the owner's: its source is outside this tree
-(DECISIONS 2026-10-05).
+**THE EXACT NEXT STEP:** B-26. Every row above it that needs no owner is done. B-24b, the
+acceptance table, and B-25b, the Scorecard run, are the owner's: the table's source is outside
+this tree and the run is Actions (DECISIONS 2026-10-05).
 
-**ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25 budgets -> B-26
-release dry run -> B-27a/B-27b (the owner's). The five house-style rows and the six release-notes rows can land
-any time. Site guides wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`,
-the OIDC role, the Actions org allowlist (Actions runs NOTHING here yet), branch rulesets, the
-bird mark, the palette, the old npm package deprecation, the first publish. Raised with the
+**ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
+(done) -> B-26 release dry run -> B-27a/B-27b (the owner's). The five house-style rows and the
+six release-notes rows can land any time. Site guides wait for renderers so they show real code.
+Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions org allowlist (Actions runs NOTHING
+here yet, so the B-25b Scorecard run with it), branch rulesets, the bird mark, the palette, the
+old npm package deprecation, the first publish. Raised with the
 owner, unanswered: whether changesets start before or after the first publish (DECISIONS,
 2026-10-03, "open"; `CLAUDE.md` still says every `packages/*/src` change).
 
@@ -117,6 +119,13 @@ the record of what was read, and they stay in the private estate document store,
       `repository` and `bugs` urls name the GitHub organization (the law says the organization
       name appears in no package.json). Not changed here: the repository url is what npm
       provenance checks against, so which way to resolve it is the owner's call.
+
+- [ ] **`CLAUDE.md` makes two claims the tree does not bear out** (found 2026-10-05 by this
+      lane; the file is the owner's). Its gate paragraph ends "This paragraph is checked against
+      `package.json`: a gate named here that is not in the `check` chain is a false claim", and
+      no script does that check (`scripts/` has none and `check` runs none). Its Packages list
+      names no `@assemblejs/mcp`, which `packages/mcp` publishes. Either write the script and
+      the line, or strike the claim and add the package.
 
 - [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
       and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:
@@ -319,7 +328,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [ ] OWNER: B-24b the acceptance table, every intent from the predecessor's tests mapped to a
       test here or struck with its reason. Its source is the `legacy-tests` dossier, outside this
       tree by design, which a cloud session cannot read; the table is written where the dossier is
-- [ ] B-25 size budgets, pack check, Scorecard
+- [x] B-25a size budgets and the pack check: every package's tarball under a budget the pack
+      check holds and self-tests; a project's pages under the `budgets` its config declares, held
+      by `perf` (DECISIONS 2026-10-05)
+- [ ] OWNER: B-25b the Scorecard run, which is Actions (the org allowlist, above); the binary
+      cannot be fetched from a cloud session
 - [ ] B-26 the release dry run with provenance
 - [ ] B-27a estate integration and the first prerelease
 - [ ] B-27b the stable publish, after the cold quickstart
