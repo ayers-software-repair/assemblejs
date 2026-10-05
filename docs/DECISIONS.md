@@ -2102,3 +2102,63 @@ The Release section says when changesets start and that `next` is in pre mode, a
 and the pull request template, which demanded a changeset per src change, now say the same. The
 gate script's self-test also holds its regex to the bare verbs and its reading to the one
 paragraph, after a verifier showed two mutations it let through.
+
+## 2026-10-05: guides for the other camps
+
+Expected, from the README and the ledger's guides row: a guide for each camp a renderer serves.
+The site had three, React, Vue and Svelte; the renderers for Preact, Solid and Lit and the
+template package exist and are proved by `examples/frameworks`, `examples/shadow` and
+`examples/templates`, so four more were owed, in the shape of the three.
+
+Found and settled:
+
+- **Four pages under `site/docs/`**: `preact.html`, `solid.html`, `lit.html` and
+  `templates.html` (EJS, Handlebars, Nunjucks, Pug and Markdown), each with the three's header,
+  `h2` sections, `dl`/`div.item`/`dt`/`dd` and generated footer. The templates page has no events
+  section: a template view has no events of its own, and its `.client.ts` is handed them in its
+  mount context. Every code block is a file in the tree, each matched verbatim by a scratch
+  script against the repository and against what `add` writes: the counters of
+  `examples/frameworks` (with the Preact counter's `label.tsx`), the boxes and sheets of
+  `examples/shadow`, the views, a service, the sheet and the page of `examples/templates`, the
+  view `add` writes for each renderer (`assembly-files.ts`), the `idle-label` fixture (the one
+  Preact view in the tree that exports `mount`), the `badge` fixture's `.client.ts`, the
+  `two-frameworks` service, and the four-language render of `render-template.test.ts`. The page
+  policy block is the one the three carry: DESIGN 8's example as a local placement, with the
+  placement `page-placement.test.ts` holds. The ledes say where everything is from, and name the
+  conformance fixtures on the two pages that show one.
+- **Every prose claim read at the source.** The peers: `preact ^11.0.0`, `solid-js ^1.9.15`,
+  `lit ^3.3.3`, and none on the templates package, whose five engines are its own dependencies,
+  each imported the first time its language renders (`load-compiler.ts`). The client entries:
+  `useEvents` for Preact and Solid; Lit's exports only `hydrate` and `HYDRATION_SUPPORT`, its
+  `AssemblyProps` carrying `events`, which the view binds to an element as a property
+  (`lit-counter`). The props each renderer's `renderToMarkup` and `hydrate` pass, and the
+  server's events they render with (`server-events.ts`). What a template sees (`load-*.ts`):
+  `data` and `children`, EJS's only locals in strict mode, children as safe strings in
+  Handlebars and Nunjucks and by the raw form in EJS and Pug, Markdown reading neither (B-17),
+  and Pug leaving `'` unescaped (the package's README; probed against the installed Pug). A
+  template view's browser half is a `.client.ts` default-exporting an object with `mount`
+  (`generate-client-module.ts`, `lazy-renderer.ts`, `client-renderer.ts`, `mount-context.ts`),
+  refused beside a framework view (`build-problems.ts`); without one the registry declares the
+  assembly `none`, and with one writes no `mount` or `shadow`, so it mounts at load in the
+  page's own tree (`generate-registry.ts`). The modes, and an unknown one read as `none`
+  (`read-mount-mode.ts`); a `.ts` or `.tsx` view read whole for its exports (`view-script.ts`).
+  Styles: any `.css` in the directory (`discover-assemblies.ts`), and a second sheet for a
+  framework view's shadow root, none for a static view (`write-styles.ts`). The JSX runtime
+  chosen per file (`jsx-source.ts`), the Solid compiler loaded from the project's own renderer
+  (`load-solid-compiler.ts`), and Lit's hydration support imported first in the page's script
+  (`generate-client-entry.ts`, `renderer-packages.ts`).
+- **The first draft, read against the same sources, said more than they do in six places, each
+  corrected:** Pug refuses an include when it compiles, so the page says "refused" and not "when
+  it renders"; the package's own instance is Handlebars's alone; the Markdown view `add` writes
+  reads no title; `check` reports a lone `cart.tsx`, not a component beside a named view; a lazy
+  Solid component renders only once its module is loaded; the mount context carries the view
+  as well.
+- **What the tree does not have is said, not invented.** No Solid or Lit view exports `mount`,
+  so those two pages state the modes without a block. The README's list also names a web
+  component, which no renderer in the tree is, so no page claims one.
+- **Declared and linked.** Four entries in `pages.json` after `docs/svelte.html` (`in_nav`
+  false, `sep " &middot; "`), four items in the docs index's Guides section, footers written by
+  `scripts/site-links.mjs`, which changes nothing on a second run. Watched red, each restored by
+  the inverse edit: `check-site.mjs` on a link to `nowhere.html` typed into `preact.html`, and on
+  `lit.html` moved aside while declared; `site-links.mjs --check` on the "Getting started" anchor
+  removed from `solid.html`'s footer.

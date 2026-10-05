@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For template authors - AssembleJS</title>
+<!-- One directory down, so the kit and the skin are reached with ../ . Relative paths only:
+     an absolute one breaks under /assemblejs/ prefix hosting. -->
+<link rel="stylesheet" href="../kit/kit.css">
+<link rel="stylesheet" href="../skin.css">
+<link rel="icon" href="../favicon.svg">
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <img src="../mark.svg" alt="" width="84" height="84">
+    <h1>For template authors</h1>
+    <div class="rule"></div>
+    <p>A template assembly is one file in EJS, Handlebars, Nunjucks, Pug or Markdown, rendered on the
+      server by its own engine and nothing else; it ships no JavaScript unless a file beside it asks
+      for some. The page it sits on can hold React or Svelte beside it. Everything on this page is
+      from the repository's own examples, its conformance fixtures, its design document or its
+      tests.</p>
+  </header>
+
+  <h2>Install the renderer</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npm install @assemblejs/renderer-templates</code></dt>
+      <dd>One package for the five languages, with no framework to install beside it: the five engines are
+        its own dependencies, and each is imported the first time a template in its language
+        renders, so a project using one language never loads the other four.</dd>
+    </div>
+  </dl>
+
+  <h2>The view</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npx assemblejs add assembly cart --renderer ejs</code></dt>
+      <dd>Writes <code>src/assemblies/cart/cart.ejs</code> and nothing else: the directory is the assembly,
+        and the extension names the language, so nothing is registered and your server file does
+        not change. <code>--renderer handlebars</code> writes <code>cart.hbs</code>,
+        <code>nunjucks</code> writes <code>cart.njk</code>, <code>pug</code> writes
+        <code>cart.pug</code> and <code>markdown</code> writes <code>cart.md</code>. The first four
+        read a title from the data and fall back to the assembly's name; the Markdown one is a
+        heading.
+<pre><code>&lt;p&gt;&lt;%= data.title ?? "cart" %&gt;&lt;/p&gt;</code></pre>
+<pre><code>&lt;p&gt;{{#if data.title}}{{data.title}}{{else}}cart{{/if}}&lt;/p&gt;</code></pre>
+<pre><code>&lt;p&gt;{{ data.title or "cart" }}&lt;/p&gt;</code></pre>
+<pre><code>p= data.title || "cart"</code></pre>
+<pre><code># cart</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt>Two names, <code>data</code> and <code>children</code></dt>
+      <dd><code>data</code> is what the assembly's services returned, as JSON. <code>children</code> is
+        rendered HTML by placement name, for an assembly that holds others. Nothing else reaches
+        the template: no request, no headers, no cookies. In EJS the two are the template's only
+        locals, in strict mode.</dd>
+    </div>
+    <div class="item">
+      <dt>Escaped by default, children as they are</dt>
+      <dd>What a template writes from <code>data</code> is escaped by every engine that reads it;
+        <code>children</code> is already HTML and is written as it is: by the engine's raw form in
+        EJS and Pug, and as a safe string in Handlebars and Nunjucks, so the same brace writes it.
+        From the renderer's tests: given a <code>name</code> of <code>&lt;b&gt;</code> and a child
+        <code>inner</code> of <code>&lt;i&gt;child&lt;/i&gt;</code>, each of these four renders
+        <code>&lt;p&gt;&amp;lt;b&amp;gt;&lt;i&gt;child&lt;/i&gt;&lt;/p&gt;</code>.
+<pre><code>&lt;p&gt;&lt;%= data.name %&gt;&lt;%- children.inner %&gt;&lt;/p&gt;</code></pre>
+<pre><code>&lt;p&gt;{{data.name}}{{children.inner}}&lt;/p&gt;</code></pre>
+<pre><code>&lt;p&gt;{{ data.name }}{{ children.inner }}&lt;/p&gt;</code></pre>
+<pre><code>p #{data.name}!{children.inner}</code></pre>
+        Pug's escaping leaves <code>'</code> as it is: write an attribute with Pug's own syntax,
+        <code>a(title=data.name)</code>, rather than inside a single-quoted attribute in raw
+        HTML.</dd>
+    </div>
+    <div class="item">
+      <dt>Markdown is prose</dt>
+      <dd>A <code>.md</code> view reads no data and places no children, and HTML written inside it is shown
+        as text; an <code>.html</code> view is the place for markup. The notes from the templates
+        example.
+<pre><code># Five template languages
+
+Each card below is written in its own language and rendered on the _server_. None of them
+ships any JavaScript.</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt>A view is one file</dt>
+      <dd>An include, an extends, an import or a partial from another file is refused, so a template never
+        reads from wherever the server happens to run; a Handlebars inline partial, defined in the
+        same file, renders. Handlebars templates compile in an instance of the package's own, so a
+        helper or partial another library registers on the shared Handlebars never reaches them.
+        An error names the view's file, which the engines' own messages do not.</dd>
+    </div>
+  </dl>
+
+  <h2>Data from the server</h2>
+  <dl>
+    <div class="item">
+      <dt><code>ejs-card.service.ts</code></dt>
+      <dd>A service beside the view runs on the server before the render and returns the data. It is given
+        the request's <code>query</code> and the route <code>params</code> of the page that placed
+        the assembly, and the same function answers the assembly's data endpoint, so the two
+        cannot disagree. The templates example gives each card a title with markup in it, which
+        the template writes escaped.
+<pre><code>import { defineService } from "@assemblejs/core";
+
+// A title with markup in it, which the template writes escaped.
+export default defineService({
+  name: "card",
+  schema: {
+    properties: { title: { type: "string" }, items: { type: "array", items: { type: "string" } } },
+    required: ["title", "items"],
+  },
+  run: () =&gt; ({ title: "Written in ejs &lt;em&gt;escaped&lt;/em&gt;", items: ["one", "two"] }),
+});</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>ejs-card.ejs</code></dt>
+      <dd>The card, reading the title and looping the items.
+<pre><code>&lt;section class="card" data-engine="ejs"&gt;
+  &lt;h2&gt;&lt;%= data.title %&gt;&lt;/h2&gt;
+  &lt;ul&gt;&lt;% for (const item of data.items) { %&gt;&lt;li&gt;&lt;%= item %&gt;&lt;/li&gt;&lt;% } %&gt;&lt;/ul&gt;
+&lt;/section&gt;</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>handlebars-card.hbs</code></dt>
+      <dd>The same card in Handlebars.
+<pre><code>&lt;section class="card" data-engine="handlebars"&gt;
+  &lt;h2&gt;{{data.title}}&lt;/h2&gt;
+  &lt;ul&gt;{{#each data.items}}&lt;li&gt;{{this}}&lt;/li&gt;{{/each}}&lt;/ul&gt;
+&lt;/section&gt;</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>nunjucks-card.njk</code></dt>
+      <dd>The same card in Nunjucks.
+<pre><code>&lt;section class="card" data-engine="nunjucks"&gt;
+  &lt;h2&gt;{{ data.title }}&lt;/h2&gt;
+  &lt;ul&gt;{% for item in data.items %}&lt;li&gt;{{ item }}&lt;/li&gt;{% endfor %}&lt;/ul&gt;
+&lt;/section&gt;</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>pug-card.pug</code></dt>
+      <dd>The same card in Pug.
+<pre><code>section.card(data-engine="pug")
+  h2= data.title
+  ul
+    each item in data.items
+      li= item</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>When it runs in the browser</h2>
+  <dl>
+    <div class="item">
+      <dt>Nothing, unless you say so</dt>
+      <dd>A template view is server markup and nothing more. An assembly made of one is declared
+        <code>none</code>: it never mounts and ships no JavaScript at all.</dd>
+    </div>
+    <div class="item">
+      <dt><code>cart.client.ts</code></dt>
+      <dd>A <code>.client.ts</code> beside the view is the assembly's browser half. It default-exports an
+        object whose <code>mount</code> is given the envelope, already resolved, the assembly's
+        data, and a context holding its id, its name, its view and its events object, scoped to it
+        as any framework's is, and returns a handle the runtime calls to unmount. The badge from
+        the conformance suite, an <code>.html</code> view with a browser half, is the whole shape.
+<pre><code>// A browser half, so the assembly has a script and a stylesheet among its assets and the page
+// carries the runtime that opens its stream.
+export default {
+  mount: (element: Element | ShadowRoot) =&gt; {
+    if (element instanceof Element) element.setAttribute("data-mounted", "");
+    return { unmount: () =&gt; undefined };
+  },
+};</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt>When it mounts</dt>
+      <dd>When the page loads. The mount modes and the shadow root are a framework view's exports; a
+        template view has none, so an assembly with a <code>.client.ts</code> mounts at once and
+        in the page's own tree.</dd>
+    </div>
+  </dl>
+
+  <h2>Styles</h2>
+  <dl>
+    <div class="item">
+      <dt><code>cart.css</code></dt>
+      <dd>A stylesheet beside the view is compiled with a scope derived from the assembly's name, so two
+        assemblies written apart cannot collide. Every file it names beside it, an image or a
+        font, is built with it; one it cannot carry is a build problem, not a broken link found
+        later. The EJS card's sheet, beside it.
+<pre><code>.card {
+  border: 1px solid currentColor;
+  padding: 0.5rem;
+}</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>On a page</h2>
+  <dl>
+    <div class="item">
+      <dt><code>&lt;assembly name="cart"&gt;&lt;/assembly&gt;</code></dt>
+      <dd>In any page template under <code>src/pages</code>. A local placement needs no policy at all. The
+        templates example places one assembly per language on one page.
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;title&gt;five template languages, one page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;assembly name="notes"&gt;&lt;/assembly&gt;
+    &lt;assembly name="ejs-card"&gt;&lt;/assembly&gt;
+    &lt;assembly name="handlebars-card"&gt;&lt;/assembly&gt;
+    &lt;assembly name="nunjucks-card"&gt;&lt;/assembly&gt;
+    &lt;assembly name="pug-card"&gt;&lt;/assembly&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>home.page.ts</code></dt>
+      <dd>Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds,
+        markup to show when the assembly does not answer, whether its failure fails the page, or a
+        deferral the browser fills after load.
+<pre><code>import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },
+});</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>Run it</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npm run dev</code></dt>
+      <dd>Builds, starts, and rebuilds on every change.</dd>
+    </div>
+    <div class="item">
+      <dt><code>npx assemblejs check</code></dt>
+      <dd>Every problem found without building, among them a template its engine cannot read: each view is
+        compiled with the engines the project's own package loads, and one that throws is reported
+        naming the file and what the engine said. Markdown never fails to compile. What an engine
+        resolves only as it renders, a value the data has not or a helper the template lacks,
+        throws then, and the placement falls back.</dd>
+    </div>
+    <div class="item">
+      <dt><code>npx assemblejs build</code></dt>
+      <dd>Writes <code>dist/server.js</code> and the browser files. Production is <code>node
+        dist/server.js</code> with no bundler.</dd>
+    </div>
+  </dl>
+
+  <footer>
+    <p><!-- links --><a href="../index.html">AssembleJS</a> &middot; <a href="../install.html">Installing</a> &middot; <a href="../start.html">Getting started</a> &middot; <a href="index.html">Documentation</a><!-- /links --></p>
+    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
+  </footer>
+
+</main>
+</body>
+</html>

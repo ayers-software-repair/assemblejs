@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Preact developers - AssembleJS</title>
+<!-- One directory down, so the kit and the skin are reached with ../ . Relative paths only:
+     an absolute one breaks under /assemblejs/ prefix hosting. -->
+<link rel="stylesheet" href="../kit/kit.css">
+<link rel="stylesheet" href="../skin.css">
+<link rel="icon" href="../favicon.svg">
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <img src="../mark.svg" alt="" width="84" height="84">
+    <h1>For Preact developers</h1>
+    <div class="rule"></div>
+    <p>A Preact assembly is a component in a file whose name says it is Preact. The server renders it, the
+      browser hydrates it, and the page it sits on can hold React or Svelte beside it. Everything on
+      this page is from the repository's own examples, its conformance fixtures, its design document
+      or its tests.</p>
+  </header>
+
+  <h2>Install the renderer</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npm install @assemblejs/renderer-preact preact</code></dt>
+      <dd>One renderer package per framework, so a project that has no React never installs React. Preact
+        11; the renderer's own machinery, <code>preact-render-to-string</code>, comes with it.</dd>
+    </div>
+  </dl>
+
+  <h2>The view</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npx assemblejs add assembly cart --renderer preact</code></dt>
+      <dd>Writes <code>src/assemblies/cart/cart.preact.tsx</code> and nothing else: the directory is the
+        assembly, and the <code>.preact</code> infix says the framework, because React, Preact and
+        Solid all write <code>.tsx</code>. Your server file does not change.
+<pre><code>import type { AssemblyProps } from "@assemblejs/renderer-preact";
+
+export default function Cart({ data }: AssemblyProps) {
+  return &lt;p&gt;cart {Object.keys(data).length}&lt;/p&gt;;
+}</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt>Two props, nothing else</dt>
+      <dd><code>data</code> is what the assembly's services returned, as JSON; <code>AssemblyProps</code>
+        takes its shape as a type argument. <code>children</code> is rendered HTML by placement name,
+        for an assembly that holds others. No request, no headers, no cookies cross to the
+        component.</dd>
+    </div>
+    <div class="item">
+      <dt>A component beside it</dt>
+      <dd>A file in the assembly's directory with no framework in its name compiles as Preact, because its
+        assembly is one; the build names the JSX runtime for each file from the framework its name
+        says, else from the assembly whose directory holds it.
+<pre><code>// A component with no framework in its name: it compiles as Preact because its assembly is one.
+export function Label({ count }: { readonly count: number }) {
+  return &lt;&gt;preact {count}&lt;/&gt;;
+}</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>Data from the server</h2>
+  <dl>
+    <div class="item">
+      <dt><code>cart.service.ts</code></dt>
+      <dd>A service beside the view runs on the server before the render and returns the data. It is given
+        the request's <code>query</code> and the route <code>params</code> of the page that placed
+        the assembly, and the same function answers the assembly's data endpoint, so the two
+        cannot disagree. The component reads the result as <code>data</code>.
+<pre><code>import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () =&gt; ({ label: "Clicked" }),
+});</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>Talking to the rest of the page</h2>
+  <dl>
+    <div class="item">
+      <dt><code>useEvents()</code></dt>
+      <dd>From <code>@assemblejs/renderer-preact/client</code>; the hooks are Preact's own, from
+        <code>preact/hooks</code>. The object is scoped to this assembly: <code>send</code> stamps
+        the sender, <code>on</code> returns its unsubscribe, so returning it from an effect is the
+        whole cleanup; what is still subscribed when the page unmounts its assemblies is released
+        then. The counter from the frameworks example sends on every click and hears every other
+        counter on the page, React, Svelte, Vue, Solid or Lit, with no adapter between them.
+<pre><code>import { useEvents } from "@assemblejs/renderer-preact/client";
+import { useEffect, useState } from "preact/hooks";
+import { Label } from "./label.js";
+
+export default function PreactCounter() {
+  const events = useEvents();
+  const [count, setCount] = useState(0);
+  const [heard, setHeard] = useState("nothing");
+  useEffect(() =&gt; events.on("counted", (message) =&gt; setHeard(message.from.name)), [events]);
+  return (
+    &lt;section&gt;
+      &lt;button
+        type="button"
+        id="preact-bump"
+        onClick={() =&gt; {
+          setCount(count + 1);
+          events.send("counted", { count: count + 1 });
+        }}
+      &gt;
+        &lt;Label count={count} /&gt;
+      &lt;/button&gt;
+      &lt;span id="preact-heard"&gt;{heard}&lt;/span&gt;
+    &lt;/section&gt;
+  );
+}</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt>On the server</dt>
+      <dd>The component renders inside the same events context it hydrates inside, holding the server's
+        events, so a component that calls <code>useEvents()</code> renders on the server as in the
+        browser: a subscription made there is accepted and never called, and <code>last</code>
+        answers nothing.</dd>
+    </div>
+    <div class="item">
+      <dt><code>events.last(topic)</code></dt>
+      <dd>A page can name one stream, and every topic the stream sends keeps its last message, because the
+        stream opens while assemblies are still loading. An assembly that mounts late reads what
+        it missed with <code>last</code>, then subscribes.</dd>
+    </div>
+  </dl>
+
+  <h2>When it runs in the browser</h2>
+  <dl>
+    <div class="item">
+      <dt><code>export const mount = "idle"</code></dt>
+      <dd>Declared by the view. <code>load</code> mounts at once and is the default; <code>idle</code> waits
+        for the browser to be idle; <code>visible</code> waits until the envelope scrolls into
+        view; <code>none</code> never mounts, and the assembly ships no JavaScript at all. A value
+        that is none of the four reads as <code>none</code>, so a typo cannot start code running
+        on a page whose author was saying when it should run.
+<pre><code>// Mounted when the browser is idle.
+export const mount = "idle";
+
+export default function IdleLabel() {
+  return &lt;p class="label"&gt;mounts when idle&lt;/p&gt;;
+}</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>export const shadow = true</code></dt>
+      <dd>Renders the assembly in its own shadow root: no page style reaches in, none of its own leaks out.
+        The box from the shadow example, where every framework counts in a root of its own.
+<pre><code>import { useState } from "preact/hooks";
+
+export const shadow = true;
+
+export default function PreactBox() {
+  const [count, setCount] = useState(0);
+  return (
+    &lt;button type="button" class="bump" id="preact-bump" onClick={() =&gt; setCount(count + 1)}&gt;
+      preact {count}
+    &lt;/button&gt;
+  );
+}</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>Styles</h2>
+  <dl>
+    <div class="item">
+      <dt><code>cart.css</code></dt>
+      <dd>A stylesheet beside the view is compiled with a scope derived from the assembly's name, so two
+        assemblies written apart cannot collide; the view in its own shadow root links a second
+        sheet, built for that root. Every file it names beside it, an image or a font, is built
+        with it; one it cannot carry is a build problem, not a broken link found later. The box
+        above writes <code>class</code>, as Preact reads it, and its sheet beside it is one rule.
+<pre><code>.bump {
+  color: rgb(0, 128, 0);
+}</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>On a page</h2>
+  <dl>
+    <div class="item">
+      <dt><code>&lt;assembly name="cart"&gt;&lt;/assembly&gt;</code></dt>
+      <dd>In any page template under <code>src/pages</code>. A local placement needs no policy at all.</dd>
+    </div>
+    <div class="item">
+      <dt><code>home.page.ts</code></dt>
+      <dd>Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds,
+        markup to show when the assembly does not answer, whether its failure fails the page, or a
+        deferral the browser fills after load.
+<pre><code>import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },
+});</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>Run it</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npm run dev</code></dt>
+      <dd>Builds, starts, and rebuilds on every change.</dd>
+    </div>
+    <div class="item">
+      <dt><code>npx assemblejs check</code></dt>
+      <dd>Every problem found without building: a placement naming an assembly that does not exist, policy
+        nothing reads, the renderer not installed, a view named <code>cart.tsx</code>, which does not
+        say its framework.</dd>
+    </div>
+    <div class="item">
+      <dt><code>npx assemblejs build</code></dt>
+      <dd>Writes <code>dist/server.js</code> and the browser files. Production is <code>node
+        dist/server.js</code> with no bundler.</dd>
+    </div>
+  </dl>
+
+  <footer>
+    <p><!-- links --><a href="../index.html">AssembleJS</a> &middot; <a href="../install.html">Installing</a> &middot; <a href="../start.html">Getting started</a> &middot; <a href="index.html">Documentation</a><!-- /links --></p>
+    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
+  </footer>
+
+</main>
+</body>
+</html>

@@ -420,6 +420,11 @@ and `/assemblejs/next/` from `next`.
 - [x] The guides: one per camp (for React devs, for Vue devs, for Svelte devs) and the
       linear tutorial, every file shown read from the repository's examples, DESIGN or its
       tests (DECISIONS 2026-10-05)
+- [x] The guides for the other camps: for Preact, Solid and Lit developers and for template
+      authors (EJS, Handlebars, Nunjucks, Pug, Markdown), in the same shape, every file shown
+      read from the repository's examples, what `add` writes, the conformance fixtures, DESIGN
+      or the tests; declared in `pages.json`, linked from the docs index, footers generated
+      (DECISIONS 2026-10-05, "guides for the other camps")
 - [x] `site/404.html` from the kit template
 - [x] `site/skin.css`: the role bindings, no structural CSS
 - [x] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
