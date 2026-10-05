@@ -33,6 +33,28 @@ DECISIONS 2026-10-05 "rulings"). Every row through B-26 that needs no owner is d
 halves of B-24, B-25 and B-26 are folded into B-27a, the owner's. The owner answered every open
 question on 2026-10-05; the rulings entry in DECISIONS lists them and what each lands with.
 
+**PULLED BACK ON 2026-10-05 FOR BUDGET, mid fan-out. Debts and salvage, in order:**
+
+- `docs/site`: the guides for Preact, Solid, Lit and the template languages landed (commit
+  "docs(site): guides for Preact, Solid, Lit and the template languages") from an agent's
+  worktree WITHOUT the separate verification every rung gets. DEBT: a fresh reader checks every
+  code block and claim in `site/docs/{preact,solid,lit,templates}.html` at the source, as the
+  2026-10-05 site entry in DECISIONS describes for the first three guides, and fixes what it
+  finds. Only the site, emoji and identity gates were run on it here.
+- `docs/studies/subassembly/reader-core.md` and `reader-renderers.md`: two of three read-only
+  design memos for the subassembly rung (core; renderers and the browser runtime), written by
+  agents against the code with file:line citations, unverified. The cli/conformance memo and
+  the synthesis (DESIGN amendments, bite ladder) were never written. Read them as a start, hold
+  every claim to the file it cites, then write the cli memo and the synthesis before any code.
+- `docs/studies/typedoc-at-deploy.wip.patch`: an interrupted agent's uncommitted work on the
+  API reference (typedoc at deploy time, the owner's ruling): typedoc added, deploy-site.yml
+  steps, index.ts doc edits of doubtful standing. Not applied, not checked; a patch to read,
+  not to trust. The rung is still open (its OWNER row below, now the owner's ruling, not a
+  question).
+- Not begun: the release-notes page with the drift gate, the three truth fixes (events.ts's
+  unmount comment, readBudgets' "computed" wording, the mcp verbs in CLAUDE.md), CI breadth
+  (a conformance job, node 24). Each is specified in the 2026-10-05 "rulings" and site entries.
+
 **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
 (done) -> B-26a release dry run (done) -> the subassembly rung -> B-27a/B-27b (the owner's). The
 five house-style rows and the release-notes rows can land any time. The site's guides are
