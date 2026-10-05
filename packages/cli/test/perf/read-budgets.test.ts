@@ -21,9 +21,9 @@ describe("the page budgets a config declares", () => {
     expect(budgets).toEqual({});
     expect(problems).toEqual([
       'budgets names "fonts", which is not a part a page sends: document, styles, scripts',
-      "the budget for styles is not a whole number of bytes above zero; write it as one",
-      "the budget for scripts is not a whole number of bytes above zero; write it as one",
-      "the budget for document is computed; write it as one",
+      "the budget for styles is not a whole number of bytes above zero; write it as a whole number of bytes above zero",
+      "the budget for scripts is not a whole number of bytes above zero; write it as a whole number of bytes above zero",
+      "the budget for document is not written as a number; write it as a whole number of bytes above zero",
     ]);
     expect(readBudgets("export default { budgets: 5 };").problems).toEqual([
       "budgets is not an object of parts and bytes",
@@ -33,7 +33,7 @@ describe("the page budgets a config declares", () => {
     expect(readBudgets(odd).problems.map((problem) => problem.split(";")[0])).toEqual([
       "the budget for document is not a whole number of bytes above zero",
       "the budget for styles is not a whole number of bytes above zero",
-      "the budget for scripts is computed",
+      "the budget for scripts is not written as a number",
     ]);
     // Computed whole: a shared constant is a budget perf cannot read, never one it has none of.
     expect(readBudgets("const b = shared();\nexport default { budgets: b };").problems).toEqual([

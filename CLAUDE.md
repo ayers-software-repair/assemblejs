@@ -16,8 +16,8 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, dep
 
 - `@assemblejs/core`: server, declaration types, HTML and WebComponents renderers.
 - `@assemblejs/cli`, `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent
-  surface: an MCP server that reads the project, adds and places an assembly, renders and
-  composes, and explains every rule `check` names).
+  surface: an MCP server that reads the project, creates one, adds and places an assembly,
+  checks it, renders and composes, and explains every rule `check` names).
 - `@assemblejs/renderer-templates` (EJS, Markdown, Nunjucks, Handlebars, Pug; no peer deps).
 - `@assemblejs/renderer-{preact,react,vue,svelte,solid,lit}`: one real peer dependency each.
 

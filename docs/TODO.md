@@ -29,7 +29,8 @@ the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub r
 are the changesets changelog); the API reference, typedoc at deploy time
 (`docs/studies/typedoc-at-deploy.wip.patch` is an interrupted agent's work: read it, do not
 apply it unread); the three truth fixes (events.ts's unmount comment, readBudgets' "computed"
-wording, the mcp verbs in CLAUDE.md); CI breadth (a conformance job, node 24); the
+wording, the mcp verbs in CLAUDE.md: done 2026-10-05, DECISIONS "three claims"); CI breadth
+(a conformance job, node 24); the
 house-style rows, which wait on the owner lifting that hold. The two inherited guide claims
 are fixed (`67bd8bc`, `e920464`).
 
@@ -470,6 +471,11 @@ and `/assemblejs/next/` from `next`.
 - [x] `site/skin.css`: the role bindings, no structural CSS
 - [x] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
 - [x] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
+- [ ] `readBudgets` reports `budgets: b` (a literal object behind a name) and `budgets: Infinity` as
+      "computed": `readDefaultExport` follows a name for the default export only. Follow it one
+      step for `budgets` too, or word the message as "not written as an object".
+- [x] Three claims brought back to the code: the events unsubscribe comment, readBudgets'
+      "computed" wording, the mcp tools named in CLAUDE.md (DECISIONS 2026-10-05)
 - [x] Six guides and DESIGN 9 said an assembly declared `mount = "none"` "ships no JavaScript
       at all"; true of a static view only. Fixed 2026-10-05: the runtime leaves such a view as
       the server sent it and the page keeps the runtime (DECISIONS 2026-10-05)

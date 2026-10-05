@@ -608,11 +608,12 @@ Events are typed, page-scoped and owned by the assembly:
 ```ts
 const events = useEvents(); // scoped to this assembly
 events.send("cart:add", { sku }); // sender identity stamped by the runtime
-const off = events.on("cart:add", handler); // removed automatically on unmount
+const off = events.on("cart:add", handler); // released when the page unmounts its assemblies
 ```
 
-- Subscriptions are held by the assembly's handle, and `unmount` removes **exactly the
-  references it added**. A leak is not possible by forgetting.
+- Subscriptions are held per assembly by the runtime, which releases **exactly the references
+  it handed out** when it unmounts the page's assemblies together. A leak is not possible by
+  forgetting.
 - Delivery is addressable by something the sender can name: every assembly, one name, one
   instance id, or the page.
 - **Last-value replay is opt-in per topic.** A late-hydrating assembly can see the message it

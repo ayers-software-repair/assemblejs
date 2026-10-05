@@ -2173,3 +2173,20 @@ guide and in DESIGN 9. And the `definePage` block the guides show for local poli
 example, test or DESIGN section, so the ledes' "from the examples, the design document or the
 tests" was not literal; DESIGN 8 now carries that exact block as the local form of the policy
 example above it.
+
+## 2026-10-05: three claims brought back to the code
+
+From the resume block's list of what remains. `events.ts` said the runtime calls an `on` unsubscribe
+"on unmount"; `start.ts` releases every subscription in `unmountAll`, when the page's assemblies
+are unmounted together, and nothing unmounts one assembly alone, so the comment now says that.
+`readBudgets` called a budget it could not read as a number "computed", true of `process.env.D`
+and false of `Infinity`, `NaN` or a bare name, which `literalOf` also reads as undefined; the
+message is now "not written as a number; write it as a whole number of bytes above zero", held
+by the reader's tests and by `perf` at the command level, and watched red by reverting the
+word. CLAUDE.md's entry for `@assemblejs/mcp` now names what its tools do: `create_project`,
+`add_assembly`, `place_assembly`, `check`, `render_assembly`, `compose_page` and `explain`
+(`create-mcp-server.ts`, `register-authoring-tools.ts`). No changeset: nothing is published.
+The verifier found the same false word at the object level (`budgets: b`, a literal object
+behind a name, is reported as "computed" because `readDefaultExport` follows names for the
+default export only) and DESIGN 9 still saying `unmount` removes an assembly's subscriptions;
+DESIGN 9 is corrected here, the object-level wording is a ledger row.
