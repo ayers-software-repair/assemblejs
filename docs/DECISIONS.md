@@ -2162,3 +2162,14 @@ Found and settled:
   the inverse edit: `check-site.mjs` on a link to `nowhere.html` typed into `preact.html`, and on
   `lit.html` moved aside while declared; `site-links.mjs --check` on the "Getting started" anchor
   removed from `solid.html`'s footer.
+
+## 2026-10-05: two claims the six guides inherited, corrected at the source
+
+Found by the reader who verified the last four guides, in all six and in DESIGN 9: "`none`
+never mounts, and the assembly ships no JavaScript at all" is true of a static view and not of a
+framework view, whose page still carries the runtime; `packages/core/src/client/start.ts` reads
+the mode and returns before mounting, and nothing else. The sentence now says that on every
+guide and in DESIGN 9. And the `definePage` block the guides show for local policy was in no
+example, test or DESIGN section, so the ledes' "from the examples, the design document or the
+tests" was not literal; DESIGN 8 now carries that exact block as the local form of the policy
+example above it.

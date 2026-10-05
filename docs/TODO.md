@@ -470,6 +470,11 @@ and `/assemblejs/next/` from `next`.
 - [x] `site/skin.css`: the role bindings, no structural CSS
 - [x] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
 - [x] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
+- [x] Six guides and DESIGN 9 said an assembly declared `mount = "none"` "ships no JavaScript
+      at all"; true of a static view only. Fixed 2026-10-05: the runtime leaves such a view as
+      the server sent it and the page keeps the runtime (DECISIONS 2026-10-05)
+- [x] The local `definePage` policy block the six guides show was in no example, test or DESIGN
+      section; DESIGN 8 now carries it, so the ledes are literal (2026-10-05)
 - [x] `scripts/site-links.mjs`: cross-links generated from `pages.json`, never hand-written;
       `--check` in `check:site`, self-tested, watched red. Named `.mjs`, not `.py`: every gate
       in the chain is Node or bash, none Python (DECISIONS 2026-10-05; raised with the owner)
