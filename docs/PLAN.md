@@ -125,6 +125,28 @@ server building the same application beside him from packed tarballs, is the str
 B-27b requires, run after the subassembly rung and A-01 to A-03; every snag is a ledger row
 before `1.0.0`.
 
+### 4.2 The subassembly rung, in bites (seat, 2026-10-09)
+
+Designed in `docs/studies/subassembly/synthesis.md` from the two reader memos, held to the tree,
+and recorded in DECISIONS under that date. The mechanism: a view renders once with no children;
+a template view wrote the directive, a framework view's `Slot` emitted it, on the server and in
+the browser alike; `renderLocal` composes the view's rendered markup with the local transport at
+the arrived depth and the path extended by the parent's identity, and each child's envelope
+replaces its directive. `children` leaves the renderer interface. Nine bites, one commit each,
+the long gate once at S-08:
+
+| bite | what lands                                                                                                                     | proof                                                                                       |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| S-01 | The one segment shape in `vocab/`; the finder skips raw-text elements                                                          | vocab and finder tests, red on the anchor dropped and the skip removed                      |
+| S-02 | `renderLocal` composes with the composition state, a `Fetch`, the server's cap and a signal; nested diagnostics; one name once | self-placement renders once with a nested `cycle`; a chain past the cap; a nested id logged |
+| S-03 | Hoisting over the diagnostic tree; a shadow parent links its children's sheets; the runtime counts static children             | a static parent with a framework child links the child's css and the runtime                |
+| S-04 | `findEnvelopes` walks shadow roots; the fill sends depth 1                                                                     | a shadow child is found and mounted once; the fill's header                                 |
+| S-05 | The transport learns nested manifests once per version; a failed subtree is not cached                                         | two manifests learned from one answer; `../x` yields no url                                 |
+| S-06 | `children` out; `Slot({ name, view? })` renders the directive on both sides; `slot()` for Svelte and Lit; the `nested` example | each renderer's slot and hydrate tests; the browser proof's six assertions                  |
+| S-07 | `check` reads directives and `Slot` names; the agent surface places a child in a view                                          | each problem reported with its rule; an agent places and composes through the protocol      |
+| S-08 | Conformance: the `nested` fixture and the two-server nested spec                                                               | `pnpm conformance` green with the new specs                                                 |
+| S-09 | DESIGN 2.4, 3.4, 7, 8, 10; the guides; the changeset; the studies deleted                                                      | the site gates; a reader with no stake confirms DESIGN against the tests                    |
+
 ## 5. Verification
 
 - `pnpm check` runs, in order, what CI runs: the identity gate against its own red fixtures then
