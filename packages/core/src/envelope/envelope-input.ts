@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { MountMode } from "../client/mount-mode.js";
 import type { JsonObject } from "../json/json-object.js";
 
 /** Everything the envelope is built from. */
@@ -18,6 +19,18 @@ export interface EnvelopeInput {
   readonly remote?: string;
   /** The content has not been fetched yet; the browser fills it after load. */
   readonly deferred?: boolean;
-  /** The render or the fetch failed and this is a fallback. */
-  readonly failed?: boolean;
+  /** The page's route parameters, carried on a deferred placeholder for the browser to send. */
+  readonly params?: Readonly<Record<string, string>>;
+  /**
+   * The render or the fetch failed and this is a fallback: the correlation id the failure was
+   * logged against, so the envelope on the page names the log line that explains it.
+   */
+  readonly failed?: string;
+  /** When the browser half runs. Emitted only when it is not the default, `load`. */
+  readonly mount?: MountMode;
+  /**
+   * Render the markup inside a declarative shadow root, with these stylesheets linked inside it,
+   * where they apply and from where they reach nothing else.
+   */
+  readonly shadow?: { readonly css: readonly string[] };
 }

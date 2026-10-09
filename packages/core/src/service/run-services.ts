@@ -14,15 +14,19 @@ import type { ServiceDefinition } from "./service-definition.js";
  * that wanted an api endpoint.
  *
  * A later service's key wins over an earlier one's, which is the same rule as the order itself:
- * what runs last has seen the most.
+ * what runs last has seen the most. `inspect` sees each service's own return before it is
+ * merged, which is the one point where who returned a field is still known.
  */
 export async function runServices<D extends JsonObject>(
   services: readonly ServiceDefinition<D>[],
   context: ServiceContext,
+  inspect?: (service: ServiceDefinition<D>, returned: JsonObject) => void,
 ): Promise<JsonObject> {
   let data: JsonObject = {};
   for (const service of orderServices(services)) {
-    data = { ...data, ...(await service.run(context)) };
+    const returned = await service.run(context);
+    inspect?.(service, returned);
+    data = { ...data, ...returned };
   }
   return data;
 }

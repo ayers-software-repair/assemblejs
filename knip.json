@@ -6,7 +6,8 @@
         "scripts/*.mjs",
         "browser/*.browser.ts",
         "browser/build-fixture.mjs",
-        "browser/fixtures/*.{ts,tsx}"
+        "browser/fixtures/*.{ts,tsx}",
+        "browser/build-examples.mjs"
       ],
       "project": ["scripts/**/*.mjs", "browser/**/*.{ts,tsx,mjs}"],
       "ignoreDependencies": ["@arethetypeswrong/cli", "publint", "sort-package-json", "react-dom"]
@@ -14,6 +15,41 @@
     "packages/*": {
       "entry": ["test/**/*.test.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}", "test/**/*.{ts,tsx}"]
+    },
+    "examples/two-frameworks": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/api/*.api.ts"],
+      "project": ["src/**/*.{ts,tsx,svelte}"],
+      "ignoreDependencies": ["@assemblejs/renderer-svelte", "svelte"]
+    },
+    "examples/styles": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx}"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["@assemblejs/renderer-react"]
+    },
+    "examples/frameworks": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/pages/*/*.page.ts"],
+      "project": ["src/**/*.{ts,tsx,svelte}"],
+      "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte", "vue"]
+    },
+    "examples/shadow": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/pages/*/*.page.ts"],
+      "project": ["src/**/*.{ts,tsx,svelte}"],
+      "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte", "vue"]
+    },
+    "examples/templates": {
+      "entry": ["src/server.ts", "src/assemblies/*/*.ts"],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": ["@assemblejs/renderer-templates"]
+    },
+    "examples/realtime": {
+      "entry": [
+        "src/server.ts",
+        "src/assemblies/*/*.{ts,tsx,svelte}",
+        "src/api/*.api.ts",
+        "src/pages/*/*.page.ts"
+      ],
+      "project": ["src/**/*.{ts,tsx,svelte}"],
+      "ignoreDependencies": ["@assemblejs/renderer-svelte"]
     }
   }
 }

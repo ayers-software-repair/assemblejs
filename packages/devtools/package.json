@@ -1,0 +1,55 @@
+{
+  "name": "@assemblejs/devtools",
+  "version": "1.0.0",
+  "description": "Read-only devtools for an AssembleJS server in development: its assemblies, pages, apis and recent failures.",
+  "license": "Apache-2.0",
+  "homepage": "https://ayers.repair/assemblejs/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayers-software-repair/assemblejs.git",
+    "directory": "packages/devtools"
+  },
+  "bugs": "https://github.com/ayers-software-repair/assemblejs/issues",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src test",
+    "check:publish": "publint && attw --pack . --profile esm-only"
+  },
+  "peerDependencies": {
+    "@assemblejs/core": "1.x"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.5",
+    "@assemblejs/core": "workspace:*",
+    "@types/node": "26.4.1",
+    "publint": "0.3.24",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.11"
+  }
+}

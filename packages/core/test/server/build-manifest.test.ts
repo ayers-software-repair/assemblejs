@@ -25,6 +25,21 @@ describe("building a manifest", () => {
     });
   });
 
+  it("reports the browser files the assembly declared", () => {
+    const withAssets = defineAssembly({
+      ...cart,
+      assets: { css: ["/_assemblejs/assets/cart.css"], js: ["/_assemblejs/assets/client.js"] },
+    });
+    const reported = buildManifest(withAssets, "default", "1").assets;
+    expect(reported).toEqual({
+      css: ["/_assemblejs/assets/cart.css"],
+      js: ["/_assemblejs/assets/client.js"],
+    });
+    // Copied, never the assembly's own arrays, so nothing holding a manifest can change them.
+    expect(reported.js).not.toBe(withAssets.assets?.js);
+    expect(reported.css).not.toBe(withAssets.assets?.css);
+  });
+
   // The predecessor built its manifest by removing three fields and shipping the rest, which
   // leaks by default every time the internal object grows. This one cannot.
   it("carries nothing of the assembly beyond those fields", () => {
@@ -43,6 +58,15 @@ describe("building a manifest", () => {
     expect(serialised).not.toContain("do not ship me");
     expect(serialised).not.toContain("secret");
     expect(serialised).not.toContain("function");
+  });
+
+  it("lists no page styles for an assembly in its own shadow root, which links them there", () => {
+    const isolated = defineAssembly({
+      ...cart,
+      shadow: true,
+      assets: { css: ["/s/cart.shadow.css"], js: ["/c.js"] },
+    });
+    expect(buildManifest(isolated, "default", "1").assets).toEqual({ css: [], js: ["/c.js"] });
   });
 
   it("refuses a view the assembly does not have", () => {

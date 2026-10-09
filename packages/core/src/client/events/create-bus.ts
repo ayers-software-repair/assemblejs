@@ -27,19 +27,25 @@ const reaches = (to: EventScope, subscriber: EventSender): boolean => {
  * else, which is what makes the mixed-framework page real: the bus belongs to the page rather
  * than to any framework's tree, so neither needs an adapter for the other.
  *
- * `replay` names the topics that keep their last message. Opt-in per topic, because the race it
- * solves is real (a late-hydrating assembly missing an early message) and an unbounded history
- * nobody reads is not.
+ * `replay` names the topics that keep their last message, and `keep` adds one: opt-in per topic,
+ * because the race it solves is real (a late-hydrating assembly missing an early message) and an
+ * unbounded history nobody reads is not. What is kept is one message per topic and address.
  */
 export function createBus(replay: readonly string[] = []): Bus {
   const subscriptions = new Set<Subscription>();
-  const kept = new Map<string, EventMessage<unknown>>();
+  // Per topic, the last message to each address, so `last` answers an assembly only what it
+  // would have been delivered: a message to one assembly is not read back by another.
+  const kept = new Map<string, Map<string, EventMessage<unknown>>>();
   const keeps = new Set(replay);
   let seq = 0;
 
   return {
     get size() {
       return subscriptions.size;
+    },
+
+    keep(topic: string) {
+      keeps.add(topic);
     },
 
     forAssembly(sender: EventSender) {
@@ -52,7 +58,11 @@ export function createBus(replay: readonly string[] = []): Bus {
           // The sender is stamped from what the runtime knows and is never taken from the
           // caller: a bus where anyone can claim to be anyone is a bus with no addressing.
           const message: EventMessage<P> = { topic, payload, from: sender, to, seq };
-          if (keeps.has(topic)) kept.set(topic, message as EventMessage<unknown>);
+          if (keeps.has(topic)) {
+            const byAddress = kept.get(topic) ?? new Map<string, EventMessage<unknown>>();
+            byAddress.set(JSON.stringify(to), message as EventMessage<unknown>);
+            kept.set(topic, byAddress);
+          }
           // A copy, so a handler that subscribes or unsubscribes while being called cannot
           // change the set being walked underneath it.
           for (const subscription of [...subscriptions]) {
@@ -78,7 +88,11 @@ export function createBus(replay: readonly string[] = []): Bus {
         },
 
         last<P>(topic: string): EventMessage<P> | undefined {
-          return kept.get(topic) as EventMessage<P> | undefined;
+          let latest: EventMessage<unknown> | undefined;
+          for (const message of kept.get(topic)?.values() ?? []) {
+            if (reaches(message.to, sender) && message.seq > (latest?.seq ?? 0)) latest = message;
+          }
+          return latest as EventMessage<P> | undefined;
         },
       };
 

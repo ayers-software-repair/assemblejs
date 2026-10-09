@@ -13,6 +13,7 @@ describe("an assembly request", () => {
       depth: 2,
       path: ["p1", "outer"],
       query: new URLSearchParams("sku=1"),
+      params: {},
       headers: { "accept-language": "en" },
       signal: AbortSignal.timeout(1000),
     };

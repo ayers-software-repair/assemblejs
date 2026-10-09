@@ -11,4 +11,9 @@ import type { JsonObject } from "../json/json-object.js";
 export interface MarkupInput {
   readonly data: Readonly<JsonObject>;
   readonly children: Readonly<Record<string, string>>;
+  /**
+   * The placement's id, as its envelope carries it and the browser half is mounted with: a
+   * renderer whose hydration keys must not collide with another island's prefixes them with it.
+   */
+  readonly id?: string;
 }

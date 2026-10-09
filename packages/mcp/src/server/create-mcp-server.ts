@@ -8,6 +8,7 @@ import type { ProjectRoot } from "../root/project-root.js";
 import { findRule } from "../rules/find-rule.js";
 import { RULES } from "../rules/rules.js";
 import { describeProject } from "./describe-project.js";
+import { registerAuthoringTools } from "./register-authoring-tools.js";
 
 const json = (value: unknown) => ({
   content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }],
@@ -126,5 +127,6 @@ export function createMcpServer(root: ProjectRoot): McpServer {
     },
   );
 
+  registerAuthoringTools(server, root);
   return server;
 }

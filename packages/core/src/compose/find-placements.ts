@@ -46,7 +46,7 @@ export function findPlacements(template: string): Placement[] {
     // author deliberately commented out, and splices its markup into the comment, where a "-->"
     // inside it ends the comment early and the rest becomes live markup.
     if (commented(start)) continue;
-    const closed = directive.endsWith(`</${PLACEMENT_ELEMENT}>`) || selfClosing === "/";
+    const closed = /<\/[a-z]+\s*>$/i.test(directive) || selfClosing === "/";
     if (!closed) {
       throw new Error(
         `<${PLACEMENT_ELEMENT}> at ${start} is neither self-closing nor immediately closed`,

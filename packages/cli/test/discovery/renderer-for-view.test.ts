@@ -9,6 +9,10 @@ describe("choosing a renderer from a file name", () => {
     expect(rendererForView("cart.vue")).toBe("vue");
     expect(rendererForView("cart.html")).toBe("html");
     expect(rendererForView("cart.md")).toBe("markdown");
+    expect(rendererForView("cart.ejs")).toBe("ejs");
+    expect(rendererForView("cart.hbs")).toBe("handlebars");
+    expect(rendererForView("cart.njk")).toBe("nunjucks");
+    expect(rendererForView("cart.pug")).toBe("pug");
   });
 
   // React, Preact and Solid all write .tsx. A file that does not say which is a file whose
@@ -19,6 +23,13 @@ describe("choosing a renderer from a file name", () => {
     expect(rendererForView("cart.preact.tsx")).toBe("preact");
     expect(rendererForView("cart.solid.jsx")).toBe("solid");
     expect(rendererForView("cart.tsx")).toBeUndefined();
+  });
+
+  it("reads a Lit view by its name among the project's own TypeScript", () => {
+    expect(rendererForView("cart.lit.ts")).toBe("lit");
+    expect(rendererForView("cart.lit.js")).toBe("lit");
+    expect(rendererForView("cart.client.ts")).toBeUndefined();
+    expect(rendererForView("cart.service.ts")).toBeUndefined();
   });
 
   it("is not a view when the extension means nothing here", () => {

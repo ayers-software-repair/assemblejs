@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { readParams } from "../compose/read-params.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import type { CompositionHeaders } from "./composition-headers.js";
 import type { HeaderProblem } from "./header-problem.js";
@@ -59,8 +60,16 @@ export function readCompositionHeaders(
     }
   }
 
+  const rawParams = headers[COMPOSITION_HEADER.params];
+  let params: Readonly<Record<string, string>> = {};
+  if (rawParams !== undefined && rawParams !== "") {
+    const read = readParams(rawParams);
+    if (read.ok) params = read.params;
+    else problems.push({ header: COMPOSITION_HEADER.params, detail: read.detail });
+  }
+
   if (problems.length > 0) return { ok: false, problems };
-  return { ok: true, headers: { page, id, depth, path } };
+  return { ok: true, headers: { page, id, depth, path, params } };
 }
 
 function readUuid(

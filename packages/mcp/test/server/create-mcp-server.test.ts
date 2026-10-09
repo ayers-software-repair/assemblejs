@@ -106,7 +106,7 @@ describe("what an agent can do", () => {
     assembly("counter", "counter.react.tsx", "export default () => null;");
     const answer = await call("render_assembly", { name: "counter" });
     expect(answer.ok).toBe(false);
-    expect(answer.problems.join()).toContain("has to be compiled");
+    expect(answer.problems.join()).toContain("only its renderer turns into markup");
   });
 
   it("names what exists when asked for something that does not", async () => {

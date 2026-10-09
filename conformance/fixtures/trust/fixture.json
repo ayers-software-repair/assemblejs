@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "guarded": {
+      "packages": ["core", "cli"],
+      "env": {
+        "ASSEMBLEJS_AUTH": "basic",
+        "ASSEMBLEJS_AUTH_USER": "lovelace",
+        "ASSEMBLEJS_AUTH_PASSWORD": "open-sesame"
+      }
+    },
+    "checked": { "packages": ["core", "cli"] },
+    "open": { "packages": ["core", "cli"], "env": { "GUARDED_ORIGIN": "{guarded}" } },
+    "plain": { "packages": ["core", "cli"] }
+  }
+}

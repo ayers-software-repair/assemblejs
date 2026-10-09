@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * The four headers that carry composition state between a parent and a child.
+ * The five headers that carry composition state between a parent and a child.
  *
  * They are ordinary request headers with no privilege attached. An outside caller may send them
  * and gets exactly the behaviour an internal caller gets, because a route that behaves one way
@@ -17,4 +17,6 @@ export const COMPOSITION_HEADER = {
   depth: "assembly-depth",
   /** Ancestor identities, innermost last, comma separated. */
   path: "assembly-path",
+  /** The page's route parameters, form encoded, for the services the fragment runs. */
+  params: "assembly-params",
 } as const;

@@ -10,6 +10,6 @@ export interface Runtime {
   readonly bus: Bus;
   /** Mounts every unmounted envelope under a root. Safe to call again for inserted markup. */
   mount(root: ParentNode): void;
-  /** Tears every assembly down, in reverse mount order. */
+  /** Closes the page's stream and tears every assembly down, in reverse mount order. */
   unmountAll(): void;
 }

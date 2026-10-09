@@ -11,7 +11,7 @@ describe("reading the composition headers", () => {
     const read = readCompositionHeaders({}, 8);
     expect(read).toEqual({
       ok: true,
-      headers: { page: undefined, id: undefined, depth: 0, path: [] },
+      headers: { page: undefined, id: undefined, depth: 0, path: [], params: {} },
     });
   });
 
@@ -65,5 +65,15 @@ describe("reading the composition headers", () => {
       8,
     );
     expect(read.ok === false && read.problems).toHaveLength(3);
+  });
+
+  it("reads the page's parameters, and refuses them malformed, naming the header", () => {
+    const read = readCompositionHeaders({ "assembly-params": "id=42&slug=a+b" }, 8);
+    expect(read.ok && read.headers.params).toEqual({ id: "42", slug: "a b" });
+    for (const raw of ["1x=1", "id=1&id=2", `id=${"x".repeat(2048)}`]) {
+      const refused = readCompositionHeaders({ "assembly-params": raw }, 8);
+      expect(refused.ok).toBe(false);
+      expect(!refused.ok && refused.problems[0]?.header).toBe("assembly-params");
+    }
   });
 });

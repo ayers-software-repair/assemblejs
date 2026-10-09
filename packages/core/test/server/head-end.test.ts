@@ -1,0 +1,26 @@
+// Copyright Ayers Electronics Inc. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0
+import { describe, expect, it } from "vitest";
+import { headEnd } from "@assemblejs/core";
+
+describe("where something for a document's head goes", () => {
+  it("is before the first closing head tag the browser reads as one", () => {
+    expect(headEnd("<head><!-- </head> --></head>")).toBe("<head><!-- </head> -->".length);
+  });
+
+  it("is after the doctype of a template with no head, which keeps it out of quirks mode", () => {
+    expect(headEnd("\n<!DOCTYPE html><title>x</title>")).toBe("\n<!DOCTYPE html>".length);
+    expect(headEnd("<!-- a --> <!-- b --><!doctype html><p>")).toBe(
+      "<!-- a --> <!-- b --><!doctype html>".length,
+    );
+  });
+
+  // Every page request reads this, so a run of comments must not cost time doubling per comment.
+  it("reads a template that opens with many comments and has no doctype at once", () => {
+    expect(headEnd(`${"<!-- c -->".repeat(40)}<p>x</p>`)).toBe(0);
+  });
+
+  it("is the very start of a template with neither", () => {
+    expect(headEnd("<p>x</p>")).toBe(0);
+  });
+});

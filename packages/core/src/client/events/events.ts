@@ -10,8 +10,14 @@ import type { EventScope } from "./event-scope.js";
  */
 export interface Events {
   send<P>(topic: string, payload: P, to?: EventScope): EventMessage<P>;
-  /** Returns the unsubscribe. The runtime also calls it on unmount. */
+  /**
+   * Returns the unsubscribe. The runtime releases every subscription it handed out when it
+   * unmounts the page's assemblies together (`unmountAll`); there is no per-assembly unmount.
+   */
   on<P>(topic: string, handler: EventHandler<P>): () => void;
-  /** The last message on a topic, when that topic was declared to keep one. */
+  /**
+   * The last message on a topic this assembly would have been delivered, when the topic keeps
+   * one: declared to by the page, or sent by the page's stream.
+   */
   last<P>(topic: string): EventMessage<P> | undefined;
 }

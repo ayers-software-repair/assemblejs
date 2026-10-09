@@ -160,4 +160,30 @@ describe("a handler that changes the subscriptions while it runs", () => {
     bus.forAssembly(catalogue).events.send("t", {});
     expect(later).toHaveBeenCalledOnce();
   });
+
+  it("keeps a topic's last message from the moment it is told to, and no other topic's", () => {
+    const bus = createBus();
+    const { events } = bus.forAssembly({ id: "a", name: "a", view: "default" });
+    events.send("price", 1);
+    bus.keep("price");
+    events.send("price", 2);
+    events.send("stock", 3);
+    expect(events.last("price")?.payload).toBe(2);
+    expect(events.last("stock")).toBeUndefined();
+  });
+
+  it("answers last with only what that assembly would have been delivered", () => {
+    const bus = createBus(["price"]);
+    const server = bus.forAssembly({ id: "server", name: "server", view: "stream" }).events;
+    const cart = bus.forAssembly({ id: "c1", name: "cart", view: "default" }).events;
+    const ticker = bus.forAssembly({ id: "t1", name: "ticker", view: "default" }).events;
+    server.send("price", 1);
+    server.send("price", 99, { name: "cart" });
+    expect(cart.last("price")?.payload).toBe(99);
+    expect(ticker.last("price")?.payload).toBe(1);
+    server.send("price", 2);
+    expect(cart.last("price")?.payload).toBe(2);
+    server.send("price", 5, { id: "t1" });
+    expect([cart.last("price")?.payload, ticker.last("price")?.payload]).toEqual([2, 5]);
+  });
 });

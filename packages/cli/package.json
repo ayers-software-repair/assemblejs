@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "The AssembleJS command line: scaffold a project, add an assembly, build and run it.",
   "license": "Apache-2.0",
-  "author": "Zachariah Ayers",
   "homepage": "https://ayers.repair/assemblejs/",
   "repository": {
     "type": "git",
@@ -18,7 +17,6 @@
   },
   "files": [
     "dist",
-    "templates",
     "README.md",
     "LICENSE",
     "NOTICE"
@@ -45,6 +43,13 @@
     "test": "vitest run",
     "lint": "eslint src test",
     "check:publish": "publint && attw --pack . --profile esm-only"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "acorn": "8.18.0",
+    "esbuild": "0.28.2",
+    "postcss": "8.5.28",
+    "postcss-selector-parser": "7.1.6"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",

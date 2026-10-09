@@ -17,6 +17,7 @@ export interface SettleInput {
   readonly depth: number;
   readonly path: readonly string[];
   readonly query: URLSearchParams;
+  readonly params: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;
   readonly newId: () => string;
   readonly now: () => number;

@@ -8,6 +8,7 @@ const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 // Tests import the package by its published specifier, which is the position a consumer is in,
 // and resolve to source rather than to dist so a stale build cannot make a red suite look green.
 export default defineConfig({
+  test: { globalSetup: ["../../scripts/test-temp-root.mjs"] },
   resolve: {
     alias: {
       "@assemblejs/cli": src("./src/index.ts"),

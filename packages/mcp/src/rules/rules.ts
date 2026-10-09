@@ -84,4 +84,86 @@ export const RULES: readonly Rule[] = [
       "A framework that defaults a password ships one password to everybody who installs it.",
     smell: "Any credential with a fallback value.",
   },
+  {
+    id: "a-directory-is-a-page",
+    rule: "A directory under src/pages IS a page: <name>/<name>.html is the page at /<name>, home at /.",
+    because:
+      "The same reason a directory is an assembly: a route table restating the directory tree is a second place to keep in step, and the one two people adding pages both edit.",
+    smell: "A page template with no directory of its own, or a list of routes in authored code.",
+  },
+  {
+    id: "an-api-file-is-an-api",
+    rule: "A file src/api/<name>.api.ts default-exports one api, and the name says it is one.",
+    because:
+      "The build finds apis by their file name. A file that looks like one and is not named like one is left out of the build with nothing saying so.",
+    smell: "An api file in another directory, or one whose name has capitals.",
+  },
+  {
+    id: "a-view-needs-its-renderer",
+    rule: "A view builds only when its renderer is one the build knows and its package is installed.",
+    because:
+      "A view the build cannot render would otherwise fail on the first request instead of at build time, where the author is looking.",
+    smell:
+      "A framework view in a project that does not depend on that framework's renderer package.",
+  },
+  {
+    id: "a-placement-names-an-assembly",
+    rule: "Every <assembly name=...> in a page template names an assembly that exists.",
+    because:
+      "A placement with nothing behind it is a blank space a visitor finds. The server refuses to start rather than serve one, and check says so before it gets that far.",
+    smell: "A template placing a name no directory under src/assemblies has.",
+  },
+  {
+    id: "a-template-view-compiles",
+    rule: "A view written in a template language compiles in that language before anything is built or served.",
+    because:
+      "A template its engine cannot read fails on its first render, where the placement falls back and a visitor sees the fallback before the author sees the error. build and check compile every template view with the project's own engine, so the error is found at the desk and names the file.",
+    smell: "An unclosed block or tag in an .ejs, .hbs, .njk or .pug view that build accepted.",
+  },
+  {
+    id: "policy-names-a-placement",
+    rule: "Policy in a page's declaration is an object per placement its template makes, saying only what the server reads: defer or required, a positive deadline in milliseconds, a cache.",
+    because:
+      "Policy for a name the template never places, or that is not an object, is read by nothing, and the author believes it applies. A deadline that is not a positive, finite number is one the composer cannot wait for. A deferred placement is filled by the browser after load, so a deadline or a cache on it is read by nothing, one from another server cannot be fetched across origins, and one on a page with no runtime is never filled. The server refuses each at boot; check says so first.",
+    smell:
+      "A place entry whose name is not in the template or whose value is not an object, a deadline of zero, or defer beside required, a deadline or a cache.",
+  },
+  {
+    id: "a-page-opens-one-stream",
+    rule: "A page's stream is the path of one of this server's streaming apis, without parameters, on a page that places an assembly of this server's with a browser half.",
+    because:
+      "The page's own runtime opens the stream, by the path as written, and is on the page only for a local assembly that runs in the browser. A stream nothing would open, or a path that is no stream, is a page waiting for messages that never come. The server refuses it at boot; check says so first.",
+    smell:
+      "A stream naming a data api or a path with :parameters, or a page of static views alone.",
+  },
+  {
+    id: "a-budget-is-whole-bytes",
+    rule: "A page budget in assemblejs.config.ts is an object of the parts a page sends, document, styles and scripts, each a whole number of gzipped bytes above zero, written as a literal.",
+    because:
+      "perf holds every page to the budgets the config declares and reads them from the source without running it, so a budget that is computed, names a part nothing sends, or is not a whole number of bytes is one no page can be held to. perf refuses it before anything is built; check says so first.",
+    smell:
+      "budgets: { html: 50000 }, a budget of zero or 12.5, or budgets built from an environment variable.",
+  },
+  {
+    id: "the-server-file-never-grows",
+    rule: "src/server.ts hands createServer the generated project and does nothing else.",
+    because:
+      "Everything the server serves is found on disk by the build. A server file that registers things is a second registry, and the first thing two people adding assemblies both edit.",
+    smell: "An import of an assembly, a page or an api in src/server.ts.",
+  },
+  {
+    id: "one-project-per-root",
+    rule: "The agent surface works on one project root, and create_project scaffolds into it only while it holds no project.",
+    because:
+      "Scaffolding over an existing project overwrites the author's files with a starter's, and a tool scoped to one root never reaches outside it.",
+    smell: "Asking to create a project where a package.json already is.",
+  },
+  {
+    id: "an-assembly-owns-its-styles",
+    rule: "An assembly's styles are its own .css files and its components' <style>, scoped to it at build time, with every file they reference built beside them.",
+    because:
+      "The stylesheet is served from the build, not from the assembly's directory, so a reference the build did not carry along points at nothing, and a stylesheet it cannot parse cannot be scoped.",
+    smell:
+      "A relative @import, a url() naming a file that is not there, or CSS the build reports it cannot parse.",
+  },
 ];

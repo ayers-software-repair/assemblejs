@@ -4,4 +4,5 @@ export * from "./root/index.js";
 export * from "./rules/index.js";
 export * from "./render/index.js";
 export * from "./compose/index.js";
+export * from "./author/index.js";
 export * from "./server/index.js";

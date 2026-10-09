@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { JsonObject } from "../json/json-object.js";
+import type { DataSchema } from "./data-schema.js";
 import type { ServiceContext } from "./service-context.js";
 
 /**
@@ -18,5 +19,7 @@ import type { ServiceContext } from "./service-context.js";
 export interface ServiceDefinition<D extends JsonObject = JsonObject> {
   readonly name: string;
   readonly after?: readonly string[];
+  /** The fields this service returns. Two contributors claiming one field is a boot error. */
+  readonly schema?: DataSchema;
   run(context: ServiceContext): D | Promise<D>;
 }

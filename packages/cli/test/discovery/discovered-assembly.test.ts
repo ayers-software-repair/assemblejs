@@ -11,6 +11,7 @@ describe("an assembly found on disk", () => {
       view: "src/assemblies/cart/cart.svelte",
       renderer: "svelte",
       client: undefined,
+      service: undefined,
       styles: [],
     };
     expect(found.renderer).toBe("svelte");

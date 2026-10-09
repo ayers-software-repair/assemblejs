@@ -20,6 +20,8 @@ export interface AssemblyRequest {
    */
   readonly path: readonly string[];
   readonly query: URLSearchParams;
+  /** The page's route parameters, which the assembly's services are given. */
+  readonly params: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;
   readonly signal: AbortSignal;
 }

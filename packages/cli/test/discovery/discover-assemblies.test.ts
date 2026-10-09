@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -37,6 +37,15 @@ describe("discovering assemblies", () => {
     const [found] = discoverAssemblies(root).assemblies;
     expect(found?.client).toMatch(/cart\.client\.ts$/);
     expect(found?.styles).toHaveLength(2);
+    expect(found?.service).toBeUndefined();
+  });
+
+  it("finds the assembly's service by its name, and only that one", () => {
+    assembly("cart", ["cart.svelte", "cart.service.ts", "other.service.ts"]);
+    const [found] = discoverAssemblies(root).assemblies;
+    expect(found?.service).toMatch(/cart\/cart\.service\.ts$/);
+    assembly("shop", ["shop.svelte", "other.service.ts"]);
+    expect(discoverAssemblies(root).assemblies[1]?.service).toBeUndefined();
   });
 
   it("has no client when the assembly declares none", () => {
@@ -50,23 +59,47 @@ describe("discovering assemblies", () => {
     assembly("cart", ["cart.css", "notes.txt"]);
     const { assemblies, problems } = discoverAssemblies(root);
     expect(assemblies).toEqual([]);
-    expect(problems.join()).toMatch(/has no view file/);
+    expect(problems[0]).toMatchObject({
+      rule: "directory-is-an-assembly",
+      message: expect.stringMatching(/has no view file/),
+      fix: expect.stringMatching(/add cart\.html/),
+    });
   });
 
   it("reports a directory with more than one view", () => {
     assembly("cart", ["cart.svelte", "cart.vue"]);
-    expect(discoverAssemblies(root).problems.join()).toMatch(/more than one view file/);
+    expect(discoverAssemblies(root).problems[0]).toMatchObject({
+      rule: "one-framework-per-assembly",
+      message: expect.stringMatching(/more than one view file/),
+    });
+  });
+
+  it("reads files of the view's framework beside it as its own components, not views", () => {
+    assembly("cart", ["cart.lit.ts", "price.lit.ts", "cart.client.ts"]);
+    const { assemblies, problems } = discoverAssemblies(root);
+    expect(problems).toEqual([]);
+    expect(assemblies[0]?.view).toBe(`${root}/cart/cart.lit.ts`);
+    expect(assemblies[0]?.renderer).toBe("lit");
   });
 
   it("reports a directory whose name could never be an assembly", () => {
     assembly("Cart", ["cart.html"]);
     assembly("cart name", ["cart.html"]);
-    expect(discoverAssemblies(root).problems).toHaveLength(2);
+    const { problems } = discoverAssemblies(root);
+    expect(problems).toHaveLength(2);
+    // Each refusal names the name that would work.
+    expect(problems.map((problem) => problem.fix).sort()).toEqual([
+      'rename the directory to "cart"',
+      'rename the directory to "cart-name"',
+    ]);
   });
 
   it("reports an ambiguous view that does not say which framework wrote it", () => {
     assembly("cart", ["cart.tsx"]);
-    expect(discoverAssemblies(root).problems.join()).toMatch(/has no view file/);
+    expect(discoverAssemblies(root).problems[0]).toMatchObject({
+      rule: "the-file-name-says-the-framework",
+      fix: expect.stringMatching(/cart\.react\.tsx/),
+    });
   });
 
   it("is an empty project, not a broken one, when there is no assemblies directory", () => {
@@ -78,5 +111,11 @@ describe("discovering assemblies", () => {
     const { assemblies, problems } = discoverAssemblies(root);
     expect(problems).toEqual([]);
     expect(assemblies[0]?.view).toMatch(/cart\.html$/);
+  });
+
+  it("passes over a dangling link in the tree, rather than crashing the build or dev", () => {
+    assembly("cart", ["cart.html"]);
+    symlinkSync(join(root, "nowhere"), join(root, "dangling"));
+    expect(discoverAssemblies(root).assemblies.map((found) => found.name)).toEqual(["cart"]);
   });
 });

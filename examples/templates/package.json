@@ -1,0 +1,19 @@
+{
+  "name": "@assemblejs/example-templates",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One assembly in each template language, EJS, Handlebars, Markdown, Nunjucks and Pug, on one page, rendered on the server.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/renderer-templates": "workspace:*"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}

@@ -15,9 +15,11 @@ import { EventsContext } from "./events-context.js";
  */
 export function hydrate(component: (props: AssemblyProps) => unknown): ClientRenderer {
   return {
-    mount(element: Element, data: JsonObject, context: MountContext) {
+    mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       const root = hydrateRoot(
-        element,
+        // React accepts a shadow root at run time (any element, document or fragment container);
+        // its type names only the first two.
+        element as Element,
         createElement(
           EventsContext.Provider,
           { value: context.events },

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
 import { settlePlacement } from "@assemblejs/core";
-import type { ContentCache, Fetch, SettleInput } from "@assemblejs/core";
+import type { AssemblyRequest, ContentCache, Fetch, SettleInput } from "@assemblejs/core";
 
 const answering =
   (html: string): Fetch =>
@@ -25,6 +25,7 @@ const input = (over: Partial<SettleInput> = {}): SettleInput => ({
   depth: 0,
   path: [],
   query: new URLSearchParams(),
+  params: {},
   headers: {},
   newId: () => "id-1",
   now: () => 0,
@@ -61,7 +62,10 @@ describe("settling one placement", () => {
     );
     expect(reached).toBe(false);
     expect(settled.diagnostic.source).toBe("deferred");
-    expect(settled.html).toBe("");
+    expect(settled.html).toMatch(
+      /^<assembly-root data-name="cart" data-id="id-1" [^>]*data-defer="">/,
+    );
+    expect(settled.html).not.toContain("x<");
   });
 
   it("falls back to the declared content when nothing answered", async () => {
@@ -71,32 +75,37 @@ describe("settling one placement", () => {
         plan: { name: "cart", view: "default", deadline: 3000, fallback: "<p>unavailable</p>" },
       }),
     );
-    expect(settled.html).toBe("<p>unavailable</p>");
+    expect(settled.html).toContain('data-failed="c-1"><p>unavailable</p><script');
     expect(settled.diagnostic.source).toBe("fallback");
     expect(settled.diagnostic.reason).toBe("status");
     expect(settled.diagnostic.correlationId).toBe("c-1");
   });
 
-  it("prefers the last good content it holds over the declared fallback", async () => {
+  it("answers a refusal before dispatch with its fallback, never with cached content", async () => {
     const cache = memory();
-    cache.set("cart/default", { html: "<p>yesterday</p>" }, 60_000);
+    cache.set("60000|cart/default", { html: "<p>cached</p>" }, 60_000);
     const settled = await settlePlacement(
       input({
+        path: ["page/default", "cart/default"],
         fetch: failing,
         cache,
-        plan: { name: "cart", view: "default", deadline: 3000, fallback: "<p>unavailable</p>" },
+        plan: { name: "cart", view: "default", deadline: 3000, cache: { ttl: 60_000 } },
       }),
     );
-    // Real content this assembly actually produced beats a static string.
-    expect(settled.html).toBe("<p>yesterday</p>");
-    expect(settled.diagnostic.source).toBe("cache");
-    expect(settled.diagnostic.reason).toBe("status");
+    expect(settled.diagnostic.reason).toBe("cycle");
+    expect(settled.html).not.toContain("cached");
   });
 
-  it("renders nothing, with an account, when there is no fallback and no cache", async () => {
+  it("renders an empty envelope marked failed, with an account, when there is nothing else", async () => {
     const settled = await settlePlacement(input({ fetch: failing }));
-    expect(settled.html).toBe("");
+    expect(settled.html).toMatch(/^<assembly-root data-name="cart" [^>]*data-failed="c-1"><script/);
     expect(settled.diagnostic.source).toBe("fallback");
+  });
+
+  it("gives a failure an id even when its transport reported none", async () => {
+    const silent = async () => ({ ok: false, reason: "timeout", detail: "", correlationId: "" });
+    const settled = await settlePlacement(input({ fetch: silent as never }));
+    expect(settled.html).toContain(`data-failed="id-1"`);
   });
 
   it("writes to the cache only when a ttl was declared", async () => {
@@ -111,7 +120,7 @@ describe("settling one placement", () => {
         plan: { name: "cart", view: "default", deadline: 3000, cache: { ttl: 60_000 } },
       }),
     );
-    expect(withTtl.store.get("cart/default")?.html).toBe("<p>cart</p>");
+    expect(withTtl.store.get("60000|cart/default")?.html).toBe("<p>cart</p>");
   });
 
   it("never caches a credentialled response, in either direction", async () => {
@@ -120,7 +129,7 @@ describe("settling one placement", () => {
     await settlePlacement(input({ cache, plan, headers: { authorization: "Bearer x" } }));
     expect(cache.store.size).toBe(0);
 
-    cache.set("cart/default", { html: "<p>someone else</p>" }, 60_000);
+    cache.set("60000|cart/default", { html: "<p>someone else</p>" }, 60_000);
     const settled = await settlePlacement(
       input({ cache, plan, fetch: failing, headers: { cookie: "s=1" } }),
     );
@@ -159,7 +168,7 @@ describe("settling one placement", () => {
     expect(settled.diagnostic.reason).toBe("cycle");
   });
 
-  it("passes identities down the path, not instance ids", async () => {
+  it("sends its ancestors' identities, never instance ids and never itself", async () => {
     let seen: readonly string[] = [];
     await settlePlacement(
       input({
@@ -172,8 +181,9 @@ describe("settling one placement", () => {
       }),
     );
     // An instance id is minted fresh per request, so a path of them could never collide and the
-    // cycle check would silently never fire.
-    expect(seen).toEqual(["page/default", "cart/default"]);
+    // cycle check would silently never fire. The target is not its own ancestor: a server that
+    // refuses a path naming itself, as DESIGN 3.4 says it does, must not refuse every request.
+    expect(seen).toEqual(["page/default"]);
     expect(seen).not.toContain("a-fresh-uuid");
   });
 
@@ -263,32 +273,21 @@ describe("a transport that does not behave", () => {
     const settled = await settlePlacement(input({ fetch: (async () => ({ html: "x" })) as never }));
     expect(settled.diagnostic.reason).toBe("invalid");
   });
-});
 
-describe("a required placement", () => {
-  it("does not die when the cache still holds its last good content", async () => {
-    const cache = memory();
-    cache.set("cart/default", { html: "<p>yesterday</p>" }, 60_000);
-    const settled = await settlePlacement(
+  it("hands the page's parameters to every request, and to a deferred placeholder for the browser", async () => {
+    const asked: AssemblyRequest[] = [];
+    const seen: Fetch = async (request) => {
+      asked.push(request);
+      return { ok: true, html: "<p></p>", source: "local" };
+    };
+    await settlePlacement(input({ fetch: seen, params: { id: "42" } }));
+    expect(asked[0]?.params).toEqual({ id: "42" });
+    const deferred = await settlePlacement(
       input({
-        fetch: failing,
-        cache,
-        plan: { name: "cart", view: "default", deadline: 3000, required: true },
+        plan: { name: "cart", view: "default", deadline: 3000, defer: true },
+        params: { id: "42", slug: "a b" },
       }),
     );
-    // The ladder answered it, so it did not fail, so the page lives.
-    expect(settled.html).toBe("<p>yesterday</p>");
-    expect(settled.diagnostic.source).toBe("cache");
-  });
-
-  it("dies when the whole ladder misses", async () => {
-    await expect(
-      settlePlacement(
-        input({
-          fetch: failing,
-          plan: { name: "cart", view: "default", deadline: 3000, required: true },
-        }),
-      ),
-    ).rejects.toThrow(/required assembly "cart"/);
+    expect(deferred.html).toMatch(/data-defer="" data-params="id=42&amp;slug=a\+b"/);
   });
 });

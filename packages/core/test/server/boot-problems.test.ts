@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { bootProblems } from "@assemblejs/core";
+import { bootProblems, defineApi, defineService } from "@assemblejs/core";
 import type { AssemblyView } from "@assemblejs/core";
 
 const view: AssemblyView = { renderer: "html", data: () => ({}), markup: () => "" };
@@ -37,5 +37,31 @@ describe("what is checked before anything listens", () => {
 
   it("reports every problem, not the first", () => {
     expect(bootProblems([{ name: "Cart", views: { compact: view } }]).length).toBe(2);
+  });
+
+  it("includes what is wrong with the apis, beside what is wrong with the assemblies", () => {
+    const problems = bootProblems(
+      [{ name: "cart", views: { default: view } }],
+      [defineApi({ path: "/_assemblejs/x", handle: () => ({}) })],
+    );
+    expect(problems.join()).toMatch(/reserves/);
+  });
+
+  it("refuses a view whose contributors both declare one data field", () => {
+    const service = (name: string) =>
+      defineService({ name, schema: { properties: { title: {} } }, run: () => ({ title: name }) });
+    const problems = bootProblems([
+      { name: "cart", views: { default: { ...view, services: [service("a"), service("b")] } } },
+    ]);
+    expect(problems.join()).toMatch(/assembly "cart" view "default": data field "title"/);
+  });
+
+  it("includes what is wrong with the pages", () => {
+    const problems = bootProblems(
+      [{ name: "cart", views: { default: view } }],
+      [],
+      [{ route: "/", template: '<assembly name="nope"></assembly>' }],
+    );
+    expect(problems.join()).toMatch(/no such assembly/);
   });
 });

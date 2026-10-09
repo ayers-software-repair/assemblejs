@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
 import { defineService, runServices } from "@assemblejs/core";
+import type { ServiceDefinition } from "@assemblejs/core";
 
 const context = { query: new URLSearchParams("name=ada"), params: {} };
 
@@ -93,5 +94,17 @@ describe("running an assembly's services", () => {
 
   it("is an empty object when there are no services", async () => {
     expect(await runServices([], context)).toEqual({});
+  });
+
+  it("shows each service's own return to an inspector before merging it", async () => {
+    const seen: string[] = [];
+    const services: ServiceDefinition[] = [
+      defineService({ name: "a", run: () => ({ x: 1 }) }),
+      defineService({ name: "b", run: () => ({ y: 2 }) }),
+    ];
+    await runServices(services, { query: new URLSearchParams(), params: {} }, (service, returned) =>
+      seen.push(`${service.name}:${Object.keys(returned).join()}`),
+    );
+    expect(seen).toEqual(["a:x", "b:y"]);
   });
 });

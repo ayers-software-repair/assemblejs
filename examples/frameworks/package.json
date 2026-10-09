@@ -1,0 +1,31 @@
+{
+  "name": "@assemblejs/example-frameworks",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One assembly in every framework AssembleJS renders, on one page, each hydrated and all talking over one bus.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/renderer-lit": "workspace:*",
+    "@assemblejs/renderer-preact": "workspace:*",
+    "@assemblejs/renderer-react": "workspace:*",
+    "@assemblejs/renderer-solid": "workspace:*",
+    "@assemblejs/renderer-svelte": "workspace:*",
+    "@assemblejs/renderer-vue": "workspace:*",
+    "lit": "3.3.3",
+    "preact": "11.0.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "solid-js": "1.9.15",
+    "svelte": "5.57.0",
+    "vue": "3.5.43"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}

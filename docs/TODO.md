@@ -5,41 +5,89 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**STATE 2026-09-10.** Branch `next` @ `ead61f3`, pushed, tree clean. Full gate `pnpm check` exit 0
-on this HEAD (367 tests, five packages). Last CODE commit `ab13197`; everything after is docs. The
-seat that built this was stopped mid-ladder on the owner's word; nothing is half-written in the tree.
+**RESUME HERE (written 2026-10-05, the session pulled back for budget mid fan-out).**
+
+STATE. Branch `next`, every commit pushed to `origin/next`, tree clean, `pnpm check` green on
+every landing commit through `1210023`; the last three commits (`2a884a6`, `90f3069`,
+`e983859`) are docs and site only and were held to the site, emoji, identity and lint gates.
+B-09 through B-23, B-24a, B-25a and B-26a are done, each verified by a separate agent with its
+findings fixed. The owner answered every open question on 2026-10-05: read DECISIONS
+"2026-10-05: the owner's rulings on everything raised this week" before anything else; it
+names what each ruling lands with and in what order.
+
+THE EXACT NEXT STEP is the subassembly rung, the `NEXT:` row in the ladder below: a child is
+placed by `<assembly name>` in a template view and a `Slot` by the same name in a framework
+view (owner's ruling); then nested composition, services shaping a child's request, and
+depth and cycle refusal held across two servers in conformance. Start from
+`docs/studies/subassembly/reader-core.md` and `reader-renderers.md`, two read-only design
+memos with file:line citations, UNVERIFIED: hold every claim to the file it cites, write the
+missing cli/conformance memo and the synthesis (DESIGN 7 and 8 amendments, a bite ladder),
+log the design in DECISIONS, then code it rung by rung with a verifier per rung.
+
+AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
+the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
+are the changesets changelog); the API reference, typedoc at deploy time
+(`docs/studies/typedoc-at-deploy.wip.patch` is an interrupted agent's work: read it, do not
+apply it unread); the three truth fixes (events.ts's unmount comment, readBudgets' "computed"
+wording, the mcp verbs in CLAUDE.md: done 2026-10-05, DECISIONS "three claims"); CI breadth
+(done 2026-10-05: a conformance job; node 24 was already in the matrix); the
+house-style rows, which wait on the owner lifting that hold. The two inherited guide claims
+are fixed (`67bd8bc`, `e920464`).
+
+DEBTS AND CORRECTIONS. The guides for Preact, Solid, Lit and the template languages
+(`2a884a6`) came from an agent worktree; a separate reader then verified all 39 code blocks
+verbatim and every claim, and `e983859` applied its two wording fixes. That commit's body lists
+three more fixes (the Markdown scaffold, "eight kinds", the templates page's missing section)
+that were already right in the committed tree; the reader had reviewed an earlier draft. The
+record here is the correction. Two claims the reader found inherited by all six guides are
+the two rows under the site section. No changeset is due for anything above: nothing is
+published, and changesets start after the first publish (ruling).
+
+OWNER-ONLY, unchanged: the Actions organization allowlist (Actions runs nothing here),
+`RELEASES_PAT`, the trusted publisher per package on npmjs.com, the `release` environment's
+reviewer, branch rulesets, the setting that lets Actions open the version pull request;
+B-27a carries the second halves of B-24, B-25 and B-26.
+
+HOW THIS LANE WORKED, so the next one is not slower: implement; tests; watch each claim red by
+a mutation and restore by the inverse edit; conformance or browser proof where one applies;
+the structural gates; `pnpm check` in the background (`pgrep -f "bin/pnpm check$"` then
+`tail --pid`); a verification agent with no stake, its findings fixed; DECISIONS and the TODO
+box in the same commit; `git commit -s -F <draft>`; `git push -u origin next`. Agent
+worktrees under `.claude/worktrees/` break `pnpm lint` (a second tsconfig) until removed.
 
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
 micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
 published as `@assemblejs/*`. `docs/DESIGN.md` is the contract, `docs/PLAN.md` the frozen rung
-ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-11 are DONE (49 rows).
-IN FLIGHT: **B-12 partial** - the service model landed (services RETURN, ordered by `after`,
-`resolveData` is the one function both endpoints call); the user-declared api routes are NOT wired.
-**B-09 partial** - `dev`, `build`, `@assemblejs/create` left; **B-09c** - agent tools
-`create_project`, `add_assembly`, `place_assembly`, `check` left.
+ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE, B-09 and
+B-09c included. The browser suite
+(`pnpm test:browser`) is outside `pnpm check`; on a machine whose Chromium is not the one this
+Playwright expects, `ASSEMBLEJS_CHROMIUM` names the binary.
 
-**THE EXACT FIRST STEP:** finish B-12. `packages/core/src/api/api-definition.ts` is the landed,
-tested contract (`{ path, method?, handle(context) }`); `server-options.ts` has NO `apis` field and
-`create-server.ts` registers no user apis. Add `apis?: readonly ApiDefinition[]`; a `register-apis.ts`
-(own file, own test) mounting each as a fastify route replying JSON; boot-time refusals through the
-existing `boot-problems.ts` for a duplicate (method,path), a path not starting with `/`, and a path
-under `/assembly/` or `/_assemblejs/`; tests via `app.inject`, each watched RED by disabling the
-guard first; align `docs/DESIGN.md` section 8's snippet (shows `GET:` as a field) to the code's
-`method`+`handle`; the curl proof on a REAL listening server bound to 127.0.0.1, output pasted;
-check this row off in the SAME commit. Then close B-09/B-09c, then B-13 onward in ledger order.
+**B-09 IS DONE (2026-10-03).** Its record, kept for the next lane: Found on resuming, and logged in `docs/DECISIONS.md`: the server
+served the assembly endpoints but no PAGES - nothing turned a template into a composed document
+or linked a browser runtime - and B-09's proof (create, build, `node dist/server.js`) needs both.
+So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild owned by the
+CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
+`@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
 
-**ORDER AND DEPENDENCIES of the 37 open rows:** B-12 -> B-09/B-09c -> B-13 (remote; carries recorded
-debt: `Limits.maxBytes` has no reader) -> B-14 auth -> B-15 styles -> B-16 four renderers -> B-17
-templates -> B-18 SSE -> B-19 devtools -> B-20 verbs -> B-21..B-24 conformance (need B-16..B-20) ->
-B-25 budgets -> B-26 release dry run -> B-27a/B-27b (need the owner's acts). The five house-style
-rows and the six release-notes rows (owner ruled: hand-kept notes for the 1.0.0 train, generated
-later; CHANGELOG<->site drift gate now; changesets kept permanently) can land any time. Site guides
-wait for renderers so they show real code. Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions
-org allowlist (Actions runs NOTHING here yet), branch rulesets, the bird mark, the palette, the
-old npm package deprecation, the first hand publish.
+**THE EXACT NEXT STEP:** the subassembly rung (the `NEXT:` row below; owner's ruling in
+DECISIONS 2026-10-05 "rulings"). Every row through B-26 that needs no owner is done; the second
+halves of B-24, B-25 and B-26 are folded into B-27a, the owner's. The owner answered every open
+question on 2026-10-05; the rulings entry in DECISIONS lists them and what each lands with.
 
-**STALE ROW, resolve first, do not assume:** Phase 1's "eleventh (client) dossier verified" still
-says a verifier "is reading now" - its outcome was never recorded.
+**ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
+(done) -> B-26a release dry run (done) -> the subassembly rung -> B-27a/B-27b (the owner's). The
+five house-style rows and the release-notes rows can land any time. The site's guides are
+written.
+Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions org allowlist (Actions runs NOTHING
+here yet, so the B-25b Scorecard run with it), branch rulesets, the bird mark, the palette, the
+old npm package deprecation, the first publish. Raised with the
+owner, unanswered: whether changesets start before or after the first publish (DECISIONS,
+2026-10-03, "open"; `CLAUDE.md` still says every `packages/*/src` change).
+
+**THE CLIENT DOSSIER ROW (Phase 1) cannot be resolved from here.** The dossiers and the reference
+clones live outside this tree by design and a cloud session has neither; its outcome was never
+recorded. It stays open for the owner.
 
 **2. THE HOUSE-STYLE KIT (private `platform` repo, `codestyle/`).** v0.23.0 is tagged and pushed;
 nothing unpushed there. PENDING: the ruling document's section 16 (in the business-site repo,
@@ -63,7 +111,11 @@ reached HEAD once). Three tests were once green for a reason they did not claim 
 red, always. Svelte 5 hydration cannot run in a DOM shim (reads `Node.prototype` getters): Chromium
 only, the test file says why. syncpack is deliberately `--dependency-types prod,dev`. The
 `client-stays-browser-only` cruiser rule is ANSWERED by moving the file, never loosened. A waiter
-using `pgrep -f` matches its own command line - use a captured PID. `identity()` joins with a
+using `pgrep -f` matches its own command line - use a captured PID, or anchor the pattern with `$`.
+A pid file read the moment it exists can be empty, and a pid of 0 probes the whole process group:
+wait for a pid that parses. The cli suite reaches the project's template engines through
+`examples/templates`, which resolves to `packages/renderer-templates/dist`: build that package
+before running the cli suite alone (`pnpm check` builds before it tests). `identity()` joins with a
 separator that cannot collide (`a/b`+`c` vs `a`+`b/c`). The `<assembly>` directive matches
 case-insensitively. The commit-msg hook runs commitlint + DCO; CI greps attribution trailers because
 fork PRs run default settings. The house emoji gate refuses a document that QUOTES an emoji -
@@ -98,12 +150,22 @@ the record of what was read, and they stay in the private estate document store,
 - [x] `legacy-additions` dossier
 - [x] `legacy-tests` dossier
 - [x] Ten of the eleven dossiers' load-bearing claims refuted at the source by a second reader
-- [ ] The eleventh (`client`) verified: its first verifier died mid-run, a second is reading now
+- [ ] The eleventh (`client`) verified: its first verifier died mid-run and the second one's
+      outcome was never recorded. Open for the owner: the dossiers are outside this tree.
 - [x] `docs/dossiers/00-BRIEF.md`: the dossiers aggregated into one design brief
 - [x] `docs/dossiers/00-AUDIT.md`: the adversarial defect hunt over the v1, eight lenses, every
       finding refuted by a second reader; 74 raised, 61 survived, fifteen design constraints
 
 ## Blocked, needs the owner (one admin click each)
+
+- [x] **Package metadata against `CLAUDE.md`'s identity law.** Ruled 2026-10-05: the twelve
+      `author` lines are gone from `packages/*/package.json`; `repository` and `bugs` keep the
+      organization's url, which provenance verifies against, and the law now says so
+      (DECISIONS 2026-10-05)
+
+- [x] **`CLAUDE.md`'s two claims now hold** (ruled 2026-10-05): `scripts/check-claude-gates.mjs`
+      checks the gate paragraph against the `check` chain as `check:claude`, self-tested and
+      watched red; the Packages list names `@assemblejs/mcp` (DECISIONS 2026-10-05)
 
 - [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
       and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:
@@ -141,42 +203,182 @@ starts. Until the owner enables Actions, every proof is local only.
 - [x] B-06 the server: the three endpoints, header validation, the error contract
 - [x] B-07 the browser runtime and the four mount modes
 - [x] B-08 events: typed, addressable, replay opt-in, teardown exact
-- [ ] B-09 the CLI and create: discovery, templates, non-interactive
-      Done: discovery, the generated registry, new, add, generate, the non-interactive bin.
-      Left: `dev` and `build` (they need the bundler seam), and `@assemblejs/create` so
-      `npm create @assemblejs` works. The rung's own proof needs both.
+- [x] B-09 the CLI and create: discovery, templates, non-interactive; new, add, the
+      non-interactive bin (the earlier `generate` verb is retired, build writes every module); pages served by core; `build` (esbuild owned by the CLI,
+      `dist/server.js` under plain node); `dev`; `@assemblejs/create`. Proof: `pnpm proof:create`
+      (packed tarballs, the starter run from its tarball, built, dev dependencies pruned, served)
 - [x] B-09b the agent surface: @assemblejs/mcp, resources and tools, no model and no key
       Landed: the project-root guard, the queryable rules, render_assembly, compose_page,
       explain, the project and rules resources, and the stdio server, all driven end to end
       through the real protocol in the tests.
-- [ ] B-09c the remaining agent tools: create_project, add_assembly, place_assembly and check,
-      which are the command line's own logic reached through the same seam. Owed once `add`
-      and `check` have a shape the protocol can hand back as structures.
+- [x] B-09c the remaining agent tools: create_project, add_assembly, place_assembly and check,
+      the command line's own logic (planAssembly, placeAssembly, checkProject) reached through
+      the same seam, every refusal a structure with its file, rule and fix. Proof: an agent
+      creates, adds, places, composes and checks through the protocol alone
 - [x] B-10 the first framework renderer: @assemblejs/renderer-react
 - [x] B-11 the second framework renderer and the day-one proof: Svelte, and two frameworks sharing an event on one page in a real browser
-- [ ] B-12 services and apis
-      Done: the service model (return not mutate, `after` not priority, ordering settled
-      at boot with duplicates/unknowns/cycles refused), the api declaration, and
-      resolveData as the one function both endpoints call.
-      Left: wiring api routes into createServer and the curl proof the rung names.
-- [ ] B-13 remote assemblies: allowlist, caps, handshake, cache
-      Owed here: `Limits.maxBytes` is declared and has no reader until the remote
-      transport exists. A verification pass found a 10 MiB fragment composing clean
-      through `maxBytes: 8`, which is correct today and must not be once B-13 lands.
-- [ ] B-14 auth and the default policy
-- [ ] B-15 styles: scoping, Shadow DOM opt-in, the documented holes
-- [ ] B-16 the remaining four framework renderers
-- [ ] B-17 the template engines
-- [ ] B-18 real-time over server-sent events
-- [ ] B-19 devtools, read-only, with the boot assertion
-- [ ] B-20 the check, perf and deploy verbs
-- [ ] B-21 the conformance harness and its first specs
-- [ ] B-22 conformance breadth, batch one
-- [ ] B-23 conformance breadth, batch two
-- [ ] B-24 conformance breadth, batch three, and the acceptance table
-- [ ] B-25 size budgets, pack check, Scorecard
-- [ ] B-26 the release dry run with provenance
-- [ ] B-27a estate integration and the first prerelease
+- [x] B-12 services and apis: the service model (return not mutate, `after` not priority,
+      ordering settled at boot with duplicates/unknowns/cycles refused), resolveData as the one
+      function both endpoints call, data schemas deep-merged with a field claimed twice refused
+      at boot, and the product's apis mounted by createServer on a flat route grammar with
+      collisions and reserved prefixes refused at boot
+- [x] B-13 remote assemblies: exact-origin allowlist (`remotes`, from `assemblejs.config.ts`),
+      redirects refused, a declared host resolving into a private range refused, nothing
+      forwarded but declared keys, the 2 MiB text/html one-envelope cap (`Limits.maxBytes` now
+      read, for every transport), the manifest once per version with its assets hoisted, the
+      per-placement cache keyed by url and answering a fresh entry before dispatch. Proof: two
+      servers in one test, and a page hydrating another server's assemblies in Chromium
+- [x] The second B-13 review's remote and root findings, each with a test watched failing: a
+      cached answer now varies on the forwarded headers; a remote answer is read by a scanner
+      that follows the browser's tokenizer and tree rules and refuses what it cannot read
+      exactly (proved against Chromium over 100,000 seeded fragments, in every context that holds
+      flow content, template content and a shadow root included), every envelope in it is
+      stamped with its origin, and the runtime takes an envelope's owner from its nearest
+      marked ancestor; the root guard follows dangling links; the manifest is read beside the
+      content under the cap, JSON only, its files on the remote's own origin
+- [x] The rest of the second B-13 review: `check` reads a placement a page declares from
+      another server against the remotes `assemblejs.config.ts` declares; `dev` stops a server
+      that ignores SIGTERM after a grace, a second Ctrl-C ends it at once and takes the server
+      with it, a server dev stopped itself is not reported as stopping, and the config is
+      watched; the private-range check is a block list of the reserved and address-carrying
+      ranges it names, reading every spelling of an IPv6 address
+- [x] The B-15 review's findings: a nested rule is scoped through its parent; `:scope` inside
+      `:not()` or `:is()` stays inside the assembly; `:root`, `html`, `body` and `:host` name
+      the envelope; `@scope`'s own `:scope` is left to it; every Svelte component in an
+      assembly's directory brings its `<style>`, shared ones go with every Svelte assembly; a
+      file a stylesheet names is built with it, and a relative `@import`, a missing file or CSS
+      the build cannot parse is a structured problem `check` reports too; the default policy's
+      refusal of inline styles is documented (DESIGN 5.2); an html-only project with styles is
+      proved to serve them
+- [x] The third review's findings: a stylesheet reference leading out of its assembly's
+      directory (by `../` or a link) is a problem, never a published file; `check` reads page
+      declarations and the config as literals through esbuild rather than by regex; `dev` ends
+      on SIGHUP; the scanner's Chromium proof marks what it parses, requires every envelope
+      stamped, and runs in more contexts, with a test only each guard fails; `html.dark` stays a
+      condition on the document and `:host()` names the envelope with its selector
+- [x] The fourth review's findings (Preact, Vue and the third round): a Vue render error rejects
+      in Vue's production build as in its development one; a listening server ends its process,
+      logged, on a failure nothing handled (DESIGN 12, missing since B-06); a shadow root's
+      stylesheet follows the markup, proved hydrating for every framework (`examples/shadow`);
+      MathML's mglyph and malignmark stay MathML in a text integration point; a remote placement
+      inside a page's form is refused at boot; a shared JSX file takes its importers' framework,
+      two of them an error; unsupported Vue SFC parts are build errors and `v-bind()` reaches the
+      server render; `check` reads a declaration's default export with a parser; a selector
+      reaching a sibling of the envelope is a style problem
+- [x] The Solid and Lit review's findings: Lit hydration lost when another module loads `lit`
+      first; Solid islands sharing one hydration registry and key space (render ids); the
+      browser proof capturing elements after hydration rather than before; the Lit style
+      removal's brittle pattern; Solid's resource scripts and async limits; TypeScript decorators
+      in Solid files; Solid and Lit scaffolds built in the unit suite; peer ranges and pins
+- [x] The verification of the Solid and Lit round: Vue's production build really under test,
+      Solid's registry carried over safely and its script matched exactly, the inert `lit-early`
+      fixture removed, the Lit guards and peer ranges tightened
+- [x] Page route parameters reach the assemblies a page places: the placement request, the
+      cache key and the remote transport each carry them, the last as `assembly-params`; a
+      deferred placeholder carries them for the browser (DECISIONS 2026-10-05)
+- [x] B-14 auth and the default policy: one decision (`decideAccess`) in the first hook every
+      request meets; basic credentials from the environment or an `authenticate` check, never
+      both; public routes, health always; a check that throws refuses; the default content
+      security policy with the declared remotes on every html answer; same-origin by default.
+      Proof: 401 without and 200 with on every kind of route, and a test that one place decides
+- [x] B-15 styles: scoping, Shadow DOM opt-in, the documented holes. Each assembly's `.css` is
+      scoped to its envelope at build time and linked only on pages that place it, its Svelte
+      component's `<style>` with it; a framework view's `shadow` export renders it in a
+      declarative shadow root with its own unscoped sheet. Proof, in Chromium from the built
+      `examples/styles`: two assemblies' `.title` keep their own colours, one's `@keyframes`
+      runs in the other, and the shadow assembly keeps a page rule out and still hydrates
+- [x] B-16 the remaining four framework renderers, proved on one page (`examples/frameworks`)
+  - [x] `renderer-preact`: `.preact.tsx`, server render, hydration (shadow roots included), the
+        events hook; each JSX file compiles through its own framework's runtime
+  - [x] `renderer-vue`: `.vue` single-file components compiled with the project's own Vue
+        (`<script setup>` with its template inlined, or a separate render function; `<style
+scoped>` under one id on both sides), an app per assembly, `useEvents()` by injection
+  - [x] `renderer-solid`: `.solid.tsx` compiled by Solid's own Babel preset, which the renderer
+        carries, for the server and hydratable for the browser; each mount adopts its markup by
+        its own hydration keys, and the events by context
+  - [x] `renderer-lit`: `.lit.ts` views as template functions, server-rendered with
+        `@lit-labs/ssr` (elements into declarative shadow roots) and hydrated with its client;
+        an element's own styles are adopted when it hydrates
+  - [x] the page carrying all six, in Chromium: html, React, Svelte, Preact, Vue, Solid and Lit
+        assemblies, each keeping the element the server sent and heard by every other
+- [x] B-17 the template engines: EJS, Handlebars, Markdown, Nunjucks and Pug through
+      `@assemblejs/renderer-templates`, each engine imported on first use and each template
+      compiled once; `data` escaped, `children` raw; one project per language scaffolded, built
+      and served, five of five
+- [x] The verification of B-17: Nunjucks reads no `views/` directory, the browser filter and
+      the templates example held by the unit suite, errors name the template's file
+- [x] `build` and `check` compile each template view, so a template that cannot compile refuses
+      the build rather than falling back at its first render (DECISIONS, 2026-10-03, "verifying
+      B-17"; done 2026-10-05, Handlebars parsing when it compiles)
+- [x] B-18 real-time over server-sent events: a streaming api, a page naming its one stream,
+      the runtime delivering each message onto the bus; in Chromium, one push reaches a React and
+      a Svelte assembly over one connection
+- [x] The verification of B-18: early messages kept per topic, back-pressure, `defineApi`
+      strict again, a stream with nothing to open it refused at boot, HEAD refused
+- [x] `dev` refreshes the browser after a rebuild, over the server-sent events B-18 builds,
+      development only and under the framework's prefix (DECISIONS, 2026-10-03, "dev is the
+      production build").
+- [x] The verification of dev reload and the B-18 fixes: `last` honours addressing, back-pressure
+      drops only a stalled client, the reload routes under the devtools prefix, the page carries
+      its boot
+- [x] B-19 devtools, read-only, with the boot assertion: handed to the server as data, mounted
+      in development only; boot refuses any route under the prefix that writes, proved with a
+      POST; `@assemblejs/devtools` serves an overview and `project.json`
+- [x] The verification of B-19: the assertion read after the router is ready, the setup builds
+      devtools, devtools answer only loopback, a write refused in production too
+- [x] B-20 the check, perf and deploy verbs: `check` prints what the project check finds and
+      fails on any; `perf` weighs what each page of the production build sends; `deploy` writes
+      `deploy/`, a build that runs; a generated project passes `check` and its deploy runs
+- [x] B-21 the conformance harness and its first specs: a real project from the packed tarballs,
+      DESIGN 2 held from the outside over HTTP (`pnpm conformance`, 14 of 14); the content
+      endpoint's fallback for a throwing service, found by the first run, fixed
+- [x] The verification of B-20: `perf` at the declared route, failing a fallback, stopping its
+      server on a signal, reading tags as a browser does; `deploy` holds its dependencies to the
+      server's imports and keeps a `deploy/` it did not write; devtools check the peer address
+- [x] The verification of B-21: `assembly-path` is ancestors' identities in DESIGN as on the
+      wire; the specs refuse a fallback under 200, data in a failure body, a bare envelope
+      attribute; `check` refuses every route boot refuses; the harness leaves no server or
+      directory; `perf` reads tags as a browser does; tests clean their temporary directories
+- [x] B-22 conformance breadth, batch one: the matrix defined from DESIGN (DECISIONS); every
+      renderer from its tarball through the contract, a static view shipping no script, and a
+      page of all of them containing its one failure (`pnpm conformance`, 15 and 53 of 53)
+- [x] The verification of B-22: the cache read only by a placement that declared a lifetime, the
+      ladder in DESIGN's order; `assembly-path` the ancestors alone, a cycle refused on arrival;
+      `check` refuses a page on an api's route; failure ids found in the server's log; a static
+      page held to no script; the matrix says what it leaves out; `perf` reads tags as a browser
+- [x] B-23 conformance breadth, batch two: two servers and a hostile third from the tarballs,
+      remote placement, script, stylesheet, failures, cache, forwarding, apis, the stream
+      (`pnpm conformance`: contract 16, remote 18, rendering 69)
+- [x] The deferred placement, found missing by B-23: the placeholder the owner ruled the page
+      ships, filled by the runtime after load, proved over HTTP and in a real browser
+- [x] The verification of B-23: a deferred shadow assembly filled into its shadow root; a failed
+      fill shows its fallback and its logged id; the page's query carried; boot refuses only a
+      deferral nothing could fill; remote failure ids held, a 4xx, cancellation and expiry held;
+      the harness stops a starting server on a signal; `check` holds apis to core's rules
+- [x] `check` reads placement policy as boot does: a view the assembly lacks, policy for an
+      unplaced name, the deferral rules, and the stream a page names, by the same functions
+      boot calls (DESIGN 11: every problem found without building; DECISIONS 2026-10-05)
+- [x] A deferred placement from another server stays refused at boot: deferral is local, a
+      remote is fetched by the server with its deadline (owner, DECISIONS 2026-10-05 rulings)
+- [ ] NEXT: a subassembly is placed by a directive in the view's markup, `<assembly name>` in a
+      template view and a `Slot` by the same name in a framework view (owner, DECISIONS
+      2026-10-05 rulings); then nested composition, services shaping a child's request, and a
+      parent's depth and cycle refusal held across two servers in conformance
+- [x] B-24a conformance breadth, batch three: trust and the command line, from the tarballs over
+      HTTP (`pnpm conformance`: trust 43 of 43, every fixture green); each claim watched red on a
+      mutation aimed at it (DECISIONS 2026-10-05)
+- [x] B-25a size budgets and the pack check: every package's tarball under a budget the pack
+      check holds and self-tests; a project's pages under the `budgets` its config declares, held
+      by `perf` (DECISIONS 2026-10-05)
+- [x] B-26a the release dry run, the local half: changeset status and version, every package
+      packed and every tarball read, the registry asked; the release workflow's inputs corrected
+      to the pinned action's, the pre-mode gap recorded (DECISIONS 2026-10-05)
+- [x] `next` in changesets pre mode: `.changeset/pre.json` written by `changeset pre enter next`
+      and committed (owner, DECISIONS 2026-10-05 rulings)
+- [ ] B-27a estate integration and the first prerelease, which now carries the second halves
+      of B-24, B-25 and B-26 (owner, DECISIONS 2026-10-05 rulings): the acceptance table from
+      the `legacy-tests` dossier, the Scorecard run, and the publish dry run with provenance
+      from the `release` environment; all three are Actions or outside this tree
 - [ ] B-27b the stable publish, after the cold quickstart
 
 ## House style / hooks stack (CTO ruled 2026-09-03..09; owner routed it here) — assemblejs's part
@@ -184,8 +386,9 @@ starts. Until the owner enables Actions, every proof is local only.
 Ruling lives in ayers.repair/docs/CODESTYLE-HOOKS-RULING.md. These are the rows that touch THIS
 repo only. Not begun; the work hold still stands and platform/codestyle is uncommitted upstream.
 
-- [ ] Release-notes DRIFT GATE: a test asserting every `CHANGELOG.md` version heading has a matching
-      `<section id="v...">` in `site/release-notes.html`, structure only never prose, watched red on
+- [ ] Release-notes DRIFT GATE: a test asserting every version heading in the packages'
+      `CHANGELOG.md` files has a matching `<section id="v...">` in `site/release-notes.html`,
+      structure only never prose, watched red on
       an injected version first. Correct whether notes are typed or generated. Ties into the
       release-notes-pattern block below (this repo needs all four surfaces).
 - [ ] Keep changesets permanently (owner ruling: only a per-package bump computes which of five
@@ -214,17 +417,21 @@ VERIFIED HERE TODAY: this repository has NONE of the four surfaces. `RELEASE_NOT
 `site/pages.json`, and `release.yml` has no body generation. So assemblejs adopts all four, where
 howland is said to need three and magpie already has them.
 
-- [ ] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, and the source the release body is
-      generated FROM.
-- [ ] `CHANGELOG.md` at the root: the developer register, hand-kept. A different register from
-      the notes on purpose.
+RULED 2026-10-05 (owner): the GitHub release body is each package's `CHANGELOG.md`, written by
+changesets, the action's default. The rows below are rewritten around that.
+
+- [ ] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, the register the site page is
+      written from. Not the release body.
+- [x] `CHANGELOG.md`: per package, written by changesets from the first changeset after the
+      first publish; never hand-kept at the root (DECISIONS 2026-10-05 rulings)
 - [ ] `site/release-notes.html`: one `<section id="v...">` per version, declared in `pages.json`
       so `check-site.mjs` refuses it going missing.
-- [ ] The GitHub release BODY generated at release time from `RELEASE_NOTES.md` plus the
-      production guide links, gated on DNS resolving rather than on a flag. Never a tracked file:
-      a tracked body is one the next person cutting a release can silently ship without the links.
+- [x] The GitHub release BODY: each package's `CHANGELOG.md` entry, created by the changesets
+      action at publish time (`create-github-releases`, its default); never a tracked file
+      (DECISIONS 2026-10-05 rulings)
 - [ ] THE DRIFT GATE, which is the part that actually holds it together: a test asserting every
-      version heading in `CHANGELOG.md` has a matching `<section id="v...">` in the site page.
+      version heading in the packages' `CHANGELOG.md` files has a matching `<section id="v...">`
+      in the site page.
       STRUCTURE ONLY, never prose — the two deliberately say the same thing in different
       registers and flattening that difference is the failure, not the fix. Watch it red on an
       injected version before trusting it, the way every other gate here was.
@@ -252,20 +459,44 @@ and `/assemblejs/next/` from `next`.
 - [x] `site/install.html` and `site/start.html` from `platform/sitekit/templates/`, instantiated
       by hand as committed pages
 - [x] `site/docs/index.html`: the model, the contract, and where to start
-- [ ] The guides: one per camp (for React devs, for Vue devs, for Svelte devs) and the
-      linear tutorial. Owed once the renderers exist, so a guide can show real code.
+- [x] The guides: one per camp (for React devs, for Vue devs, for Svelte devs) and the
+      linear tutorial, every file shown read from the repository's examples, DESIGN or its
+      tests (DECISIONS 2026-10-05)
+- [x] The guides for the other camps: for Preact, Solid and Lit developers and for template
+      authors (EJS, Handlebars, Nunjucks, Pug, Markdown), in the same shape, every file shown
+      read from the repository's examples, what `add` writes, the conformance fixtures, DESIGN
+      or the tests; declared in `pages.json`, linked from the docs index, footers generated
+      (DECISIONS 2026-10-05, "guides for the other camps")
 - [x] `site/404.html` from the kit template
 - [x] `site/skin.css`: the role bindings, no structural CSS
 - [x] `site/.gitignore` carrying `/kit`, and the local `kit` symlink for preview
 - [x] `site/DEPLOY.md` and `site/LANDING.md`: what the folder is and what the page claims
-- [ ] `scripts/site-links.py`: cross-links generated from `pages.json`, never hand-written
+- [x] `readBudgets` reported `budgets: b` (a literal object behind a name) and `budgets: Infinity`
+      as "computed"; the message is now "not written as an object of parts and bytes", true of
+      both, held by the reader's and perf's tests (2026-10-05)
+- [x] `deploy-site.yml` used `aws-actions/configure-aws-credentials@v6` unpinned; pinned to the
+      sha of v6.3.0 read with `git ls-remote --tags` (2026-10-05)
+- [x] CI breadth: a conformance job in ci.yml, proved by a local run of every fixture; node 24
+      was already in the matrix. Its first green in Actions is the owner's (DECISIONS 2026-10-05)
+- [x] Three claims brought back to the code: the events unsubscribe comment, readBudgets'
+      "computed" wording, the mcp tools named in CLAUDE.md (DECISIONS 2026-10-05)
+- [x] Six guides and DESIGN 9 said an assembly declared `mount = "none"` "ships no JavaScript
+      at all"; true of a static view only. Fixed 2026-10-05: the runtime leaves such a view as
+      the server sent it and the page keeps the runtime (DECISIONS 2026-10-05)
+- [x] The local `definePage` policy block the six guides show was in no example, test or DESIGN
+      section; DESIGN 8 now carries it, so the ledes are literal (2026-10-05)
+- [x] `scripts/site-links.mjs`: cross-links generated from `pages.json`, never hand-written;
+      `--check` in `check:site`, self-tested, watched red. Named `.mjs`, not `.py`: every gate
+      in the chain is Node or bash, none Python (DECISIONS 2026-10-05; raised with the owner)
 - [x] A test binding `pages.json` to the deploy, so a required page cannot go missing
 - [x] `.github/workflows/deploy-site.yml`: the pin read from `ayersPlatform`, OIDC to
       `gh-deploy-assemblejs-site`, sync to the shop bucket under the prefix, invalidate that
       prefix only, no `--delete`
 - [x] The `next` branch variant publishing to `/assemblejs/next/`, with every link carrying the
       trailing slash (the prefix router does not redirect a bare second segment)
-- [ ] The API reference generated into `site/docs/api/` at deploy time, never committed
+- [ ] OWNER: the API reference generated into `site/docs/api/` at deploy time, never
+      committed. A deploy-time generator is a build step in a deploy DEPLOY.md defines as
+      "no build"; which generator and where it runs is his (DECISIONS 2026-10-05)
 - [ ] **BLOCKING, the owner's hand:** `RELEASES_PAT` added to this repository's secrets, so
       deploy-site can check the private platform repo out at the pin. Nothing about the site
       publishes until it exists. Also his: the OIDC role and the bucket policy for this prefix.

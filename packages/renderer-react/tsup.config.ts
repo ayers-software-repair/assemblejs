@@ -9,7 +9,10 @@ export default defineConfig({
   dts: { compilerOptions: { ignoreDeprecations: "6.0" } },
   sourcemap: false,
   clean: true,
-  splitting: false,
+  // Split, so the events context both entry points use is one module: the server render provides
+  // it and a component reads it through the browser entry's hook, and two copies would be two
+  // contexts that never meet.
+  splitting: true,
   treeshake: true,
   // React is the consumer's, not ours: a renderer that bundled its framework would ship a
   // second copy of it into every page.

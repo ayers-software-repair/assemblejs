@@ -59,7 +59,9 @@ describe("composing a page", () => {
         plan: { b: { name: "b", view: "default", deadline: 3000, fallback: "<p>no B</p>" } },
       }),
     );
-    expect(html).toBe("<main><p>A</p><p>no B</p></main>");
+    expect(html).toMatch(
+      /^<main><p>A<\/p><assembly-root data-name="b" [^>]*data-failed="c-b"><p>no B<\/p><script/,
+    );
     expect(diagnostics[0]?.source).toBe("local");
     expect(diagnostics[1]?.source).toBe("fallback");
     expect(diagnostics[1]?.correlationId).toBe("c-b");
@@ -89,7 +91,7 @@ describe("composing a page", () => {
     expect(diagnostics.every((d) => d.reason === "timeout")).toBe(true);
   });
 
-  it("emits nothing for a deferred placement and never reaches it", async () => {
+  it("emits an empty envelope for a deferred placement and never reaches it", async () => {
     let reached = 0;
     const { html, diagnostics } = await compose(
       options({
@@ -101,7 +103,9 @@ describe("composing a page", () => {
       }),
     );
     expect(reached).toBe(1);
-    expect(html).toBe("<main><p>a</p></main>");
+    // DESIGN 3.5: the browser fills it, by the id its envelope carries.
+    expect(html).toMatch(/^<main><p>a<\/p><assembly-root data-name="b" [^>]*data-defer=""><script/);
+    expect(html).not.toContain("<p>b</p>");
     expect(diagnostics[1]?.source).toBe("deferred");
   });
 
@@ -185,8 +189,11 @@ describe("a placement that settles badly", () => {
         }) as never,
       }),
     );
-    expect(html).toBe("<main><p>A</p></main>");
+    expect(html).toMatch(/^<main><p>A<\/p><assembly-root data-name="b" [^>]*data-failed="[^"]+">/);
     expect(diagnostics[1]?.reason).toBe("transport");
+    // The transport threw and reported no id, so the composer minted one rather than leave the
+    // failure unfindable.
+    expect(diagnostics[1]?.correlationId).toMatch(/.+/);
   });
 });
 
@@ -202,5 +209,66 @@ describe("a placement whose name is also a property of Object", () => {
     );
     expect(html).toBe("<main><p>ok</p></main>");
     expect(diagnostics[0]?.source).toBe("local");
+  });
+});
+
+describe("a placement that declared a cache lifetime", () => {
+  it("is answered from its fresh entry, without a request, the second time", async () => {
+    let requests = 0;
+    const store = new Map<string, { html: string }>();
+    const cache = {
+      get: (key: string) => store.get(key),
+      set: (key: string, value: { html: string }) => void store.set(key, value),
+    };
+    const fetch: Fetch = async () => {
+      requests += 1;
+      return { ok: true, html: "<p>A</p>", source: "local" };
+    };
+    const plan = { a: { name: "a", view: "default", deadline: 1000, cache: { ttl: 60_000 } } };
+    const template = `<main><assembly name="a"/></main>`;
+    await compose(options({ template, plan, fetch, cache }));
+    const second = await compose(options({ template, plan, fetch, cache }));
+    expect(requests).toBe(1);
+    expect(second.diagnostics[0]?.source).toBe("cache");
+    // Never for a request carrying a credential, whose answer belongs to one visitor.
+    await compose(options({ template, plan, fetch, cache, headers: { cookie: "s=1" } }));
+    expect(requests).toBe(2);
+  });
+
+  it("never serves one visitor's answer to another who sent a different forwarded header", async () => {
+    const store = new Map<string, { html: string }>();
+    const cache = {
+      get: (key: string) => store.get(key),
+      set: (key: string, value: { html: string }) => void store.set(key, value),
+    };
+    let up = true;
+    const fetch: Fetch = async (request) =>
+      up
+        ? { ok: true, html: `<p>${request.headers["x-user"] ?? ""}</p>`, source: "remote" }
+        : { ok: false, reason: "status", detail: "503", correlationId: "c" };
+    const plan = { a: { name: "a", view: "default", deadline: 1000, cache: { ttl: 60_000 } } };
+    const template = `<main><assembly name="a"/></main>`;
+    const as = (user: string) =>
+      compose(options({ template, plan, fetch, cache, headers: { "x-user": user } }));
+    await as("alice");
+    expect((await as("bob")).html).toBe("<main><p>bob</p></main>");
+    // Nor as the last good content when the next request fails.
+    up = false;
+    expect((await as("carol")).html).not.toContain("alice");
+    expect((await as("alice")).html).toBe("<main><p>alice</p></main>");
+  });
+});
+
+describe("the size cap", () => {
+  it("holds whichever transport answered, so a local render is bounded like a remote one", async () => {
+    const { diagnostics, html } = await compose(
+      options({
+        template: `<main><assembly name="a"/></main>`,
+        fetch: byName({ a: `<p>${"x".repeat(100)}</p>` }),
+        limits: { depth: 8, maxBytes: 50 },
+      }),
+    );
+    expect(diagnostics[0]).toMatchObject({ source: "fallback", reason: "too-large" });
+    expect(html).not.toContain("xxxx");
   });
 });

@@ -28,6 +28,7 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
   const limits = options.limits ?? DEFAULT_LIMITS;
   const placements = findPlacements(options.template);
   const query = options.query ?? new URLSearchParams();
+  const params = options.params ?? {};
   const headers = options.headers ?? {};
 
   for (const placement of placements) {
@@ -56,6 +57,7 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
         depth: options.depth ?? 0,
         path: options.path ?? [],
         query,
+        params,
         headers,
         newId: options.newId,
         now: options.now,

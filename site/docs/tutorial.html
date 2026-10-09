@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The tutorial - AssembleJS</title>
+<!-- One directory down, so the kit and the skin are reached with ../ . Relative paths only:
+     an absolute one breaks under /assemblejs/ prefix hosting. -->
+<link rel="stylesheet" href="../kit/kit.css">
+<link rel="stylesheet" href="../skin.css">
+<link rel="icon" href="../favicon.svg">
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <img src="../mark.svg" alt="" width="84" height="84">
+    <h1>The tutorial</h1>
+    <div class="rule"></div>
+    <p>One project, from nothing to a deployed server, in the order you would actually do it. Each step
+      is one command or one file, and every file here is taken from the repository's own examples,
+      its design document or its tests.</p>
+  </header>
+
+  <h2>1. Make a project</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npm create @assemblejs shop</code></dt>
+      <dd>Writes a project that runs: a page, one assembly, a server file that will never grow, and a
+        package.json whose one runtime dependency is <code>@assemblejs/core</code>, the command
+        being a development dependency.</dd>
+    </div>
+    <div class="item">
+      <dt><code>cd shop &amp;&amp; npm install &amp;&amp; npm run dev</code></dt>
+      <dd>Builds, starts, prints the address, and rebuilds on every change.</dd>
+    </div>
+    <div class="item">
+      <dt>What is in it</dt>
+      <dd><code>src/pages/home/home.html</code> is the page, a template that places one assembly;
+        <code>src/assemblies/hello/hello.html</code> is that assembly, a plain template with no
+        framework.
+<pre><code>&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="utf-8" /&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;
+    &lt;title&gt;shop&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;assembly name="hello"&gt;&lt;/assembly&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>2. Add an assembly in your framework</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npx assemblejs add assembly counter --renderer svelte</code></dt>
+      <dd>Writes <code>src/assemblies/counter/counter.svelte</code> and prints the tag that places it.
+        Install the renderer it needs: <code>npm install @assemblejs/renderer-svelte
+        svelte</code>. The guides for <a href="react.html">React</a> and <a
+        href="vue.html">Vue</a> show the same step in those idioms.</dd>
+    </div>
+    <div class="item">
+      <dt><code>&lt;assembly name="counter"&gt;&lt;/assembly&gt;</code></dt>
+      <dd>Add the tag to the page's template, below the first. The server now renders both, each with its
+        own renderer, into one document.</dd>
+    </div>
+  </dl>
+
+  <h2>3. Give it data</h2>
+  <dl>
+    <div class="item">
+      <dt><code>src/assemblies/counter/counter.service.ts</code></dt>
+      <dd>A service beside the view returns the assembly's data. It runs on the server before the render and
+        also answers the assembly's data endpoint, so the two can never disagree.
+<pre><code>import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () =&gt; ({ label: "Clicked" }),
+});</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt>Read it in the view</dt>
+      <dd>The view receives <code>data</code> and its own <code>events</code> as props.
+<pre><code>&lt;script lang="ts"&gt;
+  let { data, events } = $props();
+  let count = $state(0);
+&lt;/script&gt;
+
+&lt;button type="button" onclick={() =&gt; { count += 1; events.send("counted", { count }); }}&gt;
+  {data.label} {count}
+&lt;/button&gt;</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>4. Let two frameworks talk</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npx assemblejs add assembly readout --renderer react</code></dt>
+      <dd>Then <code>npm install @assemblejs/renderer-react react react-dom</code>, and the tag on the page.
+        The readout hears what the Svelte counter sends, because the bus belongs to the page and
+        not to either framework's tree.
+<pre><code>import { useEvents } from "@assemblejs/renderer-react/client";
+import { useEffect, useState } from "react";
+
+export default function Readout() {
+  const events = useEvents();
+  const [heard, setHeard] = useState("nothing yet");
+  useEffect(
+    () =&gt;
+      events.on("counted", (message) =&gt;
+        setHeard(`${message.from.name} counted ${String((message.payload as { count: number }).count)}`),
+      ),
+    [events],
+  );
+  return &lt;p&gt;{heard}&lt;/p&gt;;
+}</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>5. Serve some data of your own</h2>
+  <dl>
+    <div class="item">
+      <dt><code>src/api/time.api.ts</code></dt>
+      <dd>An api is a route. <code>GET</code> unless <code>method</code> says otherwise; the handler is
+        given the request's <code>query</code>, its route <code>params</code> and its parsed
+        <code>body</code>, and what it returns is the JSON reply.
+<pre><code>import { defineApi } from "@assemblejs/core";
+
+export default defineApi({ path: "/api/time", handle: () =&gt; ({ now: new Date().toISOString() }) });</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>6. Decide what happens when an assembly is slow</h2>
+  <dl>
+    <div class="item">
+      <dt><code>src/pages/home/home.page.ts</code></dt>
+      <dd>Policy lives beside the page's template, only for the placements that need any. A deadline in
+        milliseconds; the markup shown when the assembly does not answer; or that its failure
+        fails the page. A slow assembly renders its fallback and the page still ships.
+<pre><code>import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: {
+    counter: { deadline: 500, fallback: "&lt;p&gt;Counter unavailable&lt;/p&gt;" },
+  },
+});</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>defer: true</code></dt>
+      <dd>For an assembly that must not hold the page at all: the server ships its placeholder and the
+        browser fetches it after load. A route with a parameter reaches the deferred assembly's
+        services as <code>params</code>, exactly as it reaches one rendered with the page.
+<pre><code>import { definePage } from "@assemblejs/core";
+
+export default definePage({ route: "/item/:sku", place: { tag: { defer: true } } });</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>7. Push live data to every page</h2>
+  <dl>
+    <div class="item">
+      <dt><code>src/api/prices.api.ts</code></dt>
+      <dd>An api with <code>stream</code> in place of <code>handle</code> holds its response open and sends
+        events; the browser opens one connection per page and puts each message on the page's bus,
+        where assemblies receive it like any other event.
+<pre><code>import { defineApi } from "@assemblejs/core";
+import { priceFeed } from "./price-feed.js";
+
+export default defineApi({
+  path: "/api/prices",
+  stream: ({ send, signal }) =&gt; {
+    send("price", priceFeed.latest);
+    priceFeed.listening.add(send);
+    signal.addEventListener("abort", () =&gt; priceFeed.listening.delete(send));
+  },
+});</code></pre></dd>
+    </div>
+    <div class="item">
+      <dt><code>definePage({ stream: "/api/prices" })</code></dt>
+      <dd>The page names its one stream. An assembly that mounts after the stream opened reads the last
+        message with <code>events.last("price")</code>, then subscribes.</dd>
+    </div>
+  </dl>
+
+  <h2>8. Check it, then weigh it</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npx assemblejs check</code></dt>
+      <dd>Every problem found without building: a tag naming an assembly that does not exist, policy for a
+        placement the template never makes, a stream that is no stream, a renderer not installed,
+        a template that does not compile. The same findings the agent surface reports.</dd>
+    </div>
+    <div class="item">
+      <dt><code>npx assemblejs perf</code></dt>
+      <dd>Builds, starts the built server in production, and reports what each page sends a visitor before
+        anything mounts. Budgets in <code>assemblejs.config.ts</code> are gzipped bytes by part,
+        and a page over one fails the command.
+<pre><code>import { defineConfig } from "@assemblejs/core";
+
+export default defineConfig({
+  budgets: { document: 20000, styles: 10000, scripts: 60000 },
+});</code></pre></dd>
+    </div>
+  </dl>
+
+  <h2>9. Ship it</h2>
+  <dl>
+    <div class="item">
+      <dt><code>npx assemblejs build</code></dt>
+      <dd>Writes <code>dist/server.js</code> and its browser files. <code>node dist/server.js</code> runs
+        it; <code>ASSEMBLEJS_PORT</code> and <code>ASSEMBLEJS_HOST</code> say where, and
+        <code>ASSEMBLEJS_MODE=development</code> turns the development behaviour back on.</dd>
+    </div>
+    <div class="item">
+      <dt><code>npx assemblejs deploy</code></dt>
+      <dd>Builds, then writes <code>deploy/</code>: the build and a package.json of the project's
+        dependencies alone. Install there and <code>npm start</code> runs the same server. Where
+        the directory goes is yours.</dd>
+    </div>
+  </dl>
+
+  <footer>
+    <p><!-- links --><a href="../index.html">AssembleJS</a> &middot; <a href="../install.html">Installing</a> &middot; <a href="../start.html">Getting started</a> &middot; <a href="index.html">Documentation</a><!-- /links --></p>
+    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
+  </footer>
+
+</main>
+</body>
+</html>

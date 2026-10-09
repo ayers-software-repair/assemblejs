@@ -67,7 +67,7 @@ describe("composing a page for an agent", () => {
     );
     // One assembly that needs a build does not cost the agent the rest of the page.
     expect(composed.html).toContain("<p>fine</p>");
-    expect(composed.problems.join()).toContain("compiled");
+    expect(composed.problems.join()).toContain("only its renderer turns into markup");
   });
 
   it("hands back a refused template as a problem, not as a thrown error", async () => {

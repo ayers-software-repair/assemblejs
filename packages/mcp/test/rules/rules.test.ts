@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { RULE_IDS } from "@assemblejs/cli";
 import { describe, expect, it } from "vitest";
 import { RULES } from "@assemblejs/mcp";
 
@@ -27,5 +28,10 @@ describe("what the framework knows", () => {
     ]) {
       expect(ids).toContain(needed);
     }
+  });
+
+  it("answers every rule a project problem can name, so explain never misses one", () => {
+    const ids = new Set(RULES.map((rule) => rule.id));
+    expect(RULE_IDS.filter((id) => !ids.has(id))).toEqual([]);
   });
 });

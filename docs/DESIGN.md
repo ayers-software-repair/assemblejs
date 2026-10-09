@@ -49,18 +49,25 @@ Answers `200` with `Content-Type: text/html; charset=utf-8` and a **fragment**, 
 document: no `<html>`, `<head>` or `<body>`. The fragment is exactly one element, the envelope
 of section 2.4, containing the assembly's markup and its data island.
 
+An assembly that fails to render, or whose service throws, answers `500` with the same kind of
+fragment: its fallback envelope, marked `data-failed` with the correlation id its failure is
+logged against. A composing server reads the status, applies its own fallback policy and caches
+nothing; a bare fetch still reads an envelope.
+
 Request headers, all optional, all prefixed `assembly-`:
 
-| header           | meaning                                                                                                                           |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| `assembly-page`  | Opaque id of the page being composed. Present means "you are a fragment"; absent means "you are the page".                        |
-| `assembly-id`    | The id this instance must stamp on its envelope. The parent allocates it, so the parent can address the result before it arrives. |
-| `assembly-depth` | How many assemblies deep this request is. A server refuses above its cap.                                                         |
-| `assembly-path`  | Comma-separated ids of the ancestors, innermost last. Used to detect a cycle.                                                     |
+| header            | meaning                                                                                                                           |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `assembly-page`   | Opaque id of the page being composed. Present means "you are a fragment"; absent means "you are the page".                        |
+| `assembly-id`     | The id this instance must stamp on its envelope. The parent allocates it, so the parent can address the result before it arrives. |
+| `assembly-depth`  | How many assemblies deep this request is. A server refuses above its cap.                                                         |
+| `assembly-path`   | Comma-separated identities of the ancestors, each `name/view`, innermost last. Used to detect a cycle.                            |
+| `assembly-params` | The page's route parameters (`/products/:id`), form-encoded (`id=42`), for the services this fragment runs. Absent means none.    |
 
 Every one of these is validated on arrival against its declared shape (id and page: one uuid;
-depth: an integer within the cap; path: uuids, at most the cap, comma-separated). A malformed
-value is `400`, never a coerced default. They are composition state, so an outside caller may
+depth: an integer within the cap; path: `name/view` identities, at most the cap,
+comma-separated; params: at most 2048 bytes, each name a parameter's, `[A-Za-z_][A-Za-z0-9_]*`,
+and named once). A malformed value is `400`, never a coerced default. They are composition state, so an outside caller may
 send them and get exactly the behaviour an internal caller gets: there is no privileged variant
 of this route.
 
@@ -131,7 +138,9 @@ is emitted, and every other section refers here rather than restating it.
 
 Added only when they apply: `data-remote` (the origin, when the assembly came from another
 server), `data-defer` (the content has not been fetched yet), `data-failed` (the render or the
-fetch failed and this is a fallback).
+fetch failed and this is a fallback; its value is the failure's correlation id, section 12),
+`data-mount` (when the browser half runs, section 9, when it
+is not the default `load`).
 
 `assembly-root` is a custom element with no behaviour of its own. It is the styling scope hook,
 the hydration hook, and the element a renderer's `mount` receives, which is what every framework
@@ -253,7 +262,8 @@ them finishes or times out, never later, and never fails because one of them did
 
 ### 3.4 Depth and cycles, checked before dispatch
 
-`assembly-depth` increments per hop; `assembly-path` carries the ancestor ids. Both are checked
+`assembly-depth` increments per hop; `assembly-path` carries the ancestors' identities, each
+`name/view`: an instance's id is new on every render, so only what it is can recur. Both are checked
 by the **parent, before it dispatches**, not only by the child on arrival: a request that would
 exceed `limits.depth` (default 8), or whose target already appears on the path, is never sent.
 The placement takes its fallback and a diagnostic. A server also refuses on arrival, because a
@@ -266,13 +276,22 @@ overflow.
 ### 3.5 Deferred assemblies
 
 A placement declared `defer: true` is not fetched during the page render. The server emits its
-empty envelope with `data-defer`, and the browser runtime fetches the content endpoint after
-load and replaces the envelope's children. Deferring is the answer for a genuinely slow assembly
-that must not hold the page; everything else uses the deadline.
+empty envelope with `data-defer`, carrying the page's route parameters as `data-params`, and the
+browser runtime fetches the content endpoint after load, with the envelope's id, those
+parameters as `assembly-params` and the page's own query, and puts the envelope that answers in
+its place, parsed as the page was (a declarative shadow root attached), then mounts it like any
+other. Should that fetch fail, the placement shows what any failed placement shows: its declared
+fallback, carried inert in the placeholder, in the server's failed envelope with its logged id.
+Deferring is the answer for a genuinely slow assembly that must not hold the page; everything
+else uses the deadline.
 
 `defer` and `required` together are a boot error. A deferred assembly's outcome arrives after
 the page has shipped, so it cannot fail the page, and a declaration that says it can is a
-misunderstanding worth catching at boot rather than a rule worth explaining in prose.
+misunderstanding worth catching at boot rather than a rule worth explaining in prose. So is a
+deferral nothing could carry out: one from another server, whose fragment the browser cannot
+fetch across that server's same-origin policy, and one on a page that places no assembly of this
+server's with a browser half, so no runtime is there to fetch it. A deadline or a cache on a
+deferred placement is policy nothing reads, refused like any other.
 
 ### 3.6 Real-time
 
@@ -280,6 +299,35 @@ An api handler may hold a response open and stream server-sent events. The brows
 one connection per page, not one per assembly, and delivers each message onto the page's event
 bus, where assemblies receive it exactly like any other event. Nothing in the assembly's code
 knows the message came from the network.
+
+```ts
+// src/api/prices.api.ts: `stream` in place of `handle`, run once per connection
+export default defineApi({
+  path: "/api/prices",
+  stream: ({ send, signal }) => {
+    const off = feed.subscribe((price) => send("price", price)); // or send(topic, payload, { name })
+    signal.addEventListener("abort", off);
+  },
+});
+
+// src/pages/home/home.page.ts: the page names its one stream
+export default definePage({ stream: "/api/prices" });
+```
+
+Each message is one `data:` line of JSON, `{ topic, payload, to? }`, which cannot be broken by a
+line break in the payload. It arrives on the bus from the sender `{ id: "server" }`, an id no
+placement can have, and each topic the stream sends keeps its last message per address: the
+stream opens while assemblies are still loading, so one that mounts later reads what it missed
+with `events.last`, and only what it would have been delivered.
+The page's own runtime opens the stream its head names; a remote's runtime never does, and an
+assembly placed from another server is on that server's bus, which the stream does not reach.
+A stream answers GET and not HEAD, writes a comment while quiet, drops a connection whose queue,
+once past what the socket takes at once, does not drain within thirty seconds (what it holds
+meanwhile is what the stream sent in that time), and is closed before the server stops. Over HTTP/1.1
+a browser holds six connections per origin, and every open page with a stream holds one of them
+(two in development, with the reload stream): beyond six such tabs, the next page waits. A page naming a stream that is
+not one of the server's streaming apis (a query after the path is the stream's own), or naming
+one with no assembly of this server's that runs in the browser to open it, is a boot error.
 
 There is no WebSocket in core.
 
@@ -320,7 +368,8 @@ The composer treats a remote assembly as a third party, because it is one.
 - **Nothing is forwarded by default.** Not cookies, not `authorization`, not `host`, not the
   query string, not `x-forwarded-*`. A remote declares what it needs, per remote, per key:
   `forward: ["accept-language"]`. Forwarding a credential to another company's server is a
-  decision, never a default.
+  decision, never a default. A composition header cannot be declared forwarded: the composer
+  sends those itself, and a visitor must not be able to stand in for it.
 - The response is capped, default 2 MiB, and must be `text/html`. Anything else is a failure.
 - Remote response headers are discarded. Nothing a remote sets reaches the visitor.
 
@@ -333,7 +382,9 @@ The framework ships no user store, no login page and no session.
 
 A default content-security policy and a same-origin CORS policy ship on by default; allowlisted
 remote origins are added to the policy automatically, because they are the only extra origins
-the page is designed to load from.
+the page is designed to load from. Nothing inline runs or applies under it: no inline script, no
+`<style>` block and no `style` attribute, a framework's server-rendered `style` included. Styles
+belong in an assembly's stylesheet (section 10); a project that needs more replaces the policy.
 
 ### 5.3 The server-to-browser boundary
 
@@ -415,9 +466,11 @@ export type MountHandle = { unmount(): void };
   not a teardown.
 
 The view file's extension picks the renderer. Where an extension is shared, the filename says
-which: `cart.react.tsx`, `cart.preact.tsx`, `cart.solid.tsx`. `cart.svelte`, `cart.vue`,
-`cart.md` and `cart.html` need no infix. A page's frameworks are then visible from a directory
-listing.
+which: `cart.react.tsx`, `cart.preact.tsx`, `cart.solid.tsx`, and `cart.lit.ts` among a
+project's own TypeScript. `cart.svelte`, `cart.vue`, `cart.md` and `cart.html` need no infix,
+and nor do the template languages, `cart.ejs`, `cart.hbs`, `cart.njk` and `cart.pug`, which with
+`cart.md` render through `@assemblejs/renderer-templates`. A page's frameworks are then visible
+from a directory listing.
 
 Renderers ship one per package with one real peer dependency, so installing the framework you
 use does not install the five you do not.
@@ -440,7 +493,7 @@ src/
       hello-react.service.ts    optional: server data
   api/
     time.api.ts
-assemblejs.config.ts            policy only: remotes, deadlines, renderers, port
+assemblejs.config.ts            policy only: remotes, access, the content policy, budgets
 ```
 
 **A directory under `assemblies/` is an assembly.** There is no registry to maintain, no import
@@ -478,6 +531,26 @@ export default definePage({
 
 A local placement needs no entry at all. The template alone is enough, which is the point:
 adding a second framework to a page is one file and one tag.
+When a local placement needs policy, the entry is the same shape without a url:
+
+```ts
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
+
+A placement from another server names a declared remote, and the remotes are policy, declared
+once in `assemblejs.config.ts`:
+
+```ts
+export default defineConfig({
+  remotes: [{ origin: "https://checkout.example.com", forward: ["accept-language"] }],
+});
+```
+
+So are the page budgets: what each page may send a visitor before anything mounts, in gzipped
+bytes by part (`document`, `styles`, `scripts`), declared as `budgets` in the same file. `perf`
+weighs the production build and holds every page to them; nothing on the server reads them.
 
 A service returns; it does not mutate:
 
@@ -490,8 +563,11 @@ export default defineService({
 });
 ```
 
-Returning is testable in isolation, composes without hidden order, and makes the data shape the
-function's return type. Services run in declaration order; one that must follow another says
+A service is given the request's `query` and the route `params` of the page that placed the
+assembly, `{ id: "42" }` for `/products/:id`, which reach it the same way whether the page is on
+this server or another: an object with no prototype, so a parameter named `constructor` is a
+parameter and nothing else. Returning is testable in isolation, composes without hidden order, and
+makes the data shape the function's return type. Services run in declaration order; one that must follow another says
 `after: ["greeting"]`. There is no priority number. Services run **before** children are
 fetched, so a service can shape what its children are asked for.
 
@@ -500,9 +576,15 @@ An api is a route:
 ```ts
 export default defineApi({
   path: "/api/time",
-  GET: () => ({ now: new Date().toISOString() }),
+  handle: () => ({ now: new Date().toISOString() }),
 });
 ```
+
+One method per definition, `GET` unless `method` says otherwise. The handler is given the
+request's `query`, its route `params` and its parsed `body`, and whatever it returns is the JSON
+reply. A path is literal segments and whole-segment `:parameters`. One that is declared twice for
+one method, does not start with `/`, uses a wildcard or any other pattern, or lands under
+`/assembly/` or `/_assemblejs/` is a boot error.
 
 ---
 
@@ -516,24 +598,29 @@ each island, and mounts each assembly through its renderer's client half.
              client:visible   mount when the envelope scrolls into view
              client:none      never mount; the assembly is static HTML
 
-Declared per assembly. A static assembly ships no JavaScript at all, which is a mode and not an
-accident.
+Declared per assembly. A static view (html, or a template with no `.client.ts` beside it)
+ships no JavaScript at all, which is a mode and not an accident; a framework view declared
+`none` is left as the server sent it, and the page it is on still carries the runtime for the
+rest.
 
 Events are typed, page-scoped and owned by the assembly:
 
 ```ts
 const events = useEvents(); // scoped to this assembly
 events.send("cart:add", { sku }); // sender identity stamped by the runtime
-const off = events.on("cart:add", handler); // removed automatically on unmount
+const off = events.on("cart:add", handler); // released when the page unmounts its assemblies
 ```
 
-- Subscriptions are held by the assembly's handle, and `unmount` removes **exactly the
-  references it added**. A leak is not possible by forgetting.
+- Subscriptions are held per assembly by the runtime, which releases **exactly the references
+  it handed out** when it unmounts the page's assemblies together. A leak is not possible by
+  forgetting.
 - Delivery is addressable by something the sender can name: every assembly, one name, one
   instance id, or the page.
 - **Last-value replay is opt-in per topic.** A late-hydrating assembly can see the message it
   missed. There is no unbounded history that nobody reads, and no buffer that is filled and
-  never replayed.
+  never replayed. Every topic the page's stream sends opts in, because the stream opens while
+  assemblies are still loading. What is kept is one message per topic and address, and `last`
+  answers an assembly only a message it would have been delivered.
 - Every event carries the sending assembly's id, stamped by the runtime, not supplied by the
   sender.
 - The public surface is this typed object. Raw event dispatch is never the API.
@@ -550,8 +637,18 @@ An assembly's stylesheet is compiled at build time with a scope derived from its
 independently written assemblies cannot collide. Shadow DOM is a per-assembly opt-in for hard
 isolation.
 
+Every file a stylesheet names beside it is built with it, and one it cannot carry (a relative
+`@import`, a missing file, a file outside the assembly's own directory) is a build problem, not a
+broken link found later or a file published by accident.
+
+A selector that starts at the document (`:root`, `html`, `body`) starts at the envelope instead;
+one that says more about the document (`html.dark`) stays a condition on it, with the envelope
+inside. A selector that needs the document anywhere but at its start matches nothing.
+
 Stated plainly rather than implied: `@keyframes`, `@font-face`, `@import` and `@page` are global
-by nature and are not scoped. Nothing pretends otherwise.
+by nature and are not scoped. A nested assembly sits inside its parent's envelope, so a parent's
+descendant selectors reach into it, and a page's own rules reach every assembly not in a shadow
+root. Nothing pretends otherwise.
 
 ---
 
@@ -565,12 +662,31 @@ by nature and are not scoped. Nothing pretends otherwise.
 - Asset roots resolve from **resolved module paths**, never from string arithmetic over a
   directory name, so an install layout the author did not anticipate cannot silently produce a
   path that does not exist.
-- The bundler is a development and build-time tool owned by the CLI. `assemblejs dev` runs it in
-  middleware mode, which is where hot reloading comes from; `assemblejs build` emits the server
-  and the client assets; neither leaves a trace in the running server.
+- The bundler is a development and build-time tool owned by the CLI. `assemblejs dev` runs the
+  same build and the same `node dist/server.js` as production, and rebuilds and restarts on every
+  change; `assemblejs build` emits the server and the client assets; neither leaves a trace in
+  the running server. `assemblejs check` reports every problem found without building, each with
+  its file, rule and fix. `assemblejs perf` builds, starts the build in production and weighs
+  what each page, at the route it is mounted at, sends a visitor from its own origin before
+  anything mounts; a page that falls back fails it. `assemblejs deploy` builds and writes
+  `deploy/`, the build and a package.json of the project's dependencies alone, refused when the
+  server imports a package those would not install, and never over a `deploy/` it did not write.
+  None of them publishes or touches a remote.
+- A server in development mode links one more script into every page, from under the devtools
+  prefix and carrying the boot of the server that rendered the page, which
+  listens on a stream for the server's boot and reloads the page when it hears another, so a page
+  follows `dev` across each restart; in production neither exists. A request the server fails
+  outright is answered with its failure body, which carries no script, and reloads by hand.
 - The dev server binds loopback by default. Devtools are development-only, read-only over HTTP,
   and a boot assertion refuses to start if any route under the devtools prefix accepts anything
-  but `GET` or `HEAD`.
+  but `GET` or `HEAD`. A server is handed devtools as data, `createServer({ devtools })`: routes
+  under `/_assemblejs/devtools/`, each answering a read from a summary of the project (names,
+  routes, settings; no function, credential or template source) and the failures the process
+  logged most recently. In production the server mounts none of them, so a project hands them
+  over unconditionally; `@assemblejs/devtools` supplies an overview page and the same reading as
+  JSON. Devtools answer only a request from this machine's loopback, by where the connection came
+  from and the name it used, so neither another machine nor a page on another site that points
+  its own name at 127.0.0.1 reads anything from them.
 
 ---
 
@@ -701,8 +817,9 @@ reason, so nothing has to be remembered.
 6. **The data endpoint calls the same function the content endpoint calls**, rather than
    re-entering the content route with a flag. Re-entry is elegant and it loses the composition
    state the render had, so the two answers can differ.
-7. **Events replay the last value only, opt-in per topic.** It solves the real race, a late
-   island missing an early message, without an unread history.
+7. **Events replay the last value only, opt-in per topic** (each topic the page's stream sends
+   opts in). It solves the real race, a late island missing an early message, without an unread
+   history.
 8. **Islands ship native modules**, not immediately-invoked bundles over a page global. The
    browsers all support it; the global was a bundler workaround.
 9. **Depth and cycles are refused by the parent before dispatch**, not only by the child on
@@ -734,12 +851,20 @@ no list restating the directory tree, no file two people editing different assem
 to touch. The tool generates a typed import module the author never opens and never commits, so
 the built server still has a static import graph and production never scans a directory.
 
-`server.ts` is two lines and never grows:
+`server.ts` never grows. Its whole job is to hand the server what the build found:
 
 ```ts
-const app = await createServer();
+import { createServer } from "@assemblejs/core";
+import project from "../.assemblejs/project.js";
+
+const app = await createServer(project);
 await app.listen();
 ```
+
+`.assemblejs/project.ts` is the generated module: the assemblies, pages and apis the build
+found on disk, the version of the build's output, and where its browser files are. The import is
+the one line a two-line file cannot avoid, because a library cannot import a module its user's
+build generates without a bundler doing it at run time, which is what section 11 rules out.
 
 Adding an assembly writes the assembly's own files and adds one tag to a page template. That is
 the whole change. This supersedes the earlier recorded shape, where adding an assembly edited

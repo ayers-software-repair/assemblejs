@@ -8,6 +8,17 @@ export interface StartOptions {
   readonly renderers: Readonly<Record<string, ClientRenderer>>;
   /** Where to look. The document, unless a caller is mounting one subtree. */
   readonly root?: ParentNode;
+  /**
+   * The origin this runtime's script was served from. It mounts the envelopes from that origin:
+   * those with no `data-remote` when it is the page's own, those whose `data-remote` names it
+   * when it is a remote's. Absent, it mounts only the page's own.
+   */
+  readonly origin?: string;
   /** Topics that keep their last message for an assembly that hydrates after it was sent. */
   readonly replay?: readonly string[];
+  /**
+   * The stream to open, whose messages go onto the page's bus. Absent, the page's own runtime
+   * opens the one the page names in its head, and a remote's runtime opens none.
+   */
+  readonly stream?: string;
 }

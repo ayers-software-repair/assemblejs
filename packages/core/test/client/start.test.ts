@@ -28,14 +28,17 @@ const envelope = (
 const recorder = () => {
   const mounts: string[] = [];
   const unmounts: string[] = [];
+  const into: Array<Element | ShadowRoot> = [];
+  const given: unknown[] = [];
   const renderer: ClientRenderer = {
-    mount: (element, _data, context) => {
+    mount: (element, data, context) => {
       mounts.push(context.name);
-      void element;
+      given.push(data);
+      into.push(element);
       return { unmount: () => unmounts.push(context.name) };
     },
   };
-  return { mounts, unmounts, renderer };
+  return { mounts, unmounts, into, given, renderer };
 };
 
 beforeEach(() => {
@@ -68,18 +71,9 @@ describe("starting the runtime", () => {
 
   it("hands the renderer the island's data and the assembly's identity", () => {
     document.body.innerHTML = envelope("cart", { data: { total: 2 } });
-    const seen: Array<{ data: unknown; name: string }> = [];
-    start({
-      renderers: {
-        html: {
-          mount: (_element, data, context) => {
-            seen.push({ data, name: context.name });
-            return { unmount: () => {} };
-          },
-        },
-      },
-    });
-    expect(seen).toEqual([{ data: { total: 2 }, name: "cart" }]);
+    const { mounts, given, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect([mounts, given]).toEqual([["cart"], [{ total: 2 }]]);
   });
 
   it("never mounts an assembly declared static", () => {
@@ -87,6 +81,48 @@ describe("starting the runtime", () => {
     const { mounts, renderer } = recorder();
     start({ renderers: { html: renderer } });
     expect(mounts).toEqual(["b"]);
+  });
+
+  it("never mounts a fallback, which stands in for an assembly that did not render", () => {
+    document.body.innerHTML =
+      envelope("a").replace("<assembly-root ", '<assembly-root data-failed="8f212c16" ') +
+      envelope("b");
+    const { mounts, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect(mounts).toEqual(["b"]);
+  });
+
+  it("mounts an assembly in its own shadow root inside that root, not beside it", () => {
+    document.body.innerHTML = envelope("a");
+    const shadow = document.querySelector("assembly-root")?.attachShadow({ mode: "open" });
+    const { into, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect(into).toEqual([shadow]);
+  });
+});
+
+describe("two runtimes on one page", () => {
+  const remote = (id: string, origin: string) =>
+    envelope(id).replace("<assembly-root ", `<assembly-root data-remote="${origin}" `);
+
+  it("mount only the page's own envelopes when no origin is given", () => {
+    document.body.innerHTML = envelope("a") + remote("b", "https://shop.example.com");
+    const { mounts, renderer } = recorder();
+    start({ renderers: { html: renderer } });
+    expect(mounts).toEqual(["a"]);
+  });
+
+  it("mount each envelope with the runtime from its own origin, never twice", () => {
+    // An envelope inside the remote's own belongs to that remote, whether it is marked or not.
+    document.body.innerHTML =
+      envelope("a") +
+      remote("b", "https://shop.example.com").replace(/<\/assembly-root>$/, `${envelope("c")}$&`);
+    const local = recorder();
+    const shop = recorder();
+    start({ renderers: { html: local.renderer }, origin: location.origin });
+    start({ renderers: { html: shop.renderer }, origin: "https://shop.example.com" });
+    expect(local.mounts).toEqual(["a"]);
+    expect(shop.mounts).toEqual(["b", "c"]);
   });
 });
 
@@ -141,16 +177,12 @@ describe("one assembly failing", () => {
 });
 
 describe("mounting again", () => {
-  // Written to exercise the guard and not the side effect. The first version of this test put
-  // the island back nowhere and passed even with the guard deleted, because readIsland removes
-  // the island and the second pass then found nothing to mount. It was green for a reason it
-  // did not claim, which is the same as not testing the guard at all.
+  // The island is put back first, so only the guard, not the island already being read, stops it.
   it("does not mount an assembly twice, even when an island is present again", () => {
     document.body.innerHTML = envelope("a");
     const { mounts, renderer } = recorder();
     const runtime = start({ renderers: { html: renderer } });
     expect(mounts).toEqual(["a"]);
-
     const element = document.querySelector(`assembly-root[data-id="a"]`);
     element?.insertAdjacentHTML(
       "beforeend",
@@ -171,12 +203,21 @@ describe("mounting again", () => {
 });
 
 describe("tearing down", () => {
-  it("unmounts in reverse, so an inner assembly goes before the outer one", () => {
+  it("closes the page's stream, and unmounts in reverse, inner before outer", () => {
     document.body.innerHTML = `<assembly-root data-id="outer" data-name="outer" data-view="default" data-renderer="html"><script type="application/json" data-assembly="outer">{"id":"outer","name":"outer","view":"default","renderer":"html","data":{},"deferred":false}</script>${envelope("inner")}</assembly-root>`;
+    const closed = vi.fn();
+    vi.stubGlobal(
+      "EventSource",
+      class {
+        onmessage = null;
+        close = closed;
+      },
+    );
     const { unmounts, renderer } = recorder();
-    const runtime = start({ renderers: { html: renderer } });
+    const runtime = start({ renderers: { html: renderer }, stream: "/live" });
     runtime.unmountAll();
-    expect(unmounts).toEqual(["inner", "outer"]);
+    vi.unstubAllGlobals();
+    expect([closed.mock.calls.length, unmounts]).toEqual([1, ["inner", "outer"]]);
     expect(runtime.mounted.size).toBe(0);
   });
 
@@ -249,7 +290,6 @@ describe("the runtime's bus", () => {
     runtime.bus
       .forAssembly({ id: "x", name: "catalogue", view: "default" })
       .events.send("cart:add", { sku: "late" });
-
     document.body.innerHTML = envelope("cart");
     runtime.mount(document);
     const held = runtime.bus.forAssembly({ id: "y", name: "cart", view: "default" });

@@ -1,0 +1,1140 @@
+diff --git a/.github/workflows/deploy-site.yml b/.github/workflows/deploy-site.yml
+index f4d283d..b90115d 100644
+--- a/.github/workflows/deploy-site.yml
++++ b/.github/workflows/deploy-site.yml
+@@ -4,15 +4,22 @@
+ # permissions scoped to the s3://ayers-repair-site-993011736775/assemblejs/ prefix and the one
+ # CloudFront distribution, nothing else.
+ #
+-# site/ IS the whole site: static pages, no build, fonts and images vendored. No `--delete`: the
+-# bucket carries other products' files.
++# site/ IS the whole site: static pages, fonts and images vendored. Two of its directories are
++# not in the tree and are written here, before the check and the sync: kit/, staged from the
++# platform pin, and docs/api/, the API reference, which typedoc generates from the packages'
++# sources after an install and a build (DECISIONS 2026-10-05). A run whose packages do not build,
++# or whose reference does not land, publishes nothing. No `--delete`: the bucket carries other
++# products' files.
+ #
+ # TWO PREFIXES, ONE FOLDER. This product publishes twice, which is the npm two-channel rule
+ # applied to the site: `next` to /assemblejs/next/ alongside the `next` dist-tag, `main` to
+ # /assemblejs/ alongside `latest`. The branch decides the prefix and the folder is identical.
+ #
+ # The paths filter is an INCLUDE on site/**, never an ignore list - most of a product repo is
+-# not the site, so a skip-list publishes whatever is added next.
++# not the site, so a skip-list publishes whatever is added next. Every run regenerates the
++# reference, but only a push that touches site/ starts one: a push that changes only the
++# packages leaves the published reference as it was until the next site push or a manual
++# dispatch.
+ name: deploy-site
+ on:
+   push:
+@@ -77,6 +84,33 @@ jobs:
+           rm -rf site/kit && mkdir -p site/kit
+           cp _platform/sitekit/*.css site/kit/
+ 
++      # THE API REFERENCE IS GENERATED HERE, NEVER COMMITTED. The toolchain ci.yml pins, on
++      # Node 22: install at the frozen lockfile, build the packages, then `pnpm site:api` runs
++      # typedoc (root typedoc.json) over every published entry point into site/docs/api/.
++      # Typedoc reads the sources, not dist; the build runs first so that a tree whose packages
++      # do not build publishes nothing.
++      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
++      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
++        with:
++          node-version: 22
++          cache: pnpm
++      - name: Install (frozen lockfile)
++        run: pnpm install --frozen-lockfile
++      - name: Build the packages
++        run: pnpm build
++      - name: Generate the API reference
++        run: pnpm site:api
++
++      # The docs index links this page. Publishing the link without the page is the 404 the
++      # site check exists to prevent, and the check exempts a generated page from existing in
++      # the tree, so the deploy proves it here instead.
++      - name: The reference exists
++        run: |
++          if [ ! -f site/docs/api/index.html ]; then
++            echo "::error::site/docs/api/index.html was not generated; nothing is published"
++            exit 1
++          fi
++
+       # The same gate a developer runs. A skin whose ink is unreadable, or a page advertised and
+       # missing, does not reach the bucket.
+       - name: Check the site
+@@ -93,7 +127,11 @@ jobs:
+             --exclude "*" --include "*.html" \
+             --cache-control "public, max-age=300" --only-show-errors
+ 
+-      - name: Sync assets - fonts, images, css (7 day cache)
++      # Everything that is not a page, a manifest or a note: the kit and skin css, the svg
++      # marks, and the reference's css, js and svg under docs/api/assets/. The reference links
++      # its assets with a cache-busting query (typedoc.json `cacheBust`), so the week-long cache
++      # never serves last deploy's search index with this deploy's pages.
++      - name: Sync assets - fonts, images, css, js (7 day cache)
+         run: |
+           aws s3 sync site/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/" \
+             --exclude "*.md" --exclude "*.html" --exclude "*.json" \
+diff --git a/docs/DECISIONS.md b/docs/DECISIONS.md
+index 705caa4..dcb4fa0 100644
+--- a/docs/DECISIONS.md
++++ b/docs/DECISIONS.md
+@@ -2102,3 +2102,95 @@ The Release section says when changesets start and that `next` is in pre mode, a
+ and the pull request template, which demanded a changeset per src change, now say the same. The
+ gate script's self-test also holds its regex to the bare verbs and its reading to the one
+ paragraph, after a verifier showed two mutations it let through.
++
++## 2026-10-05: the API reference, typedoc at deploy time
++
++Expected, from the rulings above: `deploy-site.yml` gains Node, pnpm, install, build and a typedoc
++run into `site/docs/api/`; DEPLOY.md's "no build" sentence is rewritten; typedoc becomes a root
++devDependency. Found and settled:
++
++- **typedoc 0.28.20**, exact, at the root (`pnpm add -D -w`; TypeScript 6.0.3 is in its peer
++  range, `5.0.x` through `6.0.x`). `pnpm site:api` runs it; every option is in the root
++  `typedoc.json`, so the script is the bare command and the output path lives in one place. The
++  lockfile is pnpm's: the same `pnpm add`, run from this commit's parent in a scratch copy of the
++  manifests, wrote it byte for byte. Besides typedoc's own tree it re-resolves one optional peer,
++  core's vitest and vite now naming esbuild 0.27.7 where they named 0.28.2; both versions were
++  already installed, and the frozen install accepts it.
++- **One root config with explicit `entryPoints` over a solution-style tsconfig, not the
++  `packages` strategy.** The twenty-two entry points are the twelve `src/index.ts` and every
++  subpath each package's `exports` names: `core/client`, `core/renderer`,
++  `renderer-solid/compiler`, `renderer-lit/hydration-support` (a leaf, not an index) and the
++  `client` of each of the six framework renderers. `tsconfig.typedoc.json` has `files: []` and a
++  `references` entry per package: typedoc's `getEntryPrograms` (read in `dist/node-utils.js`)
++  creates one program per referenced project when the root program has no files, each under
++  that package's own compiler options, and `getEntryPointsForPaths` finds each entry in whichever
++  program holds it. That matters because the packages' options differ (`lib` with and without
++  `DOM`, three JSX configurations, `useDefineForClassFields` off for Lit), and one flat program
++  would type-check every package under one of them. Only the programs holding an entry point are
++  diagnosed (`getPreEmitDiagnostics` over the entries' programs), so the empty root program's
++  references to projects that are not `composite` never fire. The `packages` strategy was the
++  alternative; typedoc's README says that mode "requires configuration to be present in each
++  directory", twelve more config files where one does the work.
++- **Typedoc reads the sources, not `dist/`.** The base tsconfig's `paths` map every published
++  specifier to its `src`, so a package's program reaches its neighbours' sources; run with every
++  `dist/` moved aside, typedoc wrote the same clean reference. The deploy builds first anyway, as
++  ruled, so a tree whose packages do not build publishes nothing.
++- **Each entry file names itself.** Typedoc names an entry by its path from the common root
++  (`core/src`, `core/src/client`), which nobody imports. Each of the twenty-two files carries
++  `/** @module @assemblejs/core/client */` and the like directly after its header: the rename is
++  typedoc's own (`onDeclaration` in `dist/index.js` sets a module's name from the tag, and a
++  comment carrying `@module` is taken as the file's comment, never a declaration's). A comment is
++  not a declaration, and the organization gate, run on the tree, is clean. The reference lists
++  the specifiers a user writes.
++- **Clean with `treatWarningsAsErrors`**: 22 modules, 416 pages, about 30 s locally, and no
++  `.nojekyll`. Watched red: an entry naming a file that does not exist stops it at exit 3 with
++  nothing written. Typedoc's `notExported` validation is on by default and fired on nothing, so no
++  type reached from a public signature is left unexported. `excludeExternals` keeps Fastify's and
++  the frameworks' types out; `excludeInternal` honours `@internal`; `githubPages: false` keeps a
++  `.nojekyll` out of a bucket that does not read it; `readme: "none"` starts the reference on the
++  module list, since the product README is the repository's; `cacheBust` adds the generation time
++  to the stylesheet and script links, because the deploy caches assets for seven days and the
++  search index and navigation are scripts that change with every run. The generated tree carries
++  none of the identity gate's strings.
++- **Source links are a claim CI alone proves.** Typedoc looks for a `.git` directory upward from
++  each source (`discoverPossibleGitDirs` in `dist/index.js`) and links a file only if that
++  repository's `git ls-files` lists it. From a worktree, whose `.git` is a file, it reaches the
++  main checkout, which does not list the worktree's paths, so the pages say "Defined in
++  packages/core/src/server/create-server.ts:65" without a link. The deploy's checkout is a clone
++  whose `origin` is GitHub, where the link template becomes GitHub's at the checked-out commit; a
++  checkout with no readable `origin` would warn, and the warning fails the run. The first
++  Actions run is where the links are seen.
++- **`pages.json` marks the page `generated`; `check-site.mjs` reads it.** A generated page is
++  exempt from the exists-locally check, still counts as declared for the link check, and the
++  directory it heads is not walked, because the generated tree links its own pages, which nobody
++  declares: with the tree on disk and the mark removed the real gate reports 1645 such links,
++  and with the tree absent it reports the missing page. The self-test, which covered only the
++  skin, now builds a scratch site and requires red on a declared page that is missing, clean on
++  the same page marked generated, and clean once the generated tree exists with undeclared links
++  inside it. Watched red four ways, each restored by the inverse edit and checked byte for byte:
++  the exemption removed, the skip removed, the missing-page refusal removed, and generated pages
++  dropped from the declared set. `site-links.mjs` needs no change: the page is not `in_nav`, has
++  no links region, and a page not on disk is skipped. The docs index gains a Reference section
++  linking `api/index.html`; the footers were regenerated and did not change.
++- **`deploy-site.yml`**: after the kit is staged, `pnpm/action-setup` and `actions/setup-node` at
++  the shas `ci.yml` pins, Node 22, the frozen install, `pnpm build`, `pnpm site:api`, and a step
++  that fails when `site/docs/api/index.html` is absent, all before "Check the site", which
++  exempts the page and so cannot prove it; that step, run locally from the YAML, passed with the
++  tree and failed without it. The sync steps are unchanged and already carry the reference: the
++  HTML sync includes every `.html`, and the asset sync excludes only `.md`, `.html` and `.json`,
++  which leaves typedoc's `.css`, `.js` and `.svg` in; it emits no fonts and no JSON. The top
++  comment and DEPLOY.md now say that two directories are written at deploy time, `kit/` and
++  `docs/api/`, where they said "no build". Validated with Python's yaml reader; the run itself
++  waits on `RELEASES_PAT`, as every deploy here does.
++- **The paths filter stays `site/**`, as ruled.** The reference refreshes on a push that touches
++  the site, not on one that touches only the packages; the next site push or a manual dispatch
++  catches it up. Said in DEPLOY.md and the workflow comment. If the owner wants a packages push
++  to republish, the include list gains `packages/*/src/**`, `typedoc.json` and
++  `tsconfig.typedoc.json`; not done here, because it changes what a push to `next` publishes.
++- **What else walks the tree.** The emoji and identity gates read `git ls-files`; jscpd honours
++  `.gitignore` and ignores `**/docs/**`; knip's project globs name `scripts/` and `browser/`. But
++  `eslint .` reads no ignore file of git's and, with a preview on disk, lints typedoc's bundled
++  `assets/*.js` to 347 errors (watched with the ignore removed), so `eslint.config.js` ignores
++  `site/docs/api/**` and says why. knip accepts typedoc because `site:api` runs its binary; with
++  the script removed it reports typedoc as an unused devDependency (watched). syncpack sees one
++  version.
+diff --git a/docs/TODO.md b/docs/TODO.md
+index 5787840..70afcb6 100644
+--- a/docs/TODO.md
++++ b/docs/TODO.md
+@@ -36,7 +36,7 @@ question on 2026-10-05; the rulings entry in DECISIONS lists them and what each
+ **ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
+ (done) -> B-26a release dry run (done) -> the subassembly rung -> B-27a/B-27b (the owner's). The
+ five house-style rows and the release-notes rows can land any time. The site's guides are
+-written.
++written, and the API reference is typedoc at deploy time (2026-10-05).
+ Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions org allowlist (Actions runs NOTHING
+ here yet, so the B-25b Scorecard run with it), branch rulesets, the bird mark, the palette, the
+ old npm package deprecation, the first publish. Raised with the
+@@ -407,9 +407,10 @@ product's one pin; inner pages link `kit/kit.css` plus the product's own `skin.c
+ page is the product's own and does not use the kit; a push to the branch touching `site/**`
+ publishes, and the paths filter is an include, never an ignore list.
+ 
+-Two differences this product has, both already ruled: the pin is `ayersPlatform` in the root
+-`package.json` rather than a go.mod line, and there are two prefixes, `/assemblejs/` from `main`
+-and `/assemblejs/next/` from `next`.
++Three differences this product has, all ruled: the pin is `ayersPlatform` in the root
++`package.json` rather than a go.mod line; there are two prefixes, `/assemblejs/` from `main` and
++`/assemblejs/next/` from `next`; and one directory, `docs/api/`, is not static: the deploy
++generates it with typedoc and the tree never carries it (DECISIONS 2026-10-05).
+ 
+ - [x] `site/pages.json`: the page list and cross-links, in magpie's schema
+ - [x] `site/index.html` + `index.css`: the landing page, the product's own skin, framework names
+@@ -433,9 +434,13 @@ and `/assemblejs/next/` from `next`.
+       prefix only, no `--delete`
+ - [x] The `next` branch variant publishing to `/assemblejs/next/`, with every link carrying the
+       trailing slash (the prefix router does not redirect a bare second segment)
+-- [ ] OWNER: the API reference generated into `site/docs/api/` at deploy time, never
+-      committed. A deploy-time generator is a build step in a deploy DEPLOY.md defines as
+-      "no build"; which generator and where it runs is his (DECISIONS 2026-10-05)
++- [x] The API reference generated into `site/docs/api/` at deploy time, never committed:
++      typedoc 0.28.20 at the root (`typedoc.json`, every published entry point of the twelve
++      packages over `tsconfig.typedoc.json`), `pnpm site:api`, each entry file naming its
++      specifier with a `@module` comment; `deploy-site.yml` installs, builds, generates, and
++      refuses a deploy without the page; `pages.json` marks it `generated`, and
++      `check-site.mjs` exempts it from existing and does not walk its tree, self-tested, watched
++      red (DECISIONS 2026-10-05)
+ - [ ] **BLOCKING, the owner's hand:** `RELEASES_PAT` added to this repository's secrets, so
+       deploy-site can check the private platform repo out at the pin. Nothing about the site
+       publishes until it exists. Also his: the OIDC role and the bucket policy for this prefix.
+diff --git a/eslint.config.js b/eslint.config.js
+index c2ec65d..63164bb 100644
+--- a/eslint.config.js
++++ b/eslint.config.js
+@@ -7,7 +7,18 @@ import unicorn from "eslint-plugin-unicorn";
+ import tseslint from "typescript-eslint";
+ 
+ export default tseslint.config(
+-  { ignores: ["**/dist/**", "**/node_modules/**", "coverage/**", "scripts/fixtures/**"] },
++  // site/docs/api is the API reference `pnpm site:api` writes and site/.gitignore keeps out of
++  // git. This config reads no ignore file of git's, so without this entry `eslint .` lints
++  // typedoc's bundled scripts whenever a local preview is on disk, and `pnpm check` goes red.
++  {
++    ignores: [
++      "**/dist/**",
++      "**/node_modules/**",
++      "coverage/**",
++      "scripts/fixtures/**",
++      "site/docs/api/**",
++    ],
++  },
+   js.configs.recommended,
+   ...tseslint.configs.recommended,
+   {
+diff --git a/package.json b/package.json
+index b8b2571..b4d72c6 100644
+--- a/package.json
++++ b/package.json
+@@ -40,6 +40,7 @@
+     "test": "pnpm -r test",
+     "test:browser": "playwright test -c browser/playwright.config.ts",
+     "proof:create": "node scripts/proof-create.mjs",
++    "site:api": "typedoc",
+     "typecheck": "pnpm -r typecheck",
+     "conformance": "node conformance/harness/run.mjs"
+   },
+@@ -69,6 +70,7 @@
+     "sort-package-json": "4.0.0",
+     "svelte": "5.57.0",
+     "syncpack": "15.3.3",
++    "typedoc": "0.28.20",
+     "typescript": "6.0.3",
+     "typescript-eslint": "8.69.0",
+     "vitest": "4.1.11"
+diff --git a/packages/cli/src/index.ts b/packages/cli/src/index.ts
+index 32b2cfe..e4d1304 100644
+--- a/packages/cli/src/index.ts
++++ b/packages/cli/src/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/cli */
+ export * from "./discovery/index.js";
+ export * from "./generate/index.js";
+ export * from "./build/index.js";
+diff --git a/packages/core/src/client/index.ts b/packages/core/src/client/index.ts
+index f900f8f..d64e57b 100644
+--- a/packages/core/src/client/index.ts
++++ b/packages/core/src/client/index.ts
+@@ -2,6 +2,7 @@
+ // SPDX-License-Identifier: Apache-2.0
+ // The browser half of a renderer: its own published entry point.
+ 
++/** @module @assemblejs/core/client */
+ // The shape browser code receives. Re-exported here rather than reached for through the package
+ // root, so a renderer's browser half can name what it is handed without importing the server
+ // surface to do it.
+diff --git a/packages/core/src/index.ts b/packages/core/src/index.ts
+index 18882c0..78bb1fa 100644
+--- a/packages/core/src/index.ts
++++ b/packages/core/src/index.ts
+@@ -4,6 +4,7 @@
+ // else: no leaf file, no declaration of its own. `renderer` and `client` are absent on purpose;
+ // each is its own published entry point, and a thing published twice is a thing that can drift.
+ 
++/** @module @assemblejs/core */
+ export * from "./contract/index.js";
+ export * from "./json/index.js";
+ export * from "./compose/index.js";
+diff --git a/packages/core/src/renderer/index.ts b/packages/core/src/renderer/index.ts
+index 2b80baf..faaea3a 100644
+--- a/packages/core/src/renderer/index.ts
++++ b/packages/core/src/renderer/index.ts
+@@ -2,5 +2,6 @@
+ // SPDX-License-Identifier: Apache-2.0
+ // The server half of a renderer: its own published entry point.
+ 
++/** @module @assemblejs/core/renderer */
+ export type { Renderer } from "./renderer.js";
+ export type { RenderInput } from "./render-input.js";
+diff --git a/packages/create/src/index.ts b/packages/create/src/index.ts
+index b96ba38..4a31669 100644
+--- a/packages/create/src/index.ts
++++ b/packages/create/src/index.ts
+@@ -1,3 +1,4 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/create */
+ export * from "./create/index.js";
+diff --git a/packages/devtools/src/index.ts b/packages/devtools/src/index.ts
+index efd0895..854648c 100644
+--- a/packages/devtools/src/index.ts
++++ b/packages/devtools/src/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/devtools */
+ export * from "./overview/index.js";
+ export * from "./routes/index.js";
+ export * from "./devtools/index.js";
+diff --git a/packages/mcp/src/index.ts b/packages/mcp/src/index.ts
+index f5f9dc7..7c1ae00 100644
+--- a/packages/mcp/src/index.ts
++++ b/packages/mcp/src/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/mcp */
+ export * from "./root/index.js";
+ export * from "./rules/index.js";
+ export * from "./render/index.js";
+diff --git a/packages/renderer-lit/src/client/hydration-support.ts b/packages/renderer-lit/src/client/hydration-support.ts
+index a81a315..fcb048e 100644
+--- a/packages/renderer-lit/src/client/hydration-support.ts
++++ b/packages/renderer-lit/src/client/hydration-support.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-lit/hydration-support */
+ import "@lit-labs/ssr-client/lit-element-hydrate-support.js";
+ import type { CSSResultOrNative } from "lit";
+ 
+diff --git a/packages/renderer-lit/src/client/index.ts b/packages/renderer-lit/src/client/index.ts
+index 0fda613..e930cf6 100644
+--- a/packages/renderer-lit/src/client/index.ts
++++ b/packages/renderer-lit/src/client/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-lit/client */
+ // The support comes first: Lit elements defined after it hydrate the shadow roots the server sent.
+ export { HYDRATION_SUPPORT } from "./hydration-support.js";
+ export { hydrate } from "./hydrate.js";
+diff --git a/packages/renderer-lit/src/index.ts b/packages/renderer-lit/src/index.ts
+index d8ff112..58370b1 100644
+--- a/packages/renderer-lit/src/index.ts
++++ b/packages/renderer-lit/src/index.ts
+@@ -1,4 +1,5 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-lit */
+ export * from "./props/index.js";
+ export * from "./server/index.js";
+diff --git a/packages/renderer-preact/src/client/index.ts b/packages/renderer-preact/src/client/index.ts
+index 2c30fe2..a988146 100644
+--- a/packages/renderer-preact/src/client/index.ts
++++ b/packages/renderer-preact/src/client/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-preact/client */
+ export { EventsContext } from "./events-context.js";
+ export { useEvents } from "./use-events.js";
+ export { Slot } from "./slot.js";
+diff --git a/packages/renderer-preact/src/index.ts b/packages/renderer-preact/src/index.ts
+index d8ff112..782014d 100644
+--- a/packages/renderer-preact/src/index.ts
++++ b/packages/renderer-preact/src/index.ts
+@@ -1,4 +1,5 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-preact */
+ export * from "./props/index.js";
+ export * from "./server/index.js";
+diff --git a/packages/renderer-react/src/client/index.ts b/packages/renderer-react/src/client/index.ts
+index 2c30fe2..f08ed22 100644
+--- a/packages/renderer-react/src/client/index.ts
++++ b/packages/renderer-react/src/client/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-react/client */
+ export { EventsContext } from "./events-context.js";
+ export { useEvents } from "./use-events.js";
+ export { Slot } from "./slot.js";
+diff --git a/packages/renderer-react/src/index.ts b/packages/renderer-react/src/index.ts
+index d8ff112..5a03c5c 100644
+--- a/packages/renderer-react/src/index.ts
++++ b/packages/renderer-react/src/index.ts
+@@ -1,4 +1,5 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-react */
+ export * from "./props/index.js";
+ export * from "./server/index.js";
+diff --git a/packages/renderer-solid/src/client/index.ts b/packages/renderer-solid/src/client/index.ts
+index 2c30fe2..31efe04 100644
+--- a/packages/renderer-solid/src/client/index.ts
++++ b/packages/renderer-solid/src/client/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-solid/client */
+ export { EventsContext } from "./events-context.js";
+ export { useEvents } from "./use-events.js";
+ export { Slot } from "./slot.js";
+diff --git a/packages/renderer-solid/src/compiler/index.ts b/packages/renderer-solid/src/compiler/index.ts
+index 340e274..dcd581a 100644
+--- a/packages/renderer-solid/src/compiler/index.ts
++++ b/packages/renderer-solid/src/compiler/index.ts
+@@ -1,3 +1,4 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-solid/compiler */
+ export { compileSolid } from "./compile-solid.js";
+diff --git a/packages/renderer-solid/src/index.ts b/packages/renderer-solid/src/index.ts
+index d8ff112..6fd86a9 100644
+--- a/packages/renderer-solid/src/index.ts
++++ b/packages/renderer-solid/src/index.ts
+@@ -1,4 +1,5 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-solid */
+ export * from "./props/index.js";
+ export * from "./server/index.js";
+diff --git a/packages/renderer-svelte/src/client/index.ts b/packages/renderer-svelte/src/client/index.ts
+index 0f87029..90f6036 100644
+--- a/packages/renderer-svelte/src/client/index.ts
++++ b/packages/renderer-svelte/src/client/index.ts
+@@ -1,3 +1,4 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-svelte/client */
+ export { hydrate } from "./hydrate.js";
+diff --git a/packages/renderer-svelte/src/index.ts b/packages/renderer-svelte/src/index.ts
+index d8ff112..63a33df 100644
+--- a/packages/renderer-svelte/src/index.ts
++++ b/packages/renderer-svelte/src/index.ts
+@@ -1,4 +1,5 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-svelte */
+ export * from "./props/index.js";
+ export * from "./server/index.js";
+diff --git a/packages/renderer-templates/src/index.ts b/packages/renderer-templates/src/index.ts
+index 66a17e7..582233e 100644
+--- a/packages/renderer-templates/src/index.ts
++++ b/packages/renderer-templates/src/index.ts
+@@ -1,4 +1,5 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-templates */
+ export * from "./engine/index.js";
+ export * from "./server/index.js";
+diff --git a/packages/renderer-vue/src/client/index.ts b/packages/renderer-vue/src/client/index.ts
+index 04b8c06..ca27cfa 100644
+--- a/packages/renderer-vue/src/client/index.ts
++++ b/packages/renderer-vue/src/client/index.ts
+@@ -1,5 +1,6 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-vue/client */
+ export { EVENTS_KEY } from "./events-key.js";
+ export { useEvents } from "./use-events.js";
+ export { Slot } from "./slot.js";
+diff --git a/packages/renderer-vue/src/index.ts b/packages/renderer-vue/src/index.ts
+index d8ff112..db8b3ba 100644
+--- a/packages/renderer-vue/src/index.ts
++++ b/packages/renderer-vue/src/index.ts
+@@ -1,4 +1,5 @@
+ // Copyright Ayers Electronics Inc. All rights reserved.
+ // SPDX-License-Identifier: Apache-2.0
++/** @module @assemblejs/renderer-vue */
+ export * from "./props/index.js";
+ export * from "./server/index.js";
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index ec3d706..b857574 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -83,6 +83,9 @@ importers:
+       syncpack:
+         specifier: 15.3.3
+         version: 15.3.3
++      typedoc:
++        specifier: 0.28.20
++        version: 0.28.20(typescript@6.0.3)
+       typescript:
+         specifier: 6.0.3
+         version: 6.0.3
+@@ -342,7 +345,7 @@ importers:
+         version: 6.0.3
+       vitest:
+         specifier: 4.1.11
+-        version: 4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
++        version: 4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0))
+ 
+   packages/create:
+     dependencies:
+@@ -1321,6 +1324,9 @@ packages:
+   '@fastify/proxy-addr@5.1.0':
+     resolution: {integrity: sha512-INS+6gh91cLUjB+PVHfu1UqcB76Sqtpyp7bnL+FYojhjygvOPA9ctiD/JDKsyD9Xgu4hUhCSJBPig/w7duNajw==}
+ 
++  '@gerrit0/mini-shiki@3.23.0':
++    resolution: {integrity: sha512-bEMORlG0cqdjVyCEuU0cDQbORWX+kYCeo0kV1lbxF5bt4r7SID2l9bqsxJEM0zndaxpOUT7riCyIVEuqq/Ynxg==}
++
+   '@hono/node-server@2.1.1':
+     resolution: {integrity: sha512-ELuehkj5VCBdgEw9zs+ivkKwyzzUCSQuE96YmiPvn1ECBoZCczbFXJLeEGMTYjphP6gydh4pHMqEYPVMYUVgQg==}
+     engines: {node: '>=20'}
+@@ -1904,6 +1910,21 @@ packages:
+     cpu: [x64]
+     os: [win32]
+ 
++  '@shikijs/engine-oniguruma@3.23.0':
++    resolution: {integrity: sha512-1nWINwKXxKKLqPibT5f4pAFLej9oZzQTsby8942OTlsJzOBZ0MWKiwzMsd+jhzu8YPCHAswGnnN1YtQfirL35g==}
++
++  '@shikijs/langs@3.23.0':
++    resolution: {integrity: sha512-2Ep4W3Re5aB1/62RSYQInK9mM3HsLeB91cHqznAJMuylqjzNVAVCMnNWRHFtcNHXsoNRayP9z1qj4Sq3nMqYXg==}
++
++  '@shikijs/themes@3.23.0':
++    resolution: {integrity: sha512-5qySYa1ZgAT18HR/ypENL9cUSGOeI2x+4IvYJu4JgVJdizn6kG4ia5Q1jDEOi7gTbN4RbuYtmHh0W3eccOrjMA==}
++
++  '@shikijs/types@3.23.0':
++    resolution: {integrity: sha512-3JZ5HXOZfYjsYSk0yPwBrkupyYSLpAE26Qc0HLghhZNGTZg/SKxXIIgoxOpmmeQP0RRSDJTk1/vPfw9tbw+jSQ==}
++
++  '@shikijs/vscode-textmate@10.0.2':
++    resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
++
+   '@simple-libs/child-process-utils@2.0.0':
+     resolution: {integrity: sha512-dvNoRKLijXnD0XoJAz94pbNuB5GQgDr55UhpSPhffDkTT0Cmcqh9jSCOtwfT2d4H6MI9E7c4SgtMuJXZ6F3c6A==}
+     engines: {node: '>=22'}
+@@ -1961,6 +1982,9 @@ packages:
+   '@types/estree@1.0.9':
+     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
+ 
++  '@types/hast@3.0.5':
++    resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
++
+   '@types/json-schema@7.0.15':
+     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+ 
+@@ -1984,6 +2008,9 @@ packages:
+   '@types/trusted-types@2.0.7':
+     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+ 
++  '@types/unist@3.0.3':
++    resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
++
+   '@types/whatwg-mimetype@3.0.2':
+     resolution: {integrity: sha512-c2AKvDT8ToxLIOUlN51gTiHXflsfIFisS4pO7pDPoKouJCESkhZnEy623gwP9laCy5lnLDAw1vAzu2vM2YLOrA==}
+ 
+@@ -2668,6 +2695,10 @@ packages:
+     resolution: {integrity: sha512-L1l8TNvomm6UVW5B253AGxQagSQr+vGwhMlrrfRS2qmhx46AMpMVJKQYLvWYbysTMY8VoicOvzHzoHMbyzB+4A==}
+     engines: {node: '>=10.13.0'}
+ 
++  entities@4.5.0:
++    resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
++    engines: {node: '>=0.12'}
++
+   entities@6.0.1:
+     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
+     engines: {node: '>=0.12'}
+@@ -3415,6 +3446,9 @@ packages:
+   lines-and-columns@1.2.4:
+     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+ 
++  linkify-it@5.0.2:
++    resolution: {integrity: sha512-ONTm2jCMAVZjgQa/Fy1kScXsuOoF5NPTsoFBdE1KVIZ2vAh/r9+Bqo+0jINCBYnavTPQZz38QzFTme79ENoN3Q==}
++
+   linkify-it@6.1.0:
+     resolution: {integrity: sha512-wJ/TwpSDTLepCrQoYWYIExIKg5Zchex2Nn5yk2mFnB+6PtdkHtyLx742md9csRjjOnGkKIS/RrbY7l8D6gT9Vw==}
+ 
+@@ -3450,6 +3484,9 @@ packages:
+   lru-cache@5.1.1:
+     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
+ 
++  lunr@2.3.9:
++    resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
++
+   magic-string@0.30.21:
+     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
+ 
+@@ -3460,6 +3497,10 @@ packages:
+     resolution: {integrity: sha512-ayF7iT+44LXdxJLTrTd3TLQpFDDvPCBxXxbv+pMUSuHA5Q8zyAfwkRP6aHHwNVFBUFWtxAHqwNJxF8vMZLAbVg==}
+     engines: {node: '>=18'}
+ 
++  markdown-it@14.3.2:
++    resolution: {integrity: sha512-sHHjZ5fJKlgrG4qns2YwVcdNep35h5fERrfkD2YNsb9UFk0UIHarbiTaHKVMlPuWAoiilyK8Fv/jAm11slsY7Q==}
++    hasBin: true
++
+   markdown-it@15.0.2:
+     resolution: {integrity: sha512-q4IGxMv56jCqT4OCRCADBoDP3LO4MhmTXjFbphHPXs4g3j9Xg5RDnxqN8IF/3vIWEU+VCnUq+7JUg/cfy2E6Qw==}
+     hasBin: true
+@@ -4278,6 +4319,13 @@ packages:
+     resolution: {integrity: sha512-faYHw0anBbc/kWF3zFTEnxSFOAGUX9GFbOBthvDdLsIlEoWOFOtS0zgCiQYwIskL9iGXZL3kAXD8OoZ4GmMATA==}
+     engines: {node: '>= 18'}
+ 
++  typedoc@0.28.20:
++    resolution: {integrity: sha512-uSKqkh8Cr48vllnEy+jdaAgOeR6Y+QCBW7usgUsKj7gJEfR7stw9U/fE49LBnj2tPRKPY0c0EBJSWe9Appmplg==}
++    engines: {node: '>= 18', pnpm: '>= 10'}
++    hasBin: true
++    peerDependencies:
++      typescript: 5.0.x || 5.1.x || 5.2.x || 5.3.x || 5.4.x || 5.5.x || 5.6.x || 5.7.x || 5.8.x || 5.9.x || 6.0.x
++
+   typescript-eslint@8.69.0:
+     resolution: {integrity: sha512-B3MltX0VqjUBNEe3b3sSuiRbfa6XrfHFtBiPamjT5AsW/dfq+y+bc0wyuS9DxAS1LyzCxRp2+rxzpLUvqM2BvA==}
+     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+@@ -4295,6 +4343,9 @@ packages:
+     engines: {node: '>=14.17'}
+     hasBin: true
+ 
++  uc.micro@2.1.0:
++    resolution: {integrity: sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==}
++
+   uc.micro@3.0.0:
+     resolution: {integrity: sha512-U3PppEkleoTnIfi8BozMx3yju3qc/L6SwqWo2Sw+54PX+PX0q9I+r1Um5HCmqD7n9VDX5/v3vQH/AjA6deDdtw==}
+ 
+@@ -5181,6 +5232,14 @@ snapshots:
+       '@fastify/forwarded': 3.0.2
+       ipaddr.js: 2.5.0
+ 
++  '@gerrit0/mini-shiki@3.23.0':
++    dependencies:
++      '@shikijs/engine-oniguruma': 3.23.0
++      '@shikijs/langs': 3.23.0
++      '@shikijs/themes': 3.23.0
++      '@shikijs/types': 3.23.0
++      '@shikijs/vscode-textmate': 10.0.2
++
+   '@hono/node-server@2.1.1(hono@4.13.5)':
+     dependencies:
+       hono: 4.13.5
+@@ -5563,6 +5622,26 @@ snapshots:
+   '@rollup/rollup-win32-x64-msvc@4.63.1':
+     optional: true
+ 
++  '@shikijs/engine-oniguruma@3.23.0':
++    dependencies:
++      '@shikijs/types': 3.23.0
++      '@shikijs/vscode-textmate': 10.0.2
++
++  '@shikijs/langs@3.23.0':
++    dependencies:
++      '@shikijs/types': 3.23.0
++
++  '@shikijs/themes@3.23.0':
++    dependencies:
++      '@shikijs/types': 3.23.0
++
++  '@shikijs/types@3.23.0':
++    dependencies:
++      '@shikijs/vscode-textmate': 10.0.2
++      '@types/hast': 3.0.5
++
++  '@shikijs/vscode-textmate@10.0.2': {}
++
+   '@simple-libs/child-process-utils@2.0.0':
+     dependencies:
+       '@simple-libs/stream-utils': 2.0.0
+@@ -5625,6 +5704,10 @@ snapshots:
+ 
+   '@types/estree@1.0.9': {}
+ 
++  '@types/hast@3.0.5':
++    dependencies:
++      '@types/unist': 3.0.3
++
+   '@types/json-schema@7.0.15': {}
+ 
+   '@types/node@26.4.1':
+@@ -5645,6 +5728,8 @@ snapshots:
+ 
+   '@types/trusted-types@2.0.7': {}
+ 
++  '@types/unist@3.0.3': {}
++
+   '@types/whatwg-mimetype@3.0.2': {}
+ 
+   '@types/ws@8.18.1':
+@@ -5821,6 +5906,14 @@ snapshots:
+       chai: 6.2.2
+       tinyrainbow: 3.1.1
+ 
++  '@vitest/mocker@4.1.11(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0))':
++    dependencies:
++      '@vitest/spy': 4.1.11
++      estree-walker: 3.0.3
++      magic-string: 0.30.21
++    optionalDependencies:
++      vite: 8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0)
++
+   '@vitest/mocker@4.1.11(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))':
+     dependencies:
+       '@vitest/spy': 4.1.11
+@@ -6285,6 +6378,8 @@ snapshots:
+       graceful-fs: 4.2.11
+       tapable: 2.3.3
+ 
++  entities@4.5.0: {}
++
+   entities@6.0.1: {}
+ 
+   entities@7.0.1: {}
+@@ -7073,6 +7168,10 @@ snapshots:
+ 
+   lines-and-columns@1.2.4: {}
+ 
++  linkify-it@5.0.2:
++    dependencies:
++      uc.micro: 2.1.0
++
+   linkify-it@6.1.0:
+     dependencies:
+       uc.micro: 3.0.0
+@@ -7115,6 +7214,8 @@ snapshots:
+     dependencies:
+       yallist: 3.1.1
+ 
++  lunr@2.3.9: {}
++
+   magic-string@0.30.21:
+     dependencies:
+       '@jridgewell/sourcemap-codec': 1.6.0
+@@ -7129,6 +7230,15 @@ snapshots:
+       type-fest: 4.41.0
+       web-worker: 1.5.0
+ 
++  markdown-it@14.3.2:
++    dependencies:
++      argparse: 2.0.1
++      entities: 4.5.0
++      linkify-it: 5.0.2
++      mdurl: 2.1.0
++      punycode.js: 2.3.1
++      uc.micro: 2.1.0
++
+   markdown-it@15.0.2:
+     dependencies:
+       argparse: 3.0.2
+@@ -8008,6 +8118,15 @@ snapshots:
+       media-typer: 1.1.1
+       mime-types: 3.0.2
+ 
++  typedoc@0.28.20(typescript@6.0.3):
++    dependencies:
++      '@gerrit0/mini-shiki': 3.23.0
++      lunr: 2.3.9
++      markdown-it: 14.3.2
++      minimatch: 10.2.6
++      typescript: 6.0.3
++      yaml: 2.9.0
++
+   typescript-eslint@8.69.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3):
+     dependencies:
+       '@typescript-eslint/eslint-plugin': 8.69.0(@typescript-eslint/parser@8.69.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
+@@ -8023,6 +8142,8 @@ snapshots:
+ 
+   typescript@6.0.3: {}
+ 
++  uc.micro@2.1.0: {}
++
+   uc.micro@3.0.0: {}
+ 
+   ufo@1.6.4: {}
+@@ -8081,6 +8202,20 @@ snapshots:
+ 
+   vary@1.1.2: {}
+ 
++  vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0):
++    dependencies:
++      lightningcss: 1.33.0
++      picomatch: 4.0.7
++      postcss: 8.5.28
++      rolldown: 1.2.6
++      tinyglobby: 0.2.17
++    optionalDependencies:
++      '@types/node': 26.4.1
++      esbuild: 0.27.7
++      fsevents: 2.3.3
++      jiti: 2.7.0
++      yaml: 2.9.0
++
+   vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0):
+     dependencies:
+       lightningcss: 1.33.0
+@@ -8099,6 +8234,34 @@ snapshots:
+     optionalDependencies:
+       vite: 8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)
+ 
++  vitest@4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0)):
++    dependencies:
++      '@vitest/expect': 4.1.11
++      '@vitest/mocker': 4.1.11(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0))
++      '@vitest/pretty-format': 4.1.11
++      '@vitest/runner': 4.1.11
++      '@vitest/snapshot': 4.1.11
++      '@vitest/spy': 4.1.11
++      '@vitest/utils': 4.1.11
++      es-module-lexer: 2.3.2
++      expect-type: 1.4.0
++      magic-string: 0.30.21
++      obug: 2.1.4
++      pathe: 2.0.3
++      picomatch: 4.0.7
++      std-env: 4.2.0
++      tinybench: 2.9.0
++      tinyexec: 1.3.0
++      tinyglobby: 0.2.17
++      tinyrainbow: 3.1.1
++      vite: 8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0)
++      why-is-node-running: 2.3.0
++    optionalDependencies:
++      '@types/node': 26.4.1
++      happy-dom: 20.13.0
++    transitivePeerDependencies:
++      - msw
++
+   vitest@4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)):
+     dependencies:
+       '@vitest/expect': 4.1.11
+diff --git a/scripts/check-site.mjs b/scripts/check-site.mjs
+index 6f5f79f..e0df043 100644
+--- a/scripts/check-site.mjs
++++ b/scripts/check-site.mjs
+@@ -10,9 +10,22 @@
+ //      whoever writes the first skin; the numbers are from platform/sitekit/ROLES.md.
+ //   2. Every page pages.json declares exists, every required page is among them, and no page
+ //      links to one that is not declared. A page advertised and missing is a 404 a visitor
+-//      finds before anyone else does.
+-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+-import { join } from "node:path";
++//      finds before anyone else does. A page marked `generated` is the one exception: the
++//      deploy writes it before this check runs (the API reference under docs/api/), so it need
++//      not exist in the tree, it still counts as declared, and the directory it heads is not
++//      walked, because a generated tree links hundreds of pages of its own that nobody declares.
++import {
++  existsSync,
++  mkdirSync,
++  mkdtempSync,
++  readFileSync,
++  readdirSync,
++  rmSync,
++  statSync,
++  writeFileSync,
++} from "node:fs";
++import { tmpdir } from "node:os";
++import { join, posix } from "node:path";
+ import { pathToFileURL } from "node:url";
+ 
+ // From platform/sitekit/ROLES.md. `null` means the role carries no contrast invariant, only the
+@@ -96,13 +109,23 @@ export function checkSkin(css) {
+ }
+ 
+ export function checkPages(siteRoot) {
++  siteRoot = siteRoot.replace(/\/+$/, "");
+   const problems = [];
+   const manifestPath = join(siteRoot, "pages.json");
+   if (!existsSync(manifestPath)) return [`${manifestPath} is missing`];
+   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+ 
+   const declared = new Set(manifest.pages.map((page) => page.file));
++  // A generated page is written by the deploy before this runs, so its absence here says
++  // nothing; and the tree it heads is its generator's, so the walk below does not enter it.
++  const generatedDirs = new Set(
++    manifest.pages
++      .filter((page) => page.generated === true)
++      .map((page) => posix.dirname(page.file))
++      .filter((dir) => dir !== "."),
++  );
+   for (const page of manifest.pages) {
++    if (page.generated === true) continue;
+     if (!existsSync(join(siteRoot, page.file))) {
+       problems.push(`pages.json declares ${page.file}, which does not exist`);
+     }
+@@ -116,7 +139,8 @@ export function checkPages(siteRoot) {
+     for (const entry of readdirSync(dir)) {
+       const path = join(dir, entry);
+       if (statSync(path).isDirectory()) {
+-        if (entry !== "kit") walk(path);
++        const rel = path.slice(siteRoot.length + 1).replaceAll("\\", "/");
++        if (entry !== "kit" && !generatedDirs.has(rel)) walk(path);
+         continue;
+       }
+       if (!path.endsWith(".html")) continue;
+@@ -138,14 +162,54 @@ export function checkPages(siteRoot) {
+ const isEntryPoint = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
+ if (isEntryPoint) {
+   if (process.argv[2] === "--self-test") {
++    const refuse = (message, seen) => {
++      console.error(`site gate self-test FAILED: ${message}`);
++      for (const p of seen) console.error(`  saw: ${p}`);
++      process.exit(1);
++    };
++
+     const bad = checkSkin(":root{--surface:#ffffff;--ink:#f0f0f0;}");
+     if (!bad.some((p) => p.includes("--ink")) || !bad.some((p) => p.includes("not bound"))) {
+-      console.error("site gate self-test FAILED: it must catch unreadable ink and an unbound role");
+-      for (const p of bad) console.error(`  saw: ${p}`);
+-      process.exit(1);
++      refuse("it must catch unreadable ink and an unbound role", bad);
+     }
++
++    // The pages rule on a scratch site: red on a declared page that is missing, clean on the
++    // same page marked generated, and clean still once the generated tree exists and links
++    // pages of its own that nothing declares.
++    const root = mkdtempSync(join(tmpdir(), "check-site-"));
++    try {
++      const page = { file: "docs/api/index.html", url: "docs/api/index.html", title: "API" };
++      const manifest = (mark) =>
++        JSON.stringify({
++          pages: [
++            { file: "index.html", url: "index.html", title: "Home" },
++            { ...page, ...mark },
++          ],
++        });
++      writeFileSync(join(root, "index.html"), '<a href="docs/api/index.html">reference</a>');
++      writeFileSync(join(root, "pages.json"), manifest({}));
++      const missing = checkPages(root);
++      if (!missing.some((p) => p.includes("docs/api/index.html, which does not exist"))) {
++        refuse("it must refuse a declared page that does not exist", missing);
++      }
++      writeFileSync(join(root, "pages.json"), manifest({ generated: true }));
++      const exempt = checkPages(root);
++      if (exempt.length > 0) {
++        refuse("it must pass a declared page marked generated that is not written yet", exempt);
++      }
++      mkdirSync(join(root, "docs", "api", "modules"), { recursive: true });
++      writeFileSync(join(root, "docs", "api", "index.html"), '<a href="modules/a.html">a</a>');
++      writeFileSync(join(root, "docs", "api", "modules", "a.html"), '<a href="../b.html">b</a>');
++      const walked = checkPages(root);
++      if (walked.length > 0) {
++        refuse("it must not walk the tree a generated page heads", walked);
++      }
++    } finally {
++      rmSync(root, { recursive: true, force: true });
++    }
++
+     console.log(
+-      `site gate self-test: red on unreadable ink and on ${bad.length - 1} unbound role(s), as required`,
++      `site gate self-test: red on unreadable ink and on ${bad.length - 1} unbound role(s), red on a declared page missing and clean on it marked generated, as required`,
+     );
+     process.exit(0);
+   }
+diff --git a/site/.gitignore b/site/.gitignore
+index b3f3a01..be2dd95 100644
+--- a/site/.gitignore
++++ b/site/.gitignore
+@@ -1 +1,2 @@
+ /kit
++/docs/api
+diff --git a/site/DEPLOY.md b/site/DEPLOY.md
+index 89e9f0d..632a9d4 100644
+--- a/site/DEPLOY.md
++++ b/site/DEPLOY.md
+@@ -1,7 +1,10 @@
+ # Deploying the AssembleJS page
+ 
+-This folder is the whole site: static pages, no build step, no CDN, fonts and images vendored.
+-`.github/workflows/deploy-site.yml` syncs `site/` to the shared bucket. Nothing is copied by hand.
++This folder is the whole site: static pages, fonts and images vendored, nothing from a
++third-party CDN. Two of its directories are not committed and are written by the deploy before
++it checks and syncs: `kit/`, staged from the platform pin, and `docs/api/`, the API reference,
++generated from the packages' sources (both below). `.github/workflows/deploy-site.yml` syncs
++`site/` to the shared bucket. Nothing is copied by hand.
+ 
+ **A PUSH THAT TOUCHES `site/` PUBLISHES.** The paths filter is an INCLUDE on `site/**`, never an
+ ignore list: this repository is a product, so almost everything in it is not the site, and a
+@@ -30,6 +33,29 @@ upload as `site/kit/`. Locally, symlink it for preview:
+ The landing page is this product's own and does not use the kit; every other page links
+ `kit/kit.css` first and `skin.css` second, in that order, because the skin overrides.
+ 
++## The API reference is generated, never committed
++
++`site/docs/api/` is gitignored. The deploy installs the workspace at the frozen lockfile, builds
++the packages, and runs `pnpm site:api`: typedoc, configured by the root `typedoc.json`, reads
++every published entry point of the twelve packages (each `src/index.ts`, and every subpath the
++package's `exports` names: `core/client`, `core/renderer`, `renderer-solid/compiler`,
++`renderer-lit/hydration-support`, and the `client` of each of the six framework renderers) and
++writes the reference into `docs/api/`. It reads the sources, not `dist/`; the build runs first
++so that a tree whose packages do not build publishes nothing. The entry points are read through
++`tsconfig.typedoc.json`, a solution-style tsconfig whose `references` are the packages' own, so
++typedoc type-checks each package under its own options; each entry file names itself with a
++`@module` comment, so the reference reads by the specifier a user imports. Locally,
++`pnpm build && pnpm site:api` writes the same tree for preview.
++
++A deploy whose reference did not land stops before the sync. In `pages.json` the page is declared
++`generated`: the site check does not require it to exist in the tree, and does not walk the tree
++it heads, which links hundreds of pages of its own. Typedoc links its assets with a cache-busting
++query, so the week-long asset cache never serves a stale search index after a deploy.
++
++The reference refreshes when the site deploys, and the site deploys on a push that touches
++`site/**`. A push that changes only the packages does not republish it; the next site push, or a
++manual dispatch, does.
++
+ ## What is checked before it ships
+ 
+ `scripts/check-site.mjs`, in `pnpm check`:
+@@ -38,7 +64,9 @@ The landing page is this product's own and does not use the kit; every other pag
+   invariant that role carries in `platform/sitekit/ROLES.md`. A role documented only by its name
+   is settled by whoever writes the first skin, so the numbers are enforced rather than described.
+ - Every page `pages.json` declares exists, every required page is declared, and no page links to
+-  one that is not. A page advertised and missing is a 404 a visitor finds before anyone else.
++  one that is not. A page advertised and missing is a 404 a visitor finds before anyone else. A
++  page marked `generated` is exempt from existing, and the deploy proves it exists after writing
++  it, before this check runs.
+ 
+ ## Still the owner's
+ 
+diff --git a/site/docs/index.html b/site/docs/index.html
+index b517c91..e3b75e7 100644
+--- a/site/docs/index.html
++++ b/site/docs/index.html
+@@ -55,6 +55,15 @@
+     </div>
+   </dl>
+ 
++  <h2>Reference</h2>
++  <dl>
++    <div class="item">
++      <dt><a href="api/index.html">API reference</a></dt>
++      <dd>Every published entry point of the twelve packages, generated from the sources when
++        the site deploys.</dd>
++    </div>
++  </dl>
++
+   <h2>The model</h2>
+   <dl>
+     <div class="item">
+diff --git a/site/pages.json b/site/pages.json
+index 56db51b..542932f 100644
+--- a/site/pages.json
++++ b/site/pages.json
+@@ -1,5 +1,5 @@
+ {
+-  "_": "Single source of truth for what pages exist and how they link. scripts/check-site.mjs reads it: every declared page must exist, every required page must be declared, and no page may link to one that is not. Generated links name docs/index.html and NEVER a bare directory: CloudFront applies a default root object only at the distribution root, so /assemblejs/docs/ 404s while /assemblejs/docs/index.html is 200, and a repo check cannot tell them apart because the file exists either way.",
++  "_": "Single source of truth for what pages exist and how they link. scripts/check-site.mjs reads it: every declared page must exist, except one marked generated, which the deploy writes before the check runs and which the check does not walk; every required page must be declared; and no page may link to one that is not. Generated links name docs/index.html and NEVER a bare directory: CloudFront applies a default root object only at the distribution root, so /assemblejs/docs/ 404s while /assemblejs/docs/index.html is 200, and a repo check cannot tell them apart because the file exists either way.",
+   "base": "https://ayers.repair/assemblejs/",
+   "required": ["install.html", "start.html", "docs/index.html"],
+   "pages": [
+@@ -59,7 +59,13 @@
+       "sep": " &middot; ",
+       "in_nav": false
+     },
+-    { "file": "404.html", "url": "404.html", "title": "Not found", "in_nav": false }
++    { "file": "404.html", "url": "404.html", "title": "Not found", "in_nav": false },
++    {
++      "file": "docs/api/index.html",
++      "url": "docs/api/index.html",
++      "title": "API reference",
++      "generated": true
++    }
+   ],
+   "external": [
+     { "url": "https://github.com/ayers-software-repair/assemblejs", "title": "Source" },
+diff --git a/tsconfig.typedoc.json b/tsconfig.typedoc.json
+new file mode 100644
+index 0000000..d37923b
+--- /dev/null
++++ b/tsconfig.typedoc.json
+@@ -0,0 +1,17 @@
++{
++  "files": [],
++  "references": [
++    { "path": "packages/cli" },
++    { "path": "packages/core" },
++    { "path": "packages/create" },
++    { "path": "packages/devtools" },
++    { "path": "packages/mcp" },
++    { "path": "packages/renderer-lit" },
++    { "path": "packages/renderer-preact" },
++    { "path": "packages/renderer-react" },
++    { "path": "packages/renderer-solid" },
++    { "path": "packages/renderer-svelte" },
++    { "path": "packages/renderer-templates" },
++    { "path": "packages/renderer-vue" }
++  ]
++}
+diff --git a/typedoc.json b/typedoc.json
+new file mode 100644
+index 0000000..28d4826
+--- /dev/null
++++ b/typedoc.json
+@@ -0,0 +1,37 @@
++{
++  "$schema": "https://typedoc.org/schema.json",
++  "name": "AssembleJS API reference",
++  "tsconfig": "tsconfig.typedoc.json",
++  "entryPointStrategy": "resolve",
++  "entryPoints": [
++    "packages/cli/src/index.ts",
++    "packages/core/src/index.ts",
++    "packages/core/src/client/index.ts",
++    "packages/core/src/renderer/index.ts",
++    "packages/create/src/index.ts",
++    "packages/devtools/src/index.ts",
++    "packages/mcp/src/index.ts",
++    "packages/renderer-lit/src/index.ts",
++    "packages/renderer-lit/src/client/index.ts",
++    "packages/renderer-lit/src/client/hydration-support.ts",
++    "packages/renderer-preact/src/index.ts",
++    "packages/renderer-preact/src/client/index.ts",
++    "packages/renderer-react/src/index.ts",
++    "packages/renderer-react/src/client/index.ts",
++    "packages/renderer-solid/src/index.ts",
++    "packages/renderer-solid/src/client/index.ts",
++    "packages/renderer-solid/src/compiler/index.ts",
++    "packages/renderer-svelte/src/index.ts",
++    "packages/renderer-svelte/src/client/index.ts",
++    "packages/renderer-templates/src/index.ts",
++    "packages/renderer-vue/src/index.ts",
++    "packages/renderer-vue/src/client/index.ts"
++  ],
++  "out": "site/docs/api",
++  "readme": "none",
++  "excludeExternals": true,
++  "excludeInternal": true,
++  "githubPages": false,
++  "cacheBust": true,
++  "treatWarningsAsErrors": true
++}

@@ -52,6 +52,8 @@ describe("directives the finder used to get wrong", () => {
     // It was previously not a directive at all: copied to the output verbatim, no diagnostic.
     expect(findPlacements(`<ASSEMBLY name="cart"/>`)).toHaveLength(1);
     expect(findPlacements(`<Assembly name="cart"/>`)[0]?.name).toBe("cart");
+    // The immediately-closed form too, whose closing tag shares the opening tag's case.
+    expect(findPlacements(`<ASSEMBLY name="cart"></ASSEMBLY>`)).toHaveLength(1);
   });
 
   it("ignores a directive inside a comment", () => {

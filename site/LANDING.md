@@ -3,15 +3,15 @@
 Every line on `index.html` has to be true on the day it ships. This file is where each claim is
 paired with the thing that makes it true, so a claim that stops being true is findable.
 
-| the page says                          | what backs it                                                                                                                               |
-| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| "One page. Every framework."           | The renderer packages, one per framework, and the browser proof that two assemblies with different renderers exchange an event on one page. |
-| "A directory is an assembly"           | Filesystem discovery and the generated registry, with a test asserting `add` writes nothing resembling a server file.                       |
-| "The file name says the framework"     | `rendererForView`, and its test that an ambiguous `.tsx` without an infix is refused rather than guessed.                                   |
-| "One slow assembly is not a slow page" | The composer's deadline, its fallback ladder, and the red tests that a hanging transport and a throwing one both leave the page standing.   |
-| "They talk without adapters"           | The page bus, and the chromium test where one framework's click changes another framework's text.                                           |
-| "An assembly can live anywhere"        | One `Fetch` interface for local and remote, so moving one changes a URL and nothing else. Not yet built: B-13.                              |
-| "Your agent knows the framework"       | `@assemblejs/mcp`. Not yet built: B-09b.                                                                                                    |
+| the page says                          | what backs it                                                                                                                                   |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| "One page. Every framework."           | The renderer packages, one per framework, and the browser proof that two assemblies with different renderers exchange an event on one page.     |
+| "A directory is an assembly"           | Filesystem discovery and the generated registry, with a test asserting `add` writes nothing resembling a server file.                           |
+| "The file name says the framework"     | `rendererForView`, and its test that an ambiguous `.tsx` without an infix is refused rather than guessed.                                       |
+| "One slow assembly is not a slow page" | The composer's deadline, its fallback ladder, and the red tests that a hanging transport and a throwing one both leave the page standing.       |
+| "They talk without adapters"           | The page bus, and the chromium test where one framework's click changes another framework's text.                                               |
+| "An assembly can live anywhere"        | One `Fetch` interface for local and remote, so moving one changes a URL and nothing else; the `remote` conformance fixture proves it over HTTP. |
+| "Your agent knows the framework"       | `@assemblejs/mcp`, which reads the project, adds and places an assembly, renders and composes, and explains every rule `check` names.           |
 
 ## What it deliberately does not say
 
@@ -24,8 +24,8 @@ paired with the thing that makes it true, so a claim that stops being true is fi
 - **No benchmark and no "fastest".** A performance claim ships with a benchmark harness in the
   repository or it does not ship.
 
-## The two claims that are ahead of the code
+## Claims ahead of the code
 
-The table above marks them. Both are on the ladder, and neither may stay on the page if it is
-still unbuilt when the page goes live: a landing page describing what a product will do is the
-one kind of lie that is hardest to notice from inside.
+None, as of 2026-10-05. Two were, and the table marked them until they were built; a claim that
+gets ahead again is marked the same way, because a landing page describing what a product will
+do is the one kind of lie that is hardest to notice from inside.

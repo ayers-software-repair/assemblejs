@@ -11,6 +11,7 @@ const request = (): AssemblyRequest => ({
   depth: 1,
   path: ["p1"],
   query: new URLSearchParams(),
+  params: {},
   headers: {},
   signal: AbortSignal.timeout(1000),
 });

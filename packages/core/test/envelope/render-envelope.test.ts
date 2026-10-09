@@ -32,11 +32,27 @@ describe("rendering the envelope", () => {
     expect(renderEnvelope(input())).not.toContain("data-failed");
 
     const marked = renderEnvelope(
-      input({ remote: "https://checkout.example.com", deferred: true, failed: true }),
+      input({ remote: "https://checkout.example.com", deferred: true, failed: "8f212c16" }),
     );
     expect(marked).toContain(`data-remote="https://checkout.example.com"`);
     expect(marked).toContain(`data-defer=""`);
-    expect(marked).toContain(`data-failed=""`);
+    expect(marked).toContain(`data-failed="8f212c16"`);
+  });
+
+  it("renders an opted-in assembly inside a declarative shadow root, its styles linked there", () => {
+    const html = renderEnvelope(input({ shadow: { css: ["/s/cart.css"] } }));
+    expect(html).toContain(
+      '<template shadowrootmode="open"><p>cart</p><link rel="stylesheet" href="/s/cart.css"></template>',
+    );
+    // The island stays in the light DOM, after the shadow root, where the runtime reads it.
+    expect(html).toMatch(/<\/template><script type="application\/json"/);
+  });
+
+  it("declares the mount mode only when it is not the default", () => {
+    expect(renderEnvelope(input())).not.toContain("data-mount");
+    expect(renderEnvelope(input({ mount: "load" }))).not.toContain("data-mount");
+    expect(renderEnvelope(input({ mount: "visible" }))).toContain(`data-mount="visible"`);
+    expect(renderEnvelope(input({ mount: "none" }))).toContain(`data-mount="none"`);
   });
 
   // The named adversarial case: no value can end the tag it sits in, whatever it contains.
@@ -83,5 +99,42 @@ describe("rendering the envelope", () => {
     const html = renderEnvelope(input());
     expect(html).not.toContain("markup");
     expect(html).not.toContain("remote");
+  });
+
+  it("carries the page's parameters on a deferred placeholder, encoded, and nowhere else", () => {
+    const params = { slug: "a b&c", id: "42" };
+    const deferred = renderEnvelope({
+      id: "d1",
+      name: "cart",
+      view: "default",
+      renderer: "",
+      markup: "",
+      data: {},
+      deferred: true,
+      params,
+    });
+    expect(deferred).toContain('data-params="id=42&amp;slug=a+b%26c"');
+    const rendered = renderEnvelope({
+      id: "r1",
+      name: "cart",
+      view: "default",
+      renderer: "html",
+      markup: "<p></p>",
+      data: {},
+      params,
+    });
+    expect(rendered).not.toContain("data-params");
+    expect(
+      renderEnvelope({
+        id: "d2",
+        name: "cart",
+        view: "default",
+        renderer: "",
+        markup: "",
+        data: {},
+        deferred: true,
+        params: {},
+      }),
+    ).not.toContain("data-params");
   });
 });

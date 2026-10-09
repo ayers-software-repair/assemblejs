@@ -15,7 +15,9 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, dep
 ## Packages
 
 - `@assemblejs/core`: server, declaration types, HTML and WebComponents renderers.
-- `@assemblejs/cli`, `@assemblejs/create`, `@assemblejs/devtools`.
+- `@assemblejs/cli`, `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent
+  surface: an MCP server that reads the project, creates one, adds and places an assembly,
+  checks it, renders and composes, and explains every rule `check` names).
 - `@assemblejs/renderer-templates` (EJS, Markdown, Nunjucks, Handlebars, Pug; no peer deps).
 - `@assemblejs/renderer-{preact,react,vue,svelte,solid,lit}`: one real peer dependency each.
 
@@ -24,9 +26,11 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, dep
 None of the legacy names (the old package name, the old handle, the retired brand) and no
 personal mail address anywhere in the tree; the exact pattern lives in `scripts/identity-gate.sh`
 and is deliberately not repeated here, because a check that finds prose finds itself.
-No author line in source files; author credit is root `package.json` `author` only. Publisher is
-Ayers Electronics on every metadata surface; the GitHub organization name appears in no
-package.json. Every `packages/*/src/**/*.ts` opens with:
+No author line in source files; author credit is root `package.json` `author` only, and no
+`packages/*/package.json` carries one. Publisher is Ayers Electronics on every metadata
+surface. The GitHub organization name appears in package.json only in the `repository` and
+`bugs` urls, which npm provenance verifies a package against, and nowhere else in it (owner,
+DECISIONS 2026-10-05 rulings). Every `packages/*/src/**/*.ts` opens with:
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 `scripts/identity-gate.sh` and `scripts/check-headers.mjs` enforce this; treat a red as a stop.
@@ -34,7 +38,7 @@ package.json. Every `packages/*/src/**/*.ts` opens with:
 ## Commands
 
     pnpm install
-    pnpm check            # identity, headers, lint, typecheck, test, build, pack: what CI runs
+    pnpm check            # identity, headers, lint, typecheck, build, test, pack: what CI runs
     pnpm --filter @assemblejs/core dev
 
 ## Rules that are hooks, not requests (.claude/hooks/)
@@ -77,18 +81,21 @@ Enforced, and every one of these is a script in `pnpm check` rather than a claim
 `check:modules` (dependency-cruiser: no cycles, no orphans, layer direction), `lint` (eslint,
 import order and kebab filenames), `check:unused` (knip: a file or export nothing reads),
 `check:versions` (syncpack: one version of a dependency across the workspace), `check:exports`,
-`check:pack` and `check:publish` (publint and are-the-types-wrong on the real tarball).
+`check:pack` and `check:publish` (publint and are-the-types-wrong on the real tarball),
+`check:claude` (this paragraph against the chain).
 
 Every gate that can go red on a known-bad input has been watched doing so, and the ones with a
-`--self-test` run it immediately before they are trusted. This paragraph is checked against
-`package.json`: a gate named here that is not in the `check` chain is a false claim, which is
-what this list was the first time it was written.
+`--self-test` run it immediately before they are trusted. The paragraph above is checked against
+`package.json` by `scripts/check-claude-gates.mjs`: a gate named there that is not in the
+`check` chain is a false claim, which is what this list was the first time it was written.
 
 ## Release
 
-changesets. `pnpm changeset` on any `packages/*/src` change. Publishing is CI only through
-`release.yml`'s `release` environment (npm trusted publishing); nobody runs `npm publish` from
-a laptop and there is no npm token anywhere.
+changesets, from the first `packages/*/src` change after the first publish: until then the
+packages' versions say what the first release is (owner, DECISIONS 2026-10-05 rulings). `next`
+is in pre mode (`.changeset/pre.json`). Publishing is CI only through `release.yml`'s `release`
+environment (npm trusted publishing); nobody runs `npm publish` from a laptop and there is no
+npm token anywhere.
 
 ## How this repository is worked (owner's standing rules, 2026-09-03)
 

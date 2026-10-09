@@ -1,0 +1,24 @@
+{
+  "name": "@assemblejs/example-two-frameworks",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A Svelte assembly and a React assembly sharing a page and an event, built and run the way a project is.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/devtools": "workspace:*",
+    "@assemblejs/renderer-react": "workspace:*",
+    "@assemblejs/renderer-svelte": "workspace:*",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "svelte": "5.57.0"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}
