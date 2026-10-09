@@ -7,7 +7,17 @@ import unicorn from "eslint-plugin-unicorn";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  { ignores: ["**/dist/**", "**/node_modules/**", "coverage/**", "scripts/fixtures/**"] },
+  // Agent worktrees under .claude/worktrees/ are whole second checkouts; linting them linted the
+  // same files twice through a second tsconfig and went red on their import order.
+  {
+    ignores: [
+      "**/dist/**",
+      "**/node_modules/**",
+      "coverage/**",
+      "scripts/fixtures/**",
+      ".claude/worktrees/**",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

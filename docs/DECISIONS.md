@@ -2251,3 +2251,36 @@ Done here:
 - Three ledger rows were stale and are corrected with their evidence: Actions runs (every
   workflow has run since 2026-10-05), `RELEASES_PAT` exists (2026-09-11), the OIDC role exists
   (2026-10-07).
+
+## 2026-10-09: tests build what they read, and the release gate
+
+Found on this machine: the Stop hook's test gate ran the suites against `dist/` folders built
+on 2026-09-10, and one core test went red for a build that predated the code it was testing
+(`exit-on-unhandled.ts` landed 2026-10-03; the old build let Node's own handler print its
+trailer where the test expected the server's log line). CI never saw it because `pnpm check`
+builds before it tests. The owner's rule, asked as a question: tests rebuild before they use a
+build.
+
+Settled:
+
+- **Every suite builds what it reads.** `scripts/build-when-stale.mjs` is a second vitest
+  global setup beside `test-temp-root.mjs`, in every package's config: before the first test,
+  each workspace package whose `dist/` is missing or older than its `src/`, `package.json` or
+  `tsup.config.ts` is built, all stale ones in one `pnpm --filter ... build` so dependencies
+  build first. A fresh build costs a stat per file and no build. Watched red first: the natural
+  red above; then core's source touched newer than its build, the setup building core, the
+  suite green.
+- **The Vue config declared `test` twice**, so its second value replaced the first and the Vue
+  suite never ran the temporary-root setup; no gate catches a duplicate key in a config file.
+  One `test` object now carries both. A duplicate-key lint for the config files is a ledger
+  row.
+- **Lint ignores `.claude/worktrees/`.** A lane's worktree is a second checkout; `eslint .`
+  linted it through a second tsconfig and went red on import order it had not changed. The
+  resume block's warning is replaced by the ignore.
+- **The release workflow asks the registry first.** A `registry` job runs `npm view
+@assemblejs/core version`; on a 404 the publish job is skipped, on an answer it runs, on any
+  other failure the run stops. The first publish is the owner's, by hand (his ruling of
+  2 September, kept on 2026-10-09), so until it happens a push to `next` fires `ci` and this
+  one request and nothing else; the 404 that was a red run on every push since 2026-10-05 is
+  the expected answer now. The `needs` context is available in a job's `if` (GitHub's context
+  availability table, read 2026-10-09).

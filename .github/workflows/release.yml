@@ -7,6 +7,10 @@ name: release
 # in changesets pre mode (`.changeset/pre.json`, written by `changeset pre enter next`), so what
 # it publishes is `1.0.0-next.N` under the `next` tag; on `main` a version is published once.
 # GitHub releases come from each package's CHANGELOG.md, the action's default.
+#
+# THE FIRST PUBLISH IS THE OWNER'S, BY HAND (DECISIONS 2026-10-09). Until the registry has
+# @assemblejs/core, the `registry` job answers no and the publish job is skipped: a push costs the
+# gate's one request, and no run goes red on the 404 that is the plan until then.
 
 on:
   push:
@@ -27,8 +31,32 @@ permissions:
   contents: read
 
 jobs:
+  registry:
+    name: is the package on the registry
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      published: ${{ steps.probe.outputs.published }}
+    steps:
+      # A 404 is the one answer that means "not yet"; any other failure is a real one and stops
+      # the run rather than letting a network fault read as "nothing to publish".
+      - name: Ask the registry for @assemblejs/core
+        id: probe
+        run: |
+          if npm view @assemblejs/core version >/dev/null 2>probe.err; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          elif grep -q E404 probe.err; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+            echo "The registry has no @assemblejs/core yet. The first publish is the owner's, by hand; nothing publishes from here until then."
+          else
+            cat probe.err >&2
+            exit 1
+          fi
+
   release:
     name: version or publish
+    needs: registry
+    if: needs.registry.outputs.published == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: release

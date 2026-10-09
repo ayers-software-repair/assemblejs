@@ -55,7 +55,9 @@ a mutation and restore by the inverse edit; conformance or browser proof where o
 the structural gates; `pnpm check` in the background (`pgrep -f "bin/pnpm check$"` then
 `tail --pid`); a verification agent with no stake, its findings fixed; DECISIONS and the TODO
 box in the same commit; `git commit -s -F <draft>`; `git push -u origin next`. Agent
-worktrees under `.claude/worktrees/` break `pnpm lint` (a second tsconfig) until removed.
+worktrees under `.claude/worktrees/` are ignored by lint since 2026-10-09; a dead lane's
+worktree is still removed when found. Every suite builds a stale package before it reads it
+(`scripts/build-when-stale.mjs`), so a test never runs against yesterday's dist.
 
 **1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
 micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
@@ -382,6 +384,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [ ] The version is read from the package, never written by hand: the `^1.0.0` the command
       line writes into a new project's manifest resolves no prerelease, and the agent surface
       announces `1.0.0`; both read their own package's version (DECISIONS 2026-10-09)
+- [x] Every suite builds a stale package before it reads it: `scripts/build-when-stale.mjs` in
+      every package's vitest config, watched red on a build older than its source; the Vue
+      config's duplicate `test` key merged; lint ignores agent worktrees; the release workflow
+      skips publication while the registry has no `@assemblejs/core` (DECISIONS 2026-10-09,
+      "tests build what they read")
+- [ ] A duplicate-key lint for the config files (`vitest.config.ts`, `tsup.config.ts`), watched
+      red on the Vue shape that hid a setup for a month (DECISIONS 2026-10-09)
 - [ ] B-27a estate integration and the first prerelease, which now carries the second halves
       of B-24, B-25 and B-26 (owner, DECISIONS 2026-10-05 rulings): the acceptance table from
       the `legacy-tests` dossier, the Scorecard run, and the publish dry run with provenance

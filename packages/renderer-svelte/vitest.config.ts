@@ -9,7 +9,9 @@ const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 // The real Svelte compiler, so the tests exercise a .svelte file the way a user's build would
 // rather than a hand-written approximation of its output.
 export default defineConfig({
-  test: { globalSetup: ["../../scripts/test-temp-root.mjs"] },
+  test: {
+    globalSetup: ["../../scripts/build-when-stale.mjs", "../../scripts/test-temp-root.mjs"],
+  },
   plugins: [svelte()],
   resolve: {
     // Svelte ships a server build and a browser build behind export conditions. Without this,

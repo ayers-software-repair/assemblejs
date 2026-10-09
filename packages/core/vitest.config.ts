@@ -9,7 +9,9 @@ const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 // and resolve to source rather than to dist so a stale build cannot make a red suite look green.
 // What the built artifact exports is a different question, proved by scripts/check-exports.mjs.
 export default defineConfig({
-  test: { globalSetup: ["../../scripts/test-temp-root.mjs"] },
+  test: {
+    globalSetup: ["../../scripts/build-when-stale.mjs", "../../scripts/test-temp-root.mjs"],
+  },
   resolve: {
     alias: {
       "@assemblejs/core/renderer": src("./src/renderer/index.ts"),

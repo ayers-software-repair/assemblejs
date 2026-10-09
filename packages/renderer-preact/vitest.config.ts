@@ -6,7 +6,9 @@ import { defineConfig } from "vitest/config";
 const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 export default defineConfig({
-  test: { globalSetup: ["../../scripts/test-temp-root.mjs"] },
+  test: {
+    globalSetup: ["../../scripts/build-when-stale.mjs", "../../scripts/test-temp-root.mjs"],
+  },
   esbuild: { jsx: "automatic", jsxImportSource: "preact" },
   resolve: {
     alias: {

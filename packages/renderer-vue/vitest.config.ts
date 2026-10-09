@@ -20,13 +20,15 @@ const alias = {
 const production = process.env.NODE_ENV === "production";
 
 export default defineConfig({
-  test: { globalSetup: ["../../scripts/test-temp-root.mjs"] },
   resolve: { alias },
-  test: production
-    ? {
-        name: "production",
-        include: ["test/server/**/*.test.ts"],
-        env: { ASSEMBLEJS_VUE_BUILD: "production" },
-      }
-    : { name: "development", env: { ASSEMBLEJS_VUE_BUILD: "development" } },
+  test: {
+    globalSetup: ["../../scripts/build-when-stale.mjs", "../../scripts/test-temp-root.mjs"],
+    ...(production
+      ? {
+          name: "production",
+          include: ["test/server/**/*.test.ts"],
+          env: { ASSEMBLEJS_VUE_BUILD: "production" },
+        }
+      : { name: "development", env: { ASSEMBLEJS_VUE_BUILD: "development" } }),
+  },
 });
