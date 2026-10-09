@@ -2284,3 +2284,32 @@ Settled:
   one request and nothing else; the 404 that was a red run on every push since 2026-10-05 is
   the expected answer now. The `needs` context is available in a job's `if` (GitHub's context
   availability table, read 2026-10-09).
+
+## 2026-10-09: AI first
+
+The owner's direction, given in the seat's own session on 2026-10-09 and answered as a plan
+question the same evening.
+
+- **The framework is AI first.** His words, cleaned: great tooling for agents, so they understand
+  it; other frameworks did not have this in mind from the beginning; the best practices and
+  components built in, so what an agent builds does not look machine-made; the frontend
+  framework of the future. The agent surface is a product surface, not an add-on, and the
+  standard of what an agent produces is the framework's to hold.
+- **Four surfaces ship in 1.0**, all four chosen when offered as a set, under his standing rule
+  that everything the mission needs is in 1.0: agent instructions in every new project (`new`
+  writes `AGENTS.md` and the MCP registration, `check` holds them current); `llms.txt` and
+  `llms-full.txt` on the site, generated from the same pages as the docs; MCP prompts for the
+  common tasks, listed by the protocol; built-in components and best practices, a token-based
+  starter design system with accessible components and `check` rules that refuse what reads as
+  machine-made, its shape settled by a design memo and his answer before code. PLAN 4.1 carries
+  them as A-01 to A-04 with their proofs; they follow the subassembly rung and precede B-27b.
+- **How it is tested in full: the joint session.** He proposed building something together, he
+  on the command line and the agent beside him on the MCP server, the same application, so both
+  roads are walked at once. Settled: that session is the stranger test B-27b's row requires, run
+  from packed tarballs after the subassembly rung and A-01 to A-03, and every snag is a ledger
+  row before `1.0.0`.
+- **The hero line he wants** for the landing page, the first microfrontend framework for
+  AI-enabled development, is a claim and goes into `site/LANDING.md`'s table paired with what
+  backs it: the agent surface, the instructions `new` writes and the prompts, all shipped. It
+  names no competitor, which the standing rule still forbids.
+- **Tests build what they read**, his rule of the same evening, is the entry above.

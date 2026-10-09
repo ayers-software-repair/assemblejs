@@ -366,6 +366,19 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       template view and a `Slot` by the same name in a framework view (owner, DECISIONS
       2026-10-05 rulings); then nested composition, services shaping a child's request, and a
       parent's depth and cycle refusal held across two servers in conformance
+- [ ] A-01 agent instructions in every new project: `new` writes `AGENTS.md` and the MCP
+      registration, `check` holds them current; proved by an agent-shaped test from the tarballs
+      (owner, 2026-10-09, PLAN 4.1)
+- [ ] A-03 MCP prompts for the common tasks, listed by the protocol, one followed to a composed
+      page in a test (owner, 2026-10-09, PLAN 4.1)
+- [ ] A-02 `llms.txt` and `llms-full.txt` on the site, generated from `pages.json` and the
+      pages, declared and held by `check:site` and a drift test (owner, 2026-10-09, PLAN 4.1)
+- [ ] A-04 built-in components and best practices: the design memo and the owner's answer
+      first, then the starter design system, the accessible components and the `check` rules,
+      each rule watched red (owner, 2026-10-09, PLAN 4.1)
+- [ ] The joint session: the owner on the command line, the agent on the MCP server, the same
+      application from packed tarballs; every snag a row here (owner, 2026-10-09, PLAN 4.1;
+      the stranger test of B-27b)
 - [x] B-24a conformance breadth, batch three: trust and the command line, from the tarballs over
       HTTP (`pnpm conformance`: trust 43 of 43, every fixture green); each claim watched red on a
       mutation aimed at it (DECISIONS 2026-10-05)

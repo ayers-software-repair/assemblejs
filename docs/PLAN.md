@@ -105,6 +105,26 @@ logged in `docs/TODO.md` and it does not stop a rung; it stops the claim that CI
 | B-27a | Estate integration and the first `next` prerelease                                                                                                                                                                                                                                                                                                                                                      | the prerelease resolves from npm under the `next` tag; the site answers at its prefix                                                                                                                        |
 | B-27b | `1.0.0` on `main`, after the flip and after the cold quickstart by someone who has never seen it                                                                                                                                                                                                                                                                                                        | provenance visible on the published package                                                                                                                                                                  |
 
+### 4.1 AI first (owner, 2026-10-09)
+
+The owner's direction, recorded in `docs/DECISIONS.md` under that date: the framework is AI
+first. An agent is expert from its first minute, and the best practices are built in so what an
+agent builds does not read as machine-made. Four rungs join the ladder, every one in 1.0 by his
+standing rule that everything the mission needs ships in 1.0. They follow the subassembly rung
+and precede B-27b; the other rows stay frozen.
+
+| rung | what lands                                                                                                                                                                                                                                                                                                                      | proof                                                                                                                                                                                    |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A-01 | Agent instructions in every new project: `new` writes an `AGENTS.md` carrying the framework's rules and the MCP registration (`.mcp.json` and the editor equivalents), and `check` holds it current                                                                                                                             | `npm create` from the tarballs, then an agent-shaped test that reads the project through nothing but the files `new` wrote and the MCP server, and adds, places and composes an assembly |
+| A-02 | `llms.txt` and `llms-full.txt` on the site, generated from `pages.json` and the pages, never hand-kept, declared in `pages.json`                                                                                                                                                                                                | `check:site` refuses a page missing from them; a drift test regenerates and diffs                                                                                                        |
+| A-03 | MCP prompts for the common tasks: add an assembly, place it, make a page, fix what `check` found; listed by the protocol                                                                                                                                                                                                        | an agent-shaped test lists the prompts through the protocol and follows one to a composed page                                                                                           |
+| A-04 | Built-in components and best practices: a token-based starter design system with accessible components, and `check` rules that refuse what reads as machine-made (inline styles, missing labels and alternative text, colours outside the tokens). Its shape is settled by a design memo and the owner's answer before any code | the memo and his answer; then every rule watched red on a known-bad assembly, and the starter's page passing `check`                                                                     |
+
+The joint session the owner proposed, himself on the command line and the agent on the MCP
+server building the same application beside him from packed tarballs, is the stranger test
+B-27b requires, run after the subassembly rung and A-01 to A-03; every snag is a ledger row
+before `1.0.0`.
+
 ## 5. Verification
 
 - `pnpm check` runs, in order, what CI runs: the identity gate against its own red fixtures then
