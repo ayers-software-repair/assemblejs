@@ -5,12 +5,11 @@ import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import type { PageDefinition } from "../page/page-definition.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
+import { SEGMENT } from "../vocab/segment.js";
 import { apiProblems } from "./api-problems.js";
 import { pageProblems } from "./page-problems.js";
 import { remoteProblems } from "./remote-problems.js";
 import { viewSchema } from "./view-schema.js";
-
-const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
  * Everything wrong with a set of assemblies, apis, pages and remotes, found before anything
@@ -30,7 +29,7 @@ export function bootProblems(
   const seen = new Set<string>();
 
   for (const assembly of assemblies) {
-    if (!NAME.test(assembly.name)) {
+    if (!SEGMENT.test(assembly.name)) {
       problems.push(
         `assembly "${assembly.name}" is not a usable url segment; names are lower case, starting with a letter`,
       );
@@ -44,7 +43,7 @@ export function bootProblems(
       problems.push(`assembly "${assembly.name}" has no "${DEFAULT_VIEW}" view`);
     }
     for (const [view, declared] of Object.entries(assembly.views)) {
-      if (!NAME.test(view)) {
+      if (!SEGMENT.test(view)) {
         problems.push(
           `assembly "${assembly.name}" has a view "${view}" that is not a usable url segment`,
         );

@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { PLACEMENT_ELEMENT } from "../vocab/placement-element.js";
+import { SEGMENT } from "../vocab/segment.js";
 import type { Placement } from "./placement.js";
 
 // The directive has a shape this product defines, so it is matched exactly rather than parsed:
@@ -15,10 +16,13 @@ const DIRECTIVE = new RegExp(
   "gi",
 );
 const COMMENT = /<!--[\s\S]*?-->/g;
-// The same shape a declared assembly must have. A template naming something that could never
-// be declared is a mistake worth reporting, and a name carrying the identity separator would
-// make two different assemblies share one identity and one cache key.
-const SEGMENT = /^[a-z][a-z0-9-]*$/;
+// The elements whose content the parser reads as text, never as tags. A directive inside one is
+// not a placement: splicing a child there would put the child's island `</script>` inside an
+// open script and end it early, the same early end a directive in a comment would cause.
+const RAW_TEXT = /<(script|style|textarea|title)\b[^>]*>[\s\S]*?<\/\1\s*>/gi;
+// A name or view is the same shape a declared assembly must have (SEGMENT): a template naming
+// something that could never be declared is a mistake worth reporting, and a name carrying the
+// identity separator would make two different assemblies share one identity and one cache key.
 const ATTRIBUTE = /([a-z-]+)\s*=\s*"([^"]*)"/g;
 const ALLOWED = new Set(["name", "view"]);
 
@@ -31,21 +35,23 @@ const ALLOWED = new Set(["name", "view"]);
  */
 export function findPlacements(template: string): Placement[] {
   const found: Placement[] = [];
-  const comments: Array<readonly [number, number]> = [];
-  COMMENT.lastIndex = 0;
-  for (const comment of template.matchAll(COMMENT)) {
-    comments.push([comment.index, comment.index + comment[0].length]);
+  const inert: Array<readonly [number, number]> = [];
+  for (const pattern of [COMMENT, RAW_TEXT]) {
+    pattern.lastIndex = 0;
+    for (const span of template.matchAll(pattern)) {
+      inert.push([span.index, span.index + span[0].length]);
+    }
   }
-  const commented = (at: number): boolean => comments.some(([from, to]) => at >= from && at < to);
+  const isInert = (at: number): boolean => inert.some(([from, to]) => at >= from && at < to);
 
   DIRECTIVE.lastIndex = 0;
   for (const match of template.matchAll(DIRECTIVE)) {
     const [directive, rawAttributes = "", selfClosing] = match;
     const start = match.index;
-    // A directive inside a comment is not a placement. Dispatching one fetches an assembly the
-    // author deliberately commented out, and splices its markup into the comment, where a "-->"
-    // inside it ends the comment early and the rest becomes live markup.
-    if (commented(start)) continue;
+    // A directive inside a comment or a raw-text element is not a placement. Dispatching one
+    // fetches an assembly the author commented out or quoted, and splices its markup where a
+    // "-->" or "</script>" inside it ends the enclosing text early and the rest becomes live.
+    if (isInert(start)) continue;
     const closed = /<\/[a-z]+\s*>$/i.test(directive) || selfClosing === "/";
     if (!closed) {
       throw new Error(

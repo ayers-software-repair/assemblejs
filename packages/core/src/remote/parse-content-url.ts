@@ -2,10 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
+import { SEGMENT_PATTERN } from "../vocab/segment-pattern.js";
 import type { ContentUrl } from "./content-url.js";
 
-const SEGMENT = "[a-z][a-z0-9-]*";
-const PATH = new RegExp(`^${ASSEMBLY_ROUTE_PREFIX}/(${SEGMENT})/(?:(${SEGMENT})/)?$`);
+const PATH = new RegExp(
+  `^${ASSEMBLY_ROUTE_PREFIX}/(${SEGMENT_PATTERN})/(?:(${SEGMENT_PATTERN})/)?$`,
+);
 
 /**
  * A placement's url, read as the content endpoint of an assembly on another server, or undefined

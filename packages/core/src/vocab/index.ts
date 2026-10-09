@@ -4,6 +4,8 @@
 // a URL or an identifier is named here once, so changing one is one edit.
 
 export { PLACEMENT_ELEMENT } from "./placement-element.js";
+export { SEGMENT_PATTERN } from "./segment-pattern.js";
+export { SEGMENT } from "./segment.js";
 export { ENVELOPE_ELEMENT } from "./envelope-element.js";
 export { ISLAND_SCRIPT_TYPE } from "./island-script-type.js";
 export { COMPOSITION_HEADER } from "./composition-header.js";

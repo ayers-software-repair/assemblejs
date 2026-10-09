@@ -65,6 +65,23 @@ describe("directives the finder used to get wrong", () => {
     ).toEqual(["new"]);
   });
 
+  it("ignores a directive inside a raw-text element, where a child's island would end it", () => {
+    expect(findPlacements(`<script>const s = '<assembly name="cart"/>';</script>`)).toEqual([]);
+    expect(findPlacements(`<style>/* <assembly name="cart"/> */</style>`)).toEqual([]);
+    expect(findPlacements(`<textarea><assembly name="cart"/></textarea>`)).toEqual([]);
+    expect(findPlacements(`<title><assembly name="cart"></assembly></title>`)).toEqual([]);
+    // Whatever the tag's case, and still finding the live one beside it.
+    expect(
+      findPlacements(`<SCRIPT type="module"><assembly name="x"/></SCRIPT><assembly name="y"/>`).map(
+        (p) => p.name,
+      ),
+    ).toEqual(["y"]);
+    // A script that merely mentions the element in a longer name is not raw text.
+    expect(findPlacements(`<scripts><assembly name="z"/></scripts>`).map((p) => p.name)).toEqual([
+      "z",
+    ]);
+  });
+
   it("refuses a name that would collide with another assembly's identity", () => {
     // identity("a/b", "c") and identity("a", "b/c") were both "a/b/c", so one assembly's
     // content could be served into the other's placement, and from its cache key.

@@ -368,7 +368,10 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       parent's depth and cycle refusal held across two servers in conformance. Designed
       2026-10-09: `docs/studies/subassembly/synthesis.md`, PLAN 4.2, DECISIONS "the
       subassembly rung, decided"; the bites below land it
-  - [ ] S-01 the one segment shape in `vocab/`; the finder skips raw-text elements
+  - [x] S-01 the one segment shape in `vocab/` (`SEGMENT_PATTERN`, `SEGMENT`), read by the
+        finder, boot and the content url parser where three copies were; the finder skips
+        `<script>`, `<style>`, `<textarea>` and `<title>` as it skips comments. Watched red with
+        the anchors dropped (eight refusals passed) and the skip removed (2026-10-09)
   - [ ] S-02 `renderLocal` composes the view's markup with the composition state, a `Fetch`,
         the server's cap and a signal; nested diagnostics; one name placed once; the content
         endpoint and `localFetch` share one `Fetch`
