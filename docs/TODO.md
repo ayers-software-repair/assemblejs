@@ -5,24 +5,23 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (written 2026-10-05, the session pulled back for budget mid fan-out).**
+**RESUME HERE (written 2026-10-09 19:50 EDT by the assemblejs seat, holding until 22:00 on the
+owner's word).**
 
-STATE. Branch `next`, every commit pushed to `origin/next`, tree clean, `pnpm check` green on
-every landing commit through `1210023`; the last three commits (`2a884a6`, `90f3069`,
-`e983859`) are docs and site only and were held to the site, emoji, identity and lint gates.
-B-09 through B-23, B-24a, B-25a and B-26a are done, each verified by a separate agent with its
-findings fixed. The owner answered every open question on 2026-10-05: read DECISIONS
-"2026-10-05: the owner's rulings on everything raised this week" before anything else; it
-names what each ruling lands with and in what order.
+STATE. Branch `next`. `origin/next` is `0ac9f53`, pushed on the owner's word (estate D1210);
+its `ci` run 38005844308 and `release` run 38005844485 are green (the release gate asked npm,
+got the 404, skipped publication). One local commit above it, `c1513a7`, bite S-01 of the
+subassembly rung, unpushed; the tree is clean. Every package reads `1.0.0-next.0`; one
+changeset is pending (`.changeset/segment-shape.md`). The owner's rulings of the day are in
+DECISIONS under 2026-10-09: the first changeset, tests build what they read, AI first (PLAN
+4.1), the subassembly rung decided (PLAN 4.2). The owner also ruled in this seat: no subagents,
+the seat does the work itself.
 
-THE EXACT NEXT STEP is the subassembly rung, the `NEXT:` row in the ladder below: a child is
-placed by `<assembly name>` in a template view and a `Slot` by the same name in a framework
-view (owner's ruling); then nested composition, services shaping a child's request, and
-depth and cycle refusal held across two servers in conformance. Start from
-`docs/studies/subassembly/reader-core.md` and `reader-renderers.md`, two read-only design
-memos with file:line citations, UNVERIFIED: hold every claim to the file it cites, write the
-missing cli/conformance memo and the synthesis (DESIGN 7 and 8 amendments, a bite ladder),
-log the design in DECISIONS, then code it rung by rung with a verifier per rung.
+THE EXACT NEXT STEP is bite S-02 of the subassembly rung (PLAN 4.2; the design is
+`docs/studies/subassembly/synthesis.md`, whose section 7 holds the file-by-file plan written
+before the hold). Then S-03 to S-09 in order; the long gate (conformance, the browser proof)
+once at S-08. Every push waits on the owner's yes, asked through the lead seat (avp) as one
+line with the sha and what the push fires.
 
 AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
 the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies

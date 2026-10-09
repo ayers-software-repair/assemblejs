@@ -172,6 +172,45 @@ the browser proof) once at S-08. Core's `test/` mirrors `src/`, one file per fil
 Order: S-01 to S-09 as numbered. S-06 can start after S-02 lands and does not wait on S-03 to
 S-05; S-08 waits on all of them.
 
+## 7. S-02, file by file (written 2026-10-09 before the 22:00 hold; the code to write next)
+
+- `compose/diagnostic.ts`: `children?: readonly Diagnostic[]`, what the answering assembly
+  composed inside itself. `compose/assembly-response.ts`: the ok branch gains
+  `nested?: readonly Diagnostic[]`. `compose/compose-options.ts` and `settle-input.ts`: a
+  `signal?: AbortSignal`, the parent's; the "Ancestor ids" comment becomes identities.
+- `compose/holds-failed-envelope.ts` (new): whether markup holds a nested
+  `<assembly-root ... data-failed>`; `settle-placement.ts` writes the cache only when it does not,
+  hangs `answer.nested` under the diagnostic as `children`, refuses to dispatch when
+  `input.signal` is already aborted (fallback, reason `timeout`), and hands the transport
+  `AbortSignal.any([input.signal, controller.signal])`. `compose.ts` passes the signal through.
+- `compose/duplicate-placement-names.ts` (new): the names a list of placements places twice.
+- `server/local-render-input.ts` (new type): `id`, `page`, `depth`, `path`, `query`, `params`,
+  `fetch`, `limits`, `signal?`, `newId`, `now`. `server/local-rendered.ts` (new type): `html`,
+  `diagnostics`. `server/render-local.ts`: `renderLocal(assembly, view, input)`: resolve data,
+  render the view with `children: {}`, find the placements in the markup (a malformed directive
+  throws and fails the parent), refuse a name placed twice, compose the markup with plan `{}`,
+  headers `{}`, the arrived depth, the path extended by `identity(name, view)`, the given
+  limits, signal, ids and clock; wrap the envelope; when it placed a child, read its own
+  envelope with `scanFragment` and throw on a refusal; return `{ html, diagnostics }`.
+- `server/local-fetch.ts`: `localFetch(assemblies, log, limits)` builds the one `Fetch` that
+  hands itself to `renderLocal` with `request.{id,page,depth,path,query,params,signal}`,
+  `randomUUID` and `performance.now`, and answers `{ ok: true, html, source: "local", nested }`.
+- `server/log-fallbacks.ts` (new): walks a diagnostic tree and logs every fallback with its id,
+  naming the page route or the parent assembly; used by `register-pages` (replacing its inline
+  loop) and by the content endpoint for nested failures.
+- `server/create-server.ts`: `limits = { depth: maxDepth, maxBytes: DEFAULT_LIMITS.maxBytes }`;
+  one `local = localFetch(byName, log, limits)` for the endpoint and `registerPages`; the
+  content endpoint calls `renderLocal` with the headers' page (or a fresh uuid), depth, path,
+  params, the query, `local`, `limits`, and logs the nested fallbacks; `registerPages` takes
+  `limits` and passes them to `compose`.
+- Tests, mirrors first: `duplicate-placement-names`, `holds-failed-envelope`, `log-fallbacks`,
+  `local-render-input`, `local-rendered` (type tests in the file's pattern); `render-local.test`
+  rewritten to the new signature plus the S-02 cases of section 5; `local-fetch.test` with
+  `limits` and the nested cases; `create-server.test` with the header-driven refusals, the
+  `maxDepth: 2` server and the nested id in the log; `settle-placement.test` with the aborted
+  signal and the uncached failed subtree; `register-pages.test` passing `limits`. The mutations
+  to watch red are in section 5's S-02 row.
+
 ## 6. Found in passing, not this rung's (reader-core 8, confirmed)
 
 Two depth caps today (fixed in S-02); the page's query reaches local services and not remote ones
