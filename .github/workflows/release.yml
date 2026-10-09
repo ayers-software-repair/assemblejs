@@ -2,12 +2,14 @@ name: release
 
 # Publishes to npm by trusted publishing (OIDC). There is no NPM_TOKEN anywhere and there never
 # will be: the trusted publisher on npmjs.com names this repository, this file, and the `release`
-# environment, whose required reviewer gates every run. On `next` the changesets pre mode
+# environment. Workflow-only changes do not publish packages. On `next` the changesets pre mode
 # publishes 1.0.0-next.N under the `next` dist-tag; on `main` a version is published once.
 
 on:
   push:
     branches: [main, next]
+    paths-ignore:
+      - ".github/workflows/**"
 
 concurrency:
   group: release-${{ github.ref }}
