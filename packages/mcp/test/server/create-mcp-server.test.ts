@@ -1,8 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -10,6 +12,38 @@ import { createMcpServer, resolveRoot } from "@assemblejs/mcp";
 
 let dir = "";
 let client: Client;
+
+const ownManifestVersion = (
+  JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {
+    version: string;
+  }
+).version;
+
+describe("who an agent is talking to", () => {
+  it("announces the version of the package that carries it", () => {
+    expect(client.getServerVersion()).toEqual({ name: "assemblejs", version: ownManifestVersion });
+  });
+
+  // The build flattens src/<dir>/ into dist/; the version is read by walking up from the module,
+  // so the built package must answer the same as the source tree, through a real client.
+  it("announces the same version from the built package", () => {
+    const root = fileURLToPath(new URL("../..", import.meta.url));
+    const dist = fileURLToPath(new URL("../../dist/index.js", import.meta.url));
+    const script = `import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { createMcpServer, resolveRoot } from ${JSON.stringify(dist)};
+const [clientSide, serverSide] = InMemoryTransport.createLinkedPair();
+const probe = new Client({ name: "probe", version: "0.0.0" });
+await Promise.all([createMcpServer(resolveRoot(process.cwd())).connect(serverSide), probe.connect(clientSide)]);
+console.log(JSON.stringify(probe.getServerVersion()));
+await probe.close();`;
+    const out = execFileSync(process.execPath, ["--input-type=module", "-e", script], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    expect(JSON.parse(out)).toEqual({ name: "assemblejs", version: ownManifestVersion });
+  });
+});
 
 const assembly = (name: string, file: string, contents: string): void => {
   const at = join(dir, "src", "assemblies", name);

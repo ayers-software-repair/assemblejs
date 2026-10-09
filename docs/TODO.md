@@ -365,7 +365,23 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [ ] NEXT: a subassembly is placed by a directive in the view's markup, `<assembly name>` in a
       template view and a `Slot` by the same name in a framework view (owner, DECISIONS
       2026-10-05 rulings); then nested composition, services shaping a child's request, and a
-      parent's depth and cycle refusal held across two servers in conformance
+      parent's depth and cycle refusal held across two servers in conformance. Designed
+      2026-10-09: `docs/studies/subassembly/synthesis.md`, PLAN 4.2, DECISIONS "the
+      subassembly rung, decided"; the bites below land it
+  - [ ] S-01 the one segment shape in `vocab/`; the finder skips raw-text elements
+  - [ ] S-02 `renderLocal` composes the view's markup with the composition state, a `Fetch`,
+        the server's cap and a signal; nested diagnostics; one name placed once; the content
+        endpoint and `localFetch` share one `Fetch`
+  - [ ] S-03 hoisting over the diagnostic tree; a shadow parent links its children's sheets;
+        the runtime counts static children
+  - [ ] S-04 `findEnvelopes` walks shadow roots; `start` considers them; the fill sends depth 1
+  - [ ] S-05 nested manifests learned once per version; a failed subtree is not cached
+  - [ ] S-06 `children` leaves the interface; `Slot({ name, view? })` renders the directive on
+        both sides; `slot()` for Svelte and Lit; the Lit-in-Lit refusal; the `nested` example
+        and the browser proof
+  - [ ] S-07 `check` reads directives and `Slot` names; the agent surface places a child in a view
+  - [ ] S-08 conformance: the `nested` fixture and the two-server nested spec
+  - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted
 - [ ] A-01 agent instructions in every new project: `new` writes `AGENTS.md` and the MCP
       registration, `check` holds them current; proved by an agent-shaped test from the tarballs
       (owner, 2026-10-09, PLAN 4.1)
@@ -394,9 +410,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       reads `1.0.0-next.0` with its `CHANGELOG.md` beside it, the changeset filed under
       `.changeset/pre/`; the first publish, by his hand, ships this version under the `next`
       tag (DECISIONS 2026-10-09, "the first changeset")
-- [ ] The version is read from the package, never written by hand: the `^1.0.0` the command
-      line writes into a new project's manifest resolves no prerelease, and the agent surface
-      announces `1.0.0`; both read their own package's version (DECISIONS 2026-10-09)
+- [x] The version is read from the package, never written by hand: the `^1.0.0` the command
+      line writes into a new project's manifest resolved no prerelease, and the agent surface
+      announced `1.0.0`; one function in the command line, `ownVersion(import.meta.url)`, reads
+      the caller's own package.json, in `src` and in the flat `dist`, and the agent surface
+      imports it; watched red on the literals and on a fixed path (DECISIONS 2026-10-09, "the
+      version is read from the package")
 - [x] Every suite builds a stale package before it reads it: `scripts/build-when-stale.mjs` in
       every package's vitest config, watched red on a build older than its source; the Vue
       config's duplicate `test` key merged; lint ignores agent worktrees; the release workflow

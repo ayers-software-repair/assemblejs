@@ -1,10 +1,25 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { projectFiles } from "@assemblejs/cli";
 
 describe("the smallest project that runs", () => {
   const files = projectFiles("my-app");
+
+  it("depends on the version of the command line that wrote it, never a number typed twice", () => {
+    const own = (
+      JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {
+        version: string;
+      }
+    ).version;
+    const manifest = JSON.parse(files["package.json"] ?? "{}") as {
+      dependencies: Record<string, string>;
+      devDependencies: Record<string, string>;
+    };
+    expect(manifest.dependencies["@assemblejs/core"]).toBe(`^${own}`);
+    expect(manifest.devDependencies["@assemblejs/cli"]).toBe(`^${own}`);
+  });
 
   it("has a server file that does not grow when an assembly is added", () => {
     const server = files["src/server.ts"] ?? "";
