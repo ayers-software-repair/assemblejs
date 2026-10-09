@@ -2211,3 +2211,43 @@ undefined for either. The message is now "budgets is not written as an object of
 bytes; write it as one", true of both, held by `read-budgets.test.ts` and by `perf` at the
 command level in `run-perf.test.ts`. Following the name one step is left undone: `readDeclared`
 is handed a value, not the program, and a written object is what the design asks for.
+
+## 2026-10-09: the first changeset, and 1.0.0-next.0
+
+Expected, from the 2026-10-05 rulings: `next` in pre mode publishes `1.0.0-next.N`, and
+changesets start after the first publish. Found: the two cannot both hold. The release run of
+2026-10-05 on `f51f844` tried to publish `@assemblejs/core@1.0.0` and failed only because the
+registry answered 404. With no changeset, `changeset version` writes nothing and `changeset
+publish` ships whatever the manifests say, `1.0.0`, under the `next` tag. Pre mode changes the
+version a changeset computes; it computes nothing without one. Read in the installed tool:
+`incrementVersion` is `semver.inc(oldVersion, type)` plus `-<tag>.<n>`, so `1.0.0` with a patch
+would be `1.0.1-next.0`, and `1.0.0-next.0` is reached from `0.0.0` with a major.
+
+Ruled by the owner, 2026-10-09: one changeset on `next` now; the first publish is `1.0.0-next.0`
+under the `next` tag; `1.0.0` stays for `main` after the flip. This amends the 2026-10-05 note
+that changesets start after the first publish and keeps his 2 September rulings: `next` is
+`1.0.0-next.N`, `main` publishes once, the first publish of each package is by his hand and OIDC
+after it.
+
+Done here:
+
+- One changeset naming every package as a major, with the summary that is each package's first
+  changelog entry. The manifests were set to `0.0.0` for the one command that reads them,
+  `pnpm changeset version`, which wrote `1.0.0-next.0` into all twelve, a `CHANGELOG.md` beside
+  each, and filed the changeset under `.changeset/pre/`, where the tool keeps what the stable
+  release reuses. Nothing else moved: `workspace:*` ranges and the private examples are as they
+  were.
+- The peer dependency on `@assemblejs/core` in the devtools and every renderer was `1.x`, which
+  no prerelease satisfies; the tool pinned each to `1.0.0-next.0` and moves the pin with every
+  prerelease, so one channel's packages version in lockstep. The range the stable `1.0.0`
+  carries is settled when pre mode exits, at B-27b, not here.
+- `CHANGELOG.md` is in no package's `files` list and the registry does not add it on its own
+  (npm's always-included set is package.json, README, LICENSE, main and bin), so the tarballs are
+  unchanged; the changelog is the repository's and the GitHub release body's.
+- Two places wrote the version by hand: the `^1.0.0` the command line writes into a new
+  project's manifest, which resolves no prerelease, and the `1.0.0` the agent surface announces.
+  Both read their package's version from now on; a ledger row, landed next.
+- CLAUDE.md, CONTRIBUTING.md and the pull request template say the rule as it now is.
+- Three ledger rows were stale and are corrected with their evidence: Actions runs (every
+  workflow has run since 2026-10-05), `RELEASES_PAT` exists (2026-09-11), the OIDC role exists
+  (2026-10-07).

@@ -91,11 +91,12 @@ Every gate that can go red on a known-bad input has been watched doing so, and t
 
 ## Release
 
-changesets, from the first `packages/*/src` change after the first publish: until then the
-packages' versions say what the first release is (owner, DECISIONS 2026-10-05 rulings). `next`
-is in pre mode (`.changeset/pre.json`). Publishing is CI only through `release.yml`'s `release`
-environment (npm trusted publishing); nobody runs `npm publish` from a laptop and there is no
-npm token anywhere.
+changesets: every change under `packages/*/src` carries one, from the first changeset of
+2026-10-09, which set every package to `1.0.0-next.0` (owner, DECISIONS 2026-10-09). `next` is
+in pre mode (`.changeset/pre.json`) and publishes `1.0.0-next.N` under the `next` tag; `main`
+publishes `1.0.0` once, after the flip. The first publish of each package is the owner's, by
+hand; after it, publishing is CI only through `release.yml`'s `release` environment (npm
+trusted publishing). Nobody runs `npm publish` from a laptop and there is no npm token anywhere.
 
 ## How this repository is worked (owner's standing rules, 2026-09-03)
 

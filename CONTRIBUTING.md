@@ -45,9 +45,7 @@ commands CI runs, in the same order; a red `check` is not pushed.
 
 ## Making a change
 
-1. `pnpm changeset` for any change under `packages/*/src` once the first version is published;
-   until then the packages' versions say what the first release is. Docs and CI changes never
-   need one.
+1. `pnpm changeset` for any change under `packages/*/src`. Docs and CI changes never need one.
 2. `pnpm check` green locally.
 3. Conventional commit messages (`feat:`, `fix:`, `docs:`, `chore:`), enforced on commit. No
    attribution trailers of any kind other than `Signed-off-by`.

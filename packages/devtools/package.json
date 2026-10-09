@@ -1,6 +1,6 @@
 {
   "name": "@assemblejs/devtools",
-  "version": "1.0.0",
+  "version": "1.0.0-next.0",
   "description": "Read-only devtools for an AssembleJS server in development: its assemblies, pages, apis and recent failures.",
   "license": "Apache-2.0",
   "homepage": "https://ayers.repair/assemblejs/",
@@ -41,7 +41,7 @@
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "peerDependencies": {
-    "@assemblejs/core": "1.x"
+    "@assemblejs/core": "1.0.0-next.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",

@@ -40,13 +40,15 @@ verbatim and every claim, and `e983859` applied its two wording fixes. That comm
 three more fixes (the Markdown scaffold, "eight kinds", the templates page's missing section)
 that were already right in the committed tree; the reader had reviewed an earlier draft. The
 record here is the correction. Two claims the reader found inherited by all six guides are
-the two rows under the site section. No changeset is due for anything above: nothing is
-published, and changesets start after the first publish (ruling).
+the two rows under the site section. The first changeset is written and consumed (2026-10-09,
+owner's ruling, DECISIONS "the first changeset"): every package reads `1.0.0-next.0`, and a
+change under `packages/*/src` from here on carries a changeset.
 
-OWNER-ONLY, unchanged: the Actions organization allowlist (Actions runs nothing here),
-`RELEASES_PAT`, the trusted publisher per package on npmjs.com, the `release` environment's
-reviewer, branch rulesets, the setting that lets Actions open the version pull request;
-B-27a carries the second halves of B-24, B-25 and B-26.
+OWNER-ONLY: the trusted publisher per package on npmjs.com, the `release` environment's
+reviewer, branch rulesets, the setting that lets Actions open the version pull request, the
+first publish of each package by his hand; B-27a carries the second halves of B-24, B-25 and
+B-26. Done by his hand: the Actions allowlist (every workflow has run since 2026-10-05),
+`RELEASES_PAT` (2026-09-11), the OIDC role `gh-deploy-assemblejs-site` (2026-10-07).
 
 HOW THIS LANE WORKED, so the next one is not slower: implement; tests; watch each claim red by
 a mutation and restore by the inverse edit; conformance or browser proof where one applies;
@@ -79,11 +81,11 @@ question on 2026-10-05; the rulings entry in DECISIONS lists them and what each 
 (done) -> B-26a release dry run (done) -> the subassembly rung -> B-27a/B-27b (the owner's). The
 five house-style rows and the release-notes rows can land any time. The site's guides are
 written.
-Owner-blocked: `RELEASES_PAT`, the OIDC role, the Actions org allowlist (Actions runs NOTHING
-here yet, so the B-25b Scorecard run with it), branch rulesets, the bird mark, the palette, the
-old npm package deprecation, the first publish. Raised with the
-owner, unanswered: whether changesets start before or after the first publish (DECISIONS,
-2026-10-03, "open"; `CLAUDE.md` still says every `packages/*/src` change).
+Owner-blocked: branch rulesets, the bird mark (he has it), the palette, the old npm package
+deprecation, the first publish by his hand. Done by his hand: `RELEASES_PAT`, the OIDC role,
+the Actions allowlist (`ci`, the browser proof, conformance and the Scorecard all run).
+Answered 2026-10-09: one changeset now; the packages read `1.0.0-next.0` (DECISIONS "the
+first changeset").
 
 **THE CLIENT DOSSIER ROW (Phase 1) cannot be resolved from here.** The dossiers and the reference
 clones live outside this tree by design and a cloud session has neither; its outcome was never
@@ -167,13 +169,11 @@ the record of what was read, and they stay in the private estate document store,
       checks the gate paragraph against the `check` chain as `check:claude`, self-tested and
       watched red; the Packages list names `@assemblejs/mcp` (DECISIONS 2026-10-05)
 
-- [ ] **Actions runs nothing on this repository.** Measured: the three workflows are registered
-      and `state=active`, repository Actions permissions read `enabled: true, allowed_actions:
-all`, both branches carry the workflow files, and `actions/runs` reports `total_count=0`.
-      The org-level Actions policy cannot be read without `admin:org`, so the remaining
-      explanation is that the organization allows Actions only for selected repositories and this
-      one is not among them. Until it runs, every gate is proven locally only.
-      Fix: organization settings, Actions, General, add `assemblejs` to the allowed repositories.
+- [x] **Actions runs on this repository** since 2026-10-05: `ci` (verify on node 22 and 24, the
+      browser proof, conformance) green on `d5c1638`, `scorecard` green on `main` at `539bbd9`
+      (2026-10-09). The earlier measurement, `total_count=0`, predates the organization's
+      allowlist. The `release` workflow runs too and fails on the registry's 404 until the
+      trusted publisher exists (DECISIONS 2026-10-09, "the first changeset").
 - [ ] Repository settings that cannot be set from a token without admin scope: the branch ruleset
       on `main` and `next`, required status checks, signed commits, fork pull-request approval,
       private vulnerability reporting, CodeQL default setup, secret scanning with push protection,
@@ -375,6 +375,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       to the pinned action's, the pre-mode gap recorded (DECISIONS 2026-10-05)
 - [x] `next` in changesets pre mode: `.changeset/pre.json` written by `changeset pre enter next`
       and committed (owner, DECISIONS 2026-10-05 rulings)
+- [x] The first changeset, written and consumed on `next` (owner, 2026-10-09): every package
+      reads `1.0.0-next.0` with its `CHANGELOG.md` beside it, the changeset filed under
+      `.changeset/pre/`; the first publish, by his hand, ships this version under the `next`
+      tag (DECISIONS 2026-10-09, "the first changeset")
+- [ ] The version is read from the package, never written by hand: the `^1.0.0` the command
+      line writes into a new project's manifest resolves no prerelease, and the agent surface
+      announces `1.0.0`; both read their own package's version (DECISIONS 2026-10-09)
 - [ ] B-27a estate integration and the first prerelease, which now carries the second halves
       of B-24, B-25 and B-26 (owner, DECISIONS 2026-10-05 rulings): the acceptance table from
       the `legacy-tests` dossier, the Scorecard run, and the publish dry run with provenance
@@ -422,8 +429,8 @@ changesets, the action's default. The rows below are rewritten around that.
 
 - [ ] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, the register the site page is
       written from. Not the release body.
-- [x] `CHANGELOG.md`: per package, written by changesets from the first changeset after the
-      first publish; never hand-kept at the root (DECISIONS 2026-10-05 rulings)
+- [x] `CHANGELOG.md`: per package, written by changesets from the first changeset (2026-10-09);
+      never hand-kept at the root (DECISIONS 2026-10-05 rulings, 2026-10-09)
 - [ ] `site/release-notes.html`: one `<section id="v...">` per version, declared in `pages.json`
       so `check-site.mjs` refuses it going missing.
 - [x] The GitHub release BODY: each package's `CHANGELOG.md` entry, created by the changesets
@@ -497,6 +504,8 @@ and `/assemblejs/next/` from `next`.
 - [ ] OWNER: the API reference generated into `site/docs/api/` at deploy time, never
       committed. A deploy-time generator is a build step in a deploy DEPLOY.md defines as
       "no build"; which generator and where it runs is his (DECISIONS 2026-10-05)
-- [ ] **BLOCKING, the owner's hand:** `RELEASES_PAT` added to this repository's secrets, so
-      deploy-site can check the private platform repo out at the pin. Nothing about the site
-      publishes until it exists. Also his: the OIDC role and the bucket policy for this prefix.
+- [x] `RELEASES_PAT` is in this repository's secrets (2026-09-11) and the deploy's platform
+      checkout passed in every run since; the OIDC role `gh-deploy-assemblejs-site` exists by
+      the owner's hand (2026-10-07) after every run through 2026-10-05 failed at the AWS
+      credentials step. Nothing has pushed `site/**` since the role, so the page has not
+      deployed; the first deploy of `/assemblejs/next/` waits on his yes to the push.
