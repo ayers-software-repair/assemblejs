@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   verify:
+    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
     name: verify
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -67,7 +68,7 @@ jobs:
 
   commit-trailers:
     name: commit trailers
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
