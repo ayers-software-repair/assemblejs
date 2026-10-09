@@ -2223,8 +2223,8 @@ version a changeset computes; it computes nothing without one. Read in the insta
 `incrementVersion` is `semver.inc(oldVersion, type)` plus `-<tag>.<n>`, so `1.0.0` with a patch
 would be `1.0.1-next.0`, and `1.0.0-next.0` is reached from `0.0.0` with a major.
 
-Ruled by the owner, 2026-10-09: one changeset on `next` now; the first publish is `1.0.0-next.0`
-under the `next` tag; `1.0.0` stays for `main` after the flip. This amends the 2026-10-05 note
+Ruled by the owner, 2026-10-09 (D1202 in the estate record): one changeset on `next` now; the
+first publish is `1.0.0-next.0` under the `next` tag; `1.0.0` stays for `main` after the flip. This amends the 2026-10-05 note
 that changesets start after the first publish and keeps his 2 September rulings: `next` is
 `1.0.0-next.N`, `main` publishes once, the first publish of each package is by his hand and OIDC
 after it.
@@ -2295,8 +2295,8 @@ question the same evening.
   components built in, so what an agent builds does not look machine-made; the frontend
   framework of the future. The agent surface is a product surface, not an add-on, and the
   standard of what an agent produces is the framework's to hold.
-- **Four surfaces ship in 1.0**, all four chosen when offered as a set, under his standing rule
-  that everything the mission needs is in 1.0: agent instructions in every new project (`new`
+- **Four surfaces ship in 1.0**, all four chosen when offered as a set (D1207 in the estate
+  record), under his standing rule that everything the mission needs is in 1.0: agent instructions in every new project (`new`
   writes `AGENTS.md` and the MCP registration, `check` holds them current); `llms.txt` and
   `llms-full.txt` on the site, generated from the same pages as the docs; MCP prompts for the
   common tasks, listed by the protocol; built-in components and best practices, a token-based
