@@ -2313,3 +2313,17 @@ question the same evening.
   backs it: the agent surface, the instructions `new` writes and the prompts, all shipped. It
   names no competitor, which the standing rule still forbids.
 - **Tests build what they read**, his rule of the same evening, is the entry above.
+
+## 2026-10-09: two standing rules carried in from the estate record
+
+Both were ruled on 2026-09-01 with the product's first plan and recorded only in the estate's
+records; an audit of 2026-09-11 asked for them here, where the code is.
+
+- **No paid model runs on any event an outsider can trigger.** The agent surface carries no
+  model and no credential (DESIGN 13.2); `ci`, the browser proof, conformance, `release` and the
+  Scorecard call none; a pull request from a fork runs the same gates with no secret. A workflow
+  that would call a model on a push or a pull request is refused in review, whatever it costs.
+- **The branch-to-channel map.** `next` publishes `1.0.0-next.N` under the `next` dist-tag and
+  its site to `/assemblejs/next/`; `main` publishes `1.0.0` once, after the flip, and its site to
+  `/assemblejs/`. The Release section of CLAUDE.md, `release.yml` and `deploy-site.yml` each say
+  their half of it.
