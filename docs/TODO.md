@@ -18,13 +18,12 @@ form of GitHub's OIDC subject (the morning list in the estate backlog has the ex
 His rulings in this seat stand: no subagents, the seat does the work itself; every bite since
 is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-03 (PLAN 4.2; DECISIONS 2026-10-09 "S-03 reads the markup it
-serves"): a refactor that moves the page's asset collection out of `register-pages.ts` into a
-file of its own, then `localAssets(html, assemblies)`, which links what every local envelope in
-the served markup needs, and a shadow parent linking its children's sheets inside its root.
-Then S-04 to S-09 in order; the long gate (conformance, the browser proof) once at S-08, or
-sooner on GitHub's runners whenever a push is allowed. Each mutation is run alone from S-03 on.
-Every push waits on the owner's yes, asked through the lead seat (avp).
+THE EXACT NEXT STEP is bite S-04 (PLAN 4.2): `findEnvelopes` walks shadow roots, document
+order kept, and the deferred fill sends `assembly-depth: 1`. Then S-05 to S-09 in order. S-01
+to S-03 are done (`c1513a7`, `e857f69`, and S-03's commit after this block was written). The
+long gate (conformance, the browser proof) runs on GitHub's runners at each push the lead
+allowed overnight: only `next`, only tips that touch no `site/**`, one push per landed bite,
+each run read to its end before the next. Each mutation is run alone.
 
 AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
 the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
@@ -382,9 +381,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         `Diagnostic.children`; a failed subtree is never cached; a `signal` through compose.
         Self-verified (the owner's no-subagents ruling; DECISIONS 2026-10-09, S-02): each claim
         watched red under a mutation aimed at it, restored by the inverse edit
-  - [ ] S-03 a page links what every local envelope in the markup it serves needs, read from
-        the markup so a cached parent's children keep their styles; a shadow parent links its
-        children's sheets inside its root
+  - [x] S-03 a page links what every local envelope in the markup it serves needs
+        (`localAssets`, through `pageAssets`), read from the markup so a cached parent's children
+        keep their styles; a shadow parent links its children's sheets inside its root; the
+        finder's comments and raw-text elements read in one pass (`inertSpans`). Self-verified:
+        seven mutations, each run alone and watched red (2026-10-09)
   - [ ] S-04 `findEnvelopes` walks shadow roots; `start` considers them; the fill sends depth 1
   - [ ] S-05 nested manifests learned once per version; a failed subtree is not cached
   - [ ] S-06 `children` leaves the interface; `Slot({ name, view? })` renders the directive on

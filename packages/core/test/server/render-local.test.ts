@@ -19,6 +19,7 @@ const given = (over: Partial<LocalRenderInput> = {}): LocalRenderInput => ({
   query: new URLSearchParams(),
   params: {},
   fetch: async () => ({ ok: false, reason: "status", detail: "none here", correlationId: "c-0" }),
+  assemblies: new Map(),
   limits,
   newId: () => `id-${String(++minted)}`,
   now: () => 0,
@@ -91,6 +92,34 @@ describe("rendering an assembly in this process", () => {
     expect((await renderLocal(isolated, "default", given())).html).toContain(
       '<template shadowrootmode="open"><p>card</p><link rel="stylesheet" href="/_assemblejs/assets/styles/card-1.css"></template>',
     );
+  });
+
+  it("links, inside a shadow parent's root, the sheets of the children placed there", async () => {
+    const sheet = (name: string, shadow: boolean, markup: string) =>
+      defineAssembly({
+        name,
+        ...(shadow ? { shadow: true } : {}),
+        views: { default: { renderer: "html", markup: () => markup } },
+        assets: { css: [`/${name}.css`], js: [] },
+      });
+    const frame = sheet("frame", true, place("plain") + place("inner"));
+    const all = [
+      frame,
+      sheet("plain", false, "<p>plain</p>"),
+      sheet("inner", true, "<p>inner</p>"),
+    ];
+    const assemblies = new Map(all.map((assembly) => [assembly.name, assembly]));
+    const { html } = await renderLocal(
+      frame,
+      "default",
+      given({ fetch: localFetch(assemblies, () => undefined, limits), assemblies }),
+    );
+    // A sheet in the page's head does not reach into a root: the plain child's is linked in the
+    // frame's, after the frame's own. The inner shadow child's is in its own root, and only there.
+    expect(html).toMatch(
+      /<link rel="stylesheet" href="\/frame\.css"><link rel="stylesheet" href="\/plain\.css"><\/template><script/,
+    );
+    expect(html.match(/href="\/inner\.css"/g)).toHaveLength(1);
   });
 
   it("gives the view the placement's id, the one its envelope carries", async () => {

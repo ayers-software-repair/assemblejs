@@ -112,6 +112,7 @@ export function registerAssemblies(
         query: queryOf(request.url),
         params: headers.params,
         fetch: local,
+        assemblies,
         limits,
         newId: randomUUID,
         now: () => performance.now(),

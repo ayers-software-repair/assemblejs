@@ -2511,3 +2511,20 @@ Also found, and rowed: the agent surface renders and composes by its own path
 agent composing a parent is shown the child's directive rather than the child; it moves onto
 core's transport at S-07. And the content endpoint is the one caller that gives `renderLocal` no
 signal.
+
+## 2026-10-09: S-03 as built, and what extracting the finder's spans found
+
+Built as the entry above says: `localAssets(html, assemblies)` reads the envelopes in served
+markup; `pageAssets` uses it for this server's assemblies and the manifests for another server's;
+a shadow parent's root links its own sheet and those of the children placed inside it, each once.
+This server's files are linked first, in the order they stand on the page, then another server's
+in the order the page placed them.
+
+Found while moving the finder's comment and raw-text patterns into one shared reader
+(`inertSpans`): the two patterns were matched independently over the whole template. A `<script`
+written inside a comment therefore opened a stretch that ran to the next real `</script>`, and
+every directive between was passed over without a word, the silent drop the finder exists to
+prevent. That was S-01's own code, a day old and never pushed. The reader is one pass now, each
+stretch consumed whole before the next is looked for; a comment whose closing dashes are its
+opening ones (`<!-->`, `<!--->`) ends where the parser ends it; one never closed runs to the end.
+Each is held by a test watched red.

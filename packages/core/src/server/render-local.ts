@@ -4,6 +4,7 @@ import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { compose } from "../compose/compose.js";
 import { identity } from "../compose/identity.js";
 import { renderEnvelope } from "../envelope/render-envelope.js";
+import { localAssets } from "./local-assets.js";
 import type { LocalRenderInput } from "./local-render-input.js";
 import type { LocalRendered } from "./local-rendered.js";
 import { resolveData } from "./resolve-data.js";
@@ -49,6 +50,14 @@ export async function renderLocal(
     newId: input.newId,
     now: input.now,
   });
+  // A shadow root is the only place a stylesheet reaches what is inside it, so it links its own
+  // assembly's and those of every child placed there, each once.
+  const rootStyles = [
+    ...new Set([
+      ...(assembly.assets?.css ?? []),
+      ...localAssets(composed.html, input.assemblies).css,
+    ]),
+  ];
   const html = renderEnvelope({
     id: input.id,
     name: assembly.name,
@@ -57,7 +66,7 @@ export async function renderLocal(
     markup: composed.html,
     data,
     ...(assembly.mount === undefined ? {} : { mount: assembly.mount }),
-    ...(assembly.shadow === true ? { shadow: { css: assembly.assets?.css ?? [] } } : {}),
+    ...(assembly.shadow === true ? { shadow: { css: rootStyles } } : {}),
   });
   return { html, diagnostics: composed.diagnostics };
 }

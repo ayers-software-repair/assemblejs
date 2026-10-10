@@ -82,6 +82,14 @@ describe("directives the finder used to get wrong", () => {
     ]);
   });
 
+  it("finds the live directive after a comment that only mentions a script", () => {
+    // The comment's `<script>` once opened a stretch that ran to the page's real script and
+    // hid the directive between: it was copied to the output and nothing said so.
+    const template = `<!-- <script> --><assembly name="cart"/><script src="/a.js"></script>`;
+    expect(findPlacements(template).map((p) => p.name)).toEqual(["cart"]);
+    expect(findPlacements(`<!--><assembly name="cart"/><!-- note -->`)).toHaveLength(1);
+  });
+
   it("refuses a name that would collide with another assembly's identity", () => {
     // identity("a/b", "c") and identity("a", "b/c") were both "a/b/c", so one assembly's
     // content could be served into the other's placement, and from its cache key.

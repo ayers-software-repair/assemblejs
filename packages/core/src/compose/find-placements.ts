@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { PLACEMENT_ELEMENT } from "../vocab/placement-element.js";
 import { SEGMENT } from "../vocab/segment.js";
+import { inertSpans } from "./inert-spans.js";
 import type { Placement } from "./placement.js";
 
 // The directive has a shape this product defines, so it is matched exactly rather than parsed:
@@ -15,11 +16,6 @@ const DIRECTIVE = new RegExp(
   `<${PLACEMENT_ELEMENT}(\\s[^>]*?)?\\s*(/?)>(?:\\s*</${PLACEMENT_ELEMENT}\\s*>)?`,
   "gi",
 );
-const COMMENT = /<!--[\s\S]*?-->/g;
-// The elements whose content the parser reads as text, never as tags. A directive inside one is
-// not a placement: splicing a child there would put the child's island `</script>` inside an
-// open script and end it early, the same early end a directive in a comment would cause.
-const RAW_TEXT = /<(script|style|textarea|title)\b[^>]*>[\s\S]*?<\/\1\s*>/gi;
 // A name or view is the same shape a declared assembly must have (SEGMENT): a template naming
 // something that could never be declared is a mistake worth reporting, and a name carrying the
 // identity separator would make two different assemblies share one identity and one cache key.
@@ -35,14 +31,7 @@ const ALLOWED = new Set(["name", "view"]);
  */
 export function findPlacements(template: string): Placement[] {
   const found: Placement[] = [];
-  const inert: Array<readonly [number, number]> = [];
-  for (const pattern of [COMMENT, RAW_TEXT]) {
-    pattern.lastIndex = 0;
-    for (const span of template.matchAll(pattern)) {
-      inert.push([span.index, span.index + span[0].length]);
-    }
-  }
-  const isInert = (at: number): boolean => inert.some(([from, to]) => at >= from && at < to);
+  const isInert = inertSpans(template);
 
   DIRECTIVE.lastIndex = 0;
   for (const match of template.matchAll(DIRECTIVE)) {

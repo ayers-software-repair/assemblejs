@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import type { Fetch } from "../compose/fetch.js";
 import type { Limits } from "../compose/limits.js";
 
@@ -25,6 +26,11 @@ export interface LocalRenderInput {
   readonly params: Readonly<Record<string, string>>;
   /** How a child its view places is reached: this server's own transport. */
   readonly fetch: Fetch;
+  /**
+   * This server's assemblies, by name: a shadow assembly links, inside its own root, the
+   * stylesheets of the children placed there, and reads what they declare from these.
+   */
+  readonly assemblies: ReadonlyMap<string, AssemblyDefinition>;
   /** The server's bounds, the same that refuse a request on arrival. */
   readonly limits: Limits;
   /** The signal of the request this render belongs to: once it aborts, no further child is dispatched. */

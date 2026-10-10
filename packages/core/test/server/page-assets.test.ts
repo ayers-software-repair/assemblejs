@@ -1,7 +1,14 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineAssembly, pageAssets } from "@assemblejs/core";
+import {
+  DEFAULT_LIMITS,
+  compose,
+  createMemoryCache,
+  defineAssembly,
+  localFetch,
+  pageAssets,
+} from "@assemblejs/core";
 import type { AssemblyDefinition, Diagnostic, RemoteTransport } from "@assemblejs/core";
 
 const assembly = (name: string, over: Partial<AssemblyDefinition> = {}): AssemblyDefinition =>
@@ -83,5 +90,49 @@ describe("the browser files a composed page links", () => {
       remote(),
     );
     expect(assets).toEqual({ css: [], js: [] });
+  });
+
+  it("links a child a view placed, which no placement of the page names", async () => {
+    const assets = await pageAssets(
+      { html: envelope("shell", envelope("hello")), diagnostics: [placed("shell")] },
+      {},
+      byName(assembly("shell"), assembly("hello")),
+      remote(),
+    );
+    expect(assets.css).toEqual(["/shell.css", "/hello.css"]);
+  });
+
+  // A cache hit answers the html it holds and no account of what is inside it.
+  it("links a cached parent's child as it linked a fresh one's", async () => {
+    const shell = defineAssembly({
+      name: "shell",
+      views: { default: { renderer: "html", markup: () => '<assembly name="hello"></assembly>' } },
+    });
+    const assemblies = byName(shell, assembly("hello"));
+    const plan = {
+      shell: { name: "shell", view: "default", deadline: 3000, cache: { ttl: 60_000 } },
+    };
+    const composeOnce = () =>
+      compose({
+        template: '<body><assembly name="shell"></assembly></body>',
+        plan,
+        fetch: localFetch(assemblies, () => undefined, DEFAULT_LIMITS),
+        cache,
+        page: "p1",
+        newId: () => `id-${String(++minted)}`,
+        now: () => 0,
+      });
+    const cache = createMemoryCache();
+    let minted = 0;
+    const fresh = await composeOnce();
+    const cached = await composeOnce();
+    expect([fresh.diagnostics[0]?.source, cached.diagnostics[0]?.source]).toEqual([
+      "local",
+      "cache",
+    ]);
+    expect(cached.diagnostics[0]?.children).toBeUndefined();
+    for (const composed of [fresh, cached]) {
+      expect((await pageAssets(composed, plan, assemblies, remote())).css).toEqual(["/hello.css"]);
+    }
   });
 });

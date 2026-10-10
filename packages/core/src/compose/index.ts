@@ -19,6 +19,7 @@ export { RequiredFailure } from "./required-failure.js";
 export { identity } from "./identity.js";
 export { cacheKey } from "./cache-key.js";
 export { carriesCredential } from "./carries-credential.js";
+export { inertSpans } from "./inert-spans.js";
 export { findPlacements } from "./find-placements.js";
 export { encodeParams } from "./encode-params.js";
 export { readParams } from "./read-params.js";

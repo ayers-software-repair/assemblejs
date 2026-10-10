@@ -60,6 +60,7 @@ export { remoteProblems } from "./remote-problems.js";
 export { accessProblems } from "./access-problems.js";
 export { createMemoryCache } from "./create-memory-cache.js";
 export { pageFetch } from "./page-fetch.js";
+export { localAssets } from "./local-assets.js";
 export { pageAssets } from "./page-assets.js";
 export { registerPages } from "./register-pages.js";
 export { createServer } from "./create-server.js";

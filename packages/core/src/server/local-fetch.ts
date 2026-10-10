@@ -44,6 +44,7 @@ export function localFetch(
         query: request.query,
         params: request.params,
         fetch,
+        assemblies,
         limits,
         signal: request.signal,
         newId: randomUUID,
