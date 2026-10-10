@@ -21,7 +21,8 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, dep
   and MCP registrations, which `check` holds current and `add agents` rewrites),
   `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent surface: an MCP
   server that reads the project, creates one, adds and places an assembly, checks it, renders
-  and composes, and explains every rule `check` names).
+  and composes, explains every rule `check` names, and lists the prompts a person asks an
+  agent for).
 - `@assemblejs/renderer-templates` (EJS, Markdown, Nunjucks, Handlebars, Pug; no peer deps).
 - `@assemblejs/renderer-{preact,react,vue,svelte,solid,lit}`: one real peer dependency each.
 

@@ -1,1 +1,6 @@
-{ "packages": ["core", "cli"] }
+{
+  "projects": {
+    "written": { "packages": ["core", "cli"] },
+    "prompted": { "packages": ["core", "cli"] }
+  }
+}

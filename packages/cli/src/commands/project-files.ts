@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { agentFiles } from "../agents/agent-files.js";
 import { ownVersion } from "./own-version.js";
+import { pageDocument } from "./page-document.js";
 
 /**
  * The smallest project that runs. One assembly, one view, no framework the author did not ask
@@ -40,18 +41,7 @@ for (const line of describeConfig(config)) console.log(line);
 console.log(\`listening \${url}\`);
 `,
 
-    "src/pages/home/home.html": `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>${name}</title>
-  </head>
-  <body>
-    <assembly name="hello"></assembly>
-  </body>
-</html>
-`,
+    "src/pages/home/home.html": pageDocument(name, ["hello"]),
 
     "src/assemblies/hello/hello.html": `<p>Hello from AssembleJS</p>\n`,
 
@@ -66,7 +56,9 @@ assembly on a page with \`<assembly name="hello"></assembly>\`.
 
 \`AGENTS.md\` tells a coding agent what this project is and the rules its code must satisfy.
 \`.mcp.json\`, \`.cursor/mcp.json\` and \`.vscode/mcp.json\` register the project's own MCP server
-for it, and \`npx assemblejs add agents\` brings all of them up to date after an upgrade.
+for it, and \`npx assemblejs add agents\` brings all of them up to date after an upgrade. The
+server lists four prompts, which Claude Code and VS Code show as commands: add an assembly,
+place one, make a page, fix what \`check\` finds.
 `,
     ...agentFiles(name).files,
   };

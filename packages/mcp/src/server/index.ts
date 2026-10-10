@@ -4,3 +4,4 @@ export type { ToolResult } from "./tool-result.js";
 export { describeProject } from "./describe-project.js";
 export { createMcpServer } from "./create-mcp-server.js";
 export { registerAuthoringTools } from "./register-authoring-tools.js";
+export { registerPrompts } from "./register-prompts.js";

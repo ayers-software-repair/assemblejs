@@ -13,8 +13,8 @@ spec runs itself. A project's `env` names an earlier project's origin or a set-a
 `{name}`, which is how a consumer is told where its producer is. `fixture.json` names the
 `@assemblejs` packages each project installs beside the ones the starter wrote into it; a
 renderer brings the framework it needs at the one version that renderer is tested against, read
-from its own package, so a fixture never pins a framework of its own. A fixture with no files of
-its own is a project exactly as the starter wrote it.
+from its own package, so a fixture never pins a framework of its own. A project with no files
+of its own, or no directory at all, is a project exactly as the starter wrote it.
 
 `harness/run.mjs` packs those packages once, and for each project creates it from the starter's
 tarball, installs every package from its tarball (never through a workspace link), builds it
@@ -36,4 +36,4 @@ than inside `pnpm check`.
 | `rendering` | DESIGN 7, 9, 3.3 to 3.5 and 12: every renderer through the contract, on pages of them, and an assembly inside an assembly in every kind of view |
 | `remote`    | DESIGN 3.1 to 3.4, 3.6, 5.1 and 10: a page composed across two servers, a parent that brings its child, and a hostile server                    |
 | `trust`     | DESIGN 5.2, 5.3 and 11: inbound access, the boundary, production, `check` and `deploy`                                                          |
-| `agents`    | DESIGN 13.7: a project as the starter wrote it, each registration starting its own server, and an agent building in it through that server      |
+| `agents`    | DESIGN 13.7 and 13.8: a project as the starter wrote it, each registration starting its own server, an agent building in it, and the prompts    |

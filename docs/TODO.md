@@ -5,29 +5,34 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:26 EDT, after the build split).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:34 EDT, after A-03).**
 
-STATE. Branch `next`. `origin/next` is `a7d3edc`, A-01, pushed 2026-10-10 02:13 EDT; its `ci`
-run is 38030156225, its `release` run 38030156222 and its `deploy-site` run 38030156238, all
-read to their end, green, and the three staging pages it changed are byte-identical to the
-branch. Above it, signed, pushed with this block: the commit that builds the command line, the
-agent surface and the starter with one copy of their code. Every package reads `1.0.0-next.0`;
-fourteen changesets are pending. The owner's overnight order (estate D1216): work the bites to
-code completion and get the landing page onto staging; no questions until morning. The landing
-page is on staging: `/assemblejs/next/` on the staging domain answers 200 (DECISIONS
-2026-10-09, staging), and a `site/**` push on `next` deploys there. `/assemblejs/` deploys from
-`main`, which has no `site/` yet: the owner's morning list. His rulings in this seat stand: no
-subagents, the seat does the work itself; every bite since is self-verified by mutation
-(DECISIONS 2026-10-09, S-02).
+STATE. Branch `next`. `origin/next` is `0c43610`, the commit that builds the command line, the
+agent surface and the starter with one copy of their code, pushed 2026-10-10 02:27 EDT; its
+`ci` run is 38030937655 and its `release` run 38030937681, both read to their end, green.
+Beneath it is A-01, `a7d3edc` (`ci` 38030156225, `release` 38030156222, `deploy-site`
+38030156238, all green). Above it, signed, pushed with this block: the A-03 commit this block
+lands in, which touches `site/**` and so fires `deploy-site` as well. Every package reads
+`1.0.0-next.0`; fifteen changesets are pending. The owner's overnight order (estate D1216):
+work the bites to code completion and get the landing page onto staging; no questions until
+morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
+200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
+`/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
+rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
+self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is A-03 (PLAN 4.1): the agent surface lists prompts for the common tasks
-through the protocol (add an assembly, place it, make a page, fix what `check` found), and an
-agent-shaped test in the `agents` conformance fixture lists them and follows one to a composed
-page. Then A-02 (`llms.txt` on the site, generated from `pages.json`), and A-04's design memo,
-which waits on the owner's answer before any code. A-01 is done: a new project carries its
-agent instructions and registrations, `check` holds them, and `add agents` rewrites them. The
-row it found is next after the ladder: DESIGN 13.3's five resources, of which the server has
-two. The subassembly rung is done: S-01 to S-09.
+THE EXACT NEXT STEP is A-02 (PLAN 4.1): `llms.txt` and `llms-full.txt` on the site, generated
+from `site/pages.json` and the pages by a script that `check:site` runs with `--check`, as
+`scripts/site-links.mjs` generates the links; a page missing from either is refused, and a
+hand edit of either is a drift the check finds. The format is llmstxt.org's (read 2026-10-10:
+an H1, a blockquote, file lists under H2s, an "Optional" section); the page text for the full
+file is read with the DOM the tests already use (`happy-dom`), and an element the converter
+does not know fails the run. Then A-04's design memo, which waits on the owner's answer before
+any code. A-01 and A-03 are done: a new project carries its agent instructions and
+registrations, and the agent surface lists four prompts. The rows they found come after the
+ladder: DESIGN 13.3's five resources, of which the server has two; `render_assembly` and
+`compose_page` showing only plain html views; the shape of a name written five times. The
+subassembly rung is done: S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -502,8 +507,35 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       protocol SDK's dependencies on express and hono. All are development dependencies and
       none reaches a deploy. Bundling the SDK into `@assemblejs/mcp`, with its notices, would
       make it one package: the owner's to say (morning list; DECISIONS 2026-10-10, A-01)
-- [ ] A-03 MCP prompts for the common tasks, listed by the protocol, one followed to a composed
-      page in a test (owner, 2026-10-09, PLAN 4.1)
+- [x] A-03 MCP prompts for the common tasks, listed by the protocol: `add_assembly`,
+      `place_assembly`, `make_page` and `fix_findings`, each a brief that gives the order,
+      where to stop and ask, and what an answer means. Proved from the tarballs in the
+      `agents` fixture, on a project of its own: the protocol lists them, and an agent follows
+      the one for a page to a page that composes and that the build serves, and the one for
+      findings from a finding to none. Self-verified: 19 mutations in the unit suites and 4
+      around a run of the fixture, each alone, each watched red (owner, 2026-10-09, PLAN 4.1;
+      DECISIONS 2026-10-10, A-03)
+- [ ] `render_assembly` and `compose_page` show a plain html view and refuse every other with
+      the reason, a view in a framework or a template language being source its renderer
+      compiles (B-09b, by design). So the loop the agent surface exists for closes only for
+      the one kind of assembly a project has fewest of. Build what they must, in a directory
+      of their own, with the project's own renderers, and render that. Then the sentences
+      brought down to what holds go back up: the landing page's "Your agent knows the
+      framework" and its row in `site/LANDING.md`, the root README, and the agent surface's
+      own (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
+      refused; DECISIONS 2026-10-10, A-03)
+- [ ] The command line's suite can fail by a race: five of its spec files build
+      `examples/two-frameworks` in place, at once, and a build begins by removing the
+      example's `dist` and `.assemblejs` (`build/build-project.ts:58-59`), so one file's
+      bundling can find another's generated modules gone ("Could not resolve
+      ./client/counter.js" in `test/build/bundle-client.test.ts`, seen once in about twenty
+      runs, 2026-10-10 02:40 EDT; green on the next run). Each such spec builds a copy of its
+      own
+- [ ] The shape of a name is written five times where the vocabulary already holds it once
+      (`SEGMENT` in core): in the discovery of pages and of assemblies, in `planAssembly`, and
+      twice more for a project's own name, in `run` and in the agent surface's
+      `create_project`. One definition of each (found 2026-10-10 writing A-03, whose prompts
+      use the vocabulary's)
 - [ ] A-02 `llms.txt` and `llms-full.txt` on the site, generated from `pages.json` and the
       pages, declared and held by `check:site` and a drift test (owner, 2026-10-09, PLAN 4.1)
 - [ ] A-04 built-in components and best practices: the design memo and the owner's answer

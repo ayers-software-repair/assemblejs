@@ -8,6 +8,7 @@ import { renderAssembly } from "../render/render-assembly.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { describeProject } from "./describe-project.js";
 import { registerAuthoringTools } from "./register-authoring-tools.js";
+import { registerPrompts } from "./register-prompts.js";
 
 const json = (value: unknown) => ({
   content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }],
@@ -127,5 +128,6 @@ export function createMcpServer(root: ProjectRoot): McpServer {
   );
 
   registerAuthoringTools(server, root);
+  registerPrompts(server);
   return server;
 }

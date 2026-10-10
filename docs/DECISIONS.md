@@ -3028,3 +3028,88 @@ budgets stand.
 Held by the budget, watched red: with the split turned off again, `pnpm check:pack` refuses the
 command line. Proved on the build: the three packages' suites, which start each built `bin.js`,
 `pnpm check:exports` and `pnpm check:publish`.
+
+## 2026-10-10: A-03, the prompts a person asks for
+
+Expected, from the plan (PLAN 4.1): MCP prompts for the common tasks, add an assembly, place
+it, make a page, fix what `check` found, listed by the protocol; proved by an agent-shaped test
+that lists them through the protocol and follows one to a composed page.
+
+What was read (2026-10-10):
+
+- The protocol, `modelcontextprotocol.io/specification/2025-11-25/server/prompts`. Prompts "are
+  designed to be **user-controlled**, meaning they are exposed from servers to clients with the
+  intention of the user being able to explicitly select them for use", as slash commands for
+  one. `prompts/list` and `prompts/get`; a message's role is `user` or `assistant`; an invalid
+  name and a missing required argument are `-32602`; "Implementations **MUST** carefully
+  validate all prompt inputs and outputs to prevent injection attacks".
+- Claude Code, `code.claude.com/docs/en/mcp`: a server's prompts "become available as
+  commands", listed as `/servername:promptname (MCP)`, their arguments space-separated, each a
+  single token. VS Code, `code.visualstudio.com/docs/copilot/customization/mcp-servers`: "Type
+  `/<MCP server>.<prompt>` in the chat input." Cursor, `cursor.com/docs/context/mcp`: prompts
+  are "Supported", and the page does not say how a person picks one. So the site and the
+  READMEs say commands of the first two and support of the third.
+- The SDK as installed, 1.30.0, its own `server/mcp.d.ts`: `registerPrompt(name, { title,
+description, argsSchema }, callback)`, every argument a string.
+
+Settled:
+
+- **Four prompts, in the order a project grows**: `add_assembly`, `place_assembly`,
+  `make_page`, `fix_findings`. Two share a name with the tool that does the mechanical half;
+  the two lists are separate in the protocol, and a person asking for an assembly should not
+  have to learn a second word for it.
+- **A brief is what a tool's description cannot be.** One message, in the person's voice. It
+  gives the order: look before adding, see before saying it is done, `check` last. It says
+  where to stop and ask: an assembly that exists, a place nobody named, a page whose contents
+  nobody gave. And it says what an answer means: a refusal carries its fix, a placement that
+  fell back looks the same in the markup, a fix that is a command is for a shell this server
+  does not run.
+- **What a person fills in is a name, or one of a list.** It becomes part of what a model
+  reads. A name is the vocabulary's own shape (`SEGMENT`) and a renderer is one the command
+  scaffolds; the protocol answers `-32602` for anything else before a brief is written.
+- **The page a brief hands over is the starter's.** `pageDocument` in the command line is the
+  one definition of the document a new project's page is written with; the prompt for a page
+  gives it with nothing placed. There is no `add page` verb and no `add_page` tool: the plan
+  asked for prompts, a page is one file, and the brief is where its document comes from.
+- **The fixture has two projects**, each the starter's, untouched: A-01's spec and the prompts'
+  both change the project they run in, and a fixture's spec files run at once. The harness
+  makes a project that has no directory of its own, so neither needs a placeholder file that
+  the starter did not write.
+
+Found on the way:
+
+- Two faults in the binding, each by the spec written for it. An argument that may be left out
+  lost its description in the listing, described before it was made optional. And a prompt
+  that takes nothing, registered with an empty shape, refused a client that sent it no
+  arguments, which is how a client sends none.
+- `render_assembly` and `compose_page` show a plain html view and refuse every other with the
+  reason, by design (B-09b). The instructions A-01 writes said they render an assembly; they
+  now say which views are shown at once and where the rest are seen, and the briefs say the
+  same. That the loop closes only for plain html is the largest gap left in the agent surface,
+  and is a row. Three public sentences said more than that and are brought down to it: the
+  landing page's, the root README's and the agent surface's own; `site/LANDING.md` records
+  the claim found ahead.
+- The shape of a name is written five times beside the vocabulary's one. A row.
+
+The agent surface's tarball budget is raised from 18000 bytes to 20500 (it packs to 18915):
+the four briefs.
+
+Proved: `pnpm conformance agents`, 14 of 14. The protocol lists the four prompts with what a
+person fills in; a prompt refuses what is not a name; an agent takes from the brief for a page
+the file to write and the document to write in it, calls what the brief names in the order it
+names it, and the page composes and is served by the project's own build at its address; and
+the brief for findings leads from one finding, through `explain` and the fix it names, to none.
+
+Watched red, each mutation alone. In the unit suites, 19: an argument listed without its
+description, a prompt that takes nothing asking for an object, a name of any shape and a
+renderer nobody scaffolds reaching a brief, nothing required, the brief in the model's voice,
+no prompts listed, one left out of the list; a renderer nobody asked for, an existing assembly
+added again, a place chosen for the agent, home served at its name, a document that is not the
+starter's, a tool and a resource the server has not, a brief that does not end with `check`;
+the document's placements out of order and a new project's page written another way; and the
+instructions silent on which views are shown. Around a run of the fixture, 4: no prompts
+listed, the prompt for findings refusing a client that sends nothing, the brief handing over
+another file, and the document not titled with its page. One more survived and was replaced: a
+document whose body opened with another tag still took a placement and was served, which is
+the placement's leniency and no fault of the brief's. With the harness refusing a project that
+has no directory, the fixture stops before it is built.

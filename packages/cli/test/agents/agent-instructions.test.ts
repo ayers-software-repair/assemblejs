@@ -53,6 +53,13 @@ describe("what an agent that opens a project is told", () => {
     }
   });
 
+  // An agent told that it will be shown a view, and shown a refusal, has been told wrong.
+  it("says which views the tools show at once, and where the rest are seen", () => {
+    expect(visible).toContain(
+      "A view in a framework or a template language is source its renderer\n  compiles, so both tools say that in place of showing it, and the running server shows it.",
+    );
+  });
+
   // One list: a rule or a renderer added to the framework is in every project's instructions.
   it("carries every rule the agent surface explains, and every renderer the command scaffolds", () => {
     const unmarked = visible.replaceAll("`", "");

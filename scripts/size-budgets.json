@@ -3,7 +3,7 @@
   "@assemblejs/core": 75000,
   "@assemblejs/create": 7000,
   "@assemblejs/devtools": 8500,
-  "@assemblejs/mcp": 18000,
+  "@assemblejs/mcp": 20500,
   "@assemblejs/renderer-lit": 9200,
   "@assemblejs/renderer-preact": 8900,
   "@assemblejs/renderer-react": 9100,

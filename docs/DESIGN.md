@@ -885,6 +885,32 @@ and a registration that is not JSON it can write back whole is refused before an
 written. `create_project` writes the same files and merges the same way, into a root that may
 hold some of them already: the registration that started the server there is the commonest.
 
+### 13.8 What a person asks for
+
+Tools are the agent's to call. A prompt is the person's to pick: the protocol lists them, and a
+client that supports prompts offers them to its user, Claude Code and VS Code as commands. There are four, the things a person asks an agent
+for most in the order a project grows, and each answers a brief, one message in the person's
+voice, written as the framework would brief an agent that had never seen it.
+
+| prompt           | what a person fills in         | what the brief has the agent do                                                                                                                       |
+| ---------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `add_assembly`   | a name, and a renderer or none | Look for it first; add it; write its view; render it; place it where it was told to, or say that it is not placed and ask; check.                     |
+| `place_assembly` | an assembly, and where or not  | Place it on the page or in the assembly named, or ask which when none was; compose it and read the account of each placement; check.                  |
+| `make_page`      | a name                         | Write the page's whole document from the one a new project's page is written with; place what belongs on it, asking when not told; compose it; check. |
+| `fix_findings`   | nothing                        | Check; take each finding by the fix it names, with `explain` where that is not enough; change nothing wider; check again until none is left.          |
+
+A brief does three things a tool's description cannot. It gives the order: look before adding,
+see before saying it is done, and `check` last, every time. It says where to stop and ask: an
+assembly that exists, a place nobody named, a page whose contents nobody gave. And it says what
+an answer means: that a refusal carries its fix, that a placement which fell back looks the
+same in the markup as one that worked, that a fix which is a command is for a shell this
+server does not run.
+
+What a person fills in becomes part of what a model reads, so a prompt takes only a name of the
+framework's own shape, or one of its own list for a renderer; the protocol refuses anything
+else as invalid before a brief is written. A prompt names no tool and no resource the server
+does not have, which its tests hold.
+
 ---
 
 ## 14. Decided here

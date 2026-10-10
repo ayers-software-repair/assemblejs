@@ -4,7 +4,7 @@
 // fixture's files laid over what it wrote, every @assemblejs package installed from its
 // tarball, the ones the starter wrote where it put them, and the build run by the command line
 // the project installed.
-import { cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -51,8 +51,11 @@ export function project(fixture, work, tarball, packages) {
     work,
   );
   const root = join(work, "app");
-  // The fixture's own description of what it installs is the harness's, not the project's.
-  cpSync(fixture, root, { recursive: true, filter: (from) => basename(from) !== "fixture.json" });
+  // The fixture's own description of what it installs is the harness's, not the project's. A
+  // project with no directory of its own is the starter's, exactly as it was written.
+  if (existsSync(fixture)) {
+    cpSync(fixture, root, { recursive: true, filter: (from) => basename(from) !== "fixture.json" });
+  }
   const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
   manifest.dependencies ??= {};
   manifest.devDependencies ??= {};

@@ -6,55 +6,15 @@
 // surface was installed with, the command line it installed, and HTTP. The tests run in the
 // order written, each on the project as the one before it left it.
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import { readFileSync, readdirSync, realpathSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { envelopesOf, get, rootOf, started } from "../http.mjs";
+import { agentIn, calling, named, resourceOf } from "../agent.mjs";
+import { originOf, rootOf, started } from "../http.mjs";
 
-const root = rootOf();
-const read = (path) => readFileSync(join(root, path), "utf8");
-const told = read("AGENTS.md");
-// The name AGENTS.md tells an agent to look for, which is the name each registration uses.
-const [, name] = /Its MCP server, `([a-z-]+)`, is registered in/.exec(told) ?? [];
-
-// The client an agent's host speaks the protocol with, as the project installed it with the
-// server it registers.
-const installed = createRequire(join(root, "node_modules", "@assemblejs", "mcp", "package.json"));
-const { Client } = installed("@modelcontextprotocol/sdk/client/index.js");
-const { StdioClientTransport } = installed("@modelcontextprotocol/sdk/client/stdio.js");
-
-/**
- * Starts the server a registration file names, the way the client that reads that file starts
- * it: its command and arguments as written, the workspace folder filled in where that client
- * fills it, in the directory and the environment given.
- */
-const startedFrom = async (file, servers, cwd, env) => {
-  const entry = JSON.parse(read(file))[servers][name];
-  const fill = (value) => value.replaceAll("${workspaceFolder}", root);
-  const client = new Client({ name: "conformance-agent", version: "1.0.0" });
-  await client.connect(
-    new StdioClientTransport({
-      command: fill(entry.command),
-      args: entry.args.map(fill),
-      cwd,
-      env,
-    }),
-  );
-  return client;
-};
-const resource = async (client, uri) =>
-  JSON.parse((await client.readResource({ uri })).contents[0].text);
-// Each envelope on a page by its assembly's name, with the markup its view rendered: what stands
-// before the data the envelope carries for the browser.
-const named = (page) =>
-  envelopesOf(page).map((envelope) => [
-    envelope.attributes["data-name"],
-    envelope.inner.split('<script type="application/json"')[0].trim(),
-  ]);
-const run = (...args) => spawnSync("npx", ["assemblejs", ...args], { cwd: root, encoding: "utf8" });
+const root = rootOf("written");
+const { read, told, name, installed, startedFrom, run } = agentIn(root);
 
 // How each client starts a server, by its own documentation and, for the directory Claude Code
 // starts one in, by what was observed (DECISIONS 2026-10-10).
@@ -88,7 +48,7 @@ for (const [file, servers, cwd, env] of CLIENTS) {
         name,
         version: installed("./package.json").version,
       });
-      const project = await resource(client, "assemblejs://project");
+      const project = await resourceOf(client, "assemblejs://project");
       assert.equal(realpathSync(project.root), realpathSync(root));
       assert.deepEqual(
         project.assemblies.map((assembly) => assembly.name),
@@ -102,8 +62,7 @@ for (const [file, servers, cwd, env] of CLIENTS) {
 
 test("an agent adds an assembly, places it and composes the page, through that server alone", async () => {
   const client = await startedFrom(...CLIENTS[0]);
-  const call = async (tool, args = {}) =>
-    JSON.parse((await client.callTool({ name: tool, arguments: args })).content[0].text);
+  const call = calling(client);
   try {
     // What AGENTS.md told it to use is what the server has, and the rules are the server's own.
     const tools = (await client.listTools()).tools.map((tool) => tool.name);
@@ -119,7 +78,7 @@ test("an agent adds an assembly, places it and composes the page, through that s
       assert.ok(tools.includes(tool), `the server has ${tool}`);
     }
     // Each rule's sentence as the server gives it, which AGENTS.md marks up with code spans.
-    const rules = await resource(client, "assemblejs://rules");
+    const rules = await resourceOf(client, "assemblejs://rules");
     assert.ok(rules.length > 20);
     const unmarked = told.replaceAll("`", "");
     for (const rule of rules) {
@@ -161,7 +120,7 @@ test("an agent adds an assembly, places it and composes the page, through that s
 
 test("the page the agent composed is the page the project's build serves", async () => {
   // The server the harness started was built from the project as the starter wrote it.
-  assert.deepEqual(named(await (await get("/")).text()), [
+  assert.deepEqual(named(await (await fetch(new URL("/", originOf("written")))).text()), [
     ["hello", "<p>Hello from AssembleJS</p>"],
   ]);
   const built = run("build");
