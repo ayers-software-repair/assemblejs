@@ -21,13 +21,17 @@ which has no `site/` yet: the owner's morning list. His rulings in this seat sta
 subagents, the seat does the work itself; every bite since is self-verified by mutation
 (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-08 (PLAN 4.2), conformance: a `nested` fixture (a local parent
-and child in every static and framework kind, a shadow parent, a self-placing view, a chain
-past the cap, a deferred parent) and, in `remote`, a producer parent placing a producer child
-placed by the consumer's page: the child's css on the consumer's page, both envelopes marked
-with the producer's origin, refusals by path and by depth from the headers the consumer
-sends, the nested failure's id in the producer's log. Then S-09: DESIGN 2.4, 3.4, 7, 8, 10 and
-11's rules line, the guides under `site/docs`, the studies deleted. S-01 to S-07 are done.
+THE EXACT NEXT STEP is bite S-08 (PLAN 4.2), conformance. A `nested` fixture: a local parent
+and child in every static and framework kind, a shadow parent, a chain past the cap, a deferred
+parent, and a Pug view that places itself, which nothing reads before it renders and which
+must hold one nested `cycle` envelope. A fixture of its own for what is read from the source:
+`check` exits 1 naming `an-assembly-is-never-its-own-ancestor`, and the server refuses to
+start (a self-placing html view cannot share a fixture: boot refuses the whole server). In
+`remote`, a producer parent placing a producer child placed by the consumer's page: the
+child's css on the consumer's page, both envelopes marked with the producer's origin,
+refusals by path and by depth from the headers the consumer sends, the nested failure's id in
+the producer's log. Then S-09: DESIGN 2.4, 3.4, 7, 8, 10 and 11's rules line, the guides under
+`site/docs`, the studies deleted. S-01 to S-07 are done (DECISIONS 2026-10-10, both entries).
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -425,7 +429,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         core's transport and places a child in a view. Self-verified: thirty-one mutations in
         the unit suites and one in the browser, each run alone and watched red (DECISIONS
         2026-10-10, S-07)
-  - [ ] S-08 conformance: the `nested` fixture and the two-server nested spec
+  - [ ] S-08 conformance: the `nested` fixture, the fixture `check` and boot refuse for a view
+        that places itself, and the two-server nested spec (DECISIONS 2026-10-10, after S-07)
   - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted. Still saying `children`
         after S-06: DESIGN 7, 8 and 11's rules line, and `site/docs/` templates, react, preact,
         vue, solid, svelte and lit. The guides are `site/**`: pushing them deploys to
@@ -439,10 +444,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       and its upstream lacks, and its self-test holds the range form too, in a repository made
       for the run. An unsigned commit, an attribution trailer beside a sign-off and a missing
       upstream were each watched red on a mutated copy of the gate (2026-10-09)
-- [ ] Slots `check` does not read, left to the render today: one reached through a namespace
-      import (`import * as renderer`), and a Vue slot written in kebab case. Read them, or say
-      in the guide that a slot is written under the name it is imported by (DECISIONS
-      2026-10-10, S-07)
+- [x] A framework view is read with the components it is split into: `viewModules` follows
+      its imports by relative path, so a slot written in a component beside the view is the
+      view's. Three mutations, each alone, watched red (2026-10-10)
+- [ ] Slots `check` still does not read, and writes into the registry as nothing: one reached
+      through a namespace import (`import * as renderer`), a Vue slot written in kebab case,
+      and one in a module reached by a package's name. Read them, or say in the guide that a
+      slot is written under the name it is imported by (DECISIONS 2026-10-10, S-07)
 - [ ] A child placed inside a custom element's own shadow root (a `slot()` written in a Lit
       element's `render`) is found and mounted, and its stylesheet is linked in the page's
       head, where it does not reach: `localAssets` tracks an assembly's shadow root, not an

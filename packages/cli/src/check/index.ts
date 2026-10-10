@@ -19,6 +19,7 @@ export { scriptPlacements } from "./script-placements.js";
 export { sveltePlacements } from "./svelte-placements.js";
 export { vuePlacements } from "./vue-placements.js";
 export { readViewPlacements } from "./read-view-placements.js";
+export { viewModules } from "./view-modules.js";
 export { viewFindings } from "./view-findings.js";
 export { viewProblems } from "./view-problems.js";
 export type { PagePolicy } from "./page-policy.js";

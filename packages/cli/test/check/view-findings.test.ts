@@ -54,4 +54,26 @@ describe("what every view in a project says it places", () => {
     // What could be read and named still stands.
     expect(placements.get("shell")).toEqual([{ name: "price", view: "default" }]);
   });
+
+  // A slot is the view's wherever its author wrote it: in the view's file, or in a component
+  // the view is split into.
+  it("reads the slots of the components a framework view is split into", () => {
+    const { placements, problems } = findings({
+      "shell/shell.react.tsx":
+        'import { Panel } from "./panel.js";\nexport default () => <Panel />;',
+      "shell/panel.tsx": `${REACT}export const Panel = (props: { which: string }) => <><Slot name="cart" /><Slot name={props.which} /></>;`,
+      "board/board.svelte":
+        '<script lang="ts">\n  import Row from "./Row.svelte";\n</script>\n<Row />',
+      "board/Row.svelte":
+        '<script lang="ts">\n  import { slot } from "@assemblejs/renderer-svelte/client";\n</script>\n<div>{@html slot("price")}</div>',
+    });
+    expect(placements.get("shell")).toEqual([{ name: "cart", view: "default" }]);
+    expect(placements.get("board")).toEqual([{ name: "price", view: "default" }]);
+    expect(problems).toMatchObject([
+      {
+        rule: "a-placement-is-named-where-it-is-written",
+        path: expect.stringMatching(/shell\.react\.tsx$/),
+      },
+    ]);
+  });
 });

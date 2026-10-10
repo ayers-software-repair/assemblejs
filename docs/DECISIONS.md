@@ -2738,10 +2738,39 @@ The agent surface's tarball budget is raised from 21000 bytes to 25000 (it packs
 three rules with their reasons, the two ways a fallback is told, and placing in a view. No
 other package crossed its budget.
 
-Not read, and left to the render: a slot reached through a namespace import; a Vue slot
-written in kebab case; a Pug view. The build writes what it read and refuses nothing for it:
-boot refuses, and `check` says where.
+Not read: a slot reached through a namespace import; a Vue slot written in kebab case; a slot
+in a module the view reaches by a package's name; a Pug view. A Pug view is written as unread
+and its placements are the render's. For the other three the registry says less than the view
+places, and says it as known: a deferred parent's child placed that way arrives without its
+files linked ahead, and `check`'s rule about Lit does not see it. Boot refuses nothing wrongly
+for it. The build writes what it read and refuses nothing: boot refuses, and `check` says
+where.
 
 Watched red, each mutation alone, by the harness S-06 describes: ten in core, thirteen in the
 command line, eight in the agent surface. In the browser, with the deferred link removed, one
 of eighteen: "a deferred assembly arrives with every assembly its view places".
+
+## 2026-10-10: after S-07, a view is read with its components, and S-08's fixture changes
+
+Found, by a reader of S-07 with no stake in it:
+
+- A view split into components was read from its own file alone. A slot written in a
+  component beside the view (`preact-counter/label.tsx` is such a component) was read as
+  nothing, and written into the registry as nothing.
+- The `nested` conformance fixture the plan describes cannot boot. It holds "a self-placing
+  view", and since S-07 a view whose source places itself is refused before anything listens,
+  and every other assertion of that fixture would go down with it.
+
+Settled:
+
+- `viewModules` follows a framework view's imports by relative path, to any depth, and
+  `viewFindings` reads every module it reaches. What a view places is what its author wrote in
+  the view or in a component it is split into.
+- S-08 holds the two refusals apart. Read from the source: a fixture of its own whose `check`
+  exits 1 naming `an-assembly-is-never-its-own-ancestor`, and whose server refuses to start
+  with the same sentence. At render, where no source says it: the headers an upstream composer
+  sends (`assembly-path` naming the child), and a Pug view that places itself, which nothing
+  reads before it renders, held to one nested `cycle` envelope.
+
+Watched red, each alone: a framework view read from its own file; only the view's own imports
+followed; a `.js` import not taken for the TypeScript behind it.
