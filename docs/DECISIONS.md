@@ -2660,3 +2660,25 @@ engines' behaviour, which no line of this package decides; the warning suppressi
 browser, because the example bundles React's production build, which reports nothing; the
 Svelte, Preact, Vue, Solid and Lit pairs in the browser, whose failure is watched in the unit
 suites, except Svelte's, which only a browser can run.
+
+## 2026-10-09: the landing page is on staging
+
+Expected: the first deploy of `/assemblejs/next/` waits on live AWS state. `deploy-site` run
+38016226372 had failed at the credentials step, because the role trusted the old form of
+GitHub's OIDC subject and this repository is issued the immutable one.
+
+Found: the lead changed the role's trust to the immutable form for `refs/heads/next` and
+`refs/heads/main` once the owner had signed in to AWS (2026-10-09 23:47 EDT, the estate's
+record), and asked for the dispatch. `deploy-site` run 38021878568, dispatched on `next` at
+`03a5a1f`, succeeded at every step. `https://d3kq4cwuz8axg8.cloudfront.net/assemblejs/next/`
+answers 200 with the title "AssembleJS"; the body is byte for byte `site/index.html` at that
+commit, and the six files it links answer 200. Read from the run's own record and from the
+page, after the run ended.
+
+Settled:
+
+- A push to `next` that touches `site/**` deploys to `/assemblejs/next/`. Its `deploy-site`
+  run is read to its end like `ci` and `release`, and the page it changed is fetched.
+- `/assemblejs/` deploys from `main`, which has no `site/` and no deploy workflow until `next`
+  is promoted. That is the release line and the owner's to call.
+- Nothing is synced or invalidated by hand. The workflow is the one way the bucket changes.

@@ -5,18 +5,21 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-09 23:40 EDT, with S-06).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-09 23:55 EDT, after S-06).**
 
 STATE. Branch `next`. `origin/next` is `03a5a1f`, S-05, with its `ci` run 38018681599 and its
 `release` run 38018681656 green on GitHub's runners (publication skipped: the registry has no
-`@assemblejs/core`). Above it, signed: the S-06 commit this block lands in, and a docs commit
-after it. Every package reads `1.0.0-next.0`; nine changesets are pending. The owner's
-overnight order (estate D1216): work the bites to code completion and get the landing page
-onto staging; no questions until morning. The staging deploy is blocked outside this
-repository: the deploy role trusts the old form of GitHub's OIDC subject (the morning list in
-the estate backlog has the exact fix), so nothing under `site/**` is pushed until it is fixed.
-His rulings in this seat stand: no subagents, the seat does the work itself; every bite since
-is self-verified by mutation (DECISIONS 2026-10-09, S-02).
+`@assemblejs/core`). Above it, signed, pushed with this block: `b0e7f60` S-06, `f49fa75` (the
+instruction file's line on starting a browser), `3e4a4a6` (React's slot keeps its object in its
+own state), and the commit this block lands in. Every package reads `1.0.0-next.0`; nine
+changesets are pending. The owner's overnight order (estate D1216): work the bites to code
+completion and get the landing page onto staging; no questions until morning. The landing page
+is on staging: the lead fixed the deploy role's trust once the owner had signed in to AWS, and
+`deploy-site` run 38021878568, dispatched on `next` at `03a5a1f`, succeeded; `/assemblejs/next/`
+on the staging domain answers 200 (DECISIONS 2026-10-09, staging). A `site/**` push on `next`
+now deploys there. `/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's
+morning list. His rulings in this seat stand: no subagents, the seat does the work itself; every
+bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
 THE EXACT NEXT STEP is bite S-07 (PLAN 4.2): `check` reads the directives in static sources
 and the slot names in framework views where it already reads `mount`, and reports a name with
@@ -27,8 +30,9 @@ parent's children need linked; the agent surface renders and composes through co
 transport and places a child in a view. Then S-08 (conformance) and S-09 (DESIGN, the guides,
 the studies deleted). S-01 to S-06 are done.
 
-HOW A BITE IS PROVED. Pushes: only `next`, no `site/**`, one per landed bite, each run read to
-its end. Each mutation is run alone, by a harness that puts the file back from its own bytes
+HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
+push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
+read too. Each mutation is run alone, by a harness that puts the file back from its own bytes
 and compares the hash of every changed file before and after; a run with no failed spec is
 invalid, not red. The browser proof runs here: give the suite the estate's sealed launcher as
 `ASSEMBLEJS_CHROMIUM`, one worker, in the background, `TMPDIR` left alone (DECISIONS
@@ -422,8 +426,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
   - [ ] S-08 conformance: the `nested` fixture and the two-server nested spec
   - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted. Still saying `children`
         after S-06: DESIGN 7, 8 and 11's rules line, and `site/docs/` templates, react, preact,
-        vue, solid, svelte and lit. The guides are `site/**`: committed, never pushed, until
-        the deploy role is fixed
+        vue, solid, svelte and lit. The guides are `site/**`: pushing them deploys to
+        `/assemblejs/next/`, which the role allows since 2026-10-09
 - [ ] The content endpoint's render ends when its request closes: `registerAssemblies` gives
       `renderLocal` no signal today, so a server keeps composing children after the server that
       asked has given up (DECISIONS 2026-10-09, S-02 named the signal; the endpoint is the one
