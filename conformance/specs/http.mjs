@@ -19,27 +19,31 @@ export const originOf = (name) => {
 };
 
 /**
- * Whether the server logged a failure against this correlation id (DESIGN 12), read from what
- * it wrote, waiting a moment for a line still on its way to the file.
+ * What the server logged against this correlation id (DESIGN 12), read from what it wrote,
+ * waiting a moment for a line still on its way to the file: the line's message, or undefined
+ * where it logged nothing against that id.
  */
-export const logged = async (correlationId, name) => {
+export const saidOf = async (correlationId, name) => {
   const file =
     process.env[name === undefined ? "CONFORMANCE_LOG" : `CONFORMANCE_LOG_${name.toUpperCase()}`];
   if (file === undefined) throw new Error("no server log in this run");
   for (let attempt = 0; attempt < 20; attempt += 1) {
-    const lines = readFileSync(file, "utf8").split("\n");
-    const found = lines.some((line) => {
+    for (const line of readFileSync(file, "utf8").split("\n")) {
       try {
-        return JSON.parse(line).correlationId === correlationId;
+        const written = JSON.parse(line);
+        if (written.correlationId === correlationId) return String(written.message);
       } catch {
-        return false;
+        // A line that is not one of the server's own is not the one looked for.
       }
-    });
-    if (found) return true;
+    }
     await sleep(100);
   }
-  return false;
+  return undefined;
 };
+
+/** Whether the server logged a failure against this correlation id. */
+export const logged = async (correlationId, name) =>
+  (await saidOf(correlationId, name)) !== undefined;
 
 /**
  * A project's root, by its name, where the command line it installed runs and its build is; the

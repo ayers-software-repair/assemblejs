@@ -27,6 +27,10 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
 
   const limits = options.limits ?? DEFAULT_LIMITS;
   const placements = findPlacements(options.template);
+  // Each placement takes its number as it is reached below, in the order the template writes
+  // them: from the request's count when this composition was handed one, from one otherwise.
+  let placed = 0;
+  const count = options.count ?? (() => (placed += 1));
   const query = options.query ?? new URLSearchParams();
   const params = options.params ?? {};
   const headers = options.headers ?? {};
@@ -56,6 +60,8 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
         page: options.page,
         depth: options.depth ?? 0,
         path: options.path ?? [],
+        ordinal: count(),
+        count,
         query,
         params,
         headers,

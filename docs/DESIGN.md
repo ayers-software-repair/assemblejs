@@ -193,7 +193,17 @@ type AssemblyResponse =
   | { ok: true; html: string; source: "local" | "remote" | "cache"; version?: string }
   | { ok: false; reason: Reason; detail: string; correlationId: string };
 
-type Reason = "timeout" | "status" | "transport" | "content-type" | "too-large" | "invalid";
+type Reason =
+  | "timeout"
+  | "status"
+  | "transport"
+  | "content-type"
+  | "too-large"
+  | "invalid"
+  // Refused by the parent before it dispatches, and never a transport's to report (3.4).
+  | "depth"
+  | "cycle"
+  | "too-many";
 
 type Fetch = (req: AssemblyRequest) => Promise<AssemblyResponse>;
 ```
@@ -269,7 +279,7 @@ them finishes or times out, never later, and never fails because one of them did
 - Placements resolve concurrently under `allSettled` semantics, and the output order is the
   template's order regardless of which finished first.
 
-### 3.4 Depth and cycles, checked before dispatch
+### 3.4 Depth, cycles and how many, checked before dispatch
 
 `assembly-depth` increments per hop; `assembly-path` carries the ancestors' identities, each
 `name/view`: an instance's id is new on every render, so only what it is can recur. Both are checked
@@ -287,9 +297,31 @@ no policy of its own, so it takes the default deadline, falls back to nothing, i
 required, deferred or cached alone, and a failure beneath a parent keeps that parent's answer
 out of the cache.
 
-A page cannot be made to recurse by any request an outsider can send, and a self-referencing
-assembly is a diagnostic at the first hop rather than a hang, a socket exhaustion or a stack
-overflow. Where a view's source says what it places, the loop is not even a request: a view
+One request composes no more than `limits.placements` placements, 256, at every depth
+together: a page's own and those of every view composed for it in this process. Each is
+numbered where its template is composed, in the order written, and one numbered past the
+limit is refused before dispatch like one too deep: its fallback and a diagnostic,
+`too-many`, and nothing is rendered for it. The number was chosen from a measure, ten times
+the 24 that the largest page of the examples and the conformance fixtures places, and no
+project can move it yet: that waits on the same question as the depth cap.
+
+What is counted is what this request composes. A placement answered from the cache is one,
+whatever that answer holds: its children were composed by the request that filled the cache,
+so a page can hold more envelopes than the limit and have composed no more. At an assembly's
+own address the assembly asked for is not counted, only what its view places. A deferred
+placement is counted and never refused, since nothing is rendered for it now; the request
+the browser later fills it with has a count of its own, and so has a request to another
+server. And refused is not free: each directive past the limit still takes an id, an empty
+failed envelope, a diagnostic and a line in the log (section 12), one of each for every
+directive a template writes.
+
+Past the limit, which placements are refused is the order their templates were composed in:
+the order written within one, and across views rendering at once the order they finished, so
+it may differ between two runs of one request. How many are composed does not.
+
+A page cannot be made to recurse by any request an outsider can send, nor to render without
+end, and a self-referencing assembly is a diagnostic at the first hop rather than a hang, a
+socket exhaustion or a stack overflow. Where a view's source says what it places, the loop is not even a request: a view
 that places itself, or leads back to itself, is refused at boot (section 7). That holds where
 each hop's view is written. A placement whose view is computed is held at boot for its name
 alone and is not followed, so a loop through one is a request, refused at its render.
@@ -536,14 +568,15 @@ export type MountHandle = { unmount(): void };
   reads what a view rendered, and nothing there tells a directive the author wrote from one a
   value wrote. A value written escaped is text and places nothing. One written with the
   engine's raw form places what it names: any assembly this server holds, with any view it has,
-  as often as it is written, given the query and the parameters the page was asked with, and
-  with no credentials asked for it, since the one decision was made of the address that was
-  asked (5.2). A directive the finder refuses, written the same way, fails the view whole. What
-  bounds it is what bounds every placement a view makes: this server's assemblies and no other
-  server's, the depth cap, and no assembly its own ancestor (3.4). So a value that came from a
-  visitor, or from anyone who may not write the view itself, is written escaped. Nothing
-  refuses the other: `check` reads a view's source for the names it writes and not for the
-  values it writes raw, and neither boot nor a render can tell them apart.
+  as often as it is written up to how many one request may place, given the query and the
+  parameters the page was asked with, and with no credentials asked for it, since the one
+  decision was made of the address that was asked (5.2). A directive the finder refuses,
+  written the same way, fails the view whole. What bounds it is what bounds every placement a
+  view makes: this server's assemblies and no other server's, the depth cap, no assembly its
+  own ancestor, and how many one request places (3.4). So a value that came from a visitor,
+  or from anyone who may not write the view itself, is written escaped. Nothing refuses the
+  other: `check` reads a view's source for the names it writes and not for the values it
+  writes raw, and neither boot nor a render can tell them apart.
 - **A Lit view holds a Lit assembly only behind a shadow root.** Lit hydrates a view by reading
   every marker in its tree, and would read a Lit child's as the parent's. A shadow root hides
   them; without one the parent refuses to mount, by name, and `check` says so before a browser

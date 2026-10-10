@@ -28,6 +28,12 @@ export interface ComposeOptions {
    * is dispatched, and a transport already called hears it through the signal it was given.
    */
   readonly signal?: AbortSignal;
+  /**
+   * Numbers each placement of the request this composition belongs to, from one. The same
+   * function is handed on to whatever each placement composes in this process, so the number
+   * is the request's and not one template's. Without it this composition starts the count.
+   */
+  readonly count?: () => number;
   readonly query?: URLSearchParams;
   /** The page's route parameters, `{ id: "42" }` for `/products/:id`, handed to every placement. */
   readonly params?: Readonly<Record<string, string>>;

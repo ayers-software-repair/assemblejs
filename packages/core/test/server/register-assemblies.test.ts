@@ -55,7 +55,7 @@ beforeAll(async () => {
     ["broken", broken],
     ["shell", shell],
   ]);
-  const limits = { depth: 3, maxBytes: 1024 * 1024 };
+  const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
   const log = (line: LogLine): void => void logged.push(line);
   const local = localFetch(assemblies, log, limits);
   registerAssemblies(app, { assemblies, version: "v7", limits, local, log });

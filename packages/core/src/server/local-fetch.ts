@@ -47,6 +47,7 @@ export function localFetch(
         assemblies,
         limits,
         signal: request.signal,
+        ...(request.count === undefined ? {} : { count: request.count }),
         newId: randomUUID,
         now: () => performance.now(),
       });

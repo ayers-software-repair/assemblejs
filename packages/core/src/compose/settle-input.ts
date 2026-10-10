@@ -16,6 +16,10 @@ export interface SettleInput {
   readonly page: string;
   readonly depth: number;
   readonly path: readonly string[];
+  /** This placement's number among every placement of its request, the first being one. */
+  readonly ordinal: number;
+  /** What numbers the request's placements, handed on to what this one composes in this process. */
+  readonly count: () => number;
   readonly query: URLSearchParams;
   readonly params: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;

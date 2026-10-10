@@ -12,6 +12,9 @@ describe("the failure reasons", () => {
       "content-type",
       "too-large",
       "invalid",
+      "depth",
+      "cycle",
+      "too-many",
     ];
     // Each is a failure and none of them is ever rendered as content.
     expect(new Set(every).size).toBe(every.length);

@@ -82,6 +82,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     query: input.query,
     params: input.params,
     headers: input.headers,
+    count: input.count,
     // Its own deadline, and the request the composition belongs to: either one ends it.
     signal:
       input.signal === undefined

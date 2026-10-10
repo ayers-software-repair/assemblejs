@@ -3830,3 +3830,62 @@ read, the fixture's server would not start. With that and one page's deferral re
 started, which is what says the deferral was what boot refused, and three specs went red: the
 deferral, the stylesheet linked ahead, and the Pug view that places itself. With an assembly
 let be its own ancestor, the loop's spec and the composition headers' went red.
+
+## 2026-10-10: how many assemblies one request places
+
+Found while reading for the fault of a value written raw, and rowed as 4b: the composer
+settled every directive a template held, all at once, and its limits were depth and the size
+of one answer. The lead ordered a limit as a plain guard, since it changes no promise about
+access and so waits on nobody: beside depth and bytes in the same definition, refused the way
+a loop is refused, its number chosen from a measure, and no setting for it.
+
+Measured: every page of every example and of every project of every conformance fixture was
+built, served and asked, and every envelope in its answer counted, nested and failed ones
+among them. Forty-four pages. The most is 24, the rendering fixture's page of twelve parents
+each holding a child; the next two place 13. Three pages whose routes take a parameter were
+not asked, and by their templates place 2, 1 and 1. One example has no page.
+
+Settled:
+
+- **`limits.placements`, 256.** Ten times the most measured, which leaves a page of a hundred
+  assemblies, each holding one of its own, room to stand. The server has no setting for it,
+  and where a project would set one waits on the same question as the depth cap (the
+  estate's morning list, item 6).
+- **What counts** is every placement a request's templates write, at every depth composed in
+  this process, the refused among them. Each takes its number where its template is composed,
+  in the order written.
+- **One past the limit is refused before dispatch**, as one too deep is: its fallback, a
+  diagnostic and a log line with the reason `too-many`, and nothing rendered for it. Depth and
+  a cycle are said first, and an abort last.
+- **A deferred placement counts and is never refused**: nothing is rendered for it now. The
+  request the browser later fills it with has a count of its own, and so has a request to
+  another server. Each server bounds its own work.
+- **What is counted is what the request composes.** A placement answered from the cache is
+  one, whatever the answer holds, and at an assembly's own address the assembly asked for is
+  not counted. So a page can hold more envelopes than the limit. The reviewer consulted
+  before the push found the design saying "places" where the code bounds what is composed.
+- **Refused is not free**, found by the same reviewer: each directive past the limit still
+  takes an id, a failed envelope, a diagnostic and a log line. The design says so, and
+  bounding it is rowed as 4c for the lead, since it touches what DESIGN 12 promises of a
+  failed envelope's id.
+- **The count is a function handed down with the request**, as its clock and its source of
+  ids are, so the composer still owns no state.
+- **Which placements are refused, past the limit, is not promised across templates composed
+  at once.** Siblings render at once, and each numbers its children when its own markup is
+  ready, so the order is the order they finished. Making it the order written would make
+  every view's children wait on every view before it, on every page, for the sake of a
+  request already past its limit. Within one template it is the order written, and how many
+  are placed never varies. The lead accepted this on a condition for the specs, which they
+  keep: they hold that the number placed never passes the limit, that a refused placement
+  carries the reason, that nothing past the limit is rendered and that under the limit
+  nothing changes, and none names which placements were refused across views.
+- **`too-many` joins the design's list of reasons with `depth` and `cycle`**, which the second
+  reading's finding 7 had found missing from it.
+
+Also in this change, by the lead's word on the last: the directive that is refused and the
+one left to its render are pinned side by side in one spec
+(`cli/test/check/view-findings.test.ts`).
+
+Proof: eleven unit mutations, each alone, each red. Two around the rendering fixture: with
+the count never asked, the spec of what is past the limit and the spec of a page's views
+together went red; with the count not handed to what a view composes, the second alone did.

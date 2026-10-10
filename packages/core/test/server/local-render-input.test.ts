@@ -14,7 +14,7 @@ describe("what one local render is given", () => {
       params: { sku: "a1" },
       fetch: async () => ({ ok: true, html: "", source: "local" }),
       assemblies: new Map(),
-      limits: { depth: 8, maxBytes: 1024 },
+      limits: { depth: 8, maxBytes: 1024, placements: 64 },
       newId: () => "fixed",
       now: () => 0,
     };

@@ -9,7 +9,7 @@ import type {
   LocalRenderInput,
 } from "@assemblejs/core";
 
-const limits = { depth: 3, maxBytes: 1024 * 1024 };
+const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
 let minted = 0;
 const given = (over: Partial<LocalRenderInput> = {}): LocalRenderInput => ({
   id: "a7f3",

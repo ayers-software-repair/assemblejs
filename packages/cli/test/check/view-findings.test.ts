@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
-import { discoverAssemblies, viewFindings } from "@assemblejs/cli";
+import { discoverAssemblies, unreadPlacements, viewFindings } from "@assemblejs/cli";
 import { linkedProject } from "../fixtures/linked-project.js";
 import { templatedProject } from "../fixtures/templated-project.js";
 
@@ -63,33 +63,31 @@ describe("what every view in a project says it places", () => {
     ]);
   });
 
-  // Passed over, such a view passed check and failed whole at its first render.
-  it("reports a directive a template writes that does not read, in each language", () => {
+  // The pair, side by side. A directive that does not read as it is written fails at every
+  // render that reaches it, and is reported: passed over, its view passed check and a build.
+  // One that does not read only for what the template computes in it may read at every render,
+  // and is its render's to tell of: no finding, no record, and nothing refuses its build.
+  it("reports a directive written wrong in each language, and leaves one only a render can read", () => {
     const { placements, problems, unread } = templated({
       "open/open.ejs": '<assembly name="cart"><p><%= data.n %></p>',
       "torn/torn.hbs": '{{data.n}}<assembly name="cart" timeout="5"></assembly>',
+      "wide/wide.hbs": '<assembly name="cart" {{#if x}}view="wide"{{/if}}></assembly>',
       "worded/worded.pug": 'assembly(name="cart") words',
     });
     expect(problems.map((problem) => problem.rule)).toEqual(
       Array(3).fill("a-placement-names-an-assembly"),
     );
+    expect(problems.map((problem) => /^"(\w+)"/.exec(problem.message)?.[1])).toEqual([
+      "open",
+      "torn",
+      "worded",
+    ]);
     expect(problems[0]?.message).toContain(
       '"open" holds a placement that cannot be read: once what the template computes is set aside, <assembly> is neither',
     );
+    expect(unreadPlacements(problems)).toEqual(problems);
     expect([...unread].sort()).toEqual(["open", "torn", "worded"]);
     expect(placements.size).toBe(0);
-  });
-
-  // What the template computes may be what makes it read: that view is its render's to tell
-  // of, with no record and no finding.
-  it("passes over a directive that does not read for what the template computes in it", () => {
-    const { placements, problems, unread } = templated({
-      "wide/wide.hbs": '<assembly name="cart" {{#if x}}view="wide"{{/if}}></assembly>',
-      "cart/cart.html": "<p>cart</p>",
-    });
-    expect(problems).toEqual([]);
-    expect(placements.has("wide")).toBe(false);
-    expect(unread.size).toBe(0);
   });
 
   it("reports a directive that cannot be read, where it is written", () => {

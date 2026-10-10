@@ -5,27 +5,29 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 07:07 EDT, after the second reading's third and fifth).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 07:36 EDT, after the limit on how many a request places).**
 
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: the second
-reading's third and fifth findings, every static view read for what it places. Beneath it, each
-pushed on 2026-10-10 with its runs read to their end, green, and each time the one its `ci` run
-was created at: `a8c882f`, 06:38 EDT, the fault of row 4a named KNOWN FAULT in the spec that
-holds it, with the memo for the owner (`ci` 38045580352, `release` 38045580288); `16d8b92`,
-06:18 EDT, the second reading's fourth finding, what a value written raw places (`ci`
-38044427017, `release` 38044427065, `deploy-site` 38044427043, and staging read: the two guides
-and both text files as the branch has them); `05fae8a`, 05:47 EDT, the second reading's first
-two findings (`ci` 38042647592, `release` 38042647595, `deploy-site` 38042647601, and staging
-read: the seven guides and both text files as the branch has them); `03a90fa`, 05:34 EDT,
-nothing outside a project's root is read (`ci` 38041855065, `release` 38041854943); `8fe15a6`,
-04:48 EDT, the project's whole shape and each assembly as resources (`ci` 38039133712,
-`release` 38039133595); `6a27a0c`, 04:06 EDT, the release notes (`ci` 38036708423, `release`
-38036708409, `deploy-site` 38036708372: the deploy ran the release-notes gate before it
-published, staging serves `/assemblejs/next/release-notes.html` as the branch has it, and the
-page was drawn in the sealed browser at a desk's width and a phone's). Beneath those: the API
-reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03,
-`9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`.
-Every package reads `1.0.0-next.0`; twenty-three changesets are pending. The owner's overnight
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: row 4b of the
+second reading, a limit on how many assemblies one request places. Beneath it, each pushed on
+2026-10-10 with its runs read to their end, green, and each time the one its `ci` run was
+created at: `3ba71b6`, 07:23 EDT, the second reading's third and fifth findings, every static
+view read for what it places (`ci` 38048248411, `release` 38048248498); `a8c882f`, 06:38 EDT,
+the fault of row 4a named KNOWN FAULT in the spec that holds it, with the memo for the owner
+(`ci` 38045580352, `release` 38045580288); `16d8b92`, 06:18 EDT, the second reading's fourth
+finding, what a value written raw places (`ci` 38044427017, `release` 38044427065,
+`deploy-site` 38044427043, and staging read: the two guides and both text files as the branch
+has them); `05fae8a`, 05:47 EDT, the second reading's first two findings (`ci` 38042647592,
+`release` 38042647595, `deploy-site` 38042647601, and staging read: the seven guides and both
+text files as the branch has them); `03a90fa`, 05:34 EDT, nothing outside a project's root is
+read (`ci` 38041855065, `release` 38041854943); `8fe15a6`, 04:48 EDT, the project's whole shape
+and each assembly as resources (`ci` 38039133712, `release` 38039133595); `6a27a0c`, 04:06 EDT,
+the release notes (`ci` 38036708423, `release` 38036708409, `deploy-site` 38036708372: the
+deploy ran the release-notes gate before it published, staging serves
+`/assemblejs/next/release-notes.html` as the branch has it, and the page was drawn in the
+sealed browser at a desk's width and a phone's). Beneath those: the API reference, `f1d217b`;
+A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03, `9ed39ef`; one copy
+of the code in three packages, `0c43610`; and A-01, `a7d3edc`.
+Every package reads `1.0.0-next.0`; twenty-four changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -47,13 +49,14 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    with the memo `docs/studies/placement-and-access.md`), and nothing for it is built into
    `next`. Its spec is titled KNOWN FAULT; the spec of the outcome waits red on the local
    branch `security/guarded-wherever-placed`, which the lead ruled stays local until the
-   owner has chosen. Its 3 and 5 are done, pushed with this block: `check` and a build read a
-   Pug view through the project's own Pug, a template's directive that does not read as it is
-   written is a finding and refuses a build, and a loop is said to be refused at boot only
-   where each hop's view is written. NEXT, ordered by the lead: 4b, a limit on how many
-   assemblies one request places, beside depth and bytes in the same definition, its number
-   chosen from a measure of what the examples' and fixtures' pages place, and no setting
-   for it. Then 7, 6, the rest of 8, 10 and 11.
+   owner has chosen. Its 3 and 5 are done (`3ba71b6`): `check` and a build read a Pug view
+   through the project's own Pug, a template's directive that does not read as it is written
+   is a finding and refuses a build, and a loop is said to be refused at boot only where each
+   hop's view is written. Its 4b is done, pushed with this block: one request places no more
+   than 256 assemblies at every depth together, the ones past that refused before dispatch
+   with the reason `too-many`, the number from a measure and no setting for it. NEXT, by
+   this seat's ranking: 7, the listings of DESIGN 3.1 and 3.2; then 6, the rest of 8, 10
+   and 11.
 3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
    pushed): its message says what is done and what is left. Bring it onto `next` after 2.
 4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
@@ -298,13 +301,24 @@ rowed or the owner's; the numbers are the report's.
       `conformance/specs/trust/raw.spec.mjs` holds the fault under the title KNOWN FAULT,
       through an EJS view and a Pug one, and the spec of the outcome nobody disputes waits
       red on the local branch `security/guarded-wherever-placed`
-- [ ] 4b. From 4: NOTHING COUNTS THE PLACEMENTS OF ONE REQUEST. The composer settles every
-      directive a template holds, all at once; its limits are depth and the size of one
-      answer (`core/src/compose/limits.ts`). A view that writes a visitor's value raw can be
-      made to render an assembly as often as the value names it. A limit is wanted whichever
-      way 4a is settled: what it counts (one template's directives, or a whole request's),
-      its default, and what the placements past it show. Measure first what one request can
-      be made to cost today
+- [x] 4b. From 4: NOTHING COUNTED THE PLACEMENTS OF ONE REQUEST. The composer settled every
+      directive a template held, all at once; its limits were depth and the size of one
+      answer. Ordered by the lead as a plain guard that waits on nobody. One request places
+      no more than `limits.placements` assemblies, 256, at every depth together, and one
+      numbered past that is refused before dispatch with a reason of its own, `too-many`. The
+      number is from a measure: 44 pages of the examples and the fixtures served and their
+      envelopes counted, the most being 24. No project can move it: that rides with where a
+      project sets the depth cap, the morning list's item 6. Past the limit, which placements
+      are refused across views composed at once is the order they finished rendering, and no
+      spec names it (DECISIONS 2026-10-10, "how many assemblies one request places")
+- [ ] 4c. From 4b: A REFUSED PLACEMENT IS NOT FREE. Each directive past the limit still takes
+      an id, an empty failed envelope in the answer, a diagnostic and a line in the log. A
+      stored value written raw that names ten thousand assemblies then writes ten thousand
+      log lines on every visit. Bounding that is a choice about DESIGN 12, which promises
+      that each failed envelope's id finds its line, so it is the lead's: one line a request
+      for every `too-many` refusal, carrying how many, with the envelopes sharing its id;
+      the directives past the limit cut from the answer, one mark standing for them; or
+      left as it is, a log's volume being its operator's. This seat's advice is the first
 - [x] 5. A loop is refused at boot only where every hop writes its view; a placement whose
       view is computed is held for its name alone and not followed, so such a loop is refused
       at render. DESIGN 3.4 said "at boot" of every loop, and says this now. The rendering
@@ -317,8 +331,8 @@ rowed or the owner's; the numbers are the report's.
       or make the six the same
 - [ ] 7. The listings in DESIGN 3.1 and 3.2 lack what nesting added and what came before it:
       `nested` on an answer, `children` on a diagnostic, the plan as a record by name with a
-      page, a depth, a path, a query and params, the reasons `depth` and `cycle`, and `params`
-      on a request
+      page, a depth, a path, a query and params, and `params` on a request. The reasons
+      `depth` and `cycle` are in the listing since row 4b added `too-many` beside them
 - [ ] 8. What the code does about a held assembly that the design does not say, each read by
       the reader and none judged: a parent whose markup holds a directive the finder cannot
       read fails whole; a parent's deadline ends its child too; the content endpoint hands

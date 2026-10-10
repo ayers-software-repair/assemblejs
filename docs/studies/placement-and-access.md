@@ -95,14 +95,15 @@ A decides who may be shown an assembly. B decides which assemblies a page may ho
 closes the fault alone. Together, a visitor cannot be shown a guarded assembly, and cannot
 fill an open page with open ones its author never put there.
 
-## Found beside it: nothing counts the placements
+## Found beside it, and closed since: nothing counted the placements
 
-A page places as many assemblies as its markup names, all at once. The limits are how deep
-(8) and how large one answer may be (2 MiB); nothing limits how many. A view that writes a
-visitor's text unescaped can be made to render an assembly as many times as that text names
-it, for one request. A leaves that as it is. B narrows it to the children the view already
-places. It has a row of its own (`docs/TODO.md`, the second reading, 4b), since a limit is
-wanted under any of the three.
+A page placed as many assemblies as its markup named, all at once. The limits were how deep
+(8) and how large one answer may be (2 MiB); nothing limited how many, so a view that writes
+a visitor's text unescaped could be made to render an assembly as many times as that text
+named it. The lead ordered a limit without waiting on the choice above, since it changes no
+promise about access: one request places no more than 256 assemblies, at every depth
+together, and the ones past that are refused before anything renders them (DESIGN 3.4). It
+holds under any of the three.
 
 ## Advice
 

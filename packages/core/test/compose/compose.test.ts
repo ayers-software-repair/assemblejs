@@ -265,7 +265,7 @@ describe("the size cap", () => {
       options({
         template: `<main><assembly name="a"/></main>`,
         fetch: byName({ a: `<p>${"x".repeat(100)}</p>` }),
-        limits: { depth: 8, maxBytes: 50 },
+        limits: { depth: 8, maxBytes: 50, placements: 64 },
       }),
     );
     expect(diagnostics[0]).toMatchObject({ source: "fallback", reason: "too-large" });

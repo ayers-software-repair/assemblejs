@@ -47,6 +47,7 @@ export async function renderLocal(
     query: input.query,
     params: input.params,
     ...(input.signal === undefined ? {} : { signal: input.signal }),
+    ...(input.count === undefined ? {} : { count: input.count }),
     newId: input.newId,
     now: input.now,
   });

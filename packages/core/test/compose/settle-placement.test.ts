@@ -20,10 +20,12 @@ const input = (over: Partial<SettleInput> = {}): SettleInput => ({
   plan: undefined,
   fetch: answering("<p>cart</p>"),
   cache: undefined,
-  limits: { depth: 8, maxBytes: 1024 },
+  limits: { depth: 8, maxBytes: 1024, placements: 64 },
   page: "p1",
   depth: 0,
   path: [],
+  ordinal: 1,
+  count: () => 1,
   query: new URLSearchParams(),
   params: {},
   headers: {},
@@ -54,6 +56,8 @@ describe("settling one placement", () => {
     let reached = false;
     const settled = await settlePlacement(
       input({
+        // Past how many a request may place, too: nothing is rendered for it now to refuse.
+        ordinal: 65,
         plan: { name: "cart", view: "default", deadline: 3000, defer: true },
         fetch: async () => {
           reached = true;
@@ -143,7 +147,7 @@ describe("settling one placement", () => {
     const settled = await settlePlacement(
       input({
         depth: 8,
-        limits: { depth: 8, maxBytes: 1024 },
+        limits: { depth: 8, maxBytes: 1024, placements: 64 },
         fetch: async () => {
           dispatched = true;
           return { ok: true, html: "x", source: "local" };

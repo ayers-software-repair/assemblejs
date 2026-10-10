@@ -24,4 +24,10 @@ export interface AssemblyRequest {
   readonly params: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;
   readonly signal: AbortSignal;
+  /**
+   * What numbers the placements of the request this one belongs to, for a transport that
+   * renders in this process to hand on: the children are then counted with their parent's
+   * request. Never sent to another server, whose own request has a count of its own.
+   */
+  readonly count?: () => number;
 }

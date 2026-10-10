@@ -3,13 +3,14 @@
 import { describe, expect, it } from "vitest";
 import { refuseBeforeDispatch } from "@assemblejs/core";
 
-const at = (depth: number, path: readonly string[] = [], signal?: AbortSignal) => ({
+const at = (depth: number, path: readonly string[] = [], signal?: AbortSignal, ordinal = 1) => ({
   name: "cart",
   view: "default",
   depth,
   path,
-  limits: { depth: 3, maxBytes: 1024 },
+  limits: { depth: 3, maxBytes: 1024, placements: 2 },
   signal,
+  ordinal,
 });
 
 describe("what a parent refuses before it dispatches", () => {
@@ -29,6 +30,17 @@ describe("what a parent refuses before it dispatches", () => {
     expect(refuseBeforeDispatch(at(1, ["shell/default", "cart/default"]))).toBe("cycle");
     // Another view of the same assembly is another identity, so it is not a cycle.
     expect(refuseBeforeDispatch(at(1, ["cart/compact"]))).toBeUndefined();
+  });
+
+  it("refuses a placement numbered past how many one request may place, and none before", () => {
+    expect(refuseBeforeDispatch(at(0, [], undefined, 2))).toBeUndefined();
+    expect(refuseBeforeDispatch(at(0, [], undefined, 3))).toBe("too-many");
+    // What it is comes before how many came before it, and an abort comes last.
+    expect(refuseBeforeDispatch(at(3, [], undefined, 3))).toBe("depth");
+    expect(refuseBeforeDispatch(at(1, ["cart/default"], undefined, 3))).toBe("cycle");
+    const request = new AbortController();
+    request.abort();
+    expect(refuseBeforeDispatch(at(0, [], request.signal, 3))).toBe("too-many");
   });
 
   it("refuses once the request the composition belongs to has been aborted", () => {

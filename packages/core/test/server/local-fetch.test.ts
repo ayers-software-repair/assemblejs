@@ -20,7 +20,7 @@ const broken = defineAssembly({
   },
 });
 
-const limits = { depth: 3, maxBytes: 1024 * 1024 };
+const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
 const request = (name: string, view = "default"): AssemblyRequest => ({
   name,
   view,
@@ -121,5 +121,102 @@ describe("the composer's local transport", () => {
     expect(answer.ok && answer.html.match(/<assembly-root/g)).toHaveLength(3);
     const childless = await own(request("hello"));
     expect(childless.ok && "nested" in childless).toBe(false);
+  });
+});
+
+describe("how many assemblies one request places", () => {
+  // A shelf holds as many items as it is asked for, and each item holds a leaf of its own.
+  const shelved = () => {
+    const renders = { item: 0, leaf: 0 };
+    const leaf = defineAssembly({
+      name: "leaf",
+      views: {
+        default: { renderer: "html", markup: () => `<i>${String((renders.leaf += 1))}</i>` },
+      },
+    });
+    const item = defineAssembly({
+      name: "item",
+      views: {
+        default: {
+          renderer: "html",
+          markup: () => `<b>${String((renders.item += 1))}</b><assembly name="leaf"></assembly>`,
+        },
+      },
+    });
+    const shelf = defineAssembly({
+      name: "shelf",
+      views: {
+        default: {
+          renderer: "html",
+          data: ({ query }) => ({ items: Number(query.get("items")) }),
+          markup: ({ data }) => '<assembly name="item"></assembly>'.repeat(Number(data["items"])),
+        },
+      },
+    });
+    const fetch = localFetch(
+      new Map([leaf, item, shelf].map((one) => [one.name, one])),
+      () => undefined,
+      { depth: 8, maxBytes: 1024 * 1024, placements: 6 },
+    );
+    const asked = async (items: number, over: Partial<AssemblyRequest> = {}) => {
+      const answer = await fetch({
+        ...request("shelf"),
+        query: new URLSearchParams({ items: String(items) }),
+        ...over,
+      });
+      if (!answer.ok) throw new Error(answer.detail);
+      const refused: string[] = [];
+      const walk = (diagnostics: typeof answer.nested): void => {
+        for (const one of diagnostics ?? []) {
+          if (one.reason !== undefined) refused.push(one.reason);
+          walk(one.children);
+        }
+      };
+      walk(answer.nested);
+      return { html: answer.html, refused };
+    };
+    return { renders, asked };
+  };
+
+  it("places every one while the request is under the limit", async () => {
+    const { renders, asked } = shelved();
+    expect((await asked(3)).refused).toEqual([]);
+    expect(renders).toEqual({ item: 3, leaf: 3 });
+  });
+
+  it("never places more than the limit at every depth together, and renders none past it", async () => {
+    const { renders, asked } = shelved();
+    const { refused } = await asked(5);
+    // Five items and their five leaves are ten: six are placed and rendered, four refused.
+    expect(renders.item + renders.leaf).toBe(6);
+    expect(refused).toEqual(Array(4).fill("too-many"));
+  });
+
+  it("refuses the ones past it in one template in the order they are written", async () => {
+    const { renders, asked } = shelved();
+    const { html, refused } = await asked(8);
+    expect(renders).toEqual({ item: 6, leaf: 0 });
+    expect(refused).toHaveLength(8);
+    const items = [...html.matchAll(/<assembly-root data-name="item"[^>]*>/g)].map((tag) =>
+      tag[0].includes("data-failed"),
+    );
+    expect(items).toEqual([false, false, false, false, false, false, true, true]);
+  });
+
+  it("numbers a request's placements from the count the request was handed", async () => {
+    const { renders, asked } = shelved();
+    let placed = 4;
+    const { refused } = await asked(3, { count: () => (placed += 1) });
+    // Numbered five, six and seven: two items are placed, and nothing after them is.
+    expect(renders).toEqual({ item: 2, leaf: 0 });
+    expect(refused).toHaveLength(3);
+    expect(placed).toBe(9);
+  });
+
+  it("starts each request's count afresh", async () => {
+    const { renders, asked } = shelved();
+    await asked(8);
+    expect((await asked(3)).refused).toEqual([]);
+    expect(renders).toEqual({ item: 9, leaf: 3 });
   });
 });
