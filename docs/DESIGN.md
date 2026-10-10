@@ -183,17 +183,25 @@ type AssemblyRequest = {
   id: string;
   page: string;
   depth: number;
-  path: readonly string[];
+  path: readonly string[]; // its ancestors, each `name/view`, innermost last
   query: URLSearchParams;
+  params: Readonly<Record<string, string>>; // the page's route parameters
   headers: Readonly<Record<string, string>>;
   signal: AbortSignal;
+  count?: () => number; // numbers the request's placements, in this process only (3.4)
 };
 
 type AssemblyResponse =
-  | { ok: true; html: string; source: "local" | "remote" | "cache"; version?: string }
-  | { ok: false; reason: Reason; detail: string; correlationId: string };
+  | {
+      ok: true;
+      html: string;
+      source: "local" | "remote" | "cache";
+      version?: string;
+      nested?: readonly Diagnostic[]; // how each placement its own view made was answered
+    }
+  | { ok: false; reason: FailureReason; detail: string; correlationId: string };
 
-type Reason =
+type FailureReason =
   | "timeout"
   | "status"
   | "transport"
@@ -205,7 +213,7 @@ type Reason =
   | "cycle"
   | "too-many";
 
-type Fetch = (req: AssemblyRequest) => Promise<AssemblyResponse>;
+type Fetch = (request: AssemblyRequest) => Promise<AssemblyResponse>;
 ```
 
 A local assembly is rendered in process; a remote one is fetched over HTTP. **Both go through
@@ -220,46 +228,69 @@ that no `catch` can see.
 ### 3.2 The composer is pure
 
 ```ts
-compose(input: {
-  template: string
-  plan: readonly AssemblyPlan[]
-  fetch: Fetch
-  cache?: ContentCache
-  limits: Limits
-}): Promise<{ html: string; diagnostics: Diagnostic[] }>
+declare function compose(options: ComposeOptions): Promise<ComposeResult>;
+
+type ComposeOptions = {
+  template: string;
+  plan: Readonly<Record<string, AssemblyPlan>>; // by the name the template writes
+  fetch: Fetch;
+  cache?: ContentCache;
+  limits?: Limits;
+  page: string;
+  depth?: number; // a page is zero; an assembly composing its children is its own
+  path?: readonly string[];
+  signal?: AbortSignal;
+  count?: () => number;
+  query?: URLSearchParams;
+  params?: Readonly<Record<string, string>>;
+  headers?: Readonly<Record<string, string>>;
+  newId: () => string;
+  now: () => number;
+};
+
+type ComposeResult = { html: string; diagnostics: readonly Diagnostic[] };
+
+type Limits = { depth: number; maxBytes: number; placements: number };
 
 type AssemblyPlan = {
-  name: string
-  view: string
-  url?: string          // present means another server
-  deadline: number
-  fallback?: string
-  required?: boolean
-  defer?: boolean
-  cache?: { ttl: number }
-}
+  name: string;
+  view: string;
+  url?: string; // present means another server
+  deadline: number;
+  fallback?: string;
+  required?: boolean;
+  defer?: boolean;
+  cache?: { ttl: number };
+};
 
 type ContentCache = {
-  get(key: string): { html: string; version?: string } | undefined
-  set(key: string, value: { html: string; version?: string }, ttl: number): void
-}
+  get(key: string): { html: string; version?: string } | undefined;
+  set(key: string, value: { html: string; version?: string }, ttl: number): void;
+};
 
 type Diagnostic = {
-  name: string
-  id: string
-  source: "local" | "remote" | "cache" | "fallback"
-  reason?: Reason
-  correlationId?: string
-  ms: number
-}
+  name: string;
+  view: string;
+  id: string;
+  source: "local" | "remote" | "cache" | "fallback" | "deferred";
+  reason?: FailureReason;
+  correlationId?: string;
+  ms: number;
+  children?: readonly Diagnostic[]; // what the answering assembly's own view placed
+};
 ```
 
-No HTTP, no framework, no filesystem, no clock it does not own. Template and a fetch function
-in, HTML and a list of what happened out. It is fully testable before a server exists, and the
+Every type this document lists in a `ts` code block is the source's, `readonly` and comments
+apart, and `pnpm check` holds each to that (`scripts/check-design-listings.mjs`).
+
+No HTTP, no framework, no filesystem, and no clock, source of ids or count it does not own.
+Template and a fetch function in, HTML and an account of what happened out, a tree where a
+placement's own view placed more. It is fully testable before a server exists, and the
 server is a thin wrapper that supplies a real `fetch`.
 
 The composer owns the fallback ladder, so `source` on a diagnostic always says which rung
-answered. `fetch` reports only what the transport did.
+answered, or `deferred` for a placement this render never reached. `fetch` reports only what
+the transport did.
 
 ### 3.3 Failure is isolated, always
 
@@ -525,7 +556,7 @@ export type RenderInput = {
 
 // @assemblejs/renderer-x/client     browser
 export interface ClientRenderer {
-  mount(el: Element, data: JsonObject, ctx: MountContext): MountHandle;
+  mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext): MountHandle;
 }
 export type MountHandle = { unmount(): void };
 ```

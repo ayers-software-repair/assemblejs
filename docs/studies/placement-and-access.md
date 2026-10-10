@@ -101,7 +101,7 @@ A page placed as many assemblies as its markup named, all at once. The limits we
 (8) and how large one answer may be (2 MiB); nothing limited how many, so a view that writes
 a visitor's text unescaped could be made to render an assembly as many times as that text
 named it. The lead ordered a limit without waiting on the choice above, since it changes no
-promise about access: one request places no more than 256 assemblies, at every depth
+promise about access: one request composes no more than 256 placements, at every depth
 together, and the ones past that are refused before anything renders them (DESIGN 3.4). It
 holds under any of the three.
 

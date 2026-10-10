@@ -3889,3 +3889,36 @@ one left to its render are pinned side by side in one spec
 Proof: eleven unit mutations, each alone, each red. Two around the rendering fixture: with
 the count never asked, the spec of what is past the limit and the spec of a page's views
 together went red; with the count not handed to what a view composes, the second alone did.
+
+## 2026-10-10: the design's listings are held to the source
+
+The second reading's seventh finding: the listings in DESIGN 3.1 and 3.2 lacked `nested` on
+an answer, `children` on a diagnostic, the plan as a record by name, the page, depth, path,
+query and params the composer takes, two of the reasons, and `params` on a request. Each had
+been true once. Nothing read them, so each fell behind as the code moved.
+
+Settled, on the reviewer's advice to choose the method before editing:
+
+- **A gate, not a note.** `scripts/check-design-listings.mjs`, run by `pnpm check` as
+  `check:design`. Every type, interface and function `docs/DESIGN.md` declares in a `ts` code
+  block is held to the declaration of that name in the source, found in the file the
+  organization rules give it: the same members under the same names, each optional where the
+  source's is and of the same type; the same members of a union; the same parameters and
+  result of a function. `readonly`, comments and layout are the listing's to leave out. A
+  name no source declares is a problem, so a listing cannot rename what it lists.
+- **The listings are rewritten as the source has them.** `Reason` is `FailureReason`, its real
+  name. The composer's signature is a declaration and its options a type, where it had been a
+  sketch no parser reads. `Limits` is listed.
+- **Found by the gate on its first run**, beyond what the reader had: a diagnostic's `view` and
+  its `deferred` source, the name of a transport's parameter, and that a client renderer
+  mounts into `Element | ShadowRoot`, where section 7 said `Element`.
+
+Its self-test refuses eight ways of being out of step, each by name: a member the listing
+lacks, one the source lacks, one required where the source's is optional, one of another
+type, a method with other parameters, a union that lacks a member, a function with another
+result, and a name no source declares; and passes a listing in step.
+
+Corrected with it: the changeset, the ledger and the memo said one request "places" no more
+than 256 assemblies, where the limit bounds what a request composes; a cached answer counts
+as one whatever it holds. The design had been corrected before the last push and these had
+not.
