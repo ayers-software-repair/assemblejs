@@ -66,7 +66,9 @@ export async function createServer(options: ServerOptions): Promise<App> {
   if (problems.length > 0) throw new BootError(problems);
 
   const version = options.version ?? "dev";
-  const maxDepth = options.maxDepth ?? 8;
+  // One cap for the whole server: what refuses a request on arrival is what its own composer
+  // refuses before it dispatches, for a page's placements and for a view's children alike.
+  const limits = { ...DEFAULT_LIMITS, depth: options.maxDepth ?? DEFAULT_LIMITS.depth };
   const byName = new Map(options.assemblies.map((assembly) => [assembly.name, assembly]));
 
   const development = config.mode === "development";
@@ -105,15 +107,19 @@ export async function createServer(options: ServerOptions): Promise<App> {
 
   app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));
 
-  registerAssemblies(app, { assemblies: byName, version, maxDepth, log });
+  // One transport for this server's own assemblies: a page's placements, a view's children and
+  // the content endpoint's all reach an assembly through it.
+  const local = localFetch(byName, log, limits);
+  registerAssemblies(app, { assemblies: byName, version, limits, local, log });
   registerApis(app, apis);
   registerStreams(app, apis, log);
   registerAssets(app, files);
   registerPages(app, {
     pages,
     assemblies: byName,
-    local: localFetch(byName, log),
-    remote: createRemoteTransport({ remotes, maxBytes: DEFAULT_LIMITS.maxBytes, log }),
+    local,
+    limits,
+    remote: createRemoteTransport({ remotes, maxBytes: limits.maxBytes, log }),
     remotes,
     cache: createMemoryCache(),
     log,

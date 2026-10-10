@@ -50,6 +50,7 @@ const byName = new Map([
   ["card", card],
 ]);
 const logged: LogLine[] = [];
+const silent = (): undefined => undefined;
 const app = Fastify({ logger: false });
 
 beforeAll(async () => {
@@ -87,12 +88,9 @@ beforeAll(async () => {
       },
     ],
     assemblies: byName,
-    local: localFetch(byName, () => undefined),
-    remote: createRemoteTransport({
-      remotes: [],
-      maxBytes: DEFAULT_LIMITS.maxBytes,
-      log: () => undefined,
-    }),
+    local: localFetch(byName, silent, DEFAULT_LIMITS),
+    limits: DEFAULT_LIMITS,
+    remote: createRemoteTransport({ remotes: [], maxBytes: DEFAULT_LIMITS.maxBytes, log: silent }),
     remotes: [],
     cache: createMemoryCache(),
     log: (line) => logged.push(line),

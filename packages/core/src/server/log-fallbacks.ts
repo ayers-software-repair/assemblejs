@@ -5,11 +5,13 @@ import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 
 /**
- * Logs every placement that was answered by something other than its own content.
+ * Logs every placement that was answered by something other than its own content, at any depth:
+ * a page's placements, and the children each of them placed.
  *
  * A placement that fell back still served a page, so nothing else would ever say it failed. Its
  * envelope carries the failure's id; the line logged here is what that id finds. `where` says
- * what was being composed, `on page "/cart"` for one.
+ * what was being composed, `on page "/cart"` for one, and a child's line also names each
+ * assembly it sits inside.
  */
 export function logFallbacks(
   diagnostics: readonly Diagnostic[],
@@ -17,11 +19,15 @@ export function logFallbacks(
   log: (line: LogLine) => void,
 ): void {
   for (const diagnostic of diagnostics) {
-    if (diagnostic.reason === undefined) continue;
-    log({
-      correlationId: diagnostic.correlationId ?? newCorrelationId(),
-      message: `assembly "${diagnostic.name}" ${where} was answered by the ${diagnostic.source} after ${diagnostic.reason}`,
-      stack: undefined,
-    });
+    if (diagnostic.reason !== undefined) {
+      log({
+        correlationId: diagnostic.correlationId ?? newCorrelationId(),
+        message: `assembly "${diagnostic.name}" ${where} was answered by the ${diagnostic.source} after ${diagnostic.reason}`,
+        stack: undefined,
+      });
+    }
+    if (diagnostic.children !== undefined) {
+      logFallbacks(diagnostic.children, `${where}, inside "${diagnostic.name}"`, log);
+    }
   }
 }

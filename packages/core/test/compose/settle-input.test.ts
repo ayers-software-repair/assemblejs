@@ -18,6 +18,7 @@ describe("what settling a placement needs", () => {
       query: new URLSearchParams(),
       params: {},
       headers: {},
+      signal: undefined,
       newId: () => "fixed",
       now: () => 0,
     };

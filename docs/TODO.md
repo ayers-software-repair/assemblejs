@@ -371,9 +371,14 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         finder, boot and the content url parser where three copies were; the finder skips
         `<script>`, `<style>`, `<textarea>` and `<title>` as it skips comments. Watched red with
         the anchors dropped (eight refusals passed) and the skip removed (2026-10-09)
-  - [ ] S-02 `renderLocal` composes the view's markup with the composition state, a `Fetch`,
-        the server's cap and a signal; nested diagnostics; one name placed once; the content
-        endpoint and `localFetch` share one `Fetch`
+  - [x] S-02 a view's children are composed: `renderLocal(assembly, view, input)` composes the
+        view's markup at the arrived depth with its own identity added to the path, and answers
+        `{ html, diagnostics }`; `localFetch` takes the server's limits and hands itself in;
+        the content endpoint (`registerAssemblies`) composes from the headers it arrived with
+        and logs nested fallbacks; one cap for arrival, the page's composer and every view's;
+        `Diagnostic.children`; a failed subtree is never cached; a `signal` through compose.
+        Self-verified (the owner's no-subagents ruling; DECISIONS 2026-10-09, S-02): each claim
+        watched red under a mutation aimed at it, restored by the inverse edit
   - [ ] S-03 hoisting over the diagnostic tree; a shadow parent links its children's sheets;
         the runtime counts static children
   - [ ] S-04 `findEnvelopes` walks shadow roots; `start` considers them; the fill sends depth 1
@@ -384,6 +389,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
   - [ ] S-07 `check` reads directives and `Slot` names; the agent surface places a child in a view
   - [ ] S-08 conformance: the `nested` fixture and the two-server nested spec
   - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted
+- [ ] Placement context: a child whose block content sits inside an open `<p>` (or any element
+      the parser closes on its own) is moved out of its envelope, and its parent's island with
+      it; silent today for a page's placements and for a view's. One check for both, where the
+      directive is read: static sources in `check` and at boot, rendered markup at render
+      (DECISIONS 2026-10-09, S-02; found while reading the fragment scanner, which is the
+      remote reader and is not the tool for it)
 - [ ] A-01 agent instructions in every new project: `new` writes `AGENTS.md` and the MCP
       registration, `check` holds them current; proved by an agent-shaped test from the tarballs
       (owner, 2026-10-09, PLAN 4.1)

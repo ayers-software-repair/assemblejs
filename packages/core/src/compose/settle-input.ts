@@ -19,6 +19,8 @@ export interface SettleInput {
   readonly query: URLSearchParams;
   readonly params: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;
+  /** The signal of the request the composition belongs to, when it belongs to one. */
+  readonly signal: AbortSignal | undefined;
   readonly newId: () => string;
   readonly now: () => number;
 }

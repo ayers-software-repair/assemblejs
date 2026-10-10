@@ -59,6 +59,7 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
         query,
         params,
         headers,
+        signal: options.signal,
         newId: options.newId,
         now: options.now,
       }),

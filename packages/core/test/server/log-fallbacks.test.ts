@@ -43,4 +43,21 @@ describe("logging the placements that fell back", () => {
     );
     expect(logged[0]?.correlationId).toMatch(/^[0-9a-f]{8}$/);
   });
+
+  it("walks into what each placement composed, and says which assembly a child sits inside", () => {
+    const logged: LogLine[] = [];
+    const shell: Diagnostic = {
+      ...answered,
+      name: "shell",
+      children: [
+        answered,
+        { ...fellBack, children: [{ ...fellBack, name: "price", reason: "cycle" }] },
+      ],
+    };
+    logFallbacks([shell], 'on page "/"', (line) => logged.push(line));
+    expect(logged.map((line) => line.message)).toEqual([
+      'assembly "cart" on page "/", inside "shell" was answered by the fallback after timeout',
+      'assembly "price" on page "/", inside "shell", inside "cart" was answered by the fallback after cycle',
+    ]);
+  });
 });

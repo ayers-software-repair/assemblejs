@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { defineAssembly, registerAssemblies } from "@assemblejs/core";
+import { defineAssembly, localFetch, registerAssemblies } from "@assemblejs/core";
 import type { LogLine } from "@assemblejs/core";
 
 const hello = defineAssembly({
@@ -28,22 +28,37 @@ const broken = defineAssembly({
     },
   },
 });
+// A parent: its view places hello, as a page would.
+const shell = defineAssembly({
+  name: "shell",
+  views: {
+    default: {
+      renderer: "html",
+      markup: () => '<section><assembly name="hello"></assembly></section>',
+    },
+  },
+});
 
 const logged: LogLine[] = [];
 const app = Fastify({ logger: false });
 const get = (url: string, headers: Record<string, string> = {}) =>
   app.inject({ method: "GET", url, headers });
+/** The id a failed envelope of this name carries, and what the log says against that id. */
+const failure = (body: string, name: string): string | undefined => {
+  const id = new RegExp(`data-name="${name}"[^>]* data-failed="([^"]+)"`).exec(body)?.[1];
+  return logged.find((line) => line.correlationId === id)?.message;
+};
 
 beforeAll(async () => {
-  registerAssemblies(app, {
-    assemblies: new Map([
-      ["hello", hello],
-      ["broken", broken],
-    ]),
-    version: "v7",
-    maxDepth: 3,
-    log: (line) => logged.push(line),
-  });
+  const assemblies = new Map([
+    ["hello", hello],
+    ["broken", broken],
+    ["shell", shell],
+  ]);
+  const limits = { depth: 3, maxBytes: 1024 * 1024 };
+  const log = (line: LogLine): void => void logged.push(line);
+  const local = localFetch(assemblies, log, limits);
+  registerAssemblies(app, { assemblies, version: "v7", limits, local, log });
   await app.ready();
 });
 afterAll(async () => {
@@ -95,5 +110,37 @@ describe("the assembly contract, mounted", () => {
     const id = /data-failed="([^"]+)"/.exec(response.body)?.[1];
     expect(response.body).not.toContain("hunter2");
     expect(logged.find((line) => line.correlationId === id)?.message).toContain("hunter2");
+  });
+});
+
+describe("an assembly whose view places a child, served", () => {
+  it("answers the parent with the child composed inside it, each in its own envelope", async () => {
+    const response = await get("/assembly/shell/?who=ada");
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toMatch(
+      /^<assembly-root data-name="shell"[^>]*><section><assembly-root data-name="hello"[^>]*><p>Hello, ada<\/p>/,
+    );
+    expect(response.body).not.toContain("data-failed");
+  });
+
+  // What a composer on another server sends: the headers hold the cycle across the hop.
+  it("refuses a child the arriving path already holds, inside a parent that still answers", async () => {
+    const response = await get("/assembly/shell/", { "assembly-path": "hello/default" });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).not.toContain("<p>Hello");
+    expect(failure(response.body, "hello")).toBe(
+      'assembly "hello" inside "shell" was answered by the fallback after cycle',
+    );
+  });
+
+  it("refuses every child of a request that arrived at the cap, as its own composer would", async () => {
+    const atCap = await get("/assembly/shell/", { "assembly-depth": "3" });
+    expect(atCap.statusCode).toBe(200);
+    expect(failure(atCap.body, "hello")).toBe(
+      'assembly "hello" inside "shell" was answered by the fallback after depth',
+    );
+    // One level short of it, the child is one deeper and still inside the cap.
+    const below = await get("/assembly/shell/", { "assembly-depth": "2" });
+    expect(below.body).toContain("<p>Hello, world</p>");
   });
 });

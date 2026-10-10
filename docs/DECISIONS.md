@@ -2412,3 +2412,68 @@ outlive the studies:
   checked at render.
 - Nine bites, S-01 to S-09, in PLAN 4.2 and the ledger; the studies are deleted at S-09 once
   DESIGN carries their result.
+
+## 2026-10-09: S-02, a view's children composed, and three things the plan had wrong
+
+Expected, from the entry above and PLAN 4.2: `renderLocal` composes the view's markup, refuses a
+name placed twice, and reads its own envelope with the fragment scanner when it placed a child;
+the new cases land in the tests of `create-server`, `register-pages` and `settle-placement`.
+
+Found, reading the code the plan rested on rather than the memos about it:
+
+- **A page places one name twice, so a view may.** The repository's own page test places `hello`
+  twice and expects two envelopes, and the owner's ruling says a view places a child "as a page
+  places one". The refusal came from reader-core, where `children` was a record with the name
+  as its key; under the mechanism chosen, a view reads no child by key, so nothing is left for
+  two placements of one name to collide on. Each directive is replaced by its own envelope with
+  its own id. No refusal is written. This supersedes "one placement per name per view" above.
+- **The fragment scanner is how another server's markup is read, and it is not run on this
+  server's own.** DESIGN 5 opens "the composer treats a remote assembly as a third party": the
+  scanner refuses what it cannot follow exactly, which is right for a stranger's markup and
+  wrong for an author's. Read in `scan-fragment.ts` and `start-tag-refusal.ts`, it refuses an
+  `iframe` or a `noscript`, and markup written with implied end tags (`<li>one<li>two`, an
+  unclosed `<p>`): valid HTML a template author writes, which would fail a view only once it
+  placed a child. Considered and not taken: keeping the scan and documenting its refusals. The
+  hazard it was meant to catch, a child whose block content sits inside an open `<p>` and so is
+  moved out of its envelope by the parser, is real, exists for a page's placements today
+  unchecked, and is neither new nor nested: it is a ledger row of its own, a placement-context
+  check for pages and views alike. This supersedes "a view that placed a child reads its own
+  envelope with the fragment scanner" above.
+- **A file's tests live in its mirror, and three mirrors were full.** Lint holds every file to
+  300 lines, tests included; the mirrors of `create-server`, `register-pages` and
+  `settle-placement` stood at 299, 300 and 293. So the behaviour landed where it has a test of its
+  own: `registerAssemblies` (the contract's three endpoints, out of `create-server`),
+  `logFallbacks`, `refuseBeforeDispatch` (a refactor commit first, every existing test untouched
+  and green), then `holdsFailedEnvelope`, with the cache's refusal inside `placementCache`, where
+  every other rule about what the cache may hold already is.
+
+Settled, as built:
+
+- `renderLocal(assembly, view, input)` renders the view once, composes its markup with no
+  policy, the arrived depth and the path extended by the assembly's own identity, and answers
+  `{ html, diagnostics }`. `LocalRenderInput` requires depth and path by type.
+- `localFetch(assemblies, log, limits)` hands itself to each render, carries the children's
+  account as `nested`, and passes the request's signal. `settlePlacement` hangs `nested` under
+  the diagnostic as `children`.
+- One cap: `maxDepth` is the depth of the limits the content endpoint reads headers against,
+  the page's composer and every view's composer. A server with `maxDepth: 2` refuses the third
+  level from its own composer; at zero the page's composer refuses the page's own placement.
+- The content endpoint composes from the headers it arrived with, so a parent on another server
+  holds the cap and the cycle across the hop; a nested fallback is logged by the server that
+  composed it (`assembly "hello" inside "shell" was answered by the fallback after cycle`).
+- A placement's answer holding a failed envelope is never written to the cache, decided from the
+  markup, which is what both transports hand back.
+- A composition takes a signal. A placement not yet dispatched when it aborts is refused as a
+  timeout, after the refusals the design makes, so a reason never depends on timing; a transport
+  already called hears it through `AbortSignal.any`, which Node documents as "a new AbortSignal
+  which will be aborted if any of the provided signals are aborted" (added in 20.3). A service
+  already running is not cancelled.
+- A malformed directive in a view's markup fails that view's render, on both transports alike.
+
+Watched red, each restored by the inverse edit: recorded with the commit.
+
+**Verification.** CLAUDE.md requires a separate agent to verify every rung and calls a
+self-verified rung unverified. The owner ruled in this seat on 2026-10-09, after that law was
+written, that the seat does the work itself with no sub tasks. This bite is therefore
+self-verified: its tests watched red under the mutations named in the commit, and the gates' own
+output. Whether a verifier is exempt from his ruling is his to say; it is on his morning list.

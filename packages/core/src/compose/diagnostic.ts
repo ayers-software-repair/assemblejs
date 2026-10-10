@@ -15,4 +15,10 @@ export interface Diagnostic {
   readonly reason?: FailureReason;
   readonly correlationId?: string;
   readonly ms: number;
+  /**
+   * How each placement the answering assembly's own view made was answered, so a page's account
+   * is a tree. Absent when it placed nothing, and for an assembly another server answered: that
+   * server's account of its children is in its own log.
+   */
+  readonly children?: readonly Diagnostic[];
 }

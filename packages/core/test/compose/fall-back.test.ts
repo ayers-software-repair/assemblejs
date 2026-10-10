@@ -30,6 +30,7 @@ const input = (plan: Partial<AssemblyPlan>, cache?: ContentCache): SettleInput =
   query: new URLSearchParams(),
   params: {},
   headers: {},
+  signal: undefined,
   newId: () => "id-2",
   now: () => 0,
 });

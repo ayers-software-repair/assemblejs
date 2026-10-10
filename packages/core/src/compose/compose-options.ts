@@ -21,8 +21,13 @@ export interface ComposeOptions {
   readonly page: string;
   /** How deep this page already is. A page is zero; an assembly composing children is its own. */
   readonly depth?: number;
-  /** Ancestor ids, innermost last. A target already on it is a cycle. */
+  /** Ancestor identities, each `name/view`, innermost last. A target already on it is a cycle. */
   readonly path?: readonly string[];
+  /**
+   * The signal of the request this composition belongs to. Once it aborts, no further placement
+   * is dispatched, and a transport already called hears it through the signal it was given.
+   */
+  readonly signal?: AbortSignal;
   readonly query?: URLSearchParams;
   /** The page's route parameters, `{ id: "42" }` for `/products/:id`, handed to every placement. */
   readonly params?: Readonly<Record<string, string>>;

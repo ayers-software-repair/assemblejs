@@ -3,12 +3,13 @@
 import { describe, expect, it } from "vitest";
 import { refuseBeforeDispatch } from "@assemblejs/core";
 
-const at = (depth: number, path: readonly string[] = []) => ({
+const at = (depth: number, path: readonly string[] = [], signal?: AbortSignal) => ({
   name: "cart",
   view: "default",
   depth,
   path,
   limits: { depth: 3, maxBytes: 1024 },
+  signal,
 });
 
 describe("what a parent refuses before it dispatches", () => {
@@ -28,5 +29,15 @@ describe("what a parent refuses before it dispatches", () => {
     expect(refuseBeforeDispatch(at(1, ["shell/default", "cart/default"]))).toBe("cycle");
     // Another view of the same assembly is another identity, so it is not a cycle.
     expect(refuseBeforeDispatch(at(1, ["cart/compact"]))).toBeUndefined();
+  });
+
+  it("refuses once the request the composition belongs to has been aborted", () => {
+    const request = new AbortController();
+    expect(refuseBeforeDispatch(at(0, [], request.signal))).toBeUndefined();
+    request.abort();
+    expect(refuseBeforeDispatch(at(0, [], request.signal))).toBe("timeout");
+    // What the design refuses is said first, so the reason never depends on timing.
+    expect(refuseBeforeDispatch(at(3, [], request.signal))).toBe("depth");
+    expect(refuseBeforeDispatch(at(1, ["cart/default"], request.signal))).toBe("cycle");
   });
 });

@@ -82,7 +82,11 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     query: input.query,
     params: input.params,
     headers: input.headers,
-    signal: controller.signal,
+    // Its own deadline, and the request the composition belongs to: either one ends it.
+    signal:
+      input.signal === undefined
+        ? controller.signal
+        : AbortSignal.any([input.signal, controller.signal]),
   };
 
   const answer = await race(call(input.fetch, request), deadline, controller);
@@ -94,7 +98,13 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
   }
   if (answer.ok) {
     cache.write(answer.html, answer.version);
-    return { html: answer.html, diagnostic: at(answer.source) };
+    const diagnostic = at(answer.source);
+    // What the assembly composed inside itself hangs under it, so the account is a tree.
+    return {
+      html: answer.html,
+      diagnostic:
+        answer.nested === undefined ? diagnostic : { ...diagnostic, children: answer.nested },
+    };
   }
   return fallBack(
     input,

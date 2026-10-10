@@ -25,5 +25,6 @@ export { readParams } from "./read-params.js";
 export { refuseBeforeDispatch } from "./refuse-before-dispatch.js";
 export { settlePlacement } from "./settle-placement.js";
 export { fallBack } from "./fall-back.js";
+export { holdsFailedEnvelope } from "./holds-failed-envelope.js";
 export { placementCache } from "./placement-cache.js";
 export { compose } from "./compose.js";

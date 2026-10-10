@@ -6,6 +6,7 @@ import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { compose } from "../compose/compose.js";
 import type { ContentCache } from "../compose/content-cache.js";
 import type { Fetch } from "../compose/fetch.js";
+import type { Limits } from "../compose/limits.js";
 import { RequiredFailure } from "../compose/required-failure.js";
 import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
@@ -38,6 +39,8 @@ export function registerPages(
     readonly pages: readonly PageDefinition[];
     readonly assemblies: ReadonlyMap<string, AssemblyDefinition>;
     readonly local: Fetch;
+    /** The server's bounds, the same its own assemblies' children are composed under. */
+    readonly limits: Limits;
     readonly remote: RemoteTransport;
     readonly remotes: readonly RemoteDefinition[];
     readonly cache: ContentCache;
@@ -73,6 +76,7 @@ export function registerPages(
           plan,
           fetch,
           cache: options.cache,
+          limits: options.limits,
           page: randomUUID(),
           query: queryOf(request.url),
           params: request.params,

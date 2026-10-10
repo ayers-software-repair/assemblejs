@@ -272,3 +272,27 @@ describe("the size cap", () => {
     expect(html).not.toContain("xxxx");
   });
 });
+
+describe("a composition that belongs to a request", () => {
+  it("hands each transport a signal the request's own reaches, and dispatches nothing once it aborted", async () => {
+    const request = new AbortController();
+    const seen: AbortSignal[] = [];
+    const fetch: Fetch = async (asked) => {
+      seen.push(asked.signal);
+      return { ok: true, html: "", source: "local" };
+    };
+    await compose(options({ fetch, signal: request.signal }));
+    request.abort();
+    expect(seen.map((signal) => signal.aborted)).toEqual([true, true]);
+    const late = await compose(options({ fetch, signal: request.signal }));
+    expect(seen).toHaveLength(2);
+    expect(late.diagnostics.map((d) => d.reason)).toEqual(["timeout", "timeout"]);
+  });
+
+  it("hangs what an answer composed inside itself under its diagnostic, as a tree", async () => {
+    const nested = [{ name: "x", view: "default", id: "n", source: "local" as const, ms: 0 }];
+    const fetch: Fetch = async () => ({ ok: true, html: "", source: "local", nested });
+    const { diagnostics } = await compose(options({ fetch }));
+    expect(diagnostics.map((d) => d.children)).toEqual([nested, nested]);
+  });
+});

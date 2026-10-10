@@ -33,6 +33,7 @@ const input = (
   query: new URLSearchParams(),
   params: {},
   headers,
+  signal: undefined,
   newId: () => "id",
   now: () => 0,
 });
@@ -59,6 +60,18 @@ describe("one placement's view of the server's cache", () => {
     expect(cache.store.size).toBe(0);
     placementCache(input(cache, plan)).write("<p>shared</p>", undefined);
     expect(placementCache(input(cache, plan, { cookie: "s=1" })).read()).toBeUndefined();
+  });
+
+  it("never writes an answer holding a failed envelope: a failure is not content", () => {
+    const cache = memory();
+    const plan = { cache: { ttl: 1000 } };
+    const child = (failed: string) => `<assembly-root data-name="cart"${failed}></assembly-root>`;
+    const shell = (inside: string) => `<assembly-root data-name="shell">${inside}</assembly-root>`;
+    // A parent that answered, with a child inside it that fell back: served once, never kept.
+    placementCache(input(cache, plan)).write(shell(child(' data-failed="c-1"')), undefined);
+    expect(cache.store.size).toBe(0);
+    placementCache(input(cache, plan)).write(shell(child("")), undefined);
+    expect(placementCache(input(cache, plan)).read()).toBe(shell(child("")));
   });
 
   it("keeps what each lifetime cached apart, so a shorter one never reads a longer one's", () => {

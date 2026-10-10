@@ -20,6 +20,7 @@ const broken = defineAssembly({
   },
 });
 
+const limits = { depth: 3, maxBytes: 1024 * 1024 };
 const request = (name: string, view = "default"): AssemblyRequest => ({
   name,
   view,
@@ -41,6 +42,7 @@ describe("the composer's local transport", () => {
       ["broken", broken],
     ]),
     (line) => logged.push(line),
+    limits,
   );
 
   it("renders a local assembly in its envelope, stamped with the id the parent allocated", async () => {
@@ -84,10 +86,40 @@ describe("the composer's local transport", () => {
         },
       },
     });
-    const own = localFetch(new Map([["item", item]]), () => undefined);
+    const own = localFetch(new Map([["item", item]]), () => undefined, limits);
     const answer = await own({ ...request("item"), params: { sku: "a1" } });
     expect(answer.ok && answer.html).toContain("<p>a1</p>");
     const none = await own(request("item"));
     expect(none.ok && none.html).toContain("<p>none</p>");
+  });
+
+  it("carries how each child of the assembly it rendered was answered, and nothing for none", async () => {
+    const shell = defineAssembly({
+      name: "shell",
+      views: {
+        default: {
+          renderer: "html",
+          markup: () => '<assembly name="hello"></assembly><assembly name="broken"></assembly>',
+        },
+      },
+    });
+    const own = localFetch(
+      new Map([
+        ["shell", shell],
+        ["hello", hello],
+        ["broken", broken],
+      ]),
+      () => undefined,
+      limits,
+    );
+    const answer = await own(request("shell"));
+    expect(answer.ok && answer.nested).toMatchObject([
+      { name: "hello", source: "local" },
+      { name: "broken", source: "fallback", reason: "status" },
+    ]);
+    // The children are in the parent's envelope, each in its own, and were asked one deeper.
+    expect(answer.ok && answer.html.match(/<assembly-root/g)).toHaveLength(3);
+    const childless = await own(request("hello"));
+    expect(childless.ok && "nested" in childless).toBe(false);
   });
 });

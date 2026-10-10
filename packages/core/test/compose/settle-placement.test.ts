@@ -27,6 +27,7 @@ const input = (over: Partial<SettleInput> = {}): SettleInput => ({
   query: new URLSearchParams(),
   params: {},
   headers: {},
+  signal: undefined,
   newId: () => "id-1",
   now: () => 0,
   ...over,
