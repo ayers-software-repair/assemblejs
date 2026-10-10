@@ -149,9 +149,10 @@ without a class convention. An author may add classes and attributes to it throu
 assembly's declaration, never through the page template, which keeps a page from styling another
 team's internals.
 
-It is deliberately not the same element the author writes in a template. A page template places
-an assembly with `<assembly name="cart">`, which is a template directive: the server replaces it
-and it is never emitted, so it needs no hyphen and carries no meaning in the browser. The two
+It is deliberately not the same element the author writes in a template. A page template, or
+an assembly's own view, places an assembly with `<assembly name="cart">`, which is a template
+directive: the server replaces it and it is never emitted, so it needs no hyphen and carries no
+meaning in the browser. The two
 are separate because one word cannot be right in both positions. A placement is nested by
 definition and a served fragment is not, so a name that reads correctly in a template reads
 wrongly on a bare fetch, and the reverse. The author writes the directive and reads the
@@ -160,6 +161,12 @@ emitted.
 
 The data island sits inside the envelope, next to the markup. The browser runtime reads it,
 parses it and removes it. It carries only what section 5.3 allows.
+
+An assembly's view may place others (section 7). Each one's envelope stands where the view
+placed it, inside its parent's, so the envelopes of a page are a tree. The runtime takes them
+in document order, a parent before what it holds, and each hydrates when its own module
+arrives, in either order: a parent writes nothing where a child stands. An envelope inside one
+marked `data-remote` came from that server, and is marked so too.
 
 ---
 
@@ -269,9 +276,19 @@ exceed `limits.depth` (default 8), or whose target already appears on the path, 
 The placement takes its fallback and a diagnostic. A server also refuses on arrival, because a
 request can come from anywhere, but the refusal a well-behaved composer relies on is its own.
 
+An assembly composes what its own view places as a page composes its template: at the depth it
+arrived with, its own identity added to the ancestors, on its own server and under that
+server's one cap. So its children are dispatched one level deeper with their parent among their
+ancestors, wherever the request for the parent came from, and the two headers hold depth and
+cycles across as many servers as a page reaches. A child a view places is this server's: it has
+no policy of its own, so it takes the default deadline, falls back to nothing, is never
+required, deferred or cached alone, and a failure beneath a parent keeps that parent's answer
+out of the cache.
+
 A page cannot be made to recurse by any request an outsider can send, and a self-referencing
 assembly is a diagnostic at the first hop rather than a hang, a socket exhaustion or a stack
-overflow.
+overflow. Where a view's source says what it places, the loop is not even a request: a view
+that places itself, or leads back to itself, is refused at boot (section 7).
 
 ### 3.5 Deferred assemblies
 
@@ -285,12 +302,17 @@ fallback, carried inert in the placeholder, in the server's failed envelope with
 Deferring is the answer for a genuinely slow assembly that must not hold the page; everything
 else uses the deadline.
 
+What a deferred assembly's view places arrives with the answer that fills it, composed inside
+it. The page cannot read those envelopes when it is served, so it links ahead what they will
+need, the runtime and each stylesheet, from what the deferred view's source is known to place.
+
 `defer` and `required` together are a boot error. A deferred assembly's outcome arrives after
 the page has shipped, so it cannot fail the page, and a declaration that says it can is a
 misunderstanding worth catching at boot rather than a rule worth explaining in prose. So is a
 deferral nothing could carry out: one from another server, whose fragment the browser cannot
-fetch across that server's same-origin policy, and one on a page that places no assembly of this
-server's with a browser half, so no runtime is there to fetch it. A deadline or a cache on a
+fetch across that server's same-origin policy, and one on a page where no assembly of this
+server's has a browser half, placed by the page or by the view of one it places, so no runtime
+is there to fetch it. A deadline or a cache on a
 deferred placement is policy nothing reads, refused like any other.
 
 ### 3.6 Real-time
@@ -443,7 +465,6 @@ export interface Renderer {
 export type RenderInput = {
   readonly template: unknown; // whatever the extension loaded
   readonly data: Readonly<JsonObject>;
-  readonly children: Readonly<Record<string, string>>; // already HTML
   readonly helpers: Readonly<Record<string, unknown>>;
   readonly url: URL;
 };
@@ -455,13 +476,30 @@ export interface ClientRenderer {
 export type MountHandle = { unmount(): void };
 ```
 
-- **Children arrive already rendered, as strings.** One conversion, in the caller. No renderer
-  reaches for children itself, so plain HTML and Markdown nest exactly as React does.
+- **A view places a child by writing the directive, and is never handed one.** The view renders
+  once. The composer then reads its markup as it reads a page's template and puts each child's
+  envelope where its directive stood. A plain html or template view writes
+  `<assembly name="cart">` in its own markup. A framework view writes it with its renderer's
+  slot, `<Slot name="cart" />` in React, Preact, Vue and Solid, `slot("cart")` in Svelte and
+  Lit, which writes the same markup on the server and in the browser, so a parent hydrates
+  around the child the server placed and writes nothing into the slot when it renders again. No
+  renderer reaches for a child or agrees with another about what one is, so plain HTML holds
+  React as React holds plain HTML. Markdown is prose and places nothing.
+- **A placement's name is written where the placement is.** What a view places is read from its
+  source before any request: the build writes it beside the view, boot refuses a name with no
+  assembly, a view the assembly lacks and a view that leads back to itself, and `check` says the
+  same in the file. Which view of a child a parent shows may come from its data; which child it
+  is may not. A Pug view writes the directive in its own syntax and is read when it renders.
+- **A Lit view holds a Lit assembly only behind a shadow root.** Lit hydrates a view by reading
+  every marker in its tree, and would read a Lit child's as the parent's. A shadow root hides
+  them; without one the parent refuses to mount, by name, and `check` says so before a browser
+  does.
 - **No try/catch inside a renderer.** A failed render throws, the composer catches it, and the
   placement falls back. A renderer that returns its own error `<div>` produces markup that
   passes every check downstream.
-- **Escape by default**, with one explicit raw mechanism. `children` are the single exception
-  and the only exception: they are already-rendered HTML by contract.
+- **Escape by default**, with one explicit raw mechanism. The directive a slot writes is the
+  single exception and the only exception: markup built from a name and a view, each held to
+  the shape an assembly's name has, so nothing a visitor supplied can be written through it.
 - **`mount` returns a handle and the runtime calls `unmount`.** A teardown nothing invokes is
   not a teardown.
 
@@ -568,8 +606,10 @@ assembly, `{ id: "42" }` for `/products/:id`, which reach it the same way whethe
 this server or another: an object with no prototype, so a parameter named `constructor` is a
 parameter and nothing else. Returning is testable in isolation, composes without hidden order, and
 makes the data shape the function's return type. Services run in declaration order; one that must follow another says
-`after: ["greeting"]`. There is no priority number. Services run **before** children are
-fetched, so a service can shape what its children are asked for.
+`after: ["greeting"]`. There is no priority number. Services run **before** the view renders,
+and what the view places is composed after it, so a service shapes which view of a child its
+parent places: the view writes it from its data. A child is given the params and the query its
+parent was given.
 
 An api is a route:
 
@@ -649,6 +689,13 @@ Stated plainly rather than implied: `@keyframes`, `@font-face`, `@import` and `@
 by nature and are not scoped. A nested assembly sits inside its parent's envelope, so a parent's
 descendant selectors reach into it, and a page's own rules reach every assembly not in a shadow
 root. Nothing pretends otherwise.
+
+A page links the stylesheet of every assembly in the markup it serves, at any depth, read from
+the envelopes themselves, so an answer that came from the cache is styled as one that was just
+composed. A stylesheet linked by the page does not reach into a shadow root, so an assembly in
+one links the sheets of the assemblies placed inside it in that root. For an assembly from
+another server the page links what that server's manifests declare, for the assembly it asked
+for and for each one that server composed inside its answer.
 
 ---
 
@@ -734,28 +781,28 @@ API would put a bill and a key in every project that installed it, and neither b
 Resources, not commands, because an agent that has to ask what exists spends its first three
 turns finding out.
 
-| resource                       | what it answers                                                                                                                                                    |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `assemblejs://project`         | Every assembly, page, renderer and setting, and how they are wired. The whole shape in one read.                                                                   |
-| `assemblejs://assembly/{name}` | One assembly: its files, its view, its renderer, the shape of its data, where it is placed.                                                                        |
-| `assemblejs://contract`        | The three endpoints, their headers and the envelope, as a specification. An agent writing a remote assembly in another language reads this and needs nothing else. |
-| `assemblejs://rules`           | The constraints real code must satisfy, with the reason for each. One framework per assembly; children arrive as strings; nothing crosses to the browser but JSON. |
-| `assemblejs://diagnostics`     | What is wrong right now, per assembly and per placement, with the correlation id that finds it in a log.                                                           |
+| resource                       | what it answers                                                                                                                                                                  |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `assemblejs://project`         | Every assembly, page, renderer and setting, and how they are wired. The whole shape in one read.                                                                                 |
+| `assemblejs://assembly/{name}` | One assembly: its files, its view, its renderer, the shape of its data, where it is placed.                                                                                      |
+| `assemblejs://contract`        | The three endpoints, their headers and the envelope, as a specification. An agent writing a remote assembly in another language reads this and needs nothing else.               |
+| `assemblejs://rules`           | The constraints real code must satisfy, with the reason for each. One framework per assembly; a view places a child with the directive; nothing crosses to the browser but JSON. |
+| `assemblejs://diagnostics`     | What is wrong right now, per assembly and per placement, with the correlation id that finds it in a log.                                                                         |
 
 ### 13.4 What an agent does
 
 Every tool answers with the change it made and the state that resulted. None of them prints
 prose for a human to re-read.
 
-| tool              | what it does                                                                                 |
-| ----------------- | -------------------------------------------------------------------------------------------- |
-| `create_project`  | Scaffolds a project that runs.                                                               |
-| `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.   |
-| `place_assembly`  | Puts the placement into a page template, at a named position.                                |
-| `render_assembly` | Renders one assembly NOW and returns its HTML, its data and its diagnostics.                 |
-| `compose_page`    | Composes a page NOW and returns the HTML with one diagnostic per placement.                  |
-| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix. |
-| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                |
+| tool              | what it does                                                                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `create_project`  | Scaffolds a project that runs.                                                                                                            |
+| `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.                                                |
+| `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position.                                            |
+| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML, its data and the account of each child.          |
+| `compose_page`    | Composes a page NOW and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
+| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                              |
+| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                             |
 
 `render_assembly` and `compose_page` are the two that matter most, and they are the reason this
 is not a wrapper. An agent that writes an assembly can immediately see what it renders, what
@@ -774,8 +821,9 @@ loud on a pull request.
 - **It knows what it cannot know.** Asked to place an assembly on a page that does not exist, it
   says so and lists the pages that do, rather than creating one nobody asked for.
 - **It never edits the author's own files to register anything.** The generated module is
-  regenerated; a page template is edited only when the agent asked for a placement, at a named
-  position, and the diff comes back with the answer.
+  regenerated; a page template, or a view that holds the directive as markup, is edited only
+  when the agent asked for a placement, at a named position, and the diff comes back with the
+  answer. A view its author writes as source is never edited: the answer is the line to write.
 
 ### 13.6 Safety
 
@@ -839,6 +887,23 @@ reason, so nothing has to be remembered.
     day something might want it.
 15. **Every gate is watched failing on a known-bad input before it is trusted.** The quality bar
     is behaviour, not a coverage number.
+16. **A view places a child with the directive and is never handed one.** This reverses
+    "children arrive as strings". A renderer that is handed its children must be rendered twice,
+    or told what they are before it has run, and a framework's browser half would have to read
+    them back out of the page to hydrate. Rendering once and composing the markup needs neither,
+    and a slot that writes the same directive on both sides gives every framework the same
+    markup to hydrate against.
+17. **A child a view places is this server's, with no policy of its own.** A view has nowhere to
+    declare a deadline, a fallback or a url for what it places, and nothing needed one. A child
+    from another server, a child's own query and a cap on how many a view may place are each
+    one question, asked when an application needs it.
+18. **What a view places is read from its source, and its name is never computed.** Everything
+    decided before a request reads it: whether a page carries the runtime, what a deferred
+    parent's children need linked, whether the assembly exists. A name that is data would be
+    known only to a render.
+19. **A Lit assembly in a Lit view's own tree is refused, not repaired.** Detaching the child
+    while its parent hydrates would move live nodes. A shadow root on the child is one line and
+    hides it.
 
 ---
 

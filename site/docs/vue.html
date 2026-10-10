@@ -46,10 +46,26 @@ defineProps&lt;{ data: Record&lt;string, unknown&gt; }&gt;();
 &lt;/template&gt;</code></pre></dd>
     </div>
     <div class="item">
-      <dt>Two props, nothing else</dt>
-      <dd><code>data</code> is what the assembly's services returned, as JSON. <code>children</code> is
-        rendered HTML by placement name, for an assembly that holds others. No request, no
-        headers, no cookies cross to the component.</dd>
+      <dt>One prop, nothing else</dt>
+      <dd><code>data</code> is what the assembly's services returned, as JSON. No request, no
+        headers, no cookies cross to the component, and nothing of the assemblies it holds: it
+        places those with a slot.</dd>
+    </div>
+    <div class="item">
+      <dt>An assembly inside this one</dt>
+      <dd><code>Slot</code> places another assembly where it stands, by name, whatever that assembly is
+        written in. The server puts it there, and the page's runtime mounts it as it mounts this
+        one; Vue leaves it alone when this component renders again. The name is written as a
+        string. A <code>view</code> may be bound to <code>data</code>.
+<pre><code>&lt;script setup lang="ts"&gt;
+import { Slot } from "@assemblejs/renderer-vue/client";
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;section class="cart"&gt;
+    &lt;Slot name="price" /&gt;
+  &lt;/section&gt;
+&lt;/template&gt;</code></pre></dd>
     </div>
   </dl>
 

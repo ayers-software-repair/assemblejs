@@ -2364,7 +2364,8 @@ Settled:
 
 From the two reader memos (`docs/studies/subassembly/`, written against 1210023, second-read
 there, and held to the tree today: the files they rest on have not changed), synthesised in
-`docs/studies/subassembly/synthesis.md`, which carries the reasons. The decisions, so they
+`docs/studies/subassembly/synthesis.md`, which carries the reasons (all three deleted at S-09,
+once DESIGN carried their result; in the history at `0ac9f53`). The decisions, so they
 outlive the studies:
 
 - **Render once; the directive is the seam.** A view renders with no children; a template view
@@ -2814,3 +2815,55 @@ without its parent (the self-placing view); children composed at depth zero (the
 headers); the deferred link removed; boot not holding what a view places (the server started);
 a nested manifest not learned (the two-server stylesheet); a shadow parent not linking in its
 root. Each turned red the spec named and no other.
+
+## 2026-10-10: S-09, DESIGN says what was built, and the studies go
+
+Expected, from the plan: DESIGN 2.4, 3.4, 7, 8 and 10 say the mechanism; every guide shows a
+child; the studies are deleted once DESIGN carries their result.
+
+Settled:
+
+- DESIGN 2.4 (the envelopes of a page are a tree), 3.4 (an assembly composes its own view's
+  placements at the depth it arrived with, itself among the ancestors; a child is local and
+  has no policy), 3.5 (a deferred assembly's children are linked ahead), 7 (a view places a
+  child with the directive and is never handed one; a placement's name is written in place; the
+  rule about Lit; `children` gone from `RenderInput`), 8 (a service shapes which view of a
+  child its parent places), 10 (what a page links, and a shadow parent's root), 13 (the rules
+  line and the three tools), and 14, items 16 to 19: the reversal of "children arrive as
+  strings" and the three decisions that came with it.
+- The seven guides under `site/docs` name one prop where they named two, show an assembly
+  placed inside the one being written, in that framework's own form, and no longer mention
+  `children`. The Lit guide says what a Lit view may hold and the line that fixes it.
+- The two reader memos and their synthesis are deleted. What they found in passing and nobody
+  had rowed is on the ledger now: a page's query reaching this server's services and not
+  another server's, and a project having no way to set the depth cap. CLAUDE.md's line on what
+  core holds is corrected: core holds no renderer.
+
+Held by the site's own gates (every page declared, linked and readable), and by the specs each
+amended sentence rests on, read one against the other:
+
+- 2.4, a tree of envelopes, a nested one marked with its server's origin, and the order the
+  runtime takes them in: `conformance/specs/rendering/nested.spec.mjs`,
+  `conformance/specs/remote/nested.spec.mjs`, `core/test/client/start.test.ts`.
+- 3.4, a child one level deeper with its parent among its ancestors, asked with its parent's
+  params and query, and an empty envelope for one that is refused:
+  `core/test/server/render-local.test.ts`; a failed subtree kept out of the cache:
+  `core/test/compose/holds-failed-envelope.test.ts`.
+- 3.5, a deferred assembly's children linked ahead: `core/test/server/local-assets.test.ts`,
+  `core/test/server/page-assets.test.ts`, the browser proof's `nested-later` page.
+- 7, the slot, the name written in place, and the rule about Lit: each renderer's
+  `test/client/slot.test` and `hydrate.test`, `core/test/server/view-placement-problems.test.ts`
+  and `boot-problems.test.ts`, the command line's `test/check/`, and
+  `renderer-lit/test/client/lit-assembly-in-tree.test.ts`.
+- 8, a service shaping which view of a child is placed: the EJS parent in
+  `conformance/specs/rendering/nested.spec.mjs`.
+- 10, what a page links and what a shadow parent links in its root:
+  `core/test/server/local-assets.test.ts`, `render-local.test.ts`,
+  `core/test/remote/learned-manifests.test.ts`.
+- 13, the three tools: the agent surface's `test/server/create-mcp-server.test.ts` and
+  `test/author/place-in-view.test.ts`.
+
+Two sentences had no spec of their own and got one in this commit, each watched red: a child
+asked with its parent's query, and the empty envelope of a refused child. The reading is the
+seat's own. The plan asked for a reader with no stake; the owner's ruling against subagents
+leaves that to him, and it is on the morning list.

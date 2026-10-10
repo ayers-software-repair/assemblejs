@@ -5,28 +5,26 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 00:53 EDT, after S-08).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 00:56 EDT, after S-09).**
 
-STATE. Branch `next`. `origin/next` is `4ce1844`, S-07 and its follow-up, with its `ci` run
-38024897733 and its `release` run 38024897699 green on GitHub's runners (publication skipped:
-the registry has no `@assemblejs/core`). Above it, signed, pushed with this block: the S-08
-commit this block lands in. Every package reads `1.0.0-next.0`; eleven changesets are pending.
-The owner's overnight order (estate D1216): work the bites to code completion and get the
-landing page onto staging; no questions until morning. The landing page is on staging:
-`deploy-site` run 38021878568, dispatched on `next` at `03a5a1f`, succeeded after the lead fixed
-the deploy role's trust, and `/assemblejs/next/` on the staging domain answers 200 (DECISIONS
-2026-10-09, staging). A `site/**` push on `next` now deploys there. `/assemblejs/` deploys from
-`main`, which has no `site/` yet: the owner's morning list. His rulings in this seat stand: no
-subagents, the seat does the work itself; every bite since is self-verified by mutation
-(DECISIONS 2026-10-09, S-02).
+STATE. Branch `next`. `origin/next` is `7b9eff2`, S-08, pushed 2026-10-10 01:10 EDT; its `ci`
+run is 38025731839 and its `release` run 38025731838 (read them to their end before the next
+push if this block is all that is known). Above it, signed, pushed with this block: the S-09
+commit this block lands in, which touches `site/**` and so fires `deploy-site` as well. Every
+package reads `1.0.0-next.0`; eleven changesets are pending. The owner's overnight order (estate
+D1216): work the bites to code completion and get the landing page onto staging; no questions
+until morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
+200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
+`/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
+rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
+self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-09 (PLAN 4.2), the words: DESIGN 2.4, 3.4, 3.5, 7, 8, 10 and
-13 say the mechanism as it was built (a view places a child with the directive; `children` is
-gone; what a view places is read from its source; the deferred link; the agent surface's
-tools); the seven guides under `site/docs` show a child and stop naming `children`; the
-studies under `docs/studies/subassembly` are deleted once DESIGN carries their result. A push
-of it touches `site/**` and deploys to `/assemblejs/next/`: read the `deploy-site` run and the
-page. S-01 to S-08 are done.
+THE EXACT NEXT STEP is the first AI-first rung, A-01 (PLAN 4.1): every new project carries
+agent instructions, written by `new` and `create`, that say what an assembly, a page and a
+placement are and what `check` and the agent surface do, so an agent that opens the project
+knows the framework before it writes. Then A-03 (prompts the agent surface lists), A-02
+(`llms.txt` on the site) and A-04 (its design memo first, then the owner's answer, then code).
+The subassembly rung is done: S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -374,12 +372,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       boot calls (DESIGN 11: every problem found without building; DECISIONS 2026-10-05)
 - [x] A deferred placement from another server stays refused at boot: deferral is local, a
       remote is fetched by the server with its deadline (owner, DECISIONS 2026-10-05 rulings)
-- [ ] NEXT: a subassembly is placed by a directive in the view's markup, `<assembly name>` in a
+- [x] A subassembly is placed by a directive in the view's markup, `<assembly name>` in a
       template view and a `Slot` by the same name in a framework view (owner, DECISIONS
       2026-10-05 rulings); then nested composition, services shaping a child's request, and a
       parent's depth and cycle refusal held across two servers in conformance. Designed
-      2026-10-09: `docs/studies/subassembly/synthesis.md`, PLAN 4.2, DECISIONS "the
-      subassembly rung, decided"; the bites below land it
+      2026-10-09 (PLAN 4.2, DECISIONS "the subassembly rung, decided"); landed in the nine bites
+      below, 2026-10-09 and 10
   - [x] S-01 the one segment shape in `vocab/` (`SEGMENT_PATTERN`, `SEGMENT`), read by the
         finder, boot and the content url parser where three copies were; the finder skips
         `<script>`, `<style>`, `<textarea>` and `<title>` as it skips comments. Watched red with
@@ -432,10 +430,16 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         linked, the producer's refusals in its own log. In the `rendering` and `remote`
         fixtures. Self-verified: six mutations, each around a run of its fixture, each watched
         red (DECISIONS 2026-10-10, S-08)
-  - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted. Still saying `children`
-        after S-06: DESIGN 7, 8 and 11's rules line, and `site/docs/` templates, react, preact,
-        vue, solid, svelte and lit. The guides are `site/**`: pushing them deploys to
-        `/assemblejs/next/`, which the role allows since 2026-10-09
+  - [x] S-09 DESIGN 2.4, 3.4, 3.5, 7, 8, 10, 13 and 14 say the mechanism as it was built; the
+        seven guides under `site/docs` show a child and no longer name `children`; the two
+        reader memos and their synthesis are deleted, what they found in passing rowed below
+        (DECISIONS 2026-10-10, S-09)
+- [ ] A page's query reaches the services of this server's assemblies and not another server's,
+      while the browser's fill of a deferred placement sends it. Decide which is meant, and say
+      it in DESIGN 5.1 (found by the reader of core, 2026-10-09)
+- [ ] A project has no way to set the depth cap: `createServer` takes `maxDepth`, the project's
+      config does not, so every server the command line builds refuses at eight. Its place in
+      the config is a ruling's to give (found by the reader of core, 2026-10-09)
 - [ ] The content endpoint's render ends when its request closes: `registerAssemblies` gives
       `renderLocal` no signal today, so a server keeps composing children after the server that
       asked has given up (DECISIONS 2026-10-09, S-02 named the signal; the endpoint is the one

@@ -44,11 +44,24 @@
 &lt;p&gt;cart {Object.keys(data).length}&lt;/p&gt;</code></pre></dd>
     </div>
     <div class="item">
-      <dt>Two props, and the events</dt>
-      <dd><code>data</code> is what the assembly's services returned, as JSON. <code>children</code> is
-        rendered HTML by placement name, for an assembly that holds others. <code>events</code> is
+      <dt>The data, and the events</dt>
+      <dd><code>data</code> is what the assembly's services returned, as JSON. <code>events</code> is
         this assembly's own events object, handed in as a prop. No request, no headers, no cookies
-        cross to the component.</dd>
+        cross to the component, and nothing of the assemblies it holds: it places those with a
+        slot.</dd>
+    </div>
+    <div class="item">
+      <dt>An assembly inside this one</dt>
+      <dd><code>slot()</code> answers the markup that places another assembly, by name, whatever that
+        assembly is written in, for Svelte's own raw form to write. The server puts the assembly
+        there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when
+        this component renders again. The name is written as a string. A second argument names
+        a view, and may come from <code>data</code>.
+<pre><code>&lt;script lang="ts"&gt;
+  import { slot } from "@assemblejs/renderer-svelte/client";
+&lt;/script&gt;
+
+&lt;section class="cart"&gt;{@html slot("price")}&lt;/section&gt;</code></pre></dd>
     </div>
   </dl>
 

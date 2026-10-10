@@ -143,7 +143,13 @@ describe("a view that places a child", () => {
     const { html, diagnostics } = await renderLocal(
       shell,
       "default",
-      given({ fetch, depth: 1, path: ["page/default"], params: { sku: "a1" } }),
+      given({
+        fetch,
+        depth: 1,
+        path: ["page/default"],
+        params: { sku: "a1" },
+        query: new URLSearchParams("sort=price"),
+      }),
     );
     expect(html).toMatch(
       /^<assembly-root data-name="shell"[^>]*><section><assembly-root data-name="hello"[^>]*><p>Hello, world<\/p>/,
@@ -151,11 +157,12 @@ describe("a view that places a child", () => {
     expect(html).not.toMatch(/<assembly /);
     expect(diagnostics).toMatchObject([{ name: "hello", view: "default", source: "local" }]);
     // The child is asked as a page's placement is: the same page, one deeper, the parent among
-    // its ancestors, and the page's parameters for its services.
+    // its ancestors, and the parameters and the query its parent was given, for its services.
     expect(asked).toMatchObject([
       { name: "hello", page: "p1", depth: 2, path: ["page/default", "shell/default"] },
     ]);
     expect(asked[0]?.params).toEqual({ sku: "a1" });
+    expect(asked[0]?.query.get("sort")).toBe("price");
     expect(shell.renders()).toBe(1);
   });
 
@@ -195,6 +202,9 @@ describe("a view that places a child", () => {
     expect(loop.renders()).toBe(1);
     expect(diagnostics).toMatchObject([{ name: "loop", source: "fallback", reason: "cycle" }]);
     expect(html).toMatch(/<section><assembly-root data-name="loop"[^>]* data-failed="[^"]+"/);
+    // A view has nowhere to declare a fallback for what it places: the refused child is an
+    // empty envelope, marked failed, its island the first thing in it.
+    expect(html).toMatch(/ data-failed="[^"]+"><script type="application\/json"/);
   });
 
   it("refuses a cycle that runs through another assembly, at the hop that closes it", async () => {

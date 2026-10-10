@@ -14,7 +14,9 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, dep
 
 ## Packages
 
-- `@assemblejs/core`: server, declaration types, HTML and WebComponents renderers.
+- `@assemblejs/core`: the server and the composer, the declaration types, the contract's
+  endpoints, and the browser runtime (`/client`). It holds no renderer: a plain html view is its
+  own markup.
 - `@assemblejs/cli`, `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent
   surface: an MCP server that reads the project, creates one, adds and places an assembly,
   checks it, renders and composes, and explains every rule `check` names).

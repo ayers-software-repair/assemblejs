@@ -47,14 +47,30 @@ import { html } from "lit";
 export default (props: AssemblyProps) =&gt; html`&lt;p&gt;cart ${Object.keys(props.data).length}&lt;/p&gt;`;</code></pre></dd>
     </div>
     <div class="item">
-      <dt>Three props</dt>
+      <dt>Two props</dt>
       <dd><code>data</code> is what the assembly's services returned, as JSON; <code>AssemblyProps</code>
-        takes its shape as a type argument. <code>children</code> is rendered HTML by placement name,
-        for an assembly that holds others. <code>events</code> is this assembly's own events object,
+        takes its shape as a type argument. <code>events</code> is this assembly's own events object,
         handed in as a prop because a template function has no context to read it from; the view
         hands it to its elements as a property. No request, no headers, no cookies cross to the
-        view. A second <code>.lit.ts</code> in the directory is one of the view's own elements,
-        not a second view.</dd>
+        view, and nothing of the assemblies it holds: it places those with a slot. A second
+        <code>.lit.ts</code> in the directory is one of the view's own elements, not a second
+        view.</dd>
+    </div>
+    <div class="item">
+      <dt>An assembly inside this one</dt>
+      <dd><code>slot()</code> places another assembly where it stands in the view's template, by name.
+        The server puts it there, and the page's runtime mounts it as it mounts this one. The
+        name is written as a string. A second argument names a view, and may come from
+        <code>data</code>.
+<pre><code>import { slot } from "@assemblejs/renderer-lit/client";
+import { html } from "lit";
+
+export default () =&gt; html`&lt;section class="cart"&gt;${slot("price")}&lt;/section&gt;`;</code></pre>
+        A Lit view holds a Lit assembly only behind a shadow root. Lit hydrates a view by
+        reading every marker in its tree, and would read that assembly's as its own, so the
+        view refuses to mount and <code>check</code> says so first. The assembly it holds takes
+        one line: <code>export const shadow = true</code> in its view. An assembly written in
+        anything else needs nothing.</dd>
     </div>
     <div class="item">
       <dt>What the server renders</dt>

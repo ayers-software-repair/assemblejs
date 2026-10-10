@@ -127,8 +127,9 @@ before `1.0.0`.
 
 ### 4.2 The subassembly rung, in bites (seat, 2026-10-09)
 
-Designed in `docs/studies/subassembly/synthesis.md` from the two reader memos, held to the tree,
-and recorded in DECISIONS under that date. The mechanism: a view renders once with no children;
+Designed in a synthesis of two reader memos, held to the tree and recorded in DECISIONS under
+that date; the three files were deleted at S-09, once DESIGN carried their result, and are in
+the history at `0ac9f53`. The mechanism: a view renders once with no children;
 a template view wrote the directive, a framework view's `Slot` emitted it, on the server and in
 the browser alike; `renderLocal` composes the view's rendered markup with the local transport at
 the arrived depth and the path extended by the parent's identity, and each child's envelope

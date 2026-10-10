@@ -52,31 +52,38 @@
 <pre><code># cart</code></pre></dd>
     </div>
     <div class="item">
-      <dt>Two names, <code>data</code> and <code>children</code></dt>
-      <dd><code>data</code> is what the assembly's services returned, as JSON. <code>children</code> is
-        rendered HTML by placement name, for an assembly that holds others. Nothing else reaches
-        the template: no request, no headers, no cookies. In EJS the two are the template's only
-        locals, in strict mode.</dd>
+      <dt>One name, <code>data</code></dt>
+      <dd><code>data</code> is what the assembly's services returned, as JSON. Nothing else reaches the
+        template: no request, no headers, no cookies. In EJS it is the template's only local, in
+        strict mode.</dd>
     </div>
     <div class="item">
-      <dt>Escaped by default, children as they are</dt>
-      <dd>What a template writes from <code>data</code> is escaped by every engine that reads it;
-        <code>children</code> is already HTML and is written as it is: by the engine's raw form in
-        EJS and Pug, and as a safe string in Handlebars and Nunjucks, so the same brace writes it.
-        From the renderer's tests: given a <code>name</code> of <code>&lt;b&gt;</code> and a child
-        <code>inner</code> of <code>&lt;i&gt;child&lt;/i&gt;</code>, each of these four renders
-        <code>&lt;p&gt;&amp;lt;b&amp;gt;&lt;i&gt;child&lt;/i&gt;&lt;/p&gt;</code>.
-<pre><code>&lt;p&gt;&lt;%= data.name %&gt;&lt;%- children.inner %&gt;&lt;/p&gt;</code></pre>
-<pre><code>&lt;p&gt;{{data.name}}{{children.inner}}&lt;/p&gt;</code></pre>
-<pre><code>&lt;p&gt;{{ data.name }}{{ children.inner }}&lt;/p&gt;</code></pre>
-<pre><code>p #{data.name}!{children.inner}</code></pre>
+      <dt>Escaped by default</dt>
+      <dd>What a template writes from <code>data</code> is escaped by every engine that reads it. From the
+        renderer's tests: given a <code>name</code> of <code>&lt;b&gt;</code>, each of these four
+        writes <code>&amp;lt;b&amp;gt;</code>.
+<pre><code>&lt;p&gt;&lt;%= data.name %&gt;&lt;/p&gt;</code></pre>
+<pre><code>&lt;p&gt;{{data.name}}&lt;/p&gt;</code></pre>
+<pre><code>&lt;p&gt;{{ data.name }}&lt;/p&gt;</code></pre>
+<pre><code>p #{data.name}</code></pre>
         Pug's escaping leaves <code>'</code> as it is: write an attribute with Pug's own syntax,
         <code>a(title=data.name)</code>, rather than inside a single-quoted attribute in raw
         HTML.</dd>
     </div>
     <div class="item">
+      <dt>An assembly inside this one</dt>
+      <dd>A template places another assembly by writing the directive in its own markup, as a page does,
+        whatever that assembly is written in. The server puts it where the directive stood. The
+        name is written as it is; a <code>view</code> may come from <code>data</code>. Pug writes
+        the directive in its own syntax.
+<pre><code>&lt;section&gt;&lt;assembly name="price" view="&lt;%= data.priceView %&gt;"&gt;&lt;/assembly&gt;&lt;/section&gt;</code></pre>
+<pre><code>&lt;section&gt;&lt;assembly name="price"&gt;&lt;/assembly&gt;&lt;/section&gt;</code></pre>
+<pre><code>section
+  assembly(name="price")</code></pre></dd>
+    </div>
+    <div class="item">
       <dt>Markdown is prose</dt>
-      <dd>A <code>.md</code> view reads no data and places no children, and HTML written inside it is shown
+      <dd>A <code>.md</code> view reads no data and places no assembly, and HTML written inside it is shown
         as text; an <code>.html</code> view is the place for markup. The notes from the templates
         example.
 <pre><code># Five template languages
