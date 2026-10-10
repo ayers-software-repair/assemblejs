@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ATTRIBUTE } from "@assemblejs/core/client";
 import type { ClientRenderer, JsonObject, MountContext } from "@assemblejs/core/client";
 import { hydrate as hydrateLit } from "@lit-labs/ssr-client";
 // Lit's template layer, never `lit` itself: the browser half must not load Lit's element base
@@ -25,7 +26,7 @@ export function hydrate(view: LitView): ClientRenderer {
       const placed = litAssemblyInTree(element);
       if (placed !== undefined) {
         throw new Error(
-          `the Lit view of "${context.name}" cannot hold the Lit assembly "${placed.getAttribute("data-name") ?? ""}" in its own tree: Lit hydrates a view by reading every marker under it, and would read that assembly's as this view's own. Give that assembly a shadow root of its own, with \`export const shadow = true\` in its view.`,
+          `the Lit view of "${context.name}" cannot hold the Lit assembly "${placed.getAttribute(ENVELOPE_ATTRIBUTE.name) ?? ""}" in its own tree: Lit hydrates a view by reading every marker under it, and would read that assembly's as this view's own. Give that assembly a shadow root of its own, with \`export const shadow = true\` in its view.`,
         );
       }
       hydrateLit(view({ data, events: context.events }), container);

@@ -55,11 +55,12 @@ describe("settling one placement", () => {
 
   it("does not reach a deferred placement at all", async () => {
     let reached = false;
+    const deferred = { name: "cart", view: "default", deadline: 3000, defer: true };
     const settled = await settlePlacement(
       input({
         // Past how many a request may place, too: nothing is rendered for it now to refuse.
         ordinal: 65,
-        plan: { name: "cart", view: "default", deadline: 3000, defer: true },
+        plan: { ...deferred, fallback: "<p>later</p>" },
         fetch: async () => {
           reached = true;
           return { ok: true, html: "x", source: "local" };
@@ -71,6 +72,8 @@ describe("settling one placement", () => {
     expect(settled.html).toMatch(
       /^<assembly-root data-name="cart" data-id="id-1" [^>]*data-defer="">/,
     );
+    // The fallback rides inert, under the attribute the browser's fill looks for.
+    expect(settled.html).toContain("<template data-fallback><p>later</p></template>");
     expect(settled.html).not.toContain("x<");
   });
 
@@ -96,7 +99,6 @@ describe("settling one placement", () => {
     );
     expect(cycle.diagnostic.reason).toBe("cycle");
     expect(cycle.html).not.toContain("cached");
-    // Another visitor's answer is in the cache; this one may not be shown it.
     const refused = await settlePlacement(
       input({ fetch: failing, cache, plan, admit: () => ({ admitted: false }) }),
     );
@@ -189,8 +191,6 @@ describe("settling one placement", () => {
         },
       }),
     );
-    // Instance ids are minted fresh, so a path of them could never collide and the cycle check
-    // would never fire; and the target is not its own ancestor, or every request is refused.
     expect(seen).toEqual(["page/default"]);
     expect(seen).not.toContain("a-fresh-uuid");
   });

@@ -1,10 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
 
 // An envelope's start tag carrying the attribute a fallback is marked with. An attribute value
 // never holds a raw ">", so the tag is everything up to the first one.
-const FAILED = new RegExp(`<${ENVELOPE_ELEMENT}\\s[^>]*\\sdata-failed=`, "i");
+const FAILED = new RegExp(`<${ENVELOPE_ELEMENT}\\s[^>]*\\s${ENVELOPE_ATTRIBUTE.failed}=`, "i");
 
 /**
  * Whether markup holds an envelope marked failed: a placement somewhere inside it was answered

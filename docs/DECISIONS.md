@@ -4088,3 +4088,58 @@ behaviour.
   only on a server-only template, which never hydrates and is in no danger; `check` refuses it
   too, by name, which costs an author a shadow root they did not need. Held by a spec in
   `renderer-lit/test/server/render-to-markup.test.ts`, said in DESIGN 7.
+
+## 2026-10-11: the envelope's words
+
+The attributes of the envelope, the attribute on its data island, the one on a deferred
+envelope's fallback and the two headers a content answer carries were spelled by hand at
+every site that wrote or read one, in core's server and browser halves, the command line's
+performance reader and the Lit renderer's mount. Spelled by hand in two places, a word can
+drift, and the browser would read what the server never wrote.
+
+Settled: four definitions in core's vocabulary, `ENVELOPE_ATTRIBUTE` (the nine attributes),
+`ISLAND_ATTRIBUTE`, `FALLBACK_ATTRIBUTE` and `RESPONSE_HEADER` (the two headers), exported from
+`@assemblejs/core`, the first from `@assemblejs/core/client` too, and every site reads its word
+from them; a spec for each holds the words to what DESIGN 2.4 names. DESIGN 2.4 gains
+`data-params`, which it had not named. Nothing a server sends or a browser reads changes, and
+the conformance fixtures, which read the real bytes, say so.
+
+The work was parked on a local branch on 2026-10-10 when the lead ordered the second reading
+first. Brought onto `next` on 2026-10-11 by a rebase in a worktree of its own (two conflicts,
+both an import line beside one way A added), then finished on `next`: after the rebase no site
+in any package spelled a word by hand, including those added since the fork.
+
+## 2026-10-11: the owner's seven answers
+
+The lead put every question this seat held to the owner in one lump on the morning of
+2026-10-11, each with a recommendation, and he chose (estate D1252). His option labels,
+verbatim, with the rows each opens:
+
+1. **Built-in components: "Plain HTML + tokens".** A-04 is built as the memo
+   `docs/studies/built-in-components.md` proposed in that form: plain html assemblies styled by
+   one tokens file every page links, and rules `check` holds them to; no framework component
+   library.
+2. **Versions: "One number".** The twelve packages share one version. Changesets is configured
+   for it (fixed groups), the release-notes gate and a new project's manifest already assume it.
+3. **The waiting change notes: "Yes", folded before the first publish.** The notes written
+   since every package was set to `1.0.0-next.0` are folded into the first entry; the first
+   publish ships them as one.
+4. **One view per assembly: "One view".** As the design and the guides say today; nothing to
+   build, and the framework's several views for a declared assembly stay as they are.
+5. **A page's data across servers: "Only a server named trusted".** A page's query and route
+   parameters reach another server's assembly only when the project declares that remote
+   trusted; otherwise, as today, nothing of the visitor's is forwarded but the headers the
+   remote declared.
+6. **The nesting depth: "In the project's config file".** `assemblejs.config.ts` gets the field
+   for `limits.depth`, read by the command line's server as `createServer`'s `maxDepth` is;
+   whether the limit on how many a request places rides with it was tied to this question and
+   is answered the same way.
+7. **An agent's preview of a framework view: "Dev server, tool runs nothing".** The agent's
+   tools render a framework view by asking the project's own running dev server, and never run
+   the project's code themselves.
+
+Also recorded by the lead the same morning: assemblejs.com is the owner's again, served from
+the same CloudFront distribution through the ayers.repair prefix router; `/next/` is the
+landing page as `next` has it, and `/` answers 404 until a stable release lands at
+`/assemblejs/`. Two rows from that: the main landing page comes with the release alignment, and
+assemblejs.com wants a 404 page of its own.

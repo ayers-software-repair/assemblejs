@@ -56,6 +56,23 @@ describe("scheduling a deferred fill", () => {
     runtime.unmountAll();
   });
 
+  it("says which deferred assembly was not filled, by its name, when the fill itself breaks", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(filledWith, { headers: { "content-type": "text/html" } })),
+    );
+    const element = placeholder();
+    // Replacing the placeholder is the one step outside the fill's own catch.
+    element.replaceWith = () => {
+      throw new Error("the page is gone");
+    };
+    const said = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    scheduleFill(element, () => undefined);
+    await vi.waitFor(() => expect(said).toHaveBeenCalled());
+    expect(said.mock.calls[0]?.[0]).toBe('assemblejs: the deferred "cart" was not filled');
+    said.mockRestore();
+  });
+
   it("hands nothing over when cancelled after the answer is on its way", async () => {
     let release: (response: Response) => void = () => undefined;
     vi.stubGlobal(

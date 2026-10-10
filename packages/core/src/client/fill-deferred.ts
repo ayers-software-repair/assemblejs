@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
+import { DEFAULT_VIEW } from "../vocab/default-view.js";
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
+import { FALLBACK_ATTRIBUTE } from "../vocab/fallback-attribute.js";
 
 // The fallback a page declared for a deferred placement, carried inert inside its placeholder.
-const FALLBACK = ":scope > template[data-fallback]";
+const FALLBACK = `:scope > template[${FALLBACK_ATTRIBUTE}]`;
 
 /**
  * Fetches a deferred placement's content from its own server's content endpoint, with the id and
@@ -22,13 +25,13 @@ export async function fillDeferred(
   element: Element,
   signal: AbortSignal,
 ): Promise<Element | undefined> {
-  const name = element.getAttribute("data-name");
-  const view = element.getAttribute("data-view") ?? "default";
-  const id = element.getAttribute("data-id");
+  const name = element.getAttribute(ENVELOPE_ATTRIBUTE.name);
+  const view = element.getAttribute(ENVELOPE_ATTRIBUTE.view) ?? DEFAULT_VIEW;
+  const id = element.getAttribute(ENVELOPE_ATTRIBUTE.id);
   if (name === null || id === null) return undefined;
   const search = element.ownerDocument.defaultView?.location.search ?? "";
   const url = `${ASSEMBLY_ROUTE_PREFIX}/${encodeURIComponent(name)}/${encodeURIComponent(view)}/${search}`;
-  const params = element.getAttribute("data-params");
+  const params = element.getAttribute(ENVELOPE_ATTRIBUTE.params);
   // One level deep, as the page's own composer would have asked: the children its view places
   // are then composed from the depth they would have had if it had been rendered with the page.
   const headers: Record<string, string> = {
@@ -42,14 +45,14 @@ export async function fillDeferred(
     const type = response.headers.get("content-type") ?? "";
     if (type.startsWith("text/html")) answer = envelopeOf(element, await response.text(), id);
     // Anything but a 2xx is a failure, whatever envelope it carries.
-    if (answer !== undefined && !response.ok && !answer.hasAttribute("data-failed")) {
+    if (answer !== undefined && !response.ok && !answer.hasAttribute(ENVELOPE_ATTRIBUTE.failed)) {
       answer = undefined;
     }
   } catch (error) {
     if (signal.aborted) throw error;
     answer = undefined;
   }
-  if (answer !== undefined && !answer.hasAttribute("data-failed")) {
+  if (answer !== undefined && !answer.hasAttribute(ENVELOPE_ATTRIBUTE.failed)) {
     element.replaceWith(answer);
     return answer;
   }
@@ -68,7 +71,7 @@ function envelopeOf(element: Element, html: string, id: string): Element | undef
   return found !== null &&
     container.childElementCount === 1 &&
     found.tagName.toLowerCase() === ENVELOPE_ELEMENT &&
-    found.getAttribute("data-id") === id
+    found.getAttribute(ENVELOPE_ATTRIBUTE.id) === id
     ? found
     : undefined;
 }
@@ -78,8 +81,8 @@ function standIn(element: Element, failed: Element | undefined): Element {
   const fallback = element.querySelector(FALLBACK);
   const shown = failed ?? element;
   if (failed === undefined) {
-    element.removeAttribute("data-defer");
-    element.setAttribute("data-failed", "");
+    element.removeAttribute(ENVELOPE_ATTRIBUTE.defer);
+    element.setAttribute(ENVELOPE_ATTRIBUTE.failed, "");
     for (const child of [...element.children]) child.remove();
   } else {
     element.replaceWith(failed);

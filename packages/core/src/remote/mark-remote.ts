@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { escapeAttribute } from "../encode/escape-attribute.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
 import type { ContentUrl } from "./content-url.js";
 import { parseContentUrl } from "./parse-content-url.js";
@@ -30,7 +31,7 @@ export function markRemote(
   { readonly html: string; readonly nested: readonly ContentUrl[] } | { readonly refused: string } {
   const tags = scanFragment(html);
   if (typeof tags === "string") return { refused: tags };
-  const stamp = ` data-remote="${escapeAttribute(origin)}"`;
+  const stamp = ` ${ENVELOPE_ATTRIBUTE.remote}="${escapeAttribute(origin)}"`;
   const nested = new Map<string, ContentUrl>();
   let envelopes = 0;
   let marked = "";
@@ -39,7 +40,9 @@ export function markRemote(
     let attributes: readonly ScannedAttribute[];
     let extra = "";
     if (tag.name === ENVELOPE_ELEMENT) {
-      attributes = tag.attributes.filter((attribute) => attribute.name !== "data-remote");
+      attributes = tag.attributes.filter(
+        (attribute) => attribute.name !== ENVELOPE_ATTRIBUTE.remote,
+      );
       extra = stamp;
       // The first envelope is the answer itself; every one after it is a child inside it.
       envelopes += 1;
@@ -62,14 +65,15 @@ function contentOf(
   attributes: readonly ScannedAttribute[],
   origin: string,
 ): ContentUrl | undefined {
-  if (attributes.some((attribute) => attribute.name === "data-failed")) return undefined;
+  if (attributes.some((attribute) => attribute.name === ENVELOPE_ATTRIBUTE.failed))
+    return undefined;
   const value = (name: string): string =>
     /^[^=]*=\s*(["']?)([\s\S]*)\1$/.exec(
       attributes.find((attribute) => attribute.name === name)?.source ?? "",
     )?.[2] ?? "";
   // Anything but two segments is not a path the contract has, and parses as none.
   return parseContentUrl(
-    `${origin}${ASSEMBLY_ROUTE_PREFIX}/${value("data-name")}/${value("data-view")}/`,
+    `${origin}${ASSEMBLY_ROUTE_PREFIX}/${value(ENVELOPE_ATTRIBUTE.name)}/${value(ENVELOPE_ATTRIBUTE.view)}/`,
   );
 }
 

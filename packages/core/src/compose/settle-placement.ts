@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { renderEnvelope } from "../envelope/render-envelope.js";
+import { FALLBACK_ATTRIBUTE } from "../vocab/fallback-attribute.js";
 import { admitted } from "./admitted.js";
 import type { AssemblyRequest } from "./assembly-request.js";
 import type { AssemblyResponse } from "./assembly-response.js";
@@ -50,7 +51,9 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
       view,
       renderer: "",
       markup:
-        plan.fallback === undefined ? "" : `<template data-fallback>${plan.fallback}</template>`,
+        plan.fallback === undefined
+          ? ""
+          : `<template ${FALLBACK_ATTRIBUTE}>${plan.fallback}</template>`,
       data: {},
       deferred: true,
       params: input.params,

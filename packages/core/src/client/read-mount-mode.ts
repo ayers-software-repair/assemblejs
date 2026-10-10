@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import type { MountMode } from "./mount-mode.js";
 
 const MODES: readonly MountMode[] = ["load", "idle", "visible", "none"];
@@ -11,7 +12,7 @@ const MODES: readonly MountMode[] = ["load", "idle", "visible", "none"];
  * code on a page whose author was trying to say when it should run.
  */
 export function readMountMode(envelope: Element): MountMode {
-  const declared = envelope.getAttribute("data-mount");
+  const declared = envelope.getAttribute(ENVELOPE_ATTRIBUTE.mount);
   if (declared === null || declared === "") return "load";
   return (MODES as readonly string[]).includes(declared) ? (declared as MountMode) : "none";
 }

@@ -1,6 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { IslandPayload } from "../island/island-payload.js";
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
+import { ISLAND_ATTRIBUTE } from "../vocab/island-attribute.js";
 
 /**
  * Reads an envelope's data island and REMOVES it.
@@ -12,9 +14,9 @@ import type { IslandPayload } from "../island/island-payload.js";
  * Returns undefined when there is no island, which is what a static assembly looks like.
  */
 export function readIsland(envelope: Element): IslandPayload | undefined {
-  const id = envelope.getAttribute("data-id");
+  const id = envelope.getAttribute(ENVELOPE_ATTRIBUTE.id);
   if (id === null) return undefined;
-  const script = envelope.querySelector(`script[data-assembly="${CSS.escape(id)}"]`);
+  const script = envelope.querySelector(`script[${ISLAND_ATTRIBUTE}="${CSS.escape(id)}"]`);
   if (script === null) return undefined;
 
   const text = script.textContent ?? "";

@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@assemblejs/core";
 import type { AssetWeight } from "./asset-weight.js";
 import type { PageWeight } from "./page-weight.js";
 import { readTags } from "./read-tags.js";
@@ -76,7 +77,10 @@ export async function measurePage(
     scripts: await linked(scripts),
     elsewhere: [...new Set(elsewhere)],
     fellBack: tags
-      .filter(({ tag, attributes }) => tag === "assembly-root" && "data-failed" in attributes)
-      .map(({ attributes }) => attributes["data-name"] ?? ""),
+      .filter(
+        ({ tag, attributes }) =>
+          tag === ENVELOPE_ELEMENT && ENVELOPE_ATTRIBUTE.failed in attributes,
+      )
+      .map(({ attributes }) => attributes[ENVELOPE_ATTRIBUTE.name] ?? ""),
   };
 }

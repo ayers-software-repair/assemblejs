@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@assemblejs/core";
 import postcss from "postcss";
 import type { AtRule, Container, Document, Rule } from "postcss";
 import selectorParser from "postcss-selector-parser";
@@ -26,7 +27,7 @@ const DOCUMENT_TAGS = new Set(["html", "body"]);
  * into it.
  */
 export function scopeCss(css: string, name: string, from: string): string {
-  const scope = `assembly-root[data-name="${name.replace(/["\\]/g, "\\$&")}"]`;
+  const scope = `${ENVELOPE_ELEMENT}[${ENVELOPE_ATTRIBUTE.name}="${name.replace(/["\\]/g, "\\$&")}"]`;
   const envelope = () => selectorParser.tag({ value: scope });
   const transform = (inScope: boolean) =>
     selectorParser((selectors) => {

@@ -7,6 +7,8 @@
 // root, so a renderer's browser half can name what it is handed without importing the server
 // surface to do it.
 export type { JsonObject } from "../json/json-object.js";
+// The envelope's attribute names, for the same reason: a browser half reads an envelope by them.
+export { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 export type { MountMode } from "./mount-mode.js";
 export { readMountMode } from "./read-mount-mode.js";
 export { readIsland } from "./read-island.js";

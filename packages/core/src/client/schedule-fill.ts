@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { fillDeferred } from "./fill-deferred.js";
 
 /**
@@ -16,7 +17,7 @@ export function scheduleFill(element: Element, filled: (envelope: Element) => vo
       },
       (error: unknown) => {
         if (controller.signal.aborted) return;
-        const name = element.getAttribute("data-name") ?? "";
+        const name = element.getAttribute(ENVELOPE_ATTRIBUTE.name) ?? "";
         console.error(`assemblejs: the deferred "${name}" was not filled`, error);
       },
     );

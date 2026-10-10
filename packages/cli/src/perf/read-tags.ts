@@ -1,8 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ELEMENT } from "@assemblejs/core";
 
 // A name ends where its tag's attributes or end begin, so `<script-loader>` is not a script.
-const TAG = /<(link|script|assembly-root)(?=[\s/>])((?:[^>"']|"[^"]*"|'[^']*')*)>/gi;
+const TAG = new RegExp(
+  `<(link|script|${ENVELOPE_ELEMENT})(?=[\\s/>])((?:[^>"']|"[^"]*"|'[^']*')*)>`,
+  "gi",
+);
 const ATTRIBUTE = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g;
 // A comment (`<!-->` and `<!--->` end at once, as in a browser), or the opening tag of an element
 // whose content loads nothing and everything up to its end, whichever starts first: raw text

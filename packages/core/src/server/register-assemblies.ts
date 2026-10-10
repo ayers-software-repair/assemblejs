@@ -14,6 +14,7 @@ import { renderFailure } from "../failure/render-failure.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
+import { RESPONSE_HEADER } from "../vocab/response-header.js";
 import type { AdmitVisitor } from "./admit-visitor.js";
 import { buildManifest } from "./build-manifest.js";
 import { logFallbacks } from "./log-fallbacks.js";
@@ -159,8 +160,8 @@ export function registerAssemblies(
     }
     return reply
       .header("content-type", "text/html; charset=utf-8")
-      .header("assembly-name", resolved.assembly.name)
-      .header("assembly-version", version)
+      .header(RESPONSE_HEADER.name, resolved.assembly.name)
+      .header(RESPONSE_HEADER.version, version)
       .send(html);
   };
 

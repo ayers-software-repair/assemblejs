@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { createBus } from "./events/create-bus.js";
 import { findEnvelopes } from "./find-envelopes.js";
 import type { MountedAssembly } from "./mounted-assembly.js";
@@ -33,21 +34,23 @@ export function start(options: StartOptions): Runtime {
   const deferring = new Set<string>();
 
   const consider = (element: Element): void => {
-    const id = element.getAttribute("data-id");
+    const id = element.getAttribute(ENVELOPE_ATTRIBUTE.id);
     if (id === null || mounted.has(id)) return;
     // A fallback stands in for an assembly that did not render. Its markup is the page's, not
     // the assembly's, so there is nothing to hydrate and mounting it would run a browser half
     // against markup it never produced.
-    if (element.hasAttribute("data-failed")) return;
+    if (element.hasAttribute(ENVELOPE_ATTRIBUTE.failed)) return;
     // Two runtimes share a page when it places a remote's assembly: each mounts what came from
     // its own origin and leaves the other's alone, so no island is mounted twice. An envelope
     // inside a remote's envelope came from that remote too, marked or not.
-    const from = element.closest("[data-remote]")?.getAttribute("data-remote") ?? null;
+    const from =
+      element.closest(`[${ENVELOPE_ATTRIBUTE.remote}]`)?.getAttribute(ENVELOPE_ATTRIBUTE.remote) ??
+      null;
     const page = typeof location === "undefined" ? undefined : location.origin;
     if (options.origin === undefined ? from !== null : (from ?? page) !== options.origin) return;
     // A deferred placement's content is fetched after the page loads, then considered like any
     // envelope the server sent.
-    if (element.hasAttribute("data-defer")) {
+    if (element.hasAttribute(ENVELOPE_ATTRIBUTE.defer)) {
       if (!deferring.has(id)) defer(element, id);
       return;
     }
@@ -57,7 +60,7 @@ export function start(options: StartOptions): Runtime {
     if (mode === "none") return;
     if (payload === undefined) return;
 
-    const rendererName = element.getAttribute("data-renderer") ?? "";
+    const rendererName = element.getAttribute(ENVELOPE_ATTRIBUTE.renderer) ?? "";
     const renderer = Object.hasOwn(options.renderers, rendererName)
       ? options.renderers[rendererName]
       : undefined;

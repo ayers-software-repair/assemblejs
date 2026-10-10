@@ -3,7 +3,9 @@
 import { encodeParams } from "../compose/encode-params.js";
 import { encodeIslandJson } from "../encode/encode-island-json.js";
 import { escapeAttribute } from "../encode/escape-attribute.js";
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
+import { ISLAND_ATTRIBUTE } from "../vocab/island-attribute.js";
 import { ISLAND_SCRIPT_TYPE } from "../vocab/island-script-type.js";
 import type { EnvelopeInput } from "./envelope-input.js";
 import { projectIsland } from "./project-island.js";
@@ -17,26 +19,26 @@ import { projectIsland } from "./project-island.js";
  */
 export function renderEnvelope(input: EnvelopeInput): string {
   const attributes: Array<readonly [string, string]> = [
-    ["data-name", input.name],
-    ["data-id", input.id],
-    ["data-view", input.view],
-    ["data-renderer", input.renderer],
+    [ENVELOPE_ATTRIBUTE.name, input.name],
+    [ENVELOPE_ATTRIBUTE.id, input.id],
+    [ENVELOPE_ATTRIBUTE.view, input.view],
+    [ENVELOPE_ATTRIBUTE.renderer, input.renderer],
   ];
-  if (input.remote !== undefined) attributes.push(["data-remote", input.remote]);
-  if (input.deferred === true) attributes.push(["data-defer", ""]);
+  if (input.remote !== undefined) attributes.push([ENVELOPE_ATTRIBUTE.remote, input.remote]);
+  if (input.deferred === true) attributes.push([ENVELOPE_ATTRIBUTE.defer, ""]);
   const params =
     input.deferred === true && input.params !== undefined ? encodeParams(input.params) : "";
-  if (params !== "") attributes.push(["data-params", params]);
-  if (input.failed !== undefined) attributes.push(["data-failed", input.failed]);
+  if (params !== "") attributes.push([ENVELOPE_ATTRIBUTE.params, params]);
+  if (input.failed !== undefined) attributes.push([ENVELOPE_ATTRIBUTE.failed, input.failed]);
   if (input.mount !== undefined && input.mount !== "load") {
-    attributes.push(["data-mount", input.mount]);
+    attributes.push([ENVELOPE_ATTRIBUTE.mount, input.mount]);
   }
 
   const opening = attributes.map(([key, value]) => ` ${key}="${escapeAttribute(value)}"`).join("");
 
   const island = encodeIslandJson({ ...projectIsland(input) });
   const script =
-    `<script type="${ISLAND_SCRIPT_TYPE}" data-assembly="${escapeAttribute(input.id)}">` +
+    `<script type="${ISLAND_SCRIPT_TYPE}" ${ISLAND_ATTRIBUTE}="${escapeAttribute(input.id)}">` +
     `${island}</script>`;
 
   // A shadow root's styles are linked inside it, the only place they apply, and after the

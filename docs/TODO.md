@@ -79,20 +79,20 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    two things to fix in code (the content endpoint and a page hand their render no signal,
    so nothing stops when the asker leaves; a placement whose settling throws renders as
    nothing where the design says an empty envelope); then 6, 10 and 11.
-3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
-   pushed): its message says what is done and what is left. Bring it onto `next` after 2.
+3. THE ENVELOPE'S WORDS, done, pushed with this block: the parked branch brought onto `next`
+   and finished (the row under Phase 3, DECISIONS 2026-10-11, "the envelope's words").
 4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
    server sends; then `compose_page` by a page's name (two rows in Phase 3 below).
 
 Then registrations for the clients beyond the three, and the rows under "AFTER IT" below.
-Five rows wait on the owner and are on the estate's morning list (SECURITY, row 4a, he ruled
-on 2026-10-10 and it is built). A-04, whose memo is `docs/studies/built-in-components.md`; showing an agent a framework view,
-which means running the project's code; whether the twelve packages share one version, which
-a new project's manifest and the release-notes gate are both written as if they did; folding
-the changesets waiting into the first entry before the first publish; and whether an assembly
-in a project may have more than one view (DECISIONS 2026-10-10). A-01, A-03 and A-02 are
-done, the API reference and the release notes are done, and the subassembly rung, S-01 to
-S-09.
+No row waits on the owner: he answered every held question on 2026-10-11 (DECISIONS
+2026-10-11, "the owner's seven answers"), and each answer is a row to build, in Phase 4 below:
+built-in components as plain html and tokens (A-04); one version for the twelve packages; the
+waiting change notes folded before the first publish; one view per assembly, as it is; a page's
+data across servers only to a remote named trusted; the nesting depth in the project's config
+file; an agent's preview of a framework view through the project's dev server. A-01, A-03 and
+A-02 are done, the API reference and the release notes are done, and the subassembly rung,
+S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -686,6 +686,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       not with the protocol's code. A tool that writes an assembly tells the client to list
       again. The instructions `new` writes name both (found 2026-10-10 writing A-01; DECISIONS
       2026-10-10, "what an agent reads")
+- [x] The envelope's words are spelled once: `ENVELOPE_ATTRIBUTE`, `ISLAND_ATTRIBUTE`,
+      `FALLBACK_ATTRIBUTE` and `RESPONSE_HEADER` in core's vocabulary, used at every code site
+      in core, the command line and the Lit renderer that writes or reads one, with a spec for
+      each; nothing a server sends or a browser reads changes. Parked on 2026-10-10 for the
+      second reading, rebased onto `next` and finished 2026-10-11: the suites, the 32
+      mutations, the browser proof through the sealed launcher, every fixture and `pnpm check`
+      (DECISIONS 2026-10-11, "the envelope's words")
 - [ ] `assemblejs://contract`, the third resource DESIGN 13.3 names: the three endpoints, their
       headers and the envelope as a structure, built from core's own constants and never as a
       copy of DESIGN 2, with a spec that holds the names in it to what a real server sends
@@ -985,3 +992,40 @@ generates it with typedoc and the tree never carries it (DECISIONS 2026-10-05, 2
       the owner's hand (2026-10-07) after every run through 2026-10-05 failed at the AWS
       credentials step. Nothing has pushed `site/**` since the role, so the page has not
       deployed; the first deploy of `/assemblejs/next/` waits on his yes to the push.
+
+## Phase 5: the owner's answers of 2026-10-11
+
+The seven questions this seat held went to him in one lump through the lead, each with a
+recommendation, and he chose (DECISIONS 2026-10-11, "the owner's seven answers"; estate
+D1252). Each answer is a row here, in the order they are taken; none waits on anyone.
+
+- [ ] P5-1 THE NESTING DEPTH IN THE PROJECT'S CONFIG FILE: `assemblejs.config.ts` gets the
+      field for the depth cap, read by the command line's server into `createServer`'s
+      `maxDepth`; `check` reads it as a setting; the limit on how many a request composes
+      rides with it, as DESIGN 3.4 tied the two. A value outside its bounds is refused at boot.
+      DESIGN 3.4 and the config guide say where it is set; the morning list's item 6 closes
+- [ ] P5-2 ONE VERSION FOR THE TWELVE PACKAGES: changesets in a fixed group for every package,
+      so a release moves them together; the release-notes gate and a new project's manifest,
+      written as if they did, are held to it by a spec; the morning list's item 11 closes
+- [ ] P5-3 THE WAITING CHANGE NOTES FOLDED: before the first publish, every changeset written
+      since the packages were set to `1.0.0-next.0` is folded into one entry per package, so
+      the first publish ships one note; the morning list's item 12 closes
+- [ ] P5-4 A PAGE'S DATA ACROSS SERVERS ONLY TO A REMOTE NAMED TRUSTED: a remote declared
+      `trusted` receives the page's query and route parameters with a placement; every other
+      remote receives, as today, only the headers it declared. DESIGN 5.1 and 8 say it, the
+      remote fixture holds both, and `check` refuses `trusted` on a remote outside the
+      project's own origins where it can tell; the morning list's item 7 closes
+- [ ] P5-5 AN AGENT'S PREVIEW OF A FRAMEWORK VIEW THROUGH THE DEV SERVER: `render_assembly`
+      and `compose_page` show a React, Vue, Svelte, Solid, Lit or template view by asking the
+      project's own running dev server for it, and refuse with the reason when none is
+      running; the tool runs nothing of the project's code itself (DESIGN 13.2 holds). The
+      morning list's item 10 closes
+- [ ] P5-6 BUILT-IN COMPONENTS AS PLAIN HTML AND TOKENS (A-04): as
+      `docs/studies/built-in-components.md` proposed in that form, one tokens file every page
+      links, plain html assemblies styled by it, and the rules `check` holds them to; no
+      framework component library. The morning list's item 9 closes
+- [x] P5-7 ONE VIEW PER ASSEMBLY: as the design and the guides say today; nothing to build.
+      The morning list's item 13 closes (2026-10-11)
+- [ ] P5-8 assemblejs.com: the main landing page exists at `/assemblejs/` once the release
+      alignment (the morning list's item 2, the promotion of `next` to `main`) puts one there;
+      and the domain wants a 404 page of its own, served where the prefix router sends it

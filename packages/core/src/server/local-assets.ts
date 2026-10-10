@@ -4,15 +4,16 @@ import type { AssemblyAssets } from "../assembly/assembly-assets.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { inertSpans } from "../compose/inert-spans.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
+import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
 import { placedAssemblyOf } from "./placed-assembly-of.js";
 import { placedBeneath } from "./placed-beneath.js";
 
 const TAG = new RegExp(`<(/?)${ENVELOPE_ELEMENT}(?:\\s[^>]*)?>`, "gi");
-const NAME = /\sdata-name="([^"]*)"/;
-const VIEW = /\sdata-view="([^"]*)"/;
-const REMOTE = /\sdata-remote=/;
-const DEFERRED = /\sdata-defer[\s=>]/;
+const NAME = new RegExp(`\\s${ENVELOPE_ATTRIBUTE.name}="([^"]*)"`);
+const VIEW = new RegExp(`\\s${ENVELOPE_ATTRIBUTE.view}="([^"]*)"`);
+const REMOTE = new RegExp(`\\s${ENVELOPE_ATTRIBUTE.remote}=`);
+const DEFERRED = new RegExp(`\\s${ENVELOPE_ATTRIBUTE.defer}[\\s=>]`);
 
 /**
  * The browser files that markup needs linked around it, for the assemblies of this server it

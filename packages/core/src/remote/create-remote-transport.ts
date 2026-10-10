@@ -8,6 +8,7 @@ import type { FailureReason } from "../compose/failure-reason.js";
 import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
+import { RESPONSE_HEADER } from "../vocab/response-header.js";
 import { isPrivateAddress } from "./is-private-address.js";
 import { learnedManifests } from "./learned-manifests.js";
 import { markRemote } from "./mark-remote.js";
@@ -125,7 +126,7 @@ export function createRemoteTransport(options: {
 
       // The content has arrived, so the placement is answered now; the manifest is learned
       // beside it and never holds it.
-      const version = response.headers.get("assembly-version") ?? undefined;
+      const version = response.headers.get(RESPONSE_HEADER.version) ?? undefined;
       if (version !== undefined) {
         manifests.learn(url, target.manifest, target.origin, version, marked.nested);
       }
