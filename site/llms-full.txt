@@ -795,7 +795,7 @@ Writes `src/assemblies/cart/cart.svelte` and nothing else. The extension says th
 
 ### An assembly inside this one
 
-`slot()` answers the markup that places another assembly, by name, whatever that assembly is written in, for Svelte's own raw form to write. The server puts the assembly there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when this component renders again. The name is written as a string. An assembly in a project has one view, so the second argument, which names one, is left out.
+`slot()` answers the markup that places another assembly, by name, whatever that assembly is written in, for Svelte's own raw form to write. The server puts the assembly there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when this component renders again. The name is written as a string. An assembly in a project has one view, so the second argument, which names one, is left out. Write nothing that came from a visitor with `{@html}`: it is markup there, and a directive in it is placed like one you wrote.
 
 ```
 <script lang="ts">
@@ -1591,6 +1591,10 @@ p #{data.name}
 ```
 
 Pug's escaping leaves `'` as it is: write an attribute with Pug's own syntax, `a(title=data.name)`, rather than inside a single-quoted attribute in raw HTML.
+
+### Written raw, a value is markup
+
+Each engine has a raw form as well: `<%- %>` in EJS, `{{{ }}}` in Handlebars, `| safe` in Nunjucks and `!{ }` in Pug. What it writes is not escaped, and the server reads it as it reads the rest of the template, so an `<assembly>` directive in it is placed like one you wrote: any assembly of this server, for anyone who can open the page. Write what came from a visitor escaped.
 
 ### An assembly inside this one
 

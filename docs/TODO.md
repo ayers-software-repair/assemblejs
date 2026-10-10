@@ -5,22 +5,23 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 05:41 EDT, after the second reading's first two).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 06:04 EDT, after the second reading's fourth).**
 
-STATE. Branch `next`. `origin/next` is `6a27a0c`, the release notes, pushed 2026-10-10
-04:05 EDT; its `ci` run is 38036708423, its `release` run 38036708409 and its `deploy-site` run
-38036708372, all read to their end, green: the deploy ran the release-notes gate before it
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: the second
+reading's fourth finding, what a value written raw places, which changes `site/**`. Beneath
+it, each pushed on 2026-10-10 with its runs read to their end, green, and each time the one
+its `ci` run was created at: `05fae8a`, 05:47 EDT, the second reading's first two findings
+(`ci` 38042647592, `release` 38042647595, `deploy-site` 38042647601, and staging read: the
+seven guides and both text files as the branch has them); `03a90fa`, 05:34 EDT, nothing
+outside a project's root is read (`ci` 38041855065, `release` 38041854943); `8fe15a6`, 04:48
+EDT, the project's whole shape and each assembly as resources (`ci` 38039133712, `release`
+38039133595); `6a27a0c`, 04:06 EDT, the release notes (`ci` 38036708423, `release`
+38036708409, `deploy-site` 38036708372: the deploy ran the release-notes gate before it
 published, staging serves `/assemblejs/next/release-notes.html` as the branch has it, and the
-page was drawn in the sealed browser at a desk's width and a phone's. Beneath it: the API
-reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03,
-`9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above it,
-signed and pushed at 05:13 EDT: `8fe15a6`, the project's whole shape and each assembly as
-resources; its `ci` run is 38039133712 and its `release` run 38039133595, both read to their
-end, green. Above that, pushed at 06:52 EDT: `03a90fa`, nothing outside a project's root is
-read; its `ci` run is 38041855065 and its `release` run 38041854943, both read to their end,
-green. Above that, signed, pushed with this block: the second reading's first two findings,
-which change `site/**`.
-Every package reads `1.0.0-next.0`; twenty-one changesets are pending. The owner's overnight
+page was drawn in the sealed browser at a desk's width and a phone's). Beneath those: the API
+reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`;
+A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`.
+Every package reads `1.0.0-next.0`; twenty-two changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -28,18 +29,19 @@ deploys there. `/assemblejs/` deploys from `main`, which has no `site/` yet: the
 morning list. His rulings in this seat stand: no subagents, the seat does the work itself;
 every bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE ORDER OF WORK, set by the lead on 2026-10-10 a little after 05:20 EDT:
+THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
 
 1. DONE, `03a90fa`: every file a reader opens is held to the root, after links are followed,
    in the agent surface and in `check`, by one definition both use.
 2. THE SECOND READING OF THE DESIGN, nine findings, at
    `~/source/AUDIT/evidence/2026-10-10-assemblejs-second-reading/findings.txt`; the rows are
-   in Phase 2 below, each fixed or open. Its 1 and 2 are done, pushed with this block: a
-   project's assembly has one view and no surface tells its author to choose one from data;
-   the directive is written closed wherever it is shown. NEXT is its 4, with a spec: an
-   `<assembly>` a view writes unescaped from data is a placement, said nowhere in the design.
-   Then 3, 5, 6, 7 and 8, by this seat's ranking: 3 first, since two of its consequences are
-   held by no spec.
+   in Phase 2 below, each fixed or open. Its 1, 2 and 9 are done (`05fae8a`). Its 4 is done,
+   pushed with this block: the design says what a value a view writes raw can place, and a
+   spec holds it in core, in the rendering fixture and in the trust fixture, where a visitor
+   with no credentials is shown an assembly whose own address refuses them. Row 4a, beside
+   it, is whether the composer should refuse that itself: this seat advises it and the lead
+   orders it or not. NEXT, by this seat's ranking: 3, since two of its consequences are held
+   by no spec; then 5, 7, 6 and the rest of 8.
 3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
    pushed): its message says what is done and what is left. Bring it onto `next` after 2.
 4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
@@ -251,11 +253,33 @@ rowed or the owner's; the numbers are the report's.
       browser half stands beneath one is refused a deferral or a stream, and a missing name, a
       missing view or a loop is not refused at boot. Say it in the design, and hold the first
       two with specs, which nothing does
-- [ ] 4. NEXT, with the security work. "Which child it is may not come from data" is held by
-      `check` alone: the composer reads the markup a view rendered, so a name a view writes
-      from data is placed like any other, and any `<assembly>` a view writes unescaped from
-      data is a placement. The one spec of it covers the escaped case. Say in the design what
-      an unescaped value can place, and hold it with a spec
+- [x] 4. "Which child it is may not come from data" is held by `check` alone: the composer
+      reads the markup a view rendered, so a name a view writes from data is placed like any
+      other, and any `<assembly>` a view writes unescaped from data is a placement. The one
+      spec of it covered the escaped case. Said now where it was claimed, DESIGN 7 and 14.18:
+      who holds the name, what a value written raw places, and what bounds it; and DESIGN 5.2
+      says what the access decision is made of, which is why it matters. Held at three
+      levels. Core: the raw case beside the escaped one. The rendering fixture: five views
+      that write a visitor's value escaped and raw, in EJS, Handlebars, Nunjucks, Pug and
+      Svelte, at their own addresses and on a page; a name no assembly has; a directive the
+      finder refuses. The trust fixture: an assembly whose own address refuses a visitor is
+      shown to that visitor on an open page. The templates guide, the Svelte guide and the
+      instructions an agent is given say to write a visitor's value escaped (DECISIONS
+      2026-10-10, "a value written raw")
+- [ ] 4a. From 4, this seat's and not the reader's: THE COMPOSER COULD HOLD IT, and does not.
+      The registry carries what each view's source places, absent only where the source was
+      not read (`AssemblyView.placements`). A render could refuse before dispatch, as it
+      refuses a loop, a directive naming anything its view's source does not: nothing
+      rendered, no service run, a failed envelope, a reason of its own. A value written raw
+      could then place only a child its author already placed there, in every view `check`
+      reads; a Pug view and the others of finding 3 would stay as they are now. It is more
+      than a hardening. It would also refuse what the reader does not see in a view it does
+      read, a slot inside a component that comes from a package and a directive a view builds
+      in code, both of which render today, unknown to boot. It costs one reason more in the
+      contract's list, one option on the composer, and the specs of 4 turned over. This
+      seat's advice is to build it before 1.0: what `check` cannot see, a render should not
+      place. It is the lead's to order, since his order for 4 was the sentence and the spec,
+      and it changes what a view may do
 - [ ] 5. A loop is refused at boot only where every hop writes its view; a placement whose
       view is computed is held for its name alone and not followed, so such a loop is refused
       at render. DESIGN 3.4 and 7 say "at boot" of every loop
@@ -283,8 +307,18 @@ rowed or the owner's; the numbers are the report's.
       beside what holds it. Corrected where they are read, DECISIONS 2026-10-10, "the second
       reading": the conformance case is retitled to what it holds, the cache's refusal is in
       `placement-cache.test.ts`, and a Svelte parent hydrating around its child is in the
-      browser proof. Also from the report, not numbered: the remote spec asks a producer at
-      depth 1 and at 8 and never at 7, the last depth at which a child is still placed
+      browser proof
+- [ ] 10. From the report's account of what holds, not numbered there: across a server hop
+      the spec holds less than DESIGN 3.4's "the two headers hold depth and cycles across as
+      many servers as a page reaches". `conformance/specs/remote/nested.spec.mjs` asks the
+      producer at depth 1 and at 8 and never at 7, the last depth at which a child is still
+      placed. Ask it at 7
+- [ ] 11. Not checked by the reader, and by nobody: whether Lit's server output always
+      carries a marker. `check` judges a Lit child by its renderer's name
+      (`cli/src/check/view-problems.ts`) and the mount judges it by markers
+      (`renderer-lit/src/client/lit-assembly-in-tree.ts`), so a Lit view that renders none
+      would be refused by one and let through by the other. Read it in Lit's own
+      documentation, then hold it with a spec or say where the two differ
 
 ## Phase 3: the ladder
 

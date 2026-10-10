@@ -56,7 +56,9 @@
         assembly is written in, for Svelte's own raw form to write. The server puts the assembly
         there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when
         this component renders again. The name is written as a string. An assembly in a
-        project has one view, so the second argument, which names one, is left out.
+        project has one view, so the second argument, which names one, is left out. Write
+        nothing that came from a visitor with <code>{@html}</code>: it is markup there, and a
+        directive in it is placed like one you wrote.
 <pre><code>&lt;script lang="ts"&gt;
   import { slot } from "@assemblejs/renderer-svelte/client";
 &lt;/script&gt;

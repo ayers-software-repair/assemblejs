@@ -3641,3 +3641,74 @@ The record of S-09 cited three specs that hold less than their sentence. Correct
 - For 7, a parent hydrating around its child: for Svelte the unit specs hold the directive's
   text and the renderer's shape. That a Svelte parent hydrates around its child and writes
   nothing again is the browser proof's, `browser/frameworks.browser.ts`, the pairs it nests.
+
+## 2026-10-10: a value written raw
+
+The second reading's fourth finding, taken as the lead ordered it: say in the design what an
+unescaped value can place, and hold it with a spec.
+
+Found by the reader, and read again here at each file named:
+
+- The composer reads what a view rendered (`core/src/server/render-local.ts`, its call to
+  `compose`), and a directive in it is settled whoever wrote it. The local transport answers
+  any name this server holds (`core/src/server/local-fetch.ts`).
+- The access decision is made in the first hook of a request, of that request's path
+  (`core/src/access/register-access.ts`). A placement rendered with the answer is composed in
+  this process, so the decision is never asked of it. A spec already held that for a child a
+  page's author placed (`conformance/specs/trust/inbound.spec.mjs`, "placed without
+  credentials too"); the design did not say it. A placement a page defers is the other case:
+  the browser asks for it at the assembly's own address (`core/src/client/fill-deferred.ts`),
+  and that request is decided like any other. A view's own children are never deferred.
+- `check` refuses a name the source computes (`cli/src/check/view-findings.ts`). It does not
+  read what a view writes raw, and neither boot nor a render can tell a directive its author
+  wrote from one a value wrote.
+
+Measured, by specs that each went red on a change made to break them:
+
+- A directive a visitor sends in a page's address is placed by a view that writes it raw, in
+  EJS (`<%- %>`), Handlebars (`{{{ }}}`), Nunjucks (`| safe`), Pug (`!{ }`) and Svelte
+  (`{@html}`), and is text where the same view escapes it.
+- A name no assembly has is a failed envelope inside a parent that answered. A directive the
+  finder refuses fails the view whole: a 500 at the view's own address, its failed envelope on
+  a page.
+- Under basic credentials, an assembly no open page places answers 401 at its own address,
+  and is shown, to a visitor with no credentials, on an open page whose view writes that
+  visitor's value raw.
+
+Settled:
+
+- The design says it where it claimed otherwise. Section 7: which child a view holds is not
+  its data's to choose, and `check` is what holds that; then what a value written raw places,
+  and what bounds it. Section 5.2: the decision is made of the address a request asked;
+  what that address places and renders with its answer is not asked again, and what a page
+  defers is. 14.18 points to both.
+- The surfaces an author and an agent read say to write a visitor's value escaped: the
+  templates guide, the Svelte guide, and the instructions `new` writes into a project.
+- Each raw form was read in its engine's own documentation before a guide named it: EJS's
+  README ("Tags"), Handlebars' guide ("HTML Escaping", the triple-stash), Nunjucks' templating
+  reference (the `safe` filter), Pug's history (`!{code}`, since 0.6.0) and Svelte's reference
+  (`{@html ...}`, with its own warning to escape what is not under the author's control).
+
+Not settled here, and rowed with this seat's advice (TODO, the second reading, 4a): the
+composer could refuse it. The registry already carries what each view's source places, so a
+render could refuse a directive naming anything else, in every view `check` reads. It would
+also refuse what the reader does not see in such a view, a slot inside a component that comes
+from a package and a directive built in code, which render today. That changes what a view
+may do, so it is the lead's to order.
+
+Considered and not done:
+
+- A rule in `check` against a raw form. It would refuse what is right, markup a project's own
+  service builds, and it cannot see what a framework's raw form is handed.
+- A mark on each directive its author wrote, new at every render, which one a value wrote
+  would lack. Every template would be rewritten at build to carry it: a design of its own,
+  larger than what it closes.
+
+One of the changes made to break a spec found a hole in the spec. With a view's placement of
+the child refused before dispatch, the page case stayed green: it asked which child each
+parent held and not whether that child answered. It asks now, by the child's own markup, and
+the same change turns it red.
+
+Also corrected in this change: three times in the ledger's resume block had been typed
+without a clock and were wrong by between twenty minutes and over an hour. Each push there now
+carries the time its `ci` run was created at.

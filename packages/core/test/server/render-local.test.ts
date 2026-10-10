@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineAssembly, defineService, localFetch, renderLocal } from "@assemblejs/core";
+import { defineAssembly, localFetch, renderLocal } from "@assemblejs/core";
 import type {
   AssemblyDefinition,
   AssemblyRequest,
@@ -166,30 +166,39 @@ describe("a view that places a child", () => {
     expect(shell.renders()).toBe(1);
   });
 
-  it("places nothing for a directive that reached it as data, escaped as text", async () => {
-    const quoting = defineAssembly({
+  /** A view that writes what a visitor sent, in the way it is given. */
+  const noted = (write: (note: string) => string): AssemblyDefinition =>
+    defineAssembly({
       name: "quoting",
       views: {
         default: {
           renderer: "html",
-          services: [
-            defineService({
-              name: "note",
-              schema: { properties: { note: { type: "string" } }, required: ["note"] },
-              run: () => ({ note: '<assembly name="hello"></assembly>' }),
-            }),
-          ],
-          markup: ({ data }) => `<p>${String(data["note"]).replaceAll("<", "&lt;")}</p>`,
+          data: ({ query }) => ({ note: query.get("note") ?? "" }),
+          markup: ({ data }) => `<p>${write(String(data["note"]))}</p>`,
         },
       },
     });
-    const { html, diagnostics } = await renderLocal(
-      quoting,
-      "default",
-      given({ fetch: server(hello) }),
-    );
+  const sent = { query: new URLSearchParams({ note: '<assembly name="hello"></assembly>' }) };
+
+  it("places nothing for a directive that reached it as data, escaped as text", async () => {
+    const quoting = noted((note) => note.replaceAll("<", "&lt;"));
+    const asked = given({ ...sent, fetch: server(hello) });
+    const { html, diagnostics } = await renderLocal(quoting, "default", asked);
     expect(diagnostics).toEqual([]);
     expect(html.match(/<assembly-root/g)).toHaveLength(1);
+  });
+
+  // The composer reads what a view rendered: a directive a value wrote is one like any other.
+  it("places a child for a directive that reached it as data and was written raw", async () => {
+    const asked = given({ ...sent, fetch: server(hello) });
+    const { html, diagnostics } = await renderLocal(
+      noted((note) => note),
+      "default",
+      asked,
+    );
+    expect(diagnostics).toMatchObject([{ name: "hello", source: "local" }]);
+    expect(html).toContain('<p><assembly-root data-name="hello"');
+    expect(html).not.toMatch(/<assembly[\s>]/);
   });
 
   // True of an assembly declared by hand, which may have several views. One in a project has

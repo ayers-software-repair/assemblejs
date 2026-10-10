@@ -71,6 +71,15 @@
         HTML.</dd>
     </div>
     <div class="item">
+      <dt>Written raw, a value is markup</dt>
+      <dd>Each engine has a raw form as well: <code>&lt;%- %&gt;</code> in EJS, <code>{{{ }}}</code> in
+        Handlebars, <code>| safe</code> in Nunjucks and <code>!{ }</code> in Pug. What it writes
+        is not escaped, and the server reads it as it reads the rest of the template, so an
+        <code>&lt;assembly&gt;</code> directive in it is placed like one you wrote: any assembly
+        of this server, for anyone who can open the page. Write what came from a visitor
+        escaped.</dd>
+    </div>
+    <div class="item">
       <dt>An assembly inside this one</dt>
       <dd>A template places another assembly by writing the directive in its own markup, as a page does,
         whatever that assembly is written in. The server puts it where the directive stood. The

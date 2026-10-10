@@ -1,7 +1,7 @@
 {
   "projects": {
     "guarded": {
-      "packages": ["core", "cli"],
+      "packages": ["core", "cli", "renderer-templates"],
       "env": {
         "ASSEMBLEJS_AUTH": "basic",
         "ASSEMBLEJS_AUTH_USER": "lovelace",

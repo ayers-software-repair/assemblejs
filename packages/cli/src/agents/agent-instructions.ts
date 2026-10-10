@@ -41,7 +41,9 @@ one framework or in none, and each hydrated in the browser by its own framework.
   writes the \`Slot\` its renderer's \`/client\` exports, which Svelte and Lit call \`slot\`. The
   name is written where the placement is, never computed.
 - A **service**, \`cart/cart.service.ts\`, runs on the server before the view renders and returns
-  the view's data.
+  the view's data. A view writes that data escaped, as every renderer does by default. Written
+  with a raw form it is markup, and an \`<assembly>\` in it is placed like one the view wrote,
+  so nothing a visitor sent is written raw.
 - An **api** is a file \`src/api/<name>.api.ts\`: a route that answers data, as JSON or as a
   stream.
 

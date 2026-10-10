@@ -404,6 +404,13 @@ credentials or an `authenticate(request)` callback, plus a list of public routes
 **one place before anything else**, so there is no second path that disagrees with the first.
 The framework ships no user store, no login page and no session.
 
+The decision is made once for each request, of the address it asked. What a page or an
+assembly places of this server's own and renders with its answer is composed in this process
+and is not asked again, so such an assembly is shown to whoever may open anything that places
+it. A placement a page defers is the exception: the browser asks for it afterwards, at the
+assembly's own address (3.5), and that request is decided like any other. What a view can be
+made to place is therefore part of who sees what (section 7).
+
 A default content-security policy and a same-origin CORS policy ship on by default; allowlisted
 remote origins are added to the policy automatically, because they are the only extra origins
 the page is designed to load from. Nothing inline runs or applies under it: no inline script, no
@@ -501,10 +508,24 @@ export type MountHandle = { unmount(): void };
 - **A placement's name is written where the placement is.** What a view places is read from its
   source before any request: the build writes it beside the view, boot refuses a name with no
   assembly, a view the assembly lacks and a view that leads back to itself, and `check` says the
-  same in the file. Which child a view holds never comes from its data. Which view of that child
-  may, where the child has more than one, which only an assembly declared by hand does: an
-  assembly in a project has one view, `default`, and a parent that names another is refused
-  at `check` and at boot. A Pug view writes the directive in its own syntax and is read when it renders.
+  same in the file. Which child a view holds is not its data's to choose, and `check` is what
+  holds that: a name the source computes is a finding in every view it reads. Which view of
+  that child may come from data, where the child has more than one, which only an assembly
+  declared by hand does: an assembly in a project has one view, `default`, and a parent that
+  names another is refused at `check` and at boot. A Pug view writes the directive in its own
+  syntax and is read when it renders.
+- **A value a view writes raw is markup, and a directive in it is a placement.** The composer
+  reads what a view rendered, and nothing there tells a directive the author wrote from one a
+  value wrote. A value written escaped is text and places nothing. One written with the
+  engine's raw form places what it names: any assembly this server holds, with any view it has,
+  as often as it is written, given the query and the parameters the page was asked with, and
+  with no credentials asked for it, since the one decision was made of the address that was
+  asked (5.2). A directive the finder refuses, written the same way, fails the view whole. What
+  bounds it is what bounds every placement a view makes: this server's assemblies and no other
+  server's, the depth cap, and no assembly its own ancestor (3.4). So a value that came from a
+  visitor, or from anyone who may not write the view itself, is written escaped. Nothing
+  refuses the other: `check` reads a view's source for the names it writes and not for the
+  values it writes raw, and neither boot nor a render can tell them apart.
 - **A Lit view holds a Lit assembly only behind a shadow root.** Lit hydrates a view by reading
   every marker in its tree, and would read a Lit child's as the parent's. A shadow root hides
   them; without one the parent refuses to mount, by name, and `check` says so before a browser
@@ -1029,7 +1050,8 @@ reason, so nothing has to be remembered.
 18. **What a view places is read from its source, and its name is never computed.** Everything
     decided before a request reads it: whether a page carries the runtime, what a deferred
     parent's children need linked, whether the assembly exists. A name that is data would be
-    known only to a render.
+    known only to a render. `check` holds this in the source it reads; what a render places
+    beyond it is in section 7.
 19. **A Lit assembly in a Lit view's own tree is refused, not repaired.** Detaching the child
     while its parent hydrates would move live nodes. A shadow root on the child is one line and
     hides it.

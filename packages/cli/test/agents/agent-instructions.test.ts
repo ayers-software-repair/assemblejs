@@ -53,6 +53,15 @@ describe("what an agent that opens a project is told", () => {
     }
   });
 
+  // The composer reads what a view rendered, whoever wrote it (DESIGN 7).
+  it("says that data is written escaped, and what a directive in a value written raw does", () => {
+    expect(visible).toContain(
+      "A view writes that data escaped, as every renderer does by default.",
+    );
+    expect(visible).toContain("an `<assembly>` in it is placed like one the view wrote");
+    expect(visible).toContain("so nothing a visitor sent is written raw.");
+  });
+
   // An agent told that it will be shown a view, and shown a refusal, has been told wrong.
   it("says which views the tools show at once, and where the rest are seen", () => {
     expect(visible).toContain(
