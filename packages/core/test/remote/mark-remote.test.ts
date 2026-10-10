@@ -10,6 +10,7 @@ describe("stamping a remote's answer with its origin", () => {
   it("adds the origin to the envelope, encoded", () => {
     expect(markRemote(envelope, origin)).toEqual({
       html: '<assembly-root data-remote="https://a.example.com" data-name="cart" data-id="1"><p>x</p></assembly-root>',
+      nested: [],
     });
     expect(markRemote(envelope, 'https://a"b')).toMatchObject({
       html: expect.stringContaining('data-remote="https://a&quot;b"'),
@@ -21,6 +22,7 @@ describe("stamping a remote's answer with its origin", () => {
       '<assembly-root data-remote="https://page.example" data-name="c"></assembly-root>';
     expect(markRemote(claimed, origin)).toEqual({
       html: '<assembly-root data-remote="https://a.example.com" data-name="c"></assembly-root>',
+      nested: [],
     });
   });
 
@@ -66,5 +68,57 @@ describe("stamping a remote's answer with its origin", () => {
     ]) {
       expect(markRemote(html, origin)).toMatchObject({ refused: expect.any(String) });
     }
+  });
+});
+
+describe("what a remote's answer holds inside it", () => {
+  const inner = (name: string, view = "default", extra = ""): string =>
+    `<assembly-root data-name="${name}" data-id="i" data-view="${view}" data-renderer="html"${extra}></assembly-root>`;
+  const holding = (inside: string) =>
+    markRemote(
+      `<assembly-root data-name="shell" data-id="s" data-view="default" data-renderer="html">${inside}</assembly-root>`,
+      origin,
+    );
+
+  it("names each assembly composed inside it, once, by the endpoint it answers at there", () => {
+    const marked = holding(
+      `${inner("cart")}<div>${inner("cart")}${inner("price", "compact")}</div>`,
+    );
+    expect("nested" in marked && marked.nested).toEqual([
+      {
+        origin,
+        name: "cart",
+        view: "default",
+        content: "https://a.example.com/assembly/cart/default/",
+        manifest: "https://a.example.com/assembly/cart/default/manifest/",
+      },
+      {
+        origin,
+        name: "price",
+        view: "compact",
+        content: "https://a.example.com/assembly/price/compact/",
+        manifest: "https://a.example.com/assembly/price/compact/manifest/",
+      },
+    ]);
+  });
+
+  it("does not name the answer itself, which the page asked for by its own url", () => {
+    expect(holding("<p>no children</p>")).toMatchObject({ nested: [] });
+  });
+
+  it("names nothing for a fallback, or for a name or view no endpoint could have", () => {
+    for (const inside of [
+      inner("cart", "default", ' data-failed="c-1"'),
+      '<assembly-root data-name="../x" data-view="default"></assembly-root>',
+      '<assembly-root data-name="cart" data-view="a/b"></assembly-root>',
+      '<assembly-root data-name="Cart" data-view="default"></assembly-root>',
+      '<assembly-root data-name="cart"></assembly-root>',
+    ]) {
+      expect(holding(inside), inside).toMatchObject({ nested: [] });
+    }
+    // Quoted either way or not at all, a segment is read as the browser reads it.
+    expect(
+      holding("<assembly-root data-name='cart' data-view=wide></assembly-root>"),
+    ).toMatchObject({ nested: [{ name: "cart", view: "wide" }] });
   });
 });

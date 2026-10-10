@@ -126,7 +126,9 @@ export function createRemoteTransport(options: {
       // The content has arrived, so the placement is answered now; the manifest is learned
       // beside it and never holds it.
       const version = response.headers.get("assembly-version") ?? undefined;
-      if (version !== undefined) manifests.learn(url, target.manifest, target.origin, version);
+      if (version !== undefined) {
+        manifests.learn(url, target.manifest, target.origin, version, marked.nested);
+      }
       return version === undefined
         ? { ok: true, html, source: "remote" }
         : { ok: true, html, source: "remote", version };

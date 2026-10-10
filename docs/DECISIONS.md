@@ -2528,3 +2528,30 @@ prevent. That was S-01's own code, a day old and never pushed. The reader is one
 stretch consumed whole before the next is looked for; a comment whose closing dashes are its
 opening ones (`<!-->`, `<!--->`) ends where the parser ends it; one never closed runs to the end.
 Each is held by a test watched red.
+
+## 2026-10-10: S-05, another server's children are linked by the url that was asked
+
+Expected, from the synthesis: the transport learns each nested envelope's manifest once per
+version, and `assets(url)` answers the union.
+
+Considered and not taken: linking another server's assemblies by the envelopes in the served
+markup, as this server's are. A remote's envelope names are its own: nothing in the contract
+makes the name an answer carries equal the name in the url it was asked at, and the transport's
+own fixtures answer one name at several urls. The page asked for a url, so the page links what
+that url's answers have needed.
+
+Settled:
+
+- `markRemote` names each assembly the answer holds inside it, once, by its content endpoint on
+  the remote's origin. An envelope marked failed is a fallback and needs no files; a name or view
+  that is not a segment is no endpoint the contract describes and is left out, decided by the one
+  parser of content urls rather than by a second check.
+- `learnedManifests` reads each nested assembly's manifest by the same once-per-version rule and
+  keeps, for the url asked, every child that version's answers have held. A superset on purpose:
+  two requests' answers can hold different children, and an answer served again from the page's
+  cache holds one of them with nothing to say which; a stylesheet too many is one request, a
+  stylesheet too few is an unstyled child. A new version starts the account again.
+- A child's manifest that cannot be read is a logged warning and a retry, and never holds back
+  the files that were read.
+- A failed subtree being kept out of the cache was built at S-02, from the markup, so it already
+  holds for another server's answer.

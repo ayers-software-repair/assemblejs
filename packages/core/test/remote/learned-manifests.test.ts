@@ -3,7 +3,7 @@
 import { createServer as createHttpServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { learnedManifests } from "@assemblejs/core";
+import { learnedManifests, parseContentUrl } from "@assemblejs/core";
 import type { LogLine } from "@assemblejs/core";
 
 // A server of manifests: each path answers the files named after it, and counts its reads.
@@ -37,7 +37,7 @@ describe("what other servers' manifests declared", () => {
   it("is read when an assembly's version is first seen, and its files made absolute", async () => {
     const learned = learnedManifests({ maxBytes: 4096, log: () => undefined });
     expect(await learned.assets(content("cart"))).toBeUndefined();
-    learned.learn(content("cart"), manifest("cart"), origin, "v1");
+    learned.learn(content("cart"), manifest("cart"), origin, "v1", []);
     // A read still in flight is waited for.
     expect(await learned.assets(content("cart"))).toEqual({
       css: [`${origin}/cart.css`],
@@ -48,18 +48,19 @@ describe("what other servers' manifests declared", () => {
   it("is read once per version, however many answers that version sends", async () => {
     const learned = learnedManifests({ maxBytes: 4096, log: () => undefined });
     for (const version of ["v1", "v1", "v1"]) {
-      learned.learn(content("once"), manifest("once"), origin, version);
+      learned.learn(content("once"), manifest("once"), origin, version, []);
       await learned.assets(content("once"));
     }
     expect(readsOf("once")).toBe(1);
-    learned.learn(content("once"), manifest("once"), origin, "v2");
+    learned.learn(content("once"), manifest("once"), origin, "v2", []);
     await learned.assets(content("once"));
     expect(readsOf("once")).toBe(2);
   });
 
   it("is asked for once by first requests that arrive together", async () => {
     const learned = learnedManifests({ maxBytes: 4096, log: () => undefined });
-    for (let i = 0; i < 5; i += 1) learned.learn(content("rush"), manifest("rush"), origin, "v1");
+    for (let i = 0; i < 5; i += 1)
+      learned.learn(content("rush"), manifest("rush"), origin, "v1", []);
     await learned.assets(content("rush"));
     expect(readsOf("rush")).toBe(1);
   });
@@ -67,11 +68,55 @@ describe("what other servers' manifests declared", () => {
   it("is a logged warning and a retry when it cannot be read, never an answer", async () => {
     const logged: LogLine[] = [];
     const learned = learnedManifests({ maxBytes: 4096, log: (line) => logged.push(line) });
-    learned.learn(content("broken"), manifest("broken"), origin, "v1");
+    learned.learn(content("broken"), manifest("broken"), origin, "v1", []);
     expect(await learned.assets(content("broken"))).toBeUndefined();
     expect(logged[0]?.message).toMatch(/could not be read, and will be asked for again/);
-    learned.learn(content("broken"), manifest("broken"), origin, "v1");
+    learned.learn(content("broken"), manifest("broken"), origin, "v1", []);
     await learned.assets(content("broken"));
     expect(readsOf("broken")).toBe(2);
+  });
+});
+
+describe("what an answer held inside it", () => {
+  const child = (name: string) => {
+    const url = parseContentUrl(`${origin}/assembly/${name}/default/`);
+    if (url === undefined) throw new Error(`not a content url: ${name}`);
+    return url;
+  };
+  const files = (...names: string[]) => ({
+    css: names.map((name) => `${origin}/${name}.css`),
+    js: names.map((name) => `${origin}/${name}.js`),
+  });
+
+  it("has its manifest read by the same rule, and its files linked with the answer's own", async () => {
+    const learned = learnedManifests({ maxBytes: 4096, log: () => undefined });
+    for (let request = 0; request < 3; request += 1) {
+      learned.learn(content("shell"), manifest("shell"), origin, "v1", [
+        child("price"),
+        child("tag"),
+      ]);
+      expect(await learned.assets(content("shell"))).toEqual(files("shell", "price", "tag"));
+    }
+    expect([readsOf("shell"), readsOf("price"), readsOf("tag")]).toEqual([1, 1, 1]);
+  });
+
+  it("is kept for as long as the version stands, whichever answer held it", async () => {
+    const learned = learnedManifests({ maxBytes: 4096, log: () => undefined });
+    // Two requests whose answers held different children: a page served from the cache holds
+    // one of them, and nothing says which, so both stay linked.
+    learned.learn(content("frame"), manifest("frame"), origin, "v1", [child("left")]);
+    learned.learn(content("frame"), manifest("frame"), origin, "v1", [child("right")]);
+    expect(await learned.assets(content("frame"))).toEqual(files("frame", "left", "right"));
+    // A new version of the server's output is a new account of what its answers hold.
+    learned.learn(content("frame"), manifest("frame"), origin, "v2", []);
+    expect(await learned.assets(content("frame"))).toEqual(files("frame"));
+  });
+
+  it("does not hold back the files that were read when a child's manifest cannot be", async () => {
+    const logged: LogLine[] = [];
+    const learned = learnedManifests({ maxBytes: 4096, log: (line) => logged.push(line) });
+    learned.learn(content("panel"), manifest("panel"), origin, "v1", [child("broken")]);
+    expect(await learned.assets(content("panel"))).toEqual(files("panel"));
+    expect(logged[0]?.message).toMatch(/broken\/default\/manifest\/ could not be read/);
   });
 });

@@ -18,14 +18,17 @@ form of GitHub's OIDC subject (the morning list in the estate backlog has the ex
 His rulings in this seat stand: no subagents, the seat does the work itself; every bite since
 is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-05 (PLAN 4.2): a refactor that moves the manifest learning out
-of `create-remote-transport.ts` into `learned-manifests.ts`, then `markRemote` reports every
-envelope an answer holds, the transport learns each one's manifest once per version under a
-canonical key, and `pageAssets` asks for another server's files by the envelopes the served
-markup holds, as it already does for this server's. Then S-06 to S-09 in order. S-01 to S-04
-are done. `origin/next` is `1024a64` (S-03), its conformance and browser proof green on
-GitHub's runners; later commits are local until the next allowed push (only `next`, no
-`site/**`, one push per landed bite, each run read to its end). Each mutation is run alone.
+THE EXACT NEXT STEP is bite S-06 (PLAN 4.2), the renderers: `children` leaves `MarkupInput`,
+`RenderInput`, every renderer's props, hydrate and server render, and the template engines'
+locals; `placementDirective(name, view?)` in core's client entry is the one definition of what
+a framework view writes; `Slot({ name, view? })` in React, Preact, Vue and Solid renders it on
+both sides (React's with `suppressHydrationWarning` and an identity-stable object per
+directive); `slot(name, view?)` in Svelte and Lit; then the `nested` page in
+`examples/frameworks` and its browser proof. Then S-07 to S-09. S-01 to S-05 are done and
+pushed through S-04 (`2396c27`, conformance and the browser proof green on GitHub's runners);
+S-05 is pushed with this block. Pushes: only `next`, no `site/**`, one per landed bite, each
+run read to its end. Each mutation is run alone. Edit scripts run in the foreground, where a
+failure is seen, before any gate is started.
 
 AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
 the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
@@ -392,7 +395,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         `start` and a filled placement consider a child placed inside one; the deferred fill sends
         `assembly-depth: 1`. Self-verified: four mutations, each run alone and watched red
         (2026-10-10)
-  - [ ] S-05 nested manifests learned once per version; a failed subtree is not cached
+  - [x] S-05 a page links what another server composed inside its answer: `markRemote` names
+        each nested assembly by its content endpoint (a fallback and a non-segment name left out),
+        `learnedManifests` reads each one's manifest once per version and keeps it for the url
+        that was asked; a failed subtree was already kept out of the cache at S-02. Self-verified:
+        six mutations, each run alone and watched red (2026-10-10)
   - [ ] S-06 `children` leaves the interface; `Slot({ name, view? })` renders the directive on
         both sides; `slot()` for Svelte and Lit; the Lit-in-Lit refusal; the `nested` example
         and the browser proof
