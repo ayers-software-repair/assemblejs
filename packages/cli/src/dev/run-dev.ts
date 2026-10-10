@@ -3,6 +3,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { buildProject } from "../build/build-project.js";
+import { CONFIG_FILE } from "../discovery/config-file.js";
 import type { Io } from "../io/io.js";
 import type { RunningServer } from "./running-server.js";
 import { startServer } from "./start-server.js";
@@ -60,7 +61,7 @@ export async function runDev(
   await rebuild();
   const stops = [
     watchSources(join(root, "src"), () => void rebuild()),
-    watchSources(root, () => void rebuild(), 100, "assemblejs.config.ts"),
+    watchSources(root, () => void rebuild(), 100, CONFIG_FILE),
   ];
   await new Promise<void>((resolve) => {
     if (signal.aborted) resolve();

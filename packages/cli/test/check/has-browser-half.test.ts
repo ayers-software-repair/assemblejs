@@ -12,7 +12,7 @@ const halves = (files: Record<string, string>): Record<string, boolean> => {
     realIo.write(join(root, "src/assemblies", path), contents);
   }
   return Object.fromEntries(
-    discoverAssemblies(join(root, "src/assemblies")).assemblies.map((assembly) => [
+    discoverAssemblies(root).assemblies.map((assembly) => [
       assembly.name,
       hasBrowserHalf(root, assembly),
     ]),

@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 04:47 EDT, after the project's shape).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 05:27 EDT, after the root is held).**
 
 STATE. Branch `next`. `origin/next` is `6a27a0c`, the release notes, pushed 2026-10-10
 04:05 EDT; its `ci` run is 38036708423, its `release` run 38036708409 and its `deploy-site` run
@@ -14,8 +14,11 @@ published, staging serves `/assemblejs/next/release-notes.html` as the branch ha
 page was drawn in the sealed browser at a desk's width and a phone's. Beneath it: the API
 reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03,
 `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above it,
-signed, pushed with this block: the project's whole shape and each assembly as resources.
-Every package reads `1.0.0-next.0`; nineteen changesets are pending. The owner's overnight
+signed and pushed at 05:13 EDT: `8fe15a6`, the project's whole shape and each assembly as
+resources; its `ci` run is 38039133712 and its `release` run 38039133595, both read to their
+end, green. Above that, signed, pushed with this block: nothing outside a project's root is
+read.
+Every package reads `1.0.0-next.0`; twenty changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -23,10 +26,24 @@ deploys there. `/assemblejs/` deploys from `main`, which has no `site/` yet: the
 morning list. His rulings in this seat stand: no subagents, the seat does the work itself;
 every bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is the other half of DESIGN 13.3, two rows in Phase 3 below:
-`assemblejs://contract`, built from core's constants with a spec that holds it to what a real
-server sends, and `compose_page` by a page's name, so the policy the page declares applies.
-Then registrations for the clients beyond the three; then the rows under "AFTER IT" below.
+THE ORDER OF WORK, set by the lead on 2026-10-10 a little after 05:20 EDT:
+
+1. DONE, pushed with this block: every file a reader opens is held to the root, after links
+   are followed, in the agent surface and in `check`, by one definition both use.
+2. THE SECOND READING OF THE DESIGN, nine findings, at
+   `~/source/AUDIT/evidence/2026-10-10-assemblejs-second-reading/findings.txt`, read whole.
+   Its 1 and 2 first, since the guides are on staging: in a project a child has one view, and
+   every guide tells its author to choose one from data, with a sample; and the design writes
+   the directive as an opening tag alone, which the finder refuses. Then its 4 with the
+   security work: an `<assembly>` a view writes unescaped from data is a placement, said
+   nowhere and held by no test. Then 3, 5, 6, 7, 8 and 9 by this seat's ranking. Each of the
+   nine ends fixed, rowed or the owner's, and the lead is told which.
+3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
+   pushed): its message says what is done and what is left. Bring it onto `next` after 2.
+4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
+   server sends; then `compose_page` by a page's name (two rows in Phase 3 below).
+
+Then registrations for the clients beyond the three, and the rows under "AFTER IT" below.
 Four rows wait on the owner and are on the estate's morning list: A-04, whose memo is
 `docs/studies/built-in-components.md`; showing an agent a framework view, which means running
 the project's code; whether the twelve packages share one version, which a new project's
@@ -504,12 +521,22 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       a log. The second waits with the row above on how an agent is shown a running project;
       the first wants a run of the service or a reading of the project's types, and neither
       is decided (DECISIONS 2026-10-10, "what an agent reads")
-- [ ] The agent surface holds the four places the shape is read from to the root
-      (`src/assemblies`, `src/pages`, `src/api`, the config), and a link one level further
-      down is followed: a page's directory, its `.page.ts`, an api file. What such a file
-      writes as literals is then shown, and `check` reads through it the same way, as it did
-      before the shape. Hold every file the readers open to the root, in the readers both
-      use (found 2026-10-10, DESIGN 13.6)
+- [x] NOTHING OUTSIDE A PROJECT'S ROOT IS READ, by `check` or by the agent surface (the lead's
+      order, 2026-10-10; DESIGN 13.6). Found on the code as it stood: a finding quoted what a
+      linked file held, `api "..." does not start with "/"` from an api file outside the root
+      and `places "..."` from a template in a directory outside it. Now every file a reader
+      opens goes through one read, `readInside`, held to the root after each link is followed;
+      discovery takes the project's root, lists no directory that leads out of it and keeps a
+      file that does by its name alone; a view's import that climbs out is not followed. Each
+      is a finding by a new rule, `a-project-stays-inside-its-root`, and reads `(unread)` in
+      the shape. The guard is the one the agent surface's tools had, moved down to the command
+      line, which the surface now takes it from. A link that stays inside is read, and a link
+      to a link is followed to where it leads (DECISIONS 2026-10-10, "nothing outside the root
+      is read")
+- [ ] The build's own reads open files directly: the hash of the sources, the stylesheets it
+      carries into `dist/`. A link out refuses the build at discovery before either runs, and
+      that is all that holds them. Give them the same read when the build is next opened
+      (found 2026-10-10)
 - [ ] `pageRoute` takes a declaration whose default export is not written as an object for one
       that declares no route, so `check` and the shape say the route its directory implies
       where only a run could tell. A value `check` cannot read should be unknown to it

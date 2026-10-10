@@ -16,7 +16,7 @@ import { RENDERABLE_WITHOUT_A_BUILD } from "./renderable-without-a-build.js";
  * reason is in the log.
  */
 export function projectAssemblies(root: ProjectRoot): ReadonlyMap<string, AssemblyDefinition> {
-  const { assemblies } = discoverAssemblies(withinRoot(root, "src", "assemblies"));
+  const { assemblies } = discoverAssemblies(root.path);
   const { placements } = viewFindings(root.path, assemblies);
   return new Map(
     assemblies.map((found): [string, AssemblyDefinition] => {

@@ -1,6 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -91,5 +98,22 @@ describe("the add agents command", () => {
     const depended = told();
     addAgents(project({ "package.json": MANIFEST }), depended.io);
     expect(depended.logs.join("\n")).not.toContain("npm install");
+  });
+
+  // What stands outside the project is not this project's to rewrite.
+  it("writes nothing through a link that leads out of the project, and nothing else either", () => {
+    const outside = project({ "AGENTS.md": "# Shared by every project here\n" });
+    const root = project({ "package.json": MANIFEST });
+    symlinkSync(join(outside, "AGENTS.md"), join(root, "AGENTS.md"));
+    const { io, logs, errors } = told();
+    expect(addAgents(root, io)).toBe(1);
+    expect(errors).toEqual([
+      "AGENTS.md leads out of the project, and nothing outside the project is read: put the file or directory itself where the link is, or bring what it leads to in as a package",
+    ]);
+    expect(logs).toEqual([]);
+    expect(readFileSync(join(outside, "AGENTS.md"), "utf8")).toBe(
+      "# Shared by every project here\n",
+    );
+    expect(existsSync(join(root, ".mcp.json"))).toBe(false);
   });
 });

@@ -18,7 +18,7 @@ export function placeOnPage(
   name: string,
   position: PlacementPosition,
 ): ToolResult {
-  const pages = discoverPages(withinRoot(root, "src", "pages")).pages;
+  const pages = discoverPages(root.path).pages;
   const found = pages.find((candidate) => candidate.name === page);
   if (found === undefined) {
     return {
@@ -37,7 +37,7 @@ export function placeOnPage(
       ],
     };
   }
-  const assemblies = discoverAssemblies(withinRoot(root, "src", "assemblies")).assemblies;
+  const assemblies = discoverAssemblies(root.path).assemblies;
   if (!assemblies.some((assembly) => assembly.name === name)) {
     return {
       ok: false,

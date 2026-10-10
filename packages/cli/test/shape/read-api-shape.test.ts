@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPUTED, UNREAD, readApiShape, realIo } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 const api = (source: string) => {
   const root = mkdtempSync(join(tmpdir(), "api-shape-"));
@@ -60,6 +61,16 @@ describe("one api file's route, read from its source", () => {
 
   it("marks every part of a file that cannot be read", () => {
     expect(api("export default { path: ")).toEqual({
+      file: "src/api/prices.api.ts",
+      path: UNREAD,
+      method: UNREAD,
+      streams: UNREAD,
+    });
+  });
+
+  it("marks every part of a file that leads out of the project, which is not opened", () => {
+    const { root } = linkedProject({}, { "src/api/prices.api.ts": "outside:secret.api.ts" });
+    expect(readApiShape(root, join(root, "src/api/prices.api.ts"))).toEqual({
       file: "src/api/prices.api.ts",
       path: UNREAD,
       method: UNREAD,

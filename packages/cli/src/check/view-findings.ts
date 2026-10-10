@@ -1,12 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readFileSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 import { SEGMENT } from "@assemblejs/core";
 import type { ViewPlacement } from "@assemblejs/core";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { leadsOut } from "../root/leads-out.js";
+import { readInside } from "../root/read-inside.js";
 import { collectPlacements } from "./collect-placements.js";
 import { readViewPlacements } from "./read-view-placements.js";
 import { viewModules } from "./view-modules.js";
@@ -23,7 +24,8 @@ const DIRECTIVE_FIX = 'write each placement as <assembly name="..."></assembly>'
  * A framework view is read with the components it is split into, since a slot written in one of
  * them is the view's as much as one written in its own file. A view missing from the answer is
  * one whose placements only its render knows, unless it is named among the unread: those hold a
- * placement that cannot be read, which is a problem here and no render's secret.
+ * placement that cannot be read, which is a problem here and no render's secret, or lead out of
+ * the project, where nothing is read. An import that leads out is a problem, and is not followed.
  */
 export function viewFindings(
   root: string,
@@ -41,10 +43,25 @@ export function viewFindings(
     const wrong = (rule: ProjectProblem["rule"], message: string, fix: string): void => {
       problems.push({ path: assembly.view, rule, message: `"${assembly.name}" ${message}`, fix });
     };
+    // A view that leads out of the project is not opened. Where the project names it says so.
+    if (leadsOut(root, file)) {
+      unread.add(assembly.name);
+      continue;
+    }
+    const found = isStaticView(assembly.renderer)
+      ? { modules: [file], outside: [] }
+      : viewModules(root, file);
+    for (const written of found.outside) {
+      wrong(
+        "a-project-stays-inside-its-root",
+        `imports ${written}, which is outside the project, so what it places is not read`,
+        "move the component into the project, or import it by a package's name",
+      );
+    }
     let read: ViewPlacements;
     try {
-      const [own, ...parts] = (isStaticView(assembly.renderer) ? [file] : viewModules(file)).map(
-        (module) => readViewPlacements(module, assembly.renderer, readFileSync(module, "utf8")),
+      const [own, ...parts] = found.modules.map((module) =>
+        readViewPlacements(module, assembly.renderer, readInside(root, module)),
       );
       // A view that cannot be read places nothing known, and its render reads it.
       if (own?.placements === undefined) continue;

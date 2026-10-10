@@ -6,6 +6,7 @@ export type { ProjectProblem } from "./project-problem.js";
 export { suggestName } from "./suggest-name.js";
 export { isDirectory } from "./is-directory.js";
 export { fromRoot } from "./from-root.js";
+export { CONFIG_FILE } from "./config-file.js";
 export type { DiscoveredAssembly } from "./discovered-assembly.js";
 export { TEMPLATE_RENDERERS } from "./template-renderers.js";
 export { isStaticView } from "./is-static-view.js";

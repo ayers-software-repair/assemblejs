@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPUTED, UNREAD, discoverPages, readPageShape, realIo } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 const TEMPLATE =
   '<main><assembly name="header"></assembly><assembly name="cart" view="compact"></assembly></main>';
@@ -14,7 +15,7 @@ const page = (files: Record<string, string>) => {
   for (const [path, contents] of Object.entries(files)) {
     realIo.write(join(root, "src/pages", path), contents);
   }
-  const [found] = discoverPages(join(root, "src/pages")).pages;
+  const [found] = discoverPages(root).pages;
   if (found === undefined) throw new Error("no page was written");
   return readPageShape(root, found);
 };
@@ -87,5 +88,20 @@ describe("one page, read from its sources", () => {
     });
     expect(shape.places).toBe(UNREAD);
     expect(shape.route).toBe("/store");
+  });
+
+  it("marks what a declaration or a template that leads out would have said, unopened", () => {
+    const { root } = linkedProject(
+      { "src/pages/shop/shop.html": TEMPLATE, "src/pages/out/out.page.ts": "export default {};" },
+      {
+        "src/pages/shop/shop.page.ts": "outside:secret.page.ts",
+        "src/pages/out/out.html": "outside:pagedir/landing.html",
+      },
+    );
+    const [out, shop] = discoverPages(root).pages.map((found) => readPageShape(root, found));
+    expect(shop).toMatchObject({ route: UNREAD, policy: UNREAD, stream: UNREAD });
+    expect(shop?.places).toHaveLength(2);
+    expect(out).toMatchObject({ route: "/out", places: UNREAD, policy: {} });
+    expect(JSON.stringify([out, shop])).not.toMatch(/SECRET|secret-/);
   });
 });

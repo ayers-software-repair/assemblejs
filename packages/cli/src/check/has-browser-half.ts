@@ -14,5 +14,5 @@ import { readViewMount } from "./read-view-mount.js";
 export function hasBrowserHalf(root: string, assembly: DiscoveredAssembly): boolean {
   if (isStaticView(assembly.renderer)) return assembly.client !== undefined;
   const view = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
-  return readViewMount(view) !== "none";
+  return readViewMount(root, view) !== "none";
 }

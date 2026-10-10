@@ -40,7 +40,7 @@ export function placeInView(
   name: string,
   position: PlacementPosition,
 ): ToolResult {
-  const assemblies = discoverAssemblies(withinRoot(root, "src", "assemblies")).assemblies;
+  const assemblies = discoverAssemblies(root.path).assemblies;
   const names = assemblies.map((assembly) => assembly.name).join(", ") || "none yet";
   const refused = (problem: ProjectProblem): ToolResult => ({
     ok: false,

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join } from "node:path";
 import {
   apiProblems,
@@ -17,12 +17,16 @@ import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
 import { agentProblems } from "../agents/agent-problems.js";
 import { buildProblems } from "../build/build-problems.js";
 import { templateProblems } from "../build/template-problems.js";
+import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import { fromRoot } from "../discovery/from-root.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { readBudgets } from "../perf/read-budgets.js";
+import { outsideProblems } from "../root/outside-problems.js";
+import { OutsideRootError } from "../root/outside-root-error.js";
+import { readInside } from "../root/read-inside.js";
 import { declaredOrigins } from "./declared-origins.js";
 import { hasBrowserHalf } from "./has-browser-half.js";
 import type { PagePolicy } from "./page-policy.js";
@@ -49,10 +53,9 @@ const STREAM_FIX =
  * findings the same way.
  */
 export async function checkProject(root: string): Promise<readonly ProjectProblem[]> {
-  const src = join(root, "src");
-  const assemblies = discoverAssemblies(join(src, "assemblies"));
-  const pages = discoverPages(join(src, "pages"));
-  const apis = discoverApis(join(src, "api"));
+  const assemblies = discoverAssemblies(root);
+  const pages = discoverPages(root);
+  const apis = discoverApis(root);
   const names = assemblies.assemblies.map((assembly) => assembly.name);
   // What the placement rules read of each assembly: in a project, one view, whether it has a
   // browser half, and what its view's source is known to place.
@@ -81,11 +84,13 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     ...agentProblems(root),
   ];
 
-  // A file that cannot be read is a finding against it, never a throw out of check.
+  // A file that cannot be read is a finding against it, never a throw out of check. One that
+  // leads out of the project is not opened, and is a finding already, where the project names it.
   const readOr = <T>(file: string, read: (source: string) => T, otherwise: T): T => {
     try {
-      return read(readFileSync(file, "utf8"));
+      return read(readInside(root, file));
     } catch (error) {
+      if (error instanceof OutsideRootError) return otherwise;
       problems.push({
         path: file,
         rule: "a-placement-names-an-assembly",
@@ -97,7 +102,8 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   };
   // The config, read once: the remotes it declares, and the budgets `perf` would hold each page
   // to, refused here as `perf` refuses them, before a build.
-  const configFile = join(root, "assemblejs.config.ts");
+  const configFile = join(root, CONFIG_FILE);
+  problems.push(...outsideProblems(root, [configFile]));
   const config = existsSync(configFile)
     ? readOr(
         configFile,
@@ -122,7 +128,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   for (const file of apis.apis) {
     let api;
     try {
-      api = readApi(file);
+      api = readApi(root, file);
     } catch {
       api = undefined;
     }
@@ -189,15 +195,17 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     let template;
     let placements;
     try {
-      template = readFileSync(page.template, "utf8");
+      template = readInside(root, page.template);
       placements = findPlacements(template);
     } catch (error) {
-      problems.push({
-        path: page.template,
-        rule: "a-placement-names-an-assembly",
-        message: error instanceof Error ? error.message : String(error),
-        fix: 'write each placement as <assembly name="..."></assembly>',
-      });
+      if (!(error instanceof OutsideRootError)) {
+        problems.push({
+          path: page.template,
+          rule: "a-placement-names-an-assembly",
+          message: error instanceof Error ? error.message : String(error),
+          fix: 'write each placement as <assembly name="..."></assembly>',
+        });
+      }
       // With no placements to read, the stream's path is still held; what would open it is not.
       for (const message of streamProblems(label, policy.stream, streams, undefined)) {
         problems.push({ path: at, rule: "a-page-opens-one-stream", message, fix: STREAM_FIX });

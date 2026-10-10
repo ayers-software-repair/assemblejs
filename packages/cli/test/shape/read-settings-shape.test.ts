@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPUTED, UNREAD, readSettingsShape, realIo } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 const settings = (source?: string) => {
   const root = mkdtempSync(join(tmpdir(), "settings-shape-"));
@@ -79,5 +80,17 @@ describe("what a project's config declares, read from its source", () => {
     });
     expect(settings("export default configFor(process.env);")).toEqual(all(COMPUTED));
     expect(settings("export default { budgets: ")).toEqual(all(UNREAD));
+  });
+
+  it("marks every field of a config that leads out of the project, there or not, unopened", () => {
+    for (const target of ["outside:secret.config.ts", "outside:no-such-config.ts"]) {
+      const { root } = linkedProject({}, { "assemblejs.config.ts": target });
+      const shape = readSettingsShape(root);
+      expect(shape, target).toMatchObject({ file: "assemblejs.config.ts", budgets: UNREAD });
+      expect(
+        Object.values(shape).filter((value) => value === UNREAD),
+        target,
+      ).toHaveLength(5);
+    }
   });
 });

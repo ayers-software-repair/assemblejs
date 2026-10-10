@@ -6,7 +6,16 @@
 // surface was installed with, the command line it installed, and HTTP. The tests run in the
 // order written, each on the project as the one before it left it.
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, realpathSync, writeFileSync } from "node:fs";
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -178,6 +187,48 @@ test("the server tells the agent the project's whole shape, and one assembly of 
     );
   } finally {
     await client.close();
+  }
+});
+
+// DESIGN 13.6: nothing outside the root is read. A link out of the project, put into the
+// project as the agent left it and taken out again: neither the server's check, nor its shape,
+// nor the command line's check says a word of what the link leads to.
+test("a link that leads out of the project is a finding, and is never read", async () => {
+  const outside = mkdtempSync(join(tmpdir(), "conformance-outside-"));
+  writeFileSync(join(outside, "secret.api.ts"), 'export default { path: "SECRET-NO-SLASH" };');
+  mkdirSync(join(root, "src", "api"));
+  symlinkSync(join(outside, "secret.api.ts"), join(root, "src", "api", "leak.api.ts"));
+  const client = await startedFrom(...CLIENTS[0]);
+  try {
+    const call = calling(client);
+    const checked = await call("check");
+    assert.equal(checked.ok, false);
+    assert.deepEqual(
+      checked.problems.map((problem) => [problem.path, problem.rule]),
+      [["src/api/leak.api.ts", "a-project-stays-inside-its-root"]],
+    );
+    const project = await resourceOf(client, "assemblejs://project");
+    assert.deepEqual(project.apis, [
+      { file: "src/api/leak.api.ts", path: "(unread)", method: "(unread)", streams: "(unread)" },
+    ]);
+    assert.deepEqual(
+      project.problems.map((problem) => [problem.path, problem.rule]),
+      [["src/api/leak.api.ts", "a-project-stays-inside-its-root"]],
+    );
+    const refused = run("check");
+    assert.equal(refused.status, 1, refused.stdout);
+    assert.match(
+      refused.stderr,
+      /^src\/api\/leak\.api\.ts: leak\.api\.ts leads out of the project/m,
+    );
+    assert.ok(!JSON.stringify([checked, project, refused.stderr]).includes("SECRET"));
+    const why = await call("explain", { id: "a-project-stays-inside-its-root" });
+    assert.match(why.result.because, /an agent is shown what they read/);
+    assert.ok(told.includes("- `a-project-stays-inside-its-root`: "), "AGENTS.md carries the rule");
+  } finally {
+    await client.close();
+    rmSync(join(root, "src", "api"), { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
   }
 });
 

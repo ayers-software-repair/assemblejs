@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -184,5 +184,17 @@ describe("what is out of date in the agent files a project carries", () => {
     expect(await checkProject(root)).toMatchObject([
       { path: "AGENTS.md", rule: "agent-instructions-are-current" },
     ]);
+  });
+
+  // An agent file that leads out of the project is not read: it is one the project does not
+  // have, and that it leads out is a finding of its own.
+  it("is an agent file that leads out of the project, which is not read to be judged", () => {
+    const outside = project({ "AGENTS.md": AGENTS.replace("## The rules", "## SECRET rules") });
+    const root = project({ "package.json": MANIFEST });
+    symlinkSync(join(outside, "AGENTS.md"), join(root, "AGENTS.md"));
+    expect(
+      agentProblems(root).map(({ path, rule }) => [path.slice(root.length + 1), rule]),
+    ).toEqual([["AGENTS.md", "a-project-stays-inside-its-root"]]);
+    expect(JSON.stringify(agentProblems(root))).not.toContain("SECRET");
   });
 });

@@ -7,6 +7,7 @@ import { buildProject } from "../build/build-project.js";
 import { pageRoute } from "../check/page-route.js";
 import type { RunningServer } from "../dev/running-server.js";
 import { startServer } from "../dev/start-server.js";
+import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import type { Io } from "../io/io.js";
 import { formatWeight } from "./format-weight.js";
@@ -38,7 +39,7 @@ export async function runPerf(
   const { build = buildProject, signal } = options;
   const start = options.start ?? ((at, quiet, env) => startServer(at, quiet, 3000, env));
   // The budgets first: one that cannot be read is known before anything is built or started.
-  const configFile = join(root, "assemblejs.config.ts");
+  const configFile = join(root, CONFIG_FILE);
   let budgets: PageBudgets = {};
   if (existsSync(configFile)) {
     try {
@@ -54,7 +55,7 @@ export async function runPerf(
     }
   }
   if ((await build(root, io)) !== 0) return 1;
-  const { pages } = discoverPages(join(root, "src", "pages"));
+  const { pages } = discoverPages(root);
   const port = await freePort();
   const server = start(
     root,

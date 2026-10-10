@@ -4,12 +4,14 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { outsideProblems } from "../root/outside-problems.js";
 import { styleProblems } from "../styles/style-problems.js";
 import { findPackage } from "./find-package.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 
 /**
  * Everything that would stop a project building, found before the bundler runs: no server file,
+ * or one that leads out of the project,
  * a view whose renderer this version cannot build, a renderer package or the Svelte compiler the
  * project has not installed, and a framework view with a `.client.ts`, whose browser behaviour is
  * its component already, and a stylesheet the build cannot carry into `dist/` intact. `check`
@@ -19,7 +21,9 @@ export function buildProblems(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
 ): readonly ProjectProblem[] {
-  const problems: ProjectProblem[] = [];
+  // The server file is the project's own like any other: one that leads out of the root is a
+  // finding, and is not what a build of this project bundles.
+  const problems: ProjectProblem[] = [...outsideProblems(root, [join(root, "src", "server.ts")])];
   if (!existsSync(join(root, "src", "server.ts"))) {
     problems.push({
       path: join(root, "src", "server.ts"),
@@ -76,6 +80,6 @@ export function buildProblems(
       });
     }
   }
-  problems.push(...styleProblems(assemblies));
+  problems.push(...styleProblems(root, assemblies));
   return problems;
 }

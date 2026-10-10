@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { isAbsolute, join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 import { COMPUTED, UNREAD, readShape, realIo } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 const REACT = 'import { Slot } from "@assemblejs/renderer-react/client";\n';
 
@@ -149,5 +150,88 @@ describe("a project's whole shape, read from its sources", () => {
   it("is what JSON carries whole", () => {
     const shape = readShape(project(SHOP));
     expect(JSON.parse(JSON.stringify(shape))).toEqual(shape);
+  });
+});
+
+// A project is its root. An agent is shown what the shape reads, so a link under the root that
+// leads out of it, and an import that climbs out, are not followed: each reads as unread, with
+// the rule that says why, and nothing of what stood outside is in the answer.
+describe("a project with links that lead out of it", () => {
+  const RULE = "a-project-stays-inside-its-root";
+  const everywhere = (): string => {
+    const { root, outside } = linkedProject(SHOP, {
+      "src/pages/home/home.page.ts": "outside:secret.page.ts",
+      "src/pages/landing": "outside:pagedir",
+      "src/api/prices.api.ts": "outside:secret.api.ts",
+      "assemblejs.config.ts": "outside:secret.config.ts",
+      "src/assemblies/stolen": "outside:asm",
+      "src/assemblies/shell/shell.html": "outside:asm/stolen.html",
+    });
+    const view = join(root, "src/assemblies/cart/cart.react.tsx");
+    const climbing = relative(join(view, ".."), join(outside, "row.tsx")).split("\\").join("/");
+    realIo.write(
+      view,
+      `${REACT}import { Row } from "${climbing}";\nexport default () => <><Row /><Slot name="price" /></>;`,
+    );
+    return root;
+  };
+
+  it("tells nothing of what a link or an import leads out to", () => {
+    const told = JSON.stringify(readShape(everywhere()));
+    expect(told).not.toMatch(/SECRET|secret-/);
+  });
+
+  it("marks each as unread, lists no directory that is one, and says which rule each breaks", () => {
+    const shape = readShape(everywhere());
+    expect(shape.pages.map((page) => [page.name, page.route, page.policy])).toEqual([
+      ["about", "/about", {}],
+      ["home", UNREAD, UNREAD],
+    ]);
+    expect(shape.apis).toEqual([
+      { file: "src/api/prices.api.ts", path: UNREAD, method: UNREAD, streams: UNREAD },
+    ]);
+    expect(shape.settings).toMatchObject({ file: "assemblejs.config.ts", budgets: UNREAD });
+    expect(shape.assemblies.map((assembly) => [assembly.name, assembly.places])).toEqual([
+      ["cart", [{ name: "price", view: "default" }]],
+      ["price", []],
+      ["shell", UNREAD],
+    ]);
+    expect(
+      shape.problems.filter((problem) => problem.rule === RULE).map((problem) => problem.path),
+    ).toEqual([
+      "src/assemblies/shell/shell.html",
+      "src/assemblies/stolen",
+      "src/pages/home/home.page.ts",
+      "src/pages/landing",
+      "src/api/prices.api.ts",
+      "assemblejs.config.ts",
+      "src/assemblies/cart/cart.react.tsx",
+    ]);
+  });
+
+  it("still reads a link that stays inside the project, and a link to a link that does", () => {
+    const { root } = linkedProject(
+      { ...SHOP, "src/shared/second.ts": 'export default { route: "/store" };' },
+      {
+        "src/shared/first.ts": "second.ts",
+        "src/pages/home/home.page.ts": "../../shared/first.ts",
+      },
+    );
+    const shape = readShape(root);
+    expect(shape.pages.find((page) => page.name === "home")?.route).toBe("/store");
+    expect(shape.problems).toEqual([]);
+  });
+
+  it("follows a link to a link that leads out, and refuses it where the project names it", () => {
+    const { root } = linkedProject(SHOP, {
+      "src/shared/first.ts": "outside:secret.page.ts",
+      "src/pages/home/home.page.ts": "../../shared/first.ts",
+    });
+    const shape = readShape(root);
+    expect(shape.pages.find((page) => page.name === "home")?.route).toBe(UNREAD);
+    expect(shape.problems.map((problem) => [problem.path, problem.rule])).toEqual([
+      ["src/pages/home/home.page.ts", RULE],
+    ]);
+    expect(JSON.stringify(shape)).not.toContain("SECRET");
   });
 });

@@ -12,6 +12,7 @@ export { instructionsIn } from "./instructions-in.js";
 export { registeredEntry } from "./registered-entry.js";
 export { manifestOf } from "./manifest-of.js";
 export { textIn } from "./text-in.js";
+export { installedManifest } from "./installed-manifest.js";
 export { agentFiles } from "./agent-files.js";
 export { addAgents } from "./add-agents.js";
 export { agentProblems } from "./agent-problems.js";

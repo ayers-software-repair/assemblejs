@@ -121,12 +121,15 @@ describe("what an agent reads", () => {
     expect(await complete("x")).toEqual([]);
   });
 
-  // Listing opens nothing but the directory the assemblies are in. A project one of whose other
-  // parts leads out of it still lists everything; only the read that would follow the link fails.
-  it("still lists what can be read when a part of the project leads out of it", async () => {
+  // Nothing outside the project is read, and nothing a project holds takes a read or the list
+  // down: where a part of it leads out of the root, the rest is still listed and still told.
+  it("still lists and answers when a part of the project leads out of it", async () => {
     const outside = mkdtempSync(join(tmpdir(), "assemblejs-mcp-outside-"));
     try {
-      writeFileSync(join(outside, "config.ts"), "export default { budgets: { document: 1 } };");
+      writeFileSync(
+        join(outside, "config.ts"),
+        'export default { contentSecurityPolicy: "SECRET" };',
+      );
       symlinkSync(join(outside, "config.ts"), join(dir, "assemblejs.config.ts"));
       expect((await client.listResources()).resources.map((resource) => resource.uri)).toEqual([
         "assemblejs://project",
@@ -134,21 +137,16 @@ describe("what an agent reads", () => {
         "assemblejs://assembly/card",
         "assemblejs://assembly/cart",
       ]);
-      expect(
-        (
-          await client.complete({
-            ref: { type: "ref/resource", uri: "assemblejs://assembly/{name}" },
-            argument: { name: "name", value: "ca" },
-          })
-        ).completion.values,
-      ).toEqual(["card", "cart"]);
-      await expect(client.readResource({ uri: "assemblejs://project" })).rejects.toThrow(
-        /outside the project root/,
-      );
-      await expect(client.readResource({ uri: "assemblejs://assembly/cart" })).rejects.toThrow(
-        /outside the project root/,
-      );
-      expect(await read("assemblejs://rules")).not.toEqual([]);
+      const project = (await read("assemblejs://project")) as {
+        settings: Record<string, unknown>;
+        problems: { path: string; rule: string }[];
+      };
+      expect(project.settings["contentSecurityPolicy"]).toBe(UNREAD);
+      expect(project.problems).toMatchObject([
+        { path: "assemblejs.config.ts", rule: "a-project-stays-inside-its-root" },
+      ]);
+      expect(JSON.stringify(project)).not.toContain("SECRET");
+      expect(await read("assemblejs://assembly/cart")).toMatchObject({ name: "cart" });
     } finally {
       rmSync(outside, { recursive: true, force: true });
     }
@@ -173,6 +171,9 @@ describe("what an agent reads", () => {
           })
         ).completion.values,
       ).toEqual([]);
+      await expect(
+        client.readResource({ uri: "assemblejs://assembly/stray" }),
+      ).rejects.toMatchObject({ code: RESOURCE_NOT_FOUND });
     } finally {
       rmSync(outside, { recursive: true, force: true });
     }

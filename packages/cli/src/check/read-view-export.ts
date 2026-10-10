@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readFileSync } from "node:fs";
+import { readInside } from "../root/read-inside.js";
 import type { LiteralValue } from "./literal-value.js";
 import { readNamedExport } from "./read-named-export.js";
 import { viewScript } from "./view-script.js";
@@ -8,13 +8,13 @@ import { viewScript } from "./view-script.js";
 /**
  * What a framework view exports under a name for the registry to read, `mount` or `shadow`,
  * as far as it is written as a literal: read from its source and never run. Undefined where
- * the view declares none, computes it, or cannot be read, which the registry resolves at run
- * time.
+ * the view declares none, computes it, or cannot be read, one that leads out of the project
+ * included, which the registry resolves at run time.
  */
-export function readViewExport(file: string, name: string): LiteralValue {
+export function readViewExport(root: string, file: string, name: string): LiteralValue {
   let source: string;
   try {
-    source = readFileSync(file, "utf8");
+    source = readInside(root, file);
   } catch {
     return undefined;
   }

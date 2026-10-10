@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -19,5 +19,14 @@ describe("a project's files, read as text by their path from its root", () => {
   it("is nothing for a file the project does not have, or for what is no file to read", () => {
     expect(textIn(root)(".mcp.json")).toBeUndefined();
     expect(textIn(root)("AGENTS.md")).toBeUndefined();
+  });
+
+  it("is nothing for a file that leads out of the project, and is read through a link that stays in", () => {
+    const outside = mkdtempSync(join(tmpdir(), "text-outside-"));
+    writeFileSync(join(outside, "secret.json"), '{ "mcpServers": { "SECRET": {} } }');
+    symlinkSync(join(outside, "secret.json"), join(root, ".mcp.json"));
+    symlinkSync(join(root, ".vscode", "mcp.json"), join(root, "linked.json"));
+    expect(textIn(root)(".mcp.json")).toBeUndefined();
+    expect(textIn(root)("linked.json")).toBe('{ "servers": {} }');
   });
 });

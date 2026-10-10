@@ -1,10 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import postcss, { CssSyntaxError } from "postcss";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { OutsideRootError } from "../root/outside-root-error.js";
+import { readInside } from "../root/read-inside.js";
 import { insideDirectory } from "./inside-directory.js";
 import { siblingOfEnvelope } from "./sibling-of-envelope.js";
 import { styleReferences } from "./style-references.js";
@@ -18,6 +20,7 @@ import { styleReferences } from "./style-references.js";
  * these, before anything is bundled.
  */
 export function styleProblems(
+  project: string,
   assemblies: readonly DiscoveredAssembly[],
 ): readonly ProjectProblem[] {
   const problems: ProjectProblem[] = [];
@@ -25,8 +28,11 @@ export function styleProblems(
     for (const file of assembly.styles) {
       let root: postcss.Root;
       try {
-        root = postcss.parse(readFileSync(file, "utf8"), { from: file });
+        root = postcss.parse(readInside(project, file), { from: file });
       } catch (error) {
+        // A stylesheet that leads out of the project is a finding where the project names it,
+        // and is not opened.
+        if (error instanceof OutsideRootError) continue;
         if (!(error instanceof CssSyntaxError)) throw error;
         problems.push({
           path: file,
@@ -65,19 +71,21 @@ export function styleProblems(
       root.walkDecls((declaration) => {
         for (const reference of styleReferences(declaration.value)) {
           const target = resolve(dirname(file), reference.split(/[?#]/)[0] ?? "");
-          if (!existsSync(target)) {
-            problems.push({
-              path: file,
-              rule: "an-assembly-owns-its-styles",
-              message: `"${assembly.name}" names ${reference}, and there is no such file`,
-              fix: `add ${reference} beside the stylesheet, or correct the url`,
-            });
-          } else if (!insideDirectory(assembly.directory, target)) {
+          // Asked first, so that a file named outside the assembly is not so much as looked
+          // for: whether it is there is not this project's to say.
+          if (!insideDirectory(assembly.directory, target)) {
             problems.push({
               path: file,
               rule: "an-assembly-owns-its-styles",
               message: `"${assembly.name}" names ${reference}, which is outside its own directory`,
               fix: `move the file into src/assemblies/${assembly.name}/, where the build may publish it`,
+            });
+          } else if (!existsSync(target)) {
+            problems.push({
+              path: file,
+              rule: "an-assembly-owns-its-styles",
+              message: `"${assembly.name}" names ${reference}, and there is no such file`,
+              fix: `add ${reference} beside the stylesheet, or correct the url`,
             });
           }
         }

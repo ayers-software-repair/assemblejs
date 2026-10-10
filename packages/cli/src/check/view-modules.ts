@@ -1,7 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readFileSync, statSync } from "node:fs";
+import { statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
+import { leadsOut } from "../root/leads-out.js";
+import { readInside } from "../root/read-inside.js";
 
 // A relative path named by an import, an export from, or a dynamic import.
 const IMPORTED = /(?:\bfrom\s*|\bimport\s*\(?\s*)["'](\.{1,2}\/[^"']+)["']/g;
@@ -33,26 +35,41 @@ const isFile = (path: string): boolean => {
  * the view itself. The view first, each file once.
  *
  * Only a relative path is followed, to a file in a language a slot can be written in. A module
- * reached by a package's name is that package's, and is not read.
+ * reached by a package's name is that package's, and is not read. Neither is one outside the
+ * project: an import that climbs out of the root, or names a link that leads out of it, is not
+ * followed nor looked for, and is answered beside the modules, as it is written, for whoever
+ * asked to report. A view that itself leads out has no modules here.
  */
-export function viewModules(view: string): readonly string[] {
-  const found: string[] = [];
+export function viewModules(
+  root: string,
+  view: string,
+): { readonly modules: readonly string[]; readonly outside: readonly string[] } {
+  const modules: string[] = [];
+  const outside: string[] = [];
   const read = (file: string): void => {
-    if (found.includes(file)) return;
+    if (modules.includes(file)) return;
     let source: string;
     try {
-      source = readFileSync(file, "utf8");
+      source = readInside(root, file);
     } catch {
       return;
     }
-    found.push(file);
+    modules.push(file);
     for (const [, written = ""] of source.matchAll(IMPORTED)) {
-      const module = candidates(resolve(dirname(file), written)).find(
-        (candidate) => COMPONENT.test(candidate) && isFile(candidate),
-      );
-      if (module !== undefined) read(module);
+      for (const candidate of candidates(resolve(dirname(file), written))) {
+        if (!COMPONENT.test(candidate)) continue;
+        // Asked before the candidate is looked for: what stands outside is not this project's.
+        if (leadsOut(root, candidate)) {
+          if (!outside.includes(written)) outside.push(written);
+          break;
+        }
+        if (isFile(candidate)) {
+          read(candidate);
+          break;
+        }
+      }
     }
   };
   read(view);
-  return found;
+  return { modules, outside };
 }

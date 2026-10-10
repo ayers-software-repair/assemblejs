@@ -859,6 +859,18 @@ loud on a pull request.
 The framework ships capability, not autonomy.
 
 - Every tool is scoped to one project root, resolved once, and refuses a path outside it.
+- Nothing outside that root is read, either. Every file a reader opens, for a resource or for
+  `check`, is held to the root after each link is followed to where it really leads. A link
+  under the root that points out of it, a directory that is one, and an import that climbs out
+  are not opened, not listed and not followed: what one would have said reads `(unread)`, and
+  each is a finding where the project names it (`a-project-stays-inside-its-root`). An agent
+  is shown what the readers read, their findings' own words included, so a file its person
+  never put in the project is not the project's to show.
+- The packages a project installs are the one thing found outside it. `check` finds them,
+  reads their manifests and loads the project's own template engine through `node_modules`,
+  wherever the package manager linked them: a workspace's root, or a store beside it. That is
+  the boundary the server itself runs inside, started from `node_modules/@assemblejs/mcp`.
+  Nothing else follows a link out.
 - Nothing runs a shell command. `check` runs the gates in process and returns findings.
 - Nothing publishes, deploys, or touches a remote. Those stay in the command line, where a
   person types them.

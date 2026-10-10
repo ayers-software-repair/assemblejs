@@ -17,7 +17,7 @@ afterAll(() => rmSync(root, { recursive: true, force: true }));
 
 describe("bundling the browser halves", () => {
   it("writes one module per assembly and answers the url of the one entry a page links", async () => {
-    const { assemblies } = discoverAssemblies(join(root, "src", "assemblies"));
+    const { assemblies } = discoverAssemblies(root);
     const browser = assemblies.filter((assembly) => assembly.renderer !== "html");
     const quiet = { ...realIo, log: () => undefined };
     const { compilers } = await loadCompilers(root, browser);

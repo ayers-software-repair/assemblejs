@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -69,10 +69,23 @@ describe("what would stop a build, found before the bundler runs", () => {
   });
 
   it("includes a stylesheet the build cannot carry into dist/ intact", () => {
-    const css = join(mkdtempSync(join(tmpdir(), "css-")), "a.css");
+    // A project of its own, since a stylesheet is read only from inside the project it is in.
+    const root = mkdtempSync(join(tmpdir(), "css-"));
+    const css = join(root, "a.css");
     writeFileSync(css, ".a { color: red");
-    expect(buildProblems(example, [{ ...assembly("html"), styles: [css] }])).toContainEqual(
+    expect(buildProblems(root, [{ ...assembly("html"), styles: [css] }])).toContainEqual(
       expect.objectContaining({ rule: "an-assembly-owns-its-styles" }),
     );
+  });
+
+  it("reports a server file that leads out of the project, which a build of it does not bundle", () => {
+    const outside = mkdtempSync(join(tmpdir(), "bare-outside-"));
+    writeFileSync(join(outside, "server.ts"), "");
+    const root = mkdtempSync(join(tmpdir(), "bare-"));
+    mkdirSync(join(root, "src"));
+    symlinkSync(join(outside, "server.ts"), join(root, "src", "server.ts"));
+    expect(buildProblems(root, []).map((problem) => [problem.path, problem.rule])).toEqual([
+      [join(root, "src", "server.ts"), "a-project-stays-inside-its-root"],
+    ]);
   });
 });

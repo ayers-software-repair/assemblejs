@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { OutsideRootError } from "@assemblejs/mcp";
+import { OutsideRootError } from "@assemblejs/cli";
 
 describe("refusing a path outside the project", () => {
   it("says what was attempted and what the root is", () => {

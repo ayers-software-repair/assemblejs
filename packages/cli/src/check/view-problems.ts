@@ -27,7 +27,7 @@ export function viewProblems(
     const known = rooted.get(assembly.name);
     if (known !== undefined) return known;
     const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
-    const own = readViewExport(file, "shadow") === true;
+    const own = readViewExport(root, file, "shadow") === true;
     rooted.set(assembly.name, own);
     return own;
   };

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 /** @module @assemblejs/cli */
 export * from "./discovery/index.js";
+export * from "./root/index.js";
 export * from "./generate/index.js";
 export * from "./build/index.js";
 export * from "./styles/index.js";

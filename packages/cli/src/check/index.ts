@@ -27,5 +27,6 @@ export type { PagePolicy } from "./page-policy.js";
 export { readPagePolicy } from "./read-page-policy.js";
 export { declaredOrigins } from "./declared-origins.js";
 export { runCheck } from "./run-check.js";
+export { declaredRoute } from "./declared-route.js";
 export { pageRoute } from "./page-route.js";
 export { readApi } from "./read-api.js";

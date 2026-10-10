@@ -1,10 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readFileSync } from "node:fs";
 import { isAbsolute, join } from "node:path";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { TEMPLATE_RENDERERS } from "../discovery/template-renderers.js";
+import { OutsideRootError } from "../root/outside-root-error.js";
+import { readInside } from "../root/read-inside.js";
 import { engineSaid } from "./engine-said.js";
 import { loadTemplateCompiler } from "./load-template-compiler.js";
 
@@ -44,8 +45,11 @@ export async function templateProblems(
     const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
     let source: string;
     try {
-      source = readFileSync(file, "utf8");
+      source = readInside(root, file);
     } catch (error) {
+      // A view that leads out of the project is a finding where the project names it, and is
+      // not opened: an engine says what it could not read, and would say it of that file.
+      if (error instanceof OutsideRootError) continue;
       problems.push({
         path: assembly.view,
         rule: "a-template-view-compiles",

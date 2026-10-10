@@ -5,7 +5,6 @@ import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { McpError } from "@modelcontextprotocol/sdk/types.js";
 import type { ProjectRoot } from "../root/project-root.js";
-import { withinRoot } from "../root/within-root.js";
 import { describeAssembly } from "./describe-assembly.js";
 import { describeProject } from "./describe-project.js";
 import { RESOURCE_NOT_FOUND } from "./resource-not-found.js";
@@ -30,14 +29,12 @@ const answer = (uri: string, value: unknown) => ({
  */
 export function registerResources(server: McpServer, root: ProjectRoot): void {
   // The names alone, from the one directory they are read from. Listing opens nothing else of
-  // the project, so a part of it that leads out of the root, which the reads refuse, cannot
-  // take the list down with it: a client that lists on connecting would be left with nothing,
-  // the fixed resources included. Where the assemblies themselves cannot be read, none is listed.
+  // the project, and nothing it could meet there takes the list down with it: a client that
+  // lists on connecting would be left with nothing, the fixed resources included. Where the
+  // assemblies lead out of the project, discovery lists none.
   const names = (): readonly string[] => {
     try {
-      return discoverAssemblies(withinRoot(root, "src", "assemblies")).assemblies.map(
-        (assembly) => assembly.name,
-      );
+      return discoverAssemblies(root.path).assemblies.map((assembly) => assembly.name);
     } catch {
       return [];
     }

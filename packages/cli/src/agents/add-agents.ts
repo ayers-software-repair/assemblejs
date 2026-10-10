@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { basename, join } from "node:path";
 import type { Io } from "../io/io.js";
+import { outsideProblems } from "../root/outside-problems.js";
 import { agentFiles } from "./agent-files.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { manifestOf } from "./manifest-of.js";
@@ -10,8 +11,9 @@ import { textIn } from "./text-in.js";
 /**
  * The `add agents` command: gives a project the agent instructions and registrations a new one
  * is written with, or brings the ones it has up to date, and says which files it wrote. A
- * registration it cannot read stops it before anything is written, so a project is never left
- * with some of its agent files rewritten and one not.
+ * registration it cannot read, or a file that leads out of the project, stops it before
+ * anything is written, so a project is never left with some of its agent files rewritten and
+ * one not.
  */
 export function addAgents(root: string, io: Io): number {
   const existing = textIn(root);
@@ -23,6 +25,16 @@ export function addAgents(root: string, io: Io): number {
         `${path} is not JSON, which a comment in it is enough to cause, and a server cannot be added to it without losing what it holds: correct it or remove it, then run this again`,
       );
     }
+    return 1;
+  }
+  // Nothing is written through a link that leads out of the project: what stands there is not
+  // this project's to rewrite, and was not read to be brought up to date.
+  const leading = outsideProblems(
+    root,
+    Object.keys(files).map((path) => join(root, path)),
+  );
+  if (leading.length > 0) {
+    for (const problem of leading) io.error(`${problem.message}: ${problem.fix}`);
     return 1;
   }
   for (const [path, contents] of Object.entries(files)) {

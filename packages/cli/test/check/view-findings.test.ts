@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { discoverAssemblies, viewFindings } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 const findings = (files: Record<string, string>) => {
   const root = mkdtempSync(join(tmpdir(), "view-findings-"));
@@ -12,7 +13,7 @@ const findings = (files: Record<string, string>) => {
     mkdirSync(join(root, "src/assemblies", path, ".."), { recursive: true });
     writeFileSync(join(root, "src/assemblies", path), contents);
   }
-  return viewFindings(root, discoverAssemblies(join(root, "src/assemblies")).assemblies);
+  return viewFindings(root, discoverAssemblies(root).assemblies);
 };
 const REACT = 'import { Slot } from "@assemblejs/renderer-react/client";\n';
 
@@ -73,6 +74,42 @@ describe("what every view in a project says it places", () => {
       {
         rule: "a-placement-is-named-where-it-is-written",
         path: expect.stringMatching(/shell\.react\.tsx$/),
+      },
+    ]);
+  });
+
+  // Nothing outside the project is read for what it places.
+  it("names a view that leads out among the unread, and says nothing of what stood there", () => {
+    const { root } = linkedProject(
+      { "src/assemblies/cart/cart.html": "<p>cart</p>" },
+      { "src/assemblies/shell/shell.html": "outside:asm/stolen.html" },
+    );
+    const { placements, problems, unread } = viewFindings(
+      root,
+      discoverAssemblies(root).assemblies,
+    );
+    expect([...unread]).toEqual(["shell"]);
+    expect(placements.has("shell")).toBe(false);
+    // That it leads out is the tree's to report, where the project names the file.
+    expect(problems).toEqual([]);
+  });
+
+  it("reports an import that leads out of the project, and reads the rest of the view", () => {
+    const { root } = linkedProject(
+      {
+        "src/assemblies/shell/shell.react.tsx": `${REACT}import { Row } from "../../../../outside/row.js";\nexport default () => <><Row /><Slot name="cart" /></>;`,
+      },
+      {},
+    );
+    const { placements, problems } = viewFindings(root, discoverAssemblies(root).assemblies);
+    expect(placements.get("shell")).toEqual([{ name: "cart", view: "default" }]);
+    expect(problems).toEqual([
+      {
+        path: expect.stringMatching(/shell\.react\.tsx$/) as unknown as string,
+        rule: "a-project-stays-inside-its-root",
+        message:
+          '"shell" imports ../../../../outside/row.js, which is outside the project, so what it places is not read',
+        fix: "move the component into the project, or import it by a package's name",
       },
     ]);
   });

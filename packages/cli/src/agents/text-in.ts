@@ -1,16 +1,17 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { readInside } from "../root/read-inside.js";
 
 /**
- * Reads a project's files as text, each by its path from the project's root: undefined for one
- * the project does not have, or that is not a file to read.
+ * Reads a project's own files as text, each by its path from the project's root: undefined for
+ * one the project does not have, that is not a file to read, or that leads out of the project,
+ * which is not opened.
  */
 export function textIn(root: string): (path: string) => string | undefined {
   return (path) => {
     try {
-      return readFileSync(join(root, path), "utf8");
+      return readInside(root, join(root, path));
     } catch {
       return undefined;
     }

@@ -3,10 +3,12 @@
 import { isAbsolute, join, resolve } from "node:path";
 import { hasBrowserHalf } from "../check/has-browser-half.js";
 import { viewFindings } from "../check/view-findings.js";
+import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import { fromRoot } from "../discovery/from-root.js";
+import { outsideProblems } from "../root/outside-problems.js";
 import type { AssemblyShape } from "./assembly-shape.js";
 import { COMPUTED } from "./computed.js";
 import type { ProjectShape } from "./project-shape.js";
@@ -24,10 +26,9 @@ import { UNREAD } from "./unread.js";
  */
 export function readShape(root: string): ProjectShape {
   const at = resolve(root);
-  const src = join(at, "src");
-  const found = discoverAssemblies(join(src, "assemblies"));
-  const pages = discoverPages(join(src, "pages"));
-  const apis = discoverApis(join(src, "api"));
+  const found = discoverAssemblies(at);
+  const pages = discoverPages(at);
+  const apis = discoverApis(at);
   const shown = (path: string): string => fromRoot(at, isAbsolute(path) ? path : join(at, path));
   const views = viewFindings(at, found.assemblies);
   const pageShapes = pages.pages.map((page) => readPageShape(at, page));
@@ -66,9 +67,14 @@ export function readShape(root: string): ProjectShape {
     apis: apis.apis.map((file) => readApiShape(at, file)),
     settings: readSettingsShape(at),
     renderers: [...new Set(found.assemblies.map((assembly) => assembly.renderer))].sort(),
-    problems: [...found.problems, ...pages.problems, ...apis.problems].map((problem) => ({
-      ...problem,
-      path: shown(problem.path),
-    })),
+    // The tree's own problems, and everything that leads out of it: a file or a directory
+    // discovery met, the config, an import a view climbs out by.
+    problems: [
+      ...found.problems,
+      ...pages.problems,
+      ...apis.problems,
+      ...outsideProblems(at, [join(at, CONFIG_FILE)]),
+      ...views.problems.filter((problem) => problem.rule === "a-project-stays-inside-its-root"),
+    ].map((problem) => ({ ...problem, path: shown(problem.path) })),
   };
 }

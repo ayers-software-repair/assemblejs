@@ -21,4 +21,13 @@ describe("whether a file really lies inside a directory", () => {
     expect(insideDirectory(directory, join(directory, "link.png"))).toBe(false);
     expect(insideDirectory(directory, directory)).toBe(false);
   });
+
+  it("takes a file that is not there by how its path is written, and looks for none outside", () => {
+    const root = mkdtempSync(join(tmpdir(), "inside-"));
+    const directory = join(root, "cart");
+    mkdirSync(directory);
+    expect(insideDirectory(directory, join(directory, "gone.png"))).toBe(true);
+    expect(insideDirectory(directory, join(root, "gone.png"))).toBe(false);
+    expect(insideDirectory(directory, join(directory, "..", "..", "gone.png"))).toBe(false);
+  });
 });

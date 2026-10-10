@@ -10,9 +10,14 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { MCP_REGISTRATIONS, agentInstructions, agentProblems } from "@assemblejs/cli";
+import {
+  MCP_REGISTRATIONS,
+  OutsideRootError,
+  agentInstructions,
+  agentProblems,
+} from "@assemblejs/cli";
 import { describe, expect, it } from "vitest";
-import { createProject, OutsideRootError, resolveRoot } from "@assemblejs/mcp";
+import { createProject, resolveRoot } from "@assemblejs/mcp";
 
 describe("scaffolding a project through the agent surface", () => {
   it("writes the command line's own project into the root, and says every file it wrote", () => {

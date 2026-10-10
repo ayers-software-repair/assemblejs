@@ -24,6 +24,7 @@ export const RULE_IDS = [
   "a-budget-is-whole-bytes",
   "the-server-file-never-grows",
   "one-project-per-root",
+  "a-project-stays-inside-its-root",
   "an-assembly-owns-its-styles",
   "agent-instructions-are-current",
 ] as const;

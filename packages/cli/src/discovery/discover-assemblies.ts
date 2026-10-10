@@ -1,8 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readdirSync } from "node:fs";
-import { join } from "node:path";
 import { SEGMENT } from "@assemblejs/core";
+import { leadsOut } from "../root/leads-out.js";
+import { outsideProblems } from "../root/outside-problems.js";
 import type { DiscoveredAssembly } from "./discovered-assembly.js";
 import { isDirectory } from "./is-directory.js";
 import { pickView } from "./pick-view.js";
@@ -11,7 +12,8 @@ import { rendererForView } from "./renderer-for-view.js";
 import { suggestName } from "./suggest-name.js";
 
 /**
- * Every assembly under a directory. A directory IS an assembly; there is nothing to register.
+ * Every assembly of a project: each directory under its `src/assemblies`. A directory IS an
+ * assembly; there is nothing to register.
  *
  * The alternative was a hand-maintained list restating the directory tree, which is the largest
  * single piece of ceremony an author would otherwise carry, and the thing two people editing
@@ -19,6 +21,10 @@ import { suggestName } from "./suggest-name.js";
  *
  * A directory that cannot be an assembly is reported rather than skipped. Skipping is how an
  * author renames a file, loses their assembly, and finds out from a visitor.
+ *
+ * Nothing outside the project is looked at. A directory that leads out of the root is reported
+ * and not listed; a file inside an assembly that leads out is reported and kept by its name,
+ * for a reader to refuse.
  */
 export function discoverAssemblies(root: string): {
   readonly assemblies: readonly DiscoveredAssembly[];
@@ -26,19 +32,26 @@ export function discoverAssemblies(root: string): {
 } {
   const assemblies: DiscoveredAssembly[] = [];
   const problems: ProjectProblem[] = [];
+  const within = `${root}/src/assemblies`.replaceAll("\\", "/");
+  if (leadsOut(root, within)) return { assemblies, problems: outsideProblems(root, [within]) };
 
   let entries: string[];
   try {
-    entries = readdirSync(root).sort();
+    entries = readdirSync(within).sort();
   } catch {
     // No assemblies directory at all is an empty project, not a broken one.
     return { assemblies, problems };
   }
 
   for (const name of entries) {
-    const directory = join(root, name);
-    if (!isDirectory(directory)) continue;
-    const at = `${root}/${name}`.replaceAll("\\", "/");
+    const at = `${within}/${name}`;
+    // Asked before the entry is so much as looked at: one that leads out is not a directory
+    // of this project's, whatever stands where it leads.
+    if (leadsOut(root, at)) {
+      problems.push(...outsideProblems(root, [at]));
+      continue;
+    }
+    if (!isDirectory(at)) continue;
     if (!SEGMENT.test(name)) {
       problems.push({
         path: at,
@@ -49,7 +62,7 @@ export function discoverAssemblies(root: string): {
       continue;
     }
 
-    const files = readdirSync(directory).sort();
+    const files = readdirSync(at).sort();
     const views = files.filter(
       (file) => rendererForView(file) !== undefined && !file.endsWith(".client.ts"),
     );
@@ -85,18 +98,19 @@ export function discoverAssemblies(root: string): {
 
     const client = files.find((file) => file.endsWith(".client.ts"));
     const service = files.find((file) => file === `${name}.service.ts`);
-    assemblies.push({
+    const found: DiscoveredAssembly = {
       name,
-      directory: `${root}/${name}`.replaceAll("\\", "/"),
-      view: `${root}/${name}/${view}`.replaceAll("\\", "/"),
+      directory: at,
+      view: `${at}/${view}`,
       renderer: rendererForView(view) as string,
-      client: client === undefined ? undefined : `${root}/${name}/${client}`.replaceAll("\\", "/"),
-      service:
-        service === undefined ? undefined : `${root}/${name}/${service}`.replaceAll("\\", "/"),
-      styles: files
-        .filter((file) => file.endsWith(".css"))
-        .map((file) => `${root}/${name}/${file}`.replaceAll("\\", "/")),
-    });
+      client: client === undefined ? undefined : `${at}/${client}`,
+      service: service === undefined ? undefined : `${at}/${service}`,
+      styles: files.filter((file) => file.endsWith(".css")).map((file) => `${at}/${file}`),
+    };
+    assemblies.push(found);
+    problems.push(
+      ...outsideProblems(root, [found.view, found.client, found.service, ...found.styles]),
+    );
   }
   return { assemblies, problems };
 }

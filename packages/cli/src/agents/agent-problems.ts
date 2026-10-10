@@ -3,11 +3,13 @@
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { outsideProblems } from "../root/outside-problems.js";
 import { agentInstructions } from "./agent-instructions.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { AGENTS_IMPORT } from "./agents-import.js";
 import { bringsInAgents } from "./brings-in-agents.js";
 import { CLAUDE_FILES } from "./claude-files.js";
+import { installedManifest } from "./installed-manifest.js";
 import { instructionsIn } from "./instructions-in.js";
 import { manifestOf } from "./manifest-of.js";
 import { MCP_REGISTRATIONS } from "./mcp-registrations.js";
@@ -34,7 +36,19 @@ const EXACT = /^\d/;
  */
 export function agentProblems(root: string): readonly ProjectProblem[] {
   const existing = textIn(root);
-  const problems: ProjectProblem[] = [];
+  // An agent file that leads out of the project is not read, and is treated as one the project
+  // does not have; that it leads out is a finding of its own.
+  const problems: ProjectProblem[] = [
+    ...outsideProblems(
+      root,
+      [
+        "AGENTS.md",
+        ...CLAUDE_FILES,
+        ...MCP_REGISTRATIONS.map(({ path }) => path),
+        "package.json",
+      ].map((path) => join(root, path)),
+    ),
+  ];
   const report = (path: string, message: string, fix = REWRITE): void => {
     problems.push({ path: join(root, path), rule: "agent-instructions-are-current", message, fix });
   };
@@ -89,9 +103,10 @@ export function agentProblems(root: string): readonly ProjectProblem[] {
   // the command line; where the project installs another beside it, the two write and check
   // different instructions, and no rewriting of them satisfies both. That is the one thing to
   // put right, so it is the one thing reported.
-  const installed = (name: string) => manifestOf(existing(`node_modules/${name}/package.json`));
-  const builtOn = installed(AGENT_SERVER.package).dependencies[AGENT_SERVER.commandLine];
-  const beside = installed(AGENT_SERVER.commandLine).version;
+  const builtOn = installedManifest(root, AGENT_SERVER.package).dependencies[
+    AGENT_SERVER.commandLine
+  ];
+  const beside = installedManifest(root, AGENT_SERVER.commandLine).version;
   if (
     (written !== undefined || registered) &&
     builtOn !== undefined &&

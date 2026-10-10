@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -28,8 +28,7 @@ const project = (views: Record<string, string>, at = templates): string => {
   }
   return root;
 };
-const found = (root: string) =>
-  templateProblems(root, discoverAssemblies(join(root, "src", "assemblies")).assemblies);
+const found = (root: string) => templateProblems(root, discoverAssemblies(root).assemblies);
 const quiet: Io = {
   write: () => undefined,
   exists: () => false,
@@ -138,4 +137,16 @@ describe("template views the project's own engine cannot read", () => {
       expect(errors.join()).toMatch(/does not compile as nunjucks/);
     },
   );
+
+  // An engine says what it could not read, and would say it of a file outside the project.
+  it("does not open a template view that leads out of the project, nor say anything of it", async () => {
+    const outside = mkdtempSync(join(tmpdir(), "template-outside-"));
+    made.push(outside);
+    writeFileSync(join(outside, "secret.ejs"), "<p>SECRET-TEMPLATE <%= data.missing( %></p>");
+    const root = project({ "ok-ejs.ejs": "<p><%= data.n %></p>" });
+    mkdirSync(join(root, "src", "assemblies", "out"));
+    symlinkSync(join(outside, "secret.ejs"), join(root, "src", "assemblies", "out", "out.ejs"));
+    expect(await found(root)).toEqual([]);
+    expect(JSON.stringify(await checkProject(root))).not.toContain("SECRET");
+  });
 });

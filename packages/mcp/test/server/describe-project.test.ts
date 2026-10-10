@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { OutsideRootError, describeProject, resolveRoot } from "@assemblejs/mcp";
+import { describeProject, resolveRoot } from "@assemblejs/mcp";
 import type { ProjectRoot } from "@assemblejs/mcp";
 
 let root: ProjectRoot;
@@ -84,24 +84,34 @@ describe("the project's whole shape", () => {
     expect(project.problems).toEqual([]);
   });
 
-  // The shape is read from four places, and each is held to the root before anything beneath
-  // it is opened. A link one level further down is not: the readers follow it, as `check` does.
-  it("refuses each of the four places it reads from where one leads out of the project", () => {
+  // Nothing outside the project is read. Each place the shape is read from that leads out of
+  // the root is marked, and reported by the rule that says why, and the rest is still told.
+  it("stops at the root wherever a part of the project leads out of it, and says where", () => {
     const outside = mkdtempSync(join(tmpdir(), "assemblejs-mcp-outside-"));
     try {
       mkdirSync(join(outside, "home"));
-      writeFileSync(join(outside, "home", "home.html"), "<main>not this project's</main>");
+      writeFileSync(join(outside, "home", "home.html"), '<assembly name="secret-placed"/>');
+      writeFileSync(join(outside, "secret.api.ts"), 'export default { path: "/SECRET" };');
       writeFileSync(join(outside, "config.ts"), "export default { budgets: { document: 1 } };");
+      file("src/assemblies/cart/cart.html", "<p>cart</p>");
       for (const [link, target] of [
         ["src/pages", outside],
         ["src/api", outside],
         ["assemblejs.config.ts", join(outside, "config.ts")],
       ] as const) {
         symlinkSync(target, join(dir, link));
-        expect(() => describeProject(root), link).toThrow(OutsideRootError);
-        rmSync(join(dir, link));
       }
-      expect(describeProject(root).pages).toEqual([]);
+      const project = describeProject(root);
+      expect(project.pages).toEqual([]);
+      expect(project.apis).toEqual([]);
+      expect(project.settings).toMatchObject({ file: "assemblejs.config.ts", budgets: "(unread)" });
+      expect(project.assemblies.map((assembly) => assembly.name)).toEqual(["cart"]);
+      expect(project.problems.map((problem) => [problem.path, problem.rule])).toEqual([
+        ["src/pages", "a-project-stays-inside-its-root"],
+        ["src/api", "a-project-stays-inside-its-root"],
+        ["assemblejs.config.ts", "a-project-stays-inside-its-root"],
+      ]);
+      expect(JSON.stringify(project)).not.toMatch(/SECRET|secret-/);
     } finally {
       rmSync(outside, { recursive: true, force: true });
     }

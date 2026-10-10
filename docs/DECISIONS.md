@@ -3502,3 +3502,90 @@ that the spec writes beneath the directory it asks from. And 4 around a run of t
 fixture from packed tarballs: the instructions not naming the one assembly's resource, an
 assembly that is not there answered as an invalid request, assemblies not listed, and no page
 said to place an assembly.
+
+## 2026-10-10: nothing outside the root is read
+
+Ordered by the lead ahead of everything else, on a row this seat had written the same morning:
+the agent surface held four places to the root, and a link one level further down was followed.
+
+Found, watched on the code as it stood before a line of it changed: through the agent's own
+`check`, a finding quoted what stood outside the project. An api file that was a link to a file
+outside came back as `api "SECRET-NO-SLASH" does not start with "/"`, and a page directory that
+was a link came back as `page "landing" places "secret-placed"`, each word of it from a file the
+project did not hold. The shape read the same files and showed a route, a policy and a stream
+from them. A project cloned from somewhere else can carry such a link, and the reader is a
+model.
+
+Settled:
+
+- **One read, held to the root.** `readInside(root, file)` is how a reader opens a file. It
+  resolves the path, follows every link along it to where it really leads, a link to a link
+  and a link to nothing included, and refuses with `OutsideRootError` before anything is
+  opened. A file outside is never read to find out what it was, so nothing of it can reach a
+  finding's words: not a value, not an engine's complaint about it.
+- **It is the guard the agent surface's tools already had**, moved down. `followLinks`, the
+  refusal and the rule itself (`insideRoot`) are the command line's now, and the surface's
+  `withinRoot` is that rule asked of the root a server was started on. One definition, used by
+  `check`, by the shape and by every tool.
+- **Discovery takes the project's root, and stops at it.** It was handed a directory and
+  listed whatever stood there. It now asks, before an entry is so much as looked at, whether
+  it leads out: a directory that does is reported and not listed, since even its files' names
+  are not the project's; a file that does is reported and kept by its name, for a reader to
+  refuse and the shape to mark. Every caller had been spelling `src/assemblies`, `src/pages`
+  and `src/api` for itself; discovery spells each once.
+- **An import that climbs out is not followed.** A framework view is read with the components
+  it is split into, by the relative paths it imports, and a path can climb out of the root
+  with no link in it. Such an import is not followed nor looked for, and is a finding on the
+  view. What two projects share comes in as a package.
+- **A rule, so the finding can be explained.** `a-project-stays-inside-its-root`, in the list
+  `explain` answers and the instructions `new` writes. A file that leads out reads `(unread)`
+  in the shape, and the finding beside it says why. The shape no longer throws for the four
+  places: it marks, reports and tells the rest.
+- **Installed packages are the exception, and the only one.** `check` finds a package in
+  `node_modules` beside the project and in each directory above it, as the bundler does
+  (`findPackage`); it reads an installed package's manifest; and it loads the project's own
+  template engine to compile its template views (`loadTemplateCompiler`). Each goes through
+  the package manager's links, which lead wherever it keeps packages: a workspace's root, a
+  store beside it. Holding those to the project's root would break every workspace, and they
+  are the boundary the server itself runs inside, started from
+  `node_modules/@assemblejs/mcp`. Nothing else follows a link out. The lead's order said
+  every file; this is where it does not hold, and it is his to overrule.
+- **`add agents` writes nothing through a link that leads out.** It read the file to bring it
+  up to date; not reading it, it would have written a new one over whatever stood outside.
+- **A stylesheet's `url()` written outside its assembly is refused without being looked for.**
+  `check` said "there is no such file" or "outside its own directory" by whether the file was
+  there, which told anyone asking whether any path on the machine exists.
+
+- **The guard takes a path as a read takes it.** Found before the push: a reader hands the
+  guard the path it was about to open, which under a root that is not whole (`app`) is a path
+  from where it is asked (`app/src/x`). The guard resolved it against the root a second time
+  and asked about `app/app/src/x`, which is nothing, and so no link out. Every caller in the
+  tree hands it a whole root, so nothing was open; a spec with a root from where it is asked
+  said a link out was none, and `leadsOut` and `readInside` now resolve both as a read does.
+- **A declaration is read once.** The shape read a page's declaration and then asked the
+  route reader, which read it again; the second read hid whether the first was guarded. One
+  rule, `declaredRoute`, says what route a declaration gives, from a reading of it, and both
+  the route reader and the shape use it.
+- **The server file is a file of the project like any other**: one that leads out is a
+  finding, which the build refuses on.
+
+Read, and found already held: a template view is one file to every engine. EJS's includer
+throws, Nunjucks has no loader and Pug is given no filename, so no engine's own include opens
+a second file.
+
+Not changed: the build's own reads (a row). Discovery refuses a build that holds a link out
+before the bundler or anything else of the build runs.
+
+A budget moved on purpose: the command line's tarball, 69000 to 73000 bytes. The guard, its
+rule and the readers' use of it took it from 66356 to 69550; the agent surface's, which the
+guard left, went from 20384 to 19540.
+
+Watched red, the specs written first: on the code as it stood, three of the shape's specs and
+both of the agent's check's, the two findings above among what they caught. Then 54 mutations
+in the unit suites, each alone, each restored from its own bytes: every guarded read handed
+`/` for its root, every report taken out, the guard itself. One survived the first run, the
+shape's read of a declaration, because the route reader read the same file a second time and
+its guard hid the first; a declaration is read once now, and the mutation is red. And 4 around
+a run of the `agents` fixture from packed tarballs, on a project with a link put into it.
+Every fixture from packed tarballs after it: agents 16, contract 20, remote 22, rendering 78,
+trust 44.

@@ -4,6 +4,7 @@ import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { build } from "esbuild";
 import { viewFindings } from "../check/view-findings.js";
+import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
@@ -33,10 +34,9 @@ import { templateProblems } from "./template-problems.js";
  * project's own dependencies and nothing of the build comes with it.
  */
 export async function buildProject(root: string, io: Io): Promise<number> {
-  const src = join(root, "src");
-  const found = discoverAssemblies(join(src, "assemblies"));
-  const pages = discoverPages(join(src, "pages"));
-  const apis = discoverApis(join(src, "api"));
+  const found = discoverAssemblies(root);
+  const pages = discoverPages(root);
+  const apis = discoverApis(root);
   const problems = [
     ...found.problems,
     ...pages.problems,
@@ -90,12 +90,12 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       generateProject({
         version: sourceVersion(root),
         client: script !== undefined || styles.size > 0,
-        config: existsSync(join(root, "assemblejs.config.ts")),
+        config: existsSync(join(root, CONFIG_FILE)),
       }),
     );
     await build({
       ...sharedOptions({ root, side: "server", assemblies: found.assemblies, compilers }),
-      entryPoints: [join(src, "server.ts")],
+      entryPoints: [join(root, "src", "server.ts")],
       platform: "node",
       format: "esm",
       target: "node22",
