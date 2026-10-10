@@ -139,8 +139,12 @@ purpose: a long CLAUDE.md gets ignored in the middle, so this is a pointer, not 
    .NET/Windows/Azure. Cite the source. Never from memory.
 2. **Reach for the tool before the generic one.** Symbols: the LSP for TypeScript, JavaScript,
    Python, Go and C/C++, in a seat; grep + Read for C# (no C# server is installed: csharp-lsp died
-   on every call and serena was removed, both 2026-09-10). A real browser is the cached chromium
-   from Bash: `~/.cache/ms-playwright/chromium-1243/chrome-linux64/chrome --headless=new
---no-sandbox --mute-audio`; the playwright plugin is removed.
+   on every call and serena was removed, both 2026-09-10). A real browser starts only through
+   the sealed launcher the root file names, never the binary; the playwright plugin is removed.
+   The browser proof takes that launcher as its browser:
+   `ASSEMBLEJS_CHROMIUM=<the launcher> pnpm exec playwright test -c browser/playwright.config.ts
+--workers=1`, in the background, with `TMPDIR` left alone (measured 2026-10-09: the frameworks
+   proof green here; a long `TMPDIR` aborts the browser at launch). It rebuilds every package,
+   so it never runs beside the unit suite.
 
 This repo is **TypeScript** — `typescript-language-server` applies.
