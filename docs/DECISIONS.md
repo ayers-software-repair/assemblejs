@@ -2577,9 +2577,10 @@ Found:
   hydration; that support patches Lit's element base when the base loads after it. Read in
   `@lit-labs/ssr` 4.1.0, `lib/lit-element-renderer.js`: the server renderer assigns its own
   `createRenderRoot` after its imports, calls `ReactiveElement.prototype.update` directly, and
-  calls an element's `connectedCallback` only when asked, so no patched method runs on a server.
-  Held by a test that renders one element in two processes, the browser half loaded first and
-  loaded last, and compares the markup.
+  calls an element's `connectedCallback` only when asked. One patch stays in force on a server,
+  seen in a probe: an element's `observedAttributes` gains `defer-hydration`. It changes nothing
+  the server renders. Held by a test that renders one element in two processes, the browser
+  half loaded first and loaded last, and compares the markup.
 - The study's page had no Svelte parent, and Svelte's hydration cannot run in a DOM shim
   (`renderer-svelte/test/client/hydrate.test.ts` says why). Nothing would have proved one.
 - Vue does not render a slot again while its name and view stand: a parent's render skips a
@@ -2598,8 +2599,12 @@ Settled:
   segments alone: a name or a view that is not one throws and never becomes markup.
 - `Slot({ name, view? })` in React, Preact, Vue and Solid writes `<div data-assembly-slot>`
   holding the directive, on both sides. React's says its difference is meant
-  (`suppressHydrationWarning`) and keeps one `{ __html }` object per directive for the life of
-  the page, because React compares that object by identity when a parent renders again.
+  (`suppressHydrationWarning`) and keeps its `{ __html }` object, one per mounted slot, in
+  its own state, because React compares that object by identity when a parent renders again.
+  Not one store for the page, keyed by directive: a server renders too, and a view named from a
+  request would grow it without end. Not a memo: React's reference says a memo may be thrown
+  away and names state for a value that must be kept (react.dev, reference/react/useMemo,
+  caveats, read 2026-10-09).
 - `slot(name, view?)` in Svelte answers the string, written with `{@html}`. In Lit it answers
   the `unsafeHTML` directive itself, so a view writes `${slot("cart")}` and imports one thing.
 - The Lit refusal is this package's own. `litAssemblyInTree` answers the innermost envelope
@@ -2633,6 +2638,7 @@ a red: two mutations first broke the declaration build and were rewritten to typ
 - React, a fresh object for the slot on every render: `hydrate.test.tsx`, the child gone after
   the parent's second render. In the browser, one of seventeen: "a react assembly holds a
   svelte one".
+- React, a slot keeps its first directive when it is given another name: `slot.test.tsx`.
 - React, `suppressHydrationWarning` removed: `hydrate.test.tsx`, one error from React's
   development build.
 - React, the slot writes nothing: `slot.test.tsx`. In the browser: twelve envelopes served

@@ -409,7 +409,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         in Svelte and Lit write it on both sides; a Lit assembly in a Lit view's own tree is
         refused by name when the view mounts (`litAssemblyInTree`), because Lit itself refuses
         only a child that binds an attribute; the `nested` page, three deep, and its browser
-        proof, seventeen green here through the sealed launcher. Self-verified: sixteen
+        proof, seventeen green here through the sealed launcher. Self-verified: seventeen
         mutations in the unit suites and two in the browser, each run alone and watched red
         (DECISIONS 2026-10-09, S-06)
   - [ ] S-07 `check` reads directives and `Slot` names; the registry writes each view's static
