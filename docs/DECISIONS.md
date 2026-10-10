@@ -2774,3 +2774,43 @@ Settled:
 
 Watched red, each alone: a framework view read from its own file; only the view's own imports
 followed; a `.js` import not taken for the TypeScript behind it.
+
+## 2026-10-10: S-08, an assembly inside an assembly, held from the outside
+
+Expected, from the plan: a `nested` fixture and a two-server nested spec.
+
+Decided otherwise: the nested cases live in the `rendering` fixture, not in a fixture of their
+own. That fixture already installs every renderer from its tarball; a second project of the
+same seven packages would double the longest install in the run and prove nothing the first
+does not. The two-server cases live in `remote`, as planned.
+
+Held, over HTTP, against projects installed from the packed tarballs:
+
+- A parent in every kind of view (plain html, EJS, Handlebars, Nunjucks, Pug, React, Preact,
+  Solid, Svelte, Vue, Lit, and a React parent in a shadow root) holds the child its view
+  places, written in another kind, inside its own envelope; its content endpoint answers it
+  composed.
+- A service shapes which view of its child a parent places (the EJS parent writes the view
+  from its data).
+- A shadow parent links its child's stylesheet inside its own root, and the page does not.
+- A chain renders eight deep, and the ninth is refused before dispatch with a logged id.
+- A Pug view that places itself, which nothing reads before it renders, holds one refusal.
+- The headers a composer sends hold a child to its ancestors and to the cap.
+- A deferred plain html parent is served empty with its child's runtime linked ahead, and the
+  answer that fills it holds the child.
+- A view whose source places itself: `check` exits 1 naming the rule, the build writes what it
+  read, and the server refuses to start. Run in a copy of the project, so the server under
+  test is left as it is.
+- Across two servers: a parent from the producer arrives with the producer's child inside it,
+  both marked with the producer's origin; the consumer's page links the child's stylesheet,
+  which it never asked for by name; the producer refuses its own child by the ancestors and
+  the depth it is sent, with the id in its own log.
+
+`treeOf` in `specs/http.mjs` reads a page's envelopes as a tree; `envelopesOf` stops at the
+first closing tag and cannot see what stands inside an envelope.
+
+Watched red, each mutation alone around a run of the fixture it touches: a child's ancestors
+without its parent (the self-placing view); children composed at depth zero (the chain and the
+headers); the deferred link removed; boot not holding what a view places (the server started);
+a nested manifest not learned (the two-server stylesheet); a shadow parent not linking in its
+root. Each turned red the spec named and no other.

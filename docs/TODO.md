@@ -5,33 +5,28 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 00:31 EDT, after S-07).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 00:53 EDT, after S-08).**
 
-STATE. Branch `next`. `origin/next` is `1db37e6`, S-06 and its fix, with its `ci` run
-38022279451 and its `release` run 38022279423 green on GitHub's runners (publication skipped:
-the registry has no `@assemblejs/core`). Above it, signed, pushed with this block: `eefa998`
-(the trailers gate checks unpushed commits when no range is named) and the S-07 commit this
-block lands in. Every package reads `1.0.0-next.0`; ten changesets are pending. The owner's
-overnight order (estate D1216): work the bites to code completion and get the landing page onto
-staging; no questions until morning. The landing page is on staging: `deploy-site` run
-38021878568, dispatched on `next` at `03a5a1f`, succeeded after the lead fixed the deploy role's
-trust, and `/assemblejs/next/` on the staging domain answers 200 (DECISIONS 2026-10-09,
-staging). A `site/**` push on `next` now deploys there. `/assemblejs/` deploys from `main`,
-which has no `site/` yet: the owner's morning list. His rulings in this seat stand: no
+STATE. Branch `next`. `origin/next` is `4ce1844`, S-07 and its follow-up, with its `ci` run
+38024897733 and its `release` run 38024897699 green on GitHub's runners (publication skipped:
+the registry has no `@assemblejs/core`). Above it, signed, pushed with this block: the S-08
+commit this block lands in. Every package reads `1.0.0-next.0`; eleven changesets are pending.
+The owner's overnight order (estate D1216): work the bites to code completion and get the
+landing page onto staging; no questions until morning. The landing page is on staging:
+`deploy-site` run 38021878568, dispatched on `next` at `03a5a1f`, succeeded after the lead fixed
+the deploy role's trust, and `/assemblejs/next/` on the staging domain answers 200 (DECISIONS
+2026-10-09, staging). A `site/**` push on `next` now deploys there. `/assemblejs/` deploys from
+`main`, which has no `site/` yet: the owner's morning list. His rulings in this seat stand: no
 subagents, the seat does the work itself; every bite since is self-verified by mutation
 (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-08 (PLAN 4.2), conformance. A `nested` fixture: a local parent
-and child in every static and framework kind, a shadow parent, a chain past the cap, a deferred
-parent, and a Pug view that places itself, which nothing reads before it renders and which
-must hold one nested `cycle` envelope. A fixture of its own for what is read from the source:
-`check` exits 1 naming `an-assembly-is-never-its-own-ancestor`, and the server refuses to
-start (a self-placing html view cannot share a fixture: boot refuses the whole server). In
-`remote`, a producer parent placing a producer child placed by the consumer's page: the
-child's css on the consumer's page, both envelopes marked with the producer's origin,
-refusals by path and by depth from the headers the consumer sends, the nested failure's id in
-the producer's log. Then S-09: DESIGN 2.4, 3.4, 7, 8, 10 and 11's rules line, the guides under
-`site/docs`, the studies deleted. S-01 to S-07 are done (DECISIONS 2026-10-10, both entries).
+THE EXACT NEXT STEP is bite S-09 (PLAN 4.2), the words: DESIGN 2.4, 3.4, 3.5, 7, 8, 10 and
+13 say the mechanism as it was built (a view places a child with the directive; `children` is
+gone; what a view places is read from its source; the deferred link; the agent surface's
+tools); the seven guides under `site/docs` show a child and stop naming `children`; the
+studies under `docs/studies/subassembly` are deleted once DESIGN carries their result. A push
+of it touches `site/**` and deploys to `/assemblejs/next/`: read the `deploy-site` run and the
+page. S-01 to S-08 are done.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -429,8 +424,14 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         core's transport and places a child in a view. Self-verified: thirty-one mutations in
         the unit suites and one in the browser, each run alone and watched red (DECISIONS
         2026-10-10, S-07)
-  - [ ] S-08 conformance: the `nested` fixture, the fixture `check` and boot refuse for a view
-        that places itself, and the two-server nested spec (DECISIONS 2026-10-10, after S-07)
+  - [x] S-08 conformance, from the packed tarballs: a parent in every kind of view holds its
+        child; a service shapes the child's view; a shadow parent links its child's sheet in its
+        root; a chain to the cap and one past it; a Pug view that places itself; the headers a
+        composer sends; a deferred parent; a view whose source places itself refused by `check`
+        and at boot; and across two servers, a parent that brings its child, the child's sheet
+        linked, the producer's refusals in its own log. In the `rendering` and `remote`
+        fixtures. Self-verified: six mutations, each around a run of its fixture, each watched
+        red (DECISIONS 2026-10-10, S-08)
   - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted. Still saying `children`
         after S-06: DESIGN 7, 8 and 11's rules line, and `site/docs/` templates, react, preact,
         vue, solid, svelte and lit. The guides are `site/**`: pushing them deploys to

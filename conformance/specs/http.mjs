@@ -123,6 +123,25 @@ export const envelopesOf = (page) =>
     inner: match[2],
   }));
 
+/**
+ * Every envelope in a page as a tree, in document order: each with its attributes and the
+ * envelopes that stand inside it, which is how an assembly holds the ones its view places.
+ */
+export const treeOf = (page) => {
+  const roots = [];
+  const open = [];
+  for (const tag of page.matchAll(/<(\/?)assembly-root\b([^>]*)>/g)) {
+    if (tag[1] === "/") {
+      open.pop();
+      continue;
+    }
+    const envelope = { attributes: readAttributes(tag[2]), children: [] };
+    (open.at(-1)?.children ?? roots).push(envelope);
+    open.push(envelope);
+  }
+  return roots;
+};
+
 /** The data island inside an envelope, parsed. */
 export const islandOf = (fragment) => {
   const script =

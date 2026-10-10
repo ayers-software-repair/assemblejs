@@ -29,9 +29,9 @@ projects and their logs can be read. A signal to the harness stops every server 
 It needs the network for the third-party dependencies, and minutes, so it runs on demand rather
 than inside `pnpm check`.
 
-| fixture     | holds the server to                                                                       |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| `contract`  | DESIGN 2: the content, data and manifest endpoints, and the envelope                      |
-| `rendering` | DESIGN 7, 9, 3.3, 3.5 and 12: every renderer through the contract, on pages of them       |
-| `remote`    | DESIGN 3.1 to 3.3, 3.6, 5.1 and 10: a page composed across two servers, and a hostile one |
-| `trust`     | DESIGN 5.2, 5.3 and 11: inbound access, the boundary, production, `check` and `deploy`    |
+| fixture     | holds the server to                                                                                                                             |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `contract`  | DESIGN 2: the content, data and manifest endpoints, and the envelope                                                                            |
+| `rendering` | DESIGN 7, 9, 3.3 to 3.5 and 12: every renderer through the contract, on pages of them, and an assembly inside an assembly in every kind of view |
+| `remote`    | DESIGN 3.1 to 3.4, 3.6, 5.1 and 10: a page composed across two servers, a parent that brings its child, and a hostile server                    |
+| `trust`     | DESIGN 5.2, 5.3 and 11: inbound access, the boundary, production, `check` and `deploy`                                                          |
