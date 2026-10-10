@@ -5,6 +5,10 @@
 // placement like any its author wrote: nothing between a view and the composer tells the two
 // apart. Each parent here writes what a visitor sent twice, escaped and raw, and its source
 // names no child at all.
+//
+// Whether a render should place such a directive at all is the owner's to settle
+// (docs/studies/placement-and-access.md). Until then this holds what happens, so that it cannot
+// change unseen; ../trust/raw.spec.mjs holds what it lets a visitor reach.
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { get, logged, treeOf } from "../http.mjs";

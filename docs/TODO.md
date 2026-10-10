@@ -5,12 +5,16 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 06:04 EDT, after the second reading's fourth).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 06:30 EDT, after the fault of 4a was named and its memo written).**
 
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: the second
-reading's fourth finding, what a value written raw places, which changes `site/**`. Beneath
-it, each pushed on 2026-10-10 with its runs read to their end, green, and each time the one
-its `ci` run was created at: `05fae8a`, 05:47 EDT, the second reading's first two findings
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: the fault of row
+4a named KNOWN FAULT in the spec that holds it, a second open page in the trust fixture whose
+view is Pug, and the memo for the owner. Beneath it, each pushed on 2026-10-10 with its runs
+read to their end, green, and each time the one its `ci` run was created at: `16d8b92`, 06:18
+EDT, the second reading's fourth finding, what a value written raw places (`ci` 38044427017,
+`release` 38044427065, `deploy-site` 38044427043, and staging read: the two guides and both
+text files as the branch has them); `05fae8a`, 05:47 EDT, the second reading's first two
+findings
 (`ci` 38042647592, `release` 38042647595, `deploy-site` 38042647601, and staging read: the
 seven guides and both text files as the branch has them); `03a90fa`, 05:34 EDT, nothing
 outside a project's root is read (`ci` 38041855065, `release` 38041854943); `8fe15a6`, 04:48
@@ -39,23 +43,27 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    pushed with this block: the design says what a value a view writes raw can place, and a
    spec holds it in core, in the rendering fixture and in the trust fixture, where a visitor
    with no credentials is shown an assembly whose own address refuses them. Row 4a, beside
-   it, is whether the composer should refuse that itself: this seat advises it and the lead
-   orders it or not. NEXT, by this seat's ranking: 3, since two of its consequences are held
-   by no spec; then 5, 7, 6 and the rest of 8.
+   it, is that fault: the lead ruled it the owner's to settle (the morning list's item 0,
+   with the memo `docs/studies/placement-and-access.md`), and nothing for it is built into
+   `next`. Its spec is titled KNOWN FAULT; the spec of the outcome waits red on the local
+   branch `security/guarded-wherever-placed`. NEXT, by the lead's order: 3, made true and
+   not only said, by reading a Pug view through the installed Pug if it has a door to its
+   parse tree; then 4b, 5, 7, 6 and the rest of 8.
 3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
    pushed): its message says what is done and what is left. Bring it onto `next` after 2.
 4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
    server sends; then `compose_page` by a page's name (two rows in Phase 3 below).
 
 Then registrations for the clients beyond the three, and the rows under "AFTER IT" below.
-Five rows wait on the owner and are on the estate's morning list: A-04, whose memo is
-`docs/studies/built-in-components.md`; showing an agent a framework view, which means running
-the project's code; whether the twelve packages share one version, which a new project's
-manifest and the release-notes gate are both written as if they did; folding the changesets
-waiting into the first entry before the first publish; and whether an assembly in a project
-may have more than one view (DECISIONS 2026-10-10). A-01,
-A-03 and A-02 are done, the API reference and the release notes are done, and the
-subassembly rung, S-01 to S-09.
+Six rows wait on the owner and are on the estate's morning list. First, as SECURITY: how
+to close the fault of row 4a, whose memo is `docs/studies/placement-and-access.md`. Then
+A-04, whose memo is `docs/studies/built-in-components.md`; showing an agent a framework view,
+which means running the project's code; whether the twelve packages share one version, which
+a new project's manifest and the release-notes gate are both written as if they did; folding
+the changesets waiting into the first entry before the first publish; and whether an assembly
+in a project may have more than one view (DECISIONS 2026-10-10). A-01, A-03 and A-02 are
+done, the API reference and the release notes are done, and the subassembly rung, S-01 to
+S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -266,20 +274,24 @@ rowed or the owner's; the numbers are the report's.
       shown to that visitor on an open page. The templates guide, the Svelte guide and the
       instructions an agent is given say to write a visitor's value escaped (DECISIONS
       2026-10-10, "a value written raw")
-- [ ] 4a. From 4, this seat's and not the reader's: THE COMPOSER COULD HOLD IT, and does not.
-      The registry carries what each view's source places, absent only where the source was
-      not read (`AssemblyView.placements`). A render could refuse before dispatch, as it
-      refuses a loop, a directive naming anything its view's source does not: nothing
-      rendered, no service run, a failed envelope, a reason of its own. A value written raw
-      could then place only a child its author already placed there, in every view `check`
-      reads; a Pug view and the others of finding 3 would stay as they are now. It is more
-      than a hardening. It would also refuse what the reader does not see in a view it does
-      read, a slot inside a component that comes from a package and a directive a view builds
-      in code, both of which render today, unknown to boot. It costs one reason more in the
-      contract's list, one option on the composer, and the specs of 4 turned over. This
-      seat's advice is to build it before 1.0: what `check` cannot see, a render should not
-      place. It is the lead's to order, since his order for 4 was the sentence and the spec,
-      and it changes what a view may do
+- [ ] 4a. SECURITY, AND THE OWNER'S: a visitor with no credentials is shown an assembly whose
+      own address refuses them, on an open page whose view writes the visitor's value raw.
+      The lead ruled on 2026-10-10 that closing it changes what the framework promises about
+      access, so the owner chooses how, and nothing is built into `next` until he has: the
+      estate's morning list, item 0. Three ways are in `docs/studies/placement-and-access.md`:
+      the access decision follows the assembly wherever it is placed; the composer places
+      only what a view's source places (this seat's first proposal, which the registry
+      already has the record for, `AssemblyView.placements`); or both. Until then
+      `conformance/specs/trust/raw.spec.mjs` holds the fault under the title KNOWN FAULT,
+      through an EJS view and a Pug one, and the spec of the outcome nobody disputes waits
+      red on the local branch `security/guarded-wherever-placed`
+- [ ] 4b. From 4: NOTHING COUNTS THE PLACEMENTS OF ONE REQUEST. The composer settles every
+      directive a template holds, all at once; its limits are depth and the size of one
+      answer (`core/src/compose/limits.ts`). A view that writes a visitor's value raw can be
+      made to render an assembly as often as the value names it. A limit is wanted whichever
+      way 4a is settled: what it counts (one template's directives, or a whole request's),
+      its default, and what the placements past it show. Measure first what one request can
+      be made to cost today
 - [ ] 5. A loop is refused at boot only where every hop writes its view; a placement whose
       view is computed is held for its name alone and not followed, so such a loop is refused
       at render. DESIGN 3.4 and 7 say "at boot" of every loop

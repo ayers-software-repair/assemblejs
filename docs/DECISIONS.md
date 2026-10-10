@@ -3712,3 +3712,39 @@ the same change turns it red.
 Also corrected in this change: three times in the ledger's resume block had been typed
 without a clock and were wrong by between twenty minutes and over an hour. Each push there now
 carries the time its `ci` run was created at.
+
+## 2026-10-10: the fault of a value written raw is the owner's to close
+
+The lead read the push that said and held the second reading's fourth finding, and ruled the
+same morning:
+
+- **Closing it is the owner's choice, not this seat's and not the lead's.** It changes what the
+  framework promises about access. It stands first on the estate's morning list, as SECURITY
+  (item 0), and nothing for it is built into `next` until he has chosen. This seat had rowed
+  its own proposal, that the composer refuse a name a view's source does not place, as the
+  lead's to order; that row (4a) is rewritten as the fault itself.
+- **The spec that holds the fault says so.** `conformance/specs/trust/raw.spec.mjs` was green
+  while the hole was open, under a title that read as a statement of how things are. Its cases
+  are titled KNOWN FAULT, and its head says their green is not soundness.
+- **The outcome nobody disputes has a spec, red, on a branch.** A visitor with no credentials
+  is not shown the ledger, however a directive naming it came to be in the page: the local
+  branch `security/guarded-wherever-placed`, cut from this change and not pushed.
+- **Three ways are written for him**, `docs/studies/placement-and-access.md`: the access
+  decision follows the assembly wherever it is placed (the lead's advice as the root); the
+  composer places only what a view's source places; or both.
+
+Added with it:
+
+- A second open page in the trust fixture whose view is written in Pug, since no reader sees a
+  Pug view before it renders: the fault is held through a view `check` reads and through one
+  it does not.
+- Measured for the memo with the command line's own reader, over the examples and every
+  fixture: 104 views, 97 read for what they place, 7 unread, every one of them Pug; 27
+  recorded as placing a child. No example configures access. One fixture page shows a guarded
+  assembly to everyone by its author's own directive, `/public/notice`, and a spec holds that.
+- Found while reading for it, and rowed (4b): nothing counts the placements of one request.
+  The composer's limits are depth and the size of one answer.
+
+Also ruled: the lexer and parser Pug installs are not to be declared by the templates
+renderer until Pug's own source and documentation have been read for a way through the
+installed Pug to its parse tree. That reading is the first step of finding 3.
