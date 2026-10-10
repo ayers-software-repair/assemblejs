@@ -50,8 +50,9 @@ one framework or in none, and each hydrated in the browser by its own framework.
 - Ask the project before you assume. Its MCP server, \`${AGENT_SERVER.name}\`, is registered in
   ${registered.slice(0, -1).join(", ")} and ${registered.at(-1) ?? ""}. A client that reads none of them
   starts it from this directory with \`node ${AGENT_SERVER.path}\`. Read
-  \`assemblejs://project\` for the assemblies that exist and \`assemblejs://rules\` for every rule
-  with its reason.
+  \`assemblejs://project\` for every page, assembly and api and how they are wired,
+  \`assemblejs://assembly/<name>\` for one assembly and where it is placed, and
+  \`assemblejs://rules\` for every rule with its reason.
 - Change the project with its tools: \`add_assembly\`, then \`place_assembly\` on a page or in
   another assembly's view. Then see what you made, with no server started: \`render_assembly\`
   renders an assembly and \`compose_page\` composes a page's template, each with an account of

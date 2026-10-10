@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync, readFileSync } from "node:fs";
-import { isAbsolute, join, relative } from "node:path";
+import { join } from "node:path";
 import {
   apiProblems,
   findPlacements,
@@ -20,15 +20,15 @@ import { templateProblems } from "../build/template-problems.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
-import { isStaticView } from "../discovery/is-static-view.js";
+import { fromRoot } from "../discovery/from-root.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { readBudgets } from "../perf/read-budgets.js";
 import { declaredOrigins } from "./declared-origins.js";
+import { hasBrowserHalf } from "./has-browser-half.js";
 import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
 import { readPagePolicy } from "./read-page-policy.js";
-import { readViewMount } from "./read-view-mount.js";
 import { viewFindings } from "./view-findings.js";
 import { viewProblems } from "./view-problems.js";
 
@@ -54,9 +54,8 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   const pages = discoverPages(join(src, "pages"));
   const apis = discoverApis(join(src, "api"));
   const names = assemblies.assemblies.map((assembly) => assembly.name);
-  // What the placement rules read of each assembly: in a project, one view, a browser half for
-  // a framework view that does not declare `mount = "none"` for itself, or a static view with a
-  // .client.ts beside it, and what its view's source is known to place.
+  // What the placement rules read of each assembly: in a project, one view, whether it has a
+  // browser half, and what its view's source is known to place.
   const views = viewFindings(root, assemblies.assemblies);
   const placeable = new Map<string, PlacedAssembly>(
     assemblies.assemblies.map((assembly) => {
@@ -65,11 +64,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
         assembly.name,
         {
           views: ["default"],
-          browserHalf: isStaticView(assembly.renderer)
-            ? assembly.client !== undefined
-            : readViewMount(
-                isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view),
-              ) !== "none",
+          browserHalf: hasBrowserHalf(root, assembly),
           ...(placed === undefined ? {} : { placements: { default: placed } }),
         },
       ];
@@ -186,7 +181,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
       problems.push({
         path: at,
         rule: "a-directory-is-a-page",
-        message: `page "${page.name}" answers at ${route ?? ""}, as the api ${relative(root, api).split("\\").join("/")} does`,
+        message: `page "${page.name}" answers at ${route ?? ""}, as the api ${fromRoot(root, api)} does`,
         fix: "give the page or the api another route",
       });
     }
@@ -262,7 +257,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   }
   return problems.map((problem) => ({
     ...problem,
-    path: relative(root, problem.path).split("\\").join("/") || ".",
+    path: fromRoot(root, problem.path),
   }));
 }
 

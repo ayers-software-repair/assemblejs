@@ -10,6 +10,7 @@ export { readNamedExport } from "./read-named-export.js";
 export { viewScript } from "./view-script.js";
 export { readViewExport } from "./read-view-export.js";
 export { readViewMount } from "./read-view-mount.js";
+export { hasBrowserHalf } from "./has-browser-half.js";
 export type { ViewPlacements } from "./view-placements.js";
 export { collectPlacements } from "./collect-placements.js";
 export { isRendererClient } from "./is-renderer-client.js";

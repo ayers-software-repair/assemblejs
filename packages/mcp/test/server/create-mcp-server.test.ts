@@ -224,10 +224,20 @@ describe("what a project's own files say of this server", () => {
     ).toEqual([join(AGENT_SERVER.path)]);
   });
 
+  // A resource with a name in it is written `<name>` for a reader and `{name}` for the protocol.
   it("is every resource it has, and no other", async () => {
-    const named = [...new Set(agentInstructions().match(/assemblejs:\/\/[a-z{}/-]+/g))].sort();
+    const named = [...new Set(agentInstructions().match(/assemblejs:\/\/[a-z<>/-]+/g))].sort();
     const { resources } = await client.listResources();
-    expect(named).toEqual(resources.map((resource) => resource.uri).sort());
+    const { resourceTemplates } = await client.listResourceTemplates();
+    expect(named).toEqual(
+      [
+        ...resources.map((resource) => resource.uri),
+        ...resourceTemplates.map((template) =>
+          template.uriTemplate.replace(/\{([a-z]+)\}/g, "<$1>"),
+        ),
+      ].sort(),
+    );
+    expect(named).toContain("assemblejs://assembly/<name>");
   });
 
   it("is every tool it has but the one that makes a project, and no tool it has not", async () => {

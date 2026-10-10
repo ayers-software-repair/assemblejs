@@ -22,7 +22,8 @@ const DIRECTIVE_FIX = 'write each placement as <assembly name="..."></assembly>'
  *
  * A framework view is read with the components it is split into, since a slot written in one of
  * them is the view's as much as one written in its own file. A view missing from the answer is
- * one whose placements only its render knows.
+ * one whose placements only its render knows, unless it is named among the unread: those hold a
+ * placement that cannot be read, which is a problem here and no render's secret.
  */
 export function viewFindings(
   root: string,
@@ -30,9 +31,11 @@ export function viewFindings(
 ): {
   readonly placements: ReadonlyMap<string, readonly ViewPlacement[]>;
   readonly problems: readonly ProjectProblem[];
+  readonly unread: ReadonlySet<string>;
 } {
   const placements = new Map<string, readonly ViewPlacement[]>();
   const problems: ProjectProblem[] = [];
+  const unread = new Set<string>();
   for (const assembly of assemblies) {
     const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
     const wrong = (rule: ProjectProblem["rule"], message: string, fix: string): void => {
@@ -62,6 +65,7 @@ export function viewFindings(
           `holds a placement that cannot be read: ${error.message}`,
           DIRECTIVE_FIX,
         );
+        unread.add(assembly.name);
       }
       continue;
     }
@@ -87,5 +91,5 @@ export function viewFindings(
     });
     placements.set(assembly.name, usable);
   }
-  return { placements, problems };
+  return { placements, problems, unread };
 }

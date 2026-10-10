@@ -21,6 +21,13 @@ const json = (value: ToolResult) => ({
  * runs a shell, publishes or deploys; those stay in the command line, where a person types them.
  */
 export function registerAuthoringTools(server: McpServer, root: ProjectRoot): void {
+  // Each assembly is a resource of its own, so a tool that wrote one tells a client that listed
+  // them to list again.
+  const listedAgain = (result: ToolResult) => {
+    if (result.ok) server.sendResourceListChanged();
+    return json(result);
+  };
+
   server.registerTool(
     "create_project",
     {
@@ -29,7 +36,7 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         "Writes the smallest project that runs into this root: one page placing one assembly, and no framework nobody asked for. Refuses a root that already holds a project.",
       inputSchema: { name: z.string().describe("the package name, lower case with hyphens") },
     },
-    ({ name }) => json(createProject(root, name)),
+    ({ name }) => listedAgain(createProject(root, name)),
   );
 
   server.registerTool(
@@ -43,7 +50,7 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         renderer: z.string().describe(RENDERERS.join(", ")).default("html"),
       },
     },
-    ({ name, renderer }) => json(addAssembly(root, name, renderer)),
+    ({ name, renderer }) => listedAgain(addAssembly(root, name, renderer)),
   );
 
   server.registerTool(

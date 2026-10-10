@@ -783,13 +783,35 @@ API would put a bill and a key in every project that installed it, and neither b
 Resources, not commands, because an agent that has to ask what exists spends its first three
 turns finding out.
 
-| resource                       | what it answers                                                                                                                                                                  |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `assemblejs://project`         | Every assembly, page, renderer and setting, and how they are wired. The whole shape in one read.                                                                                 |
-| `assemblejs://assembly/{name}` | One assembly: its files, its view, its renderer, the shape of its data, where it is placed.                                                                                      |
-| `assemblejs://contract`        | The three endpoints, their headers and the envelope, as a specification. An agent writing a remote assembly in another language reads this and needs nothing else.               |
-| `assemblejs://rules`           | The constraints real code must satisfy, with the reason for each. One framework per assembly; a view places a child with the directive; nothing crosses to the browser but JSON. |
-| `assemblejs://diagnostics`     | What is wrong right now, per assembly and per placement, with the correlation id that finds it in a log.                                                                         |
+| resource                       | what it answers                                                                                                                                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `assemblejs://project`         | Every page, assembly and api, what the config declares, and how they are wired: what each page and each view places, under what policy, and where each assembly is placed. The whole shape in one read. |
+| `assemblejs://assembly/{name}` | One assembly: its files, its view, its renderer, what its view places, and every placement of it, with the policy its page declares for it.                                                             |
+| `assemblejs://contract`        | The three endpoints, their headers and the envelope, as a specification. An agent writing a remote assembly in another language reads this and needs nothing else.                                      |
+| `assemblejs://rules`           | The constraints real code must satisfy, with the reason for each. One framework per assembly; a view places a child with the directive; nothing crosses to the browser but JSON.                        |
+
+The project and each assembly are read from the project's sources when they are asked for, by
+the readers `check` holds the project with, and nothing of the project's is run (13.6). So the
+shape is true of a project that has never been built, and of one that does not build. The
+rules and the contract are the framework's own, the same for every project. What a source computes cannot be
+read that way, and is never left out for it: a value a source computes reads `(computed)` where
+it stands, an object a source spreads into has `...` among its keys, marked the same, and what a
+file that does not compile would have said reads `(unread)`, which `check` explains. The config
+is shown field by named field, policy only; nothing reaches a reader because the config happened
+to hold it.
+
+Each assembly is a resource of its own, listed beside the fixed ones, since a client shows a
+person what the list holds and not every client fills in a template. Listing opens nothing
+but the directory the assemblies are in, so nothing else in a project can take the list down.
+A tool that writes an assembly tells the client to list again. An assembly the project has not is answered with the
+protocol's code for a resource that is not found.
+
+Two things an agent would want are not here, because no source gives them. The shape of an
+assembly's data is what its service returns, known to a run of it or to the project's types and
+to no reading of a file; the resource names the service. And what is wrong right now on a
+running server, per placement, with the correlation id that finds it in a log, is a running
+project's to say. How an agent is shown a running project is not decided (13.4); what can be
+told without one is `check`'s.
 
 ### 13.4 What an agent does
 

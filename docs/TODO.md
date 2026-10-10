@@ -5,29 +5,29 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 04:05 EDT, after the release notes).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 04:47 EDT, after the project's shape).**
 
-STATE. Branch `next`. `origin/next` is `f1d217b`, the API reference, pushed 2026-10-10
-03:32 EDT; its `ci` run is 38034766423, its `release` run 38034766454 and its `deploy-site` run
-38034766421, all read to their end, green: the deploy's two jobs ran for the first time, and
-staging serves the reference under `/assemblejs/next/docs/api/`, its source links naming that
-commit. Beneath it: A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03,
+STATE. Branch `next`. `origin/next` is `6a27a0c`, the release notes, pushed 2026-10-10
+04:05 EDT; its `ci` run is 38036708423, its `release` run 38036708409 and its `deploy-site` run
+38036708372, all read to their end, green: the deploy ran the release-notes gate before it
+published, staging serves `/assemblejs/next/release-notes.html` as the branch has it, and the
+page was drawn in the sealed browser at a desk's width and a phone's. Beneath it: the API
+reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03,
 `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above it,
-signed, pushed with this block: the release notes, which change `site/**`. Every package reads
-`1.0.0-next.0`; eighteen changesets are pending. The owner's overnight order (estate D1216):
-work the bites to code completion and get the landing page onto staging; no questions until
-morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
-200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
-`/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
-rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
-self-verified by mutation (DECISIONS 2026-10-09, S-02).
+signed, pushed with this block: the project's whole shape and each assembly as resources.
+Every package reads `1.0.0-next.0`; nineteen changesets are pending. The owner's overnight
+order (estate D1216): work the bites to code completion and get the landing page onto
+staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
+the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
+deploys there. `/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's
+morning list. His rulings in this seat stand: no subagents, the seat does the work itself;
+every bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is DESIGN 13.3's resources: the design names five that an agent reads and
-the agent surface has two, and its `assemblejs://project` lists assemblies and not the pages,
-the apis, the settings or how they are wired (the row is in Phase 3 below). All of it is read
-from sources, as the two that exist are: nothing of the project's is run. Then registrations
-for the clients beyond the three; then the rows under "AFTER IT" below. Four rows wait on the
-owner and are on the estate's morning list: A-04, whose memo is
+THE EXACT NEXT STEP is the other half of DESIGN 13.3, two rows in Phase 3 below:
+`assemblejs://contract`, built from core's constants with a spec that holds it to what a real
+server sends, and `compose_page` by a page's name, so the policy the page declares applies.
+Then registrations for the clients beyond the three; then the rows under "AFTER IT" below.
+Four rows wait on the owner and are on the estate's morning list: A-04, whose memo is
 `docs/studies/built-in-components.md`; showing an agent a framework view, which means running
 the project's code; whether the twelve packages share one version, which a new project's
 manifest and the release-notes gate are both written as if they did; and folding the
@@ -482,12 +482,38 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       assembly through it. Self-verified: 66 mutations in the unit suites and 9 around a run
       of the fixture, each alone, each watched red (owner, 2026-10-09, PLAN 4.1; DECISIONS
       2026-10-10, A-01)
-- [ ] The agent surface has two of the five resources DESIGN 13.3 names, and its
-      `assemblejs://project` lists assemblies and not the pages, the apis, the settings or how
-      they are wired. `compose_page` takes a template, so it cannot know the policy a page
-      declares: give it a page by name. Build them, then say so in the instructions `new`
-      writes, which today send an agent there for "the assemblies that exist" (found
-      2026-10-10 writing A-01; B-09b is checked done and nothing recorded the gap)
+- [x] `assemblejs://project` is the project's whole shape, and each assembly is a resource of
+      its own (DESIGN 13.3). The command line reads the shape, `readShape`, from the readers
+      `check` has and never runs the project: every page with its route, what it places and
+      the policy it declares; every assembly with its files, what its view places and where it
+      is placed; every api's route; the config, field by named field. What a source computes
+      reads `(computed)` and what a file that cannot be read would have said reads `(unread)`,
+      never left out. `assemblejs://assembly/{name}` answers one assembly with every placement
+      of it, is listed for each assembly, completes a name, and answers one the project has
+      not with the protocol's code. A tool that writes an assembly tells the client to list
+      again. The instructions `new` writes name both (found 2026-10-10 writing A-01; DECISIONS
+      2026-10-10, "what an agent reads")
+- [ ] `assemblejs://contract`, the third resource DESIGN 13.3 names: the three endpoints, their
+      headers and the envelope as a structure, built from core's own constants and never as a
+      copy of DESIGN 2, with a spec that holds the names in it to what a real server sends
+- [ ] `compose_page` takes a template, so it cannot know the policy a page declares: give it a
+      page by name. A url a declaration computes is a mark in what `check` reads and no url;
+      a page that places another server's assembly composes with no network (13.2)
+- [ ] Two things DESIGN 13.3 named are not built, because no source gives them: the shape of
+      an assembly's data, and what is wrong on a running server with the id that finds it in
+      a log. The second waits with the row above on how an agent is shown a running project;
+      the first wants a run of the service or a reading of the project's types, and neither
+      is decided (DECISIONS 2026-10-10, "what an agent reads")
+- [ ] The agent surface holds the four places the shape is read from to the root
+      (`src/assemblies`, `src/pages`, `src/api`, the config), and a link one level further
+      down is followed: a page's directory, its `.page.ts`, an api file. What such a file
+      writes as literals is then shown, and `check` reads through it the same way, as it did
+      before the shape. Hold every file the readers open to the root, in the readers both
+      use (found 2026-10-10, DESIGN 13.6)
+- [ ] `pageRoute` takes a declaration whose default export is not written as an object for one
+      that declares no route, so `check` and the shape say the route its directory implies
+      where only a run could tell. A value `check` cannot read should be unknown to it
+      (found 2026-10-10)
 - [ ] VS Code is handed this server twice: its Agent Host reads `.mcp.json` and is forwarded
       `.vscode/mcp.json`, one name with two sets of arguments, and its documentation does not
       say which it keeps. Open a new project in VS Code and read what it lists; keep one file
@@ -524,7 +550,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       own running `dev` server and never run the code here. When it lands, the sentences
       brought down to what holds go back up: the landing page's "Your agent knows the
       framework" and its row in `site/LANDING.md`, the root README, the agent surface's own,
-      DESIGN 13.4, and the descriptions of the two tools (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
+      DESIGN 13.4 and the last paragraph of 13.3, and the descriptions of the two tools (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
       refused; DECISIONS 2026-10-10, A-03)
 - [x] The command line's suite could fail by a race: two of its spec files built
       `examples/two-frameworks` in place, at once, and a build begins by removing the

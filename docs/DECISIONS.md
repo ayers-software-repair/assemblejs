@@ -3432,3 +3432,73 @@ view, nothing of the project's run, and any other view answered with the reason.
 Watched red: 8 mutations of the gate, each alone, each against its self-test; and on the real
 tree a version injected into one package's changelog, the page's section renamed, and the
 notes headed by another version, each refused.
+
+## 2026-10-10: what an agent reads (DESIGN 13.3), the first half
+
+Expected, from DESIGN 13.3: five resources, the project's whole shape first among them. Found
+writing A-01: the agent surface had two, and its `assemblejs://project` listed assemblies and
+nothing of the pages, the apis, the config or how any of it is wired.
+
+Settled:
+
+- **The shape is read by the command line and never run.** `readShape`, in
+  `packages/cli/src/shape/`, is built from the readers `check` already holds a project with
+  (`discoverPages`, `discoverAssemblies`, `discoverApis`, `viewFindings`, `pageRoute`,
+  `readDefaultExport`), so the shape and `check` read a file the same way and neither needs a
+  build. The agent surface serves it with the project's root beside it, after holding each of
+  the four places it is read from to that root.
+- **What a source computes is marked, never left out.** The readers `check` uses drop what
+  they cannot read as a literal, which is right for a rule (it cannot judge what it cannot
+  read) and wrong for a description (a missing deadline reads as no deadline). So the shape
+  shows a declaration as written: a computed value reads `(computed)` where it stands, an
+  object a source spreads into has `...` among its keys marked the same way, and what a file
+  that does not compile would have said reads `(unread)`. `viewFindings` now names the views
+  that hold a placement it could not read, so the shape does not call those computed.
+- **The config is shown by naming each field**: remotes, public routes, the content security
+  policy, whether it declares an access check, budgets. The check itself is code and is not
+  shown, and nothing else the file holds reaches a reader. The config holds policy only by
+  design (DESIGN 4: where a project runs and its credentials come from the environment), and
+  the shape does not lean on that.
+- **`assemblejs://assembly/{name}` is a template with a list.** Read in the SDK (1.30.0,
+  `server/mcp.js`): a template's `list` callback is merged into `resources/list`, and the SDK
+  declares `listChanged`. Read in Claude Code's documentation (`code.claude.com/docs/en/mcp`,
+  "Use MCP resources"): resources are what `@` offers a person, and it "automatically provides
+  tools to list and read MCP resources"; it says nothing of templates. So each assembly is
+  listed as a resource of its own, and a tool that writes one sends the notice to list again.
+- **Listing opens nothing but the directory the assemblies are in.** Found in review, before
+  the push: the list took its names from the whole shape, and the shape refuses a project one
+  of whose four places leads out of the root. The SDK awaits a template's `list` inside
+  `resources/list` and catches nothing, so a config that is a link out of the project failed
+  the whole request, the fixed resources with it, for a client that lists on connecting.
+  Watched through the protocol first (`-32603`, twice), then the names were read by discovery
+  alone, and where even that refuses, none is listed. The reads still refuse.
+- **An assembly the project has not is `-32002`.** The specification (2025-11-25,
+  server/resources, Error Handling): "Resource not found: `-32002`". The SDK's own list of
+  codes does not name it and answers an address no template matches with `-32602`; that one
+  is the SDK's to change.
+- **One definition each** for three things the shape shares with `check`: whether an assembly
+  has a browser half (`hasBrowserHalf`), a path from the root (`fromRoot`), and the mark on a
+  computed value, which the policy reader already wrote as a word of its own.
+
+Two rows of 13.3 came down, because no source gives them (a row): the shape of an assembly's
+data, which is what its service returns; and what is wrong on a running server with the id
+that finds it in a log, which waits with showing an agent a framework view on how an agent is
+shown a running project. What `check` finds is not served a second time under another name.
+
+Not here, and next: `assemblejs://contract` and `compose_page` by a page's name.
+
+Found, and rowed: `pageRoute` reads a declaration whose default export is not written as an
+object as one that declares no route. And the four places the shape is read from are held to
+the root while a link one level further down is followed, by the shape and by `check` alike;
+`check` read that way before this.
+
+A budget moved on purpose: the command line's tarball, 66000 to 69000 bytes. The shape reader
+took it from 62422 to 66356. The agent surface's went from 19029 to 20384 and stays under its 20500.
+
+Watched red: 56 mutations in the unit suites, each alone, each restored from its own bytes;
+one survived the first run, a root given as a path from where it is asked, because the spec
+wrote its project where a path that is not resolved still happened to lead, and it is red now
+that the spec writes beneath the directory it asks from. And 4 around a run of the `agents`
+fixture from packed tarballs: the instructions not naming the one assembly's resource, an
+assembly that is not there answered as an invalid request, assemblies not listed, and no page
+said to place an assembly.

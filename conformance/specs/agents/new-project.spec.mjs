@@ -118,6 +118,69 @@ test("an agent adds an assembly, places it and composes the page, through that s
   }
 });
 
+// DESIGN 13.3: what an agent reads, from the server the project installed, on the project as
+// the test before left it. Read from the sources: nothing has been built since the agent wrote.
+test("the server tells the agent the project's whole shape, and one assembly of it", async () => {
+  const client = await startedFrom(...CLIENTS[0]);
+  try {
+    for (const uri of [
+      "assemblejs://project",
+      "assemblejs://assembly/<name>",
+      "assemblejs://rules",
+    ]) {
+      assert.ok(told.includes(`\`${uri}\``), `AGENTS.md names ${uri}`);
+    }
+    const [page] = readdirSync(join(root, "src", "pages"));
+    const project = await resourceOf(client, "assemblejs://project");
+    assert.deepEqual(project.pages, [
+      {
+        name: page,
+        route: "/",
+        template: `src/pages/${page}/${page}.html`,
+        places: [
+          { name: "hello", view: "default" },
+          { name: "greeting", view: "default" },
+        ],
+        policy: {},
+        stream: null,
+      },
+    ]);
+    assert.deepEqual(
+      project.assemblies.map((assembly) => [assembly.name, assembly.renderer, assembly.placedOn]),
+      [
+        ["greeting", "html", [page]],
+        ["hello", "html", [page]],
+      ],
+    );
+    assert.deepEqual(project.apis, []);
+    assert.deepEqual(project.settings.remotes, []);
+    assert.deepEqual(project.problems, []);
+
+    // Each assembly is a resource of its own, listed beside the fixed ones, the one the agent
+    // added a moment ago among them.
+    assert.deepEqual(
+      (await client.listResources()).resources.map((resource) => resource.uri),
+      [
+        "assemblejs://project",
+        "assemblejs://rules",
+        "assemblejs://assembly/greeting",
+        "assemblejs://assembly/hello",
+      ],
+    );
+    const greeting = await resourceOf(client, "assemblejs://assembly/greeting");
+    assert.equal(greeting.view, "src/assemblies/greeting/greeting.html");
+    assert.deepEqual(greeting.placedOn, [{ page, route: "/", view: "default", policy: {} }]);
+    assert.deepEqual(greeting.placedIn, []);
+    // An assembly the project has not is the protocol's "resource not found", by its code.
+    await assert.rejects(
+      client.readResource({ uri: "assemblejs://assembly/missing" }),
+      (error) => error.code === -32002,
+    );
+  } finally {
+    await client.close();
+  }
+});
+
 test("the page the agent composed is the page the project's build serves", async () => {
   // The server the harness started was built from the project as the starter wrote it.
   assert.deepEqual(named(await (await fetch(new URL("/", originOf("written")))).text()), [

@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { ResourceListChangedNotificationSchema } from "@modelcontextprotocol/sdk/types.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createMcpServer, registerAuthoringTools, resolveRoot } from "@assemblejs/mcp";
 
@@ -64,6 +65,35 @@ describe("an agent building a page through the server's own surface", () => {
     expect(answer.ok).toBe(false);
     expect(answer.problems[0]).toMatchObject({ rule: "a-placement-names-an-assembly" });
     expect(readFileSync(join(dir, "src", "pages", "home", "home.html"), "utf8")).toBe(before);
+  });
+});
+
+// Each assembly is a resource of its own, so a client that listed them must hear when a tool
+// writes one, and must not be told to list again by a call that wrote nothing.
+describe("a client that listed what can be read", () => {
+  it("is told to list again when a tool writes an assembly, and not when one refuses", async () => {
+    let told = 0;
+    client.setNotificationHandler(ResourceListChangedNotificationSchema, () => {
+      told += 1;
+    });
+    const heard = async (): Promise<number> => {
+      // A notice is behind the answer it follows on the same transport; one more round settles it.
+      await client.listResources();
+      return told;
+    };
+
+    expect((await call("create_project", { name: "shop" })).ok).toBe(true);
+    expect(await heard()).toBe(1);
+    expect((await call("add_assembly", { name: "cart", renderer: "html" })).ok).toBe(true);
+    expect(await heard()).toBe(2);
+    expect((await client.listResources()).resources.map((resource) => resource.uri)).toContain(
+      "assemblejs://assembly/cart",
+    );
+
+    expect((await call("add_assembly", { name: "Cart", renderer: "html" })).ok).toBe(false);
+    expect((await call("place_assembly", { page: "home", name: "cart" })).ok).toBe(true);
+    expect((await call("check", {})).ok).toBe(true);
+    expect(await heard()).toBe(2);
   });
 });
 

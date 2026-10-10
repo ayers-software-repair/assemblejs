@@ -6,9 +6,9 @@ import { z } from "zod";
 import { composePage } from "../compose/compose-page.js";
 import { renderAssembly } from "../render/render-assembly.js";
 import type { ProjectRoot } from "../root/project-root.js";
-import { describeProject } from "./describe-project.js";
 import { registerAuthoringTools } from "./register-authoring-tools.js";
 import { registerPrompts } from "./register-prompts.js";
+import { registerResources } from "./register-resources.js";
 
 const json = (value: unknown) => ({
   content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }],
@@ -24,45 +24,7 @@ const json = (value: unknown) => ({
 export function createMcpServer(root: ProjectRoot): McpServer {
   const server = new McpServer({ name: AGENT_SERVER.name, version: ownVersion(import.meta.url) });
 
-  server.registerResource(
-    "project",
-    "assemblejs://project",
-    {
-      title: "This project",
-      description:
-        "Every assembly, its renderer and its view, plus anything wrong with the tree. One read, so an agent does not spend its first turns asking what exists.",
-      mimeType: "application/json",
-    },
-    () => ({
-      contents: [
-        {
-          uri: "assemblejs://project",
-          mimeType: "application/json",
-          text: JSON.stringify(describeProject(root), null, 2),
-        },
-      ],
-    }),
-  );
-
-  server.registerResource(
-    "rules",
-    "assemblejs://rules",
-    {
-      title: "The rules real code must satisfy",
-      description:
-        "Each with the reason it exists and what it looks like when broken. An agent that knows only a rule complies; one that knows why can tell when it is looking at the situation the rule was written for.",
-      mimeType: "application/json",
-    },
-    () => ({
-      contents: [
-        {
-          uri: "assemblejs://rules",
-          mimeType: "application/json",
-          text: JSON.stringify(RULES, null, 2),
-        },
-      ],
-    }),
-  );
+  registerResources(server, root);
 
   server.registerTool(
     "render_assembly",

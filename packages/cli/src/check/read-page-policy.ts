@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { COMPUTED } from "../shape/computed.js";
 import type { LiteralValue } from "./literal-value.js";
 import type { PagePolicy } from "./page-policy.js";
 import { readDefaultExport } from "./read-default-export.js";
@@ -34,7 +35,7 @@ export function readPagePolicy(source: string): PagePolicy {
     const read: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(policy)) {
       if (value !== undefined) read[key] = value;
-      else if (key === "url") read[key] = "(computed)";
+      else if (key === "url") read[key] = COMPUTED;
     }
     if ("url" in policy) {
       const url = policy["url"];
