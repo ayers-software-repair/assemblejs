@@ -50,6 +50,8 @@ export { hoistAssets } from "./hoist-assets.js";
 export { linkStream } from "./link-stream.js";
 export { renderLocal } from "./render-local.js";
 export { localFetch } from "./local-fetch.js";
+export { logFallbacks } from "./log-fallbacks.js";
+export { registerAssemblies } from "./register-assemblies.js";
 export { registerAssets } from "./register-assets.js";
 export { registerFailures } from "./register-failures.js";
 export { remoteProblems } from "./remote-problems.js";

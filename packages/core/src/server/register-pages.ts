@@ -17,6 +17,7 @@ import type { RemoteTransport } from "../remote/remote-transport.js";
 import { DEV_RELOAD_SCRIPT } from "../vocab/dev-reload-script.js";
 import { hoistAssets } from "./hoist-assets.js";
 import { linkStream } from "./link-stream.js";
+import { logFallbacks } from "./log-fallbacks.js";
 import { pageFetch } from "./page-fetch.js";
 import { pagePlan } from "./page-plan.js";
 import { queryOf } from "./query-of.js";
@@ -93,16 +94,8 @@ export function registerPages(
             ? []
             : [`${DEV_RELOAD_SCRIPT}?boot=${encodeURIComponent(options.reload)}`],
       };
+      logFallbacks(composed.diagnostics, `on page "${page.route}"`, log);
       for (const diagnostic of composed.diagnostics) {
-        // A placement that fell back still served a page, so nothing else would ever say it
-        // failed. Its envelope carries this id; the log line is what the id finds.
-        if (diagnostic.reason !== undefined) {
-          log({
-            correlationId: diagnostic.correlationId ?? newCorrelationId(),
-            message: `assembly "${diagnostic.name}" on page "${page.route}" was answered by the ${diagnostic.source} after ${diagnostic.reason}`,
-            stack: undefined,
-          });
-        }
         const url = Object.hasOwn(plan, diagnostic.name) ? plan[diagnostic.name]?.url : undefined;
         const declared =
           url === undefined

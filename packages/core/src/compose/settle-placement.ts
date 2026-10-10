@@ -8,8 +8,8 @@ import type { Diagnostic } from "./diagnostic.js";
 import type { FailureReason } from "./failure-reason.js";
 import { fallBack } from "./fall-back.js";
 import type { Fetch } from "./fetch.js";
-import { identity } from "./identity.js";
 import { placementCache } from "./placement-cache.js";
+import { refuseBeforeDispatch } from "./refuse-before-dispatch.js";
 import type { SettleInput } from "./settle-input.js";
 import type { SettledPlacement } from "./settled-placement.js";
 
@@ -102,13 +102,6 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     at("fallback", answer.reason, answer.correlationId || input.newId()),
     true,
   );
-}
-
-/** The two refusals a parent makes itself, before anything is dispatched. */
-function refuseBeforeDispatch(input: SettleInput): FailureReason | undefined {
-  if (input.depth + 1 > input.limits.depth) return "depth";
-  if (input.path.includes(identity(input.name, input.view))) return "cycle";
-  return undefined;
 }
 
 /**
