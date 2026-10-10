@@ -20,6 +20,13 @@ import { buildProject, planAssembly, projectFiles, realIo } from "@assemblejs/cl
 import type { Io } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
+// The example's source in a directory of this file's own, nested in the example so it resolves
+// the workspace's packages as the example does. A build begins by removing what the last one
+// generated, so two files building the example itself, at once, remove each other's.
+const own = mkdtempSync(join(example, ".dev-build-"));
+cpSync(join(example, "src"), join(own, "src"), { recursive: true });
+writeFileSync(join(own, "package.json"), "{}");
+afterAll(() => rmSync(own, { recursive: true, force: true }));
 const capture = () => {
   const logs: string[] = [];
   const errors: string[] = [];
@@ -54,19 +61,19 @@ const serve = async (root: string, path: string): Promise<string> => {
 describe("building a project", { timeout: 60_000 }, () => {
   it("writes a server that plain node starts, composing the page from both frameworks", async () => {
     const { io, logs } = capture();
-    expect(await buildProject(example, io)).toBe(0);
+    expect(await buildProject(own, io)).toBe(0);
     expect(logs.join()).toContain("built 3 assembly(s), 1 page(s), 1 api(s)");
-    expect(readFileSync(join(example, ".assemblejs", "project.ts"), "utf8")).toMatch(
+    expect(readFileSync(join(own, ".assemblejs", "project.ts"), "utf8")).toMatch(
       /version: "[0-9a-f]{12}"/,
     );
-    const page = await serve(example, "/");
+    const page = await serve(own, "/");
     expect(page).toContain('data-renderer="svelte"');
     expect(page).toContain("Clicked 0");
     expect(page).toContain('<p id="readout">nothing yet</p>');
     expect(page).toMatch(
       /<script type="module" src="\/_assemblejs\/assets\/client-[A-Z0-9]+\.js">/,
     );
-    expect(JSON.parse(await serve(example, "/api/time"))).toHaveProperty("now");
+    expect(JSON.parse(await serve(own, "/api/time"))).toHaveProperty("now");
   });
 
   it("refuses, before bundling, a project it cannot build, saying every reason", async () => {

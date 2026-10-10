@@ -524,13 +524,15 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       framework" and its row in `site/LANDING.md`, the root README, and the agent surface's
       own (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
       refused; DECISIONS 2026-10-10, A-03)
-- [ ] The command line's suite can fail by a race: five of its spec files build
+- [x] The command line's suite could fail by a race: two of its spec files built
       `examples/two-frameworks` in place, at once, and a build begins by removing the
       example's `dist` and `.assemblejs` (`build/build-project.ts:58-59`), so one file's
-      bundling can find another's generated modules gone ("Could not resolve
+      bundling found the other's generated modules gone ("Could not resolve
       ./client/counter.js" in `test/build/bundle-client.test.ts`, seen once in about twenty
-      runs, 2026-10-10 02:40 EDT; green on the next run). Each such spec builds a copy of its
-      own
+      runs, 2026-10-10 02:40 EDT). Each builds a copy of the example's source in a directory
+      of its own, nested in the example as the other building specs already were; the two
+      files run together twelve times without a failure, and no spec builds an example in
+      place (2026-10-10)
 - [ ] The shape of a name is written five times where the vocabulary already holds it once
       (`SEGMENT` in core): in the discovery of pages and of assemblies, in `planAssembly`, and
       twice more for a project's own name, in `run` and in the agent surface's

@@ -3113,3 +3113,17 @@ another file, and the document not titled with its page. One more survived and w
 document whose body opened with another tag still took a placement and was served, which is
 the placement's leniency and no fault of the brief's. With the harness refusing a project that
 has no directory, the fixture stops before it is built.
+
+## 2026-10-10: two specs built one example in place, and removed each other's build
+
+Seen once, in about twenty runs of the command line's suite that night: `bundle-client.test.ts`
+failed with "Could not resolve ./client/counter.js". The cause is at
+`build/build-project.ts:58-59`: a build begins by removing the project's `dist` and its
+generated `.assemblejs`. `build-project.test.ts` built `examples/two-frameworks` itself, and
+`bundle-client.test.ts` bundled the same directory, and spec files run at once.
+
+Both now copy the example's source into a directory of their own, nested in the example so it
+resolves the workspace's packages as the example does, which is what the specs of `dev`,
+`perf`, `deploy` and the server's start already did. Run together twelve times, the two files
+did not fail; no spec builds an example in place. A race cannot be watched red on demand, so
+this one is held by its cause being gone, not by a count.
