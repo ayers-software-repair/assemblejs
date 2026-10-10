@@ -9,6 +9,8 @@ export default defineConfig({
   dts: { compilerOptions: { ignoreDeprecations: "6.0" } },
   sourcemap: false,
   clean: true,
-  splitting: false,
+  // Split, so the command and the library are one copy of the code and not two: each entry
+  // point imports what both hold.
+  splitting: true,
   treeshake: true,
 });

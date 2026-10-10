@@ -3007,3 +3007,24 @@ the install fails before a spec runs.
 Not done, and why: the directory Claude Code starts a project's server in is observed, not
 documented, so the registration that depends on it is proved against what was seen. A session
 on Windows, and one started beneath the project's root, were not run.
+
+## 2026-10-10: one copy of the code in the command line, the agent surface and the starter
+
+Found by A-01, which crossed the command line's tarball budget by adding half of what the
+budget said it had added: each of these three packages builds two entry points, `bin.js` and
+`index.js`, and each was the whole bundle. Every byte of source was packed twice.
+
+They are built split now (`splitting: true`, as the framework renderers already are, for
+another reason): the code is one chunk and each entry point imports it. `bin.js` in the command
+line is 147 bytes. The version each package announces is read by walking up from the module
+that asks, so it is the same from a chunk as from an entry point, which the agent surface's
+suite holds by asking the built package through a real client.
+
+The command line's budget is lowered from 100000 bytes to 66000 (it packs to 62313 with the
+work in the tree; the unsplit build packs to 97470). The agent surface is mostly its licence
+and its declarations, so it is nearly the size it was, and the starter was small already; their
+budgets stand.
+
+Held by the budget, watched red: with the split turned off again, `pnpm check:pack` refuses the
+command line. Proved on the build: the three packages' suites, which start each built `bin.js`,
+`pnpm check:exports` and `pnpm check:publish`.

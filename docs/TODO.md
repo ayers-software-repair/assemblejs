@@ -5,19 +5,20 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:12 EDT, after A-01).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:26 EDT, after the build split).**
 
-STATE. Branch `next`. `origin/next` is `a85ca15`, S-09, pushed 2026-10-10 01:02 EDT; its `ci`
-run is 38026135845, its `release` run 38026135894 and its `deploy-site` run 38026135833, all
-read to their end, green. Above it, signed, pushed with this block: the A-01 commit this block
-lands in, which touches `site/**` and so fires `deploy-site` as well. Every package reads
-`1.0.0-next.0`; thirteen changesets are pending. The owner's overnight order (estate D1216):
-work the bites to code completion and get the landing page onto staging; no questions until
-morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
-200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
-`/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
-rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
-self-verified by mutation (DECISIONS 2026-10-09, S-02).
+STATE. Branch `next`. `origin/next` is `a7d3edc`, A-01, pushed 2026-10-10 02:13 EDT; its `ci`
+run is 38030156225, its `release` run 38030156222 and its `deploy-site` run 38030156238, all
+read to their end, green, and the three staging pages it changed are byte-identical to the
+branch. Above it, signed, pushed with this block: the commit that builds the command line, the
+agent surface and the starter with one copy of their code. Every package reads `1.0.0-next.0`;
+fourteen changesets are pending. The owner's overnight order (estate D1216): work the bites to
+code completion and get the landing page onto staging; no questions until morning. The landing
+page is on staging: `/assemblejs/next/` on the staging domain answers 200 (DECISIONS
+2026-10-09, staging), and a `site/**` push on `next` deploys there. `/assemblejs/` deploys from
+`main`, which has no `site/` yet: the owner's morning list. His rulings in this seat stand: no
+subagents, the seat does the work itself; every bite since is self-verified by mutation
+(DECISIONS 2026-10-09, S-02).
 
 THE EXACT NEXT STEP is A-03 (PLAN 4.1): the agent surface lists prompts for the common tasks
 through the protocol (add an assembly, place it, make a page, fix what `check` found), and an
@@ -491,11 +492,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [ ] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
       after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
       (DECISIONS 2026-10-10, A-01)
-- [ ] The command line and the agent surface ship their code twice: `bin.js` and `index.js`
-      are each the whole bundle (`splitting: false` in their build), so 96 KB of the command
-      line's tarball is about 50 of code. Build each so its two entry points share what they
-      both hold, hold the version read from the package to it, and lower both budgets
-      (found 2026-10-10 when A-01 crossed the command line's budget)
+- [x] The command line and the agent surface shipped their code twice: `bin.js` and `index.js`
+      were each the whole bundle. They, and the starter, are built split now, each entry point
+      importing what both hold: the command line packs to 62 KB where it packed to 97, and its
+      budget is lowered from 100000 bytes to 66000, which the unsplit build was watched
+      crossing (found 2026-10-10 when A-01 crossed the old budget; DECISIONS 2026-10-10, "one
+      copy of the code")
 - [ ] A new project installs 90 packages, 15 MB, for the agent surface alone, through the
       protocol SDK's dependencies on express and hono. All are development dependencies and
       none reaches a deploy. Bundling the SDK into `@assemblejs/mcp`, with its notices, would
