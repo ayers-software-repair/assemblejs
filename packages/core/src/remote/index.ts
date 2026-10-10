@@ -8,6 +8,7 @@ export { isPrivateAddress } from "./is-private-address.js";
 export { readCapped } from "./read-capped.js";
 export { mediaType } from "./media-type.js";
 export { readManifest } from "./read-manifest.js";
+export { learnedManifests } from "./learned-manifests.js";
 export type { ScannedAttribute } from "./scanned-attribute.js";
 export type { ScannedTag } from "./scanned-tag.js";
 export { readStartTag } from "./read-start-tag.js";

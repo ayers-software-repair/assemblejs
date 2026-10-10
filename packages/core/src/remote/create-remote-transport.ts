@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
-import type { AssemblyAssets } from "../assembly/assembly-assets.js";
 import type { AssemblyResponse } from "../compose/assembly-response.js";
 import { encodeParams } from "../compose/encode-params.js";
 import type { FailureReason } from "../compose/failure-reason.js";
@@ -10,11 +9,11 @@ import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { isPrivateAddress } from "./is-private-address.js";
+import { learnedManifests } from "./learned-manifests.js";
 import { markRemote } from "./mark-remote.js";
 import { mediaType } from "./media-type.js";
 import { parseContentUrl } from "./parse-content-url.js";
 import { readCapped } from "./read-capped.js";
-import { readManifest } from "./read-manifest.js";
 import type { RemoteDefinition } from "./remote-definition.js";
 import type { RemoteTransport } from "./remote-transport.js";
 
@@ -31,8 +30,6 @@ import type { RemoteTransport } from "./remote-transport.js";
  * content rather than in front of it, and a manifest that cannot be read is a logged warning and
  * a retry, never a failed placement.
  */
-const MANIFEST_DEADLINE = 1000;
-
 export function createRemoteTransport(options: {
   readonly remotes: readonly RemoteDefinition[];
   readonly maxBytes: number;
@@ -44,10 +41,7 @@ export function createRemoteTransport(options: {
   const resolve =
     options.resolve ??
     (async (host: string) => (await lookup(host, { all: true })).map((entry) => entry.address));
-  const manifests = new Map<
-    string,
-    { readonly version: string; readonly assets: AssemblyAssets }
-  >();
+  const manifests = learnedManifests({ maxBytes: options.maxBytes, log: options.log });
 
   const failure = (reason: FailureReason, detail: string): AssemblyResponse => {
     const correlationId = newCorrelationId();
@@ -59,35 +53,8 @@ export function createRemoteTransport(options: {
     return { ok: false, reason, detail, correlationId };
   };
 
-  // The read in flight for a url, so concurrent first requests ask once between them.
-  const reading = new Map<string, Promise<void>>();
-  const learn = (url: string, manifest: string, origin: string, version: string): void => {
-    if (manifests.get(url)?.version === version || reading.has(url)) return;
-    const read = readManifest({
-      url: manifest,
-      origin,
-      maxBytes: options.maxBytes,
-      deadline: MANIFEST_DEADLINE,
-    }).then((assets) => {
-      reading.delete(url);
-      if (typeof assets !== "string") {
-        manifests.set(url, { version, assets });
-        return;
-      }
-      options.log({
-        correlationId: newCorrelationId(),
-        message: `remote manifest ${manifest} could not be read, and will be asked for again: ${assets}`,
-        stack: undefined,
-      });
-    });
-    reading.set(url, read);
-  };
-
   return {
-    assets: async (url) => {
-      await reading.get(url);
-      return manifests.get(url)?.assets;
-    },
+    assets: manifests.assets,
     fetch: async (url, request) => {
       const target = parseContentUrl(url);
       const remote = target === undefined ? undefined : byOrigin.get(target.origin);
@@ -159,7 +126,7 @@ export function createRemoteTransport(options: {
       // The content has arrived, so the placement is answered now; the manifest is learned
       // beside it and never holds it.
       const version = response.headers.get("assembly-version") ?? undefined;
-      if (version !== undefined) learn(url, target.manifest, target.origin, version);
+      if (version !== undefined) manifests.learn(url, target.manifest, target.origin, version);
       return version === undefined
         ? { ok: true, html, source: "remote" }
         : { ok: true, html, source: "remote", version };
