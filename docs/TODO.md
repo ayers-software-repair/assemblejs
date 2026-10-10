@@ -18,12 +18,14 @@ form of GitHub's OIDC subject (the morning list in the estate backlog has the ex
 His rulings in this seat stand: no subagents, the seat does the work itself; every bite since
 is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-04 (PLAN 4.2): `findEnvelopes` walks shadow roots, document
-order kept, and the deferred fill sends `assembly-depth: 1`. Then S-05 to S-09 in order. S-01
-to S-03 are done (`c1513a7`, `e857f69`, and S-03's commit after this block was written). The
-long gate (conformance, the browser proof) runs on GitHub's runners at each push the lead
-allowed overnight: only `next`, only tips that touch no `site/**`, one push per landed bite,
-each run read to its end before the next. Each mutation is run alone.
+THE EXACT NEXT STEP is bite S-05 (PLAN 4.2): a refactor that moves the manifest learning out
+of `create-remote-transport.ts` into `learned-manifests.ts`, then `markRemote` reports every
+envelope an answer holds, the transport learns each one's manifest once per version under a
+canonical key, and `pageAssets` asks for another server's files by the envelopes the served
+markup holds, as it already does for this server's. Then S-06 to S-09 in order. S-01 to S-04
+are done. `origin/next` is `1024a64` (S-03), its conformance and browser proof green on
+GitHub's runners; later commits are local until the next allowed push (only `next`, no
+`site/**`, one push per landed bite, each run read to its end). Each mutation is run alone.
 
 AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
 the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
@@ -386,7 +388,10 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         keep their styles; a shadow parent links its children's sheets inside its root; the
         finder's comments and raw-text elements read in one pass (`inertSpans`). Self-verified:
         seven mutations, each run alone and watched red (2026-10-09)
-  - [ ] S-04 `findEnvelopes` walks shadow roots; `start` considers them; the fill sends depth 1
+  - [x] S-04 `findEnvelopes` enters every shadow root where it stands, document order kept, so
+        `start` and a filled placement consider a child placed inside one; the deferred fill sends
+        `assembly-depth: 1`. Self-verified: four mutations, each run alone and watched red
+        (2026-10-10)
   - [ ] S-05 nested manifests learned once per version; a failed subtree is not cached
   - [ ] S-06 `children` leaves the interface; `Slot({ name, view? })` renders the directive on
         both sides; `slot()` for Svelte and Lit; the Lit-in-Lit refusal; the `nested` example

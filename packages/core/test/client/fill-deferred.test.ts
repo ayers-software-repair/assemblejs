@@ -29,7 +29,8 @@ describe("filling a deferred placement", () => {
     const filled = await fill(placeholder());
     expect(fetched).toHaveBeenCalledWith(
       "/assembly/cart/default/?q=hello",
-      expect.objectContaining({ headers: { "assembly-id": "a1" } }),
+      // One level deep, as the page's own composer asks a placement it renders itself.
+      expect.objectContaining({ headers: { "assembly-id": "a1", "assembly-depth": "1" } }),
     );
     expect(filled?.hasAttribute("data-defer")).toBe(false);
     expect(document.body.innerHTML).toContain("<p>cart</p>");
@@ -86,7 +87,11 @@ describe("filling a deferred placement", () => {
     expect(fetched).toHaveBeenCalledWith(
       "/assembly/cart/default/",
       expect.objectContaining({
-        headers: { "assembly-id": "a1", "assembly-params": "id=42&slug=a+b" },
+        headers: {
+          "assembly-id": "a1",
+          "assembly-depth": "1",
+          "assembly-params": "id=42&slug=a+b",
+        },
       }),
     );
   });

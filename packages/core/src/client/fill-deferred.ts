@@ -9,9 +9,9 @@ const FALLBACK = ":scope > template[data-fallback]";
 
 /**
  * Fetches a deferred placement's content from its own server's content endpoint, with the id and
- * the page's route parameters its placeholder carries and the page's own query, as a placement
- * rendered with the page is asked, and answers the envelope now in the placeholder's place, to
- * be considered for mounting.
+ * the page's route parameters its placeholder carries, the page's own query, and the depth a
+ * page's placement has, as a placement rendered with the page is asked, and answers the envelope
+ * now in the placeholder's place, to be considered for mounting.
  *
  * The answer is parsed as the page itself was, a declarative shadow root attached, where the
  * browser can. On a failure the placement shows what DESIGN 3.3 says a failed one shows: the
@@ -29,7 +29,12 @@ export async function fillDeferred(
   const search = element.ownerDocument.defaultView?.location.search ?? "";
   const url = `${ASSEMBLY_ROUTE_PREFIX}/${encodeURIComponent(name)}/${encodeURIComponent(view)}/${search}`;
   const params = element.getAttribute("data-params");
-  const headers: Record<string, string> = { [COMPOSITION_HEADER.id]: id };
+  // One level deep, as the page's own composer would have asked: the children its view places
+  // are then composed from the depth they would have had if it had been rendered with the page.
+  const headers: Record<string, string> = {
+    [COMPOSITION_HEADER.id]: id,
+    [COMPOSITION_HEADER.depth]: "1",
+  };
   if (params !== null && params !== "") headers[COMPOSITION_HEADER.params] = params;
   let answer: Element | undefined;
   try {
