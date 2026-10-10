@@ -20,7 +20,7 @@ import { EVENTS_KEY } from "../client/events-key.js";
  * component that calls `useEvents()` renders on the server as in the browser.
  */
 export async function renderToMarkup(component: Component, input: MarkupInput): Promise<string> {
-  const app = createSSRApp(component, { data: input.data, children: input.children });
+  const app = createSSRApp(component, { data: input.data });
   app.provide(EVENTS_KEY, serverEvents());
   let failed: { readonly error: unknown } | undefined;
   app.config.errorHandler = (error) => {

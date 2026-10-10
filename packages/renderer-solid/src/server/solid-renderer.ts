@@ -17,6 +17,5 @@ export const solidRenderer: Renderer = {
   render: (input) =>
     renderToMarkup(input.template as Component<AssemblyProps>, {
       data: input.data,
-      children: input.children,
     }),
 };

@@ -3,9 +3,8 @@
 import type { TemplateCompiler } from "./template-compiler.js";
 
 /**
- * Handlebars, which escapes what `{{ }}` writes. A child's HTML is handed over as a safe
- * string, so `{{children.name}}` writes it as it is while every value from `data` stays
- * escaped. Templates compile in an instance of this package's own, so a helper or partial
+ * Handlebars, which escapes what `{{ }}` writes, so every value from `data` is escaped; a child
+ * is placed by the directive the template writes in its markup. Templates compile in an instance of this package's own, so a helper or partial
  * another library registers on the shared Handlebars never reaches them. A partial from another
  * file is refused when it renders; an inline partial, or a partial block's own fallback, is the
  * same file and renders. Handlebars compiles lazily, on the first render; the source is parsed
@@ -17,15 +16,6 @@ export async function loadHandlebars(): Promise<TemplateCompiler> {
   const instance = handlebars.create();
   return (source) => {
     const render = instance.compile(instance.parse(source));
-    return (input) =>
-      render({
-        data: input.data,
-        children: Object.fromEntries(
-          Object.entries(input.children).map(([name, html]) => [
-            name,
-            new instance.SafeString(html),
-          ]),
-        ),
-      });
+    return (input) => render({ data: input.data });
   };
 }

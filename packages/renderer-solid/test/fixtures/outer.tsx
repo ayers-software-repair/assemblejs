@@ -5,9 +5,9 @@ import { Slot } from "@assemblejs/renderer-solid/client";
 import { Counter } from "./counter.js";
 
 /** An assembly that places a child assembly ahead of a counter of its own. */
-export const Outer = (props: AssemblyProps) => (
+export const Outer = (_props: AssemblyProps) => (
   <article>
-    <Slot children={props.children} name="inner" />
-    <Counter data={{ label: "Outer" }} children={{}} />
+    <Slot name="inner" />
+    <Counter data={{ label: "Outer" }} />
   </article>
 );

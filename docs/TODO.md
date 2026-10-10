@@ -5,30 +5,34 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-09 23:40 EDT, after S-02).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-09 23:40 EDT, with S-06).**
 
-STATE. Branch `next`. `origin/next` is `0ac9f53` (pushed on the owner's word, estate D1210; its
-`ci` and `release` runs green). Local above it, unpushed, every one signed: `c1513a7` S-01,
-`f156916` a refactor with no behaviour change, `e857f69` S-02, and the docs commits between.
-The tree is clean. Every package reads `1.0.0-next.0`; three changesets are pending and
-`changeset status` computes `1.0.0-next.1`. The owner's overnight order (estate D1216): work
-the bites to code completion and get the landing page onto staging; no questions until
-morning. The staging deploy is blocked outside this repository: the deploy role trusts the old
-form of GitHub's OIDC subject (the morning list in the estate backlog has the exact fix).
+STATE. Branch `next`. `origin/next` is `03a5a1f`, S-05, with its `ci` run 38018681599 and its
+`release` run 38018681656 green on GitHub's runners (publication skipped: the registry has no
+`@assemblejs/core`). Above it, signed: the S-06 commit this block lands in, and a docs commit
+after it. Every package reads `1.0.0-next.0`; nine changesets are pending. The owner's
+overnight order (estate D1216): work the bites to code completion and get the landing page
+onto staging; no questions until morning. The staging deploy is blocked outside this
+repository: the deploy role trusts the old form of GitHub's OIDC subject (the morning list in
+the estate backlog has the exact fix), so nothing under `site/**` is pushed until it is fixed.
 His rulings in this seat stand: no subagents, the seat does the work itself; every bite since
 is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-06 (PLAN 4.2), the renderers: `children` leaves `MarkupInput`,
-`RenderInput`, every renderer's props, hydrate and server render, and the template engines'
-locals; `placementDirective(name, view?)` in core's client entry is the one definition of what
-a framework view writes; `Slot({ name, view? })` in React, Preact, Vue and Solid renders it on
-both sides (React's with `suppressHydrationWarning` and an identity-stable object per
-directive); `slot(name, view?)` in Svelte and Lit; then the `nested` page in
-`examples/frameworks` and its browser proof. Then S-07 to S-09. S-01 to S-05 are done and
-pushed through S-04 (`2396c27`, conformance and the browser proof green on GitHub's runners);
-S-05 is pushed with this block. Pushes: only `next`, no `site/**`, one per landed bite, each
-run read to its end. Each mutation is run alone. Edit scripts run in the foreground, where a
-failure is seen, before any gate is started.
+THE EXACT NEXT STEP is bite S-07 (PLAN 4.2): `check` reads the directives in static sources
+and the slot names in framework views where it already reads `mount`, and reports a name with
+no assembly, a view the child lacks, a self-placement, a slot name it cannot read, and a Lit
+assembly under a Lit view with no shadow root between; the registry writes each view's static
+placements, which boot reads for whether a page carries a runtime and what a deferred
+parent's children need linked; the agent surface renders and composes through core's own
+transport and places a child in a view. Then S-08 (conformance) and S-09 (DESIGN, the guides,
+the studies deleted). S-01 to S-06 are done.
+
+HOW A BITE IS PROVED. Pushes: only `next`, no `site/**`, one per landed bite, each run read to
+its end. Each mutation is run alone, by a harness that puts the file back from its own bytes
+and compares the hash of every changed file before and after; a run with no failed spec is
+invalid, not red. The browser proof runs here: give the suite the estate's sealed launcher as
+`ASSEMBLEJS_CHROMIUM`, one worker, in the background, `TMPDIR` left alone (DECISIONS
+2026-10-09, S-06). It rebuilds every package's `dist`, so never beside the unit suite.
 
 AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
 the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
@@ -400,20 +404,35 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         `learnedManifests` reads each one's manifest once per version and keeps it for the url
         that was asked; a failed subtree was already kept out of the cache at S-02. Self-verified:
         six mutations, each run alone and watched red (2026-10-10)
-  - [ ] S-06 `children` leaves the interface; `Slot({ name, view? })` renders the directive on
-        both sides; `slot()` for Svelte and Lit; the Lit-in-Lit refusal; the `nested` example
-        and the browser proof
+  - [x] S-06 `children` leaves the interface; `placementDirective` is the one definition of
+        what a slot writes; `Slot({ name, view? })` in React, Preact, Vue and Solid and `slot()`
+        in Svelte and Lit write it on both sides; a Lit assembly in a Lit view's own tree is
+        refused by name when the view mounts (`litAssemblyInTree`), because Lit itself refuses
+        only a child that binds an attribute; the `nested` page, three deep, and its browser
+        proof, seventeen green here through the sealed launcher. Self-verified: sixteen
+        mutations in the unit suites and two in the browser, each run alone and watched red
+        (DECISIONS 2026-10-09, S-06)
   - [ ] S-07 `check` reads directives and `Slot` names; the registry writes each view's static
         placements, which boot reads for whether a page carries a runtime and what a deferred
         parent's children need linked; the agent surface renders and composes through core's own
         transport (today it has its own path and shows a child's directive, not the child), and
-        places a child in a view
+        places a child in a view. `check` also refuses, before a browser does: a Lit assembly
+        under a Lit view with no shadow root between them, at any depth, and a slot whose name
+        it cannot read
   - [ ] S-08 conformance: the `nested` fixture and the two-server nested spec
-  - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted
+  - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted. Still saying `children`
+        after S-06: DESIGN 7, 8 and 11's rules line, and `site/docs/` templates, react, preact,
+        vue, solid, svelte and lit. The guides are `site/**`: committed, never pushed, until
+        the deploy role is fixed
 - [ ] The content endpoint's render ends when its request closes: `registerAssemblies` gives
       `renderLocal` no signal today, so a server keeps composing children after the server that
       asked has given up (DECISIONS 2026-10-09, S-02 named the signal; the endpoint is the one
       caller without one)
+- [ ] A child placed inside a custom element's own shadow root (a `slot()` written in a Lit
+      element's `render`) is found and mounted, and its stylesheet is linked in the page's
+      head, where it does not reach: `localAssets` tracks an assembly's shadow root, not an
+      element's (`server/local-assets.ts:45-50`, read 2026-10-09; not reproduced). Refuse it
+      in `check`, or link the sheet inside
 - [ ] Placement context: a child whose block content sits inside an open `<p>` (or any element
       the parser closes on its own) is moved out of its envelope, and its parent's island with
       it; silent today for a page's placements and for a view's. One check for both, where the

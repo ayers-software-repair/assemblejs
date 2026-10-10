@@ -10,6 +10,7 @@ export type { MountMode } from "./mount-mode.js";
 export { readMountMode } from "./read-mount-mode.js";
 export { readIsland } from "./read-island.js";
 export { findEnvelopes } from "./find-envelopes.js";
+export { placementDirective } from "./placement-directive.js";
 export { scheduleMount } from "./schedule-mount.js";
 export { fillDeferred } from "./fill-deferred.js";
 export { scheduleFill } from "./schedule-fill.js";

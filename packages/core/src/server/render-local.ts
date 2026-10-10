@@ -35,7 +35,7 @@ export async function renderLocal(
     throw new Error(`assembly "${assembly.name}" has no view "${view}"`);
   }
   const data = await resolveData(declared, { query: input.query, params: input.params });
-  const markup = await declared.markup({ data, children: {}, id: input.id });
+  const markup = await declared.markup({ data, id: input.id });
   const composed = await compose({
     template: markup,
     plan: {},

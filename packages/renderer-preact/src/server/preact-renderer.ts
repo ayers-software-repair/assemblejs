@@ -16,6 +16,5 @@ export const preactRenderer: Renderer = {
   render: (input) =>
     renderToMarkup(input.template as (props: AssemblyProps) => unknown, {
       data: input.data,
-      children: input.children,
     }),
 };

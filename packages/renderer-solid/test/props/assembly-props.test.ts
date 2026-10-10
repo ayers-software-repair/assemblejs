@@ -4,13 +4,10 @@ import { describe, expect, it } from "vitest";
 import type { AssemblyProps } from "@assemblejs/renderer-solid";
 
 describe("what a Solid assembly receives", () => {
-  it("gets its children already rendered, as strings", () => {
-    const props: AssemblyProps<{ total: number }> = {
-      data: { total: 2 },
-      children: { inner: "<p>from another renderer</p>" },
-    };
-    // One conversion, in the caller: plain HTML nests inside Solid the way Solid nests inside
-    // Markdown, because neither renderer fetches its own children.
-    expect(typeof props.children["inner"]).toBe("string");
+  it("is its data, and nothing of its children", () => {
+    const props: AssemblyProps<{ total: number }> = { data: { total: 2 } };
+    // A child is placed with Slot, which writes the directive the composer replaces, so no
+    // child's markup is ever handed to a view.
+    expect(Object.keys(props)).toEqual(["data"]);
   });
 });

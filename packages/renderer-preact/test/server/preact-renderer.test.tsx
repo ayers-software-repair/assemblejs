@@ -17,7 +17,6 @@ describe("the Preact renderer", () => {
     const html = await preactRenderer.render({
       template: Cart,
       data: { greeting: "hello" },
-      children: {},
       helpers: {},
       url: new URL("https://example.com/"),
     });

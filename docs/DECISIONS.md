@@ -2555,3 +2555,102 @@ Settled:
   the files that were read.
 - A failed subtree being kept out of the cache was built at S-02, from the markup, so it already
   holds for another server's answer.
+
+## 2026-10-09: S-06, a slot writes the directive, and what the plan had wrong
+
+Expected, from the synthesis: `children` leaves the interface; a `Slot` writes the directive on
+both sides; Svelte and Lit get a `slot()` that answers the string, exported from the package
+root; a Lit view holding a Lit child is a documented refusal, held by watching Lit's own
+hydration throw; the `nested` page has two parents; the browser proof runs on GitHub's runners.
+
+Found:
+
+- Lit refuses less than the plan relied on. Its hydration throws only when a child's template
+  binds an attribute, and the message names conditional rendering. A Lit child that binds
+  nothing is taken for the parent's own without a word, and its nodes are removed the next time
+  the parent view renders (probed in the browser project: `<p>plain</p>` between one part's
+  markers, hydrated, rendered again, gone). A refusal that depends on what the child happens to
+  bind is not a refusal.
+- The package root is the server half, and a browser bundle that imported a slot from it would
+  load the server renderer. A slot is exported where `Slot` and `useEvents` already are, the
+  `/client` entry, so a server loads Lit's browser half, which installs Lit's support for
+  hydration; that support patches Lit's element base when the base loads after it. Read in
+  `@lit-labs/ssr` 4.1.0, `lib/lit-element-renderer.js`: the server renderer assigns its own
+  `createRenderRoot` after its imports, calls `ReactiveElement.prototype.update` directly, and
+  calls an element's `connectedCallback` only when asked, so no patched method runs on a server.
+  Held by a test that renders one element in two processes, the browser half loaded first and
+  loaded last, and compares the markup.
+- The study's page had no Svelte parent, and Svelte's hydration cannot run in a DOM shim
+  (`renderer-svelte/test/client/hydrate.test.ts` says why). Nothing would have proved one.
+- Vue does not render a slot again while its name and view stand: a parent's render skips a
+  child component whose props did not change. "Writes something else on every render" cannot be
+  watched red there. What is watched is the slot written as an element of Vue's own in place of
+  markup, which Vue replaces when it hydrates.
+- The browser proof runs on this machine. The suite takes the estate's sealed launcher as its
+  browser binary (`ASSEMBLEJS_CHROMIUM`), one worker, and Playwright's pipe passes through it. A
+  `TMPDIR` as long as a session's scratch directory aborts the browser at launch on a socket
+  path longer than the system allows; the default runs.
+
+Settled:
+
+- `placementDirective(name, view?)`, in core's client entry, is the one definition of what a
+  slot writes. It is the one markup a framework view writes unescaped, so it is built from
+  segments alone: a name or a view that is not one throws and never becomes markup.
+- `Slot({ name, view? })` in React, Preact, Vue and Solid writes `<div data-assembly-slot>`
+  holding the directive, on both sides. React's says its difference is meant
+  (`suppressHydrationWarning`) and keeps one `{ __html }` object per directive for the life of
+  the page, because React compares that object by identity when a parent renders again.
+- `slot(name, view?)` in Svelte answers the string, written with `{@html}`. In Lit it answers
+  the `unsafeHTML` directive itself, so a view writes `${slot("cart")}` and imports one thing.
+- The Lit refusal is this package's own. `litAssemblyInTree` answers the innermost envelope
+  around any Lit marker in the view's own tree, and `hydrate` throws before Lit reads a marker,
+  naming both assemblies and the fix (`export const shadow = true` in the child's view). A
+  shadow root, the child's own or one between the two, hides the markers and is allowed. The
+  rule holds at any depth: a Lit assembly under a React one under a Lit view is the same tree.
+- `children` is gone from `MarkupInput`, `RenderInput`, every `AssemblyProps`, every hydrate
+  and server render, and the four engines' locals. EJS's strict locals are `data` alone.
+- The `nested` page of `examples/frameworks`: one plain html assembly places a shell per
+  framework and each shell places a counter written in another, three deep, each counter once.
+- The agent rule `children-arrive-as-strings` is replaced by
+  `a-view-places-a-child-with-the-directive`.
+
+Considered and not taken: detaching each child before Lit hydrates and putting it back after,
+so a Lit view could hold a Lit child in one tree. It moves live nodes: a custom element
+disconnects and connects again, and focus and a running transition are lost. The refusal says
+what to do and costs nothing. It stays the follow-up the synthesis named.
+
+Not in this bite, and where it is: DESIGN 7 and the guides under `site/docs` still describe
+`children` (S-09); `check` does not yet refuse a Lit assembly under a Lit view or a slot whose
+name it cannot read, and a deferred parent's children are not yet linked (S-07).
+
+Watched red, each mutation alone, the file put back from its own bytes, and the hash of every
+changed file the same after the run as before it. A run that broke before a spec failed is not
+a red: two mutations first broke the declaration build and were rewritten to typecheck.
+
+- core, a name or a view that is not a segment is not refused: `placement-directive.test.ts`,
+  and React's `slot.test.tsx` where the slot refuses it.
+- core, the view left out of the directive: the same two files, two specs each.
+- React, a fresh object for the slot on every render: `hydrate.test.tsx`, the child gone after
+  the parent's second render. In the browser, one of seventeen: "a react assembly holds a
+  svelte one".
+- React, `suppressHydrationWarning` removed: `hydrate.test.tsx`, one error from React's
+  development build.
+- React, the slot writes nothing: `slot.test.tsx`. In the browser: twelve envelopes served
+  where thirteen are expected, the react pair, and the five pairs that wait to hear the Svelte
+  counter.
+- Preact, the slot writes something else on every render: `hydrate.test.tsx`, the child gone.
+- Preact, Vue, Solid, Svelte and Lit, the slot writes nothing: each one's `slot.test`, and its
+  server render where a fixture holds the markup (Solid, Svelte, Lit).
+- Vue, the directive written as an element of Vue's own: `hydrate.test.ts`, the child gone
+  when Vue hydrates.
+- Lit, the refusal removed from `hydrate`: Lit's own message for the child that binds an
+  attribute, and no throw at all for the child that binds nothing.
+- Lit, only a marker that binds an attribute counts: the specs for the child that binds none.
+- Lit, any marker counts, the view's own included: nine specs across three files.
+- Markdown, `html: true`: both specs of `load-markdown.test.ts`.
+
+Green only, and why: the four engines' "the directive survives compile" specs hold the
+engines' behaviour, which no line of this package decides; the warning suppression in a real
+browser, because the example bundles React's production build, which reports nothing; the
+Svelte, Preact, Vue, Solid and Lit pairs in the browser, whose failure is watched in the unit
+suites, except Svelte's, which only a browser can run.

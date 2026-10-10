@@ -5,11 +5,9 @@ import type { JsonObject } from "@assemblejs/core";
 /**
  * What a Preact assembly receives.
  *
- * `children` are already-rendered HTML by contract, keyed by placement name, which is the one
- * conversion the whole design makes: it happens in the caller, once, so plain HTML nests inside
- * Preact exactly the way Preact nests inside Markdown.
+ * Its data, and nothing of its children: a view places a child with `Slot`, which writes the
+ * directive the composer replaces, so no child's markup ever passes through Preact.
  */
 export interface AssemblyProps<D extends JsonObject = JsonObject> {
   readonly data: D;
-  readonly children: Readonly<Record<string, string>>;
 }

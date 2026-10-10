@@ -16,7 +16,6 @@ describe("the Svelte renderer", () => {
     const html = await svelteRenderer.render({
       template: Counter,
       data: { label: "hello" },
-      children: {},
       helpers: {},
       url: new URL("https://example.com/"),
     });

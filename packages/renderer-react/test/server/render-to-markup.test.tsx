@@ -9,7 +9,7 @@ const Cart = ({ data }: AssemblyProps) => <p>Items: {String(data["total"])}</p>;
 
 describe("rendering a React assembly on the server", () => {
   it("produces the markup the server sends", () => {
-    const html = renderToMarkup(Cart, { data: { total: 2 }, children: {} });
+    const html = renderToMarkup(Cart, { data: { total: 2 } });
     // React separates adjacent text nodes with an empty comment so hydration can find the
     // boundary again. It is part of the contract with react-dom and not noise to strip: a
     // server that removed it would produce markup the client could not hydrate.
@@ -20,7 +20,6 @@ describe("rendering a React assembly on the server", () => {
     const Danger = ({ data }: AssemblyProps) => <p>{String(data["text"])}</p>;
     const html = renderToMarkup(Danger, {
       data: { text: "<script>alert(1)</script>" },
-      children: {},
     });
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;");
@@ -32,9 +31,7 @@ describe("rendering a React assembly on the server", () => {
     const Broken = () => {
       throw new Error("this component is broken");
     };
-    expect(() => renderToMarkup(Broken, { data: {}, children: {} })).toThrow(
-      "this component is broken",
-    );
+    expect(() => renderToMarkup(Broken, { data: {} })).toThrow("this component is broken");
   });
 
   it("renders a component that uses its events, as it will hydrate", () => {
@@ -42,6 +39,6 @@ describe("rendering a React assembly on the server", () => {
       const events = useEvents();
       return <p>{events.last("counted") === undefined ? "nothing yet" : "heard"}</p>;
     };
-    expect(renderToMarkup(Readout, { data: {}, children: {} })).toBe("<p>nothing yet</p>");
+    expect(renderToMarkup(Readout, { data: {} })).toBe("<p>nothing yet</p>");
   });
 });

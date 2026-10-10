@@ -10,10 +10,6 @@ export function templateRenderer(engine: TemplateEngine): Renderer {
   return {
     name: engine,
     extensions: [TEMPLATE_EXTENSIONS[engine]],
-    render: (input) =>
-      renderTemplate(engine, String(input.template), {
-        data: input.data,
-        children: input.children,
-      }),
+    render: (input) => renderTemplate(engine, String(input.template), { data: input.data }),
   };
 }

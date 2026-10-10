@@ -3,20 +3,29 @@
 // @vitest-environment happy-dom
 import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { findPlacements } from "@assemblejs/core";
 import { Slot } from "@assemblejs/renderer-react/client";
 
 describe("placing a child assembly", () => {
-  it("inserts its already-rendered html verbatim", () => {
-    const html = renderToString(
-      <Slot name="inner" children={{ inner: "<p>from another renderer</p>" }} />,
+  it("writes the directive the composer replaces, inside the slot's element", () => {
+    expect(renderToString(<Slot name="inner" />)).toBe(
+      '<div data-assembly-slot="inner"><assembly name="inner"></assembly></div>',
     );
-    // Safe for one reason: this html came from another assembly's own renderer through the
-    // composer, not from anything a visitor supplied.
-    expect(html).toContain("<p>from another renderer</p>");
-    expect(html).toContain(`data-assembly-slot="inner"`);
+    expect(renderToString(<Slot name="price" view="compact" />)).toContain(
+      '<assembly name="price" view="compact"></assembly>',
+    );
   });
 
-  it("renders empty for a child that is not there, rather than undefined", () => {
-    expect(renderToString(<Slot name="missing" children={{}} />)).not.toContain("undefined");
+  it("writes what the composer reads as exactly that placement", () => {
+    expect(findPlacements(renderToString(<Slot name="price" view="compact" />))).toMatchObject([
+      { name: "price", view: "compact" },
+    ]);
+  });
+
+  // The one place a React assembly writes markup it did not escape writes only the directive.
+  it("refuses a name that is not a segment, rather than write it as markup", () => {
+    expect(() => renderToString(<Slot name={'x"><script>alert(1)</script>'} />)).toThrow(
+      /not a usable url segment/,
+    );
   });
 });

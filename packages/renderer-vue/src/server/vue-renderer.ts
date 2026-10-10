@@ -8,6 +8,5 @@ import { renderToMarkup } from "./render-to-markup.js";
 export const vueRenderer: Renderer = {
   name: "vue",
   extensions: [".vue"],
-  render: (input) =>
-    renderToMarkup(input.template as Component, { data: input.data, children: input.children }),
+  render: (input) => renderToMarkup(input.template as Component, { data: input.data }),
 };

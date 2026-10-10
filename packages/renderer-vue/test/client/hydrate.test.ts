@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { createBus } from "@assemblejs/core/client";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, nextTick, onMounted, ref } from "vue";
 import type { PropType } from "vue";
 import { renderToMarkup } from "@assemblejs/renderer-vue";
-import { hydrate, useEvents } from "@assemblejs/renderer-vue/client";
+import { Slot, hydrate, useEvents } from "@assemblejs/renderer-vue/client";
 
 const Counter = defineComponent({
   props: { data: { type: Object as PropType<Record<string, unknown>>, required: true } },
@@ -25,7 +25,7 @@ const mountInto = async (data: Record<string, unknown>, into?: ShadowRoot) => {
   const element = document.createElement("assembly-root");
   document.body.append(element);
   const container = into ?? element;
-  container.innerHTML = await renderToMarkup(Counter, { data: data as never, children: {} });
+  container.innerHTML = await renderToMarkup(Counter, { data: data as never });
   const server = container.querySelector("button");
   const { events } = createBus().forAssembly({ id: "a", name: "counter", view: "default" });
   const handle = hydrate(Counter).mount(container, data as never, {
@@ -90,5 +90,52 @@ describe("hydrating a Vue assembly", () => {
     hydrate(Listener).mount(element, {}, { id: "b", name: "listener", view: "default", events });
     bus.forAssembly({ id: "c", name: "sender", view: "default" }).events.send("ping", {});
     expect(heard).toBe("sender");
+  });
+});
+
+const Shell = defineComponent({
+  setup() {
+    const count = ref(0);
+    return () =>
+      h("article", [
+        h(
+          "button",
+          { type: "button", id: "shell", onClick: () => (count.value += 1) },
+          `shell ${count.value}`,
+        ),
+        h(Slot, { name: "inner" }),
+      ]);
+  },
+});
+const CHILD =
+  '<assembly-root data-id="b" data-name="inner"><p id="child">from another renderer</p></assembly-root>';
+
+describe("a child placed in a Vue assembly", () => {
+  it("is left as it is when its parent hydrates, and when its parent renders again", async () => {
+    // Vue's development build reports what hydration finds different as a warning.
+    const warned = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const complaints = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const element = document.createElement("assembly-root");
+    // What the composer serves: the child's envelope where the slot's directive stood.
+    element.innerHTML = (await renderToMarkup(Shell, { data: {} })).replace(
+      '<assembly name="inner"></assembly>',
+      CHILD,
+    );
+    document.body.append(element);
+    const child = element.querySelector("#child");
+    expect(child).not.toBeNull();
+    const { events } = createBus().forAssembly({ id: "a", name: "shell", view: "default" });
+    hydrate(Shell).mount(element, {}, { id: "a", name: "shell", view: "default", events });
+    expect(element.querySelector("#child")).toBe(child);
+    for (let clicks = 0; clicks < 2; clicks += 1) {
+      element.querySelector("#shell")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      await nextTick();
+    }
+    expect(element.querySelector("#shell")?.textContent).toBe("shell 2");
+    // The same node, still in the page: the parent's own render wrote nothing into the slot.
+    expect(element.querySelector("#child")).toBe(child);
+    expect([...warned.mock.calls, ...complaints.mock.calls]).toEqual([]);
+    warned.mockRestore();
+    complaints.mockRestore();
   });
 });

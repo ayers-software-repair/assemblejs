@@ -1,23 +1,30 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { placementDirective } from "@assemblejs/core/client";
 import { defineComponent, h } from "vue";
-import type { PropType } from "vue";
 
 /**
- * Places a child assembly's already-rendered HTML.
+ * Places a child assembly: writes the directive the composer replaces with the child's envelope.
  *
- * It is inserted verbatim, which is the single exception in the whole boundary and is safe for
- * one reason: this html was produced by the composer from another assembly's own renderer, not
- * by anything a visitor supplied. Nothing else in a Vue assembly may use `innerHTML`.
+ * It writes the same markup on the server and in the browser. On the server the composer puts
+ * the child where the directive stood; in the browser Vue leaves what a slot holds alone, while
+ * it hydrates and for as long as the directive it is given does not change.
+ *
+ * This is the one place a Vue assembly writes markup it did not escape, and what it writes is
+ * only the directive, built from a name and a view. Nothing else in a Vue assembly may use
+ * `innerHTML`.
  */
 export const Slot = defineComponent({
   name: "AssemblySlot",
   props: {
-    children: { type: Object as PropType<Readonly<Record<string, string>>>, required: true },
     name: { type: String, required: true },
+    view: { type: String, required: false },
   },
   setup(props) {
     return () =>
-      h("div", { "data-assembly-slot": props.name, innerHTML: props.children[props.name] ?? "" });
+      h("div", {
+        "data-assembly-slot": props.name,
+        innerHTML: placementDirective(props.name, props.view),
+      });
   },
 });

@@ -15,7 +15,6 @@ describe("the Lit renderer", () => {
     const out = await litRenderer.render({
       template: (props: AssemblyProps) => html`<p>${String(props.data["greeting"])}</p>`,
       data: { greeting: "hello" },
-      children: {},
       helpers: {},
       url: new URL("https://example.com/"),
     });

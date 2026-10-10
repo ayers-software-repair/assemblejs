@@ -17,11 +17,11 @@ import { render } from "svelte/server";
  * side it is on.
  */
 export function renderToMarkup(component: unknown, input: MarkupInput): string {
-  // Typed as a component taking the two props every assembly receives, rather than cast to
+  // Typed as a component taking the props every assembly receives, rather than cast to
   // never: never makes the props argument uncheckable, which is the opposite of what a cast
   // here should buy.
   const { body } = render(component as Component<Record<string, unknown>>, {
-    props: { data: input.data, children: input.children, events: serverEvents() },
+    props: { data: input.data, events: serverEvents() },
   });
   return body;
 }

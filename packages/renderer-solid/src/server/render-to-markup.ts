@@ -30,7 +30,7 @@ export function renderToMarkup(component: Component<AssemblyProps>, input: Marku
       createComponent(EventsContext.Provider, {
         value: serverEvents(),
         get children() {
-          return createComponent(component, { data: input.data, children: input.children });
+          return createComponent(component, { data: input.data });
         },
       }),
     { renderId: input.id ?? "" },

@@ -15,11 +15,7 @@ export function hydrate(component: (props: AssemblyProps) => unknown): ClientRen
   return {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       hydrateInto(
-        h(
-          EventsContext.Provider,
-          { value: context.events },
-          h(component as never, { data, children: {} }),
-        ),
+        h(EventsContext.Provider, { value: context.events }, h(component as never, { data })),
         element,
       );
       return { unmount: () => render(null, element) };

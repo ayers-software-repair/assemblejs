@@ -13,7 +13,7 @@ import { EVENTS_KEY } from "./events-key.js";
 export function hydrate(component: Component): ClientRenderer {
   return {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
-      const app = createSSRApp(component, { data, children: {} });
+      const app = createSSRApp(component, { data });
       app.provide(EVENTS_KEY, context.events);
       // Vue's mount takes a shadow root at run time; its type names an element or a selector.
       app.mount(element as Element);

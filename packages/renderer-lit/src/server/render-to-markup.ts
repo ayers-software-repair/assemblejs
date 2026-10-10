@@ -21,7 +21,7 @@ import { StylelessElementRenderer } from "./styleless-element-renderer.js";
  */
 export function renderToMarkup(view: LitView, input: MarkupInput): string {
   return collectResultSync(
-    render(view({ data: input.data, children: input.children, events: serverEvents() }), {
+    render(view({ data: input.data, events: serverEvents() }), {
       elementRenderers: [StylelessElementRenderer],
     }),
   );

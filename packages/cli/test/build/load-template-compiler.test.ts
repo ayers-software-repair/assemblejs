@@ -16,9 +16,7 @@ describe("the project's own template engines", () => {
     const load = await loadTemplateCompiler(templates);
     expect(load).toBeDefined();
     if (load === undefined) throw new Error("not loaded");
-    expect((await load("ejs"))("<p><%= data.n %></p>")({ data: { n: 1 }, children: {} })).toBe(
-      "<p>1</p>",
-    );
+    expect((await load("ejs"))("<p><%= data.n %></p>")({ data: { n: 1 } })).toBe("<p>1</p>");
     const pug = await load("pug");
     expect(() => pug("p\n  - if (\n")).toThrow();
   });

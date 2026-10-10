@@ -3,13 +3,13 @@
 import type { TemplateCompiler } from "./template-compiler.js";
 
 /**
- * Pug, which escapes what `=` and `#{}` write and writes what `!=` and `!{}` write as it is, so
- * a value from `data` is written with the first and a child's HTML with the second.
+ * Pug, which escapes what `=` and `#{}` write, so a value from `data` is written with them; a
+ * child is placed by the directive, which Pug writes as the tag `assembly(name="cart")`.
  */
 export async function loadPug(): Promise<TemplateCompiler> {
   const { default: pug } = await import("pug");
   return (source) => {
     const render = pug.compile(source);
-    return (input) => render({ data: input.data, children: input.children });
+    return (input) => render({ data: input.data });
   };
 }

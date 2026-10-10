@@ -33,7 +33,7 @@ describe("rendering a Lit element's shadow root without its inline style", () =>
   it("leaves every element's styles out, whatever they contain and however the root is declared", () => {
     const out = renderToMarkup(
       () => html`<quoted-card></quoted-card><closed-card></closed-card><quoted-card></quoted-card>`,
-      { data: {}, children: {} },
+      { data: {} },
     );
     expect(out).not.toContain("<style>");
     expect(out).not.toContain("</style>");
@@ -53,7 +53,7 @@ describe("rendering a Lit element's shadow root without its inline style", () =>
             <p>own</p></template
           >
         </div>`,
-      { data: {}, children: {} },
+      { data: {} },
     );
     expect(out).toMatch(/<style>\s*p\s*\{\s*\}\s*<\/style>/);
   });

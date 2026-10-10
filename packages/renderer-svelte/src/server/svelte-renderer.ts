@@ -15,6 +15,5 @@ export const svelteRenderer: Renderer = {
   render: (input) =>
     renderToMarkup(input.template, {
       data: input.data,
-      children: input.children,
     }),
 };

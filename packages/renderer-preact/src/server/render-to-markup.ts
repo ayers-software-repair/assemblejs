@@ -24,7 +24,7 @@ export function renderToMarkup(
     h(
       EventsContext.Provider,
       { value: serverEvents() },
-      h(component as never, { data: input.data, children: input.children }),
+      h(component as never, { data: input.data }),
     ),
   );
 }

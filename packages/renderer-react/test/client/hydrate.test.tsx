@@ -4,10 +4,10 @@
 import { useEffect, useState } from "react";
 import { act } from "react";
 import { renderToMarkup } from "@assemblejs/renderer-react";
-import { hydrate, useEvents } from "@assemblejs/renderer-react/client";
+import { Slot, hydrate, useEvents } from "@assemblejs/renderer-react/client";
 import { createBus } from "@assemblejs/core/client";
 import type { AssemblyProps } from "@assemblejs/renderer-react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const Counter = ({ data }: AssemblyProps) => {
   const [count, setCount] = useState(0);
@@ -20,7 +20,7 @@ const Counter = ({ data }: AssemblyProps) => {
 
 const mountInto = async (data: Record<string, unknown>) => {
   const element = document.createElement("assembly-root");
-  element.innerHTML = renderToMarkup(Counter, { data: data as never, children: {} });
+  element.innerHTML = renderToMarkup(Counter, { data: data as never });
   document.body.append(element);
   const { events } = createBus().forAssembly({ id: "a", name: "counter", view: "default" });
   let handle!: { unmount: () => void };
@@ -84,5 +84,52 @@ describe("hydrating a React assembly", () => {
     });
     bus.forAssembly({ id: "c", name: "sender", view: "default" }).events.send("ping", {});
     expect(heard).toBe("sender");
+  });
+});
+
+const Shell = () => {
+  const [count, setCount] = useState(0);
+  return (
+    <article>
+      <button type="button" id="shell" onClick={() => setCount(count + 1)}>
+        shell {count}
+      </button>
+      <Slot name="inner" />
+    </article>
+  );
+};
+const CHILD =
+  '<assembly-root data-id="b" data-name="inner"><p id="child">from another renderer</p></assembly-root>';
+
+describe("a child placed in a React assembly", () => {
+  it("is left as it is when its parent hydrates, and when its parent renders again", async () => {
+    // React's development build reports what hydration finds different as an error, and an
+    // act() outside an environment that declares itself one; this test is such an environment.
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const complaints = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const element = document.createElement("assembly-root");
+    // What the composer serves: the child's envelope where the slot's directive stood.
+    element.innerHTML = renderToMarkup(Shell, { data: {} }).replace(
+      '<assembly name="inner"></assembly>',
+      CHILD,
+    );
+    document.body.append(element);
+    const child = element.querySelector("#child");
+    expect(child).not.toBeNull();
+    const { events } = createBus().forAssembly({ id: "a", name: "shell", view: "default" });
+    await act(async () => {
+      hydrate(Shell).mount(element, {}, { id: "a", name: "shell", view: "default", events });
+    });
+    expect(element.querySelector("#child")).toBe(child);
+    for (let clicks = 0; clicks < 2; clicks += 1) {
+      await act(async () => {
+        element.querySelector("#shell")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      });
+    }
+    expect(element.querySelector("#shell")?.textContent).toBe("shell 2");
+    // The same node, still in the page: the parent's own render wrote nothing into the slot.
+    expect(element.querySelector("#child")).toBe(child);
+    expect(complaints.mock.calls).toEqual([]);
+    complaints.mockRestore();
   });
 });

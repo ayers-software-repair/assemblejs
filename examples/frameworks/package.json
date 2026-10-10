@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "One assembly in every framework AssembleJS renders, on one page, each hydrated and all talking over one bus.",
+  "description": "One assembly in every framework AssembleJS renders, on one page, each hydrated and all talking over one bus; on a second page, each one places an assembly written in another.",
   "scripts": {
     "build": "assemblejs build",
     "dev": "assemblejs dev",

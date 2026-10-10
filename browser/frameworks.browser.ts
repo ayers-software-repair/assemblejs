@@ -12,6 +12,16 @@ import { freePort, saidBy } from "./child-server.js";
 // so every framework proves both halves of its renderer and the events binding at once.
 const example = fileURLToPath(new URL("../examples/frameworks/", import.meta.url));
 const FRAMEWORKS = ["react", "svelte", "preact", "vue", "solid", "lit"] as const;
+// The nested page: one plain html assembly places a shell per framework, and each shell places a
+// counter written in another. Each pair is the shell's framework, then its counter's.
+const NESTED = [
+  ["react", "svelte"],
+  ["svelte", "preact"],
+  ["preact", "vue"],
+  ["vue", "solid"],
+  ["solid", "lit"],
+  ["lit", "react"],
+] as const;
 
 // Holds the page's one script until released, so a test can capture what the server sent before
 // anything hydrates it, and later tell an adopted element from a replacement.
@@ -23,6 +33,24 @@ const holdScript = async (page: Page): Promise<() => void> => {
     await route.continue();
   });
   return release;
+};
+
+// What a page reports when something on it went wrong: an uncaught error, a console error or
+// warning (a hydration mismatch is reported, not thrown), or a response that failed.
+const problemsOn = (page: Page): string[] => {
+  const problems: string[] = [];
+  page.on("pageerror", (error) => problems.push(error.message));
+  page.on("console", (message) => {
+    const text = message.text();
+    if (text.startsWith("Failed to load resource")) return;
+    if (message.type() === "error" || message.type() === "warning") problems.push(text);
+  });
+  page.on("response", (response) => {
+    if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) {
+      problems.push(`${String(response.status())} ${response.url()}`);
+    }
+  });
+  return problems;
 };
 
 let server: ChildProcess | undefined;
@@ -54,19 +82,7 @@ for (const framework of FRAMEWORKS) {
   test(`a ${framework} assembly hydrates the markup the server sent, and is heard by every other`, async ({
     page,
   }) => {
-    const errors: string[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
-    // A hydration mismatch is reported as a warning or an error, not thrown.
-    page.on("console", (message) => {
-      const text = message.text();
-      if (text.startsWith("Failed to load resource")) return;
-      if (message.type() === "error" || message.type() === "warning") errors.push(text);
-    });
-    page.on("response", (response) => {
-      if (response.status() >= 400 && !response.url().endsWith("/favicon.ico")) {
-        errors.push(`${String(response.status())} ${response.url()}`);
-      }
-    });
+    const errors = problemsOn(page);
     const release = await holdScript(page);
     await page.goto(`${origin}/`, { waitUntil: "commit" });
     const bump = page.locator(`#${framework}-bump`);
@@ -134,4 +150,63 @@ test("a deferred assembly is fetched once the page has loaded, then hydrates lik
     await expect(bump).toHaveText(`${framework} 1`);
   }
   expect(errors).toEqual([]);
+});
+
+test("a page serves an assembly inside an assembly inside an assembly, whole, before any script", async ({
+  page,
+}) => {
+  const sent = await (await page.request.get(`${origin}/nested`)).text();
+  // Every directive a view wrote, by hand or through its slot, was replaced by an envelope.
+  expect(sent).not.toMatch(/<assembly[\s>]/);
+  expect(sent.match(/<assembly-root /g)).toHaveLength(13);
+  // A child's stylesheet is linked by the page that serves it, however deep the child stands.
+  expect(sent).toMatch(/<link rel="stylesheet" href="[^"]*vue-counter[^"]*\.css">/);
+});
+
+for (const [shell, counter] of NESTED) {
+  test(`a ${shell} assembly holds a ${counter} one: both hydrate, and the parent rendering again leaves its child alone`, async ({
+    page,
+  }) => {
+    const problems = problemsOn(page);
+    const release = await holdScript(page);
+    await page.goto(`${origin}/nested`, { waitUntil: "commit" });
+    // Three deep in what the server sent: the html assembly, the shell it placed, its counter.
+    const child = page.locator(
+      `assembly-root[data-name="html-shell"] assembly-root[data-name="${shell}-shell"] assembly-root[data-name="${counter}-counter"]`,
+    );
+    await expect(child).toHaveCount(1);
+    const bump = child.locator(`#${counter}-bump`);
+    await expect(bump).toHaveText(`${counter} 0`);
+    await bump.evaluate((element) => ((window as unknown as { kept: Element }).kept = element));
+    release();
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator("script[data-assembly]")).toHaveCount(0);
+    await bump.click();
+    await expect(bump).toHaveText(`${counter} 1`);
+    const parent = page.locator(`#${shell}-shell-bump`);
+    await parent.click();
+    await parent.click();
+    await expect(parent).toHaveText(`${shell} shell 2`);
+    // The parent rendered twice more and wrote nothing into its slot: the counter is the element
+    // the server sent, still in the page and still counting.
+    await expect(bump).toHaveText(`${counter} 1`);
+    expect(
+      await bump.evaluate(
+        (element) =>
+          (window as unknown as { kept: Element }).kept === element && element.isConnected,
+      ),
+    ).toBe(true);
+    // One bus for the page, whatever an assembly stands inside.
+    for (const [, other] of NESTED.filter(([, name]) => name !== counter)) {
+      await expect(page.locator(`#${other}-heard`)).toHaveText(`${counter}-counter`);
+    }
+    expect(problems).toEqual([]);
+  });
+}
+
+test("a nested assembly's own styles reach it where it stands", async ({ page }) => {
+  await page.goto(`${origin}/nested`);
+  // Vue's scoped sheet, linked by the page; Lit's, adopted into the element's own shadow root.
+  await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
+  await expect(page.locator("#lit-bump")).toHaveCSS("color", "rgb(120, 0, 120)");
 });

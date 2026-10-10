@@ -4,20 +4,19 @@ import { describe, expect, it } from "vitest";
 import type { Renderer } from "@assemblejs/core/renderer";
 
 describe("a server renderer", () => {
-  it("turns one view and its children into html", async () => {
+  it("turns one view and its data into html", async () => {
     const renderer: Renderer = {
       name: "html",
       extensions: [".html"],
-      render: (input) => String(input.template).replace("{{cart}}", input.children["cart"] ?? ""),
+      render: (input) => String(input.template).replace("{{total}}", String(input.data["total"])),
     };
     const html = await renderer.render({
-      template: "<main>{{cart}}</main>",
-      data: {},
-      children: { cart: "<p>cart</p>" },
+      template: "<main>{{total}}</main>",
+      data: { total: 2 },
       helpers: {},
       url: new URL("https://example.com/"),
     });
-    expect(html).toBe("<main><p>cart</p></main>");
+    expect(html).toBe("<main>2</main>");
   });
 
   it("throws rather than returning its own error markup", async () => {
@@ -34,7 +33,6 @@ describe("a server renderer", () => {
       renderer.render({
         template: "",
         data: {},
-        children: {},
         helpers: {},
         url: new URL("https://example.com/"),
       }),

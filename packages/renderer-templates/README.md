@@ -11,18 +11,18 @@ Write an AssembleJS assembly as an EJS, Markdown, Nunjucks, Handlebars or Pug te
 The extension names the language. A template renders on the server only, like an `.html` view;
 a `.client.ts` beside it gives it browser behaviour.
 
-A template sees two names: `data`, from the assembly's service, and `children`, the HTML of the
-assemblies it places. What a template writes from `data` is escaped. `children` is already
-HTML and is written as it is:
+A template sees one name: `data`, from the assembly's service. What a template writes from
+`data` is escaped. It places another assembly by writing the directive in its own markup, as a
+page does, and the server puts that assembly where the directive stood:
 
-| Language   | A value from `data` | A child's HTML          |
-| ---------- | ------------------- | ----------------------- |
-| EJS        | `<%= data.total %>` | `<%- children.inner %>` |
-| Nunjucks   | `{{ data.total }}`  | `{{ children.inner }}`  |
-| Handlebars | `{{data.total}}`    | `{{children.inner}}`    |
-| Pug        | `p= data.total`     | `div!= children.inner`  |
+| Language   | A value from `data` | Another assembly                    |
+| ---------- | ------------------- | ----------------------------------- |
+| EJS        | `<%= data.total %>` | `<assembly name="cart"></assembly>` |
+| Nunjucks   | `{{ data.total }}`  | `<assembly name="cart"></assembly>` |
+| Handlebars | `{{data.total}}`    | `<assembly name="cart"></assembly>` |
+| Pug        | `p= data.total`     | `assembly(name="cart")`             |
 
-A Markdown view is prose: it reads no data, places no children, and shows HTML written inside it
+A Markdown view is prose: it reads no data, places no assembly, and shows HTML written inside it
 as text.
 
 A view is one file: an include, an extends, an import or a partial from another file is refused

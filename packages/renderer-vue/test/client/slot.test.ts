@@ -1,23 +1,36 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { findPlacements } from "@assemblejs/core";
 import { describe, expect, it } from "vitest";
 import { createSSRApp, h } from "vue";
 import { renderToString } from "vue/server-renderer";
 import { Slot } from "@assemblejs/renderer-vue/client";
 
-const render = (children: Record<string, string>, name: string) =>
-  renderToString(createSSRApp({ render: () => h(Slot, { children, name }) }));
+const render = (name: string, view?: string) =>
+  renderToString(
+    createSSRApp({ render: () => h(Slot, view === undefined ? { name } : { name, view }) }),
+  );
 
 describe("placing a child assembly", () => {
-  it("inserts its already-rendered html verbatim", async () => {
-    const html = await render({ inner: "<p>from another renderer</p>" }, "inner");
-    // Safe for one reason: this html came from another assembly's own renderer through the
-    // composer, not from anything a visitor supplied.
-    expect(html).toContain("<p>from another renderer</p>");
-    expect(html).toContain(`data-assembly-slot="inner"`);
+  it("writes the directive the composer replaces, inside the slot's element", async () => {
+    expect(await render("inner")).toBe(
+      '<div data-assembly-slot="inner"><assembly name="inner"></assembly></div>',
+    );
+    expect(await render("price", "compact")).toContain(
+      '<assembly name="price" view="compact"></assembly>',
+    );
   });
 
-  it("renders empty for a child that is not there, rather than undefined", async () => {
-    expect(await render({}, "missing")).not.toContain("undefined");
+  it("writes what the composer reads as exactly that placement", async () => {
+    expect(findPlacements(await render("price", "compact"))).toMatchObject([
+      { name: "price", view: "compact" },
+    ]);
+  });
+
+  // The one place a Vue assembly writes markup it did not escape writes only the directive.
+  it("refuses a name that is not a segment, rather than write it as markup", async () => {
+    await expect(render('x"><script>alert(1)</script>')).rejects.toThrow(
+      /not a usable url segment/,
+    );
   });
 });

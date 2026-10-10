@@ -9,9 +9,9 @@ import type { TemplateEngine } from "../engine/template-engine.js";
 const compiled = new Map<TemplateEngine, Map<string, CompiledTemplate>>();
 
 /**
- * Renders a template's source to the markup the server sends, with the placement's `data` and
- * `children`: what a template writes from `data` is escaped, and `children`, which is
- * already HTML, is written as it is by the engine's raw form.
+ * Renders a template's source to the markup the server sends, with the placement's `data`,
+ * which a template writes escaped. A child is placed by the directive the template writes; the
+ * composer puts it there once the template has rendered.
  *
  * It does not catch: a template that does not compile or fails to render throws, the composer
  * catches it, and the placement falls back, the same way on every render. Given the view's file,

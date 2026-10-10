@@ -42,7 +42,7 @@ export function hydrate(component: Component<AssemblyProps>): ClientRenderer {
             createComponent(EventsContext.Provider, {
               value: context.events,
               get children() {
-                return createComponent(component, { data, children: {} });
+                return createComponent(component, { data });
               },
             }),
           element,

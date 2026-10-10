@@ -3,21 +3,21 @@
 import { describe, expect, it, vi } from "vitest";
 import { loadCompiler, renderTemplate } from "@assemblejs/renderer-templates";
 
-const input = (name: string) => ({ data: { name }, children: { inner: "<i>child</i>" } });
+const input = (name: string) => ({ data: { name } });
 
 describe("rendering a template", () => {
-  it("renders every language with the placement's data escaped and children as HTML", async () => {
+  it("renders every language with the placement's data escaped and its directive as written", async () => {
     const sources = {
-      ejs: "<p><%= data.name %><%- children.inner %></p>",
-      handlebars: "<p>{{data.name}}{{children.inner}}</p>",
-      nunjucks: "<p>{{ data.name }}{{ children.inner }}</p>",
-      pug: "p #{data.name}!{children.inner}",
+      ejs: '<p><%= data.name %><assembly name="inner"></assembly></p>',
+      handlebars: '<p>{{data.name}}<assembly name="inner"></assembly></p>',
+      nunjucks: '<p>{{ data.name }}<assembly name="inner"></assembly></p>',
+      pug: 'p #{data.name}\n  assembly(name="inner")',
     } as const;
     for (const [engine, source] of Object.entries(sources)) {
       expect(
         await renderTemplate(engine as keyof typeof sources, source, input("<b>")),
         engine,
-      ).toBe("<p>&lt;b&gt;<i>child</i></p>");
+      ).toBe('<p>&lt;b&gt;<assembly name="inner"></assembly></p>');
     }
     expect(await renderTemplate("markdown", "*hi*", input(""))).toBe("<p><em>hi</em></p>\n");
   });

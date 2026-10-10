@@ -4,15 +4,15 @@ import { describe, expect, it } from "vitest";
 import type { RenderInput } from "@assemblejs/core/renderer";
 
 describe("what a renderer receives", () => {
-  it("hands children over already rendered, as strings", () => {
+  it("is the view and its data, and never a child", () => {
     const input: RenderInput = {
-      template: "<main>{{cart}}</main>",
+      template: '<main><assembly name="cart"></assembly></main>',
       data: { total: 2 },
-      children: { cart: "<p>cart</p>" },
       helpers: {},
       url: new URL("https://example.com/"),
     };
-    // A renderer never fetches a child; the conversion happened once, in the caller.
-    expect(typeof input.children["cart"]).toBe("string");
+    // A renderer never fetches a child and is never handed one: the view writes the directive,
+    // and the composer places the child once the view has rendered.
+    expect(Object.keys(input).sort()).toEqual(["data", "helpers", "template", "url"]);
   });
 });

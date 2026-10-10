@@ -12,7 +12,6 @@ describe("the renderer for one template language", () => {
     const html = await templateRenderer("ejs").render({
       template: "<p><%= data.n %></p>",
       data: { n: 2 },
-      children: {},
       helpers: {},
       url: new URL("https://example.com/"),
     });

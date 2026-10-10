@@ -35,9 +35,7 @@ describe("rendering a Vue assembly on the server", () => {
   });
 
   it("produces the markup the server sends", async () => {
-    expect(await renderToMarkup(Cart, { data: { total: 2 }, children: {} })).toBe(
-      "<p>Items: 2</p>",
-    );
+    expect(await renderToMarkup(Cart, { data: { total: 2 } })).toBe("<p>Items: 2</p>");
   });
 
   it("escapes what it renders, because Vue does", async () => {
@@ -47,7 +45,6 @@ describe("rendering a Vue assembly on the server", () => {
     });
     const html = await renderToMarkup(Danger, {
       data: { text: "<script>alert(1)</script>" },
-      children: {},
     });
     expect(html).not.toContain("<script>");
     expect(html).toContain("&lt;script&gt;");
@@ -61,9 +58,7 @@ describe("rendering a Vue assembly on the server", () => {
         throw new Error("this component is broken");
       },
     });
-    await expect(renderToMarkup(Broken, { data: {}, children: {} })).rejects.toThrow(
-      "this component is broken",
-    );
+    await expect(renderToMarkup(Broken, { data: {} })).rejects.toThrow("this component is broken");
   });
 
   it("rejects for an error anywhere Vue would otherwise only report it", async () => {
@@ -114,7 +109,7 @@ describe("rendering a Vue assembly on the server", () => {
         }),
       ],
     ] as const) {
-      await expect(renderToMarkup(component, { data: {}, children: {} }), what).rejects.toThrow();
+      await expect(renderToMarkup(component, { data: {} }), what).rejects.toThrow();
     }
   });
 
@@ -125,6 +120,6 @@ describe("rendering a Vue assembly on the server", () => {
         return () => h("p", events.last("counted") === undefined ? "nothing yet" : "heard");
       },
     });
-    expect(await renderToMarkup(Readout, { data: {}, children: {} })).toBe("<p>nothing yet</p>");
+    expect(await renderToMarkup(Readout, { data: {} })).toBe("<p>nothing yet</p>");
   });
 });

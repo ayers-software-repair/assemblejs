@@ -27,7 +27,7 @@ describe("loading a template engine", () => {
   it("imports no engine until a template in its language renders, then only that one", async () => {
     const { imported, loaded } = await watched();
     expect(imported).toEqual([]);
-    await loaded.renderTemplate("pug", "p hi", { data: {}, children: {} });
+    await loaded.renderTemplate("pug", "p hi", { data: {} });
     expect(imported).toEqual(["pug"]);
   });
 

@@ -26,11 +26,12 @@ export const RULES: readonly Rule[] = [
     smell: "Editing src/server.ts to add an assembly, or any array of assemblies in authored code.",
   },
   {
-    id: "children-arrive-as-strings",
-    rule: "A renderer receives its children already rendered, as strings.",
+    id: "a-view-places-a-child-with-the-directive",
+    rule: "A view places a child by writing the directive. It is never handed the child.",
     because:
-      "One conversion, in the caller, is what lets plain HTML nest inside React and React nest inside Markdown. A renderer that fetches its own children can only nest inside renderers that agree with it.",
-    smell: "A renderer that takes a child descriptor and renders it itself.",
+      "The view renders once and the composer puts each child's envelope where its directive stood, so plain HTML, a template and a framework view all place a child the same way, and no renderer has to agree with another about what a child is. A framework view writes the directive with its renderer's Slot.",
+    smell:
+      "A view that fetches or renders another assembly itself, or child markup built by hand where a Slot belongs.",
   },
   {
     id: "nothing-crosses-but-json",

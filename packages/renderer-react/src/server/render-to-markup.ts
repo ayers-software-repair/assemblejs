@@ -26,7 +26,7 @@ export function renderToMarkup(
     createElement(
       EventsContext.Provider,
       { value: serverEvents() },
-      createElement(component as never, { data: input.data, children: input.children }),
+      createElement(component as never, { data: input.data }),
     ),
   );
 }

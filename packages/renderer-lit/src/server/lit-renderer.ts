@@ -11,6 +11,5 @@ import { renderToMarkup } from "./render-to-markup.js";
 export const litRenderer: Renderer = {
   name: "lit",
   extensions: [".lit.ts", ".lit.js"],
-  render: (input) =>
-    renderToMarkup(input.template as LitView, { data: input.data, children: input.children }),
+  render: (input) => renderToMarkup(input.template as LitView, { data: input.data }),
 };

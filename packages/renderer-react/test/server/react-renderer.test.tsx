@@ -19,7 +19,6 @@ describe("the React renderer", () => {
     const html = await reactRenderer.render({
       template: Cart,
       data: { greeting: "hello" },
-      children: {},
       helpers: {},
       url: new URL("https://example.com/"),
     });

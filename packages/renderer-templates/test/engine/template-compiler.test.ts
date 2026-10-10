@@ -7,6 +7,6 @@ describe("a template compiler", () => {
   it("compiles a source once into a template rendered many times", () => {
     const compile: TemplateCompiler = (source) => (input) => source + String(input.data["n"]);
     const template = compile("n=");
-    expect(template({ data: { n: 1 }, children: {} })).toBe("n=1");
+    expect(template({ data: { n: 1 } })).toBe("n=1");
   });
 });

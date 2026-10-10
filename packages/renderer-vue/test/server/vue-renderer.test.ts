@@ -20,7 +20,6 @@ describe("the Vue renderer", () => {
     const html = await vueRenderer.render({
       template: Cart,
       data: { greeting: "hello" },
-      children: {},
       helpers: {},
       url: new URL("https://example.com/"),
     });

@@ -23,7 +23,7 @@ export function hydrate(component: (props: AssemblyProps) => unknown): ClientRen
         createElement(
           EventsContext.Provider,
           { value: context.events },
-          createElement(component as never, { data, children: {} }),
+          createElement(component as never, { data }),
         ),
       );
       return { unmount: () => root.unmount() };

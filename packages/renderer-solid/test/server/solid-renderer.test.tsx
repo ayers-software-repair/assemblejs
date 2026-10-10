@@ -17,7 +17,6 @@ describe("the Solid renderer", () => {
     const html = await solidRenderer.render({
       template: Cart,
       data: { greeting: "hello" },
-      children: {},
       helpers: {},
       url: new URL("https://example.com/"),
     });

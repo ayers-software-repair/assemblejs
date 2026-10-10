@@ -5,23 +5,24 @@ import { describe, expect, it } from "vitest";
 import { Slot } from "@assemblejs/renderer-solid/client";
 
 describe("placing a child assembly", () => {
-  it("inserts its already-rendered html verbatim", () => {
+  it("writes the directive the composer replaces, inside the slot's element", () => {
     const element = document.createElement("div");
-    const dispose = render(
-      () => <Slot name="inner" children={{ inner: "<p>from another renderer</p>" }} />,
-      element,
+    const dispose = render(() => <Slot name="inner" />, element);
+    expect(element.innerHTML).toBe(
+      '<div data-assembly-slot="inner"><assembly name="inner"></assembly></div>',
     );
-    // Safe for one reason: this html came from another assembly's own renderer through the
-    // composer, not from anything a visitor supplied.
-    expect(element.innerHTML).toContain("<p>from another renderer</p>");
-    expect(element.innerHTML).toContain(`data-assembly-slot="inner"`);
     dispose();
+    const other = document.createElement("div");
+    const disposeOther = render(() => <Slot name="price" view="compact" />, other);
+    expect(other.innerHTML).toContain('<assembly name="price" view="compact"></assembly>');
+    disposeOther();
   });
 
-  it("renders empty for a child that is not there, rather than undefined", () => {
+  // The one place a Solid assembly writes markup it did not escape writes only the directive.
+  it("refuses a name that is not a segment, rather than write it as markup", () => {
     const element = document.createElement("div");
-    const dispose = render(() => <Slot name="missing" children={{}} />, element);
-    expect(element.innerHTML).not.toContain("undefined");
-    dispose();
+    expect(() => render(() => <Slot name={'x"><script>alert(1)</script>'} />, element)).toThrow(
+      /not a usable url segment/,
+    );
   });
 });
