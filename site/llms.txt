@@ -19,6 +19,7 @@ Every link here is relative to this file. All of these pages are one file, [llms
 - [For Solid developers](docs/solid.html): A Solid assembly is a component in a file whose name says it is Solid, compiled by Solid's own compiler.
 - [For Lit developers](docs/lit.html): A Lit assembly is a view, `cart.lit.ts`, a function from the assembly's props to a Lit template, and the elements it places are yours.
 - [For template authors](docs/templates.html): A template assembly is one file in EJS, Handlebars, Nunjucks, Pug or Markdown, rendered on the server by its own engine and nothing else; it ships no JavaScript unless a file beside it asks for some.
+- [API reference](docs/api/index.html): Every published entry point of the twelve packages, generated from the sources when the site deploys.
 
 ## Optional
 

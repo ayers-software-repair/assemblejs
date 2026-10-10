@@ -188,6 +188,12 @@ A view that places your elements, rendered into declarative shadow roots on the 
 
 EJS, Handlebars, Nunjucks, Pug and Markdown: one file, rendered on the server, no JavaScript unless a file beside it asks for some.
 
+## Reference
+
+### [API reference](docs/api/index.html)
+
+Every published entry point of the twelve packages, generated from the sources when the site deploys.
+
 ## The model
 
 ### assembly

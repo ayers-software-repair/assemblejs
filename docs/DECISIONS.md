@@ -3220,3 +3220,103 @@ which is what S-07 built for placements, one level deeper. About nine bites.
 It asks one thing: what a built-in component is. The advice is styled native HTML for 1.0.
 The question is on the estate's morning list, and no code of A-04 is written until it is
 answered.
+
+## 2026-10-10: what it would take to show an agent a framework view
+
+Expected, from the row A-03 left: build what `render_assembly` and `compose_page` must, with
+the project's own renderers, and render it.
+
+Found, reading the agent surface before building: it runs none of the project's code today, and
+that is not an accident of how far it got. It reads sources as text and as syntax trees; a
+plain html view is its own markup; nothing is imported, evaluated or spawned (no `import(`, no
+`eval`, no child process in `packages/mcp/src`, nor in the command line's `check`, `discovery`
+or `agents`). No service runs either, which is why a rendered assembly's `data` is always
+empty, where DESIGN 13.4 says an agent sees "what data it produced".
+
+Showing a React, a Vue or an EJS view means running it: the component's module, the template's
+code, and the service that feeds it. Inside the agent surface that is a way round a
+permission. A person lets an agent call this server's tools and edit files, and withholds a
+shell; the agent writes a service that starts a process, calls `render_assembly`, and has run
+a command. DESIGN 13.6 says the framework ships capability, not autonomy, and that nothing
+here runs a shell. A tool that runs what an agent just wrote is a shell with another name.
+
+Three ways, and the choice is the owner's, since it changes what DESIGN 13.2 and 13.6 promise:
+
+- **Stay as it is.** The tools show plain html and say why not the rest; an agent that has a
+  shell runs `dev` and reads the page. True today, and the instructions and the briefs say it.
+- **Run it here, in a process of its own, under Node's permission model.** The real render
+  and the real data, with what the process may touch cut down. How far that model can be
+  trusted on the Node versions the framework supports is not established.
+- **Show it from the project's own `dev` server.** The server a person started is where the
+  project's code already runs with their leave. `dev` writes where it listens into the
+  generated directory; the tools ask it for the assembly or the page, by the contract's own
+  endpoints, and answer what it rendered with its account and its data. The agent surface
+  still runs nothing. With no server running, the answer is to start one.
+
+The advice is the third. Nothing is built until he answers; the row waits, and the question is
+on the estate's morning list.
+
+## 2026-10-10: the API reference, typedoc at deploy time
+
+Expected, from the ruling of 2026-10-05: `deploy-site.yml` gains Node, pnpm, install, build and
+a typedoc run into `site/docs/api/`; DEPLOY.md's "no build" sentence is rewritten; typedoc
+becomes a root devDependency.
+
+An interrupted agent had built all of it once, and its work was kept as a patch under
+`docs/studies/`. The patch was read whole and not applied: the tree had moved under it, and it
+is out of the tree now (`git show 90f3069:docs/studies/typedoc-at-deploy.wip.patch`). What it
+settled was built again against today's tree, and each thing said below was seen again.
+
+- **typedoc 0.28.20**, exact, at the root; the registry gives its peer range as TypeScript
+  `5.0.x` through `6.0.x`, and the workspace is on 6.0.3. `pnpm site:api` is the bare command;
+  every option is in the root `typedoc.json`. The lockfile is pnpm's: besides typedoc's own
+  fourteen packages it re-resolved one optional peer, the bundler core's test runner sees
+  (0.27.7, which the packages' build tool already installs, where it was 0.28.2). Core's suite
+  passes under it.
+- **One root config over a tsconfig that only references the packages.** Twenty-two entry
+  points: each package's `src/index.ts`, and each subpath its `exports` names. Clean with
+  `treatWarningsAsErrors`: 22 modules, 480 pages, 13 seconds here. Each page says where its
+  source is, as a link to the repository at the commit that was generated.
+- **Each entry file names itself**, with a `@module` comment after its header, so the
+  reference lists `@assemblejs/core/client` and not a path nobody imports. A comment is not a
+  declaration, and the organization gate is clean.
+- **`check:reference` is a gate of its own in the chain**, after the build. It holds the entry
+  points to the packages' `exports` (`scripts/check-reference.mjs`), since nothing else ties the
+  two lists together and a subpath left out of `typedoc.json` would be missing with nothing to
+  say so. And it generates the whole reference, warnings as errors: the deploy runs typedoc only
+  on a push that touches the site, so without this a change to a package that breaks the
+  reference would pass CI and fail the next deploy, for a reason that push did not cause.
+- **What typedoc does not hold here.** Its check that a public signature names no type an
+  entry point leaves unexported never fires in this arrangement: it lets a reference pass
+  wherever the type's package is not the project's own (`makeIntentionallyExportedHelper` in its
+  `dist/index.js`), and one project over twelve packages makes that every reference. Seen by
+  giving an exported function an unexported interface to return: the page named it, unlinked,
+  and typedoc said nothing. Running typedoc once per package would hold it. A row.
+- **`pages.json` marks the page `generated`**, with the note the index for a model lists it
+  by. `check-site.mjs` does not require it in the tree and does not walk the tree it heads:
+  with the tree on disk and the mark not yet written, the gate reported 1920 links to pages
+  nobody declared. `llms-full.txt` leaves the reference out, being hundreds of pages of its
+  own.
+- **Two jobs, and only one holds the role.** This is where the row departs from the patch.
+  The patch installed, built and ran typedoc in the job that assumes the deploy's role, where
+  a dependency's script would run beside the right to write the bucket. The reference is
+  generated in a job of its own, whose only permission is to read the repository, and reaches
+  the deploy as an artifact; the job that assumes the role installs nothing. GitHub's
+  documentation of `permissions`: "If you specify the access for any of these permissions, all
+  of those that are not specified are set to `none`", and fetching an OIDC token "requires
+  `id-token: write`". The ruling's words, that the workflow gains an install, a build and a
+  typedoc run, hold.
+- **`eslint .` reads no ignore file of git's**, so `eslint.config.js` ignores the generated
+  tree, for when a preview is on disk. The whole check chain was run with the tree on disk and
+  the gates that could see it were run again without it.
+
+Not done: nothing is deleted from the bucket, so a removed symbol's page stays reachable (a
+row); and a push that changes only the packages does not republish the reference, as ruled.
+
+Watched red: 13 mutations of the three site scripts, each alone, each against the script's own
+self-test: the site gate's four ways of treating a generated page and its refusal of an
+undeclared link, the reference check's five, and the index's three for a generated page. And
+on the real tree: typedoc given an entry that does not exist stops at exit 3 with nothing
+written; an entry point with its `@module` removed and the reference page with its `generated`
+mark removed are each refused by the gates; and a link in a comment to a thing that is not
+there, and an entry point's source that does not compile, each fail `pnpm check:reference`.

@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+/** @module @assemblejs/core/client */
 // The browser half of a renderer: its own published entry point.
 
 // The shape browser code receives. Re-exported here rather than reached for through the package

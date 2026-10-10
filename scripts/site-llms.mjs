@@ -10,7 +10,9 @@
 //                  note, which is the first sentence beneath that page's title. The pages are
 //                  under "Docs"; the links that leave the site are under "Optional", which is
 //                  that form's word for what a reader short of room skips.
-//   llms-full.txt  every one of those pages as text, in one file, in the same order. Not part
+//   llms-full.txt  every one of those pages that is in the tree, as text, in one file, in the
+//                  same order; a page the deploy generates is listed in the index and left
+//                  out of this file, being hundreds of pages of its own. Not part
 //                  of that form: it is what documentation hosts publish beside the index, for a
 //                  reader that wants the whole of it in one request.
 //
@@ -39,9 +41,19 @@ export function render(manifest, read) {
   if (declared === undefined) throw new Error("pages.json declares no llms files");
   const landing = manifest.pages.find((page) => page.file === "index.html");
   if (landing === undefined) throw new Error("pages.json declares no index.html");
-  const pages = manifest.pages
-    .filter((page) => page.in_llms !== false)
+  const listed = manifest.pages.filter((page) => page.in_llms !== false);
+  // A generated page is not in the tree to be read. The index lists it by the note the manifest
+  // gives it, and its text is its generator's to publish, not this file's to repeat.
+  const pages = listed
+    .filter((page) => page.generated !== true)
     .map((page) => ({ ...page, ...pageText(read(page.file), page.file) }));
+  const notes = new Map(pages.map((page) => [page.file, firstSentence(page.lede)]));
+  for (const page of listed.filter((entry) => entry.generated === true)) {
+    if (typeof page.note !== "string" || page.note === "") {
+      throw new Error(`pages.json gives ${page.file} no note to list it by`);
+    }
+    notes.set(page.file, page.note);
+  }
   const home = pages.find((page) => page.file === landing.file);
   if (home?.summary === undefined) {
     throw new Error("index.html has no description to say what the site is");
@@ -55,9 +67,9 @@ export function render(manifest, read) {
     [
       "## Docs",
       "",
-      ...pages
+      ...listed
         .filter((page) => page.file !== landing.file)
-        .map((page) => `- [${page.title}](${page.url}): ${firstSentence(page.lede)}`),
+        .map((page) => `- [${page.title}](${page.url}): ${notes.get(page.file)}`),
     ].join("\n"),
     [
       "## Optional",
@@ -120,6 +132,13 @@ if (isEntryPoint) {
         { file: "index.html", url: "index.html", title: "Site" },
         { file: "docs/a.html", url: "docs/a.html", title: "A" },
         { file: "404.html", url: "404.html", title: "Not found", in_llms: false },
+        {
+          file: "api/index.html",
+          url: "api/index.html",
+          title: "API",
+          generated: true,
+          note: "Made.",
+        },
       ],
       external: [{ url: "https://x.example/", title: "X" }],
     };
@@ -148,7 +167,7 @@ if (isEntryPoint) {
       const index = readFileSync(join(root, "llms.txt"), "utf8");
       const full = readFileSync(join(root, "llms-full.txt"), "utf8");
       const expected =
-        "# Site\n\n> What it is.\n\nAbout Site. And more of it.\n\nEvery link here is relative to this file. All of these pages are one file, [llms-full.txt](llms-full.txt).\n\n## Docs\n\n- [A](docs/a.html): About A.\n\n## Optional\n\n- [X](https://x.example/)\n";
+        "# Site\n\n> What it is.\n\nAbout Site. And more of it.\n\nEvery link here is relative to this file. All of these pages are one file, [llms-full.txt](llms-full.txt).\n\n## Docs\n\n- [A](docs/a.html): About A.\n- [API](api/index.html): Made.\n\n## Optional\n\n- [X](https://x.example/)\n";
       if (index !== expected)
         throw new Error(`the index it wrote is not the one expected:\n${index}`);
       for (const held of [
@@ -172,6 +191,10 @@ if (isEntryPoint) {
       const unsaid = run(root, false);
       writeFileSync(join(root, "docs", "b.html"), page("B", "words in no paragraph"));
       const stray = run(root, false);
+      writeFileSync(join(root, "docs", "b.html"), page("B", ""));
+      manifest.pages.push({ file: "made.html", url: "made.html", title: "Made", generated: true });
+      save();
+      const unnoted = run(root, false);
       if (
         edited.length !== 1 ||
         !edited[0].startsWith("llms.txt is not what") ||
@@ -179,16 +202,18 @@ if (isEntryPoint) {
         unsaid.length !== 1 ||
         !unsaid[0].startsWith("docs/b.html: <table> has no way of being said") ||
         stray.length !== 1 ||
-        !stray[0].startsWith('docs/b.html: "words in no paragraph" stands outside')
+        !stray[0].startsWith('docs/b.html: "words in no paragraph" stands outside') ||
+        unnoted.length !== 1 ||
+        !unnoted[0].startsWith("pages.json gives made.html no note")
       ) {
         console.error("site llms self-test: FAILED to refuse a known-bad site");
-        for (const seen of [...edited, ...behind, ...unsaid, ...stray]) {
+        for (const seen of [...edited, ...behind, ...unsaid, ...stray, ...unnoted]) {
           console.error(`  saw: ${seen}`);
         }
         process.exit(1);
       }
       console.log(
-        "site llms self-test: red on a hand edit, a page the files lack, an element it cannot say and words in no paragraph, as required",
+        "site llms self-test: red on a hand edit, a page the files lack, an element it cannot say, words in no paragraph and a generated page with no note, as required",
       );
     } catch (error) {
       console.error(

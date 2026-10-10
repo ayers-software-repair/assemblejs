@@ -10,9 +10,22 @@
 //      whoever writes the first skin; the numbers are from platform/sitekit/ROLES.md.
 //   2. Every page pages.json declares exists, every required page is among them, and no page
 //      links to one that is not declared. A page advertised and missing is a 404 a visitor
-//      finds before anyone else does.
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+//      finds before anyone else does. A page marked `generated` is the one exception: the
+//      deploy writes it before this check runs (the API reference under docs/api/), so it need
+//      not exist in the tree, it still counts as declared, and the directory it heads is not
+//      walked, because a generated tree links hundreds of pages of its own that nobody declares.
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { join, posix } from "node:path";
 import { pathToFileURL } from "node:url";
 
 // From platform/sitekit/ROLES.md. `null` means the role carries no contrast invariant, only the
@@ -96,13 +109,23 @@ export function checkSkin(css) {
 }
 
 export function checkPages(siteRoot) {
+  siteRoot = siteRoot.replace(/\/+$/, "");
   const problems = [];
   const manifestPath = join(siteRoot, "pages.json");
   if (!existsSync(manifestPath)) return [`${manifestPath} is missing`];
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 
   const declared = new Set(manifest.pages.map((page) => page.file));
+  // A generated page is written by the deploy before this runs, so its absence here says
+  // nothing; and the tree it heads is its generator's, so the walk below does not enter it.
+  const generatedDirs = new Set(
+    manifest.pages
+      .filter((page) => page.generated === true)
+      .map((page) => posix.dirname(page.file))
+      .filter((dir) => dir !== "."),
+  );
   for (const page of manifest.pages) {
+    if (page.generated === true) continue;
     if (!existsSync(join(siteRoot, page.file))) {
       problems.push(`pages.json declares ${page.file}, which does not exist`);
     }
@@ -116,7 +139,8 @@ export function checkPages(siteRoot) {
     for (const entry of readdirSync(dir)) {
       const path = join(dir, entry);
       if (statSync(path).isDirectory()) {
-        if (entry !== "kit") walk(path);
+        const from = path.slice(siteRoot.length + 1).replaceAll("\\", "/");
+        if (entry !== "kit" && !generatedDirs.has(from)) walk(path);
         continue;
       }
       if (!path.endsWith(".html")) continue;
@@ -138,14 +162,59 @@ export function checkPages(siteRoot) {
 const isEntryPoint = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
 if (isEntryPoint) {
   if (process.argv[2] === "--self-test") {
+    const refuse = (message, seen) => {
+      console.error(`site gate self-test FAILED: ${message}`);
+      for (const p of seen) console.error(`  saw: ${p}`);
+      process.exit(1);
+    };
+
     const bad = checkSkin(":root{--surface:#ffffff;--ink:#f0f0f0;}");
     if (!bad.some((p) => p.includes("--ink")) || !bad.some((p) => p.includes("not bound"))) {
-      console.error("site gate self-test FAILED: it must catch unreadable ink and an unbound role");
-      for (const p of bad) console.error(`  saw: ${p}`);
-      process.exit(1);
+      refuse("it must catch unreadable ink and an unbound role", bad);
     }
+
+    // The pages rule on a scratch site: red on a declared page that is missing and on a link
+    // to a page nobody declared, clean on the missing page once it is marked generated, and
+    // clean still when the generated tree exists and links pages of its own.
+    const root = mkdtempSync(join(tmpdir(), "check-site-"));
+    try {
+      const page = { file: "docs/api/index.html", url: "docs/api/index.html", title: "API" };
+      const manifest = (mark) =>
+        JSON.stringify({
+          pages: [
+            { file: "index.html", url: "index.html", title: "Home" },
+            { ...page, ...mark },
+          ],
+        });
+      writeFileSync(join(root, "index.html"), '<a href="docs/api/index.html">reference</a>');
+      writeFileSync(join(root, "pages.json"), manifest({}));
+      const missing = checkPages(root);
+      if (!missing.some((p) => p.includes("docs/api/index.html, which does not exist"))) {
+        refuse("it must refuse a declared page that does not exist", missing);
+      }
+      writeFileSync(join(root, "pages.json"), manifest({ generated: true }));
+      const exempt = checkPages(root);
+      if (exempt.length > 0) {
+        refuse("it must pass a declared page marked generated that is not written yet", exempt);
+      }
+      mkdirSync(join(root, "docs", "api", "modules"), { recursive: true });
+      writeFileSync(join(root, "docs", "api", "index.html"), '<a href="modules/a.html">a</a>');
+      writeFileSync(join(root, "docs", "api", "modules", "a.html"), '<a href="../b.html">b</a>');
+      const walked = checkPages(root);
+      if (walked.length > 0) {
+        refuse("it must not walk the tree a generated page heads", walked);
+      }
+      writeFileSync(join(root, "index.html"), '<a href="elsewhere.html">nowhere</a>');
+      const undeclared = checkPages(root);
+      if (!undeclared.some((p) => p.includes('links to "elsewhere.html"'))) {
+        refuse("it must refuse a link to a page nobody declared", undeclared);
+      }
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+
     console.log(
-      `site gate self-test: red on unreadable ink and on ${bad.length - 1} unbound role(s), as required`,
+      `site gate self-test: red on unreadable ink and on ${bad.length - 1} unbound role(s), red on a declared page missing and on an undeclared link, clean on a page marked generated, as required`,
     );
     process.exit(0);
   }

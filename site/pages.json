@@ -1,5 +1,5 @@
 {
-  "_": "Single source of truth for what pages exist and how they link. scripts/check-site.mjs reads it: every declared page must exist, every required page must be declared, and no page may link to one that is not. scripts/site-llms.mjs writes the two files `llms` names from it and from the pages, every page but one marked `in_llms: false`. Generated links name docs/index.html and NEVER a bare directory: CloudFront applies a default root object only at the distribution root, so /assemblejs/docs/ 404s while /assemblejs/docs/index.html is 200, and a repo check cannot tell them apart because the file exists either way.",
+  "_": "Single source of truth for what pages exist and how they link. scripts/check-site.mjs reads it: every declared page must exist, except one marked `generated`, which the deploy writes; every required page must be declared; and no page may link to one that is not. scripts/site-llms.mjs writes the two files `llms` names from it and from the pages, every page but one marked `in_llms: false`. Generated links name docs/index.html and NEVER a bare directory: CloudFront applies a default root object only at the distribution root, so /assemblejs/docs/ 404s while /assemblejs/docs/index.html is 200, and a repo check cannot tell them apart because the file exists either way.",
   "base": "https://ayers.repair/assemblejs/",
   "required": ["install.html", "start.html", "docs/index.html"],
   "llms": { "index": "llms.txt", "full": "llms-full.txt" },
@@ -94,6 +94,14 @@
       "title": "Not found",
       "in_nav": false,
       "in_llms": false
+    },
+    {
+      "file": "docs/api/index.html",
+      "url": "docs/api/index.html",
+      "title": "API reference",
+      "in_nav": false,
+      "generated": true,
+      "note": "Every published entry point of the twelve packages, generated from the sources when the site deploys."
     }
   ],
   "external": [

@@ -9,6 +9,9 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   // Agent worktrees under .claude/worktrees/ are whole second checkouts; linting them linted the
   // same files twice through a second tsconfig and went red on their import order.
+  // site/docs/api is the API reference `pnpm site:api` writes and site/.gitignore keeps out of
+  // git. This config reads no ignore file of git's, so with a preview on disk `eslint .` would
+  // lint the scripts typedoc bundles.
   {
     ignores: [
       "**/dist/**",
@@ -16,6 +19,7 @@ export default tseslint.config(
       "coverage/**",
       "scripts/fixtures/**",
       ".claude/worktrees/**",
+      "site/docs/api/**",
     ],
   },
   js.configs.recommended,

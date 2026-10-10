@@ -5,31 +5,33 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 03:06 EDT, after A-04's memo).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 03:18 EDT, after the API reference).**
 
-STATE. Branch `next`. `origin/next` is `af6d423`, A-02, pushed 2026-10-10 03:01 EDT; its `ci`
-run is 38032968881, its `release` run 38032968906 and its `deploy-site` run 38032968844, all
-read to their end, green. Staging serves `llms.txt` and `llms-full.txt` under
-`/assemblejs/next/`: 200, as text in utf-8, with the pages' cache, byte-identical to the
-branch. Beneath it: two small rows, `20547ae` (`ci` 38032256041, `release` 38032256072);
-A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above
-it, signed, pushed with this block: A-04's design memo, which changes no code. Every package
-reads `1.0.0-next.0`; sixteen changesets are pending. The owner's overnight order (estate
-D1216): work the bites to code completion and get the landing page onto staging; no questions
-until morning. The landing page is on staging: `/assemblejs/next/` on the staging domain
-answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
+STATE. Branch `next`. `origin/next` is `8edfac6`, A-04's memo, pushed 2026-10-10 03:06 EDT;
+its `ci` run is 38033268073 and its `release` run 38033268049, both read to their end, green.
+Beneath it: A-02, `af6d423` (`ci` 38032968881, `release` 38032968906, `deploy-site`
+38032968844; staging serves `llms.txt` and `llms-full.txt`); two small rows, `20547ae`; A-03,
+`9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above it,
+signed, pushed with this block: the API reference, which changes `site/**` and the deploy
+workflow, so `deploy-site` runs with its new job for the first time. Every package reads
+`1.0.0-next.0`; seventeen changesets are pending. The owner's overnight order (estate D1216):
+work the bites to code completion and get the landing page onto staging; no questions until
+morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
+200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
 `/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
 rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
 self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is the largest row the AI-first rungs found, since A-04 waits on the
-owner's answer to its memo (`docs/studies/built-in-components.md`; the question is on the
-estate's morning list): `render_assembly` and `compose_page` show a plain html view and refuse
-every other with the reason. Build what they must, in a directory of their own, with the
-project's own renderers, and render that; then the three public sentences brought down to what
-holds go back up (the row names them). After it: DESIGN 13.3's five resources, of which the
-server has two; registrations for the clients beyond the three; then the rows under "AFTER
-IT" below. A-01, A-03 and A-02 are done, and the subassembly rung, S-01 to S-09.
+THE EXACT NEXT STEP is the release-notes surfaces (the section "Release notes: the uniform
+pattern" below; ruled 2026-10-05): `RELEASE_NOTES.md` at the root, `site/release-notes.html`
+with one section per version, declared in `pages.json`, and the drift gate that holds every
+version heading in the packages' `CHANGELOG.md` files to a section of that page, structure
+only, watched red on an injected version. Then DESIGN 13.3's five resources, of which the
+agent surface has two; registrations for the clients beyond the three; then the rows under
+"AFTER IT" below. Two rows wait on the owner and are on the estate's morning list: A-04,
+whose memo is `docs/studies/built-in-components.md`, and showing an agent a framework view,
+which means running the project's code (DECISIONS 2026-10-10). A-01, A-03 and A-02 are done,
+and the subassembly rung, S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -39,15 +41,12 @@ invalid, not red. The browser proof runs here: give the suite the estate's seale
 `ASSEMBLEJS_CHROMIUM`, one worker, in the background, `TMPDIR` left alone (DECISIONS
 2026-10-09, S-06). It rebuilds every package's `dist`, so never beside the unit suite.
 
-AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
-the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
-are the changesets changelog); the API reference, typedoc at deploy time
-(`docs/studies/typedoc-at-deploy.wip.patch` is an interrupted agent's work: read it, do not
-apply it unread); the three truth fixes (events.ts's unmount comment, readBudgets' "computed"
-wording, the mcp verbs in CLAUDE.md: done 2026-10-05, DECISIONS "three claims"); CI breadth
-(done 2026-10-05: a conformance job; node 24 was already in the matrix); the
-house-style rows, which wait on the owner lifting that hold. The two inherited guide claims
-are fixed (`67bd8bc`, `e920464`).
+AFTER IT, in any order: the house-style rows (the section of that name below; the estate's
+record has them ready, pristine-keeping work having been allowed through the hold); the
+eleventh dossier and the acceptance table (B-27a's first half); and the open rows of Phase 3,
+each of which says what found it. Done and no longer waiting here: the API reference
+(2026-10-10), the three truth fixes and CI's breadth (2026-10-05), the two inherited guide
+claims (`67bd8bc`, `e920464`).
 
 DEBTS AND CORRECTIONS. The guides for Preact, Solid, Lit and the template languages
 (`2a884a6`) came from an agent worktree; a separate reader then verified all 39 code blocks
@@ -515,8 +514,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [ ] `render_assembly` and `compose_page` show a plain html view and refuse every other with
       the reason, a view in a framework or a template language being source its renderer
       compiles (B-09b, by design). So the loop the agent surface exists for closes only for
-      the one kind of assembly a project has fewest of. Build what they must, in a directory
-      of their own, with the project's own renderers, and render that. Then the sentences
+      the one kind of assembly a project has fewest of. WAITS ON THE OWNER: showing any other
+      view means running the project's code, which the agent surface runs none of today, and
+      a tool that runs what an agent just wrote is a way round the permission a person gave
+      or withheld for a shell. Three ways are set out in DECISIONS 2026-10-10, "what it would
+      take to show an agent a framework view"; the advice is to show it from the project's
+      own running `dev` server and never run the code here. When it lands, the sentences
       brought down to what holds go back up: the landing page's "Your agent knows the
       framework" and its row in `site/LANDING.md`, the root README, and the agent surface's
       own (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
@@ -659,9 +662,10 @@ product's one pin; inner pages link `kit/kit.css` plus the product's own `skin.c
 page is the product's own and does not use the kit; a push to the branch touching `site/**`
 publishes, and the paths filter is an include, never an ignore list.
 
-Two differences this product has, both already ruled: the pin is `ayersPlatform` in the root
-`package.json` rather than a go.mod line, and there are two prefixes, `/assemblejs/` from `main`
-and `/assemblejs/next/` from `next`.
+Three differences this product has, all ruled: the pin is `ayersPlatform` in the root
+`package.json` rather than a go.mod line; there are two prefixes, `/assemblejs/` from `main` and
+`/assemblejs/next/` from `next`; and one directory, `docs/api/`, is not static: the deploy
+generates it with typedoc and the tree never carries it (DECISIONS 2026-10-05, 2026-10-10).
 
 - [x] `site/pages.json`: the page list and cross-links, in magpie's schema
 - [x] `site/index.html` + `index.css`: the landing page, the product's own skin, framework names
@@ -704,9 +708,26 @@ and `/assemblejs/next/` from `next`.
       prefix only, no `--delete`
 - [x] The `next` branch variant publishing to `/assemblejs/next/`, with every link carrying the
       trailing slash (the prefix router does not redirect a bare second segment)
-- [ ] OWNER: the API reference generated into `site/docs/api/` at deploy time, never
-      committed. A deploy-time generator is a build step in a deploy DEPLOY.md defines as
-      "no build"; which generator and where it runs is his (DECISIONS 2026-10-05)
+- [x] The API reference generated into `site/docs/api/` at deploy time, never committed
+      (ruled 2026-10-05): typedoc 0.28.20 at the root over every entry point the twelve
+      packages publish, each naming its specifier with a `@module` comment, `pnpm site:api`;
+      `check:reference`, a gate of its own, holds those entry points to the packages' `exports`
+      and generates the whole reference with warnings as errors;
+      `pages.json` marks the page `generated`, `check-site.mjs` exempts it from existing and
+      does not walk its tree, and the index for a model lists it by its note. The deploy
+      generates it in a job that holds no token for the cloud and hands it to the job that
+      does. Thirteen mutations of the three scripts, each against its self-test, and five
+      known-bad inputs on the real tree, each watched red (DECISIONS 2026-10-10, "the API
+      reference")
+- [ ] The reference cannot tell a type that a public signature names and no entry point
+      exports: typedoc's own check for it passes any type whose package is not the project's,
+      and one project over twelve packages makes that all of them. Run typedoc once per package
+      (its `packages` strategy, each with its own entry points), or hold it some other way, so
+      that a type a user cannot import is refused (found 2026-10-10, watched: an unexported
+      interface returned by an exported function passed in silence)
+- [ ] Nothing is ever deleted from the bucket, so the page of a symbol the reference no longer
+      has stays reachable by its address. A sync of `docs/api/` alone could delete what it no
+      longer holds; whether the deploy's role may delete is not known here (found 2026-10-10)
 - [x] `RELEASES_PAT` is in this repository's secrets (2026-09-11) and the deploy's platform
       checkout passed in every run since; the OIDC role `gh-deploy-assemblejs-site` exists by
       the owner's hand (2026-10-07) after every run through 2026-10-05 failed at the AWS

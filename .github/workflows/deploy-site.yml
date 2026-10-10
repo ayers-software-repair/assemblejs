@@ -4,15 +4,25 @@
 # permissions scoped to the s3://ayers-repair-site-993011736775/assemblejs/ prefix and the one
 # CloudFront distribution, nothing else.
 #
-# site/ IS the whole site: static pages, no build, fonts and images vendored. No `--delete`: the
-# bucket carries other products' files.
+# site/ IS the whole site: static pages, fonts and images vendored. Two of its directories are
+# not in the tree and are written here before the check and the sync: kit/, staged from the
+# platform pin, and docs/api/, the API reference, which typedoc generates from the packages'
+# sources (DECISIONS 2026-10-05, 2026-10-10). No `--delete`: the bucket carries other products'
+# files.
+#
+# TWO JOBS, AND ONLY ONE HOLDS THE ROLE. The reference is generated in a job of its own, which
+# installs the workspace, builds it and runs typedoc with no token for the cloud, and hands the
+# pages on as an artifact. The job that assumes the role installs nothing and runs nobody's
+# code but the checks': a dependency's script never runs beside the right to write the bucket.
 #
 # TWO PREFIXES, ONE FOLDER. This product publishes twice, which is the npm two-channel rule
 # applied to the site: `next` to /assemblejs/next/ alongside the `next` dist-tag, `main` to
 # /assemblejs/ alongside `latest`. The branch decides the prefix and the folder is identical.
 #
 # The paths filter is an INCLUDE on site/**, never an ignore list - most of a product repo is
-# not the site, so a skip-list publishes whatever is added next.
+# not the site, so a skip-list publishes whatever is added next. Every run regenerates the
+# reference, but only a push that touches site/ starts one: a push that changes only the
+# packages leaves the published reference as it was until the next site push or a dispatch.
 name: deploy-site
 on:
   push:
@@ -22,7 +32,6 @@ on:
   workflow_dispatch:
 
 permissions:
-  id-token: write
   contents: read
 
 concurrency:
@@ -34,8 +43,47 @@ env:
   DIST: E1CZIGG4O8R7UI
 
 jobs:
-  deploy:
+  # THE API REFERENCE IS GENERATED HERE, NEVER COMMITTED. The toolchain ci.yml pins, on Node 22:
+  # install at the frozen lockfile, build the packages, then `pnpm site:api` runs typedoc (root
+  # typedoc.json) over every published entry point into site/docs/api/. Typedoc reads the
+  # sources, not dist; the build runs first so that a tree whose packages do not build
+  # publishes nothing. This job may read the repository and nothing else.
+  reference:
+    name: the API reference
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+      - name: Build the packages
+        run: pnpm build
+      - name: Generate the API reference
+        run: pnpm site:api
+      # Kept a day: the deploy below takes it within the run, and nothing reads it after.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: api-reference
+          path: site/docs/api
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    needs: reference
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -77,6 +125,22 @@ jobs:
           rm -rf site/kit && mkdir -p site/kit
           cp _platform/sitekit/*.css site/kit/
 
+      # What the job above generated, put where the site links it.
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: api-reference
+          path: site/docs/api
+
+      # The docs index links this page. Publishing the link without the page is the 404 the
+      # site check exists to prevent, and the check exempts a generated page from existing in
+      # the tree, so the deploy proves it here instead.
+      - name: The reference exists
+        run: |
+          if [ ! -f site/docs/api/index.html ]; then
+            echo "::error::site/docs/api/index.html was not generated; nothing is published"
+            exit 1
+          fi
+
       # The same gate a developer runs. A skin whose ink is unreadable, or a page advertised and
       # missing, does not reach the bucket.
       - name: Check the site
@@ -102,7 +166,12 @@ jobs:
             --content-type "text/plain; charset=utf-8" \
             --cache-control "public, max-age=300" --only-show-errors
 
-      - name: Sync assets - fonts, images, css (7 day cache)
+      # Everything that is not a page, a manifest, a note or the pages as text: the kit and skin
+      # css, the svg marks, and the reference's css, js and svg under docs/api/assets/. The
+      # reference links its assets with a query that changes at each generation (typedoc.json
+      # `cacheBust`), so the week's cache never serves the last deploy's search index with this
+      # deploy's pages.
+      - name: Sync assets - fonts, images, css, js (7 day cache)
         run: |
           aws s3 sync site/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/" \
             --exclude "*.md" --exclude "*.html" --exclude "*.json" --exclude "*.txt" \

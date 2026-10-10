@@ -1,0 +1,41 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "packages/cli"
+    },
+    {
+      "path": "packages/core"
+    },
+    {
+      "path": "packages/create"
+    },
+    {
+      "path": "packages/devtools"
+    },
+    {
+      "path": "packages/mcp"
+    },
+    {
+      "path": "packages/renderer-lit"
+    },
+    {
+      "path": "packages/renderer-preact"
+    },
+    {
+      "path": "packages/renderer-react"
+    },
+    {
+      "path": "packages/renderer-solid"
+    },
+    {
+      "path": "packages/renderer-svelte"
+    },
+    {
+      "path": "packages/renderer-templates"
+    },
+    {
+      "path": "packages/renderer-vue"
+    }
+  ]
+}

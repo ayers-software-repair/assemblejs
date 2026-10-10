@@ -87,7 +87,8 @@ Enforced, and every one of these is a script in `pnpm check` rather than a claim
 import order and kebab filenames), `check:unused` (knip: a file or export nothing reads),
 `check:versions` (syncpack: one version of a dependency across the workspace), `check:exports`,
 `check:pack` and `check:publish` (publint and are-the-types-wrong on the real tarball),
-`check:claude` (this paragraph against the chain).
+`check:reference` (the API reference generated whole, its warnings errors, and its entry points
+held to the packages' `exports`), `check:claude` (this paragraph against the chain).
 
 Every gate that can go red on a known-bad input has been watched doing so, and the ones with a
 `--self-test` run it immediately before they are trusted. The paragraph above is checked against

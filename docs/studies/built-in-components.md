@@ -88,13 +88,13 @@ This is option A of three, and the question at the end is which.
 A rule refuses only what its reader can be certain of. A value the view computes counts as
 present.
 
-| rule                          | refuses                                                                                           | why                                                                                              |
-| ----------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `a-view-has-no-inline-style`  | a `style` attribute, in any view's spelling of it                                                 | it does nothing under the default policy, and it is a value invented where it is used            |
-| `an-image-has-an-alternative` | an `img` with no `alt` at all; an empty one says the image is decoration and passes               | WCAG 2.2, 1.1.1, level A: non-text content "has a text alternative"                              |
-| `a-control-has-a-name`        | an input, a select, a textarea with no label in its view and no name given it; a button with none | WCAG 2.2, 3.3.2, level A: "Labels or instructions are provided when content requires user input" |
-| `a-colour-is-a-token`         | a literal colour in an assembly's stylesheet                                                      | one decision, made in one file                                                                   |
-| `tokens-hold-their-contrast`  | a binding in `src/tokens.css` that breaks its role's invariant                                    | WCAG 2.2, 1.4.3 and 1.4.11, level AA                                                             |
+| rule                          | refuses                                                                                           | why                                                                                                                                                                                |
+| ----------------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a-view-has-no-inline-style`  | a `style` attribute, in any view's spelling of it                                                 | it does nothing under the default policy, and it is a value invented where it is used                                                                                              |
+| `an-image-has-an-alternative` | an `img` with no `alt` at all; an empty one says the image is decoration and passes               | WCAG 2.2, 1.1.1, level A: non-text content "has a text alternative"                                                                                                                |
+| `a-control-has-a-name`        | an input, a select, a textarea with no label in its view and no name given it; a button with none | WCAG 2.2, level A: 3.3.2, "Labels or instructions are provided when content requires user input", and for the button 4.1.2, "the name and role can be programmatically determined" |
+| `a-colour-is-a-token`         | a literal colour in an assembly's stylesheet                                                      | one decision, made in one file                                                                                                                                                     |
+| `tokens-hold-their-contrast`  | a binding in `src/tokens.css` that breaks its role's invariant                                    | WCAG 2.2, 1.4.3 and 1.4.11, level AA                                                                                                                                               |
 
 A project that has no `src/tokens.css` is held to the first three alone. Each rule joins the
 list `explain` answers and the instructions `new` writes.
