@@ -1,0 +1,26 @@
+# AssembleJS
+
+> Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+
+An assembly is a piece of a page written in one UI framework. AssembleJS composes assemblies into pages on the server, whether they live in your project or on someone else's, and hydrates them in the browser. Hire a React developer, a Svelte developer and a Vue developer, and put them on the same page on their first day.
+
+Every link here is relative to this file. All of these pages are one file, [llms-full.txt](llms-full.txt).
+
+## Docs
+
+- [Installing](install.html): AssembleJS needs Node 22 or newer and nothing else.
+- [Getting started](start.html): An assembly is a piece of a page written in one framework.
+- [Documentation](docs/index.html): Start with the guide for the framework you already know.
+- [The tutorial](docs/tutorial.html): One project, from nothing to a deployed server, in the order you would actually do it.
+- [For React developers](docs/react.html): A React assembly is a component in a file whose name says it is React.
+- [For Vue developers](docs/vue.html): A Vue assembly is a single-file component.
+- [For Svelte developers](docs/svelte.html): A Svelte assembly is a component, Svelte 5 and runes.
+- [For Preact developers](docs/preact.html): A Preact assembly is a component in a file whose name says it is Preact.
+- [For Solid developers](docs/solid.html): A Solid assembly is a component in a file whose name says it is Solid, compiled by Solid's own compiler.
+- [For Lit developers](docs/lit.html): A Lit assembly is a view, `cart.lit.ts`, a function from the assembly's props to a Lit template, and the elements it places are yours.
+- [For template authors](docs/templates.html): A template assembly is one file in EJS, Handlebars, Nunjucks, Pug or Markdown, rendered on the server by its own engine and nothing else; it ships no JavaScript unless a file beside it asks for some.
+
+## Optional
+
+- [Source](https://github.com/ayers-software-repair/assemblejs)
+- [Report an issue](https://github.com/ayers-software-repair/assemblejs/issues/new/choose)

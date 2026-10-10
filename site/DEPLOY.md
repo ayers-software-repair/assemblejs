@@ -40,6 +40,16 @@ The landing page is this product's own and does not use the kit; every other pag
 - Every page `pages.json` declares exists, every required page is declared, and no page links to
   one that is not. A page advertised and missing is a 404 a visitor finds before anyone else.
 
+## The pages as text
+
+`llms.txt` and `llms-full.txt` are generated from `pages.json` and the pages, never written by
+hand: `node scripts/site-llms.mjs` writes them. `pnpm check` holds them, which CI runs beside
+the deploy and not before it: a page added, a sentence changed or either file edited is refused
+there until the script has been run. The deploy itself does not check them, since the check
+needs the workspace installed and the job that holds the role installs nothing. They are
+uploaded with the pages' cache, as text in utf-8, and every link in them is relative, because
+the folder is published at two addresses.
+
 ## Still the owner's
 
 - **The mark.** `mark.svg` and `favicon.svg` are placeholders and say so in their own source. The

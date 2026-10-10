@@ -1,0 +1,1743 @@
+# AssembleJS
+
+> Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+
+Every page of this site as text, in the order [llms.txt](llms.txt) lists them. Every link is relative to this file.
+
+# One page. Every framework.
+
+Source: [index.html](index.html)
+
+An assembly is a piece of a page written in one UI framework. AssembleJS composes assemblies into pages on the server, whether they live in your project or on someone else's, and hydrates them in the browser. Hire a React developer, a Svelte developer and a Vue developer, and put them on the same page on their first day.
+
+[Get started](start.html) [Documentation](docs/index.html) [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Frameworks you can write an assembly in:
+
+- React
+- Vue
+- Svelte
+- Preact
+- Solid
+- Lit
+- Web Components
+- Markdown
+- HTML
+- on one page, at the same time
+
+## A directory is an assembly
+
+Make a directory, put a view in it, and it exists. Nothing to register, no import to add, no list restating your own folder tree. Your server file never grows.
+
+## The file name says the framework
+
+`cart.svelte`, `cart.react.tsx`. A directory listing tells you what a page is made of, so nobody has to read a config to find out.
+
+## One slow assembly is not a slow page
+
+Every assembly carries a deadline and a fallback. A dead one degrades to its last good content and the page still ships, in the template's order.
+
+## They talk without adapters
+
+A typed event bus that belongs to the page rather than to any framework's tree, so a React assembly and a Svelte one exchange messages with nothing in between.
+
+## An assembly can live anywhere
+
+Give one a URL and another team serves it. Moving it changes a URL and nothing else: the same deadline, the same fallback, the same headers.
+
+## Your agent knows the framework
+
+An MCP server ships with it, so an AI agent reads your project, adds an assembly, places it, and checks its own work against the framework's rules; a plain html view it renders on the spot, to see what it actually produced. Every new project is written with the instructions that tell an agent so, and with the server installed and registered. It carries no model and no key of its own.
+
+## The whole idea, in one page template
+
+```
+<main>
+  <assembly name="catalogue"></assembly>   <!-- written in React  -->
+  <assembly name="cart"></assembly>        <!-- written in Svelte -->
+</main>
+```
+
+# Installing
+
+Source: [install.html](install.html)
+
+AssembleJS needs Node 22 or newer and nothing else. There is no global install: the command comes with the project it creates.
+
+## Make a project
+
+### npm create @assemblejs my-app
+
+Writes a project that runs, with one assembly in it. Use pnpm or yarn if you prefer; the generated project does not care which one made it.
+
+### cd my-app && npm install
+
+Installs the framework and the one renderer your first assembly uses. A React team does not install Vue, because each renderer is its own package.
+
+### npm run dev
+
+Starts the server and prints the address. Edit an assembly and the page reloads.
+
+## Add it to a project you already have
+
+### npm install @assemblejs/core
+
+The runtime. It brings a web server and nothing else; there is no bundler in it, and a built server starts with plain node.
+
+### npm install -D @assemblejs/cli
+
+The command that scaffolds assemblies and builds the project. It is a development dependency: production runs the build, not the command.
+
+# Getting started
+
+Source: [start.html](start.html)
+
+An assembly is a piece of a page written in one framework. A page places assemblies. That is the whole model, and the rest of this page is how you write one.
+
+## Your first assembly
+
+### A directory is an assembly
+
+Make `src/assemblies/cart/cart.svelte` and you have an assembly called `cart`. There is nothing to register: no import to add, no array to append to, no list restating the directory tree. Your server file does not grow.
+
+### The file name says which framework
+
+`cart.svelte` and `cart.vue` need no help. Where an extension is shared, the name carries it: `cart.react.tsx`, `cart.preact.tsx`, `cart.solid.tsx`. A directory listing tells you what a page is made of.
+
+### Put it on a page
+
+Write `<assembly name="cart"></assembly>` in a page template. The server replaces it with the rendered assembly.
+
+## Adding a second framework
+
+### assemblejs add assembly checkout --renderer react
+
+One command and one tag. The React developer and the Svelte developer work on the same page without either learning the other's framework.
+
+### They talk through the page
+
+Every assembly gets a typed events object scoped to it. One sends, another listens, and neither needs an adapter, because the bus belongs to the page rather than to any framework's tree.
+
+## Working with an agent
+
+### The project says what it is
+
+A new project carries an `AGENTS.md`, the file Claude Code, Cursor and VS Code look for: what a page, an assembly and a placement are, how to change the project, and every rule its code must satisfy.
+
+### And hands over the framework's own tools
+
+The project's MCP server is installed with it and registered for each of them. An agent adds an assembly, places it, and composes the page to see what it made, with no server started. `npx assemblejs check` holds the instructions to the version you installed, and `npx assemblejs add agents` rewrites them.
+
+### Ask for the common things by name
+
+The server lists four prompts, which Claude Code and VS Code show as commands and Cursor supports as well: add an assembly, place one, make a page, fix what `check` finds. Each briefs the agent the framework's way: look before adding, ask where it was not told, and check last.
+
+## When one of them is slow
+
+### Every assembly has a deadline
+
+A slow or dead assembly renders its declared fallback, or the last good content, and the page still ships. One failing assembly is one failing assembly.
+
+# Documentation
+
+Source: [docs/index.html](docs/index.html)
+
+Start with the guide for the framework you already know. They all describe the same product; each one shows it in the idiom you write every day.
+
+## Start here
+
+### [Installing](install.html)
+
+Node 22 or newer, one command, and a project that runs.
+
+### [Getting started](start.html)
+
+Your first assembly, a second framework beside it, and what happens when one is slow.
+
+### [The tutorial](docs/tutorial.html)
+
+One project from nothing to a deployed server, nine steps, every file from the repository's own examples, its design document or its tests.
+
+## Guides
+
+### [For React developers](docs/react.html)
+
+A component in a file whose name says React: props, data from a service, events, when it mounts, styles, the page.
+
+### [For Vue developers](docs/vue.html)
+
+A single-file component, the same product in Vue's idiom.
+
+### [For Svelte developers](docs/svelte.html)
+
+Svelte 5 and runes, the same product in Svelte's idiom.
+
+### [For Preact developers](docs/preact.html)
+
+A component in a file whose name says Preact, the same product in Preact's idiom.
+
+### [For Solid developers](docs/solid.html)
+
+A component compiled by Solid's own compiler, the same product in Solid's idiom.
+
+### [For Lit developers](docs/lit.html)
+
+A view that places your elements, rendered into declarative shadow roots on the server; the events arrive as a property.
+
+### [For template authors](docs/templates.html)
+
+EJS, Handlebars, Nunjucks, Pug and Markdown: one file, rendered on the server, no JavaScript unless a file beside it asks for some.
+
+## The model
+
+### assembly
+
+A piece of a page written in one UI framework: whole, addressable, renderable on its own. Nested inside another it is a subassembly. Given a URL, it lives on another server and nothing else about it changes.
+
+### page
+
+A route that renders a template which places assemblies. A page is an assembly that has a route.
+
+### service
+
+A function that runs on the server before an assembly renders and returns its data. The same function answers the assembly's data endpoint, so the two can never disagree.
+
+### api
+
+A route that serves data to anyone.
+
+## The contract
+
+### Three endpoints per assembly
+
+Content, data and manifest. Any server in any language can serve an assembly by answering those three correctly, which is what makes a second team cost nothing.
+
+### Nothing crosses to the browser but JSON
+
+A named projection of six fields. Not your request, not your headers, not your cookies, and never another assembly's rendered bytes.
+
+# The tutorial
+
+Source: [docs/tutorial.html](docs/tutorial.html)
+
+One project, from nothing to a deployed server, in the order you would actually do it. Each step is one command or one file, and every file here is taken from the repository's own examples, its design document or its tests.
+
+## 1. Make a project
+
+### `npm create @assemblejs shop`
+
+Writes a project that runs: a page, one assembly, a server file that will never grow, and a package.json whose one runtime dependency is `@assemblejs/core`, the command and the agent surface being development dependencies. Beside them, for an AI agent that opens the project: an `AGENTS.md` that says what the project is and the rules its code must satisfy, and the project's own MCP server registered for Claude Code, Cursor and VS Code.
+
+### `cd shop && npm install && npm run dev`
+
+Builds, starts, prints the address, and rebuilds on every change.
+
+### What is in it
+
+`src/pages/home/home.html` is the page, a template that places one assembly; `src/assemblies/hello/hello.html` is that assembly, a plain template with no framework.
+
+```
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>shop</title>
+  </head>
+  <body>
+    <assembly name="hello"></assembly>
+  </body>
+</html>
+```
+
+## 2. Add an assembly in your framework
+
+### `npx assemblejs add assembly counter --renderer svelte`
+
+Writes `src/assemblies/counter/counter.svelte` and prints the tag that places it. Install the renderer it needs: `npm install @assemblejs/renderer-svelte svelte`. The guides for [React](docs/react.html) and [Vue](docs/vue.html) show the same step in those idioms.
+
+### `<assembly name="counter"></assembly>`
+
+Add the tag to the page's template, below the first. The server now renders both, each with its own renderer, into one document.
+
+## 3. Give it data
+
+### `src/assemblies/counter/counter.service.ts`
+
+A service beside the view returns the assembly's data. It runs on the server before the render and also answers the assembly's data endpoint, so the two can never disagree.
+
+```
+import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () => ({ label: "Clicked" }),
+});
+```
+
+### Read it in the view
+
+The view receives `data` and its own `events` as props.
+
+```
+<script lang="ts">
+  let { data, events } = $props();
+  let count = $state(0);
+</script>
+
+<button type="button" onclick={() => { count += 1; events.send("counted", { count }); }}>
+  {data.label} {count}
+</button>
+```
+
+## 4. Let two frameworks talk
+
+### `npx assemblejs add assembly readout --renderer react`
+
+Then `npm install @assemblejs/renderer-react react react-dom`, and the tag on the page. The readout hears what the Svelte counter sends, because the bus belongs to the page and not to either framework's tree.
+
+```
+import { useEvents } from "@assemblejs/renderer-react/client";
+import { useEffect, useState } from "react";
+
+export default function Readout() {
+  const events = useEvents();
+  const [heard, setHeard] = useState("nothing yet");
+  useEffect(
+    () =>
+      events.on("counted", (message) =>
+        setHeard(`${message.from.name} counted ${String((message.payload as { count: number }).count)}`),
+      ),
+    [events],
+  );
+  return <p>{heard}</p>;
+}
+```
+
+## 5. Serve some data of your own
+
+### `src/api/time.api.ts`
+
+An api is a route. `GET` unless `method` says otherwise; the handler is given the request's `query`, its route `params` and its parsed `body`, and what it returns is the JSON reply.
+
+```
+import { defineApi } from "@assemblejs/core";
+
+export default defineApi({ path: "/api/time", handle: () => ({ now: new Date().toISOString() }) });
+```
+
+## 6. Decide what happens when an assembly is slow
+
+### `src/pages/home/home.page.ts`
+
+Policy lives beside the page's template, only for the placements that need any. A deadline in milliseconds; the markup shown when the assembly does not answer; or that its failure fails the page. A slow assembly renders its fallback and the page still ships.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: {
+    counter: { deadline: 500, fallback: "<p>Counter unavailable</p>" },
+  },
+});
+```
+
+### `defer: true`
+
+For an assembly that must not hold the page at all: the server ships its placeholder and the browser fetches it after load. A route with a parameter reaches the deferred assembly's services as `params`, exactly as it reaches one rendered with the page.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({ route: "/item/:sku", place: { tag: { defer: true } } });
+```
+
+## 7. Push live data to every page
+
+### `src/api/prices.api.ts`
+
+An api with `stream` in place of `handle` holds its response open and sends events; the browser opens one connection per page and puts each message on the page's bus, where assemblies receive it like any other event.
+
+```
+import { defineApi } from "@assemblejs/core";
+import { priceFeed } from "./price-feed.js";
+
+export default defineApi({
+  path: "/api/prices",
+  stream: ({ send, signal }) => {
+    send("price", priceFeed.latest);
+    priceFeed.listening.add(send);
+    signal.addEventListener("abort", () => priceFeed.listening.delete(send));
+  },
+});
+```
+
+### `definePage({ stream: "/api/prices" })`
+
+The page names its one stream. An assembly that mounts after the stream opened reads the last message with `events.last("price")`, then subscribes.
+
+## 8. Check it, then weigh it
+
+### `npx assemblejs check`
+
+Every problem found without building: a tag naming an assembly that does not exist, policy for a placement the template never makes, a stream that is no stream, a renderer not installed, a template that does not compile. The same findings the agent surface reports.
+
+### `npx assemblejs perf`
+
+Builds, starts the built server in production, and reports what each page sends a visitor before anything mounts. Budgets in `assemblejs.config.ts` are gzipped bytes by part, and a page over one fails the command.
+
+```
+import { defineConfig } from "@assemblejs/core";
+
+export default defineConfig({
+  budgets: { document: 20000, styles: 10000, scripts: 60000 },
+});
+```
+
+## 9. Ship it
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and its browser files. `node dist/server.js` runs it; `ASSEMBLEJS_PORT` and `ASSEMBLEJS_HOST` say where, and `ASSEMBLEJS_MODE=development` turns the development behaviour back on.
+
+### `npx assemblejs deploy`
+
+Builds, then writes `deploy/`: the build and a package.json of the project's dependencies alone. Install there and `npm start` runs the same server. Where the directory goes is yours.
+
+# For React developers
+
+Source: [docs/react.html](docs/react.html)
+
+A React assembly is a component in a file whose name says it is React. The server renders it, the browser hydrates it, and the page it sits on can hold Svelte or Vue beside it. Everything on this page is from the repository's own examples, its design document or its tests.
+
+## Install the renderer
+
+### `npm install @assemblejs/renderer-react react react-dom`
+
+One renderer package per framework, so a project that has no Vue never installs Vue. React 18.3 or newer.
+
+## The view
+
+### `npx assemblejs add assembly cart --renderer react`
+
+Writes `src/assemblies/cart/cart.react.tsx` and nothing else: the directory is the assembly, and the `.react` infix says the framework, because `.tsx` alone could be Preact or Solid. Your server file does not change.
+
+```
+import type { AssemblyProps } from "@assemblejs/renderer-react";
+
+export default function Cart({ data }: AssemblyProps) {
+  return <p>cart {Object.keys(data).length}</p>;
+}
+```
+
+### One prop, nothing else
+
+`data` is what the assembly's services returned, as JSON. No request, no headers, no cookies cross to the component, and nothing of the assemblies it holds: it places those with a slot.
+
+### An assembly inside this one
+
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; React leaves it alone when this component renders again. The name is written in place. A `view` may come from `data`.
+
+```
+import { Slot } from "@assemblejs/renderer-react/client";
+
+export default function Cart() {
+  return (
+    <section className="cart">
+      <Slot name="price" />
+    </section>
+  );
+}
+```
+
+## Data from the server
+
+### `cart.service.ts`
+
+A service beside the view runs on the server before the render and returns the data. It is given the request's `query` and the route `params` of the page that placed the assembly, and the same function answers the assembly's data endpoint, so the two cannot disagree.
+
+```
+import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "tag",
+  schema: { properties: { sku: { type: "string" } }, required: ["sku"] },
+  run: ({ params }) => ({ sku: params["sku"] ?? "none" }),
+});
+```
+
+### Read it as a prop
+
+The component types what it reads. A page at `/item/:sku` gives this service `{ sku: "a1" }`.
+
+```
+export default function Tag(props: { readonly data: { readonly sku: string } }) {
+  return <p className="tag">{props.data.sku}</p>;
+}
+```
+
+## Talking to the rest of the page
+
+### `useEvents()`
+
+From `@assemblejs/renderer-react/client`. The object is scoped to this assembly: `send` stamps the sender, `on` returns its unsubscribe, so returning it from an effect is the whole cleanup; what is still subscribed when the page unmounts its assemblies is released then. A Svelte counter on the same page sends; this React readout hears, with no adapter between them.
+
+```
+import { useEvents } from "@assemblejs/renderer-react/client";
+import { useEffect, useState } from "react";
+
+export const mount = "visible";
+
+export default function Readout() {
+  const events = useEvents();
+  const [heard, setHeard] = useState("nothing yet");
+  useEffect(
+    () =>
+      events.on("counted", (message) =>
+        setHeard(`${message.from.name} counted ${String((message.payload as { count: number }).count)}`),
+      ),
+    [events],
+  );
+  return <p id="readout">{heard}</p>;
+}
+```
+
+### `events.last(topic)`
+
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes.
+
+```
+useEffect(() => {
+  const last = events.last("price");
+  if (last !== undefined) setPrice(JSON.stringify(last.payload));
+  return events.on("price", (message) => setPrice(JSON.stringify(message.payload)));
+}, [events]);
+```
+
+## When it runs in the browser
+
+### `export const mount = "visible"`
+
+Declared by the view. `load` mounts at once and is the default; `idle` waits for the browser to be idle; `visible` waits until the envelope scrolls into view; `none` never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest.
+
+### `export const shadow = true`
+
+Renders the assembly in its own shadow root: no page style reaches in, none of its own leaks out.
+
+## Styles
+
+### `cart.css`
+
+A stylesheet beside the view is compiled with a scope derived from the assembly's name, so two assemblies written apart cannot collide. Every file it names beside it, an image or a font, is built with it; one it cannot carry is a build problem, not a broken link found later.
+
+## On a page
+
+### `<assembly name="cart"></assembly>`
+
+In any page template under `src/pages`. A local placement needs no policy at all.
+
+### `home.page.ts`
+
+Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds, markup to show when the assembly does not answer, whether its failure fails the page, or a deferral the browser fills after load. A route with a parameter reaches the services as `params`.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  route: "/item/:sku",
+  place: {
+    cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" },
+    tag: { defer: true },
+  },
+});
+```
+
+## Run it
+
+### `npm run dev`
+
+Builds, starts, and rebuilds on every change.
+
+### `npx assemblejs check`
+
+Every problem found without building: a placement naming an assembly that does not exist, policy nothing reads, a renderer not installed, a budget that is not whole bytes.
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.
+
+# For Vue developers
+
+Source: [docs/vue.html](docs/vue.html)
+
+A Vue assembly is a single-file component. The server renders it, the browser hydrates it, and the page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its design document or its tests.
+
+## Install the renderer
+
+### `npm install @assemblejs/renderer-vue vue`
+
+The renderer and Vue itself, 3.4 or newer; the build compiles your components with the project's own Vue, so it has to be there.
+
+## The view
+
+### `npx assemblejs add assembly cart --renderer vue`
+
+Writes `src/assemblies/cart/cart.vue` and nothing else. The extension says the framework, and the directory is the assembly: nothing to register.
+
+```
+<script setup lang="ts">
+defineProps<{ data: Record<string, unknown> }>();
+</script>
+
+<template>
+  <p>cart {{ Object.keys(data).length }}</p>
+</template>
+```
+
+### One prop, nothing else
+
+`data` is what the assembly's services returned, as JSON. No request, no headers, no cookies cross to the component, and nothing of the assemblies it holds: it places those with a slot.
+
+### An assembly inside this one
+
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Vue leaves it alone when this component renders again. The name is written as a string. A `view` may be bound to `data`.
+
+```
+<script setup lang="ts">
+import { Slot } from "@assemblejs/renderer-vue/client";
+</script>
+
+<template>
+  <section class="cart">
+    <Slot name="price" />
+  </section>
+</template>
+```
+
+## Data from the server
+
+### `cart.service.ts`
+
+A service beside the view runs on the server before the render and returns the data. It is given the request's `query` and the route `params` of the page that placed the assembly, and the same function answers the assembly's data endpoint.
+
+```
+import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () => ({ label: "Clicked" }),
+});
+```
+
+## Talking to the rest of the page
+
+### `useEvents()`
+
+From `@assemblejs/renderer-vue/client`. The object is scoped to this assembly: `send` stamps the sender and `on` returns its unsubscribe. Subscribe when mounted and stop when unmounted; what is still subscribed when the page unmounts its assemblies is released then. A React or Svelte assembly on the same page hears the same message, with no adapter between them.
+
+```
+<script setup lang="ts">
+import { useEvents } from "@assemblejs/renderer-vue/client";
+import { onMounted, onUnmounted, ref } from "vue";
+
+const events = useEvents();
+const count = ref(0);
+const heard = ref("nothing");
+let stop = (): void => undefined;
+onMounted(() => {
+  stop = events.on("counted", (message) => (heard.value = message.from.name));
+});
+onUnmounted(() => stop());
+
+const bump = (): void => {
+  count.value += 1;
+  events.send("counted", { count: count.value });
+};
+</script>
+
+<template>
+  <section>
+    <button type="button" class="bump" @click="bump">vue {{ count }}</button>
+    <span>{{ heard }}</span>
+  </section>
+</template>
+
+<style scoped>
+.bump {
+  color: rgb(0, 120, 60);
+}
+</style>
+```
+
+### `events.last(topic)`
+
+A page can name one stream, and every topic the stream sends keeps its last message. An assembly that mounts after the stream opened reads what it missed with `last`, then subscribes.
+
+## When it runs in the browser
+
+### `export const mount = "visible"`
+
+Written in a plain `<script lang="ts">` block beside the `<script setup>`, because a setup script cannot export a name. `load` mounts at once and is the default; `idle` waits for the browser to be idle; `visible` waits until the envelope scrolls into view; `none` never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest. `export const shadow = true` in the same block renders it in its own shadow root.
+
+```
+<script lang="ts">
+export const mount = "visible";
+</script>
+
+<script setup lang="ts">
+defineProps<{ data: Record<string, unknown> }>();
+</script>
+```
+
+## Styles
+
+### `<style scoped>`
+
+Vue's own scoping works as it does anywhere. A `cart.css` beside the component is scoped by the build instead, with a scope derived from the assembly's name, and every file it names beside it is built with it.
+
+## On a page
+
+### `<assembly name="cart"></assembly>`
+
+In any page template under `src/pages`. A local placement needs no policy at all.
+
+### `home.page.ts`
+
+Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds, markup to show when the assembly does not answer, whether its failure fails the page, or a deferral the browser fills after load.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
+
+## Run it
+
+### `npm run dev`
+
+Builds, starts, and rebuilds on every change.
+
+### `npx assemblejs check`
+
+Every problem found without building, Vue not being installed among them.
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.
+
+# For Svelte developers
+
+Source: [docs/svelte.html](docs/svelte.html)
+
+A Svelte assembly is a component, Svelte 5 and runes. The server renders it, the browser hydrates it, and the page it sits on can hold React or Vue beside it. Everything on this page is from the repository's own examples, its design document or its tests.
+
+## Install the renderer
+
+### `npm install @assemblejs/renderer-svelte svelte`
+
+The renderer and Svelte 5 itself; the build compiles your components with the project's own compiler, so it has to be there.
+
+## The view
+
+### `npx assemblejs add assembly cart --renderer svelte`
+
+Writes `src/assemblies/cart/cart.svelte` and nothing else. The extension says the framework, and the directory is the assembly: nothing to register.
+
+```
+<script lang="ts">
+  let { data } = $props();
+</script>
+
+<p>cart {Object.keys(data).length}</p>
+```
+
+### The data, and the events
+
+`data` is what the assembly's services returned, as JSON. `events` is this assembly's own events object, handed in as a prop. No request, no headers, no cookies cross to the component, and nothing of the assemblies it holds: it places those with a slot.
+
+### An assembly inside this one
+
+`slot()` answers the markup that places another assembly, by name, whatever that assembly is written in, for Svelte's own raw form to write. The server puts the assembly there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when this component renders again. The name is written as a string. A second argument names a view, and may come from `data`.
+
+```
+<script lang="ts">
+  import { slot } from "@assemblejs/renderer-svelte/client";
+</script>
+
+<section class="cart">{@html slot("price")}</section>
+```
+
+## Data from the server
+
+### `cart.service.ts`
+
+A service beside the view runs on the server before the render and returns the data. It is given the request's `query` and the route `params` of the page that placed the assembly, and the same function answers the assembly's data endpoint.
+
+```
+import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () => ({ label: "Clicked" }),
+});
+```
+
+### Read it as a prop
+
+The counter from the two-frameworks example reads its label from the service and sends an event on every click.
+
+```
+<script lang="ts">
+  let { data, events } = $props();
+  let count = $state(0);
+</script>
+
+<button type="button" onclick={() => { count += 1; events.send("counted", { count }); }}>
+  {data.label} {count}
+</button>
+```
+
+## Talking to the rest of the page
+
+### `events`
+
+The prop is scoped to this assembly: `send` stamps the sender and `on` returns its unsubscribe, so returning it from `$effect` is the whole cleanup; what is still subscribed when the page unmounts its assemblies is released then. A React or Vue assembly on the same page hears the same message, with no adapter between them.
+
+```
+<script lang="ts">
+  let { events } = $props();
+  let count = $state(0);
+  let heard = $state("nothing");
+  $effect(() => events.on("counted", (message) => (heard = message.from.name)));
+</script>
+
+<section>
+  <button type="button" onclick={() => { count += 1; events.send("counted", { count }); }}>
+    svelte {count}
+  </button>
+  <span>{heard}</span>
+</section>
+```
+
+### `events.last(topic)`
+
+A page can name one stream, and every topic the stream sends keeps its last message. An assembly that mounts after the stream opened reads what it missed with `last`, then subscribes.
+
+```
+<script lang="ts">
+  import { onMount } from "svelte";
+
+  let { events } = $props();
+  let price = $state("waiting");
+  onMount(() => {
+    const last = events.last("price");
+    if (last !== undefined) price = JSON.stringify(last.payload);
+    return events.on("price", (message) => (price = JSON.stringify(message.payload)));
+  });
+</script>
+
+<p>{price}</p>
+```
+
+## When it runs in the browser
+
+### `export const mount = "visible"`
+
+Written in the component's module script, `<script module>`. `load` mounts at once and is the default; `idle` waits for the browser to be idle; `visible` waits until the envelope scrolls into view; `none` never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest. `export const shadow = true` in the same script renders it in its own shadow root.
+
+```
+<script module lang="ts">
+  export const mount = "visible";
+</script>
+
+<script lang="ts">
+  let { data } = $props();
+</script>
+```
+
+## Styles
+
+### `<style>`
+
+Svelte's own scoping works as it does anywhere. A `cart.css` beside the component is scoped by the build instead, with a scope derived from the assembly's name, and every file it names beside it is built with it.
+
+## On a page
+
+### `<assembly name="cart"></assembly>`
+
+In any page template under `src/pages`. A local placement needs no policy at all.
+
+### `home.page.ts`
+
+Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds, markup to show when the assembly does not answer, whether its failure fails the page, or a deferral the browser fills after load.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
+
+## Run it
+
+### `npm run dev`
+
+Builds, starts, and rebuilds on every change.
+
+### `npx assemblejs check`
+
+Every problem found without building, Svelte not being installed among them.
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.
+
+# For Preact developers
+
+Source: [docs/preact.html](docs/preact.html)
+
+A Preact assembly is a component in a file whose name says it is Preact. The server renders it, the browser hydrates it, and the page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its conformance fixtures, its design document or its tests.
+
+## Install the renderer
+
+### `npm install @assemblejs/renderer-preact preact`
+
+One renderer package per framework, so a project that has no React never installs React. Preact 11; the renderer's own machinery, `preact-render-to-string`, comes with it.
+
+## The view
+
+### `npx assemblejs add assembly cart --renderer preact`
+
+Writes `src/assemblies/cart/cart.preact.tsx` and nothing else: the directory is the assembly, and the `.preact` infix says the framework, because React, Preact and Solid all write `.tsx`. Your server file does not change.
+
+```
+import type { AssemblyProps } from "@assemblejs/renderer-preact";
+
+export default function Cart({ data }: AssemblyProps) {
+  return <p>cart {Object.keys(data).length}</p>;
+}
+```
+
+### One prop, nothing else
+
+`data` is what the assembly's services returned, as JSON; `AssemblyProps` takes its shape as a type argument. No request, no headers, no cookies cross to the component, and nothing of the assemblies it holds: it places those with a slot.
+
+### An assembly inside this one
+
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Preact leaves it alone when this component renders again. The name is written in place. A `view` may come from `data`.
+
+```
+import { Slot } from "@assemblejs/renderer-preact/client";
+
+export default function Cart() {
+  return (
+    <section class="cart">
+      <Slot name="price" />
+    </section>
+  );
+}
+```
+
+### A component beside it
+
+A file in the assembly's directory with no framework in its name compiles as Preact, because its assembly is one; the build names the JSX runtime for each file from the framework its name says, else from the assembly whose directory holds it.
+
+```
+// A component with no framework in its name: it compiles as Preact because its assembly is one.
+export function Label({ count }: { readonly count: number }) {
+  return <>preact {count}</>;
+}
+```
+
+## Data from the server
+
+### `cart.service.ts`
+
+A service beside the view runs on the server before the render and returns the data. It is given the request's `query` and the route `params` of the page that placed the assembly, and the same function answers the assembly's data endpoint, so the two cannot disagree. The component reads the result as `data`.
+
+```
+import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () => ({ label: "Clicked" }),
+});
+```
+
+## Talking to the rest of the page
+
+### `useEvents()`
+
+From `@assemblejs/renderer-preact/client`; the hooks are Preact's own, from `preact/hooks`. The object is scoped to this assembly: `send` stamps the sender, `on` returns its unsubscribe, so returning it from an effect is the whole cleanup; what is still subscribed when the page unmounts its assemblies is released then. The counter from the frameworks example sends on every click and hears every other counter on the page, React, Svelte, Vue, Solid or Lit, with no adapter between them.
+
+```
+import { useEvents } from "@assemblejs/renderer-preact/client";
+import { useEffect, useState } from "preact/hooks";
+import { Label } from "./label.js";
+
+export default function PreactCounter() {
+  const events = useEvents();
+  const [count, setCount] = useState(0);
+  const [heard, setHeard] = useState("nothing");
+  useEffect(() => events.on("counted", (message) => setHeard(message.from.name)), [events]);
+  return (
+    <section>
+      <button
+        type="button"
+        id="preact-bump"
+        onClick={() => {
+          setCount(count + 1);
+          events.send("counted", { count: count + 1 });
+        }}
+      >
+        <Label count={count} />
+      </button>
+      <span id="preact-heard">{heard}</span>
+    </section>
+  );
+}
+```
+
+### On the server
+
+The component renders inside the same events context it hydrates inside, holding the server's events, so a component that calls `useEvents()` renders on the server as in the browser: a subscription made there is accepted and never called, and `last` answers nothing.
+
+### `events.last(topic)`
+
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes.
+
+## When it runs in the browser
+
+### `export const mount = "idle"`
+
+Declared by the view. `load` mounts at once and is the default; `idle` waits for the browser to be idle; `visible` waits until the envelope scrolls into view; `none` never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest. A value that is none of the four reads as `none`, so a typo cannot start code running on a page whose author was saying when it should run.
+
+```
+// Mounted when the browser is idle.
+export const mount = "idle";
+
+export default function IdleLabel() {
+  return <p class="label">mounts when idle</p>;
+}
+```
+
+### `export const shadow = true`
+
+Renders the assembly in its own shadow root: no page style reaches in, none of its own leaks out. The box from the shadow example, where every framework counts in a root of its own.
+
+```
+import { useState } from "preact/hooks";
+
+export const shadow = true;
+
+export default function PreactBox() {
+  const [count, setCount] = useState(0);
+  return (
+    <button type="button" class="bump" id="preact-bump" onClick={() => setCount(count + 1)}>
+      preact {count}
+    </button>
+  );
+}
+```
+
+## Styles
+
+### `cart.css`
+
+A stylesheet beside the view is compiled with a scope derived from the assembly's name, so two assemblies written apart cannot collide; the view in its own shadow root links a second sheet, built for that root. Every file it names beside it, an image or a font, is built with it; one it cannot carry is a build problem, not a broken link found later. The box above writes `class`, as Preact reads it, and its sheet beside it is one rule.
+
+```
+.bump {
+  color: rgb(0, 128, 0);
+}
+```
+
+## On a page
+
+### `<assembly name="cart"></assembly>`
+
+In any page template under `src/pages`. A local placement needs no policy at all.
+
+### `home.page.ts`
+
+Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds, markup to show when the assembly does not answer, whether its failure fails the page, or a deferral the browser fills after load.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
+
+## Run it
+
+### `npm run dev`
+
+Builds, starts, and rebuilds on every change.
+
+### `npx assemblejs check`
+
+Every problem found without building: a placement naming an assembly that does not exist, policy nothing reads, the renderer not installed, a view named `cart.tsx`, which does not say its framework.
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.
+
+# For Solid developers
+
+Source: [docs/solid.html](docs/solid.html)
+
+A Solid assembly is a component in a file whose name says it is Solid, compiled by Solid's own compiler. The server renders it, the browser hydrates it, and the page it sits on can hold React or Vue beside it. Everything on this page is from the repository's own examples, its design document or its tests.
+
+## Install the renderer
+
+### `npm install @assemblejs/renderer-solid solid-js`
+
+One renderer package per framework, so a project that has no React never installs React. Solid 1.9.15 or newer in the 1.x line. Solid's JSX is compiled by Solid's own Babel preset, a dependency of the renderer, which the build loads from the project's own copy of the renderer, so there is nothing else to install.
+
+## The view
+
+### `npx assemblejs add assembly cart --renderer solid`
+
+Writes `src/assemblies/cart/cart.solid.tsx` and nothing else: the directory is the assembly, and the `.solid` infix says the framework, because React, Preact and Solid all write `.tsx`. Your server file does not change. The scaffold reads `props.data` and does not destructure.
+
+```
+import type { AssemblyProps } from "@assemblejs/renderer-solid";
+
+export default function Cart(props: AssemblyProps) {
+  return <p>cart {Object.keys(props.data).length}</p>;
+}
+```
+
+### One prop, nothing else
+
+`data` is what the assembly's services returned, as JSON; `AssemblyProps` takes its shape as a type argument. No request, no headers, no cookies cross to the component, and nothing of the assemblies it holds: it places those with a slot. A component in the assembly's directory compiles as Solid like the view does.
+
+### An assembly inside this one
+
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Solid leaves it alone when this component renders again. The name is written in place. A `view` may come from `data`.
+
+```
+import { Slot } from "@assemblejs/renderer-solid/client";
+
+export default function Cart() {
+  return (
+    <section class="cart">
+      <Slot name="price" />
+    </section>
+  );
+}
+```
+
+### What the server renders
+
+Rendering is synchronous, because an assembly's data comes from its services. A resource is not rendered on the server: the server sends its Suspense fallback, and hydrating a fallback is not supported. A lazy component renders on the server only once its module is loaded, which a server does by preloading it. The inline script Solid writes for its own bootstrap is left out of the markup, because the page's policy refuses it; each assembly hydrates with a hydration state of its own, so two Solid assemblies on one page both keep the elements the server sent.
+
+## Data from the server
+
+### `cart.service.ts`
+
+A service beside the view runs on the server before the render and returns the data. It is given the request's `query` and the route `params` of the page that placed the assembly, and the same function answers the assembly's data endpoint, so the two cannot disagree. The component reads the result as `props.data`.
+
+```
+import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () => ({ label: "Clicked" }),
+});
+```
+
+## Talking to the rest of the page
+
+### `useEvents()`
+
+From `@assemblejs/renderer-solid/client`. The object is scoped to this assembly: `send` stamps the sender and `on` returns its unsubscribe. Subscribe in `onMount` and hand the unsubscribe to `onCleanup`; what is still subscribed when the page unmounts its assemblies is released then. The counter from the frameworks example sends on every click and hears every other counter on the page, React, Svelte, Preact, Vue or Lit, with no adapter between them.
+
+```
+import { useEvents } from "@assemblejs/renderer-solid/client";
+import { createSignal, onCleanup, onMount } from "solid-js";
+
+export default function SolidCounter() {
+  const events = useEvents();
+  const [count, setCount] = createSignal(0);
+  const [heard, setHeard] = createSignal("nothing");
+  onMount(() => {
+    const stop = events.on("counted", (message) => setHeard(message.from.name));
+    onCleanup(stop);
+  });
+  return (
+    <section>
+      <button
+        type="button"
+        id="solid-bump"
+        onClick={() => {
+          setCount(count() + 1);
+          events.send("counted", { count: count() });
+        }}
+      >
+        solid {count()}
+      </button>
+      <span id="solid-heard">{heard()}</span>
+    </section>
+  );
+}
+```
+
+### On the server
+
+The component renders inside the same events context it hydrates inside, holding the server's events, so a component that calls `useEvents()` renders on the server as in the browser: a subscription made there is accepted and never called, and `last` answers nothing.
+
+### `events.last(topic)`
+
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes.
+
+## When it runs in the browser
+
+### `export const mount = "visible"`
+
+Declared by the view, beside its default export. `load` mounts at once and is the default; `idle` waits for the browser to be idle; `visible` waits until the envelope scrolls into view; `none` never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest. A value that is none of the four reads as `none`, so a typo cannot start code running on a page whose author was saying when it should run.
+
+### `export const shadow = true`
+
+Renders the assembly in its own shadow root: no page style reaches in, none of its own leaks out. The box from the shadow example, where every framework counts in a root of its own.
+
+```
+import { createSignal } from "solid-js";
+
+export const shadow = true;
+
+export default function SolidBox() {
+  const [count, setCount] = createSignal(0);
+  return (
+    <button type="button" class="bump" id="solid-bump" onClick={() => setCount(count() + 1)}>
+      solid {count()}
+    </button>
+  );
+}
+```
+
+## Styles
+
+### `cart.css`
+
+A stylesheet beside the view is compiled with a scope derived from the assembly's name, so two assemblies written apart cannot collide; the view in its own shadow root links a second sheet, built for that root. Every file it names beside it, an image or a font, is built with it; one it cannot carry is a build problem, not a broken link found later. The box above has one rule beside it.
+
+```
+.bump {
+  color: rgb(0, 128, 0);
+}
+```
+
+## On a page
+
+### `<assembly name="cart"></assembly>`
+
+In any page template under `src/pages`. A local placement needs no policy at all.
+
+### `home.page.ts`
+
+Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds, markup to show when the assembly does not answer, whether its failure fails the page, or a deferral the browser fills after load.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
+
+## Run it
+
+### `npm run dev`
+
+Builds, starts, and rebuilds on every change.
+
+### `npx assemblejs check`
+
+Every problem found without building: a placement naming an assembly that does not exist, policy nothing reads, the renderer not installed, a view named `cart.tsx`, which does not say its framework.
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.
+
+# For Lit developers
+
+Source: [docs/lit.html](docs/lit.html)
+
+A Lit assembly is a view, `cart.lit.ts`, a function from the assembly's props to a Lit template, and the elements it places are yours. The server renders it, each element into a declarative shadow root; the browser hydrates it, and the page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its design document or its tests.
+
+## Install the renderer
+
+### `npm install @assemblejs/renderer-lit lit`
+
+One renderer package per framework, so a project that has no React never installs React. Lit 3.3.3 or newer in the 3.x line; the renderer's own machinery, `@lit-labs/ssr` for the server and `@lit-labs/ssr-client` for the browser, comes with it.
+
+## The view
+
+### `npx assemblejs add assembly cart --renderer lit`
+
+Writes `src/assemblies/cart/cart.lit.ts` and nothing else: the directory is the assembly, and the `.lit` infix says the framework, because a Lit view is TypeScript like a service or a client file. Your server file does not change.
+
+```
+import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import { html } from "lit";
+
+export default (props: AssemblyProps) => html`<p>cart ${Object.keys(props.data).length}</p>`;
+```
+
+### Two props
+
+`data` is what the assembly's services returned, as JSON; `AssemblyProps` takes its shape as a type argument. `events` is this assembly's own events object, handed in as a prop because a template function has no context to read it from; the view hands it to its elements as a property. No request, no headers, no cookies cross to the view, and nothing of the assemblies it holds: it places those with a slot. A second `.lit.ts` in the directory is one of the view's own elements, not a second view.
+
+### An assembly inside this one
+
+`slot()` places another assembly where it stands in the view's template, by name. The server puts it there, and the page's runtime mounts it as it mounts this one. The name is written as a string. A second argument names a view, and may come from `data`.
+
+```
+import { slot } from "@assemblejs/renderer-lit/client";
+import { html } from "lit";
+
+export default () => html`<section class="cart">${slot("price")}</section>`;
+```
+
+A Lit view holds a Lit assembly only behind a shadow root. Lit hydrates a view by reading every marker in its tree, and would read that assembly's as its own, so the view refuses to mount and `check` says so first. The assembly it holds takes one line: `export const shadow = true` in its view. An assembly written in anything else needs nothing.
+
+### What the server renders
+
+The template with the markers hydration reads, and every Lit element in it rendered into a declarative shadow root, so the page is whole before any script runs. An element's `static styles` are left out of that root, because Lit writes them as an inline `<style>` and the page's default policy refuses one; the browser adopts the same styles as constructed sheets when the element hydrates, so an element is styled once it hydrates.
+
+## Data from the server
+
+### `cart.service.ts`
+
+A service beside the view runs on the server before the render and returns the data. It is given the request's `query` and the route `params` of the page that placed the assembly, and the same function answers the assembly's data endpoint, so the two cannot disagree. The view reads the result as `props.data`.
+
+```
+import { defineService } from "@assemblejs/core";
+
+export default defineService({
+  name: "label",
+  schema: { properties: { label: { type: "string" } }, required: ["label"] },
+  run: () => ({ label: "Clicked" }),
+});
+```
+
+## Talking to the rest of the page
+
+### `.events=${props.events}`
+
+There is no `useEvents` for Lit: the view binds the events object to an element as a property, and the element subscribes when the property arrives, which is at hydration, after the element is defined. `send` stamps the sender and `on` returns its unsubscribe; what is still subscribed when the page unmounts its assemblies is released then. The counter from the frameworks example sends on every click and hears every other counter on the page, React, Svelte, Preact, Vue or Solid, with no adapter between them.
+
+```
+import type { Events } from "@assemblejs/core/client";
+import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import { LitElement, css, html } from "lit";
+
+// A Lit element: rendered into a declarative shadow root on the server, hydrated in the browser.
+class LitCounter extends LitElement {
+  static override properties = {
+    count: { state: true },
+    heard: { state: true },
+    events: { attribute: false },
+  };
+  static override styles = css`
+    button {
+      color: rgb(120, 0, 120);
+    }
+  `;
+  declare count: number;
+  declare heard: string;
+  declare events: Events | undefined;
+  private stop: (() => void) | undefined;
+
+  constructor() {
+    super();
+    this.count = 0;
+    this.heard = "nothing";
+  }
+
+  // The element is defined before hydration hands it the assembly's events, so it subscribes
+  // whenever they arrive or change, not when it connects.
+  override willUpdate(changed: Map<PropertyKey, unknown>): void {
+    if (!changed.has("events")) return;
+    this.stop?.();
+    this.stop = this.events?.on("counted", (message) => (this.heard = message.from.name));
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.stop?.();
+  }
+
+  override render() {
+    return html`<button
+        type="button"
+        id="lit-bump"
+        @click=${() => {
+          this.count += 1;
+          this.events?.send("counted", { count: this.count });
+        }}
+      >
+        lit ${this.count}
+      </button>
+      <span id="lit-heard">${this.heard}</span>`;
+  }
+}
+if (customElements.get("lit-counter") === undefined)
+  customElements.define("lit-counter", LitCounter);
+
+export default (props: AssemblyProps) => html`<lit-counter .events=${props.events}></lit-counter>`;
+```
+
+### On the server
+
+The view renders with the server's events, as it hydrates with the page's: a subscription made there is accepted and never called, and `last` answers nothing. The same file runs on both sides without asking which one it is on.
+
+### `events.last(topic)`
+
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An element that is handed the events late reads what it missed with `last`, then subscribes.
+
+## When it runs in the browser
+
+### Lit's hydration support, first
+
+The build imports `@assemblejs/renderer-lit/hydration-support` first in the page's one script, before the runtime and before any assembly's own module, because Lit's support for hydrating elements a server rendered must be installed before Lit's element base loads. Nothing to do: the renderer's client entry imports it first as well, for a page assembled some other way.
+
+### `export const mount = "visible"`
+
+Declared by the view, beside its default export. `load` mounts at once and is the default; `idle` waits for the browser to be idle; `visible` waits until the envelope scrolls into view; `none` never mounts: the runtime reads the mode and leaves the assembly as the server sent it, and the page still carries the runtime for the rest. A value that is none of the four reads as `none`, so a typo cannot start code running on a page whose author was saying when it should run.
+
+### `export const shadow = true`
+
+Renders the whole assembly in a shadow root of its own, outside any element's: no page style reaches in, none of its own leaks out. The box from the shadow example is a template with no element in it, whose button counts through its own binding.
+
+```
+import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import { html } from "lit";
+
+export const shadow = true;
+
+// A template whose button counts by re-rendering the view in place, through its own binding.
+export default (props: AssemblyProps) => {
+  void props;
+  return html`<button
+    type="button"
+    class="bump"
+    id="lit-bump"
+    @click=${(event: Event) => {
+      const button = event.currentTarget as HTMLButtonElement;
+      const count = Number(button.dataset["count"] ?? "0") + 1;
+      button.dataset["count"] = String(count);
+      button.textContent = `lit ${String(count)}`;
+    }}
+  >
+    lit 0
+  </button>`;
+};
+```
+
+## Styles
+
+### `static styles`
+
+An element's own styles work as they do anywhere in Lit, adopted into its shadow root when it hydrates, as above.
+
+### `cart.css`
+
+A stylesheet beside the view styles the template itself, outside the elements. It is compiled with a scope derived from the assembly's name, so two assemblies written apart cannot collide; the view in its own shadow root links a second sheet, built for that root. Every file it names beside it, an image or a font, is built with it; one it cannot carry is a build problem, not a broken link found later. The box above has one rule beside it.
+
+```
+.bump {
+  color: rgb(0, 128, 0);
+}
+```
+
+## On a page
+
+### `<assembly name="cart"></assembly>`
+
+In any page template under `src/pages`. A local placement needs no policy at all.
+
+### `home.page.ts`
+
+Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds, markup to show when the assembly does not answer, whether its failure fails the page, or a deferral the browser fills after load.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
+
+## Run it
+
+### `npm run dev`
+
+Builds, starts, and rebuilds on every change.
+
+### `npx assemblejs check`
+
+Every problem found without building: a placement naming an assembly that does not exist, policy nothing reads, the renderer not installed, a `.client.ts` beside a view whose browser behaviour is its elements already.
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.
+
+# For template authors
+
+Source: [docs/templates.html](docs/templates.html)
+
+A template assembly is one file in EJS, Handlebars, Nunjucks, Pug or Markdown, rendered on the server by its own engine and nothing else; it ships no JavaScript unless a file beside it asks for some. The page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its conformance fixtures, its design document or its tests.
+
+## Install the renderer
+
+### `npm install @assemblejs/renderer-templates`
+
+One package for the five languages, with no framework to install beside it: the five engines are its own dependencies, and each is imported the first time a template in its language renders, so a project using one language never loads the other four.
+
+## The view
+
+### `npx assemblejs add assembly cart --renderer ejs`
+
+Writes `src/assemblies/cart/cart.ejs` and nothing else: the directory is the assembly, and the extension names the language, so nothing is registered and your server file does not change. `--renderer handlebars` writes `cart.hbs`, `nunjucks` writes `cart.njk`, `pug` writes `cart.pug` and `markdown` writes `cart.md`. The first four read a title from the data and fall back to the assembly's name; the Markdown one is a heading.
+
+```
+<p><%= data.title ?? "cart" %></p>
+```
+
+```
+<p>{{#if data.title}}{{data.title}}{{else}}cart{{/if}}</p>
+```
+
+```
+<p>{{ data.title or "cart" }}</p>
+```
+
+```
+p= data.title || "cart"
+```
+
+```
+# cart
+```
+
+### One name, `data`
+
+`data` is what the assembly's services returned, as JSON. Nothing else reaches the template: no request, no headers, no cookies. In EJS it is the template's only local, in strict mode.
+
+### Escaped by default
+
+What a template writes from `data` is escaped by every engine that reads it. From the renderer's tests: given a `name` of `<b>`, each of these four writes `&lt;b&gt;`.
+
+```
+<p><%= data.name %></p>
+```
+
+```
+<p>{{data.name}}</p>
+```
+
+```
+<p>{{ data.name }}</p>
+```
+
+```
+p #{data.name}
+```
+
+Pug's escaping leaves `'` as it is: write an attribute with Pug's own syntax, `a(title=data.name)`, rather than inside a single-quoted attribute in raw HTML.
+
+### An assembly inside this one
+
+A template places another assembly by writing the directive in its own markup, as a page does, whatever that assembly is written in. The server puts it where the directive stood. The name is written as it is; a `view` may come from `data`. Pug writes the directive in its own syntax.
+
+```
+<section><assembly name="price" view="<%= data.priceView %>"></assembly></section>
+```
+
+```
+<section><assembly name="price"></assembly></section>
+```
+
+```
+section
+  assembly(name="price")
+```
+
+### Markdown is prose
+
+A `.md` view reads no data and places no assembly, and HTML written inside it is shown as text; an `.html` view is the place for markup. The notes from the templates example.
+
+```
+# Five template languages
+
+Each card below is written in its own language and rendered on the _server_. None of them
+ships any JavaScript.
+```
+
+### A view is one file
+
+An include, an extends, an import or a partial from another file is refused, so a template never reads from wherever the server happens to run; a Handlebars inline partial, defined in the same file, renders. Handlebars templates compile in an instance of the package's own, so a helper or partial another library registers on the shared Handlebars never reaches them. An error names the view's file, which the engines' own messages do not.
+
+## Data from the server
+
+### `ejs-card.service.ts`
+
+A service beside the view runs on the server before the render and returns the data. It is given the request's `query` and the route `params` of the page that placed the assembly, and the same function answers the assembly's data endpoint, so the two cannot disagree. The templates example gives each card a title with markup in it, which the template writes escaped.
+
+```
+import { defineService } from "@assemblejs/core";
+
+// A title with markup in it, which the template writes escaped.
+export default defineService({
+  name: "card",
+  schema: {
+    properties: { title: { type: "string" }, items: { type: "array", items: { type: "string" } } },
+    required: ["title", "items"],
+  },
+  run: () => ({ title: "Written in ejs <em>escaped</em>", items: ["one", "two"] }),
+});
+```
+
+### `ejs-card.ejs`
+
+The card, reading the title and looping the items.
+
+```
+<section class="card" data-engine="ejs">
+  <h2><%= data.title %></h2>
+  <ul><% for (const item of data.items) { %><li><%= item %></li><% } %></ul>
+</section>
+```
+
+### `handlebars-card.hbs`
+
+The same card in Handlebars.
+
+```
+<section class="card" data-engine="handlebars">
+  <h2>{{data.title}}</h2>
+  <ul>{{#each data.items}}<li>{{this}}</li>{{/each}}</ul>
+</section>
+```
+
+### `nunjucks-card.njk`
+
+The same card in Nunjucks.
+
+```
+<section class="card" data-engine="nunjucks">
+  <h2>{{ data.title }}</h2>
+  <ul>{% for item in data.items %}<li>{{ item }}</li>{% endfor %}</ul>
+</section>
+```
+
+### `pug-card.pug`
+
+The same card in Pug.
+
+```
+section.card(data-engine="pug")
+  h2= data.title
+  ul
+    each item in data.items
+      li= item
+```
+
+## When it runs in the browser
+
+### Nothing, unless you say so
+
+A template view is server markup and nothing more. An assembly made of one is declared `none`: it never mounts and ships no JavaScript at all.
+
+### `cart.client.ts`
+
+A `.client.ts` beside the view is the assembly's browser half. It default-exports an object whose `mount` is given the envelope, already resolved, the assembly's data, and a context holding its id, its name, its view and its events object, scoped to it as any framework's is, and returns a handle the runtime calls to unmount. The badge from the conformance suite, an `.html` view with a browser half, is the whole shape.
+
+```
+// A browser half, so the assembly has a script and a stylesheet among its assets and the page
+// carries the runtime that opens its stream.
+export default {
+  mount: (element: Element | ShadowRoot) => {
+    if (element instanceof Element) element.setAttribute("data-mounted", "");
+    return { unmount: () => undefined };
+  },
+};
+```
+
+### When it mounts
+
+When the page loads. The mount modes and the shadow root are a framework view's exports; a template view has none, so an assembly with a `.client.ts` mounts at once and in the page's own tree.
+
+## Styles
+
+### `cart.css`
+
+A stylesheet beside the view is compiled with a scope derived from the assembly's name, so two assemblies written apart cannot collide. Every file it names beside it, an image or a font, is built with it; one it cannot carry is a build problem, not a broken link found later. The EJS card's sheet, beside it.
+
+```
+.card {
+  border: 1px solid currentColor;
+  padding: 0.5rem;
+}
+```
+
+## On a page
+
+### `<assembly name="cart"></assembly>`
+
+In any page template under `src/pages`. A local placement needs no policy at all. The templates example places one assembly per language on one page.
+
+```
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>five template languages, one page</title>
+  </head>
+  <body>
+    <assembly name="notes"></assembly>
+    <assembly name="ejs-card"></assembly>
+    <assembly name="handlebars-card"></assembly>
+    <assembly name="nunjucks-card"></assembly>
+    <assembly name="pug-card"></assembly>
+  </body>
+</html>
+```
+
+### `home.page.ts`
+
+Policy, when a placement needs any, lives in the page's own file: a deadline in milliseconds, markup to show when the assembly does not answer, whether its failure fails the page, or a deferral the browser fills after load.
+
+```
+import { definePage } from "@assemblejs/core";
+
+export default definePage({
+  place: { cart: { deadline: 500, fallback: "<p>Cart unavailable</p>" } },
+});
+```
+
+## Run it
+
+### `npm run dev`
+
+Builds, starts, and rebuilds on every change.
+
+### `npx assemblejs check`
+
+Every problem found without building, among them a template its engine cannot read: each view is compiled with the engines the project's own package loads, and one that throws is reported naming the file and what the engine said. Markdown never fails to compile. What an engine resolves only as it renders, a value the data has not or a helper the template lacks, throws then, and the placement falls back.
+
+### `npx assemblejs build`
+
+Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.

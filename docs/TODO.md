@@ -5,33 +5,30 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:47 EDT, after two small rows).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:54 EDT, after A-02).**
 
-STATE. Branch `next`. `origin/next` is `9ed39ef`, A-03, pushed 2026-10-10 02:44 EDT; its `ci`
-run is 38031831069, its `release` run 38031831044 and its `deploy-site` run 38031831024, all
-read to their end, green, and the two staging pages it changed are byte-identical to the
-branch. Beneath it: `0c43610`, one copy of the code in three packages (`ci` 38030937655,
-`release` 38030937681), and A-01, `a7d3edc`. Above it, signed, pushed with this block: two
-small rows, the specs that built one example in place and the shape of a name written six
-times. Every package reads `1.0.0-next.0`; sixteen changesets are pending. The owner's
-overnight order (estate D1216): work the bites to code completion and get the landing page
-onto staging; no questions until morning. The landing page is on staging: `/assemblejs/next/`
-on the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on
-`next` deploys there. `/assemblejs/` deploys from `main`, which has no `site/` yet: the
-owner's morning list. His rulings in this seat stand: no subagents, the seat does the work
-itself; every bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
+STATE. Branch `next`. `origin/next` is `20547ae`, two small rows, pushed 2026-10-10 02:48 EDT;
+its `ci` run is 38032256041 and its `release` run 38032256072, both read to their end, green.
+Beneath it: A-03, `9ed39ef` (`ci` 38031831069, `release` 38031831044, `deploy-site`
+38031831024); one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above
+it, signed, pushed with this block: the A-02 commit this block lands in, which touches
+`site/**` and the deploy workflow and so fires `deploy-site` as well. Every package reads
+`1.0.0-next.0`; sixteen changesets are pending. The owner's overnight order (estate D1216):
+work the bites to code completion and get the landing page onto staging; no questions until
+morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
+200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
+`/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
+rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
+self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is A-02 (PLAN 4.1): `llms.txt` and `llms-full.txt` on the site, generated
-from `site/pages.json` and the pages by a script that `check:site` runs with `--check`, as
-`scripts/site-links.mjs` generates the links; a page missing from either is refused, and a
-hand edit of either is a drift the check finds. The format is llmstxt.org's (read 2026-10-10:
-an H1, a blockquote, file lists under H2s, an "Optional" section); the page text for the full
-file is read with the DOM the tests already use (`happy-dom`), and an element the converter
-does not know fails the run. Then A-04's design memo, which waits on the owner's answer before
-any code. A-01 and A-03 are done: a new project carries its agent instructions and
-registrations, and the agent surface lists four prompts. The rows they found come after the
-ladder: DESIGN 13.3's five resources, of which the server has two, and `render_assembly` and
-`compose_page` showing only plain html views. The subassembly rung is done: S-01 to S-09.
+THE EXACT NEXT STEP is A-04's design memo (PLAN 4.1): built-in components and best practices,
+a token-based starter design system with accessible components, and `check` rules that refuse
+what reads as machine-made. The memo and the owner's answer come before any code: write the
+memo under `docs/`, put its question on the estate's morning list, and build nothing. A-01,
+A-03 and A-02 are done. After the memo, the rows the rungs found, largest first:
+`render_assembly` and `compose_page` show only plain html views, so build what they must;
+DESIGN 13.3's five resources, of which the server has two; registrations for the clients
+beyond the three. The subassembly rung is done: S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -537,8 +534,18 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       `SEGMENT`; a project's own name is `PROJECT_NAME` in the command line, which `new` and
       the agent surface's `create_project` both ask. Seven mutations, one at each place a
       name is tested, each watched red (found 2026-10-10 writing A-03; fixed the same night)
-- [ ] A-02 `llms.txt` and `llms-full.txt` on the site, generated from `pages.json` and the
-      pages, declared and held by `check:site` and a drift test (owner, 2026-10-09, PLAN 4.1)
+- [x] A-02 `llms.txt` and `llms-full.txt` on the site, generated from `pages.json` and the
+      pages by `scripts/site-llms.mjs` and declared in the manifest; `check:site` refuses
+      either when it is not what the pages say, which is one check for a page added, a
+      sentence changed and a hand edit. Every link relative, since the folder is published at
+      two addresses. Self-verified: 16 mutations of the generator against its own self-test,
+      and the gate watched red on three known-bad sites (owner, 2026-10-09, PLAN 4.1;
+      DECISIONS 2026-10-10, A-02)
+- [ ] The instructions `new` writes do not name the documentation a model can read. Add the
+      address of `llms.txt` to them once it is settled which the project's version should be
+      sent to, the channel's `/assemblejs/next/` or the product's `/assemblejs/`, and that
+      address answers (found 2026-10-10 writing A-02; the product's address deploys from
+      `main`, which has no site yet)
 - [ ] A-04 built-in components and best practices: the design memo and the owner's answer
       first, then the starter design system, the accessible components and the `check` rules,
       each rule watched red (owner, 2026-10-09, PLAN 4.1)

@@ -3140,3 +3140,63 @@ it. A project's name is not a segment of the framework's grammar: it names a dir
 package. It has one definition of its own, `PROJECT_NAME` in the command line, which the
 command and `create_project` both ask. Each place that tests a name was watched red while it
 accepted any: seven mutations.
+
+## 2026-10-10: A-02, the site as text for a model to read
+
+Expected, from the plan (PLAN 4.1): `llms.txt` and `llms-full.txt` on the site, generated from
+`pages.json` and the pages, never hand-kept, declared in `pages.json`; `check:site` refuses a
+page missing from them; a drift test regenerates and diffs.
+
+What was read (2026-10-10):
+
+- `llmstxt.org`. The file is `llms.txt` "at the root path `/llms.txt` of a website or at any
+  subpath"; it holds "An H1 with the name of the project or site. This is the only required
+  section", a blockquote with a short summary, any Markdown but headings, and then sections
+  "delimited by H2 headers" holding file lists: "a required markdown hyperlink `[name](url)`,
+  then optionally a `:` and notes about the file". An "Optional" section is for "links an agent
+  can skip when a shorter context is needed". It does not mention `llms-full.txt`.
+- `mintlify.com/docs/ai/llmstxt`, for what the second file is where it is published:
+  `llms-full.txt` "combines your entire documentation site into a single file".
+- The AWS CLI's `s3 sync` reference, for the upload: `--content-type` "overrides any guessed
+  mime types".
+
+Settled:
+
+- **Generated, and held by one check.** `scripts/site-llms.mjs` writes both files from the
+  manifest and the pages, as `scripts/site-links.mjs` writes the links, and `--check` in
+  `check:site` refuses either when it is not what it would write. A page added to the manifest,
+  a sentence changed on a page and an edit by hand are the same drift. The manifest names the
+  two files, and a page says `in_llms: false` to be left out, which the 404 page does.
+- **The index is llmstxt.org's form.** The name from the manifest, the blockquote from the
+  landing page's description, its opening paragraph beneath, the pages under "Docs" in the
+  manifest's order, each with the first sentence beneath its title as its note, and the links
+  that leave the site under "Optional".
+- **The full file is every page as text**, in that order, each under its own title with where
+  it came from. A convention, not llmstxt.org's, and the script's own comment says so.
+- **Every link is relative.** The one folder is published at two addresses, the channel's and
+  the product's, and an absolute link would be right at one. A link inside a page is written
+  from the site's root, since the file that now holds it stands there.
+- **A page is read from its DOM, and what cannot be said fails the run.** The DOM is the one
+  the tests already use (`happy-dom`); the elements the pages use today each have a rule, and
+  an element with none, or words in no paragraph, stops the generator with the page's name.
+  Markup added to a page cannot go missing from the text without anyone being told. A "<" in
+  prose is kept from opening a tag, which a Markdown reader would show nothing of; code is
+  left as written.
+- **Uploaded as the pages are.** The deploy sent anything that was not a page with a week's
+  cache. The two files change when a page does, so they get the pages' five minutes, and are
+  named as text in utf-8.
+
+Not done: the instructions `new` writes do not point at `llms.txt` yet. Which address a
+project should be sent to is not settled, and the product's does not answer until `main` has
+a site. A row.
+
+Watched red. The generator tests itself, as the other site scripts do, and 16 mutations of it
+and of the page reader beside it, `scripts/site-page-text.mjs`, each alone, each failed that
+self-test: a footer said, a page the manifest leaves out read, an
+unknown element and words in no paragraph dropped in silence, a hand edit called right, a link
+not rewritten from the root, code not marked, a fence its own code could close, a note that is
+the whole paragraph, the landing page among the docs, a block of code in a description taken
+for a line, a label not said, no source given, the external links left out, a "<" in prose
+left to open a tag, and one in code escaped as if it were prose. And `pnpm
+check:site` refused three known-bad sites: the index edited by hand, a sentence changed on a
+page, and a page marked to be left out, each without the files being written again.

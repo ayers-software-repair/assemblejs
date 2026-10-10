@@ -93,10 +93,19 @@ jobs:
             --exclude "*" --include "*.html" \
             --cache-control "public, max-age=300" --only-show-errors
 
+      # llms.txt and llms-full.txt are the pages as text, so they change when a page does and
+      # are cached as the pages are. Named as text in utf-8, whatever the uploader would guess.
+      - name: Sync the pages as text (5 min cache)
+        run: |
+          aws s3 sync site/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/" \
+            --exclude "*" --include "*.txt" \
+            --content-type "text/plain; charset=utf-8" \
+            --cache-control "public, max-age=300" --only-show-errors
+
       - name: Sync assets - fonts, images, css (7 day cache)
         run: |
           aws s3 sync site/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/" \
-            --exclude "*.md" --exclude "*.html" --exclude "*.json" \
+            --exclude "*.md" --exclude "*.html" --exclude "*.json" --exclude "*.txt" \
             --cache-control "public, max-age=604800" --only-show-errors
 
       - name: Invalidate CloudFront (this prefix only)
