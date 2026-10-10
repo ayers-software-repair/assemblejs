@@ -19,6 +19,7 @@ import { DEV_RELOAD_SCRIPT } from "../vocab/dev-reload-script.js";
 import { hoistAssets } from "./hoist-assets.js";
 import { linkStream } from "./link-stream.js";
 import { logFallbacks } from "./log-fallbacks.js";
+import { pageAssets } from "./page-assets.js";
 import { pageFetch } from "./page-fetch.js";
 import { pagePlan } from "./page-plan.js";
 import { queryOf } from "./query-of.js";
@@ -91,25 +92,14 @@ export function registerPages(
         return reply.code(503).send(renderFailure(correlationId));
       }
 
-      const assets: { css: string[]; js: string[] } = {
-        css: [],
-        js:
-          options.reload === undefined
-            ? []
-            : [`${DEV_RELOAD_SCRIPT}?boot=${encodeURIComponent(options.reload)}`],
-      };
       logFallbacks(composed.diagnostics, `on page "${page.route}"`, log);
-      for (const diagnostic of composed.diagnostics) {
-        const url = Object.hasOwn(plan, diagnostic.name) ? plan[diagnostic.name]?.url : undefined;
-        const declared =
-          url === undefined
-            ? assemblies.get(diagnostic.name)?.assets
-            : await options.remote.assets(url);
-        // A shadow assembly's styles are linked inside its shadow root, never in the page.
-        const shadow = url === undefined && assemblies.get(diagnostic.name)?.shadow === true;
-        if (!shadow) assets.css.push(...(declared?.css ?? []));
-        assets.js.push(...(declared?.js ?? []));
-      }
+      const placed = await pageAssets(composed, plan, assemblies, options.remote);
+      // In development the page also carries the script that reloads it after a restart.
+      const reload =
+        options.reload === undefined
+          ? []
+          : [`${DEV_RELOAD_SCRIPT}?boot=${encodeURIComponent(options.reload)}`];
+      const assets = { css: placed.css, js: [...reload, ...placed.js] };
       return reply
         .header("content-type", "text/html; charset=utf-8")
         .send(linkStream(hoistAssets(composed.html, assets), page.stream));
