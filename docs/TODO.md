@@ -5,7 +5,7 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 05:27 EDT, after the root is held).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 05:41 EDT, after the second reading's first two).**
 
 STATE. Branch `next`. `origin/next` is `6a27a0c`, the release notes, pushed 2026-10-10
 04:05 EDT; its `ci` run is 38036708423, its `release` run 38036708409 and its `deploy-site` run
@@ -16,9 +16,11 @@ reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `
 `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above it,
 signed and pushed at 05:13 EDT: `8fe15a6`, the project's whole shape and each assembly as
 resources; its `ci` run is 38039133712 and its `release` run 38039133595, both read to their
-end, green. Above that, signed, pushed with this block: nothing outside a project's root is
-read.
-Every package reads `1.0.0-next.0`; twenty changesets are pending. The owner's overnight
+end, green. Above that, pushed at 06:52 EDT: `03a90fa`, nothing outside a project's root is
+read; its `ci` run is 38041855065 and its `release` run 38041854943, both read to their end,
+green. Above that, signed, pushed with this block: the second reading's first two findings,
+which change `site/**`.
+Every package reads `1.0.0-next.0`; twenty-one changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -28,27 +30,28 @@ every bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
 THE ORDER OF WORK, set by the lead on 2026-10-10 a little after 05:20 EDT:
 
-1. DONE, pushed with this block: every file a reader opens is held to the root, after links
-   are followed, in the agent surface and in `check`, by one definition both use.
+1. DONE, `03a90fa`: every file a reader opens is held to the root, after links are followed,
+   in the agent surface and in `check`, by one definition both use.
 2. THE SECOND READING OF THE DESIGN, nine findings, at
-   `~/source/AUDIT/evidence/2026-10-10-assemblejs-second-reading/findings.txt`, read whole.
-   Its 1 and 2 first, since the guides are on staging: in a project a child has one view, and
-   every guide tells its author to choose one from data, with a sample; and the design writes
-   the directive as an opening tag alone, which the finder refuses. Then its 4 with the
-   security work: an `<assembly>` a view writes unescaped from data is a placement, said
-   nowhere and held by no test. Then 3, 5, 6, 7, 8 and 9 by this seat's ranking. Each of the
-   nine ends fixed, rowed or the owner's, and the lead is told which.
+   `~/source/AUDIT/evidence/2026-10-10-assemblejs-second-reading/findings.txt`; the rows are
+   in Phase 2 below, each fixed or open. Its 1 and 2 are done, pushed with this block: a
+   project's assembly has one view and no surface tells its author to choose one from data;
+   the directive is written closed wherever it is shown. NEXT is its 4, with a spec: an
+   `<assembly>` a view writes unescaped from data is a placement, said nowhere in the design.
+   Then 3, 5, 6, 7 and 8, by this seat's ranking: 3 first, since two of its consequences are
+   held by no spec.
 3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
    pushed): its message says what is done and what is left. Bring it onto `next` after 2.
 4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
    server sends; then `compose_page` by a page's name (two rows in Phase 3 below).
 
 Then registrations for the clients beyond the three, and the rows under "AFTER IT" below.
-Four rows wait on the owner and are on the estate's morning list: A-04, whose memo is
+Five rows wait on the owner and are on the estate's morning list: A-04, whose memo is
 `docs/studies/built-in-components.md`; showing an agent a framework view, which means running
 the project's code; whether the twelve packages share one version, which a new project's
-manifest and the release-notes gate are both written as if they did; and folding the
-changesets waiting into the first entry before the first publish (DECISIONS 2026-10-10). A-01,
+manifest and the release-notes gate are both written as if they did; folding the changesets
+waiting into the first entry before the first publish; and whether an assembly in a project
+may have more than one view (DECISIONS 2026-10-10). A-01,
 A-03 and A-02 are done, the API reference and the release notes are done, and the
 subassembly rung, S-01 to S-09.
 
@@ -221,6 +224,67 @@ the record of what was read, and they stay in the private estate document store,
 - [x] Put the remaining open question to the owner, against the written design, in one pass
 - [x] Record his answers in `docs/DECISIONS.md`
 - [x] Freeze the ladder in `docs/PLAN.md`, one rung per gate, each with its proof command
+
+### The second reading of the design (the cto seat for the lead, 2026-10-10)
+
+Nine findings, read whole at
+`~/source/AUDIT/evidence/2026-10-10-assemblejs-second-reading/findings.txt`. Each ends fixed,
+rowed or the owner's; the numbers are the report's.
+
+- [x] 1. In a project a child has one view, and every guide, the rule and the fix `check`
+      gives told its author to choose one from data, with a sample that fails. Brought down
+      to what a project holds on every surface: the seven guides, the sample, the rule's
+      sentence, the fix, DESIGN 7 and 8. Core's own sentence, that a child with several views
+      is placed with the one its parent's data names, is true of an assembly declared by
+      hand and is held by a spec now (`core/test/server/render-local.test.ts`). Whether a
+      project's assembly may have more than one view is the owner's: the estate's morning
+      list (DECISIONS 2026-10-10, "the second reading")
+- [x] 2. The design wrote the directive as an opening tag alone, which the finder refuses.
+      Written closed in DESIGN 2.4, 7 and 14, in the rule, in what a finding shows, in two
+      tools' descriptions and in core's own word for it; DESIGN 2.4 says an opening tag alone
+      is refused and what fails
+- [ ] 3. "Read from its source before any request" is true of fewer views than DESIGN 7 and
+      14 say, and what follows for the rest is said nowhere: a module that does not compile, a
+      slot reached through a namespace import, a view file that is not js, ts, svelte or vue,
+      a template that does not read once its engine's parts are masked, and Pug. For such a
+      view a deferred parent's children lose their stylesheets linked ahead, a page whose only
+      browser half stands beneath one is refused a deferral or a stream, and a missing name, a
+      missing view or a loop is not refused at boot. Say it in the design, and hold the first
+      two with specs, which nothing does
+- [ ] 4. NEXT, with the security work. "Which child it is may not come from data" is held by
+      `check` alone: the composer reads the markup a view rendered, so a name a view writes
+      from data is placed like any other, and any `<assembly>` a view writes unescaped from
+      data is a placement. The one spec of it covers the escaped case. Say in the design what
+      an unescaped value can place, and hold it with a spec
+- [ ] 5. A loop is refused at boot only where every hop writes its view; a placement whose
+      view is computed is held for its name alone and not followed, so such a loop is refused
+      at render. DESIGN 3.4 and 7 say "at boot" of every loop
+- [ ] 6. Four renderers' slots put an element of their own around the child,
+      `<div data-assembly-slot="name">` in React, Preact, Vue and Solid, where Svelte, Lit,
+      html and the templates write the directive bare. Neither the design nor a guide names
+      the element, and DESIGN 2.4 says each envelope stands where the view placed it. Say it,
+      or make the six the same
+- [ ] 7. The listings in DESIGN 3.1 and 3.2 lack what nesting added and what came before it:
+      `nested` on an answer, `children` on a diagnostic, the plan as a record by name with a
+      page, a depth, a path, a query and params, the reasons `depth` and `cycle`, and `params`
+      on a request
+- [ ] 8. What the code does about a held assembly that the design does not say, each read by
+      the reader and none judged: a parent whose markup holds a directive the finder cannot
+      read fails whole; a parent's deadline ends its child too; the content endpoint hands
+      its render no signal, so the children of a parent asked over HTTP are not stopped when
+      the asker gives up; the byte cap is measured on a parent with its children inside it; a
+      deferred fill sends no page id; a page waits up to a second for a remote's manifests on
+      first sight of a version; a slot whose name or view changes in the browser writes a
+      directive nothing composes; a placement whose settling throws renders as nothing, where
+      DESIGN 3.3 says an empty envelope, and no spec reaches that branch. One of them is
+      fixed: the comment in `core/src/client/find-envelopes.ts` said the opposite of DESIGN
+      2.4, and now says what the code does
+- [x] 9. Three citations in the record of S-09 held less than their sentence, or pointed
+      beside what holds it. Corrected where they are read, DECISIONS 2026-10-10, "the second
+      reading": the conformance case is retitled to what it holds, the cache's refusal is in
+      `placement-cache.test.ts`, and a Svelte parent hydrating around its child is in the
+      browser proof. Also from the report, not numbered: the remote spec asks a producer at
+      depth 1 and at 8 and never at 7, the last depth at which a child is still placed
 
 ## Phase 3: the ladder
 

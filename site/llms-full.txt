@@ -471,7 +471,7 @@ export default function Cart({ data }: AssemblyProps) {
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; React leaves it alone when this component renders again. The name is written in place. A `view` may come from `data`.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; React leaves it alone when this component renders again. The name is written in place. An assembly in a project has one view, so no `view` is given.
 
 ```
 import { Slot } from "@assemblejs/renderer-react/client";
@@ -635,7 +635,7 @@ defineProps<{ data: Record<string, unknown> }>();
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Vue leaves it alone when this component renders again. The name is written as a string. A `view` may be bound to `data`.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Vue leaves it alone when this component renders again. The name is written as a string. An assembly in a project has one view, so no `view` is given.
 
 ```
 <script setup lang="ts">
@@ -795,7 +795,7 @@ Writes `src/assemblies/cart/cart.svelte` and nothing else. The extension says th
 
 ### An assembly inside this one
 
-`slot()` answers the markup that places another assembly, by name, whatever that assembly is written in, for Svelte's own raw form to write. The server puts the assembly there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when this component renders again. The name is written as a string. A second argument names a view, and may come from `data`.
+`slot()` answers the markup that places another assembly, by name, whatever that assembly is written in, for Svelte's own raw form to write. The server puts the assembly there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when this component renders again. The name is written as a string. An assembly in a project has one view, so the second argument, which names one, is left out.
 
 ```
 <script lang="ts">
@@ -964,7 +964,7 @@ export default function Cart({ data }: AssemblyProps) {
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Preact leaves it alone when this component renders again. The name is written in place. A `view` may come from `data`.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Preact leaves it alone when this component renders again. The name is written in place. An assembly in a project has one view, so no `view` is given.
 
 ```
 import { Slot } from "@assemblejs/renderer-preact/client";
@@ -1157,7 +1157,7 @@ export default function Cart(props: AssemblyProps) {
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Solid leaves it alone when this component renders again. The name is written in place. A `view` may come from `data`.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Solid leaves it alone when this component renders again. The name is written in place. An assembly in a project has one view, so no `view` is given.
 
 ```
 import { Slot } from "@assemblejs/renderer-solid/client";
@@ -1335,7 +1335,7 @@ export default (props: AssemblyProps) => html`<p>cart ${Object.keys(props.data).
 
 ### An assembly inside this one
 
-`slot()` places another assembly where it stands in the view's template, by name. The server puts it there, and the page's runtime mounts it as it mounts this one. The name is written as a string. A second argument names a view, and may come from `data`.
+`slot()` places another assembly where it stands in the view's template, by name. The server puts it there, and the page's runtime mounts it as it mounts this one. The name is written as a string. An assembly in a project has one view, so the second argument, which names one, is left out.
 
 ```
 import { slot } from "@assemblejs/renderer-lit/client";
@@ -1594,11 +1594,7 @@ Pug's escaping leaves `'` as it is: write an attribute with Pug's own syntax, `a
 
 ### An assembly inside this one
 
-A template places another assembly by writing the directive in its own markup, as a page does, whatever that assembly is written in. The server puts it where the directive stood. The name is written as it is; a `view` may come from `data`. Pug writes the directive in its own syntax.
-
-```
-<section><assembly name="price" view="<%= data.priceView %>"></assembly></section>
-```
+A template places another assembly by writing the directive in its own markup, as a page does, whatever that assembly is written in. The server puts it where the directive stood. The name is written as it is, and the directive is written closed. An assembly in a project has one view, so no `view` is written. Pug writes the directive in its own syntax.
 
 ```
 <section><assembly name="price"></assembly></section>

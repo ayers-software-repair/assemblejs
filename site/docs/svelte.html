@@ -55,8 +55,8 @@
       <dd><code>slot()</code> answers the markup that places another assembly, by name, whatever that
         assembly is written in, for Svelte's own raw form to write. The server puts the assembly
         there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when
-        this component renders again. The name is written as a string. A second argument names
-        a view, and may come from <code>data</code>.
+        this component renders again. The name is written as a string. An assembly in a
+        project has one view, so the second argument, which names one, is left out.
 <pre><code>&lt;script lang="ts"&gt;
   import { slot } from "@assemblejs/renderer-svelte/client";
 &lt;/script&gt;

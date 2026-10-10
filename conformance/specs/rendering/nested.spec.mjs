@@ -49,8 +49,13 @@ test("a parent in every kind of view holds the child its view places, inside its
   }
 });
 
-test("a service shapes which view of its child a parent places", async () => {
-  // The parent's template writes the view from its data; the composer reads it once rendered.
+// In a project an assembly has one view, so `default` is the only one a template can write and
+// have composed. What this holds is when the directive is read: the template writes its view
+// from data, and the child is placed, so the composer met the directive rendered. Read before,
+// its view would have been the engine's own tag, which names no view. That a child with
+// several views is placed with the one its parent's data names is held in core
+// (core/test/server/render-local.test.ts).
+test("a directive a template writes with its data is read once the template has rendered", async () => {
   const [parent] = treeOf(await (await get("/assembly/ejs-nest/")).text());
   assert.equal(parent?.children[0]?.attributes["data-name"], "svelte-label");
   assert.equal(parent?.children[0]?.attributes["data-view"], "default");

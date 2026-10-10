@@ -35,7 +35,7 @@ export function templatePlacements(renderer: string, source: string): ViewPlacem
     found.map(({ name, view }) => ({
       name: name.includes(COMPUTED) ? undefined : name,
       view: view.includes(COMPUTED) ? undefined : view,
-      shown: `<assembly name="..."> with a name the template computes`,
+      shown: `<assembly name="..."></assembly> with a name the template computes`,
     })),
   );
 }

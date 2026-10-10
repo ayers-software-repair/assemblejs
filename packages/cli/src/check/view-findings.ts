@@ -90,7 +90,7 @@ export function viewFindings(
       wrong(
         "a-placement-is-named-where-it-is-written",
         `places an assembly whose name is computed: ${shown}`,
-        "write the name as a string where the placement is written; a service may shape the view it is placed with, never which assembly it is",
+        "write the name as a string where the placement is written: which assembly a view holds is read from its source, and is never its data's to choose",
       );
     }
     if (read.placements === undefined) continue;

@@ -74,9 +74,9 @@
       <dt>An assembly inside this one</dt>
       <dd>A template places another assembly by writing the directive in its own markup, as a page does,
         whatever that assembly is written in. The server puts it where the directive stood. The
-        name is written as it is; a <code>view</code> may come from <code>data</code>. Pug writes
-        the directive in its own syntax.
-<pre><code>&lt;section&gt;&lt;assembly name="price" view="&lt;%= data.priceView %&gt;"&gt;&lt;/assembly&gt;&lt;/section&gt;</code></pre>
+        name is written as it is, and the directive is written closed. An assembly in a project
+        has one view, so no <code>view</code> is written. Pug writes the directive in its own
+        syntax.
 <pre><code>&lt;section&gt;&lt;assembly name="price"&gt;&lt;/assembly&gt;&lt;/section&gt;</code></pre>
 <pre><code>section
   assembly(name="price")</code></pre></dd>

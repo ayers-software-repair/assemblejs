@@ -3549,7 +3549,9 @@ Settled:
   store beside it. Holding those to the project's root would break every workspace, and they
   are the boundary the server itself runs inside, started from
   `node_modules/@assemblejs/mcp`. Nothing else follows a link out. The lead's order said
-  every file; this is where it does not hold, and it is his to overrule.
+  every file; this is where it does not hold, and it is his to overrule. (He let it stand the
+  same morning, on the condition that the design say the boundary where trust is written:
+  DESIGN 5.5, with what is handed back from an installed package.)
 - **`add agents` writes nothing through a link that leads out.** It read the file to bring it
   up to date; not reading it, it would have written a new one over whatever stood outside.
 - **A stylesheet's `url()` written outside its assembly is refused without being looked for.**
@@ -3589,3 +3591,53 @@ its guard hid the first; a declaration is read once now, and the mutation is red
 a run of the `agents` fixture from packed tarballs, on a project with a link put into it.
 Every fixture from packed tarballs after it: agents 16, contract 20, remote 22, rendering 78,
 trust 44.
+
+## 2026-10-10: the second reading of the design
+
+The lead had the design read a second time, by the cto seat, read-only, against the tree by
+its sha. Nine findings. Two are in this change, since the guides are on staging and one of them
+showed a sample that fails; the rest are rows, in the order this seat will take them.
+
+Found by the reader, and read again here at each line named:
+
+- **A project's assembly has one view.** The registry writes it as `default` and nothing else
+  (`cli/src/generate/generate-registry.ts`), and a parent that names another is refused at
+  `check` and at boot. Core holds several views for an assembly declared by hand. DESIGN 7
+  said a view may come from data, which is core's truth, and the seven guides, the rule and
+  the fix `check` gives said it to a project's author, the template guide with a sample. In a
+  project that sample names a view the child has only if its data says `default`.
+- **The directive is written closed.** DESIGN wrote `<assembly name="cart">` in three places.
+  The finder refuses a directive "neither self-closing nor immediately closed", and the page or
+  the view that holds it fails whole.
+
+Settled:
+
+- Every surface a project's author reads says what a project holds: one view, so none is
+  named. The rule `a-placement-is-named-where-it-is-written` says the name is never computed
+  and no longer adds that a view may be. The design keeps core's sentence, scoped to an
+  assembly declared by hand, and "The author's day" loses it.
+- **Whether a project's assembly may have several views is the owner's**, on the estate's
+  morning list. The contract already answers at `/assembly/<name>/<view>/`; a project has no
+  way to write a second.
+- The directive is written closed wherever it is shown: the design, the rule, what a finding
+  shows, two tools' descriptions, core's own word for the element. DESIGN 2.4 says an opening
+  tag alone is refused.
+- A comment in the browser runtime said an outer assembly mounts before an inner one and that
+  the other order hands a framework a subtree another is driving. Each hydrates when its own
+  module arrives, in either order, which is what DESIGN 2.4 says and the code does; the
+  comment says so now.
+
+The record of S-09 cited three specs that hold less than their sentence. Corrected here:
+
+- For 8, a view chosen from data: `conformance/specs/rendering/nested.spec.mjs` asserts the
+  child's view is `default`, from a service that returns `default`, which is also what a
+  directive with no view gives. What that case holds is when the directive is read, after the
+  template has rendered, and it is retitled to that. A child with several views placed with
+  the one its parent's data names is held by a new spec in
+  `core/test/server/render-local.test.ts`.
+- For 3.4, a failed subtree kept out of the cache: `holds-failed-envelope.test.ts` holds the
+  question alone. The cache refusing the write is `core/test/compose/placement-cache.test.ts`,
+  "never writes an answer holding a failed envelope".
+- For 7, a parent hydrating around its child: for Svelte the unit specs hold the directive's
+  text and the renderer's shape. That a Svelte parent hydrates around its child and writes
+  nothing again is the browser proof's, `browser/frameworks.browser.ts`, the pairs it nests.

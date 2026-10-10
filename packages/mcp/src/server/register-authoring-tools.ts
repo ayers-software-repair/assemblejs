@@ -57,8 +57,7 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
     "place_assembly",
     {
       title: "Place an assembly on a page, or inside another assembly",
-      description:
-        "Puts <assembly name=...> into a page's template, or into another assembly's view, at a named position, and returns the change. Name the page or the assembly it goes in, one of the two. What is named must exist; the answer lists what does when it does not. A view its author writes as source is not edited: the answer is the line to write.",
+      description: `Puts <assembly name="..."></assembly> into a page's template, or into another assembly's view, at a named position, and returns the change. Name the page or the assembly it goes in, one of the two. What is named must exist; the answer lists what does when it does not. A view its author writes as source is not edited: the answer is the line to write.`,
       inputSchema: {
         page: z
           .string()

@@ -60,8 +60,8 @@ export default (props: AssemblyProps) =&gt; html`&lt;p&gt;cart ${Object.keys(pro
       <dt>An assembly inside this one</dt>
       <dd><code>slot()</code> places another assembly where it stands in the view's template, by name.
         The server puts it there, and the page's runtime mounts it as it mounts this one. The
-        name is written as a string. A second argument names a view, and may come from
-        <code>data</code>.
+        name is written as a string. An assembly in a project has one view, so the second
+        argument, which names one, is left out.
 <pre><code>import { slot } from "@assemblejs/renderer-lit/client";
 import { html } from "lit";
 

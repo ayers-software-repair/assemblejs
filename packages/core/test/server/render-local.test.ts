@@ -192,6 +192,33 @@ describe("a view that places a child", () => {
     expect(html.match(/<assembly-root/g)).toHaveLength(1);
   });
 
+  // True of an assembly declared by hand, which may have several views. One in a project has
+  // one, so there this is never asked.
+  it("places a child with the view its parent's data names, where the child has several", async () => {
+    const price = defineAssembly({
+      name: "price",
+      views: {
+        default: { renderer: "html", markup: () => "<b>9.99</b>" },
+        compact: { renderer: "html", markup: () => "<i>10</i>" },
+      },
+    });
+    const row = defineAssembly({
+      name: "row",
+      views: {
+        default: {
+          renderer: "html",
+          data: ({ query }) => ({ as: query.get("as") ?? "default" }),
+          markup: ({ data }) => `<assembly name="price" view="${String(data["as"])}"></assembly>`,
+        },
+      },
+    });
+    const asked = given({ query: new URLSearchParams("as=compact"), fetch: server(row, price) });
+    const { html } = await renderLocal(row, "default", asked);
+    expect(html).toContain('data-view="compact"');
+    expect(html).toContain("<i>10</i>");
+    expect(html).not.toContain("<b>9.99</b>");
+  });
+
   it("refuses a child that is its own ancestor before dispatching it, and renders once", async () => {
     const loop = counted("loop", place("loop"));
     const { html, diagnostics } = await renderLocal(

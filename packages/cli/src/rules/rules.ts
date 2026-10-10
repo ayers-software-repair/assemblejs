@@ -35,7 +35,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: "a-placement-is-named-where-it-is-written",
-    rule: "A placement's name is a string written where the placement is. Only its view may be computed.",
+    rule: "A placement's name is a string written where the placement is. It is never computed.",
     because:
       "The name says which assembly a view holds, and everything decided before a request reads it: whether the page carries the runtime, what a deferred parent's children need linked, and whether the assembly exists at all. A slot whose name changes in the browser also writes a new directive over the child that was living there.",
     smell: "A Slot or a directive whose name comes from data, a prop or a variable.",
@@ -130,7 +130,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: "a-placement-names-an-assembly",
-    rule: "Every <assembly name=...> in a page template names an assembly that exists.",
+    rule: 'Every <assembly name="..."></assembly> in a page template names an assembly that exists.',
     because:
       "A placement with nothing behind it is a blank space a visitor finds. The server refuses to start rather than serve one, and check says so before it gets that far.",
     smell: "A template placing a name no directory under src/assemblies has.",

@@ -56,7 +56,8 @@ defineProps&lt;{ data: Record&lt;string, unknown&gt; }&gt;();
       <dd><code>Slot</code> places another assembly where it stands, by name, whatever that assembly is
         written in. The server puts it there, and the page's runtime mounts it as it mounts this
         one; Vue leaves it alone when this component renders again. The name is written as a
-        string. A <code>view</code> may be bound to <code>data</code>.
+        string. An assembly in a project has one view, so no
+        <code>view</code> is given.
 <pre><code>&lt;script setup lang="ts"&gt;
 import { Slot } from "@assemblejs/renderer-vue/client";
 &lt;/script&gt;

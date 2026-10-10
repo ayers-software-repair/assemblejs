@@ -56,7 +56,8 @@ export default function Cart({ data }: AssemblyProps) {
       <dd><code>Slot</code> places another assembly where it stands, by name, whatever that assembly is
         written in. The server puts it there, and the page's runtime mounts it as it mounts this
         one; Preact leaves it alone when this component renders again. The name is written in
-        place. A <code>view</code> may come from <code>data</code>.
+        place. An assembly in a project has one view, so no
+        <code>view</code> is given.
 <pre><code>import { Slot } from "@assemblejs/renderer-preact/client";
 
 export default function Cart() {

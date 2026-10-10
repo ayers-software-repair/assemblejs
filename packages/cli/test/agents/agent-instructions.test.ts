@@ -72,7 +72,9 @@ describe("what an agent that opens a project is told", () => {
     expect(visible).toContain(
       "- `a-directory-is-a-page`: A directory under src/pages IS a page: `<name>/<name>.html` is the page at `/<name>`, home at /.",
     );
-    expect(visible).toContain("Every `<assembly name=...>` in a page template names");
+    expect(visible).toContain(
+      'Every `<assembly name="..."></assembly>` in a page template names an assembly',
+    );
     expect(visible).toContain("A file `src/api/<name>.api.ts` default-exports one api");
     expect(visible).toContain("and its components' `<style>`, scoped to it");
     expect(visible.replace(/`[^`\n]*`/g, "")).not.toMatch(/[<>]/);

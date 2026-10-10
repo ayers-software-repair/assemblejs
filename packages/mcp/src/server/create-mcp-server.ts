@@ -55,7 +55,9 @@ export function createMcpServer(root: ProjectRoot): McpServer {
       description:
         "Composes a page template against the assemblies on disk and returns the html with one diagnostic per placement, and beneath it one per assembly that placement's own view placed. A placement that fell back looks identical in the markup; the diagnostic is what says it did. An assembly whose view is not plain html falls back here, with the reason among the problems.",
       inputSchema: {
-        template: z.string().describe('the page template, with <assembly name="..."> placements'),
+        template: z
+          .string()
+          .describe('the page template, with <assembly name="..."></assembly> placements'),
       },
     },
     async ({ template }) => {

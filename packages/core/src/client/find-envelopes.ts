@@ -5,10 +5,10 @@ import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
 /**
  * Every envelope under a root, in document order, those inside a shadow root included.
  *
- * Document order matters and is not incidental: it is nesting order, so an outer assembly
- * mounts before an inner one and the inner one mounts into markup the outer already treated as
- * an opaque child. Mounting inner-first hands the outer framework a subtree another framework
- * is already driving.
+ * Document order is nesting order, so a parent is taken before what it holds, and that is the
+ * order their mounting is scheduled in. It is not the order they hydrate in: each hydrates when
+ * its own module arrives, and either order is right, because a parent writes nothing where a
+ * child stands.
  *
  * A selector does not cross into a shadow root, and an assembly rendered inside one may have
  * placed children there. So the walk enters each shadow root where it stands: the root's own,

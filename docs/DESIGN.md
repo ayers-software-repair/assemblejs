@@ -150,9 +150,11 @@ assembly's declaration, never through the page template, which keeps a page from
 team's internals.
 
 It is deliberately not the same element the author writes in a template. A page template, or
-an assembly's own view, places an assembly with `<assembly name="cart">`, which is a template
-directive: the server replaces it and it is never emitted, so it needs no hyphen and carries no
-meaning in the browser. The two
+an assembly's own view, places an assembly with `<assembly name="cart"></assembly>`, which is
+a template directive: the server replaces it and it is never emitted, so it needs no hyphen and
+carries no meaning in the browser. It is written closed, as there or as
+`<assembly name="cart" />`: an opening tag alone is refused where it is read, and the page or
+the view that holds it fails whole. The two
 are separate because one word cannot be right in both positions. A placement is nested by
 definition and a served fragment is not, so a name that reads correctly in a template reads
 wrongly on a bare fetch, and the reverse. The author writes the directive and reads the
@@ -432,6 +434,17 @@ known keys with encoded values; the envelope is built, not concatenated. Nothing
 markup without passing an encoder, and nothing crosses to the browser except JSON, which the
 type system enforces rather than a document asserting it.
 
+### 5.5 The project's root
+
+Every file a reader opens, for `check` or for the agent surface, is held to the project's root
+after each link along its path is followed to where it really leads, so a link or an import
+that leads out of the root is not opened, not listed and not followed, and is a finding
+(13.6). The packages the package manager installed are not held to it: they are found as the
+bundler finds them, in `node_modules` beside the project and in each directory above it, and
+all that is handed back from one is whether it is installed, the versions its manifest names,
+and what the project's own template engine said when it was loaded or was given one of the
+project's templates.
+
 ---
 
 ## 6. Representation
@@ -479,7 +492,7 @@ export type MountHandle = { unmount(): void };
 - **A view places a child by writing the directive, and is never handed one.** The view renders
   once. The composer then reads its markup as it reads a page's template and puts each child's
   envelope where its directive stood. A plain html or template view writes
-  `<assembly name="cart">` in its own markup. A framework view writes it with its renderer's
+  `<assembly name="cart"></assembly>` in its own markup. A framework view writes it with its renderer's
   slot, `<Slot name="cart" />` in React, Preact, Vue and Solid, `slot("cart")` in Svelte and
   Lit, which writes the same markup on the server and in the browser, so a parent hydrates
   around the child the server placed and writes nothing into the slot when it renders again. No
@@ -488,8 +501,10 @@ export type MountHandle = { unmount(): void };
 - **A placement's name is written where the placement is.** What a view places is read from its
   source before any request: the build writes it beside the view, boot refuses a name with no
   assembly, a view the assembly lacks and a view that leads back to itself, and `check` says the
-  same in the file. Which view of a child a parent shows may come from its data; which child it
-  is may not. A Pug view writes the directive in its own syntax and is read when it renders.
+  same in the file. Which child a view holds never comes from its data. Which view of that child
+  may, where the child has more than one, which only an assembly declared by hand does: an
+  assembly in a project has one view, `default`, and a parent that names another is refused
+  at `check` and at boot. A Pug view writes the directive in its own syntax and is read when it renders.
 - **A Lit view holds a Lit assembly only behind a shadow root.** Lit hydrates a view by reading
   every marker in its tree, and would read a Lit child's as the parent's. A shadow root hides
   them; without one the parent refuses to mount, by name, and `check` says so before a browser
@@ -609,8 +624,7 @@ this server or another: an object with no prototype, so a parameter named `const
 parameter and nothing else. Returning is testable in isolation, composes without hidden order, and
 makes the data shape the function's return type. Services run in declaration order; one that must follow another says
 `after: ["greeting"]`. There is no priority number. Services run **before** the view renders,
-and what the view places is composed after it, so a service shapes which view of a child its
-parent places: the view writes it from its data. A child is given the params and the query its
+and what the view places is composed after it. A child is given the params and the query its
 parent was given.
 
 An api is a route:
@@ -866,11 +880,10 @@ The framework ships capability, not autonomy.
   each is a finding where the project names it (`a-project-stays-inside-its-root`). An agent
   is shown what the readers read, their findings' own words included, so a file its person
   never put in the project is not the project's to show.
-- The packages a project installs are the one thing found outside it. `check` finds them,
-  reads their manifests and loads the project's own template engine through `node_modules`,
-  wherever the package manager linked them: a workspace's root, or a store beside it. That is
-  the boundary the server itself runs inside, started from `node_modules/@assemblejs/mcp`.
-  Nothing else follows a link out.
+- The packages a project installs are the one thing found outside it (5.5), wherever the
+  package manager linked them: a workspace's root, or a store beside it. That is the boundary
+  the server itself runs inside, started from `node_modules/@assemblejs/mcp`. Nothing else
+  follows a link out.
 - Nothing runs a shell command. `check` runs the gates in process and returns findings.
 - Nothing publishes, deploys, or touches a remote. Those stay in the command line, where a
   person types them.
@@ -957,7 +970,8 @@ does not have, which its tests hold.
 Each of these was open, or reverses something recorded earlier. Each is decided, with the
 reason, so nothing has to be remembered.
 
-1. **A page template writes `<assembly name="…">` and the server emits `<assembly-root …>`.**
+1. **A page template writes `<assembly name="…"></assembly>` and the server emits
+   `<assembly-root …>`.**
    Two elements, because no single word is right in both positions: a placement is nested by
    definition, a served fragment is not. The template form is a directive the server replaces
    and never emits, so it needs no hyphen and reads as the plain noun. The emitted form is a
