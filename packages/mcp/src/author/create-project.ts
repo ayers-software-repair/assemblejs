@@ -1,12 +1,17 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { agentFiles, projectFiles, realIo, suggestName, textIn } from "@assemblejs/cli";
+import {
+  PROJECT_NAME,
+  agentFiles,
+  projectFiles,
+  realIo,
+  suggestName,
+  textIn,
+} from "@assemblejs/cli";
 import { isOccupied } from "../root/is-occupied.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";
-
-const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
  * Scaffolds the smallest project that runs into the project root, through the command line's own
@@ -20,7 +25,7 @@ const NAME = /^[a-z][a-z0-9-]*$/;
  * own kept, and a registration that cannot be read is refused before anything is written.
  */
 export function createProject(root: ProjectRoot, name: string): ToolResult {
-  if (!NAME.test(name)) {
+  if (!PROJECT_NAME.test(name)) {
     return {
       ok: false,
       result: null,

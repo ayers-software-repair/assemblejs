@@ -5,21 +5,21 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:34 EDT, after A-03).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:47 EDT, after two small rows).**
 
-STATE. Branch `next`. `origin/next` is `0c43610`, the commit that builds the command line, the
-agent surface and the starter with one copy of their code, pushed 2026-10-10 02:27 EDT; its
-`ci` run is 38030937655 and its `release` run 38030937681, both read to their end, green.
-Beneath it is A-01, `a7d3edc` (`ci` 38030156225, `release` 38030156222, `deploy-site`
-38030156238, all green). Above it, signed, pushed with this block: the A-03 commit this block
-lands in, which touches `site/**` and so fires `deploy-site` as well. Every package reads
-`1.0.0-next.0`; fifteen changesets are pending. The owner's overnight order (estate D1216):
-work the bites to code completion and get the landing page onto staging; no questions until
-morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
-200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
-`/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
-rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
-self-verified by mutation (DECISIONS 2026-10-09, S-02).
+STATE. Branch `next`. `origin/next` is `9ed39ef`, A-03, pushed 2026-10-10 02:44 EDT; its `ci`
+run is 38031831069, its `release` run 38031831044 and its `deploy-site` run 38031831024, all
+read to their end, green, and the two staging pages it changed are byte-identical to the
+branch. Beneath it: `0c43610`, one copy of the code in three packages (`ci` 38030937655,
+`release` 38030937681), and A-01, `a7d3edc`. Above it, signed, pushed with this block: two
+small rows, the specs that built one example in place and the shape of a name written six
+times. Every package reads `1.0.0-next.0`; sixteen changesets are pending. The owner's
+overnight order (estate D1216): work the bites to code completion and get the landing page
+onto staging; no questions until morning. The landing page is on staging: `/assemblejs/next/`
+on the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on
+`next` deploys there. `/assemblejs/` deploys from `main`, which has no `site/` yet: the
+owner's morning list. His rulings in this seat stand: no subagents, the seat does the work
+itself; every bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
 THE EXACT NEXT STEP is A-02 (PLAN 4.1): `llms.txt` and `llms-full.txt` on the site, generated
 from `site/pages.json` and the pages by a script that `check:site` runs with `--check`, as
@@ -30,9 +30,8 @@ file is read with the DOM the tests already use (`happy-dom`), and an element th
 does not know fails the run. Then A-04's design memo, which waits on the owner's answer before
 any code. A-01 and A-03 are done: a new project carries its agent instructions and
 registrations, and the agent surface lists four prompts. The rows they found come after the
-ladder: DESIGN 13.3's five resources, of which the server has two; `render_assembly` and
-`compose_page` showing only plain html views; the shape of a name written five times. The
-subassembly rung is done: S-01 to S-09.
+ladder: DESIGN 13.3's five resources, of which the server has two, and `render_assembly` and
+`compose_page` showing only plain html views. The subassembly rung is done: S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -533,11 +532,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       of its own, nested in the example as the other building specs already were; the two
       files run together twelve times without a failure, and no spec builds an example in
       place (2026-10-10)
-- [ ] The shape of a name is written five times where the vocabulary already holds it once
-      (`SEGMENT` in core): in the discovery of pages and of assemblies, in `planAssembly`, and
-      twice more for a project's own name, in `run` and in the agent surface's
-      `create_project`. One definition of each (found 2026-10-10 writing A-03, whose prompts
-      use the vocabulary's)
+- [x] The shape of a name was written six times beside the vocabulary's one. The discovery of
+      pages, of assemblies and of api files, and `planAssembly`, test a name with core's
+      `SEGMENT`; a project's own name is `PROJECT_NAME` in the command line, which `new` and
+      the agent surface's `create_project` both ask. Seven mutations, one at each place a
+      name is tested, each watched red (found 2026-10-10 writing A-03; fixed the same night)
 - [ ] A-02 `llms.txt` and `llms-full.txt` on the site, generated from `pages.json` and the
       pages, declared and held by `check:site` and a drift test (owner, 2026-10-09, PLAN 4.1)
 - [ ] A-04 built-in components and best practices: the design memo and the owner's answer

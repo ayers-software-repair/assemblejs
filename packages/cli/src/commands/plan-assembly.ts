@@ -1,11 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { SEGMENT } from "@assemblejs/core";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { suggestName } from "../discovery/suggest-name.js";
 import { assemblyFiles } from "./assembly-files.js";
 import { RENDERERS } from "./renderers.js";
-
-const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
  * What adding an assembly would write, or why it cannot: the files and the tag that places it,
@@ -20,7 +19,7 @@ export function planAssembly(
   | { readonly files: Readonly<Record<string, string>>; readonly tag: string }
   | { readonly problem: ProjectProblem; readonly usage: boolean } {
   const path = `src/assemblies/${name}`;
-  if (!NAME.test(name)) {
+  if (!SEGMENT.test(name)) {
     return {
       usage: true,
       problem: {

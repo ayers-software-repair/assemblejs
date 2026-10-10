@@ -6,6 +6,7 @@ import { buildProject } from "../build/build-project.js";
 import { runCheck } from "../check/run-check.js";
 import { planAssembly } from "../commands/plan-assembly.js";
 import { projectFiles } from "../commands/project-files.js";
+import { PROJECT_NAME } from "../commands/project-name.js";
 import { RENDERERS } from "../commands/renderers.js";
 import { runDeploy } from "../deploy/run-deploy.js";
 import { runDev } from "../dev/run-dev.js";
@@ -28,8 +29,6 @@ const USAGE = `assemblejs <command>
 
   --renderer   one of: ${RENDERERS.join(", ")}   (default html)
   --cwd        where to work (default: here)`;
-
-const PACKAGE = /^[a-z][a-z0-9-]*$/;
 
 /**
  * The whole command line, as a function of its arguments and its io.
@@ -79,7 +78,7 @@ function newProject(directory: string | undefined, cwd: string, io: Io): number 
     return 2;
   }
   const name = basename(directory);
-  if (!PACKAGE.test(name)) {
+  if (!PROJECT_NAME.test(name)) {
     io.error(`"${name}" cannot name a package; lower case with hyphens: try ${suggestName(name)}`);
     return 2;
   }

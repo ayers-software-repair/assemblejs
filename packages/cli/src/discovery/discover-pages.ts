@@ -2,12 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
+import { SEGMENT } from "@assemblejs/core";
 import type { DiscoveredPage } from "./discovered-page.js";
 import { isDirectory } from "./is-directory.js";
 import type { ProjectProblem } from "./project-problem.js";
 import { suggestName } from "./suggest-name.js";
-
-const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
  * Every page under a directory. Like an assembly, a directory IS a page: `home/home.html` is the
@@ -35,7 +34,7 @@ export function discoverPages(root: string): {
     const directory = join(root, name);
     if (!isDirectory(directory)) continue;
     const at = `${root}/${name}`.replaceAll("\\", "/");
-    if (!NAME.test(name)) {
+    if (!SEGMENT.test(name)) {
       problems.push({
         path: at,
         rule: "a-directory-is-a-page",

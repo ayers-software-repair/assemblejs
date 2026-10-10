@@ -1,10 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readdirSync } from "node:fs";
+import { SEGMENT_PATTERN } from "@assemblejs/core";
 import type { ProjectProblem } from "./project-problem.js";
 import { suggestName } from "./suggest-name.js";
 
-const API = /^[a-z][a-z0-9-]*\.api\.ts$/;
+const API = new RegExp(`^${SEGMENT_PATTERN}\\.api\\.ts$`);
 
 /**
  * Every api file in a directory, in name order. Each default-exports one `defineApi`. A file

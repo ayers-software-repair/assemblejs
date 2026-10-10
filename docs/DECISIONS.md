@@ -3127,3 +3127,16 @@ resolves the workspace's packages as the example does, which is what the specs o
 `perf`, `deploy` and the server's start already did. Run together twelve times, the two files
 did not fail; no spec builds an example in place. A race cannot be watched red on demand, so
 this one is held by its cause being gone, not by a count.
+
+## 2026-10-10: one definition of a name's shape
+
+Core's vocabulary holds the shape of a segment once (`SEGMENT`, and `SEGMENT_PATTERN` for a
+longer pattern to embed), and says in its own comment that three copies had drifted apart
+before. The command line still wrote it four times, for a page, an assembly, an assembly being
+added and an api file, and twice more, with the agent surface, for a project's own name.
+
+A page, an assembly and an api file are named by the vocabulary's segment, so they test with
+it. A project's name is not a segment of the framework's grammar: it names a directory and a
+package. It has one definition of its own, `PROJECT_NAME` in the command line, which the
+command and `create_project` both ask. Each place that tests a name was watched red while it
+accepted any: seven mutations.

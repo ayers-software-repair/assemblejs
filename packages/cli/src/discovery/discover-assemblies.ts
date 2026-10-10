@@ -2,14 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
+import { SEGMENT } from "@assemblejs/core";
 import type { DiscoveredAssembly } from "./discovered-assembly.js";
 import { isDirectory } from "./is-directory.js";
 import { pickView } from "./pick-view.js";
 import type { ProjectProblem } from "./project-problem.js";
 import { rendererForView } from "./renderer-for-view.js";
 import { suggestName } from "./suggest-name.js";
-
-const NAME = /^[a-z][a-z0-9-]*$/;
 
 /**
  * Every assembly under a directory. A directory IS an assembly; there is nothing to register.
@@ -40,7 +39,7 @@ export function discoverAssemblies(root: string): {
     const directory = join(root, name);
     if (!isDirectory(directory)) continue;
     const at = `${root}/${name}`.replaceAll("\\", "/");
-    if (!NAME.test(name)) {
+    if (!SEGMENT.test(name)) {
       problems.push({
         path: at,
         rule: "directory-is-an-assembly",
