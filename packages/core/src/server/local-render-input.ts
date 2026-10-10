@@ -3,6 +3,7 @@
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import type { Fetch } from "../compose/fetch.js";
 import type { Limits } from "../compose/limits.js";
+import type { PlacementCount } from "../compose/placement-count.js";
 
 /**
  * The composition state one local render is given: which placement it is, how deep its request
@@ -36,11 +37,11 @@ export interface LocalRenderInput {
   /** The signal of the request this render belongs to: once it aborts, no further child is dispatched. */
   readonly signal?: AbortSignal;
   /**
-   * What numbers the placements of the request this render belongs to, so its children are
-   * counted with the rest of that request. A render that is itself what was asked for has
-   * none, and its children start the count.
+   * The count of the request this render belongs to, so its children are counted with the
+   * rest of that request. A render that is itself what was asked for has none, and its
+   * children begin the count.
    */
-  readonly count?: () => number;
+  readonly count?: PlacementCount;
   /** Allocates each child's id, so its envelope can be addressed before it arrives. */
   readonly newId: () => string;
   /** Milliseconds since any fixed origin, for a child's elapsed time. */

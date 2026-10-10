@@ -28,6 +28,11 @@ const broken = defineAssembly({
     },
   },
 });
+// One byte more than this server lets an answer be.
+const heavy = defineAssembly({
+  name: "heavy",
+  views: { default: { renderer: "html", markup: () => "x".repeat(1024 * 1024 + 1) } },
+});
 // A parent: its view places hello, as a page would.
 const shell = defineAssembly({
   name: "shell",
@@ -53,6 +58,7 @@ beforeAll(async () => {
   const assemblies = new Map([
     ["hello", hello],
     ["broken", broken],
+    ["heavy", heavy],
     ["shell", shell],
   ]);
   const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
@@ -110,6 +116,19 @@ describe("the assembly contract, mounted", () => {
     const id = /data-failed="([^"]+)"/.exec(response.body)?.[1];
     expect(response.body).not.toContain("hunter2");
     expect(logged.find((line) => line.correlationId === id)?.message).toContain("hunter2");
+  });
+
+  // What a page placing it would refuse, its own address refuses: an answer is under the
+  // limit on bytes or it is a failure, whoever asked.
+  it("answers an answer past the limit on bytes as its fallback under 500, and sends none of it", async () => {
+    const response = await get("/assembly/heavy/");
+    expect(response.statusCode).toBe(500);
+    expect(response.body.length).toBeLessThan(1024);
+    expect(failure(response.body, "heavy")).toContain(
+      'assembly "heavy" answered more than 1048576 bytes',
+    );
+    // One byte fewer is an answer.
+    expect((await get("/assembly/hello/")).statusCode).toBe(200);
   });
 });
 

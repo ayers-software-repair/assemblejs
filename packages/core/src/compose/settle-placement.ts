@@ -61,7 +61,9 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
   // refusal is the point.
   const refusal = refuseBeforeDispatch(input);
   if (refusal !== undefined) {
-    return fallBack(input, id, at("fallback", refusal, input.newId()), false);
+    // Past the limit, every refusal of the request carries one id, so one line finds them all.
+    const correlationId = refusal === "too-many" ? input.count.refuse(name, view) : input.newId();
+    return fallBack(input, id, at("fallback", refusal, correlationId), false);
   }
 
   // A placement that declared a lifetime is answered from its fresh entry without a request.

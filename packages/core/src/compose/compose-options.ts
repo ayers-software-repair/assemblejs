@@ -4,6 +4,7 @@ import type { AssemblyPlan } from "./assembly-plan.js";
 import type { ContentCache } from "./content-cache.js";
 import type { Fetch } from "./fetch.js";
 import type { Limits } from "./limits.js";
+import type { PlacementCount } from "./placement-count.js";
 
 /**
  * Everything composing a page needs. No HTTP, no framework, no filesystem, and no clock or id
@@ -29,11 +30,11 @@ export interface ComposeOptions {
    */
   readonly signal?: AbortSignal;
   /**
-   * Numbers each placement of the request this composition belongs to, from one. The same
-   * function is handed on to whatever each placement composes in this process, so the number
-   * is the request's and not one template's. Without it this composition starts the count.
+   * The count of the request this composition belongs to, when another composition of that
+   * request began it. Without one this composition begins the count, hands it on to whatever
+   * its placements compose in this process, and gives the one account of what was refused.
    */
-  readonly count?: () => number;
+  readonly count?: PlacementCount;
   readonly query?: URLSearchParams;
   /** The page's route parameters, `{ id: "42" }` for `/products/:id`, handed to every placement. */
   readonly params?: Readonly<Record<string, string>>;

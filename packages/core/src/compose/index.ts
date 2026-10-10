@@ -21,6 +21,8 @@ export { cacheKey } from "./cache-key.js";
 export { carriesCredential } from "./carries-credential.js";
 export { inertSpans } from "./inert-spans.js";
 export { findPlacements } from "./find-placements.js";
+export type { PlacementCount } from "./placement-count.js";
+export { countPlacements } from "./count-placements.js";
 export { encodeParams } from "./encode-params.js";
 export { readParams } from "./read-params.js";
 export { refuseBeforeDispatch } from "./refuse-before-dispatch.js";

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { placementCache } from "@assemblejs/core";
+import { countPlacements, placementCache } from "@assemblejs/core";
 import type { AssemblyPlan, ContentCache, SettleInput } from "@assemblejs/core";
 
 const memory = (): ContentCache & { store: Map<string, string> } => {
@@ -31,7 +31,7 @@ const input = (
   depth: 0,
   path: [],
   ordinal: 1,
-  count: () => 1,
+  count: countPlacements(() => "c-0"),
   query: new URLSearchParams(),
   params: {},
   headers,

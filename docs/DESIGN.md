@@ -49,8 +49,9 @@ Answers `200` with `Content-Type: text/html; charset=utf-8` and a **fragment**, 
 document: no `<html>`, `<head>` or `<body>`. The fragment is exactly one element, the envelope
 of section 2.4, containing the assembly's markup and its data island.
 
-An assembly that fails to render, or whose service throws, answers `500` with the same kind of
-fragment: its fallback envelope, marked `data-failed` with the correlation id its failure is
+An assembly that fails to render, or whose service throws, or whose answer with every child
+composed inside it is larger than the server's limit on bytes, answers `500` with the same kind
+of fragment: its fallback envelope, marked `data-failed` with the correlation id its failure is
 logged against. A composing server reads the status, applies its own fallback policy and caches
 nothing; a bare fetch still reads an envelope.
 
@@ -188,7 +189,7 @@ type AssemblyRequest = {
   params: Readonly<Record<string, string>>; // the page's route parameters
   headers: Readonly<Record<string, string>>;
   signal: AbortSignal;
-  count?: () => number; // numbers the request's placements, in this process only (3.4)
+  count?: PlacementCount; // the request's count, handed on in this process only (3.4)
 };
 
 type AssemblyResponse =
@@ -240,7 +241,7 @@ type ComposeOptions = {
   depth?: number; // a page is zero; an assembly composing its children is its own
   path?: readonly string[];
   signal?: AbortSignal;
-  count?: () => number;
+  count?: PlacementCount;
   query?: URLSearchParams;
   params?: Readonly<Record<string, string>>;
   headers?: Readonly<Record<string, string>>;
@@ -251,6 +252,12 @@ type ComposeOptions = {
 type ComposeResult = { html: string; diagnostics: readonly Diagnostic[] };
 
 type Limits = { depth: number; maxBytes: number; placements: number };
+
+type PlacementCount = {
+  next(): number; // the next placement's number in the request
+  refuse(name: string, view: string): string; // the one id every refusal past the limit shares
+  account(): Diagnostic | undefined; // the one account of them, which says how many
+};
 
 type AssemblyPlan = {
   name: string;
@@ -276,6 +283,7 @@ type Diagnostic = {
   reason?: FailureReason;
   correlationId?: string;
   ms: number;
+  refused?: number; // on the one account of every placement refused past the limit: how many
   children?: readonly Diagnostic[]; // what the answering assembly's own view placed
 };
 ```
@@ -304,7 +312,8 @@ them finishes or times out, never later, and never fails because one of them did
   and a JSON body are all failures. None of them is ever rendered as content.
 - On failure the placement renders, in order: its declared **fallback**, then the **last good**
   cached response if one is held, then an empty envelope with `data-failed`. Every case appends
-  a diagnostic naming the rung that answered.
+  a diagnostic naming the rung that answered, but the placements a request refuses for
+  passing its limit, which share one (3.4).
 - A placement declared `required: true` turns its own failure into the page's failure, with a
   `503` and the diagnostic. This is opt-in and it is the only way a page dies from a child.
 - Placements resolve concurrently under `allSettled` semantics, and the output order is the
@@ -342,9 +351,13 @@ so a page can hold more envelopes than the limit and have composed no more. At a
 own address the assembly asked for is not counted, only what its view places. A deferred
 placement is counted and never refused, since nothing is rendered for it now; the request
 the browser later fills it with has a count of its own, and so has a request to another
-server. And refused is not free: each directive past the limit still takes an id, an empty
-failed envelope, a diagnostic and a line in the log (section 12), one of each for every
-directive a template writes.
+server.
+
+A request asked to place ten thousand costs what it renders and little more. Every placement
+refused for passing the limit carries one correlation id, and the request has one diagnostic
+for them all, which says how many, and one line in the log (section 12): each still leaves
+its empty failed envelope, and that id on each finds the line. An answer swollen by them is
+bounded as any answer is, by the limit on bytes, where it is placed and at its own address.
 
 Past the limit, which placements are refused is the order their templates were composed in:
 the order written within one, and across views rendering at once the order they finished, so

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineAssembly, defineService, localFetch } from "@assemblejs/core";
-import type { AssemblyRequest, LogLine } from "@assemblejs/core";
+import { countPlacements, defineAssembly, defineService, localFetch } from "@assemblejs/core";
+import type { AssemblyRequest, Diagnostic, LogLine } from "@assemblejs/core";
 
 const hello = defineAssembly({
   name: "hello",
@@ -165,15 +165,18 @@ describe("how many assemblies one request places", () => {
         ...over,
       });
       if (!answer.ok) throw new Error(answer.detail);
-      const refused: string[] = [];
+      // Every diagnostic that tells of a refusal, wherever in the tree, and the ids the failed
+      // envelopes carry.
+      const refused: Diagnostic[] = [];
       const walk = (diagnostics: typeof answer.nested): void => {
         for (const one of diagnostics ?? []) {
-          if (one.reason !== undefined) refused.push(one.reason);
+          if (one.reason !== undefined) refused.push(one);
           walk(one.children);
         }
       };
       walk(answer.nested);
-      return { html: answer.html, refused };
+      const ids = new Set([...answer.html.matchAll(/ data-failed="([^"]*)"/g)].map((m) => m[1]));
+      return { html: answer.html, refused, ids };
     };
     return { renders, asked };
   };
@@ -186,31 +189,45 @@ describe("how many assemblies one request places", () => {
 
   it("never places more than the limit at every depth together, and renders none past it", async () => {
     const { renders, asked } = shelved();
-    const { refused } = await asked(5);
+    const { refused, ids } = await asked(5);
     // Five items and their five leaves are ten: six are placed and rendered, four refused.
     expect(renders.item + renders.leaf).toBe(6);
-    expect(refused).toEqual(Array(4).fill("too-many"));
+    // One account for the four, saying how many, under the one id their envelopes carry.
+    expect(refused).toMatchObject([{ reason: "too-many", refused: 4 }]);
+    expect([...ids]).toEqual([refused[0]?.correlationId]);
   });
 
   it("refuses the ones past it in one template in the order they are written", async () => {
     const { renders, asked } = shelved();
     const { html, refused } = await asked(8);
     expect(renders).toEqual({ item: 6, leaf: 0 });
-    expect(refused).toHaveLength(8);
+    expect(refused).toMatchObject([{ reason: "too-many", refused: 8, name: "item" }]);
     const items = [...html.matchAll(/<assembly-root data-name="item"[^>]*>/g)].map((tag) =>
       tag[0].includes("data-failed"),
     );
     expect(items).toEqual([false, false, false, false, false, false, true, true]);
   });
 
-  it("numbers a request's placements from the count the request was handed", async () => {
+  // What a flood costs: ten thousand directives in one value are one account and one id.
+  it("accounts once for ten thousand refused, and renders no more for them than the limit", async () => {
     const { renders, asked } = shelved();
-    let placed = 4;
-    const { refused } = await asked(3, { count: () => (placed += 1) });
+    const { refused, ids } = await asked(10_000);
+    expect(renders).toEqual({ item: 6, leaf: 0 });
+    expect(refused).toMatchObject([{ reason: "too-many", refused: 10_000 }]);
+    expect(ids.size).toBe(1);
+  });
+
+  it("numbers a request's placements from the count the request was handed, whose owner accounts", async () => {
+    const { renders, asked } = shelved();
+    const count = countPlacements(() => "c-1");
+    for (let placed = 0; placed < 4; placed += 1) count.next();
+    const { refused, ids } = await asked(3, { count });
     // Numbered five, six and seven: two items are placed, and nothing after them is.
     expect(renders).toEqual({ item: 2, leaf: 0 });
-    expect(refused).toHaveLength(3);
-    expect(placed).toBe(9);
+    // What was handed the count leaves the account to whoever began it.
+    expect(refused).toEqual([]);
+    expect(count.account()).toMatchObject({ refused: 3, correlationId: "c-1" });
+    expect([...ids]).toEqual(["c-1"]);
   });
 
   it("starts each request's count afresh", async () => {

@@ -5,30 +5,32 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 07:50 EDT, after the design's listings were held to the source).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 08:04 EDT, after what a refused placement costs).**
 
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: the second
-reading's seventh finding, the design's listings held to the source by a gate. Beneath it, each
-pushed on 2026-10-10 with its runs read to their end, green, and each time the one its `ci` run
-was created at: `40ad18e`, 07:46 EDT, row 4b, a limit on how many placements one request
-composes (`ci` 38049623776, `release` 38049623646); `3ba71b6`, 07:23 EDT, the second reading's
-third and fifth findings, every static view read for what it places (`ci` 38048248411,
-`release` 38048248498); `a8c882f`, 06:38 EDT, the fault of row 4a named KNOWN FAULT in the spec
-that holds it, with the memo for the owner (`ci` 38045580352, `release` 38045580288);
-`16d8b92`, 06:18 EDT, the second reading's fourth finding, what a value written raw places
-(`ci` 38044427017, `release` 38044427065, `deploy-site` 38044427043, and staging read: the two
-guides and both text files as the branch has them); `05fae8a`, 05:47 EDT, the second reading's
-first two findings (`ci` 38042647592, `release` 38042647595, `deploy-site` 38042647601, and
-staging read: the seven guides and both text files as the branch has them); `03a90fa`, 05:34
-EDT, nothing outside a project's root is read (`ci` 38041855065, `release` 38041854943);
-`8fe15a6`, 04:48 EDT, the project's whole shape and each assembly as resources (`ci`
-38039133712, `release` 38039133595); `6a27a0c`, 04:06 EDT, the release notes (`ci` 38036708423,
-`release` 38036708409, `deploy-site` 38036708372: the deploy ran the release-notes gate before
-it published, staging serves `/assemblejs/next/release-notes.html` as the branch has it, and
-the page was drawn in the sealed browser at a desk's width and a phone's). Beneath those: the
-API reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`;
-A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`.
-Every package reads `1.0.0-next.0`; twenty-four changesets are pending. The owner's overnight
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: row 4c of the
+second reading, what a refused placement costs. Beneath it, each pushed on 2026-10-10 with its
+runs read to their end, green, and each time the one its `ci` run was created at: `a9e507c`,
+07:57 EDT, the second reading's seventh finding, the design's listings held to the source by a
+gate (`ci` 38050215470, `release` 38050215535); `40ad18e`, 07:46 EDT, row 4b, a limit on how
+many placements one request composes (`ci` 38049623776, `release` 38049623646); `3ba71b6`,
+07:23 EDT, the second reading's third and fifth findings, every static view read for what it
+places (`ci` 38048248411, `release` 38048248498); `a8c882f`, 06:38 EDT, the fault of row 4a
+named KNOWN FAULT in the spec that holds it, with the memo for the owner (`ci` 38045580352,
+`release` 38045580288); `16d8b92`, 06:18 EDT, the second reading's fourth finding, what a value
+written raw places (`ci` 38044427017, `release` 38044427065, `deploy-site` 38044427043, and
+staging read: the two guides and both text files as the branch has them); `05fae8a`, 05:47 EDT,
+the second reading's first two findings (`ci` 38042647592, `release` 38042647595, `deploy-site`
+38042647601, and staging read: the seven guides and both text files as the branch has them);
+`03a90fa`, 05:34 EDT, nothing outside a project's root is read (`ci` 38041855065, `release`
+38041854943); `8fe15a6`, 04:48 EDT, the project's whole shape and each assembly as resources
+(`ci` 38039133712, `release` 38039133595); `6a27a0c`, 04:06 EDT, the release notes (`ci`
+38036708423, `release` 38036708409, `deploy-site` 38036708372: the deploy ran the release-notes
+gate before it published, staging serves `/assemblejs/next/release-notes.html` as the branch
+has it, and the page was drawn in the sealed browser at a desk's width and a phone's). Beneath
+those: the API reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows,
+`20547ae`; A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01,
+`a7d3edc`.
+Every package reads `1.0.0-next.0`; twenty-five changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -55,11 +57,13 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    is a finding and refuses a build, and a loop is said to be refused at boot only where each
    hop's view is written. Its 4b is done (`40ad18e`): one request composes no more than 256
    placements at every depth together, the ones past that refused before dispatch with the
-   reason `too-many`, the number from a measure and no setting for it; 4c, beside it, is the
-   lead's: what a refused placement still costs. Its 7 is done, pushed with this block: the
-   design's listings are the source's, and `check:design` holds them to it. NEXT, by this
-   seat's ranking: the rest of 8, which holds two things to fix in code (the content
-   endpoint hands its render no signal; a placement whose settling throws renders as
+   reason `too-many`, the number from a measure and no setting for it. Its 7 is done
+   (`a9e507c`): the design's listings are the source's, and `check:design` holds them to it.
+   Its 4c is done, pushed with this block: every placement a request refuses past its limit
+   shares one id, one diagnostic and one log line, and an assembly's own address refuses an
+   answer past the limit on bytes. NEXT, by this seat's ranking: the rest of 8, which holds
+   two things to fix in code (the content endpoint and a page hand their render no signal,
+   so nothing stops when the asker leaves; a placement whose settling throws renders as
    nothing where the design says an empty envelope); then 6, 10 and 11.
 3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
    pushed): its message says what is done and what is left. Bring it onto `next` after 2.
@@ -317,14 +321,16 @@ rowed or the owner's; the numbers are the report's.
       project sets the depth cap, the morning list's item 6. Past the limit, which placements
       are refused across views composed at once is the order they finished rendering, and no
       spec names it (DECISIONS 2026-10-10, "how many assemblies one request places")
-- [ ] 4c. From 4b: A REFUSED PLACEMENT IS NOT FREE. Each directive past the limit still takes
-      an id, an empty failed envelope in the answer, a diagnostic and a line in the log. A
-      stored value written raw that names ten thousand assemblies then writes ten thousand
-      log lines on every visit. Bounding that is a choice about DESIGN 12, which promises
-      that each failed envelope's id finds its line, so it is the lead's: one line a request
-      for every `too-many` refusal, carrying how many, with the envelopes sharing its id;
-      the directives past the limit cut from the answer, one mark standing for them; or
-      left as it is, a log's volume being its operator's. This seat's advice is the first
+- [x] 4c. From 4b: A REFUSED PLACEMENT WAS NOT FREE. Each directive past the limit took an
+      id, an empty failed envelope, a diagnostic and a line in the log, so a stored value
+      written raw that named ten thousand assemblies wrote ten thousand log lines on every
+      visit. Decided by the lead as this seat advised: every placement a request refuses for
+      passing its limit carries one id, and the request has one diagnostic for them all,
+      which says how many, and one line in the log; DESIGN 12's promise holds, since the id
+      on each envelope finds that line. And the answer they swell is under the limit on bytes
+      or refused by it whoever asks: an assembly's own address did not ask, and sent an
+      answer of any size, which it refuses now as a page that placed it would (DECISIONS
+      2026-10-10, "what a refused placement costs")
 - [x] 5. A loop is refused at boot only where every hop writes its view; a placement whose
       view is computed is held for its name alone and not followed, so such a loop is refused
       at render. DESIGN 3.4 said "at boot" of every loop, and says this now. The rendering

@@ -19,26 +19,40 @@ export const originOf = (name) => {
 };
 
 /**
- * What the server logged against this correlation id (DESIGN 12), read from what it wrote,
- * waiting a moment for a line still on its way to the file: the line's message, or undefined
- * where it logged nothing against that id.
+ * Every line the server has logged that `wanted` says yes to, each as what it wrote, read from
+ * its log, waiting a moment for a line still on its way to the file while there are fewer than
+ * `atLeast` of them.
  */
-export const saidOf = async (correlationId, name) => {
+export const loggedLines = async (wanted, atLeast = 1, name = undefined) => {
   const file =
     process.env[name === undefined ? "CONFORMANCE_LOG" : `CONFORMANCE_LOG_${name.toUpperCase()}`];
   if (file === undefined) throw new Error("no server log in this run");
+  let found = [];
   for (let attempt = 0; attempt < 20; attempt += 1) {
-    for (const line of readFileSync(file, "utf8").split("\n")) {
-      try {
-        const written = JSON.parse(line);
-        if (written.correlationId === correlationId) return String(written.message);
-      } catch {
-        // A line that is not one of the server's own is not the one looked for.
-      }
-    }
+    found = readFileSync(file, "utf8")
+      .split("\n")
+      .flatMap((line) => {
+        try {
+          return [JSON.parse(line)];
+        } catch {
+          // A line that is not one of the server's own is not one looked for.
+          return [];
+        }
+      })
+      .filter((written) => wanted(written));
+    if (found.length >= atLeast) return found;
     await sleep(100);
   }
-  return undefined;
+  return found;
+};
+
+/**
+ * What the server logged against this correlation id (DESIGN 12): the line's message, or
+ * undefined where it logged nothing against that id.
+ */
+export const saidOf = async (correlationId, name) => {
+  const [line] = await loggedLines((written) => written.correlationId === correlationId, 1, name);
+  return line === undefined ? undefined : String(line.message);
 };
 
 /** Whether the server logged a failure against this correlation id. */

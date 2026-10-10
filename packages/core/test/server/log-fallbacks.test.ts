@@ -44,6 +44,30 @@ describe("logging the placements that fell back", () => {
     expect(logged[0]?.correlationId).toMatch(/^[0-9a-f]{8}$/);
   });
 
+  // Every placement a request refused for passing its limit shares one id, and so one line.
+  it("logs one line for every placement refused past the limit, saying how many", () => {
+    const logged: LogLine[] = [];
+    const refused: Diagnostic = {
+      name: "plain",
+      view: "default",
+      id: "",
+      source: "fallback",
+      reason: "too-many",
+      correlationId: "c-9",
+      ms: 0,
+      refused: 9744,
+    };
+    logFallbacks([answered, refused], 'inside "board"', (line) => logged.push(line));
+    expect(logged).toEqual([
+      {
+        correlationId: "c-9",
+        message:
+          '9744 placements inside "board" were refused after too-many, the first of them "plain"',
+        stack: undefined,
+      },
+    ]);
+  });
+
   it("walks into what each placement composed, and says which assembly a child sits inside", () => {
     const logged: LogLine[] = [];
     const shell: Diagnostic = {

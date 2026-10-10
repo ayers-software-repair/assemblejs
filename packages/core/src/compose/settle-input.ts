@@ -4,6 +4,7 @@ import type { AssemblyPlan } from "./assembly-plan.js";
 import type { ContentCache } from "./content-cache.js";
 import type { Fetch } from "./fetch.js";
 import type { Limits } from "./limits.js";
+import type { PlacementCount } from "./placement-count.js";
 
 /** Everything settling one placement needs, resolved by the composer from its own options. */
 export interface SettleInput {
@@ -18,8 +19,8 @@ export interface SettleInput {
   readonly path: readonly string[];
   /** This placement's number among every placement of its request, the first being one. */
   readonly ordinal: number;
-  /** What numbers the request's placements, handed on to what this one composes in this process. */
-  readonly count: () => number;
+  /** The request's count, handed on to what this placement composes in this process. */
+  readonly count: PlacementCount;
   readonly query: URLSearchParams;
   readonly params: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;

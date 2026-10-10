@@ -32,7 +32,8 @@ interface Params {
  *
  * The composition headers are checked on arrival whoever sent them, because there is no
  * privileged variant of a route. An assembly or a view this server does not have is a 404 with
- * an id, and a render that throws is the assembly's fallback under a 500, its cause in the log.
+ * an id, and a render that throws, or one whose answer is past the limit on bytes, is the
+ * assembly's fallback under a 500, its cause in the log.
  * The content it answers holds every child the assembly's view placed, composed here.
  */
 export function registerAssemblies(
@@ -120,6 +121,13 @@ export function registerAssemblies(
       // A child that fell back left its failed envelope inside a parent that still answered 200;
       // its id is found here, in the log of the server that composed it.
       logFallbacks(rendered.diagnostics, `inside "${resolved.assembly.name}"`, log);
+      // An answer is under the limit on bytes or it is a failure, here as where it is placed:
+      // what a page of this server would refuse of this assembly, its own address refuses.
+      if (Buffer.byteLength(rendered.html) > limits.maxBytes) {
+        throw new Error(
+          `assembly "${resolved.assembly.name}" answered more than ${String(limits.maxBytes)} bytes`,
+        );
+      }
       html = rendered.html;
     } catch (error) {
       // The assembly's fallback, marked with the id its failure is logged against: a 500, so a

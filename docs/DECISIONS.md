@@ -3922,3 +3922,45 @@ Corrected with it: the changeset, the ledger and the memo said one request "plac
 than 256 assemblies, where the limit bounds what a request composes; a cached answer counts
 as one whatever it holds. The design had been corrected before the last push and these had
 not.
+
+## 2026-10-10: what a refused placement costs
+
+Row 4c, found by the reviewer consulted before the limit was pushed: a placement refused for
+passing a request's limit still took an id, an empty failed envelope, a diagnostic and a line
+in the log, so a stored value written raw that named ten thousand assemblies wrote ten thousand
+lines on every visit. The lead decided it as this seat advised, as a guard that changes no
+promise about access: one line a request for every such refusal, carrying how many, the
+envelopes sharing its id, and one diagnostic the same way.
+
+Settled:
+
+- **The request's count keeps the account.** It is a `PlacementCount` now, made by
+  `countPlacements`: it numbers the placements, and is told of each one refused for passing
+  the limit. It answers the one id they all carry, minted when the first is refused, and at
+  the end the one diagnostic: how many, the first of them, that id.
+- **Each refused placement still leaves its empty failed envelope**, and the id on any of them
+  finds the one line, so what DESIGN 12 promises of a failure's id holds.
+- **Whoever began the count gives the account, once**: the composition that composed the
+  request's first template. One that was handed a count leaves it to its owner. So the
+  diagnostic and the line stand where the request does: on a page among the page's, at an
+  assembly's own address among its children's.
+- **An assembly's own address refuses an answer past the limit on bytes.** The lead asked that
+  a flood's answer be under the limit on bytes or refused by it. Placed on a page it was
+  refused. Asked for at its own address it was sent whole, 3.7 MB for ten thousand
+  directives at 368 bytes an empty envelope: the content endpoint had no limit of its own. It
+  answers `500` with its fallback envelope now, as for a render that throws, and logs why.
+  This is beyond what the lead ordered, which named the line and the diagnostic, and is his
+  to overrule.
+
+Measured on the rendering fixture, a stored value naming an assembly ten thousand times: the
+request renders 256 of them, 255 on a page whose own placement of the view is the first; it
+writes one line for the 9,744, or the 9,745; and it answers in under 4 KB either way.
+
+The gate on the design's listings went red on this change until they followed it: a count is
+a `PlacementCount`, a diagnostic may say how many it accounts for, and the count's own type is
+listed.
+
+Proof: ten unit mutations, each alone, each red. Two around the rendering fixture: with a
+refusal given an id of its own and the count never told, the spec of one id and one line and
+both specs of the flood went red; with the byte limit not asked at an assembly's own address,
+the flood's spec at that address did.

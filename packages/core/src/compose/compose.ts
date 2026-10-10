@@ -3,6 +3,7 @@
 import type { AssemblyPlan } from "./assembly-plan.js";
 import type { ComposeOptions } from "./compose-options.js";
 import type { ComposeResult } from "./compose-result.js";
+import { countPlacements } from "./count-placements.js";
 import { DEFAULT_LIMITS } from "./default-limits.js";
 import type { Diagnostic } from "./diagnostic.js";
 import { findPlacements } from "./find-placements.js";
@@ -29,8 +30,7 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
   const placements = findPlacements(options.template);
   // Each placement takes its number as it is reached below, in the order the template writes
   // them: from the request's count when this composition was handed one, from one otherwise.
-  let placed = 0;
-  const count = options.count ?? (() => (placed += 1));
+  const count = options.count ?? countPlacements(options.newId);
   const query = options.query ?? new URLSearchParams();
   const params = options.params ?? {};
   const headers = options.headers ?? {};
@@ -60,7 +60,7 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
         page: options.page,
         depth: options.depth ?? 0,
         path: options.path ?? [],
-        ordinal: count(),
+        ordinal: count.next(),
         count,
         query,
         params,
@@ -92,7 +92,9 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
     cursor = placement.end;
     if (outcome.status === "fulfilled") {
       html += outcome.value.html;
-      diagnostics.push(outcome.value.diagnostic);
+      // Every placement refused for passing the request's limit shares the one account below.
+      if (outcome.value.diagnostic.reason !== "too-many")
+        diagnostics.push(outcome.value.diagnostic);
       return;
     }
     // The placement renders as nothing, and says so, rather than vanishing without a trace.
@@ -106,6 +108,10 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
     });
   });
   html += options.template.slice(cursor);
+  // Whoever began the request's count gives the account of what the request refused past its
+  // limit, once: how many, under the one id their envelopes carry.
+  const refused = options.count === undefined ? count.account() : undefined;
+  if (refused !== undefined) diagnostics.push(refused);
 
   // The output is in the template's order whichever placement finished first.
   return { html, diagnostics };

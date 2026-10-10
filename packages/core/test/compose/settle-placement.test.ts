@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { settlePlacement } from "@assemblejs/core";
+import { countPlacements, settlePlacement } from "@assemblejs/core";
 import type { AssemblyRequest, ContentCache, Fetch, SettleInput } from "@assemblejs/core";
 
 const answering =
@@ -25,7 +25,7 @@ const input = (over: Partial<SettleInput> = {}): SettleInput => ({
   depth: 0,
   path: [],
   ordinal: 1,
-  count: () => 1,
+  count: countPlacements(() => "c-0"),
   query: new URLSearchParams(),
   params: {},
   headers: {},
