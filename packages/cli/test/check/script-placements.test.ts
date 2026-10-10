@@ -39,6 +39,21 @@ describe("the slots a view written as a module places", () => {
     expect(scriptPlacements(own, "tsx").placements).toEqual([]);
   });
 
+  it("are read under a namespace the module imports the whole of a renderer's client as", () => {
+    const react = `import * as client from "@assemblejs/renderer-react/client";\nexport default (props: { name: string }) => <><client.Slot name="cart" view="wide" /><client.Slot name={props.name} /><client.Other name="price" /></>;`;
+    const read = scriptPlacements(react, "tsx");
+    expect(read.placements).toEqual([{ name: "cart", view: "wide" }]);
+    expect(read.unnamed).toEqual(["<client.Slot> with a name the view computes"]);
+    const lit = `import * as client from "@assemblejs/renderer-lit/client";\nimport { html } from "lit";\nexport default () => html\`<section>\${client.slot("price")}\${client["slot"]("cart")}</section>\`;`;
+    expect(scriptPlacements(lit, "ts").placements).toEqual([
+      { name: "price", view: "default" },
+      { name: "cart", view: "default" },
+    ]);
+    // A namespace of anything else is not a renderer's, whatever it holds.
+    const other = `import * as ui from "./ui.js";\nexport default () => <ui.Slot name="cart" />;`;
+    expect(scriptPlacements(other, "tsx").placements).toEqual([]);
+  });
+
   it("are every call of a renderer's slot() in a Lit view", () => {
     const lit = `import { slot } from "@assemblejs/renderer-lit/client";\nimport { html } from "lit";\nexport default (props: { which: string }) => html\`<section>\${slot("cart")}\${slot("price", "compact")}\${slot("badge", props.which)}\${slot(props.which)}</section>\`;`;
     const read = scriptPlacements(lit, "ts");

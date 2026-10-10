@@ -33,6 +33,9 @@ describe("the slots a Svelte component's markup places", () => {
     expect(
       sveltePlacements(component('{@html place("cart")}', "slot as place")).placements,
     ).toEqual([{ name: "cart", view: "default" }]);
+    // Under a namespace it is the same slot, and a name that only ends like it is another's.
+    const whole = `<script lang="ts">\n  import * as c from "@assemblejs/renderer-svelte/client";\n</script>\n<div>{@html c.slot("cart")}{@html abc.slot("price")}{@html c_slot("gone")}</div>`;
+    expect(sveltePlacements(whole).placements).toEqual([{ name: "cart", view: "default" }]);
     expect(sveltePlacements('<div>{@html slot("cart")}</div>').placements).toEqual([]);
   });
 });

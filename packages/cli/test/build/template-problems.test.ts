@@ -3,31 +3,32 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
 import { buildProject, checkProject, discoverAssemblies, templateProblems } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
+import { templatedProject } from "../fixtures/templated-project.js";
 
-// Nested in the example that installs the templates package, as a project that did would be.
-const templates = fileURLToPath(new URL("../../../../examples/templates/", import.meta.url));
 const made: string[] = [];
 afterAll(() => {
   for (const root of made) rmSync(root, { recursive: true, force: true });
 });
-const project = (views: Record<string, string>, at = templates): string => {
-  const root = mkdtempSync(join(at, ".dev-template-"));
-  made.push(root);
-  writeFileSync(join(root, "package.json"), "{}");
-  mkdirSync(join(root, "src", "pages", "home"), { recursive: true });
-  writeFileSync(join(root, "src", "server.ts"), "");
-  writeFileSync(join(root, "src", "pages", "home", "home.html"), "<body></body>");
-  for (const [name, source] of Object.entries(views)) {
-    const assembly = name.split(".")[0] ?? name;
-    mkdirSync(join(root, "src", "assemblies", assembly), { recursive: true });
-    writeFileSync(join(root, "src", "assemblies", assembly, name), source);
-  }
-  return root;
-};
+// Each view in an assembly named for its file, in a project that would build.
+const project = (views: Record<string, string>, at?: string): string =>
+  templatedProject(
+    made,
+    {
+      "package.json": "{}",
+      "src/server.ts": "",
+      "src/pages/home/home.html": "<body></body>",
+      ...Object.fromEntries(
+        Object.entries(views).map(([name, source]) => [
+          `src/assemblies/${name.split(".")[0] ?? name}/${name}`,
+          source,
+        ]),
+      ),
+    },
+    at,
+  );
 const found = (root: string) => templateProblems(root, discoverAssemblies(root).assemblies);
 const quiet: Io = {
   write: () => undefined,

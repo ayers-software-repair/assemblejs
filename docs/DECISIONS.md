@@ -3748,3 +3748,85 @@ Added with it:
 Also ruled: the lexer and parser Pug installs are not to be declared by the templates
 renderer until Pug's own source and documentation have been read for a way through the
 installed Pug to its parse tree. That reading is the first step of finding 3.
+
+## 2026-10-10: every static view is read
+
+The second reading's third finding, and with it the fifth. The design said what a view places
+is "read from its source before any request", and named Pug as the one exception. The reader
+found more left to the render, and three things that followed which no sentence said and no
+spec held.
+
+Found by the reader, and read again here:
+
+- Unread, each silently: a Pug view; a template whose directive did not read once what its
+  language computes was masked; a slot reached through a namespace import.
+- For such a view, a deferred parent's children lost the stylesheets linked ahead for them
+  (`core/src/server/local-assets.ts`); a page whose only browser half stood beneath one was
+  refused a deferral or a stream at boot, though its render would have put the runtime on it
+  (`opens-runtime.ts`, `placement-problems.ts`); and a missing name, a missing view or a loop
+  was not refused at boot.
+
+The lead's order was to make it true before saying it, and to add no dependency for it if the
+installed Pug has a way to its parse tree.
+
+Settled:
+
+- **A Pug view is read from the tree the project's own Pug makes of it.** Pug's compile takes
+  a list of plugins, and hands the tree its parser made to each one's `postParse`. Read in the
+  installed `pug@3.0.4/lib/index.js`: `options.plugins` at line 81, `applyPlugins` at 43 to 47,
+  the tree handed to `postParse` at 135 to 141, and `compile` passing the option through at 284. Its README says nothing of plugins: the door is in its source alone. A spec asks the
+  installed Pug for a tree and goes red if a later one stops handing it over. Nothing is
+  declared: neither Pug's lexer nor its parser is a dependency of ours.
+- **The project's own Pug is found as its templates renderer finds it**, in `node_modules`
+  beside where that package really is and in each directory above, never by asking node to
+  resolve the name. Found by a spec written to be refused: under a test runner a package
+  manager had started, node resolved the workspace's Pug, through `NODE_PATH`, for a project
+  that had none.
+- **The tree is written as the markup its directives stand in**, and the one reader of
+  directives reads that, so a Pug view is held to the rules an html view is: a directive tag
+  with every attribute it was given and whatever is inside it; text as written, since Pug
+  writes it so; every other tag as its name around what it holds, so a script's text stays
+  text; a comment as a comment. A tag whose own name is computed is not taken for a directive:
+  only a render knows what it is.
+- **A directive in a template that does not read as it is written is a finding**, where it
+  was passed over, in EJS, Handlebars, Nunjucks and Pug. Passed over, the view passed `check`
+  and failed whole at every render that reached the directive.
+- **A build refuses a view whose placement cannot be read**, as it refuses a template that
+  does not compile, and for the same reason. The other rules a view is held to stay `check`'s
+  and boot's.
+- **One that does not read only for what the template computes in it is still its render's.**
+  `<assembly name="cart" {{#if x}}view="wide"{{/if}}></assembly>` does not read once the block
+  is masked, and reads at every render. The first form of this change refused it, and would
+  have refused a build over a view that works; the reviewer consulted before the push caught
+  it. Such a view is unread, as it was, with no finding, and the design lists it among what a
+  render alone knows. So a static view of a built project can still be without a record, and
+  nothing here says otherwise.
+- **A renderer's client imported whole is followed**: `client.Slot` and `client.slot`, in a
+  module, a Svelte and a Vue view. So is a Vue slot written in kebab case, which Vue's own
+  reference says a template may do (`vuejs.org/api/sfc-script-setup`, "Using Components"). An
+  earlier record (S-07) listed both as unread; the third it listed, a slot in a component
+  that comes from a package, still is, and the ledger's row for it stays open.
+- **What a render alone still knows is said**, DESIGN 7, with what follows from it: a slot
+  handed on under another name, a slot inside a component that comes from a package, a tag
+  whose own name a template computes, what a value written raw holds, and a view of an
+  assembly declared by hand that does not say what it places. Core holds each consequence
+  with a spec of a view nothing read.
+- **Finding 5 with it.** DESIGN 3.4 said a loop is refused at boot. That holds where each
+  hop's view is written; a placement whose view is computed is held for its name alone, and a
+  loop through one is refused at its render. The rendering fixture's loop is now such a one,
+  an EJS view that places itself with a view its data gives. It had been a Pug view, which
+  reached its render only because nothing read Pug.
+
+Two specs were wrong, and a mutation found each:
+
+- The spec of a Pug that throws as it loads never loaded the Pug that throws: node kept the
+  one the case before had loaded from the same file. Each case has a project of its own now.
+- Nothing asked for a block beneath a line of code, `- if (x)` with a directive under it.
+
+Proof: fifty unit mutations, each alone, each red. Two went red only after the specs above
+were corrected, and one only once it was written so that it compiled. Three around the
+rendering fixture. With a Pug source never
+read, the fixture's server would not start. With that and one page's deferral removed it
+started, which is what says the deferral was what boot refused, and three specs went red: the
+deferral, the stylesheet linked ahead, and the Pug view that places itself. With an assembly
+let be its own ancestor, the loop's spec and the composition headers' went red.

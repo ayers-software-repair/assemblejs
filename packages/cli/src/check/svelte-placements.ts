@@ -18,8 +18,9 @@ export function sveltePlacements(source: string): ViewPlacements {
   const markup = source.replace(SCRIPT_OR_STYLE, "");
   const found: { name: string | undefined; view: string | undefined; shown: string }[] = [];
   for (const local of importedAs(source, "slot")) {
+    // A name under a namespace holds a dot, which is the one character of it a pattern reads.
     for (const [call, written = ""] of markup.matchAll(
-      new RegExp(`\\b${local}\\(([^)]*)\\)`, "g"),
+      new RegExp(`(?<![\\w$.])${local.replace(".", "\\.")}\\(([^)]*)\\)`, "g"),
     )) {
       const [name = "", view] = written.split(",").map((one) => one.trim());
       found.push({

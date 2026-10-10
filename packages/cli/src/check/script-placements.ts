@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { DEFAULT_VIEW } from "@assemblejs/core";
 import { parse } from "acorn";
-import type { AnyNode, Expression, ObjectExpression, SpreadElement } from "acorn";
+import type { AnyNode, Expression, ObjectExpression, SpreadElement, Super } from "acorn";
 import { transformSync } from "esbuild";
 import { collectPlacements } from "./collect-placements.js";
 import { isRendererClient } from "./is-renderer-client.js";
@@ -49,21 +49,24 @@ const property = (
 /**
  * The slots a view written as a module places, read from its source and never run: every
  * `<Slot name="...">` of a renderer's `Slot`, and every call of a renderer's `slot("...")`,
- * under whatever name the module imports them. A view written in place is read; one the module
- * computes is left out of the placement; a name it computes is reported.
+ * under whatever name the module imports them, or under the namespace it imports the whole
+ * client as. A view written in place is read; one the module computes is left out of the
+ * placement; a name it computes is reported.
  *
- * Throws for a module that cannot be compiled or parsed. A slot reached through a namespace
- * import is not seen here, and is left to the render.
+ * Throws for a module that cannot be compiled or parsed. A slot handed on under another name,
+ * assigned or passed, is not seen here, and is left to the render.
  */
 export function scriptPlacements(source: string, loader: "ts" | "tsx"): ViewPlacements {
   const code = transformSync(source, { loader, format: "esm", jsx: "automatic" }).code;
   const program = parse(code, { ecmaVersion: "latest", sourceType: "module" });
   const components = new Set<string>();
   const functions = new Set<string>();
+  const namespaces = new Set<string>();
   for (const statement of program.body) {
     if (statement.type !== "ImportDeclaration") continue;
     if (!isRendererClient(String(statement.source.value))) continue;
     for (const specifier of statement.specifiers) {
+      if (specifier.type === "ImportNamespaceSpecifier") namespaces.add(specifier.local.name);
       if (specifier.type !== "ImportSpecifier") continue;
       const imported =
         specifier.imported.type === "Identifier"
@@ -73,25 +76,44 @@ export function scriptPlacements(source: string, loader: "ts" | "tsx"): ViewPlac
       if (imported === "slot") functions.add(specifier.local.name);
     }
   }
+  // What an expression names of a renderer's client, as the module writes it: an imported
+  // name, or a member of a namespace, `client.slot` and `client["slot"]` alike.
+  const named = (
+    node: Expression | SpreadElement | Super | undefined,
+    exported: "Slot" | "slot",
+  ): string | undefined => {
+    const locals = exported === "Slot" ? components : functions;
+    if (node?.type === "Identifier") return locals.has(node.name) ? node.name : undefined;
+    if (node?.type !== "MemberExpression" || node.object.type !== "Identifier") return undefined;
+    if (!namespaces.has(node.object.name)) return undefined;
+    const member = node.computed
+      ? written(node.property as Expression)
+      : node.property.type === "Identifier"
+        ? node.property.name
+        : undefined;
+    return member === exported ? `${node.object.name}.${exported}` : undefined;
+  };
 
   const found: { name: string | undefined; view: string | undefined; shown: string }[] = [];
   walk(program, (node) => {
     if (node.type !== "CallExpression") return;
     const [first, second] = node.arguments;
-    if (node.callee.type === "Identifier" && functions.has(node.callee.name)) {
+    const called = named(node.callee, "slot");
+    const component = named(first, "Slot");
+    if (called !== undefined) {
       found.push({
         name: written(first),
         view: second === undefined ? DEFAULT_VIEW : written(second),
-        shown: `${node.callee.name}(...) with a name the view computes`,
+        shown: `${called}(...) with a name the view computes`,
       });
-    } else if (first?.type === "Identifier" && components.has(first.name)) {
+    } else if (component !== undefined) {
       const props = second?.type === "ObjectExpression" ? second : undefined;
       const name = props === undefined ? undefined : property(props, "name");
       const view = props === undefined ? undefined : property(props, "view");
       found.push({
         name: written(name?.value),
         view: view?.present === false ? DEFAULT_VIEW : written(view?.value),
-        shown: `<${first.name}> with a name the view computes`,
+        shown: `<${component}> with a name the view computes`,
       });
     }
   });

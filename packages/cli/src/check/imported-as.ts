@@ -3,11 +3,13 @@
 import { isRendererClient } from "./is-renderer-client.js";
 
 const IMPORT = /import\s*\{([^}]*)\}\s*from\s*["']([^"']+)["']/g;
+const NAMESPACE = /import\s*\*\s*as\s+([\w$]+)\s*from\s*["']([^"']+)["']/g;
 
 /**
- * The names a component's source imports a renderer's export under, read as text: the name
- * itself, or what it is renamed to with `as`. For a Svelte or a Vue component, whose slot is
- * written in its markup and not in a module this package parses.
+ * The names a component's source writes a renderer's export as, read as text: the name itself,
+ * what it is renamed to with `as`, or the name under a namespace the whole client is imported
+ * as, `client.slot`. For a Svelte or a Vue component, whose slot is written in its markup and
+ * not in a module this package parses.
  */
 export function importedAs(source: string, exported: string): readonly string[] {
   const locals: string[] = [];
@@ -18,6 +20,9 @@ export function importedAs(source: string, exported: string): readonly string[] 
       if (name !== exported) continue;
       locals.push(as === "as" && local !== undefined ? local : name);
     }
+  }
+  for (const [, namespace = "", from = ""] of source.matchAll(NAMESPACE)) {
+    if (isRendererClient(from)) locals.push(`${namespace}.${exported}`);
   }
   return locals;
 }

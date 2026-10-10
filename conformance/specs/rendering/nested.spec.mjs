@@ -96,8 +96,9 @@ test("a chain of assemblies renders as deep as the cap, and the one past it is r
   assert.deepEqual(link.children, []);
 });
 
-test("a view that places itself renders once, and holds one refusal where it would repeat", async () => {
-  // A Pug view writes the directive in its own syntax, so nothing reads it before it renders.
+test("a view that places itself with a view only a render knows renders once, and holds one refusal where it would repeat", async () => {
+  // Its template computes the view it places itself with, so boot holds the placement for its
+  // name alone and does not follow it (DESIGN 3.4): the loop is a request, refused at render.
   const [outer] = treeOf(await (await get("/looped")).text());
   assert.equal(nameOf(outer), "loop");
   assert.equal(outer.attributes["data-failed"], undefined);
@@ -142,6 +143,32 @@ test("a deferred parent is served empty, with the runtime its child will need li
   assert.deepEqual(answer.children.map(nameOf), ["react-label"]);
 });
 
+test("a deferred parent written in Pug stands on a page whose only browser half is the child it places", async () => {
+  // Unread, the Pug view hid that child from boot, which refused the deferral: nothing on the
+  // page would have filled it, as far as boot knew, and this server would not have listened.
+  const page = await (await get("/pug-later")).text();
+  const [placeholder, ...others] = treeOf(page);
+  assert.deepEqual(others, []);
+  assert.equal(nameOf(placeholder), "pug-nest");
+  assert.equal(placeholder.attributes["data-defer"], "");
+  assert.match(page, /<script type="module" src="[^"]+"/);
+  const filled = await get("/assembly/pug-nest/default/", {
+    "assembly-id": placeholder.attributes["data-id"],
+    "assembly-depth": "1",
+  });
+  assert.deepEqual(treeOf(await filled.text())[0].children.map(nameOf), ["preact-label"]);
+});
+
+test("a deferred parent written in Pug has its child's stylesheet linked before the child arrives", async () => {
+  const page = await (await get("/pug-tinted-later")).text();
+  const [deferred] = treeOf(page);
+  assert.equal(nameOf(deferred), "pug-tint");
+  assert.equal(deferred.attributes["data-defer"], "");
+  assert.deepEqual(deferred.children, []);
+  const head = page.slice(0, page.indexOf("</head>"));
+  assert.match(head, /<link rel="stylesheet" href="[^"]*tinted[^"]*\.css">/);
+});
+
 test("a view whose source places itself is refused before anything is built or listens", async () => {
   // In a copy of the project, so the server under test and its build are left as they are.
   const root = rootOf();
@@ -157,12 +184,22 @@ test("a view whose source places itself is refused before anything is built or l
       join(copy, "src", "assemblies", "selfish", "selfish.html"),
       '<p>selfish</p><assembly name="selfish"></assembly>\n',
     );
+    // And one in Pug, which writes the directive in its own syntax and is read all the same.
+    mkdirSync(join(copy, "src", "assemblies", "vain"));
+    writeFileSync(
+      join(copy, "src", "assemblies", "vain", "vain.pug"),
+      'p vain\nassembly(name="vain")\n',
+    );
     const run = (verb) => spawnSync("npx", ["assemblejs", verb], { cwd: copy, encoding: "utf8" });
     const checked = run("check");
     assert.equal(checked.status, 1, checked.stdout);
     assert.match(
       checked.stderr,
       /^src\/assemblies\/selfish\/selfish\.html: "selfish" places itself, and no render lets an assembly be its own ancestor \(an-assembly-is-never-its-own-ancestor\): /m,
+    );
+    assert.match(
+      checked.stderr,
+      /^src\/assemblies\/vain\/vain\.pug: "vain" places itself, and no render lets an assembly be its own ancestor \(an-assembly-is-never-its-own-ancestor\): /m,
     );
     // The build writes what it read; the server that would serve it refuses to start.
     const built = run("build");
@@ -172,6 +209,7 @@ test("a view whose source places itself is refused before anything is built or l
       assert.equal(server.origin, undefined, "a server that would loop on every render listens");
       assert.notEqual(await server.exit(), 0);
       assert.match(server.output(), /assembly "selfish" view "default" places itself/);
+      assert.match(server.output(), /assembly "vain" view "default" places itself/);
     } finally {
       await server.stop();
     }

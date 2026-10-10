@@ -72,6 +72,24 @@ describe("what is wrong with how a page places assemblies", () => {
     expect(messages(one("hello") + one("live"), { hello: { defer: true } })).toEqual([]);
   });
 
+  // With a record of what its view places, a browser half beneath a static view lets a
+  // deferral stand. With none the same page is refused, though its render would have put the
+  // runtime on it: a view is read, or it says what it places, or boot knows nothing beneath it.
+  it("counts a browser half beneath a static view only where that view's source was read", () => {
+    const beneath = (shell: PlacedAssembly) =>
+      placementProblems(
+        'page "/"',
+        findPlacements(one("shell")),
+        { shell: { defer: true } },
+        new Map([...assemblies, ["shell", shell]]),
+      ).map((problem) => problem.message);
+    const read = { default: [{ name: "live" }] };
+    expect(beneath({ views: ["default"], browserHalf: false, placements: read })).toEqual([]);
+    expect(beneath({ views: ["default"], browserHalf: false }).join()).toMatch(
+      /nothing would fill it/,
+    );
+  });
+
   it("refuses a deadline or a cache on a deferral, which nothing reads", () => {
     expect(messages(one("live"), { live: { defer: true, deadline: 5 } }).join()).toMatch(
       /nothing reads/,

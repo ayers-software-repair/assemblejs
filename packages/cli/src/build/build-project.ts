@@ -23,6 +23,7 @@ import { RENDERER_PACKAGES } from "./renderer-packages.js";
 import { sharedOptions } from "./shared-options.js";
 import { sourceVersion } from "./source-version.js";
 import { templateProblems } from "./template-problems.js";
+import { unreadPlacements } from "./unread-placements.js";
 
 /**
  * Builds a project into `dist/`: `dist/server.js`, which `node` starts with no bundler
@@ -37,12 +38,14 @@ export async function buildProject(root: string, io: Io): Promise<number> {
   const found = discoverAssemblies(root);
   const pages = discoverPages(root);
   const apis = discoverApis(root);
+  const views = viewFindings(root, found.assemblies);
   const problems = [
     ...found.problems,
     ...pages.problems,
     ...apis.problems,
     ...buildProblems(root, found.assemblies),
     ...(await templateProblems(root, found.assemblies)),
+    ...unreadPlacements(views.problems),
   ];
   const { compilers, problems: unloaded } = await loadCompilers(root, found.assemblies);
   // A framework that is not installed at all is already reported; one installed whose compiler
@@ -80,7 +83,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
         script,
         styles,
         packages,
-        placements: viewFindings(root, found.assemblies).placements,
+        placements: views.placements,
       }),
     );
     io.write(join(generated, "pages.ts"), generatePages(pages.pages, generated));

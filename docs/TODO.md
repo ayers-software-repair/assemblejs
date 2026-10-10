@@ -5,27 +5,27 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 06:30 EDT, after the fault of 4a was named and its memo written).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 07:07 EDT, after the second reading's third and fifth).**
 
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: the fault of row
-4a named KNOWN FAULT in the spec that holds it, a second open page in the trust fixture whose
-view is Pug, and the memo for the owner. Beneath it, each pushed on 2026-10-10 with its runs
-read to their end, green, and each time the one its `ci` run was created at: `16d8b92`, 06:18
-EDT, the second reading's fourth finding, what a value written raw places (`ci` 38044427017,
-`release` 38044427065, `deploy-site` 38044427043, and staging read: the two guides and both
-text files as the branch has them); `05fae8a`, 05:47 EDT, the second reading's first two
-findings
-(`ci` 38042647592, `release` 38042647595, `deploy-site` 38042647601, and staging read: the
-seven guides and both text files as the branch has them); `03a90fa`, 05:34 EDT, nothing
-outside a project's root is read (`ci` 38041855065, `release` 38041854943); `8fe15a6`, 04:48
-EDT, the project's whole shape and each assembly as resources (`ci` 38039133712, `release`
-38039133595); `6a27a0c`, 04:06 EDT, the release notes (`ci` 38036708423, `release`
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: the second
+reading's third and fifth findings, every static view read for what it places. Beneath it, each
+pushed on 2026-10-10 with its runs read to their end, green, and each time the one its `ci` run
+was created at: `a8c882f`, 06:38 EDT, the fault of row 4a named KNOWN FAULT in the spec that
+holds it, with the memo for the owner (`ci` 38045580352, `release` 38045580288); `16d8b92`,
+06:18 EDT, the second reading's fourth finding, what a value written raw places (`ci`
+38044427017, `release` 38044427065, `deploy-site` 38044427043, and staging read: the two guides
+and both text files as the branch has them); `05fae8a`, 05:47 EDT, the second reading's first
+two findings (`ci` 38042647592, `release` 38042647595, `deploy-site` 38042647601, and staging
+read: the seven guides and both text files as the branch has them); `03a90fa`, 05:34 EDT,
+nothing outside a project's root is read (`ci` 38041855065, `release` 38041854943); `8fe15a6`,
+04:48 EDT, the project's whole shape and each assembly as resources (`ci` 38039133712,
+`release` 38039133595); `6a27a0c`, 04:06 EDT, the release notes (`ci` 38036708423, `release`
 38036708409, `deploy-site` 38036708372: the deploy ran the release-notes gate before it
 published, staging serves `/assemblejs/next/release-notes.html` as the branch has it, and the
 page was drawn in the sealed browser at a desk's width and a phone's). Beneath those: the API
-reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`;
-A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`.
-Every package reads `1.0.0-next.0`; twenty-two changesets are pending. The owner's overnight
+reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03,
+`9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`.
+Every package reads `1.0.0-next.0`; twenty-three changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -46,9 +46,14 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    it, is that fault: the lead ruled it the owner's to settle (the morning list's item 0,
    with the memo `docs/studies/placement-and-access.md`), and nothing for it is built into
    `next`. Its spec is titled KNOWN FAULT; the spec of the outcome waits red on the local
-   branch `security/guarded-wherever-placed`. NEXT, by the lead's order: 3, made true and
-   not only said, by reading a Pug view through the installed Pug if it has a door to its
-   parse tree; then 4b, 5, 7, 6 and the rest of 8.
+   branch `security/guarded-wherever-placed`, which the lead ruled stays local until the
+   owner has chosen. Its 3 and 5 are done, pushed with this block: `check` and a build read a
+   Pug view through the project's own Pug, a template's directive that does not read as it is
+   written is a finding and refuses a build, and a loop is said to be refused at boot only
+   where each hop's view is written. NEXT, ordered by the lead: 4b, a limit on how many
+   assemblies one request places, beside depth and bytes in the same definition, its number
+   chosen from a measure of what the examples' and fixtures' pages place, and no setting
+   for it. Then 7, 6, the rest of 8, 10 and 11.
 3. THE ENVELOPE'S WORDS, parked on the local branch `wip/envelope-vocabulary` (`09ff5c5`, not
    pushed): its message says what is done and what is left. Bring it onto `next` after 2.
 4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
@@ -253,14 +258,22 @@ rowed or the owner's; the numbers are the report's.
       Written closed in DESIGN 2.4, 7 and 14, in the rule, in what a finding shows, in two
       tools' descriptions and in core's own word for it; DESIGN 2.4 says an opening tag alone
       is refused and what fails
-- [ ] 3. "Read from its source before any request" is true of fewer views than DESIGN 7 and
-      14 say, and what follows for the rest is said nowhere: a module that does not compile, a
-      slot reached through a namespace import, a view file that is not js, ts, svelte or vue,
-      a template that does not read once its engine's parts are masked, and Pug. For such a
-      view a deferred parent's children lose their stylesheets linked ahead, a page whose only
-      browser half stands beneath one is refused a deferral or a stream, and a missing name, a
-      missing view or a loop is not refused at boot. Say it in the design, and hold the first
-      two with specs, which nothing does
+- [x] 3. "Read from its source before any request" was true of fewer views than DESIGN 7 and
+      14 said: a Pug view, a template whose directive did not read once its engine's parts
+      were masked, and a slot reached through a namespace import were left to the render. For
+      such a view a deferred parent's children lost their stylesheets linked ahead, a page
+      whose only browser half stood beneath one was refused a deferral or a stream, and a
+      missing name, a missing view or a loop was not refused at boot. Made true where it
+      could be, and said where it could not. `check` and a build read a Pug view from the
+      tree the project's own Pug makes of it. A directive in a template that does not read as
+      it is written is a finding where it was silence, and a build refuses that view; one
+      that does not read only for what the template computes in it is still its render's. A
+      namespace import is followed in a module, a Svelte and a Vue view, and a Vue slot
+      written in kebab case is read. What a render alone still knows is listed in DESIGN 7
+      with what follows from it, and core holds each consequence with a spec of a view
+      nothing read. The rendering fixture defers a Pug parent whose child holds the page's
+      only browser half, and another whose child has a stylesheet (DECISIONS 2026-10-10,
+      "every static view is read")
 - [x] 4. "Which child it is may not come from data" is held by `check` alone: the composer
       reads the markup a view rendered, so a name a view writes from data is placed like any
       other, and any `<assembly>` a view writes unescaped from data is a placement. The one
@@ -292,9 +305,11 @@ rowed or the owner's; the numbers are the report's.
       way 4a is settled: what it counts (one template's directives, or a whole request's),
       its default, and what the placements past it show. Measure first what one request can
       be made to cost today
-- [ ] 5. A loop is refused at boot only where every hop writes its view; a placement whose
+- [x] 5. A loop is refused at boot only where every hop writes its view; a placement whose
       view is computed is held for its name alone and not followed, so such a loop is refused
-      at render. DESIGN 3.4 and 7 say "at boot" of every loop
+      at render. DESIGN 3.4 said "at boot" of every loop, and says this now. The rendering
+      fixture's loop is such a one: an EJS view that places itself with a view its data
+      gives. It had been a Pug view, which reached its render only because nothing read Pug
 - [ ] 6. Four renderers' slots put an element of their own around the child,
       `<div data-assembly-slot="name">` in React, Preact, Vue and Solid, where Svelte, Lit,
       html and the templates write the directive bare. Neither the design nor a guide names
@@ -585,10 +600,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] A framework view is read with the components it is split into: `viewModules` follows
       its imports by relative path, so a slot written in a component beside the view is the
       view's. Three mutations, each alone, watched red (2026-10-10)
-- [ ] Slots `check` still does not read, and writes into the registry as nothing: one reached
-      through a namespace import (`import * as renderer`), a Vue slot written in kebab case,
-      and one in a module reached by a package's name. Read them, or say in the guide that a
-      slot is written under the name it is imported by (DECISIONS 2026-10-10, S-07)
+- [ ] A slot `check` still does not read, and writes into the registry as nothing: one in a
+      module reached by a package's name. DESIGN 7 says so now, with what follows from it.
+      The framework guides do not: say it there once the owner has chosen in row 4a of the
+      second reading, since one of his choices gives such a slot a declaration. The other two
+      this row named are read since the second reading's finding 3: a slot reached through a
+      namespace import, and a Vue slot written in kebab case (DECISIONS 2026-10-10, S-07 and
+      "every static view is read")
 - [ ] A child placed inside a custom element's own shadow root (a `slot()` written in a Lit
       element's `render`) is found and mounted, and its stylesheet is linked in the page's
       head, where it does not reach: `localAssets` tracks an assembly's shadow root, not an

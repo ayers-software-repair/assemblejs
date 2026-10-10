@@ -15,6 +15,8 @@ export type { ViewPlacements } from "./view-placements.js";
 export { collectPlacements } from "./collect-placements.js";
 export { isRendererClient } from "./is-renderer-client.js";
 export { importedAs } from "./imported-as.js";
+export { pugTree } from "./pug-tree.js";
+export { pugMarkup } from "./pug-markup.js";
 export { templatePlacements } from "./template-placements.js";
 export { scriptPlacements } from "./script-placements.js";
 export { sveltePlacements } from "./svelte-placements.js";

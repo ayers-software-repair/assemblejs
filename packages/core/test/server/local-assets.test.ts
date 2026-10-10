@@ -124,6 +124,17 @@ describe("the browser files a deferred placement needs linked before it is fille
     });
   });
 
+  // The page knows what a deferred view places from a record of its source alone. With none it
+  // links the deferred assembly's own files, and what its children need is not on the page when
+  // they arrive.
+  it("are its own alone where nothing recorded what its view places", () => {
+    const unread = new Map([...known, ["shell", assembly("shell")]]);
+    expect(localAssets(placeholder("shell"), unread)).toEqual({
+      css: ["/shell.css"],
+      js: ["/shell.js"],
+    });
+  });
+
   it("leave the sheets of what a deferred shadow assembly places to its root", () => {
     expect(localAssets(placeholder("card"), known)).toEqual({
       css: [],

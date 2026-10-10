@@ -17,8 +17,9 @@ const guarded = originOf("guarded");
 const at = (path) => fetch(new URL(path, guarded));
 const nameOf = (envelope) => envelope.attributes["data-name"];
 const LEDGER = '<assembly name="ledger"></assembly>';
-// Two open pages, each holding one view that writes what a visitor sent raw: one in a language
-// check reads for what it places, one in a language nothing reads before it renders.
+// Two open pages, each holding one view that writes what a visitor sent raw, one in EJS and one
+// in Pug. Both are read for what they place and recorded as placing nothing: the fault needs no
+// view to go unread.
 const BOARDS = { board: "EJS, <%- %>", pinboard: "Pug, !{ }" };
 
 test("an assembly no open page places is refused at its own address, and is on no open page", async () => {

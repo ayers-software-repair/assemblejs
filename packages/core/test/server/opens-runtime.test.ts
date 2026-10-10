@@ -40,6 +40,16 @@ describe("whether a page carries its own runtime", () => {
     expect(opensRuntime(placing('<assembly name="quiet"></assembly>'), {}, nested)).toBe(false);
   });
 
+  // Boot knows what was read of a view's source and nothing more. A view with no record may
+  // hold a browser half when it renders, and no rule of the page can count on that one.
+  it("does not for a static assembly with no record of what its view places", () => {
+    const unread = new Map<string, PlacedAssembly>([
+      ...assemblies,
+      ["shell", { views: ["default"], browserHalf: false }],
+    ]);
+    expect(opensRuntime(placing('<assembly name="shell"></assembly>'), {}, unread)).toBe(false);
+  });
+
   it("does not for another server's assembly, whose runtime is that server's", () => {
     const place = { live: { url: "https://other.example/assembly/live/" } };
     expect(opensRuntime(placing('<assembly name="live"></assembly>'), place, assemblies)).toBe(

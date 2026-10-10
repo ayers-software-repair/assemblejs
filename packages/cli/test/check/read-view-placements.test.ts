@@ -1,7 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { readViewPlacements } from "@assemblejs/cli";
+import { loadPug, readViewPlacements } from "@assemblejs/cli";
+
+const pug = loadPug(fileURLToPath(new URL("../../../../examples/templates/", import.meta.url)));
 
 describe("what a view's source says it places, each kind of view by what it is", () => {
   it("reads a plain html view as a page's template is read, and throws as its render would", () => {
@@ -14,7 +17,7 @@ describe("what a view's source says it places, each kind of view by what it is",
     );
   });
 
-  it("reads a template in its language, nothing from Markdown, and leaves Pug to the render", () => {
+  it("reads a template in its language, Pug with the project's own, and nothing from Markdown", () => {
     expect(
       readViewPlacements("card.ejs", "ejs", '<assembly name="cart"></assembly><%= data.x %>')
         .placements,
@@ -22,6 +25,10 @@ describe("what a view's source says it places, each kind of view by what it is",
     expect(
       readViewPlacements("notes.md", "markdown", '<assembly name="cart"/>').placements,
     ).toEqual([]);
+    expect(readViewPlacements("card.pug", "pug", 'assembly(name="cart")', pug).placements).toEqual([
+      { name: "cart", view: "default" },
+    ]);
+    // With no Pug to read it, a project that has not installed its renderer, it is unread.
     expect(
       readViewPlacements("card.pug", "pug", 'assembly(name="cart")').placements,
     ).toBeUndefined();

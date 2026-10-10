@@ -29,8 +29,8 @@ framework. What is ours is what follows from it here, and that the design said i
 
 A visitor with no credentials is not shown the ledger, however a directive naming it came to
 be in the page. That spec is written, and red, on the local branch
-`security/guarded-wherever-placed`, in two cases: an EJS view and a Pug one. A turns both
-green. B turns the first green, and the second by a choice B has to make, below.
+`security/guarded-wherever-placed`, in two cases: an EJS view and a Pug one. Each way below
+turns both green.
 
 ## Three ways
 
@@ -67,9 +67,9 @@ fallback, or nothing.
 The build already records what each view's source places. A render refuses, before dispatch,
 a directive naming anything else.
 
-- **Closes:** the fault, in every view the build can read. Measured over the examples and the
-  fixtures, 97 of 104 views are read. The 7 that are not are all Pug, and reading Pug is the
-  second reading's finding 3, in hand.
+- **Closes:** the fault, in every view the build reads. Measured over the examples and the
+  fixtures, with the renderers each installs: all 105 views are read, the Pug ones among them
+  since the second reading's finding 3.
 - **Changes for an author:** two things that render today stop. One is a slot written inside
   a component that comes from a package. It gets a declaration: the view says
   `export const places = ["nav"]`, beside the `mount` and the `shadow` it may already export,
@@ -77,15 +77,15 @@ a directive naming anything else.
   exist: the view writes it plainly.
 - **Has a choice of its own to make:** what a render does for a view with no record. An
   assembly declared by hand in code has none unless its author writes one, and neither has a
-  view the build could not read, which today is every Pug view. Allow, and the fault stays
-  open for those. Refuse, and a third thing stops: such a view places nothing until it says
-  what it places. The seat would refuse, so the rule has no exception; once Pug is read, no
-  view in a project is without a record.
-- **Measured, by reading and not by running, since B is not built:** the reader records 27
+  template holding a directive that reads only once the template has computed part of it.
+  Allow, and the fault stays open for those. Refuse, and a third thing stops: such a view
+  places nothing until it says what it places. The seat would refuse, so the rule has no
+  exception.
+- **Measured, by reading and not by running, since B is not built:** the reader records 30
   views, in the examples and the fixtures, as placing a child. The only views that place what
   their source does not show are the seven written to show this fault.
-- **Costs:** one option on the composer, one reason more in the contract's list, the
-  declaration and its reader, and Pug read first.
+- **Costs:** one option on the composer, one reason more in the contract's list, and the
+  declaration with its reader.
 - **Leaves:** an author who places a guarded assembly on an open page still shows it to
   everyone. That is today's rule, and under B it stays the rule.
 
@@ -110,7 +110,8 @@ The lead advises A, with B on top of it. This seat advises the same, in that ord
 
 - **A first.** It is the root. Guarded should mean guarded wherever an assembly is shown, and
   A needs no reading of anyone's source to be true.
-- **B after finding 3,** once every view is read, so that it holds for all of them at once.
+- **B after it.** Every static view the examples and fixtures hold is read now, so B would
+  hold for all of them at once.
 
 ## The question
 

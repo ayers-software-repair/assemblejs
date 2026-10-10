@@ -81,6 +81,7 @@ describe("a project's whole shape, read from its sources", () => {
   });
 
   it("marks a view only its render can tell of, and one that cannot be read, differently", () => {
+    // This project has no templates renderer installed, so nothing here can read its Pug view.
     const shape = readShape(
       project({
         "src/assemblies/card/card.pug": 'assembly(name="cart")',

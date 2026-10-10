@@ -3,6 +3,8 @@
 import { isAbsolute, join } from "node:path";
 import { SEGMENT } from "@assemblejs/core";
 import type { ViewPlacement } from "@assemblejs/core";
+import { loadPug } from "../build/load-pug.js";
+import type { PugCompiler } from "../build/pug-compiler.js";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
@@ -38,6 +40,10 @@ export function viewFindings(
   const placements = new Map<string, readonly ViewPlacement[]>();
   const problems: ProjectProblem[] = [];
   const unread = new Set<string>();
+  // The project's own Pug, loaded for the first Pug view and not before.
+  let pug: { readonly loaded: PugCompiler | undefined } | undefined;
+  const pugFor = (renderer: string): PugCompiler | undefined =>
+    renderer === "pug" ? (pug ??= { loaded: loadPug(root) }).loaded : undefined;
   for (const assembly of assemblies) {
     const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
     const wrong = (rule: ProjectProblem["rule"], message: string, fix: string): void => {
@@ -61,7 +67,12 @@ export function viewFindings(
     let read: ViewPlacements;
     try {
       const [own, ...parts] = found.modules.map((module) =>
-        readViewPlacements(module, assembly.renderer, readInside(root, module)),
+        readViewPlacements(
+          module,
+          assembly.renderer,
+          readInside(root, module),
+          pugFor(assembly.renderer),
+        ),
       );
       // A view that cannot be read places nothing known, and its render reads it.
       if (own?.placements === undefined) continue;

@@ -81,10 +81,15 @@ describe("building a project", { timeout: 60_000 }, () => {
     mkdirSync(join(root, "src", "assemblies", "a"), { recursive: true });
     writeFileSync(join(root, "package.json"), "{}");
     writeFileSync(join(root, "src", "assemblies", "a", "a.angular.tsx"), "");
+    // A view whose placement cannot be read fails whole when it renders, as a template that
+    // does not compile fails: it is refused where that one is.
+    mkdirSync(join(root, "src", "assemblies", "torn"));
+    writeFileSync(join(root, "src", "assemblies", "torn", "torn.html"), '<assembly name="x">');
     const { io, errors } = capture();
     expect(await buildProject(root, io)).toBe(1);
     expect(errors.join()).toMatch(/cannot build yet/);
     expect(errors.join()).toMatch(/no src\/server\.ts/);
+    expect(errors.join()).toMatch(/"torn" holds a placement that cannot be read/);
     expect(existsSync(join(root, "dist"))).toBe(false);
   });
 

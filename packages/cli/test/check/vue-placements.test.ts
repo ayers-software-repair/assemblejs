@@ -34,5 +34,18 @@ describe("the slots a Vue component's template places", () => {
       { name: "cart", view: "default" },
     ]);
     expect(vuePlacements(component('<slot name="cart" />')).placements).toEqual([]);
+    // Vue also takes a component's name written in kebab case, which for Slot itself is the
+    // native outlet's and stays so.
+    expect(
+      vuePlacements(component('<place-here name="cart" />', "Slot as PlaceHere")).placements,
+    ).toEqual([{ name: "cart", view: "default" }]);
+    expect(
+      vuePlacements(
+        component('<place-hereby name="cart" /><place-here-by name="cart" />', "Slot as PlaceHere"),
+      ).placements,
+    ).toEqual([]);
+    // Under a namespace it is the same Slot, written as Vue writes a component of an object.
+    const whole = `<script setup lang="ts">\nimport * as c from "@assemblejs/renderer-vue/client";\n</script>\n<template><c.Slot name="cart" /><c-Slot name="price" /></template>`;
+    expect(vuePlacements(whole).placements).toEqual([{ name: "cart", view: "default" }]);
   });
 });

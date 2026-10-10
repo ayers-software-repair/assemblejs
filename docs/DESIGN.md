@@ -290,7 +290,9 @@ out of the cache.
 A page cannot be made to recurse by any request an outsider can send, and a self-referencing
 assembly is a diagnostic at the first hop rather than a hang, a socket exhaustion or a stack
 overflow. Where a view's source says what it places, the loop is not even a request: a view
-that places itself, or leads back to itself, is refused at boot (section 7).
+that places itself, or leads back to itself, is refused at boot (section 7). That holds where
+each hop's view is written. A placement whose view is computed is held at boot for its name
+alone and is not followed, so a loop through one is a request, refused at its render.
 
 ### 3.5 Deferred assemblies
 
@@ -313,8 +315,8 @@ the page has shipped, so it cannot fail the page, and a declaration that says it
 misunderstanding worth catching at boot rather than a rule worth explaining in prose. So is a
 deferral nothing could carry out: one from another server, whose fragment the browser cannot
 fetch across that server's same-origin policy, and one on a page where no assembly of this
-server's has a browser half, placed by the page or by the view of one it places, so no runtime
-is there to fetch it. A deadline or a cache on a
+server's has a browser half, placed by the page or by the view of one it places as far as its
+source was read (section 7), so no runtime is there to fetch it. A deadline or a cache on a
 deferred placement is policy nothing reads, refused like any other.
 
 ### 3.6 Real-time
@@ -512,8 +514,24 @@ export type MountHandle = { unmount(): void };
   holds that: a name the source computes is a finding in every view it reads. Which view of
   that child may come from data, where the child has more than one, which only an assembly
   declared by hand does: an assembly in a project has one view, `default`, and a parent that
-  names another is refused at `check` and at boot. A Pug view writes the directive in its own
-  syntax and is read when it renders.
+  names another is refused at `check` and at boot.
+- **Every static view is read, and a framework view where its slots are written.** A plain
+  html view is read as a page's template is. A template is read with what its language
+  computes set aside, and a Pug view, which writes the directive in its own syntax, from the
+  tree the project's own Pug makes of it. A directive in any of them that does not read as it
+  is written is a finding, and a build refuses that view as it refuses a template that does
+  not compile: every render that reaches the directive would fail on it. A framework view is
+  read for each `Slot` or `slot` of its renderer's that it writes, under whatever name or
+  namespace it imports them, in its own file and in each component of the project it imports.
+  A render alone knows the rest: a slot handed on under another name, a slot inside a
+  component that comes from a package, a tag whose own name a template computes, a directive
+  that reads only once a template has computed part of it, which leaves that whole view
+  without a record, and what a value written raw holds. For
+  those nothing is decided before a request. No missing name, missing view or loop is refused
+  at boot, a page that defers the parent does not link the child's stylesheet ahead, and the
+  child is not counted when a page's rules ask whether the runtime is on it. An assembly
+  declared by hand says what each of its views places, `placements`, or boot knows nothing
+  beneath it.
 - **A value a view writes raw is markup, and a directive in it is a placement.** The composer
   reads what a view rendered, and nothing there tells a directive the author wrote from one a
   value wrote. A value written escaped is text and places nothing. One written with the
