@@ -801,15 +801,20 @@ prose for a human to re-read.
 | `create_project`  | Scaffolds a project that runs.                                                                                                            |
 | `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.                                                |
 | `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position.                                            |
-| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML, its data and the account of each child.          |
+| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML and the account of each child.                    |
 | `compose_page`    | Composes a page NOW and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
 | `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                              |
 | `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                             |
 
 `render_assembly` and `compose_page` are the two that matter most, and they are the reason this
-is not a wrapper. An agent that writes an assembly can immediately see what it renders, what
-data it produced and which placement fell back, without starting a server, opening a browser or
-asking the developer to look. It closes its own loop.
+is not a wrapper. An agent that writes an assembly can immediately see what it renders and
+which placement fell back, without starting a server, opening a browser or asking the developer
+to look. It closes its own loop.
+
+For a plain html view, that is. Nothing of the project's is run here (13.6): a view in a
+framework or a template language is source its renderer compiles, and a service is the
+project's own code, so such a view is answered with the reason it was not rendered, and an
+assembly's data comes back empty. How an agent is shown those is not decided.
 
 ### 13.5 What makes it expert rather than mechanical
 

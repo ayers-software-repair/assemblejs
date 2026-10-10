@@ -10,6 +10,7 @@ Every link here is relative to this file. All of these pages are one file, [llms
 
 - [Installing](install.html): AssembleJS needs Node 22 or newer and nothing else.
 - [Getting started](start.html): An assembly is a piece of a page written in one framework.
+- [Release notes](release-notes.html): What is in each version of AssembleJS, newest first.
 - [Documentation](docs/index.html): Start with the guide for the framework you already know.
 - [The tutorial](docs/tutorial.html): One project, from nothing to a deployed server, in the order you would actually do it.
 - [For React developers](docs/react.html): A React assembly is a component in a file whose name says it is React.

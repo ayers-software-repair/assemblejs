@@ -26,6 +26,13 @@
       "in_nav": true
     },
     {
+      "file": "release-notes.html",
+      "url": "release-notes.html",
+      "title": "Release notes",
+      "sep": " &middot; ",
+      "in_nav": true
+    },
+    {
       "file": "docs/index.html",
       "url": "docs/index.html",
       "title": "Documentation",

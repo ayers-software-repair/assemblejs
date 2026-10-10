@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release notes - AssembleJS</title>
+<!-- Kit CSS first, product skin second: the skin overrides, never the other way round.
+     Relative paths ONLY - absolute ones break under /<product>/ prefix hosting. -->
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="skin.css">
+<link rel="icon" href="favicon.svg">
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <img src="mark.svg" alt="" width="84" height="84">
+    <h1>Release notes</h1>
+    <div class="rule"></div>
+    <p>What is in each version of AssembleJS, newest first.</p>
+  </header>
+
+  <!-- One section for each version, newest first, its id the version: scripts/check-release-notes.mjs
+       holds these to the packages' changelogs. Written by hand, for someone using the framework. -->
+  <section id="v1.0.0-next.0">
+    <h2>1.0.0-next.0</h2>
+    <dl>
+      <div class="item">
+        <dt>The first prerelease</dt>
+        <dd>On the <code>next</code> channel, and everything the framework is, for the first
+          time. It is versioned and not yet published: until it is, the registry has nothing
+          for <code>npm create @assemblejs</code> to find.</dd>
+      </div>
+      <div class="item">
+        <dt>The server</dt>
+        <dd>A page places assemblies by name in its template, and the server composes them into
+          one document. An assembly holds other assemblies, the way a page does. Every placement
+          has a deadline and a fallback, so one slow assembly is not a slow page. An assembly can
+          live on another server: give it a URL and nothing else changes. One can be left for
+          the browser to fetch after the page has loaded, and a page can open one stream of live
+          events that every assembly on it hears.</dd>
+      </div>
+      <div class="item">
+        <dt>The frameworks</dt>
+        <dd>React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own. EJS,
+          Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no package
+          at all. Assemblies written in different frameworks talk through the page's event bus,
+          with nothing in between.</dd>
+      </div>
+      <div class="item">
+        <dt>The command line</dt>
+        <dd><code>npm create @assemblejs</code> writes a project that runs. <code>add</code>,
+          <code>dev</code>, <code>build</code>, <code>check</code>, <code>perf</code> and
+          <code>deploy</code> take it from one assembly to a server you can put anywhere Node
+          runs.</dd>
+      </div>
+      <div class="item">
+        <dt>For an AI agent</dt>
+        <dd>Every new project is written with an <code>AGENTS.md</code> and its own MCP server,
+          installed and registered for Claude Code, Cursor and VS Code. That server reads the
+          project, adds and places an assembly, renders a plain HTML one to show what it made,
+          and checks the work against the framework's rules. It lists four prompts for the
+          things a person asks for most, and carries no model and no key of its own.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <footer>
+    <p><!-- links --><a href="index.html">AssembleJS</a> &middot; <a href="install.html">Installing</a> &middot; <a href="start.html">Getting started</a> &middot; <a href="docs/index.html">Documentation</a><!-- /links --></p>
+    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
+  </footer>
+
+</main>
+</body>
+</html>

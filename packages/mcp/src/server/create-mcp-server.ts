@@ -69,7 +69,7 @@ export function createMcpServer(root: ProjectRoot): McpServer {
     {
       title: "Render one assembly now",
       description:
-        "Renders an assembly and returns the real envelope the server would emit, with every assembly its view places composed inside it, the account of each, and any problems. Use it right after writing one, to see what it actually produced rather than guessing.",
+        "Renders an assembly whose view is plain html and returns the envelope the server would emit, with every assembly its view places composed inside it, the account of each, and any problems. Nothing of the project's is run here: no service, so its data is empty, and no view in a framework or a template language, which is answered with the reason and seen from the running server. Use it right after writing one, to see what it actually produced rather than guessing.",
       inputSchema: { name: z.string().describe("the assembly's name, which is its directory") },
     },
     async ({ name }) => {
@@ -91,7 +91,7 @@ export function createMcpServer(root: ProjectRoot): McpServer {
     {
       title: "Compose a page now",
       description:
-        "Composes a page template against the assemblies on disk and returns the html with one diagnostic per placement, and beneath it one per assembly that placement's own view placed. A placement that fell back looks identical in the markup; the diagnostic is what says it did.",
+        "Composes a page template against the assemblies on disk and returns the html with one diagnostic per placement, and beneath it one per assembly that placement's own view placed. A placement that fell back looks identical in the markup; the diagnostic is what says it did. An assembly whose view is not plain html falls back here, with the reason among the problems.",
       inputSchema: {
         template: z.string().describe('the page template, with <assembly name="..."> placements'),
       },

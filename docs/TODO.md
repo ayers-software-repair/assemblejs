@@ -5,16 +5,16 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 03:18 EDT, after the API reference).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 04:05 EDT, after the release notes).**
 
-STATE. Branch `next`. `origin/next` is `8edfac6`, A-04's memo, pushed 2026-10-10 03:06 EDT;
-its `ci` run is 38033268073 and its `release` run 38033268049, both read to their end, green.
-Beneath it: A-02, `af6d423` (`ci` 38032968881, `release` 38032968906, `deploy-site`
-38032968844; staging serves `llms.txt` and `llms-full.txt`); two small rows, `20547ae`; A-03,
+STATE. Branch `next`. `origin/next` is `f1d217b`, the API reference, pushed 2026-10-10
+03:32 EDT; its `ci` run is 38034766423, its `release` run 38034766454 and its `deploy-site` run
+38034766421, all read to their end, green: the deploy's two jobs ran for the first time, and
+staging serves the reference under `/assemblejs/next/docs/api/`, its source links naming that
+commit. Beneath it: A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows, `20547ae`; A-03,
 `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above it,
-signed, pushed with this block: the API reference, which changes `site/**` and the deploy
-workflow, so `deploy-site` runs with its new job for the first time. Every package reads
-`1.0.0-next.0`; seventeen changesets are pending. The owner's overnight order (estate D1216):
+signed, pushed with this block: the release notes, which change `site/**`. Every package reads
+`1.0.0-next.0`; eighteen changesets are pending. The owner's overnight order (estate D1216):
 work the bites to code completion and get the landing page onto staging; no questions until
 morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
@@ -22,16 +22,18 @@ morning. The landing page is on staging: `/assemblejs/next/` on the staging doma
 rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
 self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is the release-notes surfaces (the section "Release notes: the uniform
-pattern" below; ruled 2026-10-05): `RELEASE_NOTES.md` at the root, `site/release-notes.html`
-with one section per version, declared in `pages.json`, and the drift gate that holds every
-version heading in the packages' `CHANGELOG.md` files to a section of that page, structure
-only, watched red on an injected version. Then DESIGN 13.3's five resources, of which the
-agent surface has two; registrations for the clients beyond the three; then the rows under
-"AFTER IT" below. Two rows wait on the owner and are on the estate's morning list: A-04,
-whose memo is `docs/studies/built-in-components.md`, and showing an agent a framework view,
-which means running the project's code (DECISIONS 2026-10-10). A-01, A-03 and A-02 are done,
-and the subassembly rung, S-01 to S-09.
+THE EXACT NEXT STEP is DESIGN 13.3's resources: the design names five that an agent reads and
+the agent surface has two, and its `assemblejs://project` lists assemblies and not the pages,
+the apis, the settings or how they are wired (the row is in Phase 3 below). All of it is read
+from sources, as the two that exist are: nothing of the project's is run. Then registrations
+for the clients beyond the three; then the rows under "AFTER IT" below. Four rows wait on the
+owner and are on the estate's morning list: A-04, whose memo is
+`docs/studies/built-in-components.md`; showing an agent a framework view, which means running
+the project's code; whether the twelve packages share one version, which a new project's
+manifest and the release-notes gate are both written as if they did; and folding the
+changesets waiting into the first entry before the first publish (DECISIONS 2026-10-10). A-01,
+A-03 and A-02 are done, the API reference and the release notes are done, and the
+subassembly rung, S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -521,8 +523,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       take to show an agent a framework view"; the advice is to show it from the project's
       own running `dev` server and never run the code here. When it lands, the sentences
       brought down to what holds go back up: the landing page's "Your agent knows the
-      framework" and its row in `site/LANDING.md`, the root README, and the agent surface's
-      own (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
+      framework" and its row in `site/LANDING.md`, the root README, the agent surface's own,
+      DESIGN 13.4, and the descriptions of the two tools (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
       refused; DECISIONS 2026-10-10, A-03)
 - [x] The command line's suite could fail by a race: two of its spec files built
       `examples/two-frameworks` in place, at once, and a build begins by removing the
@@ -599,11 +601,10 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 Ruling lives in ayers.repair/docs/CODESTYLE-HOOKS-RULING.md. These are the rows that touch THIS
 repo only. Not begun; the work hold still stands and platform/codestyle is uncommitted upstream.
 
-- [ ] Release-notes DRIFT GATE: a test asserting every version heading in the packages'
-      `CHANGELOG.md` files has a matching `<section id="v...">` in `site/release-notes.html`,
-      structure only never prose, watched red on
-      an injected version first. Correct whether notes are typed or generated. Ties into the
-      release-notes-pattern block below (this repo needs all four surfaces).
+- [x] Release-notes DRIFT GATE: `scripts/check-release-notes.mjs`, in `check:site`, holds one
+      `<section id="v...">` in `site/release-notes.html` to each version heading in the
+      packages' `CHANGELOG.md` files, structure only, never prose; watched red on an injected
+      version (2026-10-10; the release-notes block below has the rest)
 - [ ] Keep changesets permanently (owner ruling: only a per-package bump computes which of five
       packages move when core moves). Do NOT swap to a commit-derived generator here.
 - [ ] Keep husky + commitlint (already live). When the shared house check set lands, add a
@@ -615,42 +616,64 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
 - [ ] Reconcile the eslint pin: platform/codestyle pins 10.10.0, this repo carries 10.9.1. One
       version or a stated reason. Prettier already agrees at 3.9.6.
 
-## Release notes: the uniform pattern (owner order, 2026-09-03) — NOT STARTED, awaiting his word
-
-Relayed by the AVP as a notification, explicitly not a dispatch, while this seat was on hold.
-Nothing here is begun until the owner lifts the hold. Recorded now because a fact that lives only
-in a session's memory is a fact that is lost.
+## Release notes: the uniform pattern (owner order, 2026-09-03; ruled 2026-10-05; built 2026-10-10)
 
 His order: "howland and magpie should do release notes the same way, same for assemblejs, uniform
 pattern". The shape is written up at `ayers.repair/docs/RELEASE-NOTES-PATTERN.md`, derived from
-what magpie and howland already converged on independently rather than invented.
+what magpie and howland already converged on independently rather than invented. It was relayed
+while this seat was on hold and recorded then; the hold is lifted (the estate's record has the
+row ready), and the ruling of 2026-10-05 settled its one open point: the GitHub release body is
+each package's `CHANGELOG.md`, written by changesets, the action's default.
 
-VERIFIED HERE TODAY: this repository has NONE of the four surfaces. `RELEASE_NOTES.md`,
-`CHANGELOG.md` and `site/release-notes.html` are all absent, the page is not declared in
-`site/pages.json`, and `release.yml` has no body generation. So assemblejs adopts all four, where
-howland is said to need three and magpie already has them.
-
-RULED 2026-10-05 (owner): the GitHub release body is each package's `CHANGELOG.md`, written by
-changesets, the action's default. The rows below are rewritten around that.
-
-- [ ] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, the register the site page is
-      written from. Not the release body.
+- [x] `RELEASE_NOTES.md` at the root: user-facing, hand-kept, the register the site page is
+      written from. Not the release body. Headed by the newest version, which the drift gate
+      holds (2026-10-10)
 - [x] `CHANGELOG.md`: per package, written by changesets from the first changeset (2026-10-09);
       never hand-kept at the root (DECISIONS 2026-10-05 rulings, 2026-10-09)
-- [ ] `site/release-notes.html`: one `<section id="v...">` per version, declared in `pages.json`
-      so `check-site.mjs` refuses it going missing.
+- [x] `site/release-notes.html`: one `<section id="v...">` per version, newest first, declared
+      in `pages.json` and in the nav, as the reference product has it; written in the kit's one
+      content shape, a heading and a table of rows (2026-10-10)
 - [x] The GitHub release BODY: each package's `CHANGELOG.md` entry, created by the changesets
       action at publish time (`create-github-releases`, its default); never a tracked file
       (DECISIONS 2026-10-05 rulings)
-- [ ] THE DRIFT GATE, which is the part that actually holds it together: a test asserting every
-      version heading in the packages' `CHANGELOG.md` files has a matching `<section id="v...">`
-      in the site page.
-      STRUCTURE ONLY, never prose — the two deliberately say the same thing in different
-      registers and flattening that difference is the failure, not the fix. Watch it red on an
-      injected version before trusting it, the way every other gate here was.
-- [ ] Standing bar, same ruling: no old releases left around. One release per version, no orphaned
-      drafts or prereleases, superseded ones deleted rather than left visible. `gh release list`
-      before any cut.
+- [x] THE DRIFT GATE: `scripts/check-release-notes.mjs`, in the shape of the reference
+      product's, run in `check:site`, in the deploy before the site is published, and in the
+      release job before it versions or publishes. One section for each version any package's
+      changelog heads, exactly once, newest first, none for a version no changelog has, and
+      `RELEASE_NOTES.md` headed by the newest. STRUCTURE ONLY, never prose: the two say the
+      same thing in different registers on purpose. Eight mutations against its self-test, and
+      three known-bad inputs on the real tree, an injected version among them, each watched
+      red (DECISIONS 2026-10-10, "release notes")
+- [ ] The release job's run of that gate has not been seen in Actions: the job is skipped
+      until the registry has `@assemblejs/core`. Read the step at the job's first run, after
+      the first publish (found 2026-10-10)
+- [x] Standing bar, same ruling: no old releases left around. `gh release list` on 2026-10-10
+      lists none, drafts and prereleases included. Checked again before any cut.
+- [ ] The page says its one version is not yet published, which is true today. At the first
+      publish, by the owner's hand, that sentence becomes the date, in the same change that
+      publishes (found 2026-10-10)
+- [ ] ONE VERSION OR TWELVE: waits on the owner (the estate's morning list). Measured in a
+      clone: the packages' versions part ways at the first cut that does not name them all.
+      Two things are right only while they share one. A new project's manifest asks for the
+      server at the command line's own version, which after a cut of the command line alone is
+      a version the server never had, and `npm install` fails. And the drift gate reads
+      versions and no package's name, so a package reaching a version another already had
+      passes with nothing written. Either one fixed group in the changesets config, which
+      moved all twelve to one number when one renderer changed, and a gate that holds it; or
+      the versions stay apart, the manifest asks for the versions the packages were built
+      beside, and the notes say which package a version is of. Nothing is published, so no
+      cut can meet it first (DECISIONS 2026-10-10, "release notes")
+- [ ] BEFORE THE FIRST PUBLISH, by the owner's word (the estate's morning list): fold the
+      changesets waiting into the first entry. The first publish ships the tree as it stands
+      that day as `1.0.0-next.0`, and the version pull request after it would cut
+      `1.0.0-next.1` for changes `1.0.0-next.0` already holds. Measured in a clone: manifests
+      to `0.0.0`, the changelogs removed, the first changeset back from `.changeset/pre/`,
+      `pnpm changeset version`; every package reads `1.0.0-next.0` again with one entry
+      holding every change, and none waits (DECISIONS 2026-10-10, "release notes")
+- [ ] The reference product writes a note's subsections as smaller headings and lists, and
+      styles them in a stylesheet of its own (`magpie/site/site.css:11-14`); the kit has no rule
+      for either. A fold for the kit, the platform's to make. When this site's pin has it, the
+      page takes the reference's shape (found 2026-10-10; for the lead)
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

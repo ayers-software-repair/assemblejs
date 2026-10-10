@@ -138,6 +138,34 @@ The server lists four prompts, which Claude Code and VS Code show as commands an
 
 A slow or dead assembly renders its declared fallback, or the last good content, and the page still ships. One failing assembly is one failing assembly.
 
+# Release notes
+
+Source: [release-notes.html](release-notes.html)
+
+What is in each version of AssembleJS, newest first.
+
+## 1.0.0-next.0
+
+### The first prerelease
+
+On the `next` channel, and everything the framework is, for the first time. It is versioned and not yet published: until it is, the registry has nothing for `npm create @assemblejs` to find.
+
+### The server
+
+A page places assemblies by name in its template, and the server composes them into one document. An assembly holds other assemblies, the way a page does. Every placement has a deadline and a fallback, so one slow assembly is not a slow page. An assembly can live on another server: give it a URL and nothing else changes. One can be left for the browser to fetch after the page has loaded, and a page can open one stream of live events that every assembly on it hears.
+
+### The frameworks
+
+React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own. EJS, Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no package at all. Assemblies written in different frameworks talk through the page's event bus, with nothing in between.
+
+### The command line
+
+`npm create @assemblejs` writes a project that runs. `add`, `dev`, `build`, `check`, `perf` and `deploy` take it from one assembly to a server you can put anywhere Node runs.
+
+### For an AI agent
+
+Every new project is written with an `AGENTS.md` and its own MCP server, installed and registered for Claude Code, Cursor and VS Code. That server reads the project, adds and places an assembly, renders a plain HTML one to show what it made, and checks the work against the framework's rules. It lists four prompts for the things a person asks for most, and carries no model and no key of its own.
+
 # Documentation
 
 Source: [docs/index.html](docs/index.html)

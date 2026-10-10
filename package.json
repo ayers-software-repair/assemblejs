@@ -32,7 +32,7 @@
     "check:pack": "node scripts/check-pack.mjs",
     "check:publish": "pnpm -r --filter './packages/*' check:publish",
     "check:reference": "node scripts/check-reference.mjs --self-test && node scripts/check-reference.mjs && pnpm site:api",
-    "check:site": "node scripts/check-site.mjs --self-test && node scripts/check-site.mjs && node scripts/site-links.mjs --self-test && node scripts/site-links.mjs --check && node scripts/site-llms.mjs --self-test && node scripts/site-llms.mjs --check",
+    "check:site": "node scripts/check-site.mjs --self-test && node scripts/check-site.mjs && node scripts/site-links.mjs --self-test && node scripts/site-links.mjs --check && node scripts/site-llms.mjs --self-test && node scripts/site-llms.mjs --check && node scripts/check-release-notes.mjs --self-test && node scripts/check-release-notes.mjs",
     "check:trailers": "bash scripts/check-trailers.sh --self-test && bash scripts/check-trailers.sh",
     "check:unused": "knip",
     "check:versions": "syncpack lint --dependency-types prod,dev",

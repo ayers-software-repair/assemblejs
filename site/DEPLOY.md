@@ -83,6 +83,14 @@ needs the workspace installed and the job that holds the role installs nothing. 
 uploaded with the pages' cache, as text in utf-8, and every link in them is relative, because
 the folder is published at two addresses.
 
+## The release notes
+
+`release-notes.html` is written by hand, one `<section id="v...">` for each version, newest
+first. `scripts/check-release-notes.mjs` holds it to the packages' changelogs in structure
+only: a section for each version a changelog heads, once, and none for a version no changelog
+has. It needs nothing installed, so the deploy runs it before anything is published, the
+release job runs it before a version is, and `pnpm check` runs it too.
+
 ## Still the owner's
 
 - **The mark.** `mark.svg` and `favicon.svg` are placeholders and say so in their own source. The

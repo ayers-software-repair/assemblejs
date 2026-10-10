@@ -104,6 +104,14 @@ publishes `1.0.0` once, after the flip. The first publish of each package is the
 hand; after it, publishing is CI only through `release.yml`'s `release` environment (npm
 trusted publishing). Nobody runs `npm publish` from a laptop and there is no npm token anywhere.
 
+Release notes are four surfaces, the estate's one pattern: each package's `CHANGELOG.md`, which
+changesets writes and which is the GitHub release's body; `RELEASE_NOTES.md` and
+`site/release-notes.html`, hand-kept for a user. One gate holds the page to a section for each
+version a changelog heads: in `check:site`, in the deploy, and in the release job before it
+versions or publishes, so no version is published without its notes. The notes for a version
+are the last commit on the version pull request's branch, which the action rewrites at every
+push to `next`.
+
 ## How this repository is worked (owner's standing rules, 2026-09-03)
 
 - NOTHING LIVES IN A SESSION'S MEMORY. A fact is a fact only once it is in a file here: a rule in

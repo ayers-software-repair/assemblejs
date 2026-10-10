@@ -146,6 +146,11 @@ jobs:
       - name: Check the site
         run: node scripts/check-site.mjs --self-test && node scripts/check-site.mjs
 
+      # The notes page has one section for each version the changelogs head, or nothing is
+      # published. The script reads files and needs nothing installed.
+      - name: Check the release notes
+        run: node scripts/check-release-notes.mjs --self-test && node scripts/check-release-notes.mjs
+
       - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: arn:aws:iam::993011736775:role/gh-deploy-assemblejs-site

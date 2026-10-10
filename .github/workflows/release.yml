@@ -76,6 +76,12 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      # A VERSION IS NEVER PUBLISHED WITHOUT ITS NOTES. The push that merges the version pull
+      # request is the one this job publishes from, and it changes no file under site/, so the
+      # deploy's own run of this gate never sees it. The script reads files and needs nothing
+      # installed.
+      - name: Check the release notes
+        run: node scripts/check-release-notes.mjs --self-test && node scripts/check-release-notes.mjs
       - name: Install (frozen lockfile)
         run: pnpm install --frozen-lockfile
       - name: Build

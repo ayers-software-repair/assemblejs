@@ -3320,3 +3320,115 @@ on the real tree: typedoc given an entry that does not exist stops at exit 3 wit
 written; an entry point with its `@module` removed and the reference page with its `generated`
 mark removed are each refused by the gates; and a link in a comment to a thing that is not
 there, and an entry point's source that does not compile, each fail `pnpm check:reference`.
+
+## 2026-10-10: release notes, the estate's one pattern
+
+Expected, from the owner's order of 2026-09-03 and the ruling of 2026-10-05: this repository
+gains the surfaces it lacked. The changelogs are changesets', one per package, and are the
+GitHub release's body; `RELEASE_NOTES.md` and `site/release-notes.html` are written by hand for
+a user; a gate holds the page to the changelogs in structure only.
+
+Settled:
+
+- **`RELEASE_NOTES.md`** in the pattern's form: the product and its version as the heading,
+  one line of what it is, a paragraph led in bold for each of its four parts, the address for
+  an issue. No dates and no history, which the changelogs carry.
+- **`site/release-notes.html`**: one section for `1.0.0-next.0`, the only version there is. It
+  says that version is versioned and not yet published, because that is true (the registry
+  answers 404 for `@assemblejs/core`, asked today), and the sentence becomes a date at the
+  first publish (a row). Declared in `pages.json` and in the nav, as the reference product has
+  it, so every page's generated links gained it and the index for a model lists it.
+- **The page is written in the kit's one content shape, a heading and a table of rows.** The
+  reference product writes a note's subsections as smaller headings and lists, and styles them
+  in a stylesheet of its own (`magpie/site/site.css:11-14`: "which kit.css's h2/dl shape does
+  not carry"). This site links the kit and its skin and nothing else, and the kit at this
+  site's pin resets every margin and has no rule for either, so the same markup here would be
+  unstyled. Copying the reference's rules into a second product is the duplicate the kit exists
+  to end; the shape belongs in the kit, which is the platform's to change (a row, for the
+  lead). The contract the gate holds, the section and its id, is the reference's exactly.
+- **The drift gate is the reference product's, for twelve changelogs.**
+  `scripts/check-release-notes.mjs`: one section for each version any package's changelog
+  heads, exactly once, newest first, none for a version no changelog has, and
+  `RELEASE_NOTES.md` headed by the newest. The versions of twelve files are one list, so it
+  orders them itself, a prerelease before its release and the tenth prerelease after the
+  second. It reads no prose: the page and the changelogs say the same thing differently on
+  purpose.
+- **It runs in three places, as the reference's runs in its release and its deploy.** In
+  `check:site`; in the deploy, before the site is published; and in the release job, before
+  it versions or publishes. The last is the one that guards a publish: the push that merges
+  the version pull request is the push the release job publishes from, it changes no file
+  under `site/`, so the deploy does not run, and CI on `next` would go red only after the
+  registry had the version, which cannot be taken back. The script needs nothing installed.
+  The release job is skipped until the registry has `@assemblejs/core`, so that step has not
+  run in Actions and cannot yet; its proof is the same command, in the deploy's run and on
+  this machine against the known-bad inputs below (a row to read it at its first run).
+- **Where the notes for a version are written: on the version pull request's own branch, as
+  its last commit.** The changelogs gain a version's heading in the pull request the
+  changesets action opens, and the page and `RELEASE_NOTES.md` gain the version there. Read in
+  the pinned action (v2.1.1, `8488615`, `src/github.ts`): by default it pushes through the
+  API, and `pushChanges` writes the version commit onto the pushed commit and moves the branch
+  to it with `force: true`, at every push to `next`. A commit added by hand is gone at the
+  next push; the gate is then red again wherever it runs. Merging publishes and deploys from
+  one push, so the notes reach the site with the version and not before.
+- **CI on that pull request waits to be approved.** The release job hands the action no token
+  of its own, so the pull request is opened with the workflow's. GitHub's documentation
+  (`github/docs`, `data/reusables/actions/actions-do-not-trigger-workflows.md`, read today):
+  "when a workflow using `GITHUB_TOKEN` creates or updates a pull request, the resulting
+  `pull_request` event creates workflow runs in an **approval-required** state", started by
+  "a user with write access to the repository". So that pull request is not red by itself; it
+  shows runs waiting, and they fail at `check:site` once started, until the notes are there.
+  The commit that adds the notes is a person's push and starts CI in the ordinary way.
+- **No old releases**: `gh release list` lists none.
+
+Measured, in a clone of its own with an install of its own, at `f1d217b`, as the release
+workflow runs it (`CI=true pnpm changeset version`):
+
+- The version step works: exit 0, twelve manifests and twelve changelogs written, every package
+  `1.0.0-next.1`, the seventeen changesets then waiting filed under `.changeset/pre/`, the
+  lockfile untouched.
+- **The packages' versions part ways after it.** A changeset naming the agent surface alone
+  moved it to `1.0.0-next.2` and nothing else. One naming the command line alone then moved the
+  command line and create to `1.0.0-next.2` and the agent surface to `1.0.0-next.3`, and left
+  the server at `1.0.0-next.1`. DECISIONS 2026-10-09 expected "one channel's packages version in
+  lockstep". They do only when a changeset names them all.
+- Two things here are right only while the twelve share one version. The gate: a version one
+  package reaches after another already has its section, so a cut of one renderer alone can
+  pass with nothing written (the script's header says so). And a new project's manifest, which
+  asks for the server and the agent surface at the command line's own version
+  (`commands/project-files.ts`): after a cut of the command line alone it asks for
+  `@assemblejs/core@^1.0.0-next.2`, which no registry would have (semver 7.8.5:
+  `maxSatisfying(["1.0.0-next.0", "1.0.0-next.1"], "^1.0.0-next.2")` is `null`), and
+  `npm install` in a project just made fails. Nothing is published, so nobody has met it.
+- One fixed group would end both: with the twelve named in `fixed` (the tool's schema:
+  "Packages that should always be released together with the same version"), a changeset
+  naming one renderer moved all twelve to one number, and a package nothing changed in gained
+  an entry with nothing under it. The other way is to keep the versions apart, and have a new
+  project's manifest ask for the versions the packages were built beside, and the notes say
+  which package a version is of. **Which is the owner's**: he kept changesets on 2026-09-09
+  on the reasoning that a bump for each package computes which packages move
+  (`ayers.repair/docs/CODESTYLE-HOOKS-RULING.md:270-278`), and one group moves all twelve
+  every time. "Lockstep" in the 2026-10-09 entry was this seat's expectation and never his
+  word. Nothing is published and no cut can happen before he answers, so nothing is built on
+  either until he does (a row; the estate's morning list).
+- **The changesets waiting are already in what the first publish ships.** The first publish is
+  `1.0.0-next.0` of the tree as it stands that day, and the version pull request after it would
+  cut `1.0.0-next.1` for changes `1.0.0-next.0` already holds. They fold into the first entry:
+  with the manifests at `0.0.0`, the changelogs removed and the first changeset back from
+  `.changeset/pre/`, the version step wrote `1.0.0-next.0` into all twelve with one entry
+  holding every change, and left none waiting. A step before his publish, by his word (a row;
+  the estate's morning list).
+
+A lesson for the tooling, not the tree: the dry run was first tried in a copy with this
+checkout's `node_modules` linked into it. pnpm 11 checks an install before `pnpm exec`, found a
+copy it had not installed, and set about removing the modules directory it had been handed; it
+stopped only for want of a terminal to ask at. Nothing was removed. A dry run gets a clone and
+an install of its own, which takes two seconds from the store.
+
+With it, a truth fix the review of the last commit asked for: the descriptions of
+`render_assembly` and `compose_page`, which an agent reads when it lists the tools, and DESIGN
+13.4 said an agent sees an assembly's data and any view. They say what holds: a plain html
+view, nothing of the project's run, and any other view answered with the reason.
+
+Watched red: 8 mutations of the gate, each alone, each against its self-test; and on the real
+tree a version injected into one package's changelog, the page's section renamed, and the
+notes headed by another version, each refused.
