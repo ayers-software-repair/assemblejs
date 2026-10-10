@@ -135,17 +135,17 @@ the arrived depth and the path extended by the parent's identity, and each child
 replaces its directive. `children` leaves the renderer interface. Nine bites, one commit each,
 the long gate once at S-08:
 
-| bite | what lands                                                                                                                     | proof                                                                                       |
-| ---- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
-| S-01 | The one segment shape in `vocab/`; the finder skips raw-text elements                                                          | vocab and finder tests, red on the anchor dropped and the skip removed                      |
-| S-02 | `renderLocal` composes with the composition state, a `Fetch`, the server's cap and a signal; nested diagnostics                | self-placement renders once with a nested `cycle`; a chain past the cap; a nested id logged |
-| S-03 | Hoisting over the diagnostic tree; a shadow parent links its children's sheets; the runtime counts static children             | a static parent with a framework child links the child's css and the runtime                |
-| S-04 | `findEnvelopes` walks shadow roots; the fill sends depth 1                                                                     | a shadow child is found and mounted once; the fill's header                                 |
-| S-05 | The transport learns nested manifests once per version; a failed subtree is not cached                                         | two manifests learned from one answer; `../x` yields no url                                 |
-| S-06 | `children` out; `Slot({ name, view? })` renders the directive on both sides; `slot()` for Svelte and Lit; the `nested` example | each renderer's slot and hydrate tests; the browser proof's six assertions                  |
-| S-07 | `check` reads directives and `Slot` names; the agent surface places a child in a view                                          | each problem reported with its rule; an agent places and composes through the protocol      |
-| S-08 | Conformance: the `nested` fixture and the two-server nested spec                                                               | `pnpm conformance` green with the new specs                                                 |
-| S-09 | DESIGN 2.4, 3.4, 7, 8, 10; the guides; the changeset; the studies deleted                                                      | the site gates; a reader with no stake confirms DESIGN against the tests                    |
+| bite | what lands                                                                                                                                     | proof                                                                                       |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| S-01 | The one segment shape in `vocab/`; the finder skips raw-text elements                                                                          | vocab and finder tests, red on the anchor dropped and the skip removed                      |
+| S-02 | `renderLocal` composes with the composition state, a `Fetch`, the server's cap and a signal; nested diagnostics                                | self-placement renders once with a nested `cycle`; a chain past the cap; a nested id logged |
+| S-03 | A page links what every local envelope in the markup it serves needs; a shadow parent links its children's sheets in its root                  | a cached parent's child keeps its sheet; the child's `<link>` inside the parent's root      |
+| S-04 | `findEnvelopes` walks shadow roots; the fill sends depth 1                                                                                     | a shadow child is found and mounted once; the fill's header                                 |
+| S-05 | The transport learns nested manifests once per version; a failed subtree is not cached                                                         | two manifests learned from one answer; `../x` yields no url                                 |
+| S-06 | `children` out; `Slot({ name, view? })` renders the directive on both sides; `slot()` for Svelte and Lit; the `nested` example                 | each renderer's slot and hydrate tests; the browser proof's six assertions                  |
+| S-07 | `check` reads directives and `Slot` names; the registry writes each view's static placements for boot; the agent surface uses core's transport | each problem reported with its rule; an agent places and composes through the protocol      |
+| S-08 | Conformance: the `nested` fixture and the two-server nested spec                                                                               | `pnpm conformance` green with the new specs                                                 |
+| S-09 | DESIGN 2.4, 3.4, 7, 8, 10; the guides; the changeset; the studies deleted                                                                      | the site gates; a reader with no stake confirms DESIGN against the tests                    |
 
 ## 5. Verification
 

@@ -5,23 +5,26 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (written 2026-10-09 19:50 EDT by the assemblejs seat, holding until 22:00 on the
-owner's word).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-09 23:40 EDT, after S-02).**
 
-STATE. Branch `next`. `origin/next` is `0ac9f53`, pushed on the owner's word (estate D1210);
-its `ci` run 38005844308 and `release` run 38005844485 are green (the release gate asked npm,
-got the 404, skipped publication). One local commit above it, `c1513a7`, bite S-01 of the
-subassembly rung, unpushed; the tree is clean. Every package reads `1.0.0-next.0`; one
-changeset is pending (`.changeset/segment-shape.md`). The owner's rulings of the day are in
-DECISIONS under 2026-10-09: the first changeset, tests build what they read, AI first (PLAN
-4.1), the subassembly rung decided (PLAN 4.2). The owner also ruled in this seat: no subagents,
-the seat does the work itself.
+STATE. Branch `next`. `origin/next` is `0ac9f53` (pushed on the owner's word, estate D1210; its
+`ci` and `release` runs green). Local above it, unpushed, every one signed: `c1513a7` S-01,
+`f156916` a refactor with no behaviour change, `e857f69` S-02, and the docs commits between.
+The tree is clean. Every package reads `1.0.0-next.0`; three changesets are pending and
+`changeset status` computes `1.0.0-next.1`. The owner's overnight order (estate D1216): work
+the bites to code completion and get the landing page onto staging; no questions until
+morning. The staging deploy is blocked outside this repository: the deploy role trusts the old
+form of GitHub's OIDC subject (the morning list in the estate backlog has the exact fix).
+His rulings in this seat stand: no subagents, the seat does the work itself; every bite since
+is self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is bite S-02 of the subassembly rung (PLAN 4.2; the design is
-`docs/studies/subassembly/synthesis.md`, whose section 7 holds the file-by-file plan written
-before the hold). Then S-03 to S-09 in order; the long gate (conformance, the browser proof)
-once at S-08. Every push waits on the owner's yes, asked through the lead seat (avp) as one
-line with the sha and what the push fires.
+THE EXACT NEXT STEP is bite S-03 (PLAN 4.2; DECISIONS 2026-10-09 "S-03 reads the markup it
+serves"): a refactor that moves the page's asset collection out of `register-pages.ts` into a
+file of its own, then `localAssets(html, assemblies)`, which links what every local envelope in
+the served markup needs, and a shadow parent linking its children's sheets inside its root.
+Then S-04 to S-09 in order; the long gate (conformance, the browser proof) once at S-08, or
+sooner on GitHub's runners whenever a push is allowed. Each mutation is run alone from S-03 on.
+Every push waits on the owner's yes, asked through the lead seat (avp).
 
 AFTER IT, in any order, each specified in the rulings entry or the site entry of DECISIONS:
 the release-notes page with the drift gate and RELEASE_NOTES.md (ruled: GitHub release bodies
@@ -379,16 +382,25 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         `Diagnostic.children`; a failed subtree is never cached; a `signal` through compose.
         Self-verified (the owner's no-subagents ruling; DECISIONS 2026-10-09, S-02): each claim
         watched red under a mutation aimed at it, restored by the inverse edit
-  - [ ] S-03 hoisting over the diagnostic tree; a shadow parent links its children's sheets;
-        the runtime counts static children
+  - [ ] S-03 a page links what every local envelope in the markup it serves needs, read from
+        the markup so a cached parent's children keep their styles; a shadow parent links its
+        children's sheets inside its root
   - [ ] S-04 `findEnvelopes` walks shadow roots; `start` considers them; the fill sends depth 1
   - [ ] S-05 nested manifests learned once per version; a failed subtree is not cached
   - [ ] S-06 `children` leaves the interface; `Slot({ name, view? })` renders the directive on
         both sides; `slot()` for Svelte and Lit; the Lit-in-Lit refusal; the `nested` example
         and the browser proof
-  - [ ] S-07 `check` reads directives and `Slot` names; the agent surface places a child in a view
+  - [ ] S-07 `check` reads directives and `Slot` names; the registry writes each view's static
+        placements, which boot reads for whether a page carries a runtime and what a deferred
+        parent's children need linked; the agent surface renders and composes through core's own
+        transport (today it has its own path and shows a child's directive, not the child), and
+        places a child in a view
   - [ ] S-08 conformance: the `nested` fixture and the two-server nested spec
   - [ ] S-09 DESIGN, the guides, the changeset, the studies deleted
+- [ ] The content endpoint's render ends when its request closes: `registerAssemblies` gives
+      `renderLocal` no signal today, so a server keeps composing children after the server that
+      asked has given up (DECISIONS 2026-10-09, S-02 named the signal; the endpoint is the one
+      caller without one)
 - [ ] Placement context: a child whose block content sits inside an open `<p>` (or any element
       the parser closes on its own) is moved out of its envelope, and its parent's island with
       it; silent today for a page's placements and for a view's. One check for both, where the

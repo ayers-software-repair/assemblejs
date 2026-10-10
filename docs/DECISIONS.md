@@ -2477,3 +2477,37 @@ self-verified rung unverified. The owner ruled in this seat on 2026-10-09, after
 written, that the seat does the work itself with no sub tasks. This bite is therefore
 self-verified: its tests watched red under the mutations named in the commit, and the gates' own
 output. Whether a verifier is exempt from his ruling is his to say; it is on his morning list.
+
+## 2026-10-09: S-03 reads the markup it serves
+
+Expected, from PLAN 4.2 and the synthesis: `register-pages` hoists css and js by walking the
+diagnostic tree S-02 built, and `opensRuntime` and the deferral rule count the children boot can
+see in static sources.
+
+Found:
+
+- **A cache hit has no tree.** `settlePlacement` answers a fresh cache entry as `{ html,
+diagnostic }` with the diagnostic it mints then: the cache holds html, never an account. A
+  parent placed with a lifetime would link its children's sheets on the first request and lose
+  them on every one after. The diagnostic tree says how a page was composed; it is not a record
+  of what the page holds.
+- **The markup is.** Every assembly on a page is in an envelope that names it, whichever rung
+  answered and however deep it sits. So a page links the browser files of every local envelope
+  in the html it is about to send, read from that html: `localAssets(html, assemblies)`. An
+  envelope stamped with another server's origin, and everything inside it, is that server's
+  (S-05 learns those from its manifests, read the same way from its answer). An envelope inside
+  a shadow parent's root gets its sheet from that root, not from the head.
+- **Boot sees definitions, not sources.** `pageProblems` is handed markup functions; a template
+  view's cannot be called without its services' data. Whether a page carries a runtime when its
+  only browser half is a view's child, and what a deferred parent's children need linked before
+  the browser fills it, are knowable only from what the command line reads off static sources.
+  That reader lands at S-07, so the seam does too: the generated registry writes each view's
+  static placements onto the definition, and boot reads them. Until then a page whose stream or
+  deferral is opened only by a view's child is refused at boot as before; no shipped example or
+  fixture is one.
+
+Also found, and rowed: the agent surface renders and composes by its own path
+(`render-assembly.ts` builds the envelope itself, `compose-page.ts` has its own transport), so an
+agent composing a parent is shown the child's directive rather than the child; it moves onto
+core's transport at S-07. And the content endpoint is the one caller that gives `renderLocal` no
+signal.
