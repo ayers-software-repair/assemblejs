@@ -432,6 +432,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       `renderLocal` no signal today, so a server keeps composing children after the server that
       asked has given up (DECISIONS 2026-10-09, S-02 named the signal; the endpoint is the one
       caller without one)
+- [x] `pnpm check:trailers` ran its gate with no range and stopped on an unbound variable: the
+      script took a range from CI only. With no range it now checks the commits the branch has
+      and its upstream lacks, and its self-test holds the range form too, in a repository made
+      for the run. An unsigned commit, an attribution trailer beside a sign-off and a missing
+      upstream were each watched red on a mutated copy of the gate (2026-10-09)
 - [ ] A child placed inside a custom element's own shadow root (a `slot()` written in a Lit
       element's `render`) is found and mounted, and its stylesheet is linked in the page's
       head, where it does not reach: `localAssets` tracks an assembly's shadow root, not an
