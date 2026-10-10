@@ -136,6 +136,25 @@ describe("what an agent can do", () => {
     expect(result.diagnostics.map((d) => d.name)).toEqual(["header", "cart"]);
   });
 
+  it("places a child in a parent's view, and sees the parent with the child composed inside", async () => {
+    assembly("shell", "shell.html", "<section><h2>Shell</h2></section>");
+    assembly("cart", "cart.html", "<p>Two items</p>");
+
+    const placed = await call("place_assembly", { in: "shell", name: "cart" });
+    expect(placed.ok).toBe(true);
+    expect(placed.result["written"]).toEqual(["src/assemblies/shell/shell.html"]);
+
+    const seen = await call("render_assembly", { name: "shell" });
+    expect(seen.ok).toBe(true);
+    expect(String(seen.result["html"])).toMatch(/data-name="shell".*data-name="cart".*Two items/s);
+    expect(seen.result["children"]).toMatchObject([{ name: "cart", source: "local" }]);
+    // Named neither, or both: where it goes is one or the other.
+    expect((await call("place_assembly", { name: "cart" })).ok).toBe(false);
+    expect((await call("place_assembly", { page: "home", in: "shell", name: "cart" })).ok).toBe(
+      false,
+    );
+  });
+
   it("refuses a framework view with the reason rather than approximating it", async () => {
     assembly("counter", "counter.react.tsx", "export default () => null;");
     const answer = await call("render_assembly", { name: "counter" });

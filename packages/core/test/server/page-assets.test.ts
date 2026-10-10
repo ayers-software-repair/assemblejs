@@ -136,3 +136,36 @@ describe("the browser files a composed page links", () => {
     }
   });
 });
+
+describe("the browser files of a page that defers a parent", () => {
+  it("are the parent's and those of the children its view is known to place", async () => {
+    const shell = assembly("shell", {
+      views: {
+        default: { renderer: "html", markup: () => "", placements: [{ name: "live" }] },
+      },
+      assets: { css: [], js: [] },
+    });
+    const assemblies = byName(shell, assembly("live"));
+    const plan = { shell: { name: "shell", view: "default", deadline: 1000, defer: true } };
+    const composed = await compose({
+      template: '<main><assembly name="shell"></assembly></main>',
+      plan,
+      fetch: localFetch(assemblies, () => undefined, DEFAULT_LIMITS),
+      cache: createMemoryCache(),
+      limits: DEFAULT_LIMITS,
+      page: "p",
+      query: new URLSearchParams(),
+      params: {},
+      headers: {},
+      newId: () => "id",
+      now: () => 0,
+    });
+    // The page holds the placeholder alone; the child is not in it and is linked all the same.
+    expect(composed.html).toContain("data-defer");
+    expect(composed.html).not.toContain('data-name="live"');
+    expect(await pageAssets(composed, plan, assemblies, remote())).toEqual({
+      css: ["/live.css"],
+      js: ["/live.js"],
+    });
+  });
+});

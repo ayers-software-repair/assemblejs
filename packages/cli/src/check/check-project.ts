@@ -28,6 +28,8 @@ import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
 import { readPagePolicy } from "./read-page-policy.js";
 import { readViewMount } from "./read-view-mount.js";
+import { viewFindings } from "./view-findings.js";
+import { viewProblems } from "./view-problems.js";
 
 const NO_POLICY: PagePolicy = { place: {}, remote: new Map(), stream: undefined };
 const POLICY_FIX =
@@ -38,8 +40,8 @@ const STREAM_FIX =
 /**
  * Everything wrong with a project that can be known without building it, each as a structure
  * with the file, the rule and the fix: the tree (assemblies, pages, apis), the renderers it
- * needs, every page's placements and policy against the assemblies that exist, by the rules boot
- * refuses them by, or, for a placement its page declares from another server, against the
+ * needs, what every view places and every page's placements and policy against the assemblies
+ * that exist, by the rules boot refuses them by, or, for a placement its page declares from another server, against the
  * remotes `assemblejs.config.ts` declares, the stream a page names, the budgets that config
  * declares as `perf` reads them, and every template view compiled with the project's own
  * engine. In process, no shell, so the command line and the agent surface report the same
@@ -51,20 +53,26 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   const pages = discoverPages(join(src, "pages"));
   const apis = discoverApis(join(src, "api"));
   const names = assemblies.assemblies.map((assembly) => assembly.name);
-  // What the placement rules read of each assembly: in a project, one view, and a browser half
-  // for a framework view that does not declare `mount = "none"` for itself, or a static view
-  // with a .client.ts beside it.
+  // What the placement rules read of each assembly: in a project, one view, a browser half for
+  // a framework view that does not declare `mount = "none"` for itself, or a static view with a
+  // .client.ts beside it, and what its view's source is known to place.
+  const views = viewFindings(root, assemblies.assemblies);
   const placeable = new Map<string, PlacedAssembly>(
-    assemblies.assemblies.map((assembly) => [
-      assembly.name,
-      {
-        views: ["default"],
-        browserHalf: isStaticView(assembly.renderer)
-          ? assembly.client !== undefined
-          : readViewMount(isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view)) !==
-            "none",
-      },
-    ]),
+    assemblies.assemblies.map((assembly) => {
+      const placed = views.placements.get(assembly.name);
+      return [
+        assembly.name,
+        {
+          views: ["default"],
+          browserHalf: isStaticView(assembly.renderer)
+            ? assembly.client !== undefined
+            : readViewMount(
+                isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view),
+              ) !== "none",
+          ...(placed === undefined ? {} : { placements: { default: placed } }),
+        },
+      ];
+    }),
   );
   const problems: ProjectProblem[] = [
     ...assemblies.problems,
@@ -72,6 +80,8 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     ...apis.problems,
     ...buildProblems(root, assemblies.assemblies),
     ...(await templateProblems(root, assemblies.assemblies)),
+    ...views.problems,
+    ...viewProblems(root, assemblies.assemblies, placeable),
   ];
 
   // A file that cannot be read is a finding against it, never a throw out of check.

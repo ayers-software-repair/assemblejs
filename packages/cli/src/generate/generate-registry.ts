@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { dirname, relative, sep } from "node:path";
+import type { ViewPlacement } from "@assemblejs/core";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import { TEMPLATE_RENDERERS } from "../discovery/template-renderers.js";
@@ -29,7 +30,8 @@ const TEMPLATE_RENDER = "render_template";
  * runs and whether it renders in its own shadow root; a module without one reads as undefined,
  * the default; a view in its own shadow root links the stylesheet built for that root instead of
  * the one scoped to its envelope. An assembly with a browser half links the build's client
- * entry; one without is declared `none`, so it ships no JavaScript at all.
+ * entry; one without is declared `none`, so it ships no JavaScript at all. What a view's source
+ * is known to place is written beside it, for boot to hold and to link ahead of a deferral.
  */
 export function generateRegistry(
   assemblies: readonly DiscoveredAssembly[],
@@ -42,6 +44,8 @@ export function generateRegistry(
     readonly styles?: ReadonlyMap<string, AssemblyStyles>;
     /** Renderer name to the package that renders it on the server. */
     readonly packages: Readonly<Record<string, string>>;
+    /** What each assembly's view is known to place, by name, for those whose source says. */
+    readonly placements?: ReadonlyMap<string, readonly ViewPlacement[]>;
   },
 ): string {
   const imports: string[] = [];
@@ -72,6 +76,8 @@ export function generateRegistry(
           ? `markup: () => ${view}`
           : `markup: (input) => ${identifierFor("render", assembly.renderer)}(${view}.default, input)`,
     );
+    const placed = options.placements?.get(assembly.name);
+    if (placed !== undefined) fields.push(`placements: ${JSON.stringify(placed)}`);
 
     const parts = [`name: "${assembly.name}"`, `views: { default: { ${fields.join(", ")} } }`];
     const browser = !html || assembly.client !== undefined;

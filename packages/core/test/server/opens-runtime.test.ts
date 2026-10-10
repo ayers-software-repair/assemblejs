@@ -18,6 +18,28 @@ describe("whether a page carries its own runtime", () => {
     expect(opensRuntime([], {}, assemblies)).toBe(false);
   });
 
+  // A static view has no browser half of its own, and the one its child has still needs the
+  // runtime: what a view's source is known to place counts, at any depth.
+  it("does for a static assembly whose view is known to place one with a browser half", () => {
+    const nested = new Map<string, PlacedAssembly>([
+      ...assemblies,
+      [
+        "shell",
+        { views: ["default"], browserHalf: false, placements: { default: [{ name: "panel" }] } },
+      ],
+      [
+        "panel",
+        { views: ["default"], browserHalf: false, placements: { default: [{ name: "live" }] } },
+      ],
+      [
+        "quiet",
+        { views: ["default"], browserHalf: false, placements: { default: [{ name: "still" }] } },
+      ],
+    ]);
+    expect(opensRuntime(placing('<assembly name="shell"></assembly>'), {}, nested)).toBe(true);
+    expect(opensRuntime(placing('<assembly name="quiet"></assembly>'), {}, nested)).toBe(false);
+  });
+
   it("does not for another server's assembly, whose runtime is that server's", () => {
     const place = { live: { url: "https://other.example/assembly/live/" } };
     expect(opensRuntime(placing('<assembly name="live"></assembly>'), place, assemblies)).toBe(

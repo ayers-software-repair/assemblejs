@@ -8,7 +8,9 @@ import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { SEGMENT } from "../vocab/segment.js";
 import { apiProblems } from "./api-problems.js";
 import { pageProblems } from "./page-problems.js";
+import { placedAssemblyOf } from "./placed-assembly-of.js";
 import { remoteProblems } from "./remote-problems.js";
+import { viewPlacementProblems } from "./view-placement-problems.js";
 import { viewSchema } from "./view-schema.js";
 
 /**
@@ -51,6 +53,30 @@ export function bootProblems(
       for (const problem of viewSchema(declared).problems) {
         problems.push(`assembly "${assembly.name}" view "${view}": ${problem}`);
       }
+      for (const placed of declared.placements ?? []) {
+        for (const value of [placed.name, placed.view]) {
+          if (value !== undefined && !SEGMENT.test(value)) {
+            problems.push(
+              `assembly "${assembly.name}" view "${view}" places "${value}", which is not a usable url segment`,
+            );
+          }
+        }
+      }
+    }
+  }
+  // What each view's source is known to place, held as a page's placements are: a name with no
+  // assembly, a view it lacks and a view that leads back to itself are refusals, not requests.
+  const placeable = new Map(
+    assemblies.map((assembly) => [assembly.name, placedAssemblyOf(assembly)]),
+  );
+  for (const assembly of assemblies) {
+    for (const view of Object.keys(assembly.views)) {
+      const at = `assembly "${assembly.name}" view "${view}"`;
+      problems.push(
+        ...viewPlacementProblems(at, { name: assembly.name, view }, placeable).map(
+          (problem) => problem.message,
+        ),
+      );
     }
   }
   return [

@@ -34,6 +34,27 @@ export const RULES: readonly Rule[] = [
       "A view that fetches or renders another assembly itself, or child markup built by hand where a Slot belongs.",
   },
   {
+    id: "a-placement-is-named-where-it-is-written",
+    rule: "A placement's name is a string written where the placement is. Only its view may be computed.",
+    because:
+      "The name says which assembly a view holds, and everything decided before a request reads it: whether the page carries the runtime, what a deferred parent's children need linked, and whether the assembly exists at all. A slot whose name changes in the browser also writes a new directive over the child that was living there.",
+    smell: "A Slot or a directive whose name comes from data, a prop or a variable.",
+  },
+  {
+    id: "an-assembly-is-never-its-own-ancestor",
+    rule: "No assembly is placed inside itself, directly or through the assemblies it places.",
+    because:
+      "A view that leads back to itself would render without end, so the composer refuses a child that is its own ancestor before it dispatches it, and the visitor gets a fallback where the author meant content. Read from the sources, the loop is a problem before any request.",
+    smell: "A view that places its own assembly, or two views that place each other.",
+  },
+  {
+    id: "lit-holds-lit-behind-a-shadow-root",
+    rule: "A Lit view holds a Lit assembly only behind a shadow root.",
+    because:
+      "Lit hydrates a view by reading every marker in its tree, down to each shadow root. A Lit assembly left in the same tree has markers of its own, which Lit reads as the view's: it throws on one that binds an attribute, and takes the rest for its own and removes them when the view renders again. A shadow root hides them.",
+    smell: "A Lit view placing a Lit assembly whose view does not export shadow = true.",
+  },
+  {
     id: "nothing-crosses-but-json",
     rule: "Only a named projection of six fields crosses from the server to the browser.",
     because:

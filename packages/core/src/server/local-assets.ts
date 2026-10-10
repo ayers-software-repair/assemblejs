@@ -3,11 +3,16 @@
 import type { AssemblyAssets } from "../assembly/assembly-assets.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
 import { inertSpans } from "../compose/inert-spans.js";
+import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
+import { placedAssemblyOf } from "./placed-assembly-of.js";
+import { placedBeneath } from "./placed-beneath.js";
 
 const TAG = new RegExp(`<(/?)${ENVELOPE_ELEMENT}(?:\\s[^>]*)?>`, "gi");
 const NAME = /\sdata-name="([^"]*)"/;
+const VIEW = /\sdata-view="([^"]*)"/;
 const REMOTE = /\sdata-remote=/;
+const DEFERRED = /\sdata-defer[\s=>]/;
 
 /**
  * The browser files that markup needs linked around it, for the assemblies of this server it
@@ -21,6 +26,10 @@ const REMOTE = /\sdata-remote=/;
  * it; what it needs comes from its manifest. A shadow assembly's stylesheets are linked inside
  * its own root, and so are those of every assembly placed inside that root, where a sheet
  * linked around it would not reach them: neither is answered here, and the modules of both are.
+ *
+ * A deferred placement is served empty and filled by the browser, and its children arrive with
+ * that answer. So the page links for them now, from what the deferred view's source is known to
+ * place at any depth, what it would otherwise have read from their envelopes.
  */
 export function localAssets(
   html: string,
@@ -43,9 +52,24 @@ export function localAssets(
     const remote = around?.remote === true || REMOTE.test(tag[0]);
     const assembly = remote ? undefined : assemblies.get(NAME.exec(tag[0])?.[1] ?? "");
     const shadowed = around?.shadowed === true;
+    const link = (one: AssemblyDefinition | undefined, hidden: boolean): boolean => {
+      js.push(...(one?.assets?.js ?? []));
+      if (!hidden && one?.shadow !== true) css.push(...(one?.assets?.css ?? []));
+      return hidden || one?.shadow === true;
+    };
     if (assembly !== undefined) {
-      js.push(...(assembly.assets?.js ?? []));
-      if (!shadowed && assembly.shadow !== true) css.push(...(assembly.assets?.css ?? []));
+      const hidden = link(assembly, shadowed);
+      if (DEFERRED.test(tag[0])) {
+        placedBeneath(
+          { name: assembly.name, view: VIEW.exec(tag[0])?.[1] ?? DEFAULT_VIEW },
+          (name) => {
+            const placed = assemblies.get(name);
+            return placed === undefined ? undefined : placedAssemblyOf(placed);
+          },
+          (placed, above) => link(assemblies.get(placed.name), above),
+          hidden,
+        );
+      }
     }
     open.push({ remote, shadowed: shadowed || assembly?.shadow === true });
   }

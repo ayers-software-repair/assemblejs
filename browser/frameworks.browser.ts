@@ -210,3 +210,28 @@ test("a nested assembly's own styles reach it where it stands", async ({ page })
   await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
   await expect(page.locator("#lit-bump")).toHaveCSS("color", "rgb(120, 0, 120)");
 });
+
+test("a deferred assembly arrives with every assembly its view places, each one linked ahead", async ({
+  page,
+}) => {
+  const problems = problemsOn(page);
+  const sent = await (await page.request.get(`${origin}/nested-later`)).text();
+  // One placeholder, with no browser half of its own, and ahead of it what the twelve assemblies
+  // inside it will need: the runtime that fills it, and the one stylesheet among them.
+  expect(sent.match(/<assembly-root /g)).toHaveLength(1);
+  expect(sent).toContain('data-defer=""');
+  expect(sent).toMatch(/<link rel="stylesheet" href="[^"]*vue-counter[^"]*\.css">/);
+  expect(sent).toMatch(/<script type="module" src="[^"]*client-[^"]*\.js">/);
+
+  await page.goto(`${origin}/nested-later`);
+  await expect(page.locator("assembly-root[data-defer]")).toHaveCount(0);
+  await expect(page.locator("assembly-root")).toHaveCount(13);
+  await page.waitForLoadState("networkidle");
+  for (const [shell, counter] of NESTED) {
+    const bump = page.locator(`assembly-root[data-name="${shell}-shell"] #${counter}-bump`);
+    await bump.click();
+    await expect(bump).toHaveText(`${counter} 1`);
+  }
+  await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
+  expect(problems).toEqual([]);
+});

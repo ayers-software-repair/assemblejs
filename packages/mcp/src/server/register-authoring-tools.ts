@@ -6,6 +6,7 @@ import { z } from "zod";
 import { addAssembly } from "../author/add-assembly.js";
 import { checkRoot } from "../author/check-root.js";
 import { createProject } from "../author/create-project.js";
+import { placeInView } from "../author/place-in-view.js";
 import { placeOnPage } from "../author/place-on-page.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import type { ToolResult } from "./tool-result.js";
@@ -48,26 +49,40 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
   server.registerTool(
     "place_assembly",
     {
-      title: "Place an assembly on a page",
+      title: "Place an assembly on a page, or inside another assembly",
       description:
-        "Puts <assembly name=...> into a page's template at a named position, and returns the change. The page and the assembly must exist; the answer lists the ones that do when they do not.",
+        "Puts <assembly name=...> into a page's template, or into another assembly's view, at a named position, and returns the change. Name the page or the assembly it goes in, one of the two. What is named must exist; the answer lists what does when it does not. A view its author writes as source is not edited: the answer is the line to write.",
       inputSchema: {
-        page: z.string().describe("the page's name, which is its directory under src/pages"),
+        page: z
+          .string()
+          .optional()
+          .describe("the page's name, which is its directory under src/pages"),
+        in: z
+          .string()
+          .optional()
+          .describe("in place of a page: the assembly whose view takes the placement"),
         name: z.string().describe("the assembly to place"),
         at: z.enum(["start", "end"]).optional().describe("the start or end of the body"),
         after: z.string().optional().describe("place it after this assembly's placement"),
         before: z.string().optional().describe("place it before this assembly's placement"),
       },
     },
-    ({ page, name, at, after, before }) =>
-      json(
-        placeOnPage(
-          root,
-          page,
-          name,
-          after !== undefined ? { after } : before !== undefined ? { before } : { at: at ?? "end" },
-        ),
-      ),
+    ({ page, in: parent, name, at, after, before }) => {
+      const position =
+        after !== undefined ? { after } : before !== undefined ? { before } : { at: at ?? "end" };
+      if ((page === undefined) === (parent === undefined)) {
+        return json({
+          ok: false,
+          result: null,
+          problems: ["name where it goes: a page, or the assembly it is placed in, and not both"],
+        });
+      }
+      return json(
+        parent === undefined
+          ? placeOnPage(root, page ?? "", name, position)
+          : placeInView(root, parent, name, position),
+      );
+    },
   );
 
   server.registerTool(

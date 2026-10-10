@@ -116,6 +116,18 @@ describe("what is checked about pages before anything listens", () => {
     // Another assembly's browser half puts the runtime on the page, which fills a static one.
     expect(text(one("live") + one("hello"), { hello: { defer: true } })).toBe("");
     expect(text(one("hello"), { hello: { defer: true } })).toMatch(/nothing would fill it/);
+    // A static view known to place an assembly with a browser half brings the runtime with it.
+    const shell = defineAssembly({
+      name: "shell",
+      views: { default: { renderer: "html", markup: () => "", placements: [{ name: "live" }] } },
+    });
+    expect(
+      pageProblems(
+        [{ route: "/", template: one("shell"), place: { shell: { defer: true } } }],
+        [shell, hydrated],
+        [],
+      ),
+    ).toEqual([]);
     expect(
       text(one("far"), { far: { defer: true, url: "https://other.example/assembly/far/" } }),
     ).toMatch(/across origins/);

@@ -3,6 +3,7 @@
 import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { build } from "esbuild";
+import { viewFindings } from "../check/view-findings.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
@@ -79,6 +80,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
         script,
         styles,
         packages,
+        placements: viewFindings(root, found.assemblies).placements,
       }),
     );
     io.write(join(generated, "pages.ts"), generatePages(pages.pages, generated));

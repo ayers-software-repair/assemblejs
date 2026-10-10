@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonObject } from "@assemblejs/core";
+import type { Diagnostic, JsonObject } from "@assemblejs/core";
 
 /**
  * What rendering an assembly answered.
@@ -14,6 +14,8 @@ export interface RenderedAssembly {
   readonly renderer: string;
   readonly html: string;
   readonly data: JsonObject;
+  /** How each assembly its view places was answered, as a page's account says it. */
+  readonly children: readonly Diagnostic[];
   /** Empty when it rendered. Otherwise what stopped it, in terms an agent can act on. */
   readonly problems: readonly string[];
 }

@@ -2682,3 +2682,66 @@ Settled:
 - `/assemblejs/` deploys from `main`, which has no `site/` and no deploy workflow until `next`
   is promoted. That is the release line and the owner's to call.
 - Nothing is synced or invalidated by hand. The workflow is the one way the bucket changes.
+
+## 2026-10-10: S-07, what a view places is known before it renders
+
+Expected, from the plan: `check` reads directives and slot names; the registry writes each
+view's static placements for boot; the agent surface uses core's transport.
+
+Found:
+
+- Two refusals at boot were wrong, and one page could never have worked. A page whose only
+  placement is a plain html parent with framework children was refused for deferring that
+  parent, and for naming a stream, on the ground that nothing on it had a browser half
+  (`placementProblems`, `opensRuntime`: a page's own placements were all they read). Let
+  through, the same page would have been served with the placeholder and no runtime, because a
+  placeholder names only the parent, and nothing would have filled it.
+- Boot cannot know a renderer by name: nothing in core names a framework. The rule about Lit
+  is `check`'s, which reads renderers from file names, and the browser half's own at mount.
+- A computed view is legitimate, a computed name is not. A service shapes which view of a
+  child a parent shows (the synthesis, section 3); nothing decided before a request can read a
+  name that is data, and a slot whose name changes in the browser writes over its child.
+- For a Svelte or a Vue component the slot is written in markup, not in a module `check`
+  already parses, and `check` runs without the project's compilers. They are read as text.
+- A template's directive can be entangled with the engine's own syntax. Read with everything
+  the engine writes replaced by a marker, such a source is no longer a directive the finder
+  reads; that is not a finding, since the render may well place it.
+
+Settled:
+
+- `AssemblyView.placements`, each a `ViewPlacement`: a name, and a view only where the source
+  writes one. A placement with no view stands for any view its assembly has.
+- One walk, `placedBeneath`, over what views are known to place, each name and view once. It
+  serves the runtime rule (`opensRuntime` counts what is beneath a placement), the loop check,
+  the deferred link and `check`'s rule about Lit.
+- `viewPlacementProblems`, called by boot and by `check`: a name with no assembly, a view the
+  assembly lacks, a view that places itself or leads back to itself. Only written views are
+  followed when looking for a way back, so nothing is refused on a guess.
+- `localAssets` links, for a deferred placement, the files of everything its view is known to
+  place, at any depth, a shadow root hiding sheets as it does in served markup.
+- `check` reads each kind of view by what it is (`readViewPlacements`): a plain html view as a
+  page's template; EJS, Handlebars and Nunjucks past what the engine writes; a module by its
+  syntax tree, following the name it imports `Slot` or `slot` under from a renderer's browser
+  entry; Svelte and Vue as text. Pug is left to the render and Markdown places nothing.
+- Three rules of `check`'s own, each explained by the agent surface:
+  `a-placement-is-named-where-it-is-written`, `an-assembly-is-never-its-own-ancestor`,
+  `lit-holds-lit-behind-a-shadow-root`. The last holds at any depth and stops at a shadow root.
+- The agent surface declares the project's assemblies as a server would (`projectAssemblies`)
+  and renders and composes through `localFetch`. A view that needs a build throws its reason,
+  so a child that is one falls back as any failed render does and the reason is told.
+  `RenderedAssembly.children` is the account of what a view placed.
+- `place_assembly` takes `in`. A view that holds the directive as markup is written into; any
+  other is its author's source, and the answer is the line to write and its import.
+- The example's `nested-later` page defers the plain html parent of twelve assemblies.
+
+The agent surface's tarball budget is raised from 21000 bytes to 25000 (it packs to 23134):
+three rules with their reasons, the two ways a fallback is told, and placing in a view. No
+other package crossed its budget.
+
+Not read, and left to the render: a slot reached through a namespace import; a Vue slot
+written in kebab case; a Pug view. The build writes what it read and refuses nothing for it:
+boot refuses, and `check` says where.
+
+Watched red, each mutation alone, by the harness S-06 describes: ten in core, thirteen in the
+command line, eight in the agent surface. In the browser, with the deferred link removed, one
+of eighteen: "a deferred assembly arrives with every assembly its view places".

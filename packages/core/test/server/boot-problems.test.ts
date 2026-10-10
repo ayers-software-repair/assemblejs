@@ -56,6 +56,27 @@ describe("what is checked before anything listens", () => {
     expect(problems.join()).toMatch(/assembly "cart" view "default": data field "title"/);
   });
 
+  it("refuses what a view's source is known to place when nothing answers to it", () => {
+    const placing = (placements: AssemblyView["placements"]): AssemblyView => ({
+      ...view,
+      ...(placements === undefined ? {} : { placements }),
+    });
+    const problems = bootProblems([
+      {
+        name: "shell",
+        views: { default: placing([{ name: "nope" }, { name: "cart", view: "wide" }]) },
+      },
+      { name: "cart", views: { default: placing([{ name: "cart", view: "default" }]) } },
+      { name: "odd", views: { default: placing([{ name: "Not A Segment" }]) } },
+    ]).join("\n");
+    expect(problems).toContain(
+      'assembly "shell" view "default" places "nope", and there is no such',
+    );
+    expect(problems).toContain('assembly "shell" view "default" places "cart" with a view "wide"');
+    expect(problems).toContain('assembly "cart" view "default" places itself');
+    expect(problems).toContain('places "Not A Segment", which is not a usable url segment');
+  });
+
   it("includes what is wrong with the pages", () => {
     const problems = bootProblems(
       [{ name: "cart", views: { default: view } }],

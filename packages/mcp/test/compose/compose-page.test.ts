@@ -82,4 +82,26 @@ describe("composing a page for an agent", () => {
     expect(composed.html).toBe("<main><p>static</p></main>");
     expect(composed.diagnostics).toEqual([]);
   });
+
+  it("composes what a placed assembly's own view places, and accounts for it beneath its parent", async () => {
+    assembly("shell", "shell.html", '<section><assembly name="cart"></assembly></section>');
+    assembly("cart", "cart.html", "<p>Two items</p>");
+    const composed = await composePage(root, '<main><assembly name="shell"/></main>');
+
+    expect(composed.problems).toEqual([]);
+    expect(composed.html).toMatch(/data-name="shell".*data-name="cart".*Two items/s);
+    expect(composed.diagnostics).toMatchObject([
+      { name: "shell", source: "local", children: [{ name: "cart", source: "local" }] },
+    ]);
+  });
+
+  it("says why a child fell back, though the page and its parent stand", async () => {
+    assembly("shell", "shell.html", '<section><assembly name="counter"></assembly></section>');
+    assembly("counter", "counter.react.tsx", "export default () => null;");
+    const composed = await composePage(root, '<main><assembly name="shell"/></main>');
+
+    expect(composed.diagnostics[0]).toMatchObject({ name: "shell", source: "local" });
+    expect(composed.problems).toHaveLength(1);
+    expect(composed.problems[0]).toContain("only its renderer turns into markup");
+  });
 });

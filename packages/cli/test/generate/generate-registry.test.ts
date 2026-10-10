@@ -33,6 +33,22 @@ const generate = (
   });
 
 describe("generating the registry the built server imports", () => {
+  it("writes what each view is known to place beside it, and nothing for a view nobody read", () => {
+    const source = generateRegistry(
+      [found("shell", "shell.html", "html"), found("card", "card.pug", "pug")],
+      {
+        from,
+        script: undefined,
+        packages: {},
+        placements: new Map([["shell", [{ name: "cart", view: "default" }, { name: "price" }]]]),
+      },
+    );
+    expect(source).toContain(
+      'markup: () => view_shell, placements: [{"name":"cart","view":"default"},{"name":"price"}] }',
+    );
+    expect(source.match(/placements:/g)).toHaveLength(1);
+  });
+
   it("imports every view by name, so the graph is static", () => {
     const source = generate([
       found("cart", "cart.html", "html"),

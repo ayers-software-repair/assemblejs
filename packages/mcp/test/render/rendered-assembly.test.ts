@@ -11,6 +11,7 @@ describe("what rendering answered", () => {
       renderer: "html",
       html: "<assembly-root></assembly-root>",
       data: {},
+      children: [],
       problems: [],
     };
     // Any one of the three alone leaves "did what I just wrote work" open.

@@ -7,6 +7,7 @@ import type { PageDefinition } from "../page/page-definition.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
 import { opensRuntime } from "./opens-runtime.js";
 import { pageRouteProblems } from "./page-route-problems.js";
+import { placedAssemblyOf } from "./placed-assembly-of.js";
 import type { PlacedAssembly } from "./placed-assembly.js";
 import { placementProblems } from "./placement-problems.js";
 import { remotePlacementProblems } from "./remote-placement-problems.js";
@@ -33,13 +34,7 @@ export function pageProblems(
 ): readonly string[] {
   const problems: string[] = [];
   const placeable = new Map<string, PlacedAssembly>(
-    assemblies.map((assembly) => [
-      assembly.name,
-      {
-        views: Object.keys(assembly.views),
-        browserHalf: assembly.mount !== "none" && (assembly.assets?.js.length ?? 0) > 0,
-      },
-    ]),
+    assemblies.map((assembly) => [assembly.name, placedAssemblyOf(assembly)]),
   );
   const taken = new Set(
     apis.filter((api) => (api.method ?? "GET") === "GET").map((api) => routeKey("GET", api.path)),

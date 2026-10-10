@@ -85,3 +85,57 @@ describe("the browser files markup needs linked around it", () => {
     expect(localAssets(page, all).css).toEqual(["/cart.css", "/price.css"]);
   });
 });
+
+describe("the browser files a deferred placement needs linked before it is filled", () => {
+  const placing = (
+    name: string,
+    placements: readonly { name: string; view?: string }[],
+    shadow = false,
+  ): AssemblyDefinition =>
+    defineAssembly({
+      name,
+      views: { default: { renderer: "html", markup: () => "", placements } },
+      assets: { css: [`/${name}.css`], js: [`/${name}.js`] },
+      ...(shadow ? { shadow: true } : {}),
+    });
+  const known = new Map(
+    [
+      placing("shell", [{ name: "cart", view: "default" }]),
+      placing("cart", [{ name: "price" }, { name: "gone" }]),
+      placing("price", []),
+      placing("card", [{ name: "cart", view: "default" }], true),
+    ].map((one) => [one.name, one]),
+  );
+  const placeholder = (name: string, deferred = true): string =>
+    renderEnvelope({
+      id: `id-${name}`,
+      name,
+      view: "default",
+      renderer: "html",
+      markup: "",
+      data: {},
+      ...(deferred ? { deferred: true } : {}),
+    });
+
+  it("are its own and those of everything its view is known to place, at any depth", () => {
+    expect(localAssets(placeholder("shell"), known)).toEqual({
+      css: ["/shell.css", "/cart.css", "/price.css"],
+      js: ["/shell.js", "/cart.js", "/price.js"],
+    });
+  });
+
+  it("leave the sheets of what a deferred shadow assembly places to its root", () => {
+    expect(localAssets(placeholder("card"), known)).toEqual({
+      css: [],
+      js: ["/card.js", "/cart.js", "/price.js"],
+    });
+  });
+
+  // An assembly served whole holds its children's envelopes, and they are read from the markup.
+  it("are not guessed for a placement that is not deferred", () => {
+    expect(localAssets(placeholder("shell", false), known)).toEqual({
+      css: ["/shell.css"],
+      js: ["/shell.js"],
+    });
+  });
+});
