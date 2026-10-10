@@ -17,9 +17,11 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, dep
 - `@assemblejs/core`: the server and the composer, the declaration types, the contract's
   endpoints, and the browser runtime (`/client`). It holds no renderer: a plain html view is its
   own markup.
-- `@assemblejs/cli`, `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent
-  surface: an MCP server that reads the project, creates one, adds and places an assembly,
-  checks it, renders and composes, and explains every rule `check` names).
+- `@assemblejs/cli` (it holds the rules `check` names, and writes a new project its `AGENTS.md`
+  and MCP registrations, which `check` holds current and `add agents` rewrites),
+  `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent surface: an MCP
+  server that reads the project, creates one, adds and places an assembly, checks it, renders
+  and composes, and explains every rule `check` names).
 - `@assemblejs/renderer-templates` (EJS, Markdown, Nunjucks, Handlebars, Pug; no peer deps).
 - `@assemblejs/renderer-{preact,react,vue,svelte,solid,lit}`: one real peer dependency each.
 

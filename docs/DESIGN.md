@@ -532,6 +532,8 @@ src/
   api/
     time.api.ts
 assemblejs.config.ts            policy only: remotes, access, the content policy, budgets
+AGENTS.md                       what an agent that opens the project is told (13.7)
+.mcp.json                       the project's agent surface, registered (13.7)
 ```
 
 **A directory under `assemblies/` is an assembly.** There is no registry to maintain, no import
@@ -835,6 +837,54 @@ The framework ships capability, not autonomy.
   person types them.
 - Mutating tools report every file they wrote, so the agent's caller can see the whole change.
 
+### 13.7 What a new project carries
+
+An agent meets a project before it meets the framework, so the project says what it is. Beside
+the project's own files, `new` writes what an agent needs in its first minute:
+
+| file                                                | what it is                                                                                                                                                                                                                                |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`                                         | What a page, an assembly, a placement, a service and an api are; how to ask the project and change it; every rule of `assemblejs://rules`, by its id. The command line's part stands between two comments, and the rest is the project's. |
+| `CLAUDE.md`                                         | One line, `@AGENTS.md`. Claude Code reads a `CLAUDE.md` in place of `AGENTS.md` wherever one exists in the project or above it, and the import is its documented way to share the one file.                                               |
+| `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json` | The project's own server, registered for each client that reads a registration from a project, in that client's form.                                                                                                                     |
+
+The server is a development dependency of the project, `@assemblejs/mcp` beside the command
+line, and each registration runs its entry point with node. No shell, no package runner and
+nothing fetched when an agent starts, and the server an agent talks to is the one the project
+installed. It is built on one exact version of the command line, and checks with that one.
+
+**The root is the one thing a registration must get right**, because every tool is scoped to it
+(13.6). Cursor and VS Code fill their workspace folder into a server's arguments, so their
+registrations name the server in full and hand it the root as its one argument, whatever
+directory it is started in. `.mcp.json` has no such variable, so its server is named by a path
+from the directory Claude Code starts it in, which is the session's: observed, not documented.
+What Claude Code does document is the project's root in the server's environment, as
+`CLAUDE_PROJECT_DIR`, and the server takes its root from there. A server given neither an
+argument nor that variable works where it was started, and one whose root is no directory
+refuses to start, on standard error.
+
+**Held current, and never rewritten behind the author's back.** The instructions carry no
+version: they are what the installed command line writes, or they are not, and `check` says
+which (`agent-instructions-are-current`). It refuses, the same way, this server registered
+otherwise than this version registers it, a registered server the project does not depend on,
+and a `CLAUDE.md` that hides the instructions by not importing them. A project that carries
+none of these files has nothing to hold.
+
+Two command lines judge those instructions: the project's, when a person runs `check`, and the
+one the server is built on, when an agent does. Installed at versions that were not released
+together, each would call the other's instructions out of date, and no rewriting would satisfy
+both. So where the installed server is built on another command line than the one installed
+beside it, `check` reports that and nothing else about these files, from either side, with the
+update that puts it right.
+
+`assemblejs add agents` is the one thing that writes them after `new`. Into a project that has
+none it writes all of them; in one that has some it rewrites only what is the command line's
+own: its part of `AGENTS.md`, the one import in `CLAUDE.md`, its own server in a registration.
+Another server in a registration and the project's own text in an instruction file are kept,
+and a registration that is not JSON it can write back whole is refused before anything is
+written. `create_project` writes the same files and merges the same way, into a root that may
+hold some of them already: the registration that started the server there is the commonest.
+
 ---
 
 ## 14. Decided here
@@ -904,6 +954,14 @@ reason, so nothing has to be remembered.
 19. **A Lit assembly in a Lit view's own tree is refused, not repaired.** Detaching the child
     while its parent hydrates would move live nodes. A shadow root on the child is one line and
     hides it.
+20. **A project installs its agent surface and registers it by a path, not by a package
+    runner.** A registration that fetched the server when an agent started would run whatever
+    version the registry held that day, against a project checked by another, and would need a
+    network and a shell. The cost is one more development dependency in every project, which a
+    built server never installs.
+21. **The rules live with the command line.** `new` writes them into a project and `check`
+    names them, and the agent surface, which depends on the command line, explains the same
+    list. One list in the package both read is the only arrangement in which they cannot differ.
 
 ---
 

@@ -6,8 +6,9 @@
 //
 //   1. build and pack the packages, once, so what is installed is what a publish would ship;
 //   2. create a project from the starter's tarball and lay the fixture's files over it;
-//   3. install every @assemblejs package the fixture names from its tarball, never through a
-//      workspace link, and build with the command line the project installed;
+//   3. install every @assemblejs package the starter wrote or the fixture names from its
+//      tarball, never through a workspace link, and build with the command line the project
+//      installed;
 //   4. start dist/server.js under plain node, in production;
 //   5. run the fixture's specs, conformance/specs/<fixture>/, with node's own test runner.
 //
@@ -83,11 +84,13 @@ for (const [signal, code] of [
   });
 }
 
+// The starter, what it writes into every project, and what the fixtures name beside them.
 const packages = [
   ...new Set([
+    "create",
     "core",
     "cli",
-    "create",
+    "mcp",
     ...[...declared.values()].flatMap((fixture) =>
       fixture.projects.flatMap((project) => project.packages),
     ),

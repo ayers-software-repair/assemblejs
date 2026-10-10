@@ -5,26 +5,28 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 00:56 EDT, after S-09).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:12 EDT, after A-01).**
 
-STATE. Branch `next`. `origin/next` is `7b9eff2`, S-08, pushed 2026-10-10 01:10 EDT; its `ci`
-run is 38025731839 and its `release` run 38025731838 (read them to their end before the next
-push if this block is all that is known). Above it, signed, pushed with this block: the S-09
-commit this block lands in, which touches `site/**` and so fires `deploy-site` as well. Every
-package reads `1.0.0-next.0`; eleven changesets are pending. The owner's overnight order (estate
-D1216): work the bites to code completion and get the landing page onto staging; no questions
-until morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
+STATE. Branch `next`. `origin/next` is `a85ca15`, S-09, pushed 2026-10-10 01:02 EDT; its `ci`
+run is 38026135845, its `release` run 38026135894 and its `deploy-site` run 38026135833, all
+read to their end, green. Above it, signed, pushed with this block: the A-01 commit this block
+lands in, which touches `site/**` and so fires `deploy-site` as well. Every package reads
+`1.0.0-next.0`; thirteen changesets are pending. The owner's overnight order (estate D1216):
+work the bites to code completion and get the landing page onto staging; no questions until
+morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
 `/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
 rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
 self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is the first AI-first rung, A-01 (PLAN 4.1): every new project carries
-agent instructions, written by `new` and `create`, that say what an assembly, a page and a
-placement are and what `check` and the agent surface do, so an agent that opens the project
-knows the framework before it writes. Then A-03 (prompts the agent surface lists), A-02
-(`llms.txt` on the site) and A-04 (its design memo first, then the owner's answer, then code).
-The subassembly rung is done: S-01 to S-09.
+THE EXACT NEXT STEP is A-03 (PLAN 4.1): the agent surface lists prompts for the common tasks
+through the protocol (add an assembly, place it, make a page, fix what `check` found), and an
+agent-shaped test in the `agents` conformance fixture lists them and follows one to a composed
+page. Then A-02 (`llms.txt` on the site, generated from `pages.json`), and A-04's design memo,
+which waits on the owner's answer before any code. A-01 is done: a new project carries its
+agent instructions and registrations, `check` holds them, and `add agents` rewrites them. The
+row it found is next after the ladder: DESIGN 13.3's five resources, of which the server has
+two. The subassembly rung is done: S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -467,9 +469,37 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       directive is read: static sources in `check` and at boot, rendered markup at render
       (DECISIONS 2026-10-09, S-02; found while reading the fragment scanner, which is the
       remote reader and is not the tool for it)
-- [ ] A-01 agent instructions in every new project: `new` writes `AGENTS.md` and the MCP
-      registration, `check` holds them current; proved by an agent-shaped test from the tarballs
-      (owner, 2026-10-09, PLAN 4.1)
+- [x] A-01 agent instructions in every new project: `new` writes `AGENTS.md`, a `CLAUDE.md`
+      that brings it to Claude Code, and the project's own MCP server installed and registered
+      for Claude Code, Cursor and VS Code; `check` holds them current
+      (`agent-instructions-are-current`) and `add agents` rewrites only what is its own in
+      each. Proved from the tarballs, `pnpm conformance agents`, 10 of 10: each registration
+      starts the installed server on the project, and an agent adds, places and composes an
+      assembly through it. Self-verified: 66 mutations in the unit suites and 9 around a run
+      of the fixture, each alone, each watched red (owner, 2026-10-09, PLAN 4.1; DECISIONS
+      2026-10-10, A-01)
+- [ ] The agent surface has two of the five resources DESIGN 13.3 names, and its
+      `assemblejs://project` lists assemblies and not the pages, the apis, the settings or how
+      they are wired. `compose_page` takes a template, so it cannot know the policy a page
+      declares: give it a page by name. Build them, then say so in the instructions `new`
+      writes, which today send an agent there for "the assemblies that exist" (found
+      2026-10-10 writing A-01; B-09b is checked done and nothing recorded the gap)
+- [ ] VS Code is handed this server twice: its Agent Host reads `.mcp.json` and is forwarded
+      `.vscode/mcp.json`, one name with two sets of arguments, and its documentation does not
+      say which it keeps. Open a new project in VS Code and read what it lists; keep one file
+      for it if they collide (DECISIONS 2026-10-10, A-01)
+- [ ] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
+      after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
+      (DECISIONS 2026-10-10, A-01)
+- [ ] The command line and the agent surface ship their code twice: `bin.js` and `index.js`
+      are each the whole bundle (`splitting: false` in their build), so 96 KB of the command
+      line's tarball is about 50 of code. Build each so its two entry points share what they
+      both hold, hold the version read from the package to it, and lower both budgets
+      (found 2026-10-10 when A-01 crossed the command line's budget)
+- [ ] A new project installs 90 packages, 15 MB, for the agent surface alone, through the
+      protocol SDK's dependencies on express and hono. All are development dependencies and
+      none reaches a deploy. Bundling the SDK into `@assemblejs/mcp`, with its notices, would
+      make it one package: the owner's to say (morning list; DECISIONS 2026-10-10, A-01)
 - [ ] A-03 MCP prompts for the common tasks, listed by the protocol, one followed to a composed
       page in a test (owner, 2026-10-09, PLAN 4.1)
 - [ ] A-02 `llms.txt` and `llms-full.txt` on the site, generated from `pages.json` and the

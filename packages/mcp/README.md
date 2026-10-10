@@ -11,6 +11,15 @@ assembly can render it and compose the page it sits on, immediately, and see wha
 produced, including which placement fell back. It closes its own loop instead of asking you to
 look.
 
+A project made with `npm create @assemblejs` has it already: installed as a development
+dependency and registered for Claude Code, Cursor and VS Code, beside an `AGENTS.md` that tells
+an agent to use it. In an older project, `npx assemblejs add agents` writes the same files.
+Any other client starts it over stdio with
+
+    node node_modules/@assemblejs/mcp/dist/bin.js
+
+from the project's root, or with the root as its one argument from anywhere else.
+
 See <https://ayers.repair/assemblejs/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

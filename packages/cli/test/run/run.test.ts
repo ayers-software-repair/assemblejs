@@ -77,13 +77,28 @@ describe("new", () => {
     const { io, written } = fake();
     expect(run(["new", "my-app"], io)).toBe(0);
     expect([...written.keys()].sort()).toEqual([
+      "my-app/.cursor/mcp.json",
       "my-app/.gitignore",
+      "my-app/.mcp.json",
+      "my-app/.vscode/mcp.json",
+      "my-app/AGENTS.md",
+      "my-app/CLAUDE.md",
       "my-app/README.md",
       "my-app/package.json",
       "my-app/src/assemblies/hello/hello.html",
       "my-app/src/pages/home/home.html",
       "my-app/src/server.ts",
     ]);
+  });
+
+  // The agent instructions and registrations among them are held current by check from then on.
+  it("writes a project its own check passes", async () => {
+    const parent = mkdtempSync(join(tmpdir(), "new-"));
+    expect(run(["new", "my-app", "--cwd", parent], { ...realIo, log: () => undefined })).toBe(0);
+    const lines: string[] = [];
+    const io = { ...realIo, log: (line: string) => void lines.push(line) };
+    expect(await run(["check", "--cwd", join(parent, "my-app")], io)).toBe(0);
+    expect(lines).toEqual(["no problems"]);
   });
 
   it("refuses a directory that already exists rather than writing into it", () => {
@@ -104,6 +119,37 @@ describe("new", () => {
     const { io, errors } = fake();
     expect(run(["new"], io)).toBe(2);
     expect(errors.join()).toContain("needs a directory");
+  });
+});
+
+describe("add agents", () => {
+  it("is a thing add writes, named in the usage beside an assembly", () => {
+    const { io, logs, errors } = fake();
+    run(["help"], io);
+    expect(logs.join("\n")).toContain("  add agents ");
+    expect(run(["add", "nonsense"], io)).toBe(2);
+    expect(errors.join()).toContain("assemblejs add assembly <name>, or assemblejs add agents");
+  });
+
+  it("writes into the project it is pointed at, and check then finds nothing to bring up to date", async () => {
+    const root = mkdtempSync(join(tmpdir(), "add-agents-"));
+    writeFileSync(join(root, "package.json"), '{ "devDependencies": { "@assemblejs/mcp": "*" } }');
+    mkdirSync(join(root, "src", "assemblies", "hello"), { recursive: true });
+    writeFileSync(join(root, "src", "assemblies", "hello", "hello.html"), "<p>hello</p>");
+    writeFileSync(join(root, "src", "server.ts"), "");
+    const quiet = { ...realIo, log: () => undefined };
+    expect(run(["add", "agents", "--cwd", root], quiet)).toBe(0);
+    expect(readFileSync(join(root, "CLAUDE.md"), "utf8")).toBe("@AGENTS.md\n");
+    expect(await run(["check", "--cwd", root], quiet)).toBe(0);
+    writeFileSync(join(root, "CLAUDE.md"), "Ours alone.\n");
+    const errors: string[] = [];
+    expect(
+      await run(["check", "--cwd", root], { ...quiet, error: (line) => errors.push(line) }),
+    ).toBe(1);
+    expect(errors.join("\n")).toContain("agent-instructions-are-current");
+    expect(run(["add", "agents", "--cwd", root], quiet)).toBe(0);
+    expect(readFileSync(join(root, "CLAUDE.md"), "utf8")).toBe("@AGENTS.md\n\nOurs alone.\n");
+    expect(await run(["check", "--cwd", root], quiet)).toBe(0);
   });
 });
 

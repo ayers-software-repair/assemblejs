@@ -1,11 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { AGENT_SERVER, agentInstructions } from "@assemblejs/cli";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createMcpServer, resolveRoot } from "@assemblejs/mcp";
@@ -13,11 +15,15 @@ import { createMcpServer, resolveRoot } from "@assemblejs/mcp";
 let dir = "";
 let client: Client;
 
-const ownManifestVersion = (
-  JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {
-    version: string;
-  }
-).version;
+const ownManifest = JSON.parse(
+  readFileSync(new URL("../../package.json", import.meta.url), "utf8"),
+) as {
+  name: string;
+  version: string;
+  bin: Record<string, string>;
+  dependencies: Record<string, string>;
+};
+const ownManifestVersion = ownManifest.version;
 
 describe("who an agent is talking to", () => {
   it("announces the version of the package that carries it", () => {
@@ -202,5 +208,77 @@ describe("what an agent cannot do", () => {
       expect(typeof answer.ok).toBe("boolean");
       expect(Array.isArray(answer.problems)).toBe(true);
     }
+  });
+});
+
+// A new project's AGENTS.md and registrations are written by the command line, which cannot
+// read this package: what they say of this server is held to it here.
+describe("what a project's own files say of this server", () => {
+  it("is the name it announces, and the entry point its package installs", () => {
+    expect(client.getServerVersion()?.name).toBe(AGENT_SERVER.name);
+    expect(ownManifest.name).toBe(AGENT_SERVER.package);
+    // Published as one exact version, which is what check compares with the one installed.
+    expect(ownManifest.dependencies[AGENT_SERVER.commandLine]).toBe("workspace:*");
+    expect(
+      Object.values(ownManifest.bin).map((file) => join("node_modules", ownManifest.name, file)),
+    ).toEqual([join(AGENT_SERVER.path)]);
+  });
+
+  it("is every resource it has, and no other", async () => {
+    const named = [...new Set(agentInstructions().match(/assemblejs:\/\/[a-z{}/-]+/g))].sort();
+    const { resources } = await client.listResources();
+    expect(named).toEqual(resources.map((resource) => resource.uri).sort());
+  });
+
+  it("is every tool it has but the one that makes a project, and no tool it has not", async () => {
+    const tools = (await client.listTools()).tools.map((tool) => tool.name);
+    const told = agentInstructions();
+    for (const tool of tools.filter((name) => name !== "create_project")) {
+      expect(told, tool).toContain(`\`${tool}\``);
+    }
+    const named = (told.match(/`[a-z]+(?:_[a-z]+)+`/g) ?? []).map((word) => word.slice(1, -1));
+    expect(named.length).toBeGreaterThan(3);
+    for (const tool of named) expect(tools, tool).toContain(tool);
+  });
+});
+
+describe("the server a registration starts", () => {
+  const bin = fileURLToPath(new URL("../../dist/bin.js", import.meta.url));
+  // The root the started server says it works on, asked through the protocol over its pipes.
+  const rootOf = async (args: string[], env: Record<string, string>, cwd: string) => {
+    const started = new Client({ name: "test-agent", version: "1.0.0" });
+    await started.connect(
+      new StdioClientTransport({ command: process.execPath, args: [bin, ...args], env, cwd }),
+    );
+    try {
+      const answer = await started.readResource({ uri: "assemblejs://project" });
+      return realpathSync((JSON.parse(textOf(answer)) as { root: string }).root);
+    } finally {
+      await started.close();
+    }
+  };
+
+  it("works on the root it is handed as its argument, wherever it is started", async () => {
+    const elsewhere = mkdtempSync(join(tmpdir(), "elsewhere-"));
+    expect(await rootOf([dir], { CLAUDE_PROJECT_DIR: elsewhere }, elsewhere)).toBe(
+      realpathSync(dir),
+    );
+  });
+
+  it("works on the root Claude Code names in its environment, wherever it is started", async () => {
+    const elsewhere = mkdtempSync(join(tmpdir(), "elsewhere-"));
+    expect(await rootOf([], { CLAUDE_PROJECT_DIR: dir }, elsewhere)).toBe(realpathSync(dir));
+  });
+
+  it("works where it is started when nothing names a root", async () => {
+    expect(await rootOf([], {}, dir)).toBe(realpathSync(dir));
+  });
+
+  it("refuses a root that is no directory, on the stream a client shows its user", () => {
+    const missing = join(dir, "not-here");
+    const ended = spawnSync(process.execPath, [bin, missing], { encoding: "utf8", input: "" });
+    expect(ended.status).toBe(2);
+    expect(ended.stdout).toBe("");
+    expect(ended.stderr).toContain(`assemblejs-mcp: ${missing} is not a directory.`);
   });
 });

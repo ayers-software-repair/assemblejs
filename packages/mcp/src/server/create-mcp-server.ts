@@ -1,13 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ownVersion } from "@assemblejs/cli";
+import { AGENT_SERVER, RULES, findRule, ownVersion } from "@assemblejs/cli";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { composePage } from "../compose/compose-page.js";
 import { renderAssembly } from "../render/render-assembly.js";
 import type { ProjectRoot } from "../root/project-root.js";
-import { findRule } from "../rules/find-rule.js";
-import { RULES } from "../rules/rules.js";
 import { describeProject } from "./describe-project.js";
 import { registerAuthoringTools } from "./register-authoring-tools.js";
 
@@ -23,7 +21,7 @@ const json = (value: unknown) => ({
  * shell, publishes, deploys, or reaches a network, and nothing holds a credential.
  */
 export function createMcpServer(root: ProjectRoot): McpServer {
-  const server = new McpServer({ name: "assemblejs", version: ownVersion(import.meta.url) });
+  const server = new McpServer({ name: AGENT_SERVER.name, version: ownVersion(import.meta.url) });
 
   server.registerResource(
     "project",

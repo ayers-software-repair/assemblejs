@@ -14,6 +14,7 @@ import {
   streamProblems,
 } from "@assemblejs/core";
 import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
+import { agentProblems } from "../agents/agent-problems.js";
 import { buildProblems } from "../build/build-problems.js";
 import { templateProblems } from "../build/template-problems.js";
 import { discoverApis } from "../discovery/discover-apis.js";
@@ -82,6 +83,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     ...(await templateProblems(root, assemblies.assemblies)),
     ...views.problems,
     ...viewProblems(root, assemblies.assemblies, placeable),
+    ...agentProblems(root),
   ];
 
   // A file that cannot be read is a finding against it, never a throw out of check.

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { projectFiles } from "@assemblejs/cli";
+import { MCP_REGISTRATIONS, agentFiles, projectFiles } from "@assemblejs/cli";
 
 describe("the smallest project that runs", () => {
   const files = projectFiles("my-app");
@@ -18,7 +18,24 @@ describe("the smallest project that runs", () => {
       devDependencies: Record<string, string>;
     };
     expect(manifest.dependencies["@assemblejs/core"]).toBe(`^${own}`);
-    expect(manifest.devDependencies["@assemblejs/cli"]).toBe(`^${own}`);
+    expect(manifest.devDependencies).toEqual({
+      "@assemblejs/cli": `^${own}`,
+      "@assemblejs/mcp": `^${own}`,
+    });
+  });
+
+  // An agent that opens the project is told what it is, and has its agent surface to ask:
+  // installed with the command line, and registered where each client looks for it.
+  it("is written for the agents that will work in it", () => {
+    const forAgents = agentFiles("my-app").files;
+    expect(Object.keys(forAgents)).toHaveLength(5);
+    for (const [path, contents] of Object.entries(forAgents)) {
+      expect(files[path], path).toBe(contents);
+    }
+    for (const registration of MCP_REGISTRATIONS) {
+      expect(files["README.md"], registration.path).toContain(`\`${registration.path}\``);
+    }
+    expect(files["README.md"]).toContain("`npx assemblejs add agents`");
   });
 
   it("has a server file that does not grow when an assembly is added", () => {

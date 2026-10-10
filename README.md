@@ -10,12 +10,14 @@ It also ships an MCP server, so an AI agent builds with the framework the way a 
 with the framework's own knowledge behind it: it can read the project's shape, add an assembly,
 place it on a page, and then render and compose to see what it actually produced. The server
 carries no model and no credential of its own; the intelligence is whichever agent you already
-use.
+use. Every new project is written with an `AGENTS.md` that says what it is and the rules its
+code must satisfy, and with that server installed and registered for Claude Code, Cursor and
+VS Code, so an agent that opens the project knows the framework before it writes.
 
 Status: under construction on the `next` branch. Nothing is published yet.
 
 - Packages: `@assemblejs/core`, `@assemblejs/cli`, `@assemblejs/create`, `@assemblejs/devtools`,
-  one `@assemblejs/renderer-*` package per framework.
+  `@assemblejs/mcp`, one `@assemblejs/renderer-*` package per framework.
 - Command: `assemblejs` (alias `asm`): `new`, `add`, `dev`, `build`, `check`, `deploy`.
 - Docs: https://ayers.repair/assemblejs/docs/
 - License: Apache-2.0. See LICENSE and NOTICE.

@@ -3,8 +3,8 @@
 
 /**
  * Every rule a project problem can name. A problem's rule is typed from this list, so the
- * compiler refuses one the agent surface's `explain` could not answer, and that package's tests
- * hold its rules to cover every one of these.
+ * compiler refuses one the agent surface's `explain` could not answer, and the rules' own tests
+ * hold them to cover every one of these.
  */
 export const RULE_IDS = [
   "directory-is-an-assembly",
@@ -25,4 +25,5 @@ export const RULE_IDS = [
   "the-server-file-never-grows",
   "one-project-per-root",
   "an-assembly-owns-its-styles",
+  "agent-instructions-are-current",
 ] as const;

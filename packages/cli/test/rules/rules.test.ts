@@ -1,8 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { RULE_IDS } from "@assemblejs/cli";
 import { describe, expect, it } from "vitest";
-import { RULES } from "@assemblejs/mcp";
+import { RULE_IDS, RULES } from "@assemblejs/cli";
 
 describe("what the framework knows", () => {
   it("gives every rule a reason and a smell, not just a sentence", () => {

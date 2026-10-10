@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // A real project, made the way a user makes one: the starter run from its tarball, the
 // fixture's files laid over what it wrote, every @assemblejs package installed from its
-// tarball, and the build run by the command line the project installed.
+// tarball, the ones the starter wrote where it put them, and the build run by the command line
+// the project installed.
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -55,13 +56,26 @@ export function project(fixture, work, tarball, packages) {
   const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
   manifest.dependencies ??= {};
   manifest.devDependencies ??= {};
+  const ours = "@assemblejs/";
+  // Each package of ours the starter wrote is pointed at its tarball where the starter put it,
+  // never moved: which of them a running server needs is part of what a project is.
+  for (const field of ["dependencies", "devDependencies"]) {
+    for (const name of Object.keys(manifest[field]).filter((key) => key.startsWith(ours))) {
+      manifest[field][name] = `file:${tarball(name.slice(ours.length))}`;
+    }
+  }
+  // And each the fixture names beside them, with the framework it is tested against.
   for (const name of packages) {
-    const field = name === "cli" ? "devDependencies" : "dependencies";
-    manifest[field][`@assemblejs/${name}`] = `file:${tarball(name)}`;
+    if (manifest.devDependencies[`${ours}${name}`] === undefined) {
+      manifest.dependencies[`${ours}${name}`] = `file:${tarball(name)}`;
+    }
     Object.assign(manifest.dependencies, peersOf(name));
   }
-  // One copy of core whoever asks for it, the tarball, never a registry version.
-  manifest.overrides = { "@assemblejs/core": `file:${tarball("core")}` };
+  // One copy of core and of the command line whoever asks for them, a renderer or the agent
+  // surface: the tarball, never a registry version.
+  manifest.overrides = Object.fromEntries(
+    ["core", "cli"].map((name) => [`${ours}${name}`, `file:${tarball(name)}`]),
+  );
   writeFileSync(join(root, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
   sh("npm", ["install", "--no-audit", "--no-fund"], root);
   sh("npx", ["assemblejs", "build"], root);

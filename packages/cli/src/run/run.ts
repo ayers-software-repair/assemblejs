@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { basename, join, resolve } from "node:path";
+import { addAgents } from "../agents/add-agents.js";
 import { buildProject } from "../build/build-project.js";
 import { runCheck } from "../check/run-check.js";
 import { planAssembly } from "../commands/plan-assembly.js";
@@ -17,6 +18,8 @@ const USAGE = `assemblejs <command>
   new <directory>              scaffold a project that runs
   add assembly <name> [--renderer <name>]
                                add an assembly; a directory IS an assembly
+  add agents                   write the agent instructions and MCP registrations, or bring
+                               the ones the project has up to date
   dev                          build, run, and rebuild on every change
   build                        build dist/server.js and its browser files
   check                        report every problem found without building
@@ -57,6 +60,7 @@ export function run(argv: readonly string[], io: Io): number | Promise<number> {
   }
 
   if (command === "new") return newProject(rest[0], cwd, io);
+  if (command === "add" && rest[0] === "agents") return addAgents(resolve(cwd), io);
   if (command === "add") return addAssembly(rest, flags.get("renderer") ?? "html", cwd, io);
   if (command === "build") return buildProject(resolve(cwd), io);
   if (command === "dev") return runDev(resolve(cwd), io, interrupted());
@@ -96,7 +100,7 @@ function newProject(directory: string | undefined, cwd: string, io: Io): number 
 function addAssembly(rest: readonly string[], renderer: string, cwd: string, io: Io): number {
   const [what, name] = rest;
   if (what !== "assembly") {
-    io.error(`add what? try: assemblejs add assembly <name>`);
+    io.error(`add what? try: assemblejs add assembly <name>, or assemblejs add agents`);
     return 2;
   }
   const plan = planAssembly(

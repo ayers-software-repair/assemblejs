@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { findRule } from "@assemblejs/mcp";
+import { findRule } from "@assemblejs/cli";
 
 describe("asking why", () => {
   it("answers with the reason", () => {

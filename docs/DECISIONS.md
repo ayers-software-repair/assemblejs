@@ -2867,3 +2867,143 @@ Two sentences had no spec of their own and got one in this commit, each watched 
 asked with its parent's query, and the empty envelope of a refused child. The reading is the
 seat's own. The plan asked for a reader with no stake; the owner's ruling against subagents
 leaves that to him, and it is on the morning list.
+
+## 2026-10-10: A-01, a new project is written for the agents that will work in it
+
+Expected, from the plan (PLAN 4.1): `new` writes an `AGENTS.md` carrying the framework's rules
+and the MCP registration, `.mcp.json` and the editor equivalents, and `check` holds it current;
+proved from the tarballs by an agent-shaped test that reads the project through nothing but the
+files `new` wrote and the MCP server.
+
+What each client documents (read 2026-10-10, each claim from the page named):
+
+- Claude Code, `code.claude.com/docs/en/mcp`. A project's servers are in `.mcp.json` at its
+  root, under `mcpServers`. An entry with no `type` is read as stdio, and `"type": "stdio"` is
+  written in the page's own examples. `${VAR}` and `${VAR:-default}` are expanded in `command`,
+  `args` and `env`, from Claude Code's own environment. It "sets `CLAUDE_PROJECT_DIR` in the
+  spawned server's environment to the project root, so your server can resolve project-relative
+  paths without depending on the working directory"; the variable is not in its own
+  environment, so in an argument it expands to its default. The page does not say what
+  directory a stdio server is started in.
+- Claude Code, `code.claude.com/docs/en/memory`. `AGENTS.md` is read only where no `CLAUDE.md`,
+  `.claude/CLAUDE.md` or `CLAUDE.local.md` stands in the working directory or above it, and
+  from v2.1.277. Its remedy is a `CLAUDE.md` beside it holding `@AGENTS.md`. An `@` and a path
+  outside a code span or a fenced block, anywhere in an instruction file, is an import.
+  Block-level HTML comments are stripped before the file reaches the model.
+- VS Code, `code.visualstudio.com/docs/copilot/reference/mcp-configuration`. `.vscode/mcp.json`,
+  under `servers`; a stdio entry has `type`, `command`, `args`, `env` and `cwd` ("Defaults to
+  the workspace folder when run in a workspace"); predefined variables such as
+  `${workspaceFolder}` are filled in the server configuration. Its Agent Host also reads
+  `.mcp.json` at the workspace root, "the portable format". What it does with one name in both
+  files is not stated.
+- Cursor, `cursor.com/docs/context/mcp`. `.cursor/mcp.json`, under `mcpServers`; `type` is
+  required; variables are resolved in `command`, `args`, `env`, `url` and `headers`, and
+  `${workspaceFolder}` is "the folder that contains `.cursor/mcp.json`". The page does not say
+  what directory a server is started in.
+- `AGENTS.md` at a project's root is read by Cursor (`cursor.com/docs/context/rules`) and by
+  VS Code (`code.visualstudio.com/docs/copilot/customization/custom-instructions`).
+
+Observed, not documented (this machine, Claude Code 2.1.296): a stdio server of the running
+session had the session's directory as its working directory and `CLAUDE_PROJECT_DIR` naming
+it; the shell its Bash tool runs did not carry that variable.
+
+Settled:
+
+- **Three files for instructions and registration, each because a client reads it.**
+  `AGENTS.md` for every client that reads one. `CLAUDE.md`, one line, `@AGENTS.md`, because
+  Claude Code otherwise never sees the instructions in a project that sits beneath any
+  `CLAUDE.md`, which is every project in this workspace, nor on a version before 2.1.277. A
+  registration for each of the three clients whose project-level form was read. Another
+  client is one entry in `MCP_REGISTRATIONS`, after its documentation is read: a row.
+- **The instructions are generated, between two comments, with no version.** What a page, an
+  assembly, a placement, a service and an api are; how to ask the project and change it; every
+  rule's id and sentence from the one list. They say in their own text who keeps them, since
+  the comment that says so is stripped before Claude Code's model sees it, and every `@` in
+  them stands in a code span, since one anywhere else is read as an import.
+- **The server is installed, and started by its path.** `@assemblejs/mcp` is a development
+  dependency of every new project and each registration is `node` and its entry point: no
+  shell, no package runner, nothing fetched when an agent starts, and the version an agent
+  talks to is the one the project's `check` is. The cost was measured in a project installed
+  from the tarballs: 90 of the 151 packages a new project installs, 15 MB of 48, are there for
+  the agent surface alone, because the protocol's SDK depends on express and hono for
+  transports this server does not use. All are development dependencies, and neither
+  `npm prune --omit=dev` nor `deploy` carries one. Whether that weight is acceptable, or the
+  SDK is bundled into the package with its notices, is the owner's: the morning list.
+- **How the server finds its root.** The directory given as its one argument; else
+  `CLAUDE_PROJECT_DIR`; else where it was started. Cursor's and VS Code's registrations name
+  the server in full and hand it `${workspaceFolder}`, so neither depends on a directory no
+  page promises. `.mcp.json` has no variable for the root that is set where arguments are
+  expanded, so its server is named from where Claude Code starts it, and a session started
+  beneath the project's root would not find it. That is a failure the client shows, not a
+  wrong project; nothing in the documentation offers better.
+- **The rules moved to the command line.** `new` writes them and `check` names them; the agent
+  surface, which depends on the command line, explains the same list. `RULES`, `findRule` and
+  `Rule` are the command line's exports now.
+- **`add agents`, under the verb the command line already has.** It writes the files into a
+  project that has none and rewrites only its own part of each in one that has; a registration
+  that is not JSON it can write back whole, one with a comment for instance, is refused before
+  anything is written. `create_project` merges the same way, because the root it is asked to
+  scaffold into usually holds the registration that started it.
+- **`check` holds what a project carries, and asks for nothing it does not.** A project with no
+  `AGENTS.md` part, no registration and no `CLAUDE.md` has nothing to hold. One that carries
+  them is red when its part of `AGENTS.md` is not this version's, when its server is registered
+  otherwise, when the server is registered and not depended on, and when a `CLAUDE.md` does
+  not bring `AGENTS.md` in. So an upgrade that changes a rule's sentence turns `check` red
+  until `add agents` is run, which is the point of the rule and is said in its fix.
+
+- **Two command lines judge the instructions, and they must be one version.** The packed
+  agent surface asks for the command line at one exact version (`workspace:*`, written by the
+  workspace as `1.0.0-next.0`; read from the tarball), and the release configuration neither
+  fixes nor links the packages' versions. A project that updated one and not the other would
+  have a person's `check` and an agent's `check` each calling the other's instructions out of
+  date, and `add agents` satisfying only whichever ran it. `check` now compares what the
+  installed server is built on with the command line installed beside it and, where they
+  differ, reports that alone, with `npm update` of the two as its fix. Every release of the
+  command line brings a release of the agent surface built on it (`updateInternalDependencies`),
+  so the update always has somewhere to go. Found by the review before the push.
+
+What the plan had wrong, or did not know:
+
+- Every conformance fixture and `proof:create` would have failed at `npm install`: the starter
+  now writes a package that is not on the registry (`npm view @assemblejs/mcp`: 404). The
+  harness and the proof install every package of ours the starter wrote from its tarball, where
+  the starter put it, and override the command line as they did core.
+- DESIGN 13.3 names five resources and the server has two, and its `assemblejs://project`
+  lists assemblies only. Nothing recorded the gap; B-09b is checked. The instructions send an
+  agent to that resource, so they say "the assemblies that exist", which is true, and the gap
+  is a row.
+
+The command line's tarball budget is raised from 81000 bytes to 100000 (it packs to 96246) and
+the agent surface's lowered from 25000 to 18000 (it packs to 16322): the rules moved from one
+to the other, and the instructions and the registrations are new. Both packages ship their
+code twice, `bin.js` and `index.js` each being the whole bundle, which is why the command line
+grew by twice what was added. Building them to share it is a row.
+
+Proved: `pnpm conformance agents`, 10 of 10, in a project exactly as `npm create` wrote it
+from the tarballs. Each registration starts the installed server on the project, Cursor's and
+VS Code's from another directory; an agent adds an assembly, places it on the page and composes
+it through that server; the project's own build then serves the same page; and `check` refuses
+a hand-edited `AGENTS.md` and a `CLAUDE.md` without the import until `add agents` is run; and
+with the installed server's manifest edited to another command line, the project's `check` and
+the server's `check` tool name the same one problem. The other four fixtures and
+`pnpm proof:create` pass with the agent surface installed in every project they make.
+
+Watched red, each mutation alone. In the unit suites, 66: what `add agents` keeps and what it
+rewrites in each of the five files; each of the four things `check` reports and each it must
+not; how an import is read, in a span, in a block closed or not, from the file that holds it;
+the root from the argument, the environment and the directory, in that order; the entry point
+refusing what is no directory; `create_project` merging, refusing and reading through the
+root's guard; and the instructions held to the server they describe, its name, its entry
+point, its tools and its resources; and the two command lines held to one version, with what
+that check must leave alone. Two survived a first run and each got the case it lacked: an
+import shown in a code span, where the spec's case could not have matched with or without the
+guard, and the command line's name, which the agent surface's own manifest could not tell from
+another dependency. Around a run of the fixture, 9: the starter not installing the server, the
+root not handed over, the entry point ignoring it, `check` not holding the files, `add agents`
+dropping the project's own text from either instruction file, a rule left out, a tool named
+that the server has not, and the two versions not compared. With the harness no longer pointing the starter's packages at their tarballs,
+the install fails before a spec runs.
+
+Not done, and why: the directory Claude Code starts a project's server in is observed, not
+documented, so the registration that depends on it is proved against what was seen. A session
+on Windows, and one started beneath the project's root, were not run.

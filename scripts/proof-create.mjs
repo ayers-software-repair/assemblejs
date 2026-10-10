@@ -3,12 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // B-09's proof, end to end, the way a user meets it: the packed tarballs, never workspace links.
 //
-//   1. pack core, cli and create with pnpm, which writes real versions where the workspace says
-//      workspace:*, exactly as a publish would;
+//   1. pack the starter and what it writes into a project, core, cli and mcp, with pnpm, which
+//      writes real versions where the workspace says workspace:*, exactly as a publish would;
 //   2. run the starter from its tarball into an empty directory, as `npm create` does;
 //   3. point the new project at the tarballs (nothing is published yet) and install it;
 //   4. build it with the command line it installed;
-//   5. prune every development dependency, so no bundler and no command line is installed;
+//   5. prune every development dependency, so no bundler, no command line and no agent surface
+//      is installed;
 //   6. start dist/server.js under plain node and fetch the page it composes.
 //
 // It needs the network for the third-party dependencies, and minutes, so it is a proof run on
@@ -25,21 +26,11 @@ const sh = (command, args, cwd) =>
 const work = mkdtempSync(join(tmpdir(), "assemblejs-proof-"));
 const tarballs = join(work, "tarballs");
 
-step("build and pack core, cli and create, so the tarballs are the source at this commit");
-sh(
-  "pnpm",
-  [
-    "--filter",
-    "@assemblejs/core",
-    "--filter",
-    "@assemblejs/cli",
-    "--filter",
-    "@assemblejs/create",
-    "build",
-  ],
-  ".",
-);
-for (const name of ["core", "cli", "create"]) {
+// The starter, and every package of ours it writes into a project.
+const packed = ["create", "core", "cli", "mcp"];
+step(`build and pack ${packed.join(", ")}, so the tarballs are the source at this commit`);
+sh("pnpm", [...packed.flatMap((name) => ["--filter", `@assemblejs/${name}`]), "build"], ".");
+for (const name of packed) {
   sh("pnpm", ["pack", "--pack-destination", tarballs], join("packages", name));
 }
 const tarball = (name) => {
@@ -68,15 +59,18 @@ const app = join(work, "my-app");
 step("install the project against the tarballs");
 const manifest = JSON.parse(readFileSync(join(app, "package.json"), "utf8"));
 // Each package is pointed at its tarball where the starter put it, never moved: whether the
-// command line is a development dependency is part of what this proves.
+// command line and the agent surface are development dependencies is part of what this proves.
 for (const field of ["dependencies", "devDependencies"]) {
-  for (const name of ["core", "cli"]) {
+  for (const name of packed) {
     if (manifest[field]?.[`@assemblejs/${name}`] !== undefined) {
       manifest[field][`@assemblejs/${name}`] = `file:${tarball(name)}`;
     }
   }
 }
-manifest.overrides = { "@assemblejs/core": `file:${tarball("core")}` };
+// One copy of core and of the command line, whoever asks for them: the tarball.
+manifest.overrides = Object.fromEntries(
+  ["core", "cli"].map((name) => [`@assemblejs/${name}`, `file:${tarball(name)}`]),
+);
 writeFileSync(join(app, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 sh("npm", ["install", "--no-audit", "--no-fund"], app);
 
@@ -85,7 +79,7 @@ console.log(sh("npx", ["assemblejs", "build"], app).trim());
 
 step("prune every development dependency");
 sh("npm", ["prune", "--omit=dev", "--no-audit", "--no-fund"], app);
-for (const gone of ["esbuild", "@assemblejs/cli"]) {
+for (const gone of ["esbuild", "@assemblejs/cli", "@assemblejs/mcp"]) {
   if (existsSync(join(app, "node_modules", gone))) throw new Error(`${gone} is still installed`);
   console.log(`${gone}: not installed`);
 }
