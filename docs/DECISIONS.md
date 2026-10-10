@@ -3200,3 +3200,23 @@ for a line, a label not said, no source given, the external links left out, a "<
 left to open a tag, and one in code escaped as if it were prose. And `pnpm
 check:site` refused three known-bad sites: the index edited by hand, a sentence changed on a
 page, and a page marked to be left out, each without the files being written again.
+
+## 2026-10-10: A-04's memo is written, and nothing is built
+
+The plan asks for a design memo and the owner's answer before any of A-04. The memo is
+`docs/studies/built-in-components.md`. It was written from four things read at their source:
+that nothing in a project is shared between assemblies but the page, so a token has nowhere to
+live; that the default content policy already refuses an inline style and `check` says nothing
+of it; that `check` reads a view for what it places and for nothing else; and that the estate's
+own site kit has roles bound by a skin with their contrast held by a checker, which this
+repository's site already runs.
+
+It proposes one tokens file that every page links, with the estate's role names and their
+invariants held by `check`; components as styled native HTML; five rules, each refusing only
+what its reader can be certain of, with the success criterion of WCAG 2.2 it rests on quoted
+from the specification; and what reading an element's attributes in each kind of view takes,
+which is what S-07 built for placements, one level deeper. About nine bites.
+
+It asks one thing: what a built-in component is. The advice is styled native HTML for 1.0.
+The question is on the estate's morning list, and no code of A-04 is written until it is
+answered.

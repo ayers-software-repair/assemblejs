@@ -5,30 +5,31 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 02:54 EDT, after A-02).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-10 03:06 EDT, after A-04's memo).**
 
-STATE. Branch `next`. `origin/next` is `20547ae`, two small rows, pushed 2026-10-10 02:48 EDT;
-its `ci` run is 38032256041 and its `release` run 38032256072, both read to their end, green.
-Beneath it: A-03, `9ed39ef` (`ci` 38031831069, `release` 38031831044, `deploy-site`
-38031831024); one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above
-it, signed, pushed with this block: the A-02 commit this block lands in, which touches
-`site/**` and the deploy workflow and so fires `deploy-site` as well. Every package reads
-`1.0.0-next.0`; sixteen changesets are pending. The owner's overnight order (estate D1216):
-work the bites to code completion and get the landing page onto staging; no questions until
-morning. The landing page is on staging: `/assemblejs/next/` on the staging domain answers
-200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
+STATE. Branch `next`. `origin/next` is `af6d423`, A-02, pushed 2026-10-10 03:01 EDT; its `ci`
+run is 38032968881, its `release` run 38032968906 and its `deploy-site` run 38032968844, all
+read to their end, green. Staging serves `llms.txt` and `llms-full.txt` under
+`/assemblejs/next/`: 200, as text in utf-8, with the pages' cache, byte-identical to the
+branch. Beneath it: two small rows, `20547ae` (`ci` 38032256041, `release` 38032256072);
+A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01, `a7d3edc`. Above
+it, signed, pushed with this block: A-04's design memo, which changes no code. Every package
+reads `1.0.0-next.0`; sixteen changesets are pending. The owner's overnight order (estate
+D1216): work the bites to code completion and get the landing page onto staging; no questions
+until morning. The landing page is on staging: `/assemblejs/next/` on the staging domain
+answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next` deploys there.
 `/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's morning list. His
 rulings in this seat stand: no subagents, the seat does the work itself; every bite since is
 self-verified by mutation (DECISIONS 2026-10-09, S-02).
 
-THE EXACT NEXT STEP is A-04's design memo (PLAN 4.1): built-in components and best practices,
-a token-based starter design system with accessible components, and `check` rules that refuse
-what reads as machine-made. The memo and the owner's answer come before any code: write the
-memo under `docs/`, put its question on the estate's morning list, and build nothing. A-01,
-A-03 and A-02 are done. After the memo, the rows the rungs found, largest first:
-`render_assembly` and `compose_page` show only plain html views, so build what they must;
-DESIGN 13.3's five resources, of which the server has two; registrations for the clients
-beyond the three. The subassembly rung is done: S-01 to S-09.
+THE EXACT NEXT STEP is the largest row the AI-first rungs found, since A-04 waits on the
+owner's answer to its memo (`docs/studies/built-in-components.md`; the question is on the
+estate's morning list): `render_assembly` and `compose_page` show a plain html view and refuse
+every other with the reason. Build what they must, in a directory of their own, with the
+project's own renderers, and render that; then the three public sentences brought down to what
+holds go back up (the row names them). After it: DESIGN 13.3's five resources, of which the
+server has two; registrations for the clients beyond the three; then the rows under "AFTER
+IT" below. A-01, A-03 and A-02 are done, and the subassembly rung, S-01 to S-09.
 
 HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
@@ -548,7 +549,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       `main`, which has no site yet)
 - [ ] A-04 built-in components and best practices: the design memo and the owner's answer
       first, then the starter design system, the accessible components and the `check` rules,
-      each rule watched red (owner, 2026-10-09, PLAN 4.1)
+      each rule watched red (owner, 2026-10-09, PLAN 4.1). The memo is written,
+      `docs/studies/built-in-components.md`, 2026-10-10: one tokens file every page links, with
+      the estate's roles and their contrast held by `check`; components as styled native HTML;
+      five rules; about nine bites. Its one question, what a built-in component is, is on the
+      owner's morning list. Nothing is built until he answers
 - [ ] The joint session: the owner on the command line, the agent on the MCP server, the same
       application from packed tarballs; every snag a row here (owner, 2026-10-09, PLAN 4.1;
       the stranger test of B-27b)
