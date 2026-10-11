@@ -3,6 +3,7 @@
 import { agentFiles } from "../agents/agent-files.js";
 import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";
+import { TOKENS } from "./tokens.js";
 
 /**
  * The smallest project that runs. One assembly, one view, no framework the author did not ask
@@ -44,6 +45,8 @@ console.log(\`listening \${url}\`);
     "src/pages/home/home.html": pageDocument(name, ["hello"]),
 
     "src/assemblies/hello/hello.html": `<p>Hello from AssembleJS</p>\n`,
+
+    "src/tokens.css": TOKENS,
 
     "README.md": `# ${name}
 

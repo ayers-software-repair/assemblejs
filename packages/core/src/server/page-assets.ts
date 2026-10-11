@@ -10,19 +10,22 @@ import { localAssets } from "./local-assets.js";
 /**
  * The browser files a composed page links: the stylesheets and modules of every assembly on it.
  *
- * This server's are read from the envelopes in the page's own markup, so a child a view placed
- * is linked as its parent is, and so is one inside an answer that came from the cache. A
- * placement the page's plan sends to another server links what that server's manifest declared.
- * This server's come first, in the order they stand on the page.
+ * The stylesheets the server links on every page come first, the project's tokens, so every
+ * assembly's sheet reads them. This server's assemblies are read from the envelopes in the
+ * page's own markup, so a child a view placed is linked as its parent is, and so is one inside
+ * an answer that came from the cache. A placement the page's plan sends to another server links
+ * what that server's manifest declared. This server's come before those, in the order they stand
+ * on the page.
  */
 export async function pageAssets(
   composed: ComposeResult,
   plan: Readonly<Record<string, AssemblyPlan>>,
   assemblies: ReadonlyMap<string, AssemblyDefinition>,
   remote: RemoteTransport,
+  styles: readonly string[] = [],
 ): Promise<AssemblyAssets> {
   const local = localAssets(composed.html, assemblies);
-  const css = [...local.css];
+  const css = [...styles, ...local.css];
   const js = [...local.js];
   for (const diagnostic of composed.diagnostics) {
     const url = Object.hasOwn(plan, diagnostic.name) ? plan[diagnostic.name]?.url : undefined;

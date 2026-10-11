@@ -29,6 +29,11 @@ export interface ServerOptions {
   readonly remotes?: readonly RemoteDefinition[];
   /** The directory a build wrote its browser files to, as an absolute path. */
   readonly assets?: string;
+  /**
+   * Stylesheets every page links before any assembly's, as the urls a page links them by: the
+   * project's tokens, which every assembly reads (DESIGN 10). None by default.
+   */
+  readonly styles?: readonly string[];
   /** The version of this build's output, reported in every manifest. */
   readonly version?: string;
   /** How deep composition goes and how many placements one request composes; the rest default. */

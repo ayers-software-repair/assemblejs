@@ -18,6 +18,16 @@ describe("generating the one module the server file imports", () => {
     expect(source).not.toContain("process.cwd");
   });
 
+  it("names the stylesheets every page links first, when the build wrote any", () => {
+    const styles = ["/_assemblejs/assets/styles/tokens-1a2b3c4d.css"];
+    expect(generateProject({ version: "1", client: true, config: false, styles })).toContain(
+      'styles: ["/_assemblejs/assets/styles/tokens-1a2b3c4d.css"],',
+    );
+    expect(
+      generateProject({ version: "1", client: false, config: false, styles: [] }),
+    ).not.toContain("styles");
+  });
+
   it("carries the policy the project's config declares, when it has one", () => {
     const source = generateProject({ version: "1", client: false, config: true });
     expect(source).toContain('import config from "../assemblejs.config.js";');

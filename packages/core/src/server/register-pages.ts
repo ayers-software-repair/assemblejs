@@ -48,6 +48,8 @@ export function registerPages(
     readonly remote: RemoteTransport;
     readonly remotes: readonly RemoteDefinition[];
     readonly cache: ContentCache;
+    /** Stylesheets every page links before any assembly's, by url. */
+    readonly styles?: readonly string[];
     readonly log: (line: LogLine) => void;
     /**
      * In development, this server's boot: every page links the script that reloads it, carrying
@@ -107,7 +109,7 @@ export function registerPages(
       }
 
       logFallbacks(composed.diagnostics, `on page "${page.route}"`, log);
-      const placed = await pageAssets(composed, plan, assemblies, options.remote);
+      const placed = await pageAssets(composed, plan, assemblies, options.remote, options.styles);
       // In development the page also carries the script that reloads it after a restart.
       const reload =
         options.reload === undefined

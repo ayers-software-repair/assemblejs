@@ -4256,3 +4256,32 @@ Settled:
   find and ask the dev server packed it to 20817, measured by `check:pack`, and the budget is
   raised to hold them with the usual room, on purpose and with the measure, as the rule for a
   budget asks.
+
+## 2026-10-11: the tokens every page links
+
+The first bite of A-04 as the owner chose it (D1252, "Plain HTML + tokens"): the tokens file and
+its link, as `docs/studies/built-in-components.md` proposed and left to the seat to decide.
+
+Settled:
+
+- **One file, `src/tokens.css`**, custom properties at `:root`: the estate's colour roles as the
+  site's own skin names them (`--surface`, `--surface-panel`, `--border`, `--ink`, `--ink-muted`,
+  `--accent`, `--accent-strong`, `--accent-alt`, `--accent-wash`, the three faces), three scales
+  (`--space-1..4`, `--text-1..4`, `--corner`), and a dark scheme rebinding the colours under
+  `prefers-color-scheme`. `new` writes it with placeholder values that pass their contrast; the
+  look is the author's to set there and nowhere else.
+- **Carried whole and unscoped.** `writeTokens` reads the file, carries every file it names as an
+  assembly's sheet is carried, and writes it to the build named by its content's hash, so a
+  changed token is a new url. It is not scoped to an envelope: a custom property at `:root` is
+  inherited by every assembly, one in a shadow root included, and a scoped selector would reach
+  none of them.
+- **Linked first on every page.** `createServer` takes `styles`, the urls every page links before
+  any assembly's sheet; the built project declares the tokens there, and `pageAssets` puts them
+  ahead. A project without the file has no tokens and links none.
+- **What follows**, in bites as the memo laid them out: the invariants `check` holds the tokens
+  to, the stylesheet of components and the starter's use of it, the element readers, and the
+  five rules.
+- **The command line's tarball budget moves**, from 73000 to 76000 bytes: the starter now ships
+  the tokens file, 1.3 kB of CSS that every new project needs, and the writer that carries it,
+  which packed the command line to 74586, measured by `check:pack`. Nothing could leave first:
+  the tokens are the bite. The stylesheet of components will move it again, with its measure.

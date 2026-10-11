@@ -89,6 +89,7 @@ describe("new", () => {
       "my-app/src/assemblies/hello/hello.html",
       "my-app/src/pages/home/home.html",
       "my-app/src/server.ts",
+      "my-app/src/tokens.css",
     ]);
   });
 

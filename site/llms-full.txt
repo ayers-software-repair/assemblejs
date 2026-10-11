@@ -461,7 +461,7 @@ export default defineConfig({
 });
 ```
 
-The same file sets `limits`, how deep composition goes and how many placements one request composes, when the defaults of 8 and 256 do not fit: `limits: { depth: 4, placements: 100 }`. A value outside its bounds refuses to boot.
+`src/tokens.css` holds the project's tokens, the colour roles, distances, type sizes and corners every assembly's stylesheet reads; every page links it first, and the look of the project is changed in that one place. The same file sets `limits`, how deep composition goes and how many placements one request composes, when the defaults of 8 and 256 do not fit: `limits: { depth: 4, placements: 100 }`. A value outside its bounds refuses to boot.
 
 ## 9. Ship it
 

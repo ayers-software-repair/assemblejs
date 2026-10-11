@@ -1041,9 +1041,24 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       DESIGN 13.4 and 13.6 say it (DECISIONS 2026-10-11, "the dev server renders for the
       agent"). The morning list's item 10 closes
 - [ ] P5-6 BUILT-IN COMPONENTS AS PLAIN HTML AND TOKENS (A-04): as
-      `docs/studies/built-in-components.md` proposed in that form, one tokens file every page
-      links, plain html assemblies styled by it, and the rules `check` holds them to; no
-      framework component library. The morning list's item 9 closes
+      `docs/studies/built-in-components.md` proposed in that form, in its bites; no framework
+      component library. The morning list's item 9 closes when the last bite lands.
+  - [x] P5-6a The tokens file and its link (2026-10-11): `src/tokens.css`, carried whole and
+        unscoped into the build by `writeTokens`, named by its content; the built project
+        declares it as `styles`, which `createServer` links on every page before any
+        assembly's sheet; `new` writes the estate's roles, three scales and a dark scheme as
+        placeholders (`TOKENS`). DESIGN 10 and 8 and the tutorial say it (DECISIONS
+        2026-10-11, "the tokens every page links")
+  - [ ] P5-6b The tokens' invariants: each colour role's contrast held by `check`, in both
+        schemes (WCAG 2.2 1.4.3 and 1.4.11)
+  - [ ] P5-6c The stylesheet of components, styled native HTML, written by `new` beside the
+        tokens, and the starter's page using it
+  - [ ] P5-6d The element reader for templates (html, EJS, Handlebars, Nunjucks)
+  - [ ] P5-6e The element reader for modules (React, Preact, Solid) and Lit
+  - [ ] P5-6f The element reader for Vue and Svelte
+  - [ ] P5-6g The rules, one bite each: `a-view-has-no-inline-style`,
+        `an-image-has-an-alternative`, `a-control-has-a-name`, `a-colour-is-a-token`,
+        `tokens-hold-their-contrast`
 - [x] P5-7 ONE VIEW PER ASSEMBLY: as the design and the guides say today; nothing to build.
       The morning list's item 13 closes (2026-10-11)
 - [ ] P5-8 assemblejs.com: the main landing page exists at `/assemblejs/` once the release

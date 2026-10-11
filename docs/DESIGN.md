@@ -722,6 +722,7 @@ src/
       hello-react.service.ts    optional: server data
   api/
     time.api.ts
+  tokens.css                    the roles every stylesheet reads, set in one place (10)
 assemblejs.config.ts            policy only: remotes, access, the content policy, budgets, limits
 AGENTS.md                       what an agent that opens the project is told (13.7)
 .mcp.json                       the project's agent surface, registered (13.7)
@@ -886,6 +887,15 @@ Stated plainly rather than implied: `@keyframes`, `@font-face`, `@import` and `@
 by nature and are not scoped. A nested assembly sits inside its parent's envelope, so a parent's
 descendant selectors reach into it, and a page's own rules reach every assembly not in a shadow
 root. Nothing pretends otherwise.
+
+A project's tokens are one file, `src/tokens.css`: the colour roles, the distances, the type
+sizes and the corners every assembly's stylesheet reads, declared as custom properties at
+`:root`, which every assembly inherits, one in a shadow root included. The build carries the file
+whole and unscoped, named by its content, and every page links it before any assembly's sheet
+(`styles` on the server). A new project starts with the estate's roles, three scales and a dark
+scheme, each value a placeholder that passes its contrast, and changes the values in that one
+place; the rules that hold a project to its tokens follow (owner, DECISIONS 2026-10-11, "Plain
+HTML + tokens").
 
 A page links the stylesheet of every assembly in the markup it serves, at any depth, read from
 the envelopes themselves, so an answer that came from the cache is styled as one that was just

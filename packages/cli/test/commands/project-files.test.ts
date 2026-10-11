@@ -55,6 +55,11 @@ describe("the smallest project that runs", () => {
     expect(Object.keys(manifest.dependencies)).toEqual(["@assemblejs/core"]);
   });
 
+  it("starts with the project's tokens, the one place its look is set", () => {
+    expect(files["src/tokens.css"]).toContain("--ink:");
+    expect(files["src/tokens.css"]).toContain("@media (prefers-color-scheme: dark)");
+  });
+
   it("ignores the generated module rather than committing it", () => {
     expect(files[".gitignore"]).toContain(".assemblejs/");
   });

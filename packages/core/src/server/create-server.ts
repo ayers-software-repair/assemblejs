@@ -135,6 +135,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
     remote: createRemoteTransport({ remotes, maxBytes: limits.maxBytes, log }),
     remotes,
     cache: createMemoryCache(),
+    ...(options.styles === undefined ? {} : { styles: options.styles }),
     log,
     admit,
     ...(boot === undefined ? {} : { reload: boot }),

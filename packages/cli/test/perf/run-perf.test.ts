@@ -68,7 +68,8 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     const line = logs.find((entry) => entry.startsWith("/  document"));
     expect(logs.some((entry) => entry.startsWith("/store  document"))).toBe(true);
     expect(line).toMatch(
-      /^\/ {2}document \d+ B \(\d+ B gzip\) {2}styles [1-9]\d* B \(\d+ B gzip\) {2}scripts 0 B \(0 B gzip\)$/,
+      // The styles weigh the tokens every page links and the assembly's own sheet.
+      /^\/ {2}document \d+ B \(\d+ B gzip\) {2}styles (?:[1-9]\d* B|\d+(?:\.\d+)? kB) \(\d+ B gzip\) {2}scripts 0 B \(0 B gzip\)$/,
     );
   });
 
