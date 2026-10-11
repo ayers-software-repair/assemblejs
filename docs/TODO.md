@@ -1097,7 +1097,12 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
         over; and every Lit `html` template's fixed parts as markup with the marker where its
         expressions go. Nothing refuses yet (DECISIONS 2026-10-11, "the elements a module
         writes")
-  - [ ] P5-6f The element reader for Vue and Svelte
+  - [x] P5-6f The element reader for Vue and Svelte (2026-10-11): `vueElements` reads a
+        component's `<template>` as markup with `{{ }}` marked, a bound attribute as the
+        attribute computed and a directive as no attribute the browser reads; `svelteElements`
+        reads the markup outside script and style with every `{ }` expression marked from the
+        inside out, a block as text, a spread as computed. Nothing refuses yet (DECISIONS
+        2026-10-11, "the elements Vue and Svelte write")
   - [ ] P5-6g The rules, one bite each: `a-view-has-no-inline-style`,
         `an-image-has-an-alternative`, `a-control-has-a-name`, `a-colour-is-a-token`,
         `tokens-hold-their-contrast`

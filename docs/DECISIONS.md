@@ -4384,3 +4384,22 @@ Settled:
 - **Nothing refuses yet.** Vue and Svelte follow, then one bite a rule.
 - **The command line's tarball budget moves**, from 80000 to 82000 bytes: the module reader
   packed it to 80782, measured by `check:pack`.
+
+## 2026-10-11: the elements Vue and Svelte write
+
+The sixth bite of A-04 (D1252): the last two element readers, as the memo laid them out: the
+markup of a Vue or Svelte component read as elements, with the same tokenizer as the rest.
+
+Settled:
+
+- **Vue**: the `<template>` part as markup, every `{{ }}` standing as the marker. An attribute
+  bound with `:name` or `v-bind:name` is the attribute `name` with the marker for its value and
+  makes the element computed; a directive (`v-if`, `v-for`, `@`, `v-on:`, `#slot`) writes no
+  attribute the browser reads and is left out; `v-bind` of a whole object makes the element
+  computed. A component with no template writes no element.
+- **Svelte**: everything outside the script and style, every `{ }` expression standing as the
+  marker from the inside out where they nest, so a block is text between tags and `alt={value}`
+  is the attribute with the marker for its value; a spread makes its element computed.
+- **One tokenizer for all six kinds of view** now reads the elements: `templateElements`,
+  `scriptElements`, `vueElements` and `svelteElements` all end in `readElements`, so no two
+  readers disagree on what a tag or an attribute is. The rules follow, one bite each.
