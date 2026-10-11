@@ -205,6 +205,14 @@ export const RULES: readonly Rule[] = [
       "A muted ink that fades into its panel, or an accent that cannot be told from the surface, in the dark scheme most of all.",
   },
   {
+    id: "a-view-has-no-inline-style",
+    rule: "A view writes no style attribute, in any kind of view: a style lives in the assembly's stylesheet.",
+    because:
+      "A style attribute does nothing under the default content security policy, and it is a value invented where it is used, where the tokens and the stylesheet are the one place a look is set.",
+    smell:
+      'style="..." in a template, style={{ ... }} in JSX, :style in Vue, a style attribute computed by the view.',
+  },
+  {
     id: "agent-instructions-are-current",
     rule: "The agent instructions and MCP registrations a project carries are the ones its command line writes, and a CLAUDE.md beside them brings AGENTS.md in.",
     because:

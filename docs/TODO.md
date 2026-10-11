@@ -1103,9 +1103,15 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
         reads the markup outside script and style with every `{ }` expression marked from the
         inside out, a block as text, a spread as computed. Nothing refuses yet (DECISIONS
         2026-10-11, "the elements Vue and Svelte write")
-  - [ ] P5-6g The rules, one bite each: `a-view-has-no-inline-style`,
-        `an-image-has-an-alternative`, `a-control-has-a-name`, `a-colour-is-a-token`,
-        `tokens-hold-their-contrast`
+  - [ ] P5-6g The rules, one bite each (`tokens-hold-their-contrast` landed with P5-6b):
+    - [x] `a-view-has-no-inline-style` (2026-10-11): `viewElements` reads every assembly's
+          elements by its view's kind, the components a framework view is split into included,
+          and `elementProblems` refuses a `style` attribute, written or computed, in any of the
+          six kinds, naming the assembly and the element; `check` runs it and `explain` answers
+          it (DECISIONS 2026-10-11, "a view has no inline style")
+    - [ ] `an-image-has-an-alternative`
+    - [ ] `a-control-has-a-name`
+    - [ ] `a-colour-is-a-token`
 - [x] P5-7 ONE VIEW PER ASSEMBLY: as the design and the guides say today; nothing to build.
       The morning list's item 13 closes (2026-10-11)
 - [ ] P5-8 assemblejs.com: the main landing page exists at `/assemblejs/` once the release

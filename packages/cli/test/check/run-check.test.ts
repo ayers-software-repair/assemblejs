@@ -44,6 +44,19 @@ describe("the check verb", () => {
     expect(errors.at(-1)).toBe("1 problem(s)");
   });
 
+  it("holds every view to the stylesheet: a style attribute is a finding, with the rest", async () => {
+    const root = generated();
+    realIo.write(
+      join(root, "src", "assemblies", "hello", "hello.html"),
+      '<p style="color: red">hi</p>\n',
+    );
+    const { io, errors } = capture();
+    expect(await runCheck(root, io)).toBe(1);
+    expect(errors[0]).toMatch(
+      /^src\/assemblies\/hello\/hello\.html: "hello" writes a style attribute on <p>, .* \(a-view-has-no-inline-style\): move the style/,
+    );
+  });
+
   it("holds the project's tokens to their contrast, with the project's other findings", async () => {
     const root = generated();
     realIo.write(

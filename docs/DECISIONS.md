@@ -4403,3 +4403,25 @@ Settled:
 - **One tokenizer for all six kinds of view** now reads the elements: `templateElements`,
   `scriptElements`, `vueElements` and `svelteElements` all end in `readElements`, so no two
   readers disagree on what a tag or an attribute is. The rules follow, one bite each.
+
+## 2026-10-11: a view has no inline style
+
+The first rule of A-04's markup rules (D1252), on the element readers the bites before built.
+
+Settled:
+
+- **`viewElements`** reads every assembly's elements by its view's kind, as the placement reader
+  reads its placements: the view and, for a framework view, each component it is split into,
+  Pug through the project's own Pug, and leaves out a view it cannot read, so the rules say
+  nothing of what the reader is not certain of.
+- **`a-view-has-no-inline-style`** refuses a `style` attribute on any element, written or
+  computed, in any of the six kinds of view: `style="..."` in markup, `style={{ }}` in JSX,
+  `:style` in Vue (read as `style` bound), `style={look}` in Svelte. The reason is the memo's: a
+  style attribute does nothing under the default content security policy (DESIGN 5.2), and it
+  is a value invented where it is used, where the tokens and the stylesheet are the one place a
+  look is set (DESIGN 10). The finding names the assembly and the element and says to move the
+  style into a `.css` file in the assembly's directory.
+- **Next**: `an-image-has-an-alternative`, `a-control-has-a-name`, `a-colour-is-a-token`, each
+  its own bite.
+- **The command line's tarball budget moves**, from 82000 to 84000 bytes: the aggregator and the
+  rule packed it to 82549, measured by `check:pack`.
