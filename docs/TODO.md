@@ -5,13 +5,17 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the open-paragraph refusal
-and the registrations for two more clients).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the per-package reference,
+with every ledger row that waits on nobody done).**
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with. Beneath it, each
-pushed on 2026-10-11 with its `ci` run read green unless named: `0c872c8` a placement inside an
-open paragraph is refused where the directive is read; `af6cccf` `compose_page` takes a page by
-its name; `723a75d` the contract as an agent reads it, `assemblejs://contract`, with `e13f936`
+STATE AT THIS LANDING. `origin/next` is `a8e9be1` (the API reference once per package; its `ci`
+and `deploy-site` runs are read next, the deploy exercising the new delete of retired reference
+pages). Beneath it, each pushed on 2026-10-11 with its `ci` run read green unless named: `2dd4a59`
+the deploy retires the reference's pages (`ci` 38172087831); `e922fce` `check` reads a slot in an
+element's render, with `90bc782` a placement inside an element's shadow root refused beneath it
+(`ci` 38171625851); `5d69f9a` registrations for Gemini CLI and opencode (`ci` 38171109261);
+`f88e3c8` a placement inside an open paragraph is refused where the directive is read (`ci`
+38170356584); `af6cccf` `compose_page` takes a page by its name (`ci` 38169659857); `723a75d` the contract as an agent reads it, `assemblejs://contract`, with `e13f936`
 the build's reads through the root guard beneath it (`ci` 38169177951); `8ef8644` the six
 framework guides on a slot behind a package name (`ci` 38168099712), with `4367272` a page
 declaration `check` could not read leaves its route unknown beneath it. Beneath them
@@ -33,9 +37,11 @@ the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens
 the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
 and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
 envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: the open ledger rows that need no ruling: a child placed in a Lit element's own shadow
-root (refuse in `check`, or link the sheet inside; not reproduced yet), the agent surface's
-install size, VS Code's two registrations (needs VS Code opened). P5-8's other half is Astra's; (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
+NEXT: nothing in this ledger waits on nobody. What remains waits on the owner (branch rulesets,
+the first publish and its notes, B-27a and B-27b, the joint session, the agent surface's install
+size), on the promotion of `next` (the llms.txt address in AGENTS.md, P5-8's landing page), on
+Astra (the shared 404), on the kit (a fold for note subsections), or on a machine with VS Code
+(one read). P5-8's other half is Astra's; (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
 crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
 00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
 before the day's work.
@@ -824,9 +830,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       findings from a finding to none. Self-verified: 19 mutations in the unit suites and 4
       around a run of the fixture, each alone, each watched red (owner, 2026-10-09, PLAN 4.1;
       DECISIONS 2026-10-10, A-03)
-- [ ] `render_assembly` and `compose_page` show a plain html view and refuse every other with
+- [x] `render_assembly` and `compose_page` show a plain html view and refuse every other with
       the reason, a view in a framework or a template language being source its renderer
-      compiles (B-09b, by design). So the loop the agent surface exists for closes only for
+      compiles (B-09b, by design). RULED AND BUILT: "Dev server, tool runs nothing" (owner,
+      D1252; P5-5, `5a08454`, 2026-10-11): while the project's dev server runs, both tools ask
+      it, so every kind of view is shown and the surface runs none of the project's code. So the loop the agent surface exists for closes only for
       the one kind of assembly a project has fewest of. WAITS ON THE OWNER: showing any other
       view means running the project's code, which the agent surface runs none of today, and
       a tool that runs what an agent just wrote is a way round the permission a person gave
@@ -997,7 +1005,11 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
 - [ ] The reference product writes a note's subsections as smaller headings and lists, and
       styles them in a stylesheet of its own (`magpie/site/site.css:11-14`); the kit has no rule
       for either. A fold for the kit, the platform's to make. When this site's pin has it, the
-      page takes the reference's shape (found 2026-10-10; for the lead)
+      page takes the reference's shape (found 2026-10-10; for the lead). CUT 2026-10-11 on the
+      lead's word: platform branch `asm/codestyle-note-fold`, `4a93154` (the three rules, as
+      magpie wrote them, and a kit test watched red first) on `6b989c6` (kit.css as the kit's
+      own formatter writes it, which its hook demanded); the lead tags it. Then this site's pin
+      moves to that tag and `release-notes.html` takes the h3 and list shape
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 
