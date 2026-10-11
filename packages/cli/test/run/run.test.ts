@@ -79,12 +79,14 @@ describe("new", () => {
     expect(run(["new", "my-app"], io)).toBe(0);
     expect([...written.keys()].sort()).toEqual([
       "my-app/.cursor/mcp.json",
+      "my-app/.gemini/settings.json",
       "my-app/.gitignore",
       "my-app/.mcp.json",
       "my-app/.vscode/mcp.json",
       "my-app/AGENTS.md",
       "my-app/CLAUDE.md",
       "my-app/README.md",
+      "my-app/opencode.json",
       "my-app/package.json",
       "my-app/src/assemblies/hello/hello.html",
       "my-app/src/components.css",

@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { agentFiles } from "../agents/agent-files.js";
+import { MCP_REGISTRATIONS } from "../agents/mcp-registrations.js";
 import { COMPONENTS } from "./components.js";
 import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";
@@ -16,6 +17,8 @@ import { TOKENS } from "./tokens.js";
  */
 export function projectFiles(name: string): Readonly<Record<string, string>> {
   const range = `^${ownVersion(import.meta.url)}`;
+  // The README names each registration the project is written with, as the instructions do.
+  const registered = MCP_REGISTRATIONS.map((registration) => `\`${registration.path}\``);
   return {
     "package.json": `${JSON.stringify(
       {
@@ -61,7 +64,7 @@ There is nothing to register: \`src/server.ts\` does not grow when you add eithe
 assembly on a page with \`<assembly name="hello"></assembly>\`.
 
 \`AGENTS.md\` tells a coding agent what this project is and the rules its code must satisfy.
-\`.mcp.json\`, \`.cursor/mcp.json\` and \`.vscode/mcp.json\` register the project's own MCP server
+${registered.slice(0, -1).join(", ")} and ${registered.at(-1) ?? ""} register the project's own MCP server
 for it, and \`npx assemblejs add agents\` brings all of them up to date after an upgrade. The
 server lists four prompts, which Claude Code and VS Code show as commands: add an assembly,
 place one, make a page, fix what \`check\` finds.

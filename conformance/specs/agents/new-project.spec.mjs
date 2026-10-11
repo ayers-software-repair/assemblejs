@@ -33,6 +33,9 @@ const CLIENTS = [
   // Cursor and VS Code fill their workspace folder into the arguments; no directory is promised.
   [".cursor/mcp.json", "mcpServers", tmpdir(), {}],
   [".vscode/mcp.json", "servers", tmpdir(), {}],
+  // Gemini CLI and opencode read the project's file and run in the project.
+  [".gemini/settings.json", "mcpServers", root, {}],
+  ["opencode.json", "mcp", root, {}],
 ];
 
 test("the starter writes the instructions and the file that brings them to Claude Code", () => {

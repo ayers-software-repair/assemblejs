@@ -32,7 +32,15 @@ const told = () => {
   return { io, logs, errors };
 };
 const MANIFEST = '{ "name": "shop", "devDependencies": { "@assemblejs/mcp": "^1.0.0" } }';
-const ALL = ["AGENTS.md", "CLAUDE.md", ".mcp.json", ".cursor/mcp.json", ".vscode/mcp.json"];
+const ALL = [
+  "AGENTS.md",
+  "CLAUDE.md",
+  ".mcp.json",
+  ".cursor/mcp.json",
+  ".vscode/mcp.json",
+  ".gemini/settings.json",
+  "opencode.json",
+];
 
 describe("the add agents command", () => {
   it("gives a project that has none what a new one is written with, and says each file", () => {

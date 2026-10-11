@@ -6,7 +6,7 @@ export interface McpRegistration {
   /** The file, from the project's root. */
   readonly path: string;
   /** The key that file lists its servers under. */
-  readonly servers: "mcpServers" | "servers";
+  readonly servers: "mcpServers" | "servers" | "mcp";
   /** How that client starts the project's agent surface. */
   readonly entry: Readonly<Record<string, string | readonly string[]>>;
 }

@@ -32,4 +32,20 @@ export const MCP_REGISTRATIONS: readonly McpRegistration[] = [
   },
   { path: ".cursor/mcp.json", servers: "mcpServers", entry: FROM_ANYWHERE },
   { path: ".vscode/mcp.json", servers: "servers", entry: FROM_ANYWHERE },
+  // Gemini CLI reads a project's settings from the project, and starts a server where it runs,
+  // which is the project; its entry names the command and its arguments and no transport
+  // (geminicli.com, tools/mcp-server, read 2026-10-11).
+  {
+    path: ".gemini/settings.json",
+    servers: "mcpServers",
+    entry: { command: "node", args: [AGENT_SERVER.path] },
+  },
+  // opencode reads opencode.json from the project root, the directory it runs in; a local
+  // server is one command array under "mcp" (opencode.ai, docs/mcp-servers and docs/config,
+  // read 2026-10-11).
+  {
+    path: "opencode.json",
+    servers: "mcp",
+    entry: { type: "local", command: ["node", AGENT_SERVER.path] },
+  },
 ];

@@ -11,15 +11,32 @@ describe("where a project registers its agent surface", () => {
       [".mcp.json", "mcpServers"],
       [".cursor/mcp.json", "mcpServers"],
       [".vscode/mcp.json", "servers"],
+      [".gemini/settings.json", "mcpServers"],
+      ["opencode.json", "mcp"],
     ]);
   });
 
   it("starts the server the project installed, with node, over stdio, in every one", () => {
     for (const { entry, path } of MCP_REGISTRATIONS) {
-      expect(entry["type"], path).toBe("stdio");
-      expect(entry["command"], path).toBe("node");
-      expect(String(entry["args"]?.[0]).endsWith(AGENT_SERVER.path), path).toBe(true);
+      // One command array where the client takes one, a command and its arguments elsewhere.
+      const [command, first] = Array.isArray(entry["command"])
+        ? entry["command"]
+        : [entry["command"], entry["args"]?.[0]];
+      expect(command, path).toBe("node");
+      expect(String(first).endsWith(AGENT_SERVER.path), path).toBe(true);
+      expect(entry["type"] ?? "stdio", path).toMatch(/^(stdio|local)$/);
     }
+  });
+
+  it("names the server from the project's root for the clients that run in it, in their forms", () => {
+    expect(by(".gemini/settings.json")?.entry).toEqual({
+      command: "node",
+      args: [AGENT_SERVER.path],
+    });
+    expect(by("opencode.json")?.entry).toEqual({
+      type: "local",
+      command: ["node", AGENT_SERVER.path],
+    });
   });
 
   // No variable there names the project's root: the server finds it from how it was started.

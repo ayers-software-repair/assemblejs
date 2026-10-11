@@ -19,6 +19,8 @@ describe("what a project with no agent files is written with", () => {
       ".mcp.json",
       ".cursor/mcp.json",
       ".vscode/mcp.json",
+      ".gemini/settings.json",
+      "opencode.json",
     ]);
     expect(agentFiles("shop").unreadable).toEqual([]);
   });
@@ -122,6 +124,12 @@ describe("what a project that has agent files is written with", () => {
       having({ ".vscode/mcp.json": '{\n  // ours\n  "servers": {}\n}', ".mcp.json": "[]" }),
     );
     expect(answer.unreadable).toEqual([".mcp.json", ".vscode/mcp.json"]);
-    expect(Object.keys(answer.files)).toEqual(["AGENTS.md", "CLAUDE.md", ".cursor/mcp.json"]);
+    expect(Object.keys(answer.files)).toEqual([
+      "AGENTS.md",
+      "CLAUDE.md",
+      ".cursor/mcp.json",
+      ".gemini/settings.json",
+      "opencode.json",
+    ]);
   });
 });

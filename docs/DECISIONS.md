@@ -4670,3 +4670,30 @@ is not torn the same way and is not refused.
 
 The core tarball budget moves, from 75000 to 78000 bytes: the paragraph scan packed it to 75281,
 measured by `check:pack`.
+
+## 2026-10-11: registrations for the clients beyond the three
+
+The ledger's row from A-01: one registration per client, after its documentation is read.
+
+Read 2026-10-11, each client's own documentation:
+
+- Gemini CLI reads `.gemini/settings.json` in the project, servers under `mcpServers`, each with
+  `command`, `args` and optionally `cwd`, `env`, `timeout`, `trust`; no transport field. A
+  registration is written, the command and its argument the project's own server, started where
+  the CLI runs, which is the project.
+- opencode reads `opencode.json` (or `.jsonc`) from the project root, the directory it runs in;
+  a local server stands under `mcp` with `type: "local"` and one `command` array. A registration
+  is written in that form, the one place a command is an array, which the readers, the writer
+  and the agents fixture take.
+- Codex reads `~/.codex/config.toml` and, for a trusted project, `.codex/config.toml`: TOML, one
+  `[mcp_servers.<name>]` table. The command line's registration reader and writer are JSON and
+  stay so; the instructions give the one line, `codex mcp add assemblejs -- node <path>`.
+- Zed takes a server under `context_servers` in its settings; its documentation shows the user
+  settings file and does not say a project's `.zed/settings.json` holds the key, so none is
+  written, and the instructions say the entry of `.mcp.json` is what to paste.
+- JetBrains AI Assistant has no project file: servers are added in the IDE's settings, which
+  take the `mcpServers` JSON shape pasted or imported. The instructions say so.
+
+The McpRegistration type gains `mcp` among the keys a client lists servers under; the writer and
+the drift check were already generic over the key. The agents fixture starts each written
+registration as its client does: the two new ones from the project's root.

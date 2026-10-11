@@ -27,11 +27,16 @@ export const agentIn = (root) => {
   const startedFrom = async (file, servers, cwd, env) => {
     const entry = JSON.parse(read(file))[servers][name];
     const fill = (value) => value.replaceAll("${workspaceFolder}", root);
+    // One command array where the client takes one (opencode), a command and its arguments
+    // elsewhere.
+    const [command, ...args] = Array.isArray(entry.command)
+      ? entry.command
+      : [entry.command, ...entry.args];
     const client = new Client({ name: "conformance-agent", version: "1.0.0" });
     await client.connect(
       new StdioClientTransport({
-        command: fill(entry.command),
-        args: entry.args.map(fill),
+        command: fill(command),
+        args: args.map(fill),
         cwd,
         env,
       }),

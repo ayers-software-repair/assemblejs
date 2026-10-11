@@ -28,7 +28,7 @@ describe("the smallest project that runs", () => {
   // installed with the command line, and registered where each client looks for it.
   it("is written for the agents that will work in it", () => {
     const forAgents = agentFiles("my-app").files;
-    expect(Object.keys(forAgents)).toHaveLength(5);
+    expect(Object.keys(forAgents)).toHaveLength(7);
     for (const [path, contents] of Object.entries(forAgents)) {
       expect(files[path], path).toBe(contents);
     }

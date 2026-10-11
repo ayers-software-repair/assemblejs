@@ -783,9 +783,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       `.vscode/mcp.json`, one name with two sets of arguments, and its documentation does not
       say which it keeps. Open a new project in VS Code and read what it lists; keep one file
       for it if they collide (DECISIONS 2026-10-10, A-01)
-- [ ] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
+- [x] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
       after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
-      (DECISIONS 2026-10-10, A-01)
+      (DECISIONS 2026-10-10, A-01). DONE 2026-10-11 for the two that read a registration from
+      the project, Gemini CLI (`.gemini/settings.json`) and opencode (`opencode.json`), each
+      started by the agents fixture as its client does; Codex reads TOML and the other two no
+      project file, so the instructions say how each takes the server (DECISIONS 2026-10-11,
+      "registrations for the clients beyond the three")
 - [x] The command line and the agent surface shipped their code twice: `bin.js` and `index.js`
       were each the whole bundle. They, and the starter, are built split now, each entry point
       importing what both hold: the command line packs to 62 KB where it packed to 97, and its

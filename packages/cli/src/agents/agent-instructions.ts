@@ -51,7 +51,9 @@ one framework or in none, and each hydrated in the browser by its own framework.
 
 - Ask the project before you assume. Its MCP server, \`${AGENT_SERVER.name}\`, is registered in
   ${registered.slice(0, -1).join(", ")} and ${registered.at(-1) ?? ""}. A client that reads none of them
-  starts it from this directory with \`node ${AGENT_SERVER.path}\`. Read
+  starts it from this directory with \`node ${AGENT_SERVER.path}\`: Codex with
+  \`codex mcp add ${AGENT_SERVER.name} -- node ${AGENT_SERVER.path}\`, JetBrains AI Assistant and Zed
+  with the entry of \`.mcp.json\` pasted into their MCP settings. Read
   \`assemblejs://project\` for every page, assembly and api and how they are wired,
   \`assemblejs://assembly/<name>\` for one assembly and where it is placed,
   \`assemblejs://rules\` for every rule with its reason, and \`assemblejs://contract\` for the
