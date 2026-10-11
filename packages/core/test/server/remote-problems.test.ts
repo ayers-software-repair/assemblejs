@@ -4,13 +4,20 @@ import { describe, expect, it } from "vitest";
 import { remoteProblems } from "@assemblejs/core";
 
 describe("what is checked about remotes before anything listens", () => {
-  it("passes exact origins with lower-case forwarded keys", () => {
+  it("passes exact origins with lower-case forwarded keys, trusted or not", () => {
     expect(
       remoteProblems([
         { origin: "https://checkout.example.com", forward: ["accept-language"] },
-        { origin: "http://127.0.0.1:4000" },
+        { origin: "http://127.0.0.1:4000", trusted: true },
       ]),
     ).toEqual([]);
+  });
+
+  it("refuses trusted written as anything but a boolean, which a truthy string would be", () => {
+    const origin = "https://checkout.example.com";
+    expect(remoteProblems([{ origin, trusted: "yes" as never }])).toEqual([
+      `remote "${origin}" has trusted: yes; it is true or left out`,
+    ]);
   });
 
   it("refuses anything that is not exactly an origin, so the allowlist compares like with like", () => {

@@ -2,13 +2,20 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * Another server this one may compose assemblies from: its exact origin, and the request headers
- * it is given. Nothing is forwarded unless named here, per remote, per key: forwarding a
- * credential to another company's server is a decision, never a default.
+ * Another server this one may compose assemblies from: its exact origin, the request headers it
+ * is given, and whether it is trusted with the page's query. Nothing is forwarded unless named
+ * here, per remote, per key: forwarding a credential to another company's server is a decision,
+ * never a default, and so is handing it what a visitor typed into the address.
  */
 export interface RemoteDefinition {
   /** `https://checkout.example.com`: scheme, host and port, nothing else. Matched exactly. */
   readonly origin: string;
   /** Lower-case request header names this remote receives from the visitor's request. */
   readonly forward?: readonly string[];
+  /**
+   * Whether the page's query reaches this remote with each placement, as it reaches this
+   * server's own services (DESIGN 5.1). Off unless declared: a remote not named trusted is
+   * given the route parameters and the declared headers, and nothing the visitor typed.
+   */
+  readonly trusted?: boolean;
 }

@@ -20,7 +20,8 @@ const isExactOrigin = (origin: string): boolean => {
  * allowlist compares like with like), one declared twice, a forwarded key that is not a
  * lower-case header name, which would never match the request header it was meant to pass on,
  * and a forwarded key that is a composition header, which the composer sends itself and a
- * visitor must not be able to set.
+ * visitor must not be able to set; and `trusted` written as anything but a boolean, since a
+ * truthy string would hand a visitor's query to a server nobody meant to trust.
  */
 export function remoteProblems(remotes: readonly RemoteDefinition[]): readonly string[] {
   const problems: string[] = [];
@@ -35,6 +36,11 @@ export function remoteProblems(remotes: readonly RemoteDefinition[]): readonly s
     if (seen.has(remote.origin))
       problems.push(`remote "${remote.origin}" is declared more than once`);
     seen.add(remote.origin);
+    if (remote.trusted !== undefined && typeof remote.trusted !== "boolean") {
+      problems.push(
+        `remote "${remote.origin}" has trusted: ${String(remote.trusted)}; it is true or left out`,
+      );
+    }
     for (const key of remote.forward ?? []) {
       if (!HEADER.test(key)) {
         problems.push(

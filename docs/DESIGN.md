@@ -506,7 +506,10 @@ The composer treats a remote assembly as a third party, because it is one.
   query string, not `x-forwarded-*`. A remote declares what it needs, per remote, per key:
   `forward: ["accept-language"]`. Forwarding a credential to another company's server is a
   decision, never a default. A composition header cannot be declared forwarded: the composer
-  sends those itself, and a visitor must not be able to stand in for it.
+  sends those itself, and a visitor must not be able to stand in for it. The page's query, what
+  a visitor typed into the address, reaches only a remote declared `trusted: true`, on the
+  content url it is asked at; every remote is given the page's route parameters, as a local
+  assembly is (2.1), since a page's route is the author's and not the visitor's.
 - The response is capped, default 2 MiB, and must be `text/html`. Anything else is a failure.
 - Remote response headers are discarded. Nothing a remote sets reaches the visitor.
 
@@ -797,7 +800,8 @@ export default defineService({
 
 A service is given the request's `query` and the route `params` of the page that placed the
 assembly, `{ id: "42" }` for `/products/:id`, which reach it the same way whether the page is on
-this server or another: an object with no prototype, so a parameter named `constructor` is a
+this server or another, but for the query, which crosses to another server only where that
+server is declared trusted with it (5.1): an object with no prototype, so a parameter named `constructor` is a
 parameter and nothing else. Returning is testable in isolation, composes without hidden order, and
 makes the data shape the function's return type. Services run in declaration order; one that must follow another says
 `after: ["greeting"]`. There is no priority number. Services run **before** the view renders,

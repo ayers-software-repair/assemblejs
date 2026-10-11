@@ -4208,3 +4208,24 @@ Settled:
   unmoved: the version headings are the same.
 - **`RELEASE_NOTES.md`** says in a paragraph what the first prerelease gained since its notes
   were first written, for a user; the package changelogs hold the detail.
+
+## 2026-10-11: a trusted remote
+
+The owner's answer of this morning (D1252, "Only a server named trusted") to whether a page's
+data reaches another server's assembly. Read in the code first: the route parameters already
+crossed to every remote as `assembly-params` (the remote fixture's `parameters.spec.mjs`), and
+the query never did (DESIGN 5.1, "not the query string"); the question on the morning list was
+the query's.
+
+Settled:
+
+- **`trusted: true` on a declared remote** hands it the page's query with each placement, on the
+  content url it is asked at (`contentRequestUrl`), which that server's content endpoint reads
+  as it reads any query; an untrusted remote is asked at the bare url, whatever the visitor
+  typed. The route parameters keep crossing to every remote: a page's route is the author's,
+  and the design and a spec already held it.
+- **Refused at boot** when written as anything but a boolean, since a truthy string would hand a
+  visitor's query to a server nobody meant to trust.
+- **Held in the remote fixture**: the consumer trusts its producer, a page passes its query to
+  the producer's `echo`, and the outbound spec goes on holding the query away from the hostile
+  remote, which is declared and not trusted.

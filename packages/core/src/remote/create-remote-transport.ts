@@ -9,6 +9,7 @@ import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { RESPONSE_HEADER } from "../vocab/response-header.js";
+import { contentRequestUrl } from "./content-request-url.js";
 import { isPrivateAddress } from "./is-private-address.js";
 import { learnedManifests } from "./learned-manifests.js";
 import { markRemote } from "./mark-remote.js";
@@ -96,11 +97,15 @@ export function createRemoteTransport(options: {
 
       let response: Response;
       try {
-        response = await fetch(target.content, {
-          redirect: "error",
-          signal: request.signal,
-          headers,
-        });
+        // The page's query goes only to a remote declared trusted with it (DESIGN 5.1).
+        response = await fetch(
+          contentRequestUrl(target.content, remote.trusted === true, request.query),
+          {
+            redirect: "error",
+            signal: request.signal,
+            headers,
+          },
+        );
       } catch (error) {
         return failure("transport", error instanceof Error ? error.message : String(error));
       }

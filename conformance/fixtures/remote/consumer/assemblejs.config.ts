@@ -6,6 +6,10 @@ import { defineConfig } from "@assemblejs/core";
 const producer = process.env.PRODUCER_ORIGIN ?? "";
 const hostile = process.env.HOSTILE_ORIGIN ?? "";
 
+// The producer is trusted with the page's query; the hostile remote is declared and is not.
 export default defineConfig({
-  remotes: [{ origin: producer }, { origin: hostile, forward: ["accept-language"] }],
+  remotes: [
+    { origin: producer, trusted: true },
+    { origin: hostile, forward: ["accept-language"] },
+  ],
 });

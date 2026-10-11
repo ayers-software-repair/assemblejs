@@ -1003,7 +1003,7 @@ recommendation, and he chose (DECISIONS 2026-10-11, "the owner's seven answers";
 D1252). Each answer is a row here, in the order they are taken; none waits on anyone.
 
 - [x] P5-1 THE NESTING DEPTH IN THE PROJECT'S CONFIG FILE. Done 2026-10-11: `limits: { depth,
-  placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createServer`'s
+placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createServer`'s
       options as every config field is, in place of `maxDepth`; `limitProblems` refuses a
       value outside its bounds at boot; `check` and the agent surface show it as a setting;
       DESIGN 3.4 and 14 and the tutorial say where it is set; the trust fixture's `bounded`
@@ -1023,11 +1023,14 @@ D1252). Each answer is a row here, in the order they are taken; none waits on an
       twenty-nine that had gathered, and run again by hand before the first publish for any
       that gather after. `RELEASE_NOTES.md` says in prose what the first prerelease gained.
       The morning list's item 12 closes (DECISIONS 2026-10-11, "the waiting change notes")
-- [ ] P5-4 A PAGE'S DATA ACROSS SERVERS ONLY TO A REMOTE NAMED TRUSTED: a remote declared
-      `trusted` receives the page's query and route parameters with a placement; every other
-      remote receives, as today, only the headers it declared. DESIGN 5.1 and 8 say it, the
-      remote fixture holds both, and `check` refuses `trusted` on a remote outside the
-      project's own origins where it can tell; the morning list's item 7 closes
+- [x] P5-4 A PAGE'S DATA ACROSS SERVERS ONLY TO A REMOTE NAMED TRUSTED. Done 2026-10-11: a
+      remote declared `trusted: true` is given the page's query on the content url it is asked
+      at; every other remote is asked at the bare url. Route parameters cross to every remote
+      as before, since a page's route is the author's (DESIGN 2.1, held by the remote
+      fixture's parameters spec); DESIGN 5.1 and 8 say both. Boot refuses `trusted` written
+      as anything but a boolean. The remote fixture trusts its producer and holds the query
+      reaching it, beside the hostile remote the outbound spec holds the query away from
+      (DECISIONS 2026-10-11, "a trusted remote"). The morning list's item 7 closes
 - [ ] P5-5 AN AGENT'S PREVIEW OF A FRAMEWORK VIEW THROUGH THE DEV SERVER: `render_assembly`
       and `compose_page` show a React, Vue, Svelte, Solid, Lit or template view by asking the
       project's own running dev server for it, and refuse with the reason when none is
