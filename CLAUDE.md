@@ -102,21 +102,21 @@ changesets: every change under `packages/*/src` carries one, from the first chan
 2026-10-09, which set every package to `1.0.0-next.0` (owner, DECISIONS 2026-10-09). The twelve
 packages share one version: one fixed group in `.changeset/config.json` moves them together,
 and `check:one-version` holds it (owner, DECISIONS 2026-10-11, "One number"). `next` is
-in pre mode (`.changeset/pre.json`). Branch pushes prepare version pull requests only. An
-owner-approved `v1.0.0-next.N` tag publishes to npm `next`; a stable `v1.0.0` tag publishes to
+in pre mode (`.changeset/pre.json`). Versions and release notes are prepared in a normal
+commit before the owner cuts the tag. `v1.0.0-next.N` publishes to npm `next`; `v1.0.0` publishes to
 `latest`. `release.yml` checks the tag against every public package and the channel's branch,
 requires successful CI for that commit, and publishes through the `release` environment
 (npm trusted publishing). The same run then calls the existing site deployment at that exact
 commit: `/assemblejs/next/` or `/assemblejs/`. The first npm bootstrap remains the owner's;
 after it, registry publication is CI only. No package is published by a normal branch push.
+The release neither commits back nor creates another tag or version pull request.
 
 Release notes are four surfaces, the estate's one pattern: each package's `CHANGELOG.md`, which
 changesets writes; `RELEASE_NOTES.md` supplies the product release's notes, and
 `site/release-notes.html`, hand-kept for a user. One gate holds the page to a section for each
 version a changelog heads: in `check:site`, in the deploy, and in the release job before it
-versions or publishes, so no version is published without its notes. The notes for a version
-are the last commit on the version pull request's branch, which the action rewrites at every
-push to `next`.
+publishes, so no version is published without its notes. The tagged commit contains the
+package versions and all four release-note surfaces; the release does not rewrite them.
 
 ## How this repository is worked (owner's standing rules, 2026-09-03)
 

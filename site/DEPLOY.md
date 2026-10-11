@@ -23,7 +23,7 @@ same bucket. The workflow invalidates both after uploading.
 
 ## A release tag publishes the package and its site
 
-Branch pushes let Changesets prepare version pull requests; they do not publish npm packages.
+Versions and release notes are prepared in a normal commit; branch pushes do not publish npm.
 The owner cuts `v1.0.0-next.N` from `next` or `v1.0.0` from `main` after versioning, release notes
 and that commit's CI pass. `release.yml` verifies that every public package matches the tag,
 that Changesets' prerelease mode matches its channel, and that the commit belongs to the right
@@ -32,7 +32,9 @@ branch. The `release` environment identifies npm publication through trusted pub
 After npm succeeds, that same run calls `deploy-site.yml` with the release's exact commit and
 channel. A failed npm publication cannot deploy the release's site. There is no separate
 release-listener workflow. A rerun uses the same tag and commit; it does not take newer branch
-contents. The existing site-only push and manual deployment paths remain available.
+contents. The release does not commit changes back, create another tag, or open a version
+pull request. It needs no permission to create or approve pull requests. The existing site-only
+push and manual deployment paths remain available.
 
 The first publication still requires the owner's npm package/bootstrap and trusted-publisher
 setup. A site deployment alone does not establish that npm publication is configured or complete.
