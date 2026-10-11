@@ -4494,3 +4494,31 @@ one decision, made in one file. With it the seven answers of D1252 are all built
 
 The command line's tarball budget moves, from 86000 to 88000 bytes: the rule, with the 148
 names, packed it to 86282, measured by `check:pack`.
+
+## 2026-10-11: the domain's 404 page
+
+P5-8's second half, as far as this repository reaches.
+
+Found: `site/404.html` linked its kit, skin, mark, icon and pages by relative paths, and a
+distribution serves a custom error page at whatever address was not found, so on
+`assemblejs.com/docs/nowhere.html` every one of those paths would resolve under `docs/` and
+miss. Fixed: every path on the page is absolute from the domain's root, which the prefix router
+sends to `/assemblejs/` (`ayers.repair/infra/cloudfront/prefix-router.js`, read 2026-10-11).
+Until the promotion of `next` to `main` puts the main channel there, the page served from the
+`next` prefix reaches for a kit that is not yet at the root, which is the state the row names.
+
+Not this repository's: the company distribution maps 403 and 404 to `/404.html` at the bucket's
+root, the business site's page (`README-functions.md` there, config read 2026-09-23). For the
+domain to show this page, its error response names `/assemblejs/404.html`; whether the domain is
+a distribution of its own or an alias of the company's is in AWS, not in any repository, and
+this seat has no credentials to read it. The morning list carries it.
+
+The ledger's rows the Phase 5 bites had already closed are checked off here, each with its
+commit: the depth cap (P5-1), the page's query across servers (P5-4), the content endpoint's
+signal (way A), one version (P5-2) and A-04 itself.
+
+Also in this pass, the ledger's duplicate-key row: `eslint .` does lint the config files, and
+`no-dupe-keys` is in the recommended set, but typescript-eslint's `eslint-recommended` turns it
+off for `.ts` files on the ground that the compiler reports a duplicate, and no tsconfig includes
+a config file, so a probe file with `test` declared twice linted clean (exit 0, 2026-10-11). The
+core rule is turned back on for `*.config.{ts,js,mjs}`; the same probe now fails the lint.

@@ -651,16 +651,19 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
         seven guides under `site/docs` show a child and no longer name `children`; the two
         reader memos and their synthesis are deleted, what they found in passing rowed below
         (DECISIONS 2026-10-10, S-09)
-- [ ] A page's query reaches the services of this server's assemblies and not another server's,
+- [x] A page's query reaches the services of this server's assemblies and not another server's,
       while the browser's fill of a deferred placement sends it. Decide which is meant, and say
-      it in DESIGN 5.1 (found by the reader of core, 2026-10-09)
-- [ ] A project has no way to set the depth cap: `createServer` takes `maxDepth`, the project's
+      it in DESIGN 5.1 (found by the reader of core, 2026-10-09). RULED AND BUILT: a remote
+      marked `trusted` receives it, no other (owner, D1252; P5-4, `387dae6`, 2026-10-11)
+- [x] A project has no way to set the depth cap: `createServer` takes `maxDepth`, the project's
       config does not, so every server the command line builds refuses at eight. Its place in
-      the config is a ruling's to give (found by the reader of core, 2026-10-09)
-- [ ] The content endpoint's render ends when its request closes: `registerAssemblies` gives
+      the config is a ruling's to give (found by the reader of core, 2026-10-09). RULED AND
+      BUILT: `limits` in `assemblejs.config.ts` (owner, D1252; P5-1, `03b4c2b`, 2026-10-11)
+- [x] The content endpoint's render ends when its request closes: `registerAssemblies` gives
       `renderLocal` no signal today, so a server keeps composing children after the server that
       asked has given up (DECISIONS 2026-10-09, S-02 named the signal; the endpoint is the one
-      caller without one)
+      caller without one). BUILT: the endpoint hands `renderLocal` the request's own signal
+      (`register-assemblies.ts`, with way A, `49ec079`, 2026-10-11)
 - [x] `pnpm check:trailers` ran its gate with no range and stopped on an unbound variable: the
       script took a range from CI only. With no range it now checks the commits the branch has
       and its upstream lacks, and its self-test holds the range form too, in a repository made
@@ -809,9 +812,10 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       sent to, the channel's `/assemblejs/next/` or the product's `/assemblejs/`, and that
       address answers (found 2026-10-10 writing A-02; the product's address deploys from
       `main`, which has no site yet)
-- [ ] A-04 built-in components and best practices: the design memo and the owner's answer
+- [x] A-04 built-in components and best practices: the design memo and the owner's answer
       first, then the starter design system, the accessible components and the `check` rules,
-      each rule watched red (owner, 2026-10-09, PLAN 4.1). The memo is written,
+      each rule watched red (owner, 2026-10-09, PLAN 4.1). BUILT in P5-6a to P5-6g, the last
+      rule `a-colour-is-a-token` (2026-10-11). The memo is written,
       `docs/studies/built-in-components.md`, 2026-10-10: one tokens file every page links, with
       the estate's roles and their contrast held by `check`; components as styled native HTML;
       five rules; about nine bites. Its one question, what a built-in component is, is on the
@@ -845,8 +849,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       config's duplicate `test` key merged; lint ignores agent worktrees; the release workflow
       skips publication while the registry has no `@assemblejs/core` (DECISIONS 2026-10-09,
       "tests build what they read")
-- [ ] A duplicate-key lint for the config files (`vitest.config.ts`, `tsup.config.ts`), watched
-      red on the Vue shape that hid a setup for a month (DECISIONS 2026-10-09)
+- [x] A duplicate-key lint for the config files (`vitest.config.ts`, `tsup.config.ts`), watched
+      red on the Vue shape that hid a setup for a month (DECISIONS 2026-10-09). DONE 2026-10-11:
+      the TypeScript preset turns `no-dupe-keys` off for `.ts`, leaving the duplicate to a
+      compiler that never reads a config file; `eslint.config.js` turns it back on for
+      `*.config.{ts,js,mjs}`, watched red on `{ test: {}, test: {} }` and green on every config
+      (DECISIONS 2026-10-11, "the domain's 404 page", last paragraph)
 - [ ] B-27a estate integration and the first prerelease, which now carries the second halves
       of B-24, B-25 and B-26 (owner, DECISIONS 2026-10-05 rulings): the acceptance table from
       the `legacy-tests` dossier, the Scorecard run, and the publish dry run with provenance
@@ -909,7 +917,8 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
 - [ ] The page says its one version is not yet published, which is true today. At the first
       publish, by the owner's hand, that sentence becomes the date, in the same change that
       publishes (found 2026-10-10)
-- [ ] ONE VERSION OR TWELVE: waits on the owner (the estate's morning list). Measured in a
+- [x] ONE VERSION OR TWELVE: RULED "One number" (owner, D1252) and built as one fixed group
+      with `check:one-version` (P5-2, `74ef101`, 2026-10-11). Measured in a
       clone: the packages' versions part ways at the first cut that does not name them all.
       Two things are right only while they share one. A new project's manifest asks for the
       server at the command line's own version, which after a cut of the command line alone is
@@ -1129,4 +1138,10 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       The morning list's item 13 closes (2026-10-11)
 - [ ] P5-8 assemblejs.com: the main landing page exists at `/assemblejs/` once the release
       alignment (the morning list's item 2, the promotion of `next` to `main`) puts one there;
-      and the domain wants a 404 page of its own, served where the prefix router sends it
+      and the domain wants a 404 page of its own, served where the prefix router sends it.
+      This repository's half is done (2026-10-11): `site/404.html` stands at any address, every
+      path on it absolute from the domain's root. The other half is the company distribution's
+      custom error responses, which name `/404.html` at the bucket's root (the business site's
+      page; `ayers.repair/infra/cloudfront/README-functions.md`, read 2026-10-11) and would name
+      `/assemblejs/404.html` for the domain; that is another repository's change and the
+      owner's word, on the morning list (DECISIONS 2026-10-11, "the domain's 404 page")

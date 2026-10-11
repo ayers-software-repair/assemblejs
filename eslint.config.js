@@ -92,6 +92,14 @@ export default tseslint.config(
   // Repository tooling prints to stdout on purpose: its output is the gate's evidence.
   { files: ["scripts/**", "eslint.config.js"], rules: { "no-console": "off" } },
 
+  // A config file is not typechecked, so the TypeScript preset's reliance on the compiler for a
+  // duplicate key does not hold there: the Vue test config declared `test` twice and its second
+  // value silently replaced the first (DECISIONS 2026-10-09). The core rule stands for them.
+  {
+    files: ["**/*.config.ts", "**/*.config.js", "**/*.config.mjs"],
+    rules: { "no-dupe-keys": "error" },
+  },
+
   // The conformance harness prints its steps on purpose: they are the run's evidence.
   { files: ["conformance/**"], rules: { "no-console": "off" } },
 
