@@ -881,8 +881,10 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
       house file copied byte for byte (platform v0.54.1, unchanged since v0.21.0), and
       `check:editorconfig` holds it to that file's hash and refuses a nested copy, self-tested
       red (DECISIONS 2026-10-11, "the house editorconfig")
-- [ ] Reconcile the eslint pin: platform/codestyle pins 10.10.0, this repo carries 10.9.1. One
-      version or a stated reason. Prettier already agrees at 3.9.6.
+- [x] Reconcile the eslint pin: platform/codestyle pins 10.10.0, this repo carries 10.9.1. One
+      version or a stated reason. Prettier already agrees at 3.9.6. DONE 2026-10-11: eslint
+      10.10.0, one version with the kit; every plugin's peer range admits it and `pnpm lint` is
+      green at it (DECISIONS 2026-10-11, "the eslint pin")
 
 ## Release notes: the uniform pattern (owner order, 2026-09-03; ruled 2026-10-05; built 2026-10-10)
 

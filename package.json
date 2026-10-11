@@ -57,7 +57,7 @@
     "@playwright/test": "1.62.1",
     "dependency-cruiser": "18.2.0",
     "esbuild": "0.28.2",
-    "eslint": "10.9.1",
+    "eslint": "10.10.0",
     "eslint-import-resolver-typescript": "4.4.5",
     "eslint-plugin-import-x": "4.17.1",
     "eslint-plugin-unicorn": "74.0.0",

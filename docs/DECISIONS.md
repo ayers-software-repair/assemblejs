@@ -4538,3 +4538,14 @@ test does. Re-syncing is copying the file and recording the new hash and tag. Wh
 an editor: Markdown keeps its trailing spaces (a hard line break), Go would indent with tabs, and
 the indent width is stated per language rather than for every file; Prettier reads the same two
 values it read before, so no formatted file changes.
+
+## 2026-10-11: the eslint pin
+
+The ledger's row: one eslint version with the kit, or a stated reason.
+
+Settled: one version. eslint moves from 10.9.1 to 10.10.0, the kit's pin (platform/codestyle
+`package.json`, read 2026-10-11; the registry has 10.10.0 since 2026-10-02 and a 10.11.0 the kit
+has not taken). The plugins admit it by their peer ranges, read in `node_modules`:
+typescript-eslint 8.69.0 and eslint-plugin-import-x `^8.57.0 || ^9.0.0 || ^10.0.0`,
+eslint-plugin-unicorn `>=10.4`, `@eslint/js` `^10.0.0`. `pnpm lint` ran green at the new version
+before the commit; syncpack finds one version across the workspace.
