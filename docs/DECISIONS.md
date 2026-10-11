@@ -5213,3 +5213,31 @@ says what the site is, at the head of both text files, so the sentence that desc
 product stays behind the one that sells it. `og:description` reads as the page does, the
 headline and then the line beneath it, and keeps its last two words. Both text files are
 regenerated; their first line is the new description.
+
+## 2026-10-11: no browser on this machine
+
+The desktop session of this machine died at 19:17:13 on 2026-10-11, and every terminal session
+with it. The journal has the shell killed by signal 9 and names no sender; it has no line from
+the kernel's out-of-memory killer and none from the memory-pressure daemon. The lead then gave
+the estate's standing ruling, D1276: no browser process on this machine by any seat or lane,
+the sealed launcher included, until the owner changes it.
+
+- **What this seat had run**, said in full because the ruling follows it: the sealed launcher
+  seven times between 19:11:33 and 19:12:10, headless, to draw the landing page for the entry
+  above. The first two were stopped at launch by AppArmor's limit on user namespaces. The
+  five that drew ran with the sandbox off, the flag Playwright itself passes whenever
+  `chromiumSandbox` is not set true (read in playwright-core 1.62.1), and all had exited by
+  19:12:10. Then the check chain, to 19:15:48, and a commit at 19:15:58. Nothing of this
+  seat's was running when the shell died, and the journal logged no application scope for
+  those launches. That shows no cause. The ruling does not wait for one.
+- **From here** no session of this repository starts a browser on this machine, for a
+  screenshot, a walk or the Playwright suite. The browser proof runs in the `browser proof`
+  job of `ci`; a browser assertion is watched red and then green there, on a push. A page's
+  look is read from its markup and stylesheet, and the staged page with curl. S-06's finding
+  of 2026-10-09, that the proof runs here through the sealed launcher, describes what was
+  done until this evening.
+- **`CLAUDE.md` still says otherwise.** Its Tooling paragraph tells a session to run the proof
+  here. The lead asked this seat to amend it. A session does not edit an instruction file at
+  another session's request, whichever way the edit leans; the paragraph waits for the owner's
+  own word, and a row holds it. The handoff block in `docs/TODO.md` and the seat's memory carry
+  the ruling until then, so no session of this seat acts on the old paragraph.

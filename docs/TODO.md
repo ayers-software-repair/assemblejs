@@ -5,16 +5,27 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, with the hero line on the
-front door).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, with one commit rule and
+the ruling that no browser starts on this machine).**
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the owner's line
-is the landing page's headline, "The first micro-frontend framework for AI-enabled
-development", with "One page. Every framework." the line beneath it in one heading group and a
-row of its own in `site/LANDING.md`; the site's text reader knows a heading group, so
-`llms.txt` describes the site by the paragraph it did (DECISIONS 2026-10-11, "the hero line
-stands on the front door"). Beneath it, each pushed 2026-10-11 with its `ci` run read green on
-every job: `12da0f0` the seven places brought down on 2026-10-10 to "a plain html view" say
+NO BROWSER STARTS ON THIS MACHINE (D1276, 2026-10-11, the estate's standing ruling as the lead
+gave it): not for a screenshot, not for a walk, not for the Playwright suite, the sealed
+launcher included, until the owner changes it. The browser proof and every draw of a page run
+in CI: the `browser proof` job of `ci`, and `deploy-site` with the staged page read by curl.
+`CLAUDE.md`'s Tooling paragraph still says the proof runs here; it is wrong until the owner
+changes it, and a row says so (DECISIONS 2026-10-11, "no browser on this machine").
+
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with, the third of
+three pushed together: the commit rule is one rule, commitlint under the house's config and
+the house's script copied from platform `v0.55.0` and held to one verdict on 51 messages
+(DECISIONS 2026-10-11, "one commit rule"); the landing page's description and its
+`og:description` lead with the headline sentence, on the lead's decision; and the ruling above
+recorded. Beneath them, each pushed 2026-10-11 with its `ci` run read green on every job:
+`5830efc` the owner's line is the landing page's headline, "The first micro-frontend framework
+for AI-enabled development", with "One page. Every framework." the line beneath it in one
+heading group and a row of its own in `site/LANDING.md`; the site's text reader knows a
+heading group (`ci` 38184326973, `deploy-site` 38184326974, and staging read: the page, its
+stylesheet and both text files byte for byte the commit's); `12da0f0` the seven places brought down on 2026-10-10 to "a plain html view" say
 both halves again, any view through the project's running dev server and a plain html one with
 nothing running, and the lists of registered clients name five (`ci` 38183217546, `deploy-site`
 38183217542, and staging read: the four files it changed as the commit has them); `818d5b4` the acceptance
@@ -69,11 +80,9 @@ envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `
 NEXT: read the open rows afresh before believing none can be worked: on 2026-10-11 that was
 said and five could. As read that night, what remains waits on the owner (branch rulesets, the
 first publish and its notes, B-27a and B-27b, the joint session, the agent surface's install
-size; his four questions are with the lead; the public cut of the landing page, and whether
-its title, description and `og:description` take the hero line too), on the cto seat's next
-platform tag (the
-commit rule settled there: the house's files copied again, their hashes and the tag recorded
-in `check:commit-rule`, the eight recorded differences turned into rules, the pin moved), on
+size; his four questions are with the lead; the public cut of the landing page; his word for
+`CLAUDE.md`'s Tooling paragraph under D1276), on platform `v0.55.0`'s own CI read green (the
+pin, `ayersPlatform`, then moves to it; nothing staged changes), on
 the promotion of `next` (the llms.txt address in AGENTS.md, P5-8's landing page), on Astra
 (the shared 404), or on a machine with VS Code (one read). A STANDING
 GATE since `84efc3f`: one commit on `next` with no conventional header or no sign-off turns
@@ -176,9 +185,11 @@ HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to
 push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
 read too. Each mutation is run alone, by a harness that puts the file back from its own bytes
 and compares the hash of every changed file before and after; a run with no failed spec is
-invalid, not red. The browser proof runs here: give the suite the estate's sealed launcher as
-`ASSEMBLEJS_CHROMIUM`, one worker, in the background, `TMPDIR` left alone (DECISIONS
-2026-10-09, S-06). It rebuilds every package's `dist`, so never beside the unit suite.
+invalid, not red. The browser proof runs in CI alone since D1276 (the paragraph at the top of
+this block): a browser assertion is watched red and then green on a push, in the `browser
+proof` job, and a page's look is read from its markup, its stylesheet and the staged page.
+Until 2026-10-11 it ran here through the estate's sealed launcher (DECISIONS 2026-10-09,
+S-06); that is how it was done and is not to be done.
 
 AFTER IT, in any order: the house-style rows (the section of that name below; the estate's
 record has them ready, pristine-keeping work having been allowed through the hold); and the
@@ -204,9 +215,11 @@ B-26. Done by his hand: the Actions allowlist (every workflow has run since 2026
 `RELEASES_PAT` (2026-09-11), the OIDC role `gh-deploy-assemblejs-site` (2026-10-07).
 
 HOW THIS LANE WORKED, so the next one is not slower: implement; tests; watch each claim red by
-a mutation and restore by the inverse edit; conformance or browser proof where one applies;
-the structural gates; `pnpm check` in the background (`pgrep -f "bin/pnpm check$"` then
-`tail --pid`); a verification agent with no stake, its findings fixed; DECISIONS and the TODO
+a mutation and restore by the inverse edit; conformance where it applies, and the browser
+proof in CI alone (D1276); the structural gates; `pnpm check` in the background, its end told
+by the task's own notice or a Monitor and never by a watch loop (owner, 2026-10-11); a run
+found by the full commit id, since `gh run list -c` with a short one finds nothing and says
+nothing; a second reader with no stake, its findings fixed; DECISIONS and the TODO
 box in the same commit; `git commit -s -F <draft>`; `git push -u origin next`. Agent
 worktrees under `.claude/worktrees/` are ignored by lint since 2026-10-09; a dead lane's
 worktree is still removed when found. Every suite builds a stale package before it reads it
@@ -217,8 +230,7 @@ micro-frontends: pages composed from assemblies, each in its own framework, hydr
 published as `@assemblejs/*`. `docs/DESIGN.md` is the contract, `docs/PLAN.md` the frozen rung
 ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE, B-09 and
 B-09c included. The browser suite
-(`pnpm test:browser`) is outside `pnpm check`; on a machine whose Chromium is not the one this
-Playwright expects, `ASSEMBLEJS_CHROMIUM` names the binary.
+(`pnpm test:browser`) is outside `pnpm check` and, since D1276, runs in CI alone.
 
 **B-09 IS DONE (2026-10-03).** Its record, kept for the next lane: Found on resuming, and logged in `docs/DECISIONS.md`: the server
 served the assembly endpoints but no PAGES - nothing turned a template into a composed document
@@ -1123,6 +1135,12 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       rule's copies were taken from it. Measured 2026-10-11: `sitekit/` and the house
       `.editorconfig` are byte for byte the same from v0.54.3 to v0.55.0, so the move stages
       nothing new and no deploy is owed to it (cto, 2026-10-11)
+- [ ] `CLAUDE.md`'s Tooling paragraph tells a session to run the browser proof on this machine
+      through the sealed launcher. D1276 (2026-10-11) forbids any browser process here, and
+      this seat obeys it: DECISIONS, the handoff block and the seat's memory say so. The lead
+      asked this seat to amend the paragraph. A session does not edit an instruction file at
+      another session's request, whichever way the edit leans, so the paragraph waits for the
+      owner's own word, or his hand (found 2026-10-11)
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 
