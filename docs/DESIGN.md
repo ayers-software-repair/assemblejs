@@ -665,7 +665,9 @@ export type MountHandle = { unmount(): void };
   is written is a finding, and a build refuses that view as it refuses a template that does
   not compile: every render that reaches the directive would fail on it. A framework view is
   read for each `Slot` or `slot` of its renderer's that it writes, under whatever name or
-  namespace it imports them, in its own file and in each component of the project it imports.
+  namespace it imports them, in its own file and in each component of the project it imports;
+  one written inside a class's `render`, a Lit element's own, is a finding and no placement,
+  since the composer refuses a child inside an element's shadow root (section 2.4).
   A render alone knows the rest: a slot handed on under another name, a slot inside a
   component that comes from a package, a tag whose own name a template computes, a directive
   that reads only once a template has computed part of it, which leaves that whole view

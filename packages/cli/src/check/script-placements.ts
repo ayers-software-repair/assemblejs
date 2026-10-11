@@ -2,7 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 import { DEFAULT_VIEW } from "@assemblejs/core";
 import { parse } from "acorn";
-import type { AnyNode, Expression, ObjectExpression, SpreadElement, Super } from "acorn";
+import type {
+  Class,
+  Expression,
+  MethodDefinition,
+  ObjectExpression,
+  SpreadElement,
+  Super,
+} from "acorn";
 import { transformSync } from "esbuild";
 import { collectPlacements } from "./collect-placements.js";
 import { isRendererClient } from "./is-renderer-client.js";
@@ -10,14 +17,36 @@ import type { ViewPlacements } from "./view-placements.js";
 
 type Argument = Expression | SpreadElement | undefined;
 
-const walk = (node: unknown, visit: (node: AnyNode) => void): void => {
+// Where a node stands: the class it is in, by name, and whether it is inside that class's render.
+interface Within {
+  readonly element: string | undefined;
+  readonly inRender: boolean;
+}
+
+// Every node, with where it stands: a class names the element from there down, and its `render`
+// method is where an element writes its own shadow root.
+const walk = (
+  node: unknown,
+  visit: (node: { readonly type: string }, within: Within) => void,
+  within: Within = { element: undefined, inRender: false },
+): void => {
   if (typeof node !== "object" || node === null) return;
   if (Array.isArray(node)) {
-    for (const one of node) walk(one, visit);
+    for (const one of node) walk(one, visit, within);
     return;
   }
-  if (typeof (node as { readonly type?: unknown }).type === "string") visit(node as AnyNode);
-  for (const value of Object.values(node)) walk(value, visit);
+  const typed = node as { readonly type?: unknown };
+  if (typeof typed.type !== "string") return;
+  let inside = within;
+  if (typed.type === "ClassDeclaration" || typed.type === "ClassExpression") {
+    inside = { element: (node as Class).id?.name ?? "an element", inRender: false };
+  } else if (typed.type === "MethodDefinition") {
+    const { key } = node as MethodDefinition;
+    const render = key.type === "Identifier" && key.name === "render";
+    inside = { element: within.element, inRender: within.element !== undefined && render };
+  }
+  visit(node as { readonly type: string }, inside);
+  for (const value of Object.values(node)) walk(value, visit, inside);
 };
 
 // A string written in place: a string literal, or a template literal with nothing computed.
@@ -52,6 +81,10 @@ const property = (
  * under whatever name the module imports them, or under the namespace it imports the whole
  * client as. A view written in place is read; one the module computes is left out of the
  * placement; a name it computes is reported.
+ *
+ * A slot written inside a class's `render`, a Lit element's own, places a child inside that
+ * element's shadow root, which the composer refuses: it is reported as such and is no placement
+ * of the view's.
  *
  * Throws for a module that cannot be compiled or parsed. A slot handed on under another name,
  * assigned or passed, is not seen here, and is left to the render.
@@ -95,11 +128,20 @@ export function scriptPlacements(source: string, loader: "ts" | "tsx"): ViewPlac
   };
 
   const found: { name: string | undefined; view: string | undefined; shown: string }[] = [];
-  walk(program, (node) => {
-    if (node.type !== "CallExpression") return;
+  const shadowed: string[] = [];
+  walk(program, (visited, within) => {
+    if (visited.type !== "CallExpression") return;
+    const node = visited as Expression & { readonly type: "CallExpression" };
     const [first, second] = node.arguments;
     const called = named(node.callee, "slot");
     const component = named(first, "Slot");
+    if (within.inRender && (called ?? component) !== undefined) {
+      const shown = written(
+        called === undefined ? property(second as ObjectExpression, "name").value : first,
+      );
+      shadowed.push(`${within.element ?? "an element"}.render() places "${shown ?? "..."}"`);
+      return;
+    }
     if (called !== undefined) {
       found.push({
         name: written(first),
@@ -117,5 +159,5 @@ export function scriptPlacements(source: string, loader: "ts" | "tsx"): ViewPlac
       });
     }
   });
-  return collectPlacements(found);
+  return { ...collectPlacements(found), ...(shadowed.length > 0 ? { shadowed } : {}) };
 }

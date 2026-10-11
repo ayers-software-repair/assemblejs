@@ -8,5 +8,11 @@ describe("what a view's source says it places", () => {
     const read: ViewPlacements = { placements: [{ name: "cart", view: "default" }], unnamed: [] };
     const unread: ViewPlacements = { placements: undefined, unnamed: [] };
     expect([read.placements?.length, unread.placements]).toEqual([1, undefined]);
+    const rooted: ViewPlacements = {
+      placements: [],
+      unnamed: [],
+      shadowed: ['Card.render() places "price"'],
+    };
+    expect(rooted.shadowed).toHaveLength(1);
   });
 });

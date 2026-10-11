@@ -100,6 +100,21 @@ describe("what every view in a project says it places", () => {
     expect(problems[0]?.path).toMatch(/shell\/shell\.html$/);
   });
 
+  it("reports a slot written inside a Lit element's render, and keeps the view's own placements", () => {
+    const { placements, problems } = findings({
+      "shell/shell.lit.ts": `import { slot } from "@assemblejs/renderer-lit/client";\nimport { LitElement, html } from "lit";\nexport class ShellCard extends LitElement { render() { return html\`\${slot("price")}\`; } }\nexport default () => html\`<shell-card></shell-card>\${slot("cart")}\`;`,
+      "cart/cart.html": "<p>cart</p>",
+      "price/price.html": "<p>price</p>",
+    });
+    expect(problems.map((problem) => [problem.rule, problem.message])).toEqual([
+      [
+        "a-placement-stands-outside-an-element",
+        '"shell" places an assembly inside an element\'s own shadow root, where the page\'s stylesheets do not reach: ShellCard.render() places "price"',
+      ],
+    ]);
+    expect(placements.get("shell")).toEqual([{ name: "cart", view: "default" }]);
+  });
+
   it("reports a placement whose name is computed, and one no assembly could be named", () => {
     const { placements, problems } = findings({
       "shell/shell.react.tsx": `${REACT}export default (props: { which: string }) => <><Slot name={props.which} /><Slot name="Cart" /><Slot name="price" /></>;`,

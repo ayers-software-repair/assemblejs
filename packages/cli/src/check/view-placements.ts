@@ -11,4 +11,10 @@ export interface ViewPlacements {
   readonly placements: readonly ViewPlacement[] | undefined;
   /** Each placement whose name the source computes, as it is written, for a problem to show. */
   readonly unnamed: readonly string[];
+  /**
+   * The slots written inside an element's own `render`, each shown as the view writes it: a child
+   * placed there stands in the element's shadow root, which the composer refuses, so none is a
+   * placement of the view's.
+   */
+  readonly shadowed?: readonly string[];
 }

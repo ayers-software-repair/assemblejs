@@ -17,6 +17,7 @@ export const RULE_IDS = [
   "a-placement-names-an-assembly",
   "a-view-places-a-child-with-the-directive",
   "a-placement-is-named-where-it-is-written",
+  "a-placement-stands-outside-an-element",
   "an-assembly-is-never-its-own-ancestor",
   "lit-holds-lit-behind-a-shadow-root",
   "policy-names-a-placement",

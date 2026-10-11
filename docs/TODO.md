@@ -704,11 +704,14 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       the composer, the server at boot and a view at render say so; `check` reads a Lit view's
       slots from its module and does not yet know which stand in an element's render
       (DECISIONS 2026-10-11, "a placement inside an element's shadow root")
-- [ ] `check` reads a Lit view's slots from its module without telling one written in an
+- [x] `check` reads a Lit view's slots from its module without telling one written in an
       element's `render` from one in the view's template, so a child placed in an element's own
       shadow root is refused first at a render and not by `check`: read the class that extends
       `LitElement` and refuse the slot in its `render` as the composer does (found 2026-10-11,
-      DECISIONS "a placement inside an element's shadow root")
+      DECISIONS "a placement inside an element's shadow root"). DONE 2026-10-11: the module
+      reader knows which class and which method it stands in, and a slot in a class's `render`
+      is a finding, `a-placement-stands-outside-an-element`, and no placement of the view's
+      (DECISIONS 2026-10-11, "check reads a slot in an element's render")
 - [x] Placement context: a child whose block content sits inside an open `<p>` (or any element
       the parser closes on its own) is moved out of its envelope, and its parent's island with
       it; silent today for a page's placements and for a view's. One check for both, where the
@@ -914,8 +917,10 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
       `<section id="v...">` in `site/release-notes.html` to each version heading in the
       packages' `CHANGELOG.md` files, structure only, never prose; watched red on an injected
       version (2026-10-10; the release-notes block below has the rest)
-- [ ] Keep changesets permanently (owner ruling: only a per-package bump computes which of five
-      packages move when core moves). Do NOT swap to a commit-derived generator here.
+- [x] Keep changesets permanently (owner ruling: only a per-package bump computes which of five
+      packages move when core moves). Do NOT swap to a commit-derived generator here. KEPT: the
+      standing rule is in CLAUDE.md's Release section, and every change since 2026-10-09 carries
+      a changeset (2026-10-11).
 - [ ] Keep husky + commitlint (already live). When the shared house check set lands, add a
       CROSS-TEST feeding the same fixture messages to commitlint and the shared script, asserting
       the same verdict, so one rule does not drift into two implementations.
@@ -1116,9 +1121,10 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       any other is refused with the word to start the dev server (`needsTheDevServer`).
       DESIGN 13.4 and 13.6 say it (DECISIONS 2026-10-11, "the dev server renders for the
       agent"). The morning list's item 10 closes
-- [ ] P5-6 BUILT-IN COMPONENTS AS PLAIN HTML AND TOKENS (A-04): as
+- [x] P5-6 BUILT-IN COMPONENTS AS PLAIN HTML AND TOKENS (A-04): as
       `docs/studies/built-in-components.md` proposed in that form, in its bites; no framework
-      component library. The morning list's item 9 closes when the last bite lands.
+      component library. The morning list's item 9 closes when the last bite lands: it landed
+      2026-10-11 (`970a004`, `a-colour-is-a-token`), and the item is closed.
   - [x] P5-6a The tokens file and its link (2026-10-11): `src/tokens.css`, carried whole and
         unscoped into the build by `writeTokens`, named by its content; the built project
         declares it as `styles`, which `createServer` links on every page before any

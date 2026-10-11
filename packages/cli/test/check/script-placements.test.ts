@@ -65,6 +65,16 @@ describe("the slots a view written as a module places", () => {
     expect(read.unnamed).toEqual(["slot(...) with a name the view computes"]);
   });
 
+  it("reports a slot written inside an element's render as placed in its shadow root, not by the view", () => {
+    const lit = `import { slot } from "@assemblejs/renderer-lit/client";\nimport { LitElement, html } from "lit";\nexport class ShopCard extends LitElement { render() { return html\`<p>\${slot("price")}</p>\`; } helper() { return slot("badge"); } }\nexport default () => html\`<shop-card></shop-card>\${slot("cart")}\`;`;
+    const read = scriptPlacements(lit, "ts");
+    expect(read.placements).toEqual([
+      { name: "badge", view: "default" },
+      { name: "cart", view: "default" },
+    ]);
+    expect(read.shadowed).toEqual(['ShopCard.render() places "price"']);
+  });
+
   it("throws for a module that cannot be compiled", () => {
     expect(() => scriptPlacements("export default <", "tsx")).toThrow();
   });

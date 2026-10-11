@@ -41,6 +41,13 @@ export const RULES: readonly Rule[] = [
     smell: "A Slot or a directive whose name comes from data, a prop or a variable.",
   },
   {
+    id: "a-placement-stands-outside-an-element",
+    rule: "A view places a child in its own template, never inside an element's render.",
+    because:
+      "A slot written in a Lit element's render puts the child inside that element's own shadow root, where the page's stylesheets do not reach: the child stands unstyled and its sheet is linked where it does nothing. The composer refuses the placement at render; check says so first.",
+    smell: "slot(...) inside the render() of a class in a Lit view.",
+  },
+  {
     id: "an-assembly-is-never-its-own-ancestor",
     rule: "No assembly is placed inside itself, directly or through the assemblies it places.",
     because:

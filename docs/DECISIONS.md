@@ -4717,3 +4717,18 @@ belongs in the view's template, outside the element, where the page styles it. `
 Lit view's slots from its module and does not yet tell those in an element's `render` from those
 in the view's template; a view that places one is refused at the render the agent asks for, and
 by the build's render of it, not by `check` first. That reading is a row of its own.
+
+## 2026-10-11: check reads a slot in an element's render
+
+The row the entry above opened, closed the same day.
+
+Settled: the module reader (`scriptPlacements`) walks the tree knowing where each node stands,
+the class it is in by name and whether it is inside that class's `render` method, and a slot
+written there is reported in a new field of what a view places, `shadowed`, shown as
+`<Class>.render() places "<name>"`, and is no placement of the view's. `viewFindings` turns each
+into a finding, `a-placement-stands-outside-an-element`, with the composer's reason: the child
+would stand in the element's own shadow root, where the page's stylesheets do not reach. Any class
+counts, not only one that extends `LitElement` by that name: a Lit element may extend a base of
+the project's own, and a `render` on a class in a view is an element's in every case this reader
+meets. A slot in another method of the class is the view's as before, since only `render` writes
+the shadow root.
