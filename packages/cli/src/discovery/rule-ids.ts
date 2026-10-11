@@ -28,5 +28,6 @@ export const RULE_IDS = [
   "an-assembly-owns-its-styles",
   "tokens-hold-their-contrast",
   "a-view-has-no-inline-style",
+  "an-image-has-an-alternative",
   "agent-instructions-are-current",
 ] as const;

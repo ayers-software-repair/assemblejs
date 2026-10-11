@@ -910,7 +910,9 @@ dialog, each a class and the tokens, with its focus ring and its states, and no 
 every page links it after the tokens, and a new project's one assembly uses it. `check` holds
 every view to the stylesheet (`a-view-has-no-inline-style`): a `style` attribute on an element,
 written or computed, in any kind of view, is refused, since it does nothing under the default
-policy and sets a value where it is used. A component here
+policy and sets a value where it is used; and an `img` with no `alt` at all is refused
+(`an-image-has-an-alternative`, WCAG 2.2, 1.1.1, level A), an empty one saying the image is
+decoration, one the view computes present, one under a spread left to the render. A component here
 is an element the browser makes usable, a modal `dialog` that makes the rest of the page inert
 among them; no custom element and no library per framework (owner, DECISIONS 2026-10-11, "Plain
 HTML + tokens"). The rules that hold a view to the tokens follow.

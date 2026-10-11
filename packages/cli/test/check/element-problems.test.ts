@@ -38,6 +38,30 @@ describe("a view has no inline style", () => {
     expect(found[0]?.fix).toContain(".css file in the assembly's directory");
   });
 
+  it("refuses an img with no alt at all, in any kind of view, and passes an empty, a computed, or a spread one", () => {
+    const found = problems({
+      "src/assemblies/photo/photo.html": '<img src="a.png"><img src="b.png" alt="">',
+      "src/assemblies/hero/hero.react.tsx":
+        'export default (p: { readonly alt: string; readonly rest: object }) => <><img src="c.png" /><img src="d.png" alt={p.alt} /><img {...p.rest} /></>;',
+      "src/assemblies/logo/logo.svelte": '<img src={src} alt={alt} /><img src="e.png" />',
+    });
+    expect(found.map((one) => [one.rule, one.message]).sort()).toEqual([
+      [
+        "an-image-has-an-alternative",
+        '"hero" writes an <img> with no alt, so what it shows has no text alternative',
+      ],
+      [
+        "an-image-has-an-alternative",
+        '"logo" writes an <img> with no alt, so what it shows has no text alternative',
+      ],
+      [
+        "an-image-has-an-alternative",
+        '"photo" writes an <img> with no alt, so what it shows has no text alternative',
+      ],
+    ]);
+    expect(found[0]?.fix).toContain('alt="" if it is decoration');
+  });
+
   it("is quiet for views with a class and no style, and for a view it cannot read", () => {
     expect(
       problems({

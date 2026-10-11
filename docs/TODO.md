@@ -1109,7 +1109,9 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
           and `elementProblems` refuses a `style` attribute, written or computed, in any of the
           six kinds, naming the assembly and the element; `check` runs it and `explain` answers
           it (DECISIONS 2026-10-11, "a view has no inline style")
-    - [ ] `an-image-has-an-alternative`
+    - [x] `an-image-has-an-alternative` (2026-10-11): an `img` with no `alt` at all is refused in
+          any kind of view; an empty, a computed or a spread one passes (DECISIONS 2026-10-11,
+          "an image has an alternative")
     - [ ] `a-control-has-a-name`
     - [ ] `a-colour-is-a-token`
 - [x] P5-7 ONE VIEW PER ASSEMBLY: as the design and the guides say today; nothing to build.

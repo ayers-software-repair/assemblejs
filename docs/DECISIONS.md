@@ -4425,3 +4425,15 @@ Settled:
   its own bite.
 - **The command line's tarball budget moves**, from 82000 to 84000 bytes: the aggregator and the
   rule packed it to 82549, measured by `check:pack`.
+
+## 2026-10-11: an image has an alternative
+
+The second markup rule of A-04 (D1252), on the same element readers.
+
+Settled: `an-image-has-an-alternative` refuses an `img` with no `alt` attribute at all, in any
+kind of view. An empty `alt` passes, since it says the image is decoration; an `alt` the view
+computes passes, since it is present and only a render knows its text; an `img` the view spreads
+attributes onto is left alone, since the spread may carry the alt and the reader cannot see it.
+The reason is WCAG 2.2's, 1.1.1 at level A: non-text content has a text alternative that serves
+the equivalent purpose. The finding names the assembly and says to give the image an alt that
+says what it shows, or `alt=""` if it is decoration.

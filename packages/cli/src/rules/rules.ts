@@ -213,6 +213,13 @@ export const RULES: readonly Rule[] = [
       'style="..." in a template, style={{ ... }} in JSX, :style in Vue, a style attribute computed by the view.',
   },
   {
+    id: "an-image-has-an-alternative",
+    rule: "An img has an alt: what it shows, or empty when it is decoration.",
+    because:
+      'WCAG 2.2, 1.1.1, level A: non-text content has a text alternative that serves the equivalent purpose. An img with no alt at all is read aloud by its file name; alt="" says there is nothing to say.',
+    smell: "<img src=...> with no alt attribute, in any kind of view.",
+  },
+  {
     id: "agent-instructions-are-current",
     rule: "The agent instructions and MCP registrations a project carries are the ones its command line writes, and a CLAUDE.md beside them brings AGENTS.md in.",
     because:
