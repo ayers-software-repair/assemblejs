@@ -15,6 +15,16 @@ const server = createServer((request, response) => {
   } else if (request.url?.startsWith("/assembly/json/") === true) {
     response.writeHead(200, { "content-type": "application/json" });
     response.end("{}");
+  } else if (request.url?.startsWith("/assembly/failing/") === true) {
+    response.writeHead(500, { "content-type": "text/html; charset=utf-8" });
+    response.end(
+      '<assembly-root data-name="failing" data-id="preview-1" data-view="default" data-renderer="" data-failed="c0ffee12"></assembly-root>',
+    );
+  } else if (request.url?.startsWith("/assembly/holder/") === true) {
+    response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+    response.end(
+      '<assembly-root data-name="holder"><assembly-root data-name="price" data-failed="deadbeef"></assembly-root><assembly-root data-name="tag" data-failed=""></assembly-root></assembly-root>',
+    );
   } else {
     response.writeHead(500, { "content-type": "text/html" });
     response.end("<p>broken</p>");
@@ -73,5 +83,38 @@ describe("asking the project's dev server for a placement", () => {
       ok: false,
       reason: "transport",
     });
+  });
+
+  it("answers a failed assembly with the id that server logged it against, and says so once", async () => {
+    const said: { correlationId: string; message: string }[] = [];
+    const fetch = devServerFetch(origin, (line) => said.push(line));
+    expect(await fetch(request("failing"))).toMatchObject({
+      ok: false,
+      reason: "status",
+      correlationId: "c0ffee12",
+    });
+    expect(said).toEqual([
+      {
+        correlationId: "c0ffee12",
+        message:
+          '"failing" failed on the dev server, which answered 500: its log says why, against c0ffee12',
+        stack: undefined,
+      },
+    ]);
+    // An answer that is no envelope of the assembly's carries no id, and nothing is said of it.
+    expect(await fetch(request("broken"))).toMatchObject({ ok: false, correlationId: "" });
+    expect(said).toHaveLength(1);
+  });
+
+  it("says each placement that fell back inside an answer that stands, by its id where it has one", async () => {
+    const inside: string[] = [];
+    const fetch = devServerFetch(origin, undefined, (problem) => inside.push(problem));
+    expect((await fetch(request("holder"))).ok).toBe(true);
+    expect(inside).toEqual([
+      '"price" fell back inside "holder" on the dev server: its log says why, against deadbeef',
+      '"tag" fell back inside "holder" on the dev server: its log says why',
+    ]);
+    expect((await fetch(request("counter"))).ok).toBe(true);
+    expect(inside).toHaveLength(2);
   });
 });

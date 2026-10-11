@@ -49,10 +49,15 @@ export async function renderAssembly(root: ProjectRoot, name: string): Promise<R
   }
 
   const logged: LogLine[] = [];
+  const inside: string[] = [];
   const fetch =
     dev === undefined
       ? localFetch(assemblies, (line) => logged.push(line), DEFAULT_LIMITS)
-      : devServerFetch(dev);
+      : devServerFetch(
+          dev,
+          (line) => logged.push(line),
+          (problem) => inside.push(problem),
+        );
   const answer = await fetch({
     name,
     view: "default",
@@ -79,6 +84,6 @@ export async function renderAssembly(root: ProjectRoot, name: string): Promise<R
     html: answer.html,
     data: {},
     children,
-    problems: fallbackProblems(children, names, logged),
+    problems: fallbackProblems(children, names, logged, inside),
   };
 }

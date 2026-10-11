@@ -31,6 +31,7 @@ export async function composeTemplate(
 ): Promise<ComposedPage> {
   const assemblies = projectAssemblies(root);
   const logged: LogLine[] = [];
+  const inside: string[] = [];
   let sequence = 0;
   const dev = await devServerUrl(root);
   try {
@@ -40,7 +41,11 @@ export async function composeTemplate(
       fetch:
         dev === undefined
           ? localFetch(assemblies, (line) => logged.push(line), DEFAULT_LIMITS)
-          : devServerFetch(dev),
+          : devServerFetch(
+              dev,
+              (line) => logged.push(line),
+              (problem) => inside.push(problem),
+            ),
       limits: DEFAULT_LIMITS,
       page: "preview",
       newId: () => `preview-${(sequence += 1)}`,
@@ -49,7 +54,7 @@ export async function composeTemplate(
     return {
       html,
       diagnostics,
-      problems: fallbackProblems(diagnostics, [...assemblies.keys()], logged),
+      problems: fallbackProblems(diagnostics, [...assemblies.keys()], logged, inside),
     };
   } catch (error) {
     // A template the composer refuses is the agent's own mistake to fix, so it comes back as a

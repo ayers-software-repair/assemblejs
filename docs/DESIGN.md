@@ -1056,12 +1056,12 @@ but the directory the assemblies are in, so nothing else in a project can take t
 A tool that writes an assembly tells the client to list again. An assembly the project has not is answered with the
 protocol's code for a resource that is not found.
 
-Two things an agent would want are not here, because no source gives them. The shape of an
+One thing an agent would want is not here, because no source gives it. The shape of an
 assembly's data is what its service returns, known to a run of it or to the project's types and
-to no reading of a file; the resource names the service. And what is wrong right now on a
-running server, per placement, with the correlation id that finds it in a log, is a running
-project's to say. How an agent is shown a running project is not decided (13.4); what can be
-told without one is `check`'s.
+to no reading of a file; the resource names the service. What is wrong right now on a running
+server, per placement, with the correlation id that finds it in a log, is a running project's
+to say, and the two tools that ask the project's dev server say it (13.4); what can be told
+without one is `check`'s.
 
 ### 13.4 What an agent does
 
@@ -1092,6 +1092,11 @@ what the project serves, framework and template views and services included (own
 2026-10-11, "Dev server, tool runs nothing"). Without one, a plain html view is rendered here
 with no service, so its data is empty, and a view in a framework or a template language, source
 its renderer compiles, is answered with the reason and the word to start the dev server.
+What failed on that server is in its log, and the tools say where to look: an assembly that
+failed there answers its fallback envelope marked with the id its failure is logged against
+(2.1), which the tool's own account and markup then carry, and each placement that fell back
+inside an answer that stands is named with its own id, read from the markup, since the
+composer's account holds nothing of what another server composed inside its answer.
 `compose_page` takes a page by its name and composes its own template under the policy its
 declaration writes, read as `check` reads it, so the agent sees the page it made and not a
 template it pasted; a placement from another server, by a url written or computed, is composed

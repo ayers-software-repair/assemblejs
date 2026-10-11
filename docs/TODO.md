@@ -775,11 +775,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       2026-10-11: `composePage(root, name)` reads the page and its declaration as `check` does
       and plans it with core's `pagePlan`; a remote placement is composed deferred; the
       template path is `composeTemplate` (DECISIONS 2026-10-11, "compose_page by name")
-- [ ] Two things DESIGN 13.3 named are not built, because no source gives them: the shape of
-      an assembly's data, and what is wrong on a running server with the id that finds it in
-      a log. The second waits with the row above on how an agent is shown a running project;
-      the first wants a run of the service or a reading of the project's types, and neither
-      is decided (DECISIONS 2026-10-10, "what an agent reads")
+- [ ] One thing DESIGN 13.3 named is not built, because no source gives it: the shape of an
+      assembly's data, which wants a run of the service or a reading of the project's types,
+      and neither is decided (DECISIONS 2026-10-10, "what an agent reads"). The other it named
+      is BUILT 2026-10-11: what is wrong on a running server, with the id that finds it in its
+      log. `render_assembly` and `compose_page` answer a failed assembly with the dev server's
+      own id, and name each placement that fell back inside an answer that stands, read from
+      the markup (DECISIONS 2026-10-11, "what failed on the dev server")
 - [x] NOTHING OUTSIDE A PROJECT'S ROOT IS READ, by `check` or by the agent surface (the lead's
       order, 2026-10-10; DESIGN 13.6). Found on the code as it stood: a finding quoted what a
       linked file held, `api "..." does not start with "/"` from an api file outside the root

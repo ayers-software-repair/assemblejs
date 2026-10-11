@@ -1,13 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { createServer } from "node:http";
-import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { composeTemplate, resolveRoot } from "@assemblejs/mcp";
 import type { ProjectRoot } from "@assemblejs/mcp";
+import { devServer } from "../fixtures/dev-server.js";
 
 let root: ProjectRoot;
 let dir = "";
@@ -27,36 +26,13 @@ afterEach(() => {
   rmSync(dir, { recursive: true, force: true });
 });
 
-// The project's own dev server, as the agent surface finds it: a record under the root, and a
-// server answering its health and the content endpoint for what only it renders.
-const devServer = createServer((request, response) => {
-  if (request.url === "/_assemblejs/health") {
-    response.writeHead(200, { "content-type": "application/json" });
-    response.end('{"status":"ok","version":"v"}');
-    return;
-  }
-  const name = /^\/assembly\/([a-z-]+)\//.exec(request.url ?? "")?.[1] ?? "none";
-  response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-  response.end(
-    `<assembly-root data-name="${name}" data-id="x" data-view="default" data-renderer="react"><button>served ${name}</button></assembly-root>`,
-  );
-});
-let devOrigin = "";
-beforeAll(async () => {
-  await new Promise<void>((resolve) => devServer.listen(0, "127.0.0.1", resolve));
-  devOrigin = `http://127.0.0.1:${String((devServer.address() as AddressInfo).port)}`;
-});
-afterAll(() => new Promise<void>((resolve) => devServer.close(() => resolve())));
-const devRunning = (): void => {
-  mkdirSync(join(dir, ".assemblejs"), { recursive: true });
-  writeFileSync(join(dir, ".assemblejs", "dev.json"), JSON.stringify({ url: devOrigin }));
-};
+const dev = devServer();
 
 describe("composing through the project's dev server", () => {
   it("asks the running server for every placement, so the page is what the project serves", async () => {
     assembly("ok", "ok.html", "<p>on disk</p>");
     assembly("counter", "counter.react.tsx", "export default () => null;");
-    devRunning();
+    dev.runningFor(dir);
     const composed = await composeTemplate(
       root,
       `<main><assembly name="ok"/><assembly name="counter"/></main>`,
@@ -65,6 +41,26 @@ describe("composing through the project's dev server", () => {
     expect(composed.html).toContain("served ok");
     expect(composed.html).toContain("served counter");
     expect(composed.diagnostics.map((d) => d.source)).toEqual(["remote", "remote"]);
+  });
+
+  it("says what failed or fell back on the running server, each with the id its log holds the cause against", async () => {
+    assembly("failing", "failing.react.tsx", "export default () => null;");
+    assembly("holder", "holder.react.tsx", "export default () => null;");
+    dev.runningFor(dir);
+    const composed = await composeTemplate(
+      root,
+      `<main><assembly name="failing"/><assembly name="holder"/></main>`,
+    );
+    expect(composed.diagnostics.map((d) => [d.name, d.source, d.correlationId])).toEqual([
+      ["failing", "fallback", "c0ffee12"],
+      ["holder", "remote", undefined],
+    ]);
+    expect(composed.problems).toEqual([
+      '"failing" failed on the dev server, which answered 500: its log says why, against c0ffee12',
+      '"price" fell back inside "holder" on the dev server: its log says why, against deadbeef',
+    ]);
+    // The page's own fallback envelope carries the id the dev server logged the failure against.
+    expect(composed.html).toContain('data-failed="c0ffee12"');
   });
 });
 

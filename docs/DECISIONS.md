@@ -4898,3 +4898,31 @@ CONTRIBUTING's "no other attribution trailer, ever" already asks.
 Watched before it was trusted, the two steps run on a clone: green on the history as it stands;
 red, both, on one commit with no conventional header and no sign-off; red on the trailers alone
 for a signed commit with an attribution trailer. The workflow itself is proven by its first run.
+
+## 2026-10-11: what failed on the dev server
+
+The ledger's row from DESIGN 13.3: what is wrong on a running server, per placement, with the id
+that finds it in a log. It waited on how an agent is shown a running project, which the owner
+settled ("Dev server, tool runs nothing", D1252) and P5-5 built.
+
+Found in what P5-5 built (`dev-server-fetch.ts`, read 2026-10-11): an assembly that failed on the
+dev server answers its fallback envelope under a 500, marked `data-failed` with the id its failure
+is logged against (DESIGN 2.1), and the transport dropped the body and answered `status` with no
+id, so the composer minted one of its own that is in nobody's log. And an answer that stood with a
+child fallen back inside it said nothing at all: the composer holds no account of another server's
+children (`diagnostic.ts`, on `children`), so the agent was shown a page with no problems. The design's own sentence, that a
+placement that fell back looks identical in the markup and the account is what says it did, did
+not hold through the dev server.
+
+Settled: the transport reads the markup, which is where another server's failures are written.
+`failedEnvelopes` reads every envelope marked failed with its assembly and its id, by the element
+reader the command line already has. A failed answer is answered with the server's own id, so the
+tool's account and its fallback envelope carry the id the dev server's log has, and the problem
+says so. Each placement that fell back inside an answer that stands is said as a problem with its
+own id. The cause is not said: it is in the log, as it is for any server (12), and an id is what
+finds it. `fallbackProblems` takes what a transport said of placements no account here holds; the
+local transport says none, and nothing of its account changes.
+
+The two specs that carried one dev-server fixture, word for word, share it now from
+`test/fixtures/dev-server.ts`, with the two assemblies this needs. Five mutations, each alone,
+watched red.
