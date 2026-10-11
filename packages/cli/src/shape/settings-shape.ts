@@ -20,4 +20,6 @@ export interface SettingsShape {
   readonly authenticate: Written;
   /** What each page may send a visitor, in gzipped bytes by part, which `perf` holds it to. */
   readonly budgets: Written;
+  /** How deep composition goes and how many placements one request composes, where it sets them. */
+  readonly limits: Written;
 }

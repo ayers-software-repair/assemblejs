@@ -372,8 +372,10 @@ together: a page's own and those of every view composed for it in this process. 
 numbered where its template is composed, in the order written, and one numbered past the
 limit is refused before dispatch like one too deep: its fallback and a diagnostic,
 `too-many`, and nothing is rendered for it. The number was chosen from a measure, ten times
-the 24 that the largest page of the examples and the conformance fixtures places, and no
-project can move it yet: that waits on the same question as the depth cap.
+the 24 that the largest page of the examples and the conformance fixtures places. A project
+sets either bound in its config file, `limits: { depth, placements }` in `assemblejs.config.ts`
+(section 14), each a whole number, and one it leaves out keeps the default; a value outside its
+bounds refuses to boot. The limit on bytes is the server's own.
 
 What is counted is what this request composes. A placement answered from the cache is one,
 whatever that answer holds: its children were composed by the request that filled the cache,
@@ -717,7 +719,7 @@ src/
       hello-react.service.ts    optional: server data
   api/
     time.api.ts
-assemblejs.config.ts            policy only: remotes, access, the content policy, budgets
+assemblejs.config.ts            policy only: remotes, access, the content policy, budgets, limits
 AGENTS.md                       what an agent that opens the project is told (13.7)
 .mcp.json                       the project's agent surface, registered (13.7)
 ```
@@ -777,6 +779,10 @@ export default defineConfig({
 So are the page budgets: what each page may send a visitor before anything mounts, in gzipped
 bytes by part (`document`, `styles`, `scripts`), declared as `budgets` in the same file. `perf`
 weighs the production build and holds every page to them; nothing on the server reads them.
+And so are the bounds on composition, `limits: { depth, placements }` (3.4): how deep it goes
+and how many placements one request composes, where the defaults of 8 and 256 do not fit.
+The server reads them at boot and refuses a value outside its bounds; `check` shows them as it
+shows every setting.
 
 A service returns; it does not mutate:
 

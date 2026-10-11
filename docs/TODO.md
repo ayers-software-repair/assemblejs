@@ -5,11 +5,14 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after row 8 of the second reading).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after P5-1, the limits in the config file).**
 
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: row 8 of the
-second reading, what stops when the asker leaves and what a placement whose settling threw
-shows. Beneath it, pushed on 2026-10-11 with runs read to their end, green: `05297aa`, 08:43
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: P5-1, the
+composition limits in the project's config file, the first of the owner's answers of this
+morning (Phase 5). Beneath it, pushed on 2026-10-11 with runs read to their end, green:
+`b759756`, 09:28 EDT, the envelope's words spelled once; `9381f4a`, 09:13 EDT, the second
+reading's last three findings (its browser proof green on one rerun); `a5c4444`, 09:07 EDT, row
+8 (`ci` 38141909308, `release` 38141909302); `05297aa`, 08:43
 EDT, the revert of five files `49ec079` had carried that were another seat's (`ci` 38140381103,
 `release` 38140381111, `deploy-site` 38140381107, staging read); `49ec079`, 08:39 EDT, row 4a,
 the owner's ruling that a guarded assembly is guarded wherever it is placed (`release`
@@ -999,11 +1002,13 @@ The seven questions this seat held went to him in one lump through the lead, eac
 recommendation, and he chose (DECISIONS 2026-10-11, "the owner's seven answers"; estate
 D1252). Each answer is a row here, in the order they are taken; none waits on anyone.
 
-- [ ] P5-1 THE NESTING DEPTH IN THE PROJECT'S CONFIG FILE: `assemblejs.config.ts` gets the
-      field for the depth cap, read by the command line's server into `createServer`'s
-      `maxDepth`; `check` reads it as a setting; the limit on how many a request composes
-      rides with it, as DESIGN 3.4 tied the two. A value outside its bounds is refused at boot.
-      DESIGN 3.4 and the config guide say where it is set; the morning list's item 6 closes
+- [x] P5-1 THE NESTING DEPTH IN THE PROJECT'S CONFIG FILE. Done 2026-10-11: `limits: { depth,
+    placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createServer`'s
+      options as every config field is, in place of `maxDepth`; `limitProblems` refuses a
+      value outside its bounds at boot; `check` and the agent surface show it as a setting;
+      DESIGN 3.4 and 14 and the tutorial say where it is set; the trust fixture's `bounded`
+      project holds a page to a depth of one and two placements (DECISIONS 2026-10-11, "the
+      limits are in the config file"). The morning list's item 6 closes
 - [ ] P5-2 ONE VERSION FOR THE TWELVE PACKAGES: changesets in a fixed group for every package,
       so a release moves them together; the release-notes gate and a new project's manifest,
       written as if they did, are held to it by a spec; the morning list's item 11 closes

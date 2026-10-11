@@ -8,8 +8,20 @@
         "ASSEMBLEJS_AUTH_PASSWORD": "open-sesame"
       }
     },
-    "checked": { "packages": ["core", "cli"] },
-    "open": { "packages": ["core", "cli"], "env": { "GUARDED_ORIGIN": "{guarded}" } },
-    "plain": { "packages": ["core", "cli"] }
+    "checked": {
+      "packages": ["core", "cli"]
+    },
+    "open": {
+      "packages": ["core", "cli"],
+      "env": {
+        "GUARDED_ORIGIN": "{guarded}"
+      }
+    },
+    "plain": {
+      "packages": ["core", "cli"]
+    },
+    "bounded": {
+      "packages": ["core", "cli"]
+    }
   }
 }

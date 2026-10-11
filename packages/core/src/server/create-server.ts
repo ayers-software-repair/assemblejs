@@ -21,6 +21,7 @@ import { bootProblems } from "./boot-problems.js";
 import { createMemoryCache } from "./create-memory-cache.js";
 import { devtoolsProblems } from "./devtools-problems.js";
 import { devtoolsWrites } from "./devtools-writes.js";
+import { limitProblems } from "./limit-problems.js";
 import { listAssets } from "./list-assets.js";
 import { localFetch } from "./local-fetch.js";
 import { recentFailures } from "./recent-failures.js";
@@ -61,6 +62,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
       options.publicRoutes ?? [],
       options.contentSecurityPolicy,
     ),
+    ...limitProblems(options.limits),
     ...(options.devtools === undefined
       ? []
       : devtoolsProblems(options.devtools, config.mode === "development")),
@@ -68,9 +70,14 @@ export async function createServer(options: ServerOptions): Promise<App> {
   if (problems.length > 0) throw new BootError(problems);
 
   const version = options.version ?? "dev";
-  // One cap for the whole server: what refuses a request on arrival is what its own composer
-  // refuses before it dispatches, for a page's placements and for a view's children alike.
-  const limits = { ...DEFAULT_LIMITS, depth: options.maxDepth ?? DEFAULT_LIMITS.depth };
+  // One set of bounds for the whole server, the project's where it set them: what refuses a
+  // request on arrival is what its own composer refuses before it dispatches, for a page's
+  // placements and for a view's children alike.
+  const limits = {
+    ...DEFAULT_LIMITS,
+    ...(options.limits?.depth === undefined ? {} : { depth: options.limits.depth }),
+    ...(options.limits?.placements === undefined ? {} : { placements: options.limits.placements }),
+  };
   const byName = new Map(options.assemblies.map((assembly) => [assembly.name, assembly]));
 
   const development = config.mode === "development";

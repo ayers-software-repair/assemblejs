@@ -11,8 +11,9 @@ describe("what a project's config declares", () => {
       contentSecurityPolicy: null,
       authenticate: false,
       budgets: {},
+      limits: {},
     };
     expect(settings.file).toBeUndefined();
-    expect(Object.keys(settings)).toHaveLength(5);
+    expect(Object.keys(settings)).toHaveLength(6);
   });
 });

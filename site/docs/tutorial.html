@@ -207,7 +207,11 @@ export default defineApi({
 
 export default defineConfig({
   budgets: { document: 20000, styles: 10000, scripts: 60000 },
-});</code></pre></dd>
+});</code></pre>
+        The same file sets <code>limits</code>, how deep composition goes and how many placements
+        one request composes, when the defaults of 8 and 256 do not fit:
+        <code>limits: { depth: 4, placements: 100 }</code>. A value outside its bounds refuses to
+        boot.</dd>
     </div>
   </dl>
 

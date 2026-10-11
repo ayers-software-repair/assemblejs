@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { createServer, defineAssembly } from "@assemblejs/core";
+import { BootError, createServer, defineAssembly } from "@assemblejs/core";
 import type { ServerOptions } from "@assemblejs/core";
 
 describe("what a server is built from", () => {
@@ -11,7 +11,7 @@ describe("what a server is built from", () => {
       assemblies: [],
     };
     expect(options.version).toBeUndefined();
-    expect(options.maxDepth).toBeUndefined();
+    expect(options.limits).toBeUndefined();
     expect(options.apis).toBeUndefined();
     expect(options.pages).toBeUndefined();
     expect(options.assets).toBeUndefined();
@@ -36,12 +36,12 @@ describe("the depth a server composes to", () => {
         },
       },
     });
-  const refusedAt = async (maxDepth: number): Promise<string[]> => {
+  const refusedAt = async (depth: number): Promise<string[]> => {
     const server = await createServer({
       config: { mode: "production", host: "127.0.0.1", port: 0, auth: undefined },
       assemblies: [link("a", "b"), link("b", "c"), link("c")],
       pages: [{ route: "/", template: '<body><assembly name="a"></assembly></body>' }],
-      maxDepth,
+      limits: { depth },
       log: () => undefined,
     });
     const page = (await server.inject({ method: "GET", url: "/" })).body;
@@ -58,5 +58,17 @@ describe("the depth a server composes to", () => {
     expect(await refusedAt(1)).toEqual(["b"]);
     // At zero nothing may be placed at all, and it is the page's own composer that says so.
     expect(await refusedAt(0)).toEqual(["a"]);
+  });
+});
+
+describe("the limits a project set", () => {
+  it("refuse to boot outside their bounds, each named", async () => {
+    const config = { mode: "production" as const, host: "127.0.0.1", port: 0, auth: undefined };
+    await expect(
+      createServer({ config, assemblies: [], limits: { depth: -1, placements: 0 } }),
+    ).rejects.toThrow(/limits\.depth is -1[^]*limits\.placements is 0/);
+    await expect(createServer({ config, assemblies: [], limits: { depth: 2.5 } })).rejects.toThrow(
+      BootError,
+    );
   });
 });

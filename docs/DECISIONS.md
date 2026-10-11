@@ -4143,3 +4143,24 @@ the same CloudFront distribution through the ayers.repair prefix router; `/next/
 landing page as `next` has it, and `/` answers 404 until a stable release lands at
 `/assemblejs/`. Two rows from that: the main landing page comes with the release alignment, and
 assemblejs.com wants a 404 page of its own.
+
+## 2026-10-11: the limits are in the config file
+
+The owner's answer of this morning (D1252, "In the project's config file") to where a project
+sets the depth cap; the lead had tied the limit on how many placements a request composes to
+the same question, so both are answered by it.
+
+Settled:
+
+- **`limits: { depth, placements }` in `assemblejs.config.ts`**, `LimitsConfig`: each a whole
+  number, each optional, one left out keeping the server's default (8 and 256). The config file
+  is spread into the server's options as every field of it is, so `createServer` takes `limits`
+  in place of `maxDepth`, which leaves; the limit on bytes stays the server's own.
+- **Refused at boot outside its bounds**: a depth below zero or not whole, a count of placements
+  below one or not whole, each named by `limitProblems` beside the access problems, before
+  anything listens. A server allowed to compose nothing is a mistake and not a policy.
+- **Shown as a setting.** `check`'s settings shape and the agent surface's described project
+  carry `limits` as written, computed or unread, like every other field.
+- **Held in the trust fixture** by a project of its own, `bounded`, whose config sets a depth of
+  one and two placements: on its one page the chain's child is refused for the depth and the
+  third placement for the count, accounted once, and the two inside the bounds render.

@@ -461,6 +461,8 @@ export default defineConfig({
 });
 ```
 
+The same file sets `limits`, how deep composition goes and how many placements one request composes, when the defaults of 8 and 256 do not fit: `limits: { depth: 4, placements: 100 }`. A value outside its bounds refuses to boot.
+
 ## 9. Ship it
 
 ### `npx assemblejs build`

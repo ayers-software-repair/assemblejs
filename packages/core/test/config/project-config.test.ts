@@ -8,8 +8,10 @@ describe("what assemblejs.config.ts declares", () => {
     const none: ProjectConfig = {};
     const remotes: ProjectConfig = { remotes: [{ origin: "https://checkout.example.com" }] };
     const budgeted: ProjectConfig = { budgets: { scripts: 40000 } };
+    const bounded: ProjectConfig = { limits: { depth: 4 } };
     expect(none.remotes).toBeUndefined();
     expect(remotes.remotes).toHaveLength(1);
     expect(budgeted.budgets?.scripts).toBe(40000);
+    expect(bounded.limits).toEqual({ depth: 4 });
   });
 });

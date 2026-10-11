@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { Authenticate } from "../access/authenticate.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
+import type { LimitsConfig } from "./limits-config.js";
 import type { PageBudgets } from "./page-budgets.js";
 
 /**
@@ -20,4 +21,6 @@ export interface ProjectConfig {
   readonly contentSecurityPolicy?: string;
   /** What each page may send a visitor, gzipped, by part. Read by `perf`, never by the server. */
   readonly budgets?: PageBudgets;
+  /** How deep composition goes and how many placements one request composes (DESIGN 3.4). */
+  readonly limits?: LimitsConfig;
 }

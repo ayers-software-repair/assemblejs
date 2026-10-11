@@ -16,6 +16,7 @@ describe("a project's whole shape as an agent reads it", () => {
         contentSecurityPolicy: null,
         authenticate: false,
         budgets: {},
+        limits: {},
       },
       renderers: [],
       problems: [],

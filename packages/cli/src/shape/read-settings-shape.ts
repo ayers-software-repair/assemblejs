@@ -25,6 +25,7 @@ export function readSettingsShape(root: string): SettingsShape {
     contentSecurityPolicy: null,
     authenticate: false,
     budgets: {},
+    limits: {},
   };
   const file = join(root, CONFIG_FILE);
   // A config that leads out of the project is one the project has, and is not opened.
@@ -36,6 +37,7 @@ export function readSettingsShape(root: string): SettingsShape {
     contentSecurityPolicy: mark,
     authenticate: mark,
     budgets: mark,
+    limits: mark,
   });
   let declared;
   try {
@@ -51,5 +53,6 @@ export function readSettingsShape(root: string): SettingsShape {
     contentSecurityPolicy: fieldAsWritten(declared, "contentSecurityPolicy", null),
     authenticate: "authenticate" in declared ? true : UNWRITTEN in declared ? COMPUTED : false,
     budgets: fieldAsWritten(declared, "budgets", nothing.budgets),
+    limits: fieldAsWritten(declared, "limits", nothing.limits),
   };
 }

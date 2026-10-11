@@ -19,6 +19,7 @@ const NOTHING = {
   contentSecurityPolicy: null,
   authenticate: false,
   budgets: {},
+  limits: {},
 };
 
 describe("what a project's config declares, read from its source", () => {
@@ -36,6 +37,7 @@ describe("what a project's config declares, read from its source", () => {
       file: "assemblejs.config.ts",
       remotes: [{ origin: "https://shop.example", forward: ["cookie"] }],
       budgets: { document: 14000 },
+      limits: {},
     });
   });
 
@@ -66,6 +68,7 @@ describe("what a project's config declares, read from its source", () => {
       contentSecurityPolicy: COMPUTED,
       authenticate: COMPUTED,
       budgets: COMPUTED,
+      limits: COMPUTED,
     });
   });
 
@@ -77,6 +80,7 @@ describe("what a project's config declares, read from its source", () => {
       contentSecurityPolicy: mark,
       authenticate: mark,
       budgets: mark,
+      limits: mark,
     });
     expect(settings("export default configFor(process.env);")).toEqual(all(COMPUTED));
     expect(settings("export default { budgets: ")).toEqual(all(UNREAD));
@@ -90,7 +94,7 @@ describe("what a project's config declares, read from its source", () => {
       expect(
         Object.values(shape).filter((value) => value === UNREAD),
         target,
-      ).toHaveLength(5);
+      ).toHaveLength(6);
     }
   });
 });

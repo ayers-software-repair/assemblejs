@@ -122,6 +122,7 @@ describe("a project's whole shape, read from its sources", () => {
         contentSecurityPolicy: null,
         authenticate: false,
         budgets: {},
+        limits: {},
       },
       renderers: [],
       problems: [],
