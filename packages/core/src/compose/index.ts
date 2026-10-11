@@ -21,6 +21,7 @@ export { cacheKey } from "./cache-key.js";
 export { carriesCredential } from "./carries-credential.js";
 export { inertSpans } from "./inert-spans.js";
 export { findPlacements } from "./find-placements.js";
+export { openParagraphs } from "./open-paragraphs.js";
 export type { Admission } from "./admission.js";
 export type { Admit } from "./admit.js";
 export { admitted } from "./admitted.js";

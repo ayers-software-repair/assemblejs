@@ -5,12 +5,16 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after A-04's last rule and five
-small ledger rows).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the open-paragraph refusal
+and the registrations for two more clients).**
 
-STATE AT THIS LANDING. `origin/next` is `8ef8644`, pushed 2026-10-11 with two commits beneath one
-`ci` run (read it to its end): `8ef8644` the six framework guides on a slot behind a package name;
-`4367272` a page declaration `check` could not read leaves its route unknown. Beneath them
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with. Beneath it, each
+pushed on 2026-10-11 with its `ci` run read green unless named: `0c872c8` a placement inside an
+open paragraph is refused where the directive is read; `af6cccf` `compose_page` takes a page by
+its name; `723a75d` the contract as an agent reads it, `assemblejs://contract`, with `e13f936`
+the build's reads through the root guard beneath it (`ci` 38169177951); `8ef8644` the six
+framework guides on a slot behind a package name (`ci` 38168099712), with `4367272` a page
+declaration `check` could not read leaves its route unknown beneath it. Beneath them
 `cb58aa6`, pushed with four commits beneath one `ci` run, 38167396655, green (a rerun on this
 branch cancels the run in flight, by the concurrency group in `ci.yml`): `cb58aa6` eslint 10.10.0
 with the kit; `7faefef` the house
@@ -29,8 +33,9 @@ the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens
 the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
 and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
 envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: the open ledger rows that need no ruling (the build's reads through the root guard, in the
-tree; the agent surface's `assemblejs://contract`; `compose_page` by page name), then P5-8 (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
+NEXT: the open ledger rows that need no ruling: a child placed in a Lit element's own shadow
+root (refuse in `check`, or link the sheet inside; not reproduced yet), the agent surface's
+install size, VS Code's two registrations (needs VS Code opened). P5-8's other half is Astra's; (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
 crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
 00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
 before the day's work.
@@ -695,10 +700,14 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       head, where it does not reach: `localAssets` tracks an assembly's shadow root, not an
       element's (`server/local-assets.ts:45-50`, read 2026-10-09; not reproduced). Refuse it
       in `check`, or link the sheet inside
-- [ ] Placement context: a child whose block content sits inside an open `<p>` (or any element
+- [x] Placement context: a child whose block content sits inside an open `<p>` (or any element
       the parser closes on its own) is moved out of its envelope, and its parent's island with
       it; silent today for a page's placements and for a view's. One check for both, where the
-      directive is read: static sources in `check` and at boot, rendered markup at render
+      directive is read: static sources in `check` and at boot, rendered markup at render.
+      DONE 2026-10-11 for the paragraph, the one element the parser closes at a block: a
+      directive inside an open `<p>` is refused in `findPlacements`, which every reader of the
+      directive calls, with the tag lists from the HTML parser's "in body" rules (DECISIONS
+      2026-10-11, "a placement inside an open paragraph")
       (DECISIONS 2026-10-09, S-02; found while reading the fragment scanner, which is the
       remote reader and is not the tool for it)
 - [x] A-01 agent instructions in every new project: `new` writes `AGENTS.md`, a `CLAUDE.md`

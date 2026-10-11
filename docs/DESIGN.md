@@ -159,7 +159,12 @@ an assembly's own view, places an assembly with `<assembly name="cart"></assembl
 a template directive: the server replaces it and it is never emitted, so it needs no hyphen and
 carries no meaning in the browser. It is written closed, as there or as
 `<assembly name="cart" />`: an opening tag alone is refused where it is read, and the page or
-the view that holds it fails whole. The two
+the view that holds it fails whole. So is a directive inside a paragraph the parser has not
+closed, after a `<p>` with no `</p>`, no start tag that closes a paragraph and no end tag of a
+block above it between: the browser closes the paragraph at the first block the placed assembly
+holds, and the rest of the assembly, its island included, leaves its envelope. The one reader of
+the directive refuses it, so `check`, the server at boot, the composer and a view at render all
+say the same. The two
 are separate because one word cannot be right in both positions. A placement is nested by
 definition and a served fragment is not, so a name that reads correctly in a template reads
 wrongly on a bare fetch, and the reverse. The author writes the directive and reads the

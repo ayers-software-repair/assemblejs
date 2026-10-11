@@ -3,6 +3,7 @@
 import { PLACEMENT_ELEMENT } from "../vocab/placement-element.js";
 import { SEGMENT } from "../vocab/segment.js";
 import { inertSpans } from "./inert-spans.js";
+import { openParagraphs } from "./open-paragraphs.js";
 import type { Placement } from "./placement.js";
 
 // The directive has a shape this product defines, so it is matched exactly rather than parsed:
@@ -32,6 +33,7 @@ const ALLOWED = new Set(["name", "view"]);
 export function findPlacements(template: string): Placement[] {
   const found: Placement[] = [];
   const isInert = inertSpans(template);
+  const inParagraph = openParagraphs(template);
 
   DIRECTIVE.lastIndex = 0;
   for (const match of template.matchAll(DIRECTIVE)) {
@@ -41,6 +43,15 @@ export function findPlacements(template: string): Placement[] {
     // fetches an assembly the author commented out or quoted, and splices its markup where a
     // "-->" or "</script>" inside it ends the enclosing text early and the rest becomes live.
     if (isInert(start)) continue;
+    // Inside a paragraph the parser has not closed, the browser closes it at the first block the
+    // assembly holds, and the rest of the assembly, its island included, leaves its envelope.
+    if (inParagraph(start)) {
+      throw new Error(
+        `<${PLACEMENT_ELEMENT}> at ${start} stands inside an open <p>, which the browser closes at ` +
+          `the first block the assembly holds, moving the rest of it out of its envelope; close ` +
+          `the paragraph before the placement, or place inside a <div>`,
+      );
+    }
     const closed = /<\/[a-z]+\s*>$/i.test(directive) || selfClosing === "/";
     if (!closed) {
       throw new Error(

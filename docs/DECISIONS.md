@@ -4639,3 +4639,34 @@ instructions `new` writes and the agents fixture call the tool by the page's nam
 
 The agent surface's tarball budget moves, from 24000 to 25000 bytes: the page reader packed it
 to 24039, measured by `check:pack`.
+
+## 2026-10-11: a placement inside an open paragraph
+
+The ledger's row on placement context, found 2026-10-09 (DECISIONS 2026-10-09, S-02).
+
+Found: a directive inside an open `<p>` composes an envelope the browser then tears: the parser
+closes the paragraph at the first block the assembly holds (its `section`, its `div`), and the
+rest of the assembly's markup, its data island included, lands outside the envelope and outside
+the paragraph, so the island is not found and the assembly does not hydrate. Nothing said so.
+
+Settled: `findPlacements` refuses a directive that stands inside a paragraph the parser has not
+closed, and since every reader of the directive calls it (`check` on a page's template and on a
+view, the server at boot, the composer on a page and on a view's rendered markup) the one refusal
+reaches each. What closes a paragraph is read from the HTML parser's "in body" insertion mode
+(html.spec.whatwg.org, parsing, read 2026-10-11): `</p>`; the start tags whose rule opens "If the
+stack of open elements has a p element in button scope, then close a p element" (address,
+article, aside, blockquote, center, details, dialog, dir, div, dl, fieldset, figcaption, figure,
+footer, header, hgroup, main, menu, nav, ol, p, search, section, summary, ul, h1 to h6, pre,
+listing, plaintext, hr, xmp); and the end tags that generate implied end tags, those of the same
+elements and of li, dd, dt, td, th, tr, tbody, thead, tfoot, caption, form, table, button, body
+and html. An end tag of an element opened inside the paragraph leaves it open, as the parser
+does; a tag inside a comment or a raw-text element is no tag. The scan is of start and end tags
+before the directive, not a full tree, so it errs only toward passing: a paragraph closed by an
+end tag this list lacks reads as open to nothing, since only an open one is refused.
+
+The other elements the parser closes on its own (`li`, `dd`, `dt`, `option`, the table parts) are
+closed by their own siblings' start tags, not by a block inside them, so a placement inside them
+is not torn the same way and is not refused.
+
+The core tarball budget moves, from 75000 to 78000 bytes: the paragraph scan packed it to 75281,
+measured by `check:pack`.

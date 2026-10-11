@@ -28,7 +28,7 @@ describe("a Pug template as the markup its directives are written in", () => {
     ]);
     expect(placed("assembly(name='price')")).toEqual(PRICE);
     expect(placed("assembly(name=`price`)")).toEqual(PRICE);
-    expect(placed('p before #[assembly(name="price")] after')).toEqual(PRICE);
+    expect(placed('div before #[assembly(name="price")] after')).toEqual(PRICE);
     expect(placed('each one in data.list\n  assembly(name="price")')).toEqual(PRICE);
     expect(placed('mixin card\n  assembly(name="price")\n+card')).toEqual(PRICE);
     expect(placed('- if (data.open)\n  assembly(name="price")')).toEqual(PRICE);
@@ -48,14 +48,14 @@ describe("a Pug template as the markup its directives are written in", () => {
     expect(placed('mixin card(n)\n  assembly(name=n)\n+card("price")')).toEqual([
       { name: "computed", view: "default" },
     ]);
-    expect(placed('p\n  | <assembly name="#{data.n}"></assembly>')).toEqual([
+    expect(placed('div\n  | <assembly name="#{data.n}"></assembly>')).toEqual([
       { name: "computed", view: "default" },
     ]);
   });
 
   it("keeps a directive written as markup: a line of html, or text", () => {
     expect(placed('<assembly name="price"></assembly>')).toEqual(PRICE);
-    expect(placed('p\n  | <assembly name="price"></assembly>')).toEqual(PRICE);
+    expect(placed('div\n  | <assembly name="price"></assembly>')).toEqual(PRICE);
   });
 
   it("writes what makes a directive unreadable, for the one reader of directives to refuse", () => {
