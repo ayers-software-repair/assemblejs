@@ -64,7 +64,6 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
-      actions: write
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -92,17 +91,8 @@ jobs:
       - name: npm 11.5.1 or newer, required for trusted publishing
         run: npm install -g npm@^11.5.1 && npm --version
       - name: Version or publish
-        id: publish
         uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
         with:
           publish-script: pnpm changeset publish
           commit-message: "chore: version packages"
           pr-title: "chore: version packages"
-
-      # GITHUB_TOKEN-created releases do not start release-event workflows. Dispatch explicitly
-      # only after actual publication; a version pull request must not publish a landing page.
-      - name: Publish the matching product site
-        if: steps.publish.outputs.published == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run deploy-site.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
