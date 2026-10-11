@@ -4513,6 +4513,17 @@ domain to show this page, its error response names `/assemblejs/404.html`; wheth
 a distribution of its own or an alias of the company's is in AWS, not in any repository, and
 this seat has no credentials to read it. The morning list carries it.
 
+Amended the same day from the lead's reading of AWS: assemblejs.com is its own distribution today
+and moves this week onto the one ayers.repair site distribution as an alias with every product
+domain (D1265). Custom error responses are per distribution and cannot differ by Host, so the
+domain's 404 page is the shared `/404.html` of ayers.repair, reading the Host and showing the
+product's words and links, each domain mapped to its prefix by the router there; that work is
+Astra's, in ayers.repair, not this repository's. `site/404.html` here keeps its absolute paths:
+it is the page a visitor to `/assemblejs/404.html` sees, and the words Astra's page shows for this
+product. By the owner's order of 2026-10-11 the product domains answer 404 at the edge until he
+launches each, so assemblejs.com shows nothing until his word; the `next` prefix on the
+ayers.repair address stays this seat's proof surface.
+
 The ledger's rows the Phase 5 bites had already closed are checked off here, each with its
 commit: the depth cap (P5-1), the page's query across servers (P5-4), the content endpoint's
 signal (way A), one version (P5-2) and A-04 itself.
@@ -4587,3 +4598,26 @@ through `readInside`. A file whose path is inside the project but which is a lin
 outside it is refused unopened with `OutsideRootError`, one spec apiece, each written against the
 unguarded read first. Discovery's refusal stands before them; this closes the gap for a link
 written after discovery, or a path the build reaches that discovery did not list.
+
+## 2026-10-11: the contract as an agent reads it
+
+The ledger's row for the third fixed resource DESIGN 13.3 names.
+
+Settled: `assemblejs://contract` answers a structure, not prose: the contract version, the route
+prefix and the default view, the three endpoints with what each answers and refuses, the five
+composition headers with their shapes, the two response headers, the manifest's eight fields and
+the envelope, its element, the attributes always written and the ones written when they apply,
+the island's script type and attribute, the fallback template's attribute and the placement
+directive. Every name is core's own constant (`CONTRACT_VERSION`, `ASSEMBLY_ROUTE_PREFIX`,
+`DEFAULT_VIEW`, `COMPOSITION_HEADER`, `RESPONSE_HEADER`, `ENVELOPE_ELEMENT`,
+`ENVELOPE_ATTRIBUTE`, `ISLAND_SCRIPT_TYPE`, `ISLAND_ATTRIBUTE`, `FALLBACK_ATTRIBUTE`,
+`PLACEMENT_ELEMENT`), so a rename there renames here in the same build; the meanings are this
+surface's sentences, written for an agent that will implement the contract elsewhere, never a copy
+of DESIGN 2. The manifest's field names are the one list written by hand, and the spec holds it to
+the keys of a real server's manifest, as it holds the response headers to a real content answer,
+the envelope's element and attributes to its body, the island to its script, and the refusals to
+a malformed header and an unknown assembly. The instructions `new` writes name the resource, and
+the agents fixture expects it among the listed ones.
+
+The agent surface's tarball budget moves, from 21500 to 24000 bytes: the resource packed it to
+23228, measured by `check:pack`.

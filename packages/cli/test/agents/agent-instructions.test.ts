@@ -40,6 +40,7 @@ describe("what an agent that opens a project is told", () => {
     for (const named of [
       "`assemblejs://project`",
       "`assemblejs://rules`",
+      "`assemblejs://contract`",
       "`add_assembly`",
       "`place_assembly`",
       "`render_assembly`",

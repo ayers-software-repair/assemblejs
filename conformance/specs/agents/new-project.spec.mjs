@@ -139,6 +139,7 @@ test("the server tells the agent the project's whole shape, and one assembly of 
       "assemblejs://project",
       "assemblejs://assembly/<name>",
       "assemblejs://rules",
+      "assemblejs://contract",
     ]) {
       assert.ok(told.includes(`\`${uri}\``), `AGENTS.md names ${uri}`);
     }
@@ -175,6 +176,7 @@ test("the server tells the agent the project's whole shape, and one assembly of 
       [
         "assemblejs://project",
         "assemblejs://rules",
+        "assemblejs://contract",
         "assemblejs://assembly/greeting",
         "assemblejs://assembly/hello",
       ],

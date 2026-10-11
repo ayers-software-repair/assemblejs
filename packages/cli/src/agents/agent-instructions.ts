@@ -53,8 +53,9 @@ one framework or in none, and each hydrated in the browser by its own framework.
   ${registered.slice(0, -1).join(", ")} and ${registered.at(-1) ?? ""}. A client that reads none of them
   starts it from this directory with \`node ${AGENT_SERVER.path}\`. Read
   \`assemblejs://project\` for every page, assembly and api and how they are wired,
-  \`assemblejs://assembly/<name>\` for one assembly and where it is placed, and
-  \`assemblejs://rules\` for every rule with its reason.
+  \`assemblejs://assembly/<name>\` for one assembly and where it is placed,
+  \`assemblejs://rules\` for every rule with its reason, and \`assemblejs://contract\` for the
+  three endpoints, their headers and the envelope, when an assembly is served from another server.
 - Change the project with its tools: \`add_assembly\`, then \`place_assembly\` on a page or in
   another assembly's view. Then see what you made, with no server started: \`render_assembly\`
   renders an assembly and \`compose_page\` composes a page's template, each with an account of

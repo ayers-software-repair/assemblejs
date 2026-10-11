@@ -728,9 +728,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       second reading, rebased onto `next` and finished 2026-10-11: the suites, the 32
       mutations, the browser proof through the sealed launcher, every fixture and `pnpm check`
       (DECISIONS 2026-10-11, "the envelope's words")
-- [ ] `assemblejs://contract`, the third resource DESIGN 13.3 names: the three endpoints, their
+- [x] `assemblejs://contract`, the third resource DESIGN 13.3 names: the three endpoints, their
       headers and the envelope as a structure, built from core's own constants and never as a
-      copy of DESIGN 2, with a spec that holds the names in it to what a real server sends
+      copy of DESIGN 2, with a spec that holds the names in it to what a real server sends.
+      BUILT 2026-10-11: `describeContract` from core's vocabulary, its spec against a real
+      server's three answers; listed, named in the instructions `new` writes and in the agents
+      fixture (DECISIONS 2026-10-11, "the contract as an agent reads it")
 - [ ] `compose_page` takes a template, so it cannot know the policy a page declares: give it a
       page by name. A url a declaration computes is a mark in what `check` reads and no url;
       a page that places another server's assembly composes with no network (13.2)
@@ -1161,8 +1164,15 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       alignment (the morning list's item 2, the promotion of `next` to `main`) puts one there;
       and the domain wants a 404 page of its own, served where the prefix router sends it.
       This repository's half is done (2026-10-11): `site/404.html` stands at any address, every
-      path on it absolute from the domain's root. The other half is the company distribution's
-      custom error responses, which name `/404.html` at the bucket's root (the business site's
-      page; `ayers.repair/infra/cloudfront/README-functions.md`, read 2026-10-11) and would name
-      `/assemblejs/404.html` for the domain; that is another repository's change and the
-      owner's word, on the morning list (DECISIONS 2026-10-11, "the domain's 404 page")
+      path on it absolute from the domain's root. The other half is not this repository's, and
+      its shape is settled by the lead (avp, 2026-10-11, from AWS): assemblejs.com is its own
+      distribution today and moves this week onto the one ayers.repair site distribution as an
+      alias with every other product domain (D1265), so custom error responses are per
+      distribution and cannot differ by Host; the domain's 404 is therefore the shared
+      `/404.html` of ayers.repair reading the Host and showing the product's words and links
+      (each domain maps to a prefix in `infra/cloudfront/prefix-router.js` there). That row is
+      Astra's, in ayers.repair. And by the owner's order of 2026-10-11 the product domains
+      answer 404 at the edge until he launches each (the router's LIVE map, ayers.repair
+      `317a2e3`), so assemblejs.com shows nothing until his word; `/assemblejs/next/` on the
+      ayers.repair address keeps serving for this seat's proofs (DECISIONS 2026-10-11, "the
+      domain's 404 page", amended)

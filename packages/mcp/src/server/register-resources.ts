@@ -6,11 +6,13 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { McpError } from "@modelcontextprotocol/sdk/types.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { describeAssembly } from "./describe-assembly.js";
+import { describeContract } from "./describe-contract.js";
 import { describeProject } from "./describe-project.js";
 import { RESOURCE_NOT_FOUND } from "./resource-not-found.js";
 
 const PROJECT = "assemblejs://project";
 const RULES_URI = "assemblejs://rules";
+const CONTRACT_URI = "assemblejs://contract";
 const ASSEMBLY = "assemblejs://assembly/";
 const TYPE = "application/json";
 
@@ -19,9 +21,9 @@ const answer = (uri: string, value: unknown) => ({
 });
 
 /**
- * What an agent reads: the project's whole shape, one assembly of it, and the rules. The shape
- * and each assembly are read from the project's sources when they are asked for, and nothing of
- * the project's is run.
+ * What an agent reads: the project's whole shape, one assembly of it, the rules, and the
+ * contract. The shape and each assembly are read from the project's sources when they are asked
+ * for, and nothing of the project's is run; the rules and the contract are the framework's own.
  *
  * The assemblies are one resource each, listed with the fixed ones, because a client that
  * shows a person what can be read lists resources and not every client expands a template.
@@ -89,5 +91,17 @@ export function registerResources(server: McpServer, root: ProjectRoot): void {
       mimeType: TYPE,
     },
     () => answer(RULES_URI, RULES),
+  );
+
+  server.registerResource(
+    "contract",
+    CONTRACT_URI,
+    {
+      title: "The assembly contract",
+      description:
+        "The three endpoints every assembly answers at, the headers each way with their shapes, the manifest's fields and the envelope with its attributes, every name the one the server writes. An agent writing a remote assembly in another language reads this and needs nothing else.",
+      mimeType: TYPE,
+    },
+    () => answer(CONTRACT_URI, describeContract()),
   );
 }
