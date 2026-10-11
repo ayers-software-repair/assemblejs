@@ -5,7 +5,7 @@ import { discoverAssemblies, viewFindings } from "@assemblejs/cli";
 import type { AssemblyDefinition } from "@assemblejs/core";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
-import { needsABuild } from "./needs-a-build.js";
+import { needsTheDevServer } from "./needs-the-dev-server.js";
 import { RENDERABLE_WITHOUT_A_BUILD } from "./renderable-without-a-build.js";
 
 /**
@@ -30,7 +30,7 @@ export function projectAssemblies(root: ProjectRoot): ReadonlyMap<string, Assemb
               renderer: found.renderer,
               markup: () => {
                 if (!RENDERABLE_WITHOUT_A_BUILD.includes(found.renderer)) {
-                  throw new Error(needsABuild(found.name, found.renderer));
+                  throw new Error(needsTheDevServer(found.name, found.renderer));
                 }
                 return readFileSync(withinRoot(root, found.view), "utf8");
               },

@@ -33,6 +33,7 @@ const found = (root: string) => templateProblems(root, discoverAssemblies(root).
 const quiet: Io = {
   write: () => undefined,
   exists: () => false,
+  remove: () => undefined,
   log: () => undefined,
   error: () => undefined,
 };

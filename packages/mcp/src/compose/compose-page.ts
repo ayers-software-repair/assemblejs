@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { DEFAULT_LIMITS, compose, localFetch } from "@assemblejs/core";
 import type { AssemblyPlan, LogLine } from "@assemblejs/core";
+import { devServerFetch } from "../render/dev-server-fetch.js";
+import { devServerUrl } from "../render/dev-server-url.js";
 import { projectAssemblies } from "../render/project-assemblies.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import type { ComposedPage } from "./composed-page.js";
@@ -17,8 +19,10 @@ import { fallbackProblems } from "./fallback-problems.js";
  * placement's view placed. A placement that fell back looks identical to one that worked in the
  * html alone, which is exactly why the account comes back with it rather than instead of it.
  *
- * No HTTP: an agent asking what this page looks like should not need a port, and a remote
- * assembly is not this tool's question.
+ * While the project's own dev server runs, every placement is asked of it instead, so the page
+ * is what the project serves, framework views included, and nothing of the project's code runs
+ * here (DESIGN 13.4). Without one there is no HTTP: an agent asking what this page looks like
+ * should not need a port, and a remote assembly is not this tool's question.
  */
 export async function composePage(
   root: ProjectRoot,
@@ -28,11 +32,15 @@ export async function composePage(
   const assemblies = projectAssemblies(root);
   const logged: LogLine[] = [];
   let sequence = 0;
+  const dev = await devServerUrl(root);
   try {
     const { html, diagnostics } = await compose({
       template,
       plan,
-      fetch: localFetch(assemblies, (line) => logged.push(line), DEFAULT_LIMITS),
+      fetch:
+        dev === undefined
+          ? localFetch(assemblies, (line) => logged.push(line), DEFAULT_LIMITS)
+          : devServerFetch(dev),
       limits: DEFAULT_LIMITS,
       page: "preview",
       newId: () => `preview-${(sequence += 1)}`,

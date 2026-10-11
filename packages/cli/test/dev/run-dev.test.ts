@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
@@ -43,6 +43,10 @@ describe("dev", () => {
     const done = runDev(root, io, controller.signal);
     try {
       await until(async () => (await page()).includes("first"));
+      // While the server runs, the record says where, for the agent surface to ask it.
+      const record = join(root, ".assemblejs", "dev.json");
+      await until(async () => existsSync(record));
+      expect(JSON.parse(readFileSync(record, "utf8"))).toEqual({ url: `http://127.0.0.1:${port}` });
       writeFileSync(view, "<p>second</p>");
       await until(async () => (await page()).includes("second"));
 
@@ -56,6 +60,7 @@ describe("dev", () => {
     }
     expect(await done).toBe(0);
     await expect(page()).rejects.toThrow();
+    expect(existsSync(join(root, ".assemblejs", "dev.json"))).toBe(false);
     // Every server here was stopped by dev itself, on a restart or at the end.
     expect(errors.join()).not.toContain("the server stopped");
   });

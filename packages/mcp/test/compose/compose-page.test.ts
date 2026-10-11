@@ -1,9 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { composePage, resolveRoot } from "@assemblejs/mcp";
 import type { ProjectRoot } from "@assemblejs/mcp";
 
@@ -23,6 +25,47 @@ beforeEach(() => {
 });
 afterEach(() => {
   rmSync(dir, { recursive: true, force: true });
+});
+
+// The project's own dev server, as the agent surface finds it: a record under the root, and a
+// server answering its health and the content endpoint for what only it renders.
+const devServer = createServer((request, response) => {
+  if (request.url === "/_assemblejs/health") {
+    response.writeHead(200, { "content-type": "application/json" });
+    response.end('{"status":"ok","version":"v"}');
+    return;
+  }
+  const name = /^\/assembly\/([a-z-]+)\//.exec(request.url ?? "")?.[1] ?? "none";
+  response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+  response.end(
+    `<assembly-root data-name="${name}" data-id="x" data-view="default" data-renderer="react"><button>served ${name}</button></assembly-root>`,
+  );
+});
+let devOrigin = "";
+beforeAll(async () => {
+  await new Promise<void>((resolve) => devServer.listen(0, "127.0.0.1", resolve));
+  devOrigin = `http://127.0.0.1:${String((devServer.address() as AddressInfo).port)}`;
+});
+afterAll(() => new Promise<void>((resolve) => devServer.close(() => resolve())));
+const devRunning = (): void => {
+  mkdirSync(join(dir, ".assemblejs"), { recursive: true });
+  writeFileSync(join(dir, ".assemblejs", "dev.json"), JSON.stringify({ url: devOrigin }));
+};
+
+describe("composing through the project's dev server", () => {
+  it("asks the running server for every placement, so the page is what the project serves", async () => {
+    assembly("ok", "ok.html", "<p>on disk</p>");
+    assembly("counter", "counter.react.tsx", "export default () => null;");
+    devRunning();
+    const composed = await composePage(
+      root,
+      `<main><assembly name="ok"/><assembly name="counter"/></main>`,
+    );
+    expect(composed.problems).toEqual([]);
+    expect(composed.html).toContain("served ok");
+    expect(composed.html).toContain("served counter");
+    expect(composed.diagnostics.map((d) => d.source)).toEqual(["remote", "remote"]);
+  });
 });
 
 describe("composing a page for an agent", () => {

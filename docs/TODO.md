@@ -1031,11 +1031,15 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       as anything but a boolean. The remote fixture trusts its producer and holds the query
       reaching it, beside the hostile remote the outbound spec holds the query away from
       (DECISIONS 2026-10-11, "a trusted remote"). The morning list's item 7 closes
-- [ ] P5-5 AN AGENT'S PREVIEW OF A FRAMEWORK VIEW THROUGH THE DEV SERVER: `render_assembly`
-      and `compose_page` show a React, Vue, Svelte, Solid, Lit or template view by asking the
-      project's own running dev server for it, and refuse with the reason when none is
-      running; the tool runs nothing of the project's code itself (DESIGN 13.2 holds). The
-      morning list's item 10 closes
+- [x] P5-5 AN AGENT'S PREVIEW OF A FRAMEWORK VIEW THROUGH THE DEV SERVER. Done 2026-10-11:
+      `dev` records its server's url under the root (`DEV_RECORD`, `.assemblejs/dev.json`)
+      while it runs and removes it when it stops; `render_assembly` and `compose_page` find it,
+      ask its health, and then ask its content endpoint for every assembly and placement
+      (`devServerUrl`, `devServerFetch`), so a React, Vue, Svelte, Solid, Lit or template view
+      is shown as the project serves it; without one, a plain html view is rendered here and
+      any other is refused with the word to start the dev server (`needsTheDevServer`).
+      DESIGN 13.4 and 13.6 say it (DECISIONS 2026-10-11, "the dev server renders for the
+      agent"). The morning list's item 10 closes
 - [ ] P5-6 BUILT-IN COMPONENTS AS PLAIN HTML AND TOKENS (A-04): as
       `docs/studies/built-in-components.md` proposed in that form, one tokens file every page
       links, plain html assemblies styled by it, and the rules `check` holds them to; no

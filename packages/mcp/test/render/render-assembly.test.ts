@@ -1,9 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { renderAssembly, resolveRoot } from "@assemblejs/mcp";
 import type { ProjectRoot } from "@assemblejs/mcp";
 
@@ -23,6 +25,48 @@ beforeEach(() => {
 });
 afterEach(() => {
   rmSync(dir, { recursive: true, force: true });
+});
+
+// The project's own dev server, as the agent surface finds it: a record under the root, and a
+// server answering its health and the content endpoint for what only it renders.
+const devServer = createServer((request, response) => {
+  if (request.url === "/_assemblejs/health") {
+    response.writeHead(200, { "content-type": "application/json" });
+    response.end('{"status":"ok","version":"v"}');
+    return;
+  }
+  const name = /^\/assembly\/([a-z-]+)\//.exec(request.url ?? "")?.[1] ?? "none";
+  response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
+  response.end(
+    `<assembly-root data-name="${name}" data-id="x" data-view="default" data-renderer="react"><button>served ${name}</button></assembly-root>`,
+  );
+});
+let devOrigin = "";
+beforeAll(async () => {
+  await new Promise<void>((resolve) => devServer.listen(0, "127.0.0.1", resolve));
+  devOrigin = `http://127.0.0.1:${String((devServer.address() as AddressInfo).port)}`;
+});
+afterAll(() => new Promise<void>((resolve) => devServer.close(() => resolve())));
+const devRunning = (): void => {
+  mkdirSync(join(dir, ".assemblejs"), { recursive: true });
+  writeFileSync(join(dir, ".assemblejs", "dev.json"), JSON.stringify({ url: devOrigin }));
+};
+
+describe("rendering through the project's dev server", () => {
+  it("asks the running server for a framework view, which only it renders", async () => {
+    assembly("counter", "counter.react.tsx", "export default () => null;");
+    devRunning();
+    const rendered = await renderAssembly(root, "counter");
+    expect(rendered.problems).toEqual([]);
+    expect(rendered.renderer).toBe("react");
+    expect(rendered.html).toContain("<button>served counter</button>");
+  });
+
+  it("asks it for a plain html view too, so what is shown is what the project serves", async () => {
+    assembly("cart", "cart.html", "<p>on disk</p>");
+    devRunning();
+    expect((await renderAssembly(root, "cart")).html).toContain("served cart");
+  });
 });
 
 describe("rendering an assembly for an agent", () => {

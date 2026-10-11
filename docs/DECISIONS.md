@@ -4229,3 +4229,30 @@ Settled:
 - **Held in the remote fixture**: the consumer trusts its producer, a page passes its query to
   the producer's `echo`, and the outbound spec goes on holding the query away from the hostile
   remote, which is declared and not trusted.
+
+## 2026-10-11: the dev server renders for the agent
+
+The owner's answer of this morning (D1252, "Dev server, tool runs nothing") to how an agent is
+shown a framework view. The agent surface rendered a plain html view in process and refused every
+other, since a framework or template view is source its renderer compiles and running the
+project's code in the tool was never the design (13.6).
+
+Settled:
+
+- **`dev` records where it listens.** `.assemblejs/dev.json` under the root holds `{ url }` from
+  the moment the server says it is listening until dev stops it, or restarts it on a change; the
+  command line's io gains `remove` for it. The directory is already ignored by a new project.
+- **The tools ask that server.** `devServerUrl` reads the record and asks the server's health
+  before believing it, so a record a dead dev left is nothing; `devServerFetch` is the composer's
+  transport for a running project, asking the content endpoint for each placement with the
+  composition headers and the query, as a page asks another server. With a dev server running,
+  `render_assembly` asks it for any assembly and `compose_page` for every placement, so what the
+  agent is shown is what the project serves, services and all; without one, the tools do as
+  before, and the refusal of a framework view now says to start the dev server
+  (`needsTheDevServer`, in place of `needsABuild`).
+- **The tool still runs nothing of the project's.** The one address it reaches is the dev server
+  on this machine, at the recorded url, said in DESIGN 13.4 and 13.6.
+- **The agent surface's tarball budget moves**, from 20500 to 21500 bytes: the two modules that
+  find and ask the dev server packed it to 20817, measured by `check:pack`, and the budget is
+  raised to hold them with the usual room, on purpose and with the measure, as the rule for a
+  budget asks.

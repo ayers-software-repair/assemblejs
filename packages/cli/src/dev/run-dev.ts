@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { buildProject } from "../build/build-project.js";
 import { CONFIG_FILE } from "../discovery/config-file.js";
 import type { Io } from "../io/io.js";
+import { DEV_RECORD } from "./dev-record.js";
 import type { RunningServer } from "./running-server.js";
 import { startServer } from "./start-server.js";
 import { watchSources } from "./watch-sources.js";
@@ -19,7 +20,8 @@ import { watchSources } from "./watch-sources.js";
  * tries again. Each step ends once the server is spawned, never waiting on what the server
  * prints, so a server that is slow to listen or never says so holds nothing up. When the signal
  * aborts (Ctrl-C at a terminal) the server is stopped first, then the command ends. Only a server
- * that exits on its own is reported as stopped; one dev stopped itself is not.
+ * that exits on its own is reported as stopped; one dev stopped itself is not. While a server
+ * runs, `DEV_RECORD` under the root holds its url, for the agent surface to ask it.
  */
 export async function runDev(
   root: string,
@@ -29,6 +31,7 @@ export async function runDev(
 ): Promise<number> {
   let server: RunningServer | undefined;
   let queue = Promise.resolve();
+  const record = join(root, DEV_RECORD);
 
   const step = async (): Promise<void> => {
     if (signal.aborted) return;
@@ -38,13 +41,15 @@ export async function runDev(
     }
     const previous = server;
     server = undefined;
+    io.remove(record);
     await previous?.stop();
     if (signal.aborted) return;
     const started = startServer(root, io);
     server = started;
     void started.ready.then((url) => {
-      if (url === undefined && server === started)
-        io.error("the server stopped; waiting for a change");
+      if (server !== started) return;
+      if (url === undefined) io.error("the server stopped; waiting for a change");
+      else io.write(record, `${JSON.stringify({ url })}\n`);
     });
   };
   const rebuild = (): Promise<void> =>
@@ -71,6 +76,7 @@ export async function runDev(
   const ending = async (): Promise<void> => {
     const last = server;
     server = undefined;
+    io.remove(record);
     await last?.stop();
   };
   await ending();

@@ -31,7 +31,7 @@ export function createMcpServer(root: ProjectRoot): McpServer {
     {
       title: "Render one assembly now",
       description:
-        "Renders an assembly whose view is plain html and returns the envelope the server would emit, with every assembly its view places composed inside it, the account of each, and any problems. Nothing of the project's is run here: no service, so its data is empty, and no view in a framework or a template language, which is answered with the reason and seen from the running server. Use it right after writing one, to see what it actually produced rather than guessing.",
+        "Renders an assembly and returns the envelope the server would emit, with every assembly its view places composed inside it, the account of each, and any problems. While the project's dev server runs (npx assemblejs dev), that server renders it, framework and template views included, and nothing of the project's code runs here; without one, a plain html view is rendered here with no service, so its data is empty, and any other view is answered with the reason. Use it right after writing one, to see what it actually produced rather than guessing.",
       inputSchema: { name: z.string().describe("the assembly's name, which is its directory") },
     },
     async ({ name }) => {
@@ -53,7 +53,7 @@ export function createMcpServer(root: ProjectRoot): McpServer {
     {
       title: "Compose a page now",
       description:
-        "Composes a page template against the assemblies on disk and returns the html with one diagnostic per placement, and beneath it one per assembly that placement's own view placed. A placement that fell back looks identical in the markup; the diagnostic is what says it did. An assembly whose view is not plain html falls back here, with the reason among the problems.",
+        "Composes a page template and returns the html with one diagnostic per placement, and beneath it one per assembly that placement's own view placed. While the project's dev server runs, every placement is asked of it, so the page is what the project serves; without one, placements are composed from the assemblies on disk, and one whose view is not plain html falls back with the reason among the problems. A placement that fell back looks identical in the markup; the diagnostic is what says it did.",
       inputSchema: {
         template: z
           .string()

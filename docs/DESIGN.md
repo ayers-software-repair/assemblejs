@@ -1028,10 +1028,15 @@ is not a wrapper. An agent that writes an assembly can immediately see what it r
 which placement fell back, without starting a server, opening a browser or asking the developer
 to look. It closes its own loop.
 
-For a plain html view, that is. Nothing of the project's is run here (13.6): a view in a
-framework or a template language is source its renderer compiles, and a service is the
-project's own code, so such a view is answered with the reason it was not rendered, and an
-assembly's data comes back empty. How an agent is shown those is not decided.
+Nothing of the project's is run here (13.6). While the project's own dev server runs, the two
+tools ask it instead, as a page asks another server: `dev` records the url its server listens
+on under the project's root (`.assemblejs/dev.json`) for as long as it runs, the tools ask that
+server's health before they believe the record, and then every assembly and every placement is
+fetched from its content endpoint with the composition headers, so what the agent is shown is
+what the project serves, framework and template views and services included (owner, DECISIONS
+2026-10-11, "Dev server, tool runs nothing"). Without one, a plain html view is rendered here
+with no service, so its data is empty, and a view in a framework or a template language, source
+its renderer compiles, is answered with the reason and the word to start the dev server.
 
 ### 13.5 What makes it expert rather than mechanical
 
@@ -1067,7 +1072,8 @@ The framework ships capability, not autonomy.
   follows a link out.
 - Nothing runs a shell command. `check` runs the gates in process and returns findings.
 - Nothing publishes, deploys, or touches a remote. Those stay in the command line, where a
-  person types them.
+  person types them. The one address the tools reach is the project's own dev server on this
+  machine, at the url `dev` recorded under the root, and only to be shown what it serves (13.4).
 - Mutating tools report every file they wrote, so the agent's caller can see the whole change.
 
 ### 13.7 What a new project carries

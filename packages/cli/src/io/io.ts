@@ -11,6 +11,8 @@
 export interface Io {
   write(path: string, contents: string | Uint8Array): void;
   exists(path: string): boolean;
+  /** Removes a file this command wrote; nothing happens for one that is not there. */
+  remove(path: string): void;
   log(line: string): void;
   error(line: string): void;
 }

@@ -16,6 +16,7 @@ const fake = (existing: readonly string[] = []) => {
   const io: Io = {
     write: (path, contents) => void written.set(path.replaceAll("\\", "/"), String(contents)),
     exists: (path) => existing.includes(path.replaceAll("\\", "/")),
+    remove: () => undefined,
     log: (line) => logs.push(line),
     error: (line) => errors.push(line),
   };

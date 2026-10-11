@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -12,6 +12,15 @@ afterEach(() => {
 });
 
 describe("the io a command gets when it is actually run", () => {
+  it("removes a file it wrote, and is quiet about one that is not there", () => {
+    const dir = mkdtempSync(join(tmpdir(), "real-io-"));
+    const file = join(dir, "gone.txt");
+    realIo.write(file, "x");
+    realIo.remove(file);
+    expect(existsSync(file)).toBe(false);
+    expect(() => realIo.remove(file)).not.toThrow();
+  });
+
   it("creates the directories a path needs", () => {
     root = mkdtempSync(join(tmpdir(), "assemblejs-io-"));
     const path = join(root, "deep", "nested", "file.txt");
