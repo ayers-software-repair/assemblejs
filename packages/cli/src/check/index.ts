@@ -23,6 +23,7 @@ export { markedTemplate } from "./marked-template.js";
 export type { ViewElement } from "./view-element.js";
 export { readElements } from "./read-elements.js";
 export { templateElements } from "./template-elements.js";
+export { scriptElements } from "./script-elements.js";
 export { scriptPlacements } from "./script-placements.js";
 export { sveltePlacements } from "./svelte-placements.js";
 export { vuePlacements } from "./vue-placements.js";

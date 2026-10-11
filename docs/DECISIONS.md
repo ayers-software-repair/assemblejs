@@ -4361,3 +4361,26 @@ Settled:
   the render, undefined, as its placements are.
 - **Nothing refuses yet.** The readers for modules, Lit, Vue and Svelte follow, then one bite a
   rule.
+
+## 2026-10-11: the elements a module writes
+
+The fifth bite of A-04 (D1252): the element reader for views written as modules, React, Preact
+and Solid through JSX and Lit through its templates, as the memo laid it out.
+
+Settled:
+
+- **JSX is read off the syntax tree `check` already builds**: esbuild's automatic runtime
+  compiles each element to a call of `jsx`, `jsxs` or `jsxDEV` with the tag as a string and the
+  props as an object, and `scriptElements` reads those calls, under whatever names the module
+  imports them from a `jsx-runtime` or `jsx-dev-runtime`. A prop written in place is kept, a
+  computed one stands as the marker, a boolean written `true` is a bare attribute, a spread makes
+  the element computed, and a component, whose tag is not a string, is passed over as nothing
+  the browser sees here.
+- **Lit through its templates**: each `html` template's fixed parts, joined by the marker where
+  its expressions go, are read by the same tokenizer the template views use.
+- **Names are lower-cased** as the browser reads them (`className` reads as `classname`, which
+  the rules account for). `at` is where the element stands in the compiled module, near enough to
+  find the tag by; a finding names the file and the tag.
+- **Nothing refuses yet.** Vue and Svelte follow, then one bite a rule.
+- **The command line's tarball budget moves**, from 80000 to 82000 bytes: the module reader
+  packed it to 80782, measured by `check:pack`.

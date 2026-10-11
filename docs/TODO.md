@@ -5,7 +5,21 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after P5-1, the limits in the config file).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after P5-6e, the element reader for
+modules and Lit).**
+
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: P5-6e. Beneath it,
+each pushed on 2026-10-11 with its runs read green: `1d0b0cb` P5-6d the element reader for
+templates (`ci` 38149854085); `2a4709e` the port flake fixed (`ci` 38149271043); `49b76df` P5-6c
+the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens; `5a08454` P5-5
+the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
+and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
+envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
+NEXT: P5-6f (the element reader for Vue and Svelte), P5-6g (the five rules, one bite each), then
+P5-8 (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
+crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
+00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
+before the day's work.
 
 STATE. Branch `next`. `origin/next` is the commit this block is pushed with: P5-1, the
 composition limits in the project's config file, the first of the owner's answers of this
@@ -1076,7 +1090,13 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       drew a port by chance (`20000 + random`) ask the OS for a free one through `freePort`,
       and the build spec says what the server printed when it exits before it listens, so a
       next failure names its cause
-  - [ ] P5-6e The element reader for modules (React, Preact, Solid) and Lit
+  - [x] P5-6e The element reader for modules and Lit (2026-10-11): `scriptElements` reads every
+        JSX element from the call esbuild's automatic runtime compiles it to, the tag as a
+        string and the props as attributes, a value written in place kept, a computed one
+        marked, a bare one true, a spread making the element computed, a component passed
+        over; and every Lit `html` template's fixed parts as markup with the marker where its
+        expressions go. Nothing refuses yet (DECISIONS 2026-10-11, "the elements a module
+        writes")
   - [ ] P5-6f The element reader for Vue and Svelte
   - [ ] P5-6g The rules, one bite each: `a-view-has-no-inline-style`,
         `an-image-has-an-alternative`, `a-control-has-a-name`, `a-colour-is-a-token`,
