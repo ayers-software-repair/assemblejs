@@ -1056,9 +1056,20 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
         `tokens-hold-their-contrast`, which `check` runs and `explain` answers; a value it
         cannot judge is left alone. DESIGN 10 says it (DECISIONS 2026-10-11, "the tokens hold
         their contrast")
-  - [ ] P5-6c The stylesheet of components, styled native HTML, written by `new` beside the
-        tokens, and the starter's page using it
+  - [x] P5-6c The stylesheet of components (2026-10-11): `src/components.css`, the button, the
+        field, the link, the list, the table, the notice and the dialog, each a class and the
+        tokens with its focus ring and states and no colour of its own (`COMPONENTS`); carried
+        whole after the tokens by `writeProjectStyles`, in place of `writeTokens`, and linked
+        on every page in that order; the starter's hello is a notice with a link styled as the
+        button, which the agents fixture holds. DESIGN 10 and the tutorial say it (DECISIONS
+        2026-10-11, "the components HTML has")
   - [ ] P5-6d The element reader for templates (html, EJS, Handlebars, Nunjucks)
+- [ ] FLAKE SEEN ONCE (2026-10-11, under `pnpm check` with every package's suite running at
+      once): `cli/test/build/build-project.test.ts`, "generates, builds and runs a project with a
+      handlebars assembly", failed with the built server "exited with 1" and nothing more said;
+      green alone and in every run before and after. Make the spec say what the server printed
+      when it exits, so the next time names the cause, and look for the race in how it picks
+      its port
   - [ ] P5-6e The element reader for modules (React, Preact, Solid) and Lit
   - [ ] P5-6f The element reader for Vue and Svelte
   - [ ] P5-6g The rules, one bite each: `a-view-has-no-inline-style`,

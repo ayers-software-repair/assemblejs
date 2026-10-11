@@ -55,9 +55,13 @@ describe("the smallest project that runs", () => {
     expect(Object.keys(manifest.dependencies)).toEqual(["@assemblejs/core"]);
   });
 
-  it("starts with the project's tokens, the one place its look is set", () => {
+  it("starts with the project's tokens, the one place its look is set, and the components styled by them", () => {
     expect(files["src/tokens.css"]).toContain("--ink:");
     expect(files["src/tokens.css"]).toContain("@media (prefers-color-scheme: dark)");
+    expect(files["src/components.css"]).toContain(".notice {");
+    // The starter's one assembly uses them: a notice, and a link styled as the button.
+    expect(files["src/assemblies/hello/hello.html"]).toContain('<section class="notice">');
+    expect(files["src/assemblies/hello/hello.html"]).toContain('<a class="button" href=');
   });
 
   it("ignores the generated module rather than committing it", () => {

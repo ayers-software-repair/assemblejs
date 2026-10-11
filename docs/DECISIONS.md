@@ -4313,3 +4313,30 @@ Settled:
 - **The command line's tarball budget moves**, from 76000 to 78000 bytes: the five modules of
   this bite packed it to 76761, measured by `check:pack`. Each bite of A-04 that adds code moves
   it with its own measure; none is guessed ahead.
+
+## 2026-10-11: the components HTML has
+
+The third bite of A-04 (D1252, "Plain HTML + tokens"): the stylesheet of components the memo's
+option A describes, written by `new` beside the tokens, and the starter's use of it.
+
+Settled:
+
+- **A component is an element HTML already has, a class, and the tokens.** `src/components.css`
+  styles the button (`.button`, and `button` itself), the field with its label (`.field`), the
+  link, the list, the table, the notice and the dialog, each with its focus ring
+  (`:focus-visible`, as the estate's kit draws it) and its states (hover, disabled, invalid, the
+  dialog's backdrop). Every value is a token or a plain length; the sheet names no colour of its
+  own, which the spec holds, so the colour rule to come has nothing to refuse in it.
+- **Carried and linked after the tokens.** `writeProjectStyles` replaces `writeTokens`: the two
+  project sheets, each optional, written whole and unscoped and named by content, in that order,
+  which is the order every page links them. Unscoped on purpose: the components style the
+  elements every kind of view writes, so a scope would reach none of them.
+- **The starter uses it.** The new project's one assembly is a notice holding the greeting and a
+  link to the tutorial styled as the button, so a project's first page already reads as set,
+  and the agents fixture holds that markup through the tools and the built server. A modal
+  `dialog` is styled and not opened: the starter ships no script, and HTML's own attributes for
+  opening one (`command`, `commandfor`, read on MDN 2026-10-11) are newer than the element and
+  not yet baseline across browsers, so the starter does not rely on them.
+- **The command line's tarball budget moves**, from 78000 to 80000 bytes, as the tokens' decision
+  said it would: the components the starter ships, 2 kB of CSS a new project needs, packed it to
+  78575, measured by `check:pack`.

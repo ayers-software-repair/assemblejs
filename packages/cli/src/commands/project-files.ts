@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { agentFiles } from "../agents/agent-files.js";
+import { COMPONENTS } from "./components.js";
 import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";
 import { TOKENS } from "./tokens.js";
@@ -44,9 +45,11 @@ console.log(\`listening \${url}\`);
 
     "src/pages/home/home.html": pageDocument(name, ["hello"]),
 
-    "src/assemblies/hello/hello.html": `<p>Hello from AssembleJS</p>\n`,
+    "src/assemblies/hello/hello.html": `<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>\n`,
 
     "src/tokens.css": TOKENS,
+
+    "src/components.css": COMPONENTS,
 
     "README.md": `# ${name}
 

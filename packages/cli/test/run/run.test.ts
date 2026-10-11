@@ -87,6 +87,7 @@ describe("new", () => {
       "my-app/README.md",
       "my-app/package.json",
       "my-app/src/assemblies/hello/hello.html",
+      "my-app/src/components.css",
       "my-app/src/pages/home/home.html",
       "my-app/src/server.ts",
       "my-app/src/tokens.css",

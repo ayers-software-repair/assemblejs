@@ -9,7 +9,7 @@ export { siblingOfEnvelope } from "./sibling-of-envelope.js";
 export { styleProblems } from "./style-problems.js";
 export { styleReferences } from "./style-references.js";
 export { writeStyles } from "./write-styles.js";
-export { writeTokens } from "./write-tokens.js";
+export { writeProjectStyles } from "./write-project-styles.js";
 export { relativeLuminance } from "./relative-luminance.js";
 export { contrastRatio } from "./contrast-ratio.js";
 export { readTokens } from "./read-tokens.js";

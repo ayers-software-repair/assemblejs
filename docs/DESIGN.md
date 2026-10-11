@@ -723,6 +723,7 @@ src/
   api/
     time.api.ts
   tokens.css                    the roles every stylesheet reads, set in one place (10)
+  components.css                the elements HTML has, styled by the tokens (10)
 assemblejs.config.ts            policy only: remotes, access, the content policy, budgets, limits
 AGENTS.md                       what an agent that opens the project is told (13.7)
 .mcp.json                       the project's agent surface, registered (13.7)
@@ -900,7 +901,13 @@ true of whatever binds it, and `check` holds the file to it in both schemes
 and an accent against the surfaces at 3:1 or more, the numbers WCAG 2.2's own (1.4.3 and 1.4.11,
 level AA, by its definitions of relative luminance and contrast ratio). A role bound to anything
 the reader cannot judge, a variable or a named colour, is left alone, since a rule refuses only
-what it is certain of. The rules that hold a view to the tokens follow.
+what it is certain of. Beside the tokens, `src/components.css` styles the components HTML already
+has, the button, the field with its label, the link, the list, the table, the notice and the
+dialog, each a class and the tokens, with its focus ring and its states, and no colour of its own;
+every page links it after the tokens, and a new project's one assembly uses it. A component here
+is an element the browser makes usable, a modal `dialog` that makes the rest of the page inert
+among them; no custom element and no library per framework (owner, DECISIONS 2026-10-11, "Plain
+HTML + tokens"). The rules that hold a view to the tokens follow.
 
 A page links the stylesheet of every assembly in the markup it serves, at any depth, read from
 the envelopes themselves, so an answer that came from the cache is styled as one that was just

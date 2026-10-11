@@ -115,7 +115,10 @@ test("an agent adds an assembly, places it and composes the page, through that s
       ["hello", "greeting"],
     );
     assert.deepEqual(named(composed.result.html), [
-      ["hello", "<p>Hello from AssembleJS</p>"],
+      [
+        "hello",
+        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+      ],
       ["greeting", "<p>greeting</p>"],
     ]);
 
@@ -235,7 +238,10 @@ test("a link that leads out of the project is a finding, and is never read", asy
 test("the page the agent composed is the page the project's build serves", async () => {
   // The server the harness started was built from the project as the starter wrote it.
   assert.deepEqual(named(await (await fetch(new URL("/", originOf("written")))).text()), [
-    ["hello", "<p>Hello from AssembleJS</p>"],
+    [
+      "hello",
+      '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+    ],
   ]);
   const built = run("build");
   assert.equal(built.status, 0, built.stderr);
@@ -243,7 +249,10 @@ test("the page the agent composed is the page the project's build serves", async
   try {
     assert.ok(server.origin, server.output());
     assert.deepEqual(named(await (await fetch(new URL("/", server.origin))).text()), [
-      ["hello", "<p>Hello from AssembleJS</p>"],
+      [
+        "hello",
+        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+      ],
       ["greeting", "<p>greeting</p>"],
     ]);
   } finally {
