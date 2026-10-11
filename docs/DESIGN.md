@@ -164,7 +164,11 @@ closed, after a `<p>` with no `</p>`, no start tag that closes a paragraph and n
 block above it between: the browser closes the paragraph at the first block the placed assembly
 holds, and the rest of the assembly, its island included, leaves its envelope. The one reader of
 the directive refuses it, so `check`, the server at boot, the composer and a view at render all
-say the same. The two
+say the same. And so is a directive inside a declarative shadow root an element writes for itself,
+`<template shadowrootmode="...">` not yet closed, as a Lit element's render would place it: the
+page's stylesheets do not reach into an element's root, so the assembly would stand unstyled and
+its sheet be linked where it does nothing; it is placed in the view's template, outside the
+element. The two
 are separate because one word cannot be right in both positions. A placement is nested by
 definition and a served fragment is not, so a name that reads correctly in a template reads
 wrongly on a bare fetch, and the reverse. The author writes the directive and reads the

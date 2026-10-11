@@ -695,11 +695,20 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       this row named are read since the second reading's finding 3: a slot reached through a
       namespace import, and a Vue slot written in kebab case (DECISIONS 2026-10-10, S-07 and
       "every static view is read")
-- [ ] A child placed inside a custom element's own shadow root (a `slot()` written in a Lit
+- [x] A child placed inside a custom element's own shadow root (a `slot()` written in a Lit
       element's `render`) is found and mounted, and its stylesheet is linked in the page's
       head, where it does not reach: `localAssets` tracks an assembly's shadow root, not an
       element's (`server/local-assets.ts:45-50`, read 2026-10-09; not reproduced). Refuse it
-      in `check`, or link the sheet inside
+      in `check`, or link the sheet inside. REFUSED 2026-10-11 where the directive is read: a
+      directive inside an open `<template shadowrootmode>` is refused in `findPlacements`, so
+      the composer, the server at boot and a view at render say so; `check` reads a Lit view's
+      slots from its module and does not yet know which stand in an element's render
+      (DECISIONS 2026-10-11, "a placement inside an element's shadow root")
+- [ ] `check` reads a Lit view's slots from its module without telling one written in an
+      element's `render` from one in the view's template, so a child placed in an element's own
+      shadow root is refused first at a render and not by `check`: read the class that extends
+      `LitElement` and refuse the slot in its `render` as the composer does (found 2026-10-11,
+      DECISIONS "a placement inside an element's shadow root")
 - [x] Placement context: a child whose block content sits inside an open `<p>` (or any element
       the parser closes on its own) is moved out of its envelope, and its parent's island with
       it; silent today for a page's placements and for a view's. One check for both, where the

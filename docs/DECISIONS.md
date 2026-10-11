@@ -4697,3 +4697,23 @@ Read 2026-10-11, each client's own documentation:
 The McpRegistration type gains `mcp` among the keys a client lists servers under; the writer and
 the drift check were already generic over the key. The agents fixture starts each written
 registration as its client does: the two new ones from the project's root.
+
+## 2026-10-11: a placement inside an element's shadow root
+
+The ledger's row found 2026-10-09 on the fragment scanner: a `slot()` written in a Lit element's
+`render` places a child inside the element's own declarative shadow root. Reproduced at the
+markup, which is where it is decided: an envelope inside `<template shadowrootmode="open">` has
+its stylesheet linked in the page's head by `localAssets`, which tracks an assembly's shadow root
+and not an element's, and a sheet in the head does not reach into an element's root. The child
+would stand unstyled.
+
+Settled: the directive is refused where it is read, as the paragraph case is. `findPlacements`
+refuses a directive that stands inside a declarative shadow root not yet closed (one pass over
+the template's `<template>` tags, counting depth so only the roots among them count), so the
+composer, the server at boot and a view at render say the same thing, and `render_assembly`
+hands the agent the reason. Linking the sheet inside was the other way, and it is not taken: it
+would rewrite what another renderer wrote, and an element's root is the element's own; a child
+belongs in the view's template, outside the element, where the page styles it. `check` reads a
+Lit view's slots from its module and does not yet tell those in an element's `render` from those
+in the view's template; a view that places one is refused at the render the agent asks for, and
+by the build's render of it, not by `check` first. That reading is a row of its own.

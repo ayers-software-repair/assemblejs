@@ -50,6 +50,20 @@ describe("finding placements in a template", () => {
     expect(findPlacements(`<!-- <p> --><assembly name="price"/>`)).toHaveLength(1);
   });
 
+  it("refuses a placement inside an element's own declarative shadow root, and passes one beside it", () => {
+    expect(() =>
+      findPlacements(
+        `<x-el><template shadowrootmode="open"><assembly name="cart"/></template></x-el>`,
+      ),
+    ).toThrow(/at 38 stands inside an element's own shadow root/);
+    expect(
+      findPlacements(
+        `<x-el><template shadowrootmode="open"></template></x-el><assembly name="cart"/>`,
+      ),
+    ).toHaveLength(1);
+    expect(findPlacements(`<template><assembly name="cart"/></template>`)).toHaveLength(1);
+  });
+
   it("refuses a directive that is neither self-closing nor immediately closed", () => {
     expect(() => findPlacements(`<assembly name="cart">text</assembly>`)).toThrow(
       /neither self-closing nor immediately closed/,

@@ -5,6 +5,7 @@ import { SEGMENT } from "../vocab/segment.js";
 import { inertSpans } from "./inert-spans.js";
 import { openParagraphs } from "./open-paragraphs.js";
 import type { Placement } from "./placement.js";
+import { shadowTemplates } from "./shadow-templates.js";
 
 // The directive has a shape this product defines, so it is matched exactly rather than parsed:
 // an opening tag with only the attributes named below, quoted, then either a self-closing slash
@@ -34,6 +35,7 @@ export function findPlacements(template: string): Placement[] {
   const found: Placement[] = [];
   const isInert = inertSpans(template);
   const inParagraph = openParagraphs(template);
+  const inShadowRoot = shadowTemplates(template);
 
   DIRECTIVE.lastIndex = 0;
   for (const match of template.matchAll(DIRECTIVE)) {
@@ -50,6 +52,14 @@ export function findPlacements(template: string): Placement[] {
         `<${PLACEMENT_ELEMENT}> at ${start} stands inside an open <p>, which the browser closes at ` +
           `the first block the assembly holds, moving the rest of it out of its envelope; close ` +
           `the paragraph before the placement, or place inside a <div>`,
+      );
+    }
+    // Inside an element's own declarative shadow root, where the page's stylesheets do not reach,
+    // so the assembly would stand unstyled and its sheet be linked where it does nothing.
+    if (inShadowRoot(start)) {
+      throw new Error(
+        `<${PLACEMENT_ELEMENT}> at ${start} stands inside an element's own shadow root, where the ` +
+          `page's stylesheets do not reach; place it in the view's template, outside the element`,
       );
     }
     const closed = /<\/[a-z]+\s*>$/i.test(directive) || selfClosing === "/";
