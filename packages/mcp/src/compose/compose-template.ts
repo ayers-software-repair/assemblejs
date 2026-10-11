@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { randomUUID } from "node:crypto";
 import { DEFAULT_LIMITS, compose, localFetch } from "@assemblejs/core";
 import type { AssemblyPlan, LogLine } from "@assemblejs/core";
 import { devServerFetch } from "../render/dev-server-fetch.js";
@@ -32,7 +33,6 @@ export async function composeTemplate(
   const assemblies = projectAssemblies(root);
   const logged: LogLine[] = [];
   const inside: string[] = [];
-  let sequence = 0;
   const dev = await devServerUrl(root);
   try {
     const { html, diagnostics } = await compose({
@@ -47,8 +47,10 @@ export async function composeTemplate(
               (problem) => inside.push(problem),
             ),
       limits: DEFAULT_LIMITS,
-      page: "preview",
-      newId: () => `preview-${(sequence += 1)}`,
+      // The ids a page's composer sends, which the content endpoint holds to their shape and
+      // refuses a request without (DESIGN 2.1).
+      page: randomUUID(),
+      newId: randomUUID,
       now: () => 0,
     });
     return {

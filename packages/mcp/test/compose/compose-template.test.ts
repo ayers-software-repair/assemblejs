@@ -51,16 +51,19 @@ describe("composing through the project's dev server", () => {
       root,
       `<main><assembly name="failing"/><assembly name="holder"/></main>`,
     );
+    // Each id is the server's own, and the one its log holds the failure against.
+    const ids = composed.problems.map((said) => / against (\S+)$/.exec(said)?.[1] ?? "none");
+    expect(dev.logged().map((line) => line.correlationId)).toEqual(expect.arrayContaining(ids));
     expect(composed.diagnostics.map((d) => [d.name, d.source, d.correlationId])).toEqual([
-      ["failing", "fallback", "c0ffee12"],
+      ["failing", "fallback", ids[0]],
       ["holder", "remote", undefined],
     ]);
     expect(composed.problems).toEqual([
-      '"failing" failed on the dev server, which answered 500: its log says why, against c0ffee12',
-      '"price" fell back inside "holder" on the dev server: its log says why, against deadbeef',
+      `"failing" failed on the dev server, which answered 500: its log says why, against ${ids[0] ?? ""}`,
+      `"price" fell back inside "holder" on the dev server: its log says why, against ${ids[1] ?? ""}`,
     ]);
     // The page's own fallback envelope carries the id the dev server logged the failure against.
-    expect(composed.html).toContain('data-failed="c0ffee12"');
+    expect(composed.html).toContain(`data-failed="${ids[0] ?? ""}"`);
   });
 });
 

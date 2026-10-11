@@ -4257,6 +4257,10 @@ Settled:
   raised to hold them with the usual room, on purpose and with the measure, as the rule for a
   budget asks.
 
+Corrected the same day, by "the tools ask the dev server as a composer asks" below: as this
+landed, the tools sent ids the content endpoint refuses, and no request to a real dev server was
+answered. The proof this entry rested on was a stand-in server in the specs.
+
 ## 2026-10-11: the tokens every page links
 
 The first bite of A-04 as the owner chose it (D1252, "Plain HTML + tokens"): the tokens file and
@@ -4926,3 +4930,44 @@ local transport says none, and nothing of its account changes.
 The two specs that carried one dev-server fixture, word for word, share it now from
 `test/fixtures/dev-server.ts`, with the two assemblies this needs. Five mutations, each alone,
 watched red.
+
+## 2026-10-11: the tools ask the dev server as a composer asks
+
+Found while proving the entry above against the artifact: P5-5, as it landed this morning
+(`5a08454`), never worked against a real dev server. `render_assembly` sent `assembly-id:
+preview-<name>` and `compose_page` `preview-<n>`, both with `assembly-page: preview`. The content
+endpoint holds each to one uuid and answers a malformed value with a 400, never a coerced default
+(DESIGN 2.1; `read-composition-headers.ts`). Measured with a probe against a server made by
+`createServer`: both tools' ids answered 400, uuids answered the envelope. So with a dev server
+running, every assembly was refused and every placement on a page fell back, and the owner's
+answer, "Dev server, tool runs nothing", was recorded as built when it was not. The specs were
+green because the dev server in them was a hand-written stand-in that answers whatever it is sent,
+and no fixture ran the tools against a server of the framework.
+
+Settled:
+
+- **The tools send what a composer sends.** A uuid for the page and for every id, as the server's
+  own pages do. The stable `preview-` ids go; nothing held them, and a tool that composes is a
+  composer.
+- **A refusal says why.** A request the server refuses answers, as JSON, the id it logged the
+  refusal against and a line for each header that did not fit. The transport carries both, so an
+  agent reads "assembly-id is not a uuid" where it read "answered 400". This defect would have
+  been one line on its first day.
+- **The specs' dev server is real.** `test/fixtures/dev-server.ts` is a server of the framework,
+  listening, with an assembly whose service throws and one whose view places an assembly the
+  server has not; the ids the tools report for what failed are held to that server's own log.
+  The transport's own spec keeps a scripted server, to read what was asked of it, and sends ids
+  of the contract's shape.
+- **The agents fixture asks.** In the project as `npm create` wrote it, with its built server
+  running and recorded as `dev` records its own, `compose_page` and `render_assembly` are called
+  through the installed MCP server: every placement answered by the server, none rendered here.
+
+Watched red before the fix: the five dev-server specs against the real server with the ids as
+they were sent, each on "answered 400"; and the fixture's step, run once with the old page id,
+on the tools' own new words, "the dev server refused the request for "hello" (400): assembly-page
+is not a uuid". The mechanism that let it through is closed in two places,
+the real server in the specs and the step in the fixture; a stand-in no longer stands between the
+tools and the contract.
+
+Found beside it, a row: `render_assembly` answers `data: {}` through the dev server, though the
+island in the html it answered holds what the service returned.

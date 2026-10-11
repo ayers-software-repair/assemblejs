@@ -15,7 +15,9 @@ import { failedEnvelopes } from "./failed-envelopes.js";
  * assembly answers its fallback envelope marked with one, and an answer that stands holds one
  * for each placement that fell back inside it. So a failure is answered with the server's own
  * id and said to `failed`, which the composer's account then finds it by; and each placement
- * that fell back inside an answer is said to `inside`, since no account here holds it.
+ * that fell back inside an answer is said to `inside`, since no account here holds it. A request
+ * the server refused, for a header that does not fit its shape, is said the same way, with what
+ * the server said was wrong with it.
  */
 export function devServerFetch(
   url: string,
@@ -24,6 +26,19 @@ export function devServerFetch(
 ): Fetch {
   const logged = (id: string): string =>
     id === "" ? "its log says why" : `its log says why, against ${id}`;
+  // A request the server refused answers what was wrong with it, as JSON: the id it logged the
+  // refusal against, and a line for each header that did not fit its shape (DESIGN 2.1).
+  const refusal = (body: string): { readonly id: string; readonly said: string } | undefined => {
+    try {
+      const { error } = JSON.parse(body) as {
+        error?: { correlationId?: unknown; headers?: unknown };
+      };
+      const said = Array.isArray(error?.headers) ? error.headers.map(String).join("; ") : "";
+      return said === "" ? undefined : { id: String(error?.correlationId ?? ""), said };
+    } catch {
+      return undefined;
+    }
+  };
   return async (request) => {
     const headers: Record<string, string> = {
       accept: "text/html",
@@ -59,11 +74,19 @@ export function devServerFetch(
           stack: undefined,
         });
       }
+      const refused = own === undefined ? refusal(html) : undefined;
+      if (refused !== undefined) {
+        failed({
+          correlationId: refused.id,
+          message: `the dev server refused the request for "${request.name}" (${String(response.status)}): ${refused.said}`,
+          stack: undefined,
+        });
+      }
       return {
         ok: false,
         reason: "status",
-        detail: `${at} answered ${String(response.status)}`,
-        correlationId: own?.id ?? "",
+        detail: `${at} answered ${String(response.status)}${refused === undefined ? "" : `: ${refused.said}`}`,
+        correlationId: own?.id ?? refused?.id ?? "",
       };
     }
     if (!type.startsWith("text/html")) {

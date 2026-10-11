@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { randomUUID } from "node:crypto";
 import { DEFAULT_LIMITS, localFetch } from "@assemblejs/core";
 import type { LogLine } from "@assemblejs/core";
 import { fallbackProblems } from "../compose/fallback-problems.js";
@@ -61,8 +62,10 @@ export async function renderAssembly(root: ProjectRoot, name: string): Promise<R
   const answer = await fetch({
     name,
     view: "default",
-    id: `preview-${name}`,
-    page: "preview",
+    // The ids a page's composer sends, which the content endpoint holds to their shape and
+    // refuses a request without (DESIGN 2.1).
+    id: randomUUID(),
+    page: randomUUID(),
     // As a page's placement is asked: one deep, with nothing above it.
     depth: 1,
     path: [],

@@ -258,6 +258,33 @@ test("the page the agent composed is the page the project's build serves", async
       ],
       ["greeting", "<p>greeting</p>"],
     ]);
+
+    // With that server recorded as `dev` records its own, the agent is shown what it serves:
+    // each placement answered by the server over its content endpoint, none rendered here. The
+    // server holds every request to the contract, so this is the tools asking as a composer
+    // asks, and nothing a stand-in can prove.
+    mkdirSync(join(root, ".assemblejs"), { recursive: true });
+    writeFileSync(join(root, ".assemblejs", "dev.json"), JSON.stringify({ url: server.origin }));
+    const client = await startedFrom(...CLIENTS[0]);
+    try {
+      const call = calling(client);
+      const [page] = readdirSync(join(root, "src", "pages"));
+      const composed = await call("compose_page", { page });
+      assert.equal(composed.ok, true, JSON.stringify(composed.problems));
+      assert.deepEqual(
+        composed.result.diagnostics.map((diagnostic) => [diagnostic.name, diagnostic.source]),
+        [
+          ["hello", "remote"],
+          ["greeting", "remote"],
+        ],
+      );
+      const rendered = await call("render_assembly", { name: "greeting" });
+      assert.equal(rendered.ok, true, JSON.stringify(rendered.problems));
+      assert.deepEqual(named(rendered.result.html), [["greeting", "<p>greeting</p>"]]);
+    } finally {
+      await client.close();
+      rmSync(join(root, ".assemblejs", "dev.json"), { force: true });
+    }
   } finally {
     await server.stop();
   }

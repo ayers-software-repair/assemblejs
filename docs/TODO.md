@@ -1184,7 +1184,22 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       is shown as the project serves it; without one, a plain html view is rendered here and
       any other is refused with the word to start the dev server (`needsTheDevServer`).
       DESIGN 13.4 and 13.6 say it (DECISIONS 2026-10-11, "the dev server renders for the
-      agent"). The morning list's item 10 closes
+      agent"). The morning list's item 10 closes. CORRECTED the same day: as it landed
+      (`5a08454`) it did not work against a real server. Both tools sent ids that are not
+      uuids, the content endpoint refuses such a request with a 400, and the specs passed
+      because their dev server was a stand-in that answers whatever it is sent. Found by a
+      probe against a real server, fixed in the row below
+- [x] The agent surface asks the dev server as a composer asks (2026-10-11): `render_assembly`
+      and `compose_page` send uuids for the page and every id, as the contract holds a request
+      to; a request the server refuses is said with what the server said was wrong with it; the
+      specs' dev server is a real server of the framework, whose own log the ids are held to;
+      and the agents fixture asks both tools through the installed server against the
+      project's built server. Watched red first: five specs against the real server with the
+      ids as they were sent (DECISIONS 2026-10-11, "the tools ask the dev server as a composer
+      asks")
+- [ ] `render_assembly` answers `data: {}` through the dev server, though the server ran the
+      assembly's service and the island in the html it answered holds what it returned. Read
+      the island of the answer in hand (found 2026-10-11 beside the row above)
 - [x] P5-6 BUILT-IN COMPONENTS AS PLAIN HTML AND TOKENS (A-04): as
       `docs/studies/built-in-components.md` proposed in that form, in its bites; no framework
       component library. The morning list's item 9 closes when the last bite lands: it landed

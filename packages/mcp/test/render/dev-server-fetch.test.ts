@@ -18,7 +18,12 @@ const server = createServer((request, response) => {
   } else if (request.url?.startsWith("/assembly/failing/") === true) {
     response.writeHead(500, { "content-type": "text/html; charset=utf-8" });
     response.end(
-      '<assembly-root data-name="failing" data-id="preview-1" data-view="default" data-renderer="" data-failed="c0ffee12"></assembly-root>',
+      '<assembly-root data-name="failing" data-id="0b9f4c1e-6a55-4f0d-9d1c-2f6f3f1f7a10" data-view="default" data-renderer="" data-failed="c0ffee12"></assembly-root>',
+    );
+  } else if (request.url?.startsWith("/assembly/refused/") === true) {
+    response.writeHead(400, { "content-type": "application/json; charset=utf-8" });
+    response.end(
+      '{"error":{"correlationId":"feedf00d","headers":["assembly-id is not a uuid","assembly-depth is not a whole number"]}}',
     );
   } else if (request.url?.startsWith("/assembly/holder/") === true) {
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
@@ -37,11 +42,14 @@ beforeAll(async () => {
 });
 afterAll(() => new Promise<void>((resolve) => server.close(() => resolve())));
 
+// Ids of the shape the content endpoint holds a request to (DESIGN 2.1).
+const ID = "0b9f4c1e-6a55-4f0d-9d1c-2f6f3f1f7a10";
+const PAGE = "7c1d2e3f-4a5b-4c6d-8e9f-0a1b2c3d4e5f";
 const request = (name: string) => ({
   name,
   view: "default",
-  id: "preview-1",
-  page: "preview",
+  id: ID,
+  page: PAGE,
   depth: 2,
   path: ["shell/default"],
   query: new URLSearchParams("note=hi"),
@@ -62,8 +70,8 @@ describe("asking the project's dev server for a placement", () => {
     expect(sent?.url).toBe("/assembly/counter/default/?note=hi");
     expect(sent?.headers).toMatchObject({
       accept: "text/html",
-      "assembly-id": "preview-1",
-      "assembly-page": "preview",
+      "assembly-id": ID,
+      "assembly-page": PAGE,
       "assembly-depth": "2",
       "assembly-path": "shell/default",
       "assembly-params": "sku=a1",
@@ -116,5 +124,21 @@ describe("asking the project's dev server for a placement", () => {
     ]);
     expect((await fetch(request("counter"))).ok).toBe(true);
     expect(inside).toHaveLength(2);
+  });
+
+  it("says what the server said was wrong with a request it refused, by the id it logged it against", async () => {
+    const said: { correlationId: string; message: string }[] = [];
+    const answer = await devServerFetch(origin, (line) => said.push(line))(request("refused"));
+    expect(answer).toMatchObject({
+      ok: false,
+      reason: "status",
+      correlationId: "feedf00d",
+      detail: expect.stringMatching(
+        / answered 400: assembly-id is not a uuid; assembly-depth is not a whole number$/,
+      ),
+    });
+    expect(said.map((line) => line.message)).toEqual([
+      'the dev server refused the request for "refused" (400): assembly-id is not a uuid; assembly-depth is not a whole number',
+    ]);
   });
 });

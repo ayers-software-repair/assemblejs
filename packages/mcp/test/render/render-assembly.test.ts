@@ -42,12 +42,18 @@ describe("rendering through the project's dev server", () => {
     assembly("failing", "failing.react.tsx", "export default () => null;");
     assembly("holder", "holder.react.tsx", "export default () => null;");
     dev.runningFor(dir);
-    expect((await renderAssembly(root, "failing")).problems).toEqual([
-      '"failing" failed on the dev server, which answered 500: its log says why, against c0ffee12',
-    ]);
-    expect((await renderAssembly(root, "holder")).problems).toEqual([
-      '"price" fell back inside "holder" on the dev server: its log says why, against deadbeef',
-    ]);
+    const [failed] = (await renderAssembly(root, "failing")).problems;
+    const [inside] = (await renderAssembly(root, "holder")).problems;
+    // Each id is the server's own, and the one its log holds the failure against.
+    const ids = [failed, inside].map((said) => / against (\S+)$/.exec(said ?? "")?.[1] ?? "none");
+    expect(failed).toBe(
+      `"failing" failed on the dev server, which answered 500: its log says why, against ${ids[0] ?? ""}`,
+    );
+    expect(inside).toBe(
+      `"price" fell back inside "holder" on the dev server: its log says why, against ${ids[1] ?? ""}`,
+    );
+    const logged = dev.logged().map((line) => line.correlationId);
+    expect(logged).toEqual(expect.arrayContaining(ids));
   });
 
   it("asks it for a plain html view too, so what is shown is what the project serves", async () => {
