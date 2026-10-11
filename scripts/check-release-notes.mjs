@@ -15,9 +15,8 @@
 // the site goes on describing the release before. It runs in `pnpm check`, in the deploy before
 // the site is published, and in the release job before a version is: it needs nothing installed.
 //
-// It reads version headings and no package's name. While every package heads the same versions
-// that is exact. Where they part, a version one package reaches after another already has its
-// section, and nothing here asks for more.
+// It reads version headings and no package's name, which is exact: every package heads the same
+// versions, since one changesets fixed group moves them together (check-one-version.mjs).
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";

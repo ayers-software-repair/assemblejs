@@ -1003,18 +1003,26 @@ recommendation, and he chose (DECISIONS 2026-10-11, "the owner's seven answers";
 D1252). Each answer is a row here, in the order they are taken; none waits on anyone.
 
 - [x] P5-1 THE NESTING DEPTH IN THE PROJECT'S CONFIG FILE. Done 2026-10-11: `limits: { depth,
-    placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createServer`'s
+  placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createServer`'s
       options as every config field is, in place of `maxDepth`; `limitProblems` refuses a
       value outside its bounds at boot; `check` and the agent surface show it as a setting;
       DESIGN 3.4 and 14 and the tutorial say where it is set; the trust fixture's `bounded`
       project holds a page to a depth of one and two placements (DECISIONS 2026-10-11, "the
       limits are in the config file"). The morning list's item 6 closes
-- [ ] P5-2 ONE VERSION FOR THE TWELVE PACKAGES: changesets in a fixed group for every package,
-      so a release moves them together; the release-notes gate and a new project's manifest,
-      written as if they did, are held to it by a spec; the morning list's item 11 closes
-- [ ] P5-3 THE WAITING CHANGE NOTES FOLDED: before the first publish, every changeset written
-      since the packages were set to `1.0.0-next.0` is folded into one entry per package, so
-      the first publish ships one note; the morning list's item 12 closes
+- [x] P5-2 ONE VERSION FOR THE TWELVE PACKAGES. Done 2026-10-11: `"fixed": [["@assemblejs/*"]]`
+      in `.changeset/config.json`, a glob the installed `@changesets/config` 4.0.0 expands with
+      picomatch (`dist/index.mjs:777`), so a changeset to any package moves them all; the gate
+      `check:one-version` holds every package to one version and to that one group, named in
+      CLAUDE.md's gate paragraph; the release-notes gate's comment says the assumption is now
+      exact. Measured in a clone with its own install: `changeset version` in pre mode moves
+      every package to the same `1.0.0-next.N` (DECISIONS 2026-10-11, "one version"). The
+      morning list's item 11 closes
+- [x] P5-3 THE WAITING CHANGE NOTES FOLDED. Done 2026-10-11: `scripts/fold-changesets.mjs`
+      folds every pending changeset into the current version's entry of each package's
+      `CHANGELOG.md`, under the bump's heading, and removes the changeset; run once now on the
+      twenty-nine that had gathered, and run again by hand before the first publish for any
+      that gather after. `RELEASE_NOTES.md` says in prose what the first prerelease gained.
+      The morning list's item 12 closes (DECISIONS 2026-10-11, "the waiting change notes")
 - [ ] P5-4 A PAGE'S DATA ACROSS SERVERS ONLY TO A REMOTE NAMED TRUSTED: a remote declared
       `trusted` receives the page's query and route parameters with a placement; every other
       remote receives, as today, only the headers it declared. DESIGN 5.1 and 8 say it, the

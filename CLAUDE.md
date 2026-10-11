@@ -85,7 +85,8 @@ Enforced, and every one of these is a script in `pnpm check` rather than a claim
 `check:organization` (rules 1-4, 6, 7, read off the TypeScript AST), `check:mirror` (rule 5),
 `check:modules` (dependency-cruiser: no cycles, no orphans, layer direction), `lint` (eslint,
 import order and kebab filenames), `check:unused` (knip: a file or export nothing reads),
-`check:versions` (syncpack: one version of a dependency across the workspace), `check:exports`,
+`check:versions` (syncpack: one version of a dependency across the workspace),
+`check:one-version` (the twelve packages name one version and sit in one changesets fixed group), `check:exports`,
 `check:pack` and `check:publish` (publint and are-the-types-wrong on the real tarball),
 `check:reference` (the API reference generated whole, its warnings errors, and its entry points
 held to the packages' `exports`), `check:claude` (this paragraph against the chain).
@@ -98,7 +99,9 @@ Every gate that can go red on a known-bad input has been watched doing so, and t
 ## Release
 
 changesets: every change under `packages/*/src` carries one, from the first changeset of
-2026-10-09, which set every package to `1.0.0-next.0` (owner, DECISIONS 2026-10-09). `next` is
+2026-10-09, which set every package to `1.0.0-next.0` (owner, DECISIONS 2026-10-09). The twelve
+packages share one version: one fixed group in `.changeset/config.json` moves them together,
+and `check:one-version` holds it (owner, DECISIONS 2026-10-11, "One number"). `next` is
 in pre mode (`.changeset/pre.json`). Branch pushes prepare version pull requests only. An
 owner-approved `v1.0.0-next.N` tag publishes to npm `next`; a stable `v1.0.0` tag publishes to
 `latest`. `release.yml` checks the tag against every public package and the channel's branch,

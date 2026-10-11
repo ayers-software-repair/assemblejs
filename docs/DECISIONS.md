@@ -4164,3 +4164,47 @@ Settled:
 - **Held in the trust fixture** by a project of its own, `bounded`, whose config sets a depth of
   one and two placements: on its one page the chain's child is refused for the depth and the
   third placement for the count, accounted once, and the two inside the bounds render.
+
+## 2026-10-11: one version
+
+The owner's answer of this morning (D1252, "One number") to whether the twelve packages share one
+version or keep one each. Each had kept its own, and after a first release that changed only
+some of them the numbers would have parted, which a new project's manifest (`^<version>` of the
+command line's own) and the release-notes gate were both written as if they never did.
+
+Settled:
+
+- **One fixed group**, `"fixed": [["@assemblejs/*"]]` in `.changeset/config.json`. The installed
+  `@changesets/config` 4.0.0 expands the glob with picomatch and refuses a pattern that matches
+  no package; changesets' own guide (changesets.dev/guide/fixed-packages, read 2026-10-11): "all
+  packages in the group will be version-bumped and published together even when there are no
+  changes", so "all packages will always have the same version".
+- **A gate holds it**, `scripts/check-one-version.mjs` as `check:one-version` in the chain and
+  in CLAUDE.md's gate paragraph: every `packages/*/package.json` names one version, the fixed
+  group is exactly that one glob, and every package's name is under it. Its self-test goes red
+  on a second version, a missing group, a partial group and a package outside the group.
+- **Measured** in a clone of the repository with an install of its own: `changeset version` in
+  pre mode moves every package to the same `1.0.0-next.N` and writes each package's changelog.
+
+## 2026-10-11: the waiting change notes
+
+The owner's answer of this morning (D1252, "Yes") to folding the change notes that gathered
+since every package was set to `1.0.0-next.0` into the first entry before the first publish.
+The first publish ships the tree as it stands that day as `1.0.0-next.0`, so a note describing
+a change already in that version belongs in that version's entry, not in a bump to `next.1` the
+publish never makes.
+
+Settled:
+
+- **`scripts/fold-changesets.mjs`** reads every pending changeset, its packages, bumps and note,
+  and writes the note under `### Major`, `### Minor` or `### Patch Changes` of the version each
+  package has now in its `CHANGELOG.md`, making the heading where it is missing and keeping the
+  order major, minor, patch; then removes the changeset. Its self-test holds the shape it writes,
+  the order, a second note under an existing heading, an older version left alone, and the
+  refusal of a version the changelog lacks. No commit hash on a folded note: the first entry is
+  one note per package, not a history.
+- **Run once now** on the twenty-nine that had gathered, and to be run again by hand before the
+  first publish for any that gather after, as the owner's step. The release-notes gate is
+  unmoved: the version headings are the same.
+- **`RELEASE_NOTES.md`** says in a paragraph what the first prerelease gained since its notes
+  were first written, for a user; the package changelogs hold the detail.

@@ -19,7 +19,7 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "changeset": "changeset",
-    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:site && pnpm check:claude && pnpm check:design && pnpm check:organization && pnpm check:duplication && pnpm check:mirror && pnpm check:versions && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm build && pnpm check:reference && pnpm test && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
+    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:site && pnpm check:claude && pnpm check:design && pnpm check:organization && pnpm check:duplication && pnpm check:mirror && pnpm check:versions && pnpm check:one-version && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm build && pnpm check:reference && pnpm test && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
     "check:emoji": "node scripts/check-emoji.mjs --self-test && node scripts/check-emoji.mjs",
     "check:exports": "node scripts/check-exports.mjs",
     "check:headers": "node scripts/check-headers.mjs",
@@ -37,6 +37,7 @@
     "check:trailers": "bash scripts/check-trailers.sh --self-test && bash scripts/check-trailers.sh",
     "check:unused": "knip",
     "check:versions": "syncpack lint --dependency-types prod,dev",
+    "check:one-version": "node scripts/check-one-version.mjs --self-test && node scripts/check-one-version.mjs",
     "lint": "eslint .",
     "prepare": "husky",
     "test": "pnpm -r test",
