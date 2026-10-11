@@ -109,21 +109,67 @@ jobs:
       # and minutes; here it runs on every push and pull request.
       - run: pnpm conformance
 
-  commit-trailers:
-    name: commit trailers
-    if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
+  # Every commit carries a conventional header and a sign-off, and no attribution trailer
+  # (CONTRIBUTING). The hooks hold that on a machine that has them; this job holds it for a
+  # commit that reached the branch without them, pushed or in a pull request.
+  #
+  # A pull request is read for its own commits. A push is read from the floor below to the tip,
+  # and not for the push's own range, because a newer push cancels the run in flight (the
+  # concurrency group above), and that run's commits would then never be read. The floor is the
+  # repository's first commit: every commit since passes both steps. A commit that cannot be made
+  # to pass, on a branch that is never rewritten, is passed by moving the floor above it, with the
+  # reason in docs/DECISIONS.md, never by loosening a step.
+  commits:
+    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+    name: commits
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: read
+    env:
+      COMMITS_SINCE: c565074e594ae5d6d3ee617e09bfc5a3d3b1f15c
     steps:
       - name: Checkout with history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+
+      - name: Setup Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: The commits to read
+        id: range
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ -n "$PR_BASE" ]; then
+            echo "base=$PR_BASE" >> "$GITHUB_OUTPUT"
+            echo "head=$PR_HEAD" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=$COMMITS_SINCE" >> "$GITHUB_OUTPUT"
+            echo "head=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The same judge the commit-msg hook asks, with the same config.
+      - name: Every header conventional
+        env:
+          BASE_SHA: ${{ steps.range.outputs.base }}
+          HEAD_SHA: ${{ steps.range.outputs.head }}
+        run: pnpm exec commitlint --from "$BASE_SHA" --to "$HEAD_SHA"
+
       - name: Every commit signed off, no other attribution trailer
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ steps.range.outputs.base }}
+          HEAD_SHA: ${{ steps.range.outputs.head }}
         run: bash scripts/check-trailers.sh "$BASE_SHA" "$HEAD_SHA"

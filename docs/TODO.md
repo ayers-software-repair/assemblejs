@@ -950,10 +950,14 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
       with its reason, measured. Watched red on a rule verdict recorded wrong, a difference
       recorded that is none, and the house's script edited (DECISIONS 2026-10-11, "one rule
       for a commit's header")
-- [ ] Nothing in CI reads a commit's header, and the sign-off is read on a pull request alone:
+- [x] Nothing in CI reads a commit's header, and the sign-off is read on a pull request alone:
       `ci.yml`'s `commit trailers` job is skipped on a push, and commitlint runs only in the
       husky hook, which `--no-verify` or a machine without the hooks passes by. Every push to
-      `next` so far went through the hook. Hold both on a push too (found 2026-10-11)
+      `next` so far went through the hook. Hold both on a push too (found 2026-10-11). DONE
+      2026-10-11: the job is `commits`, on a push and on a pull request, commitlint with the
+      hook's own config and then the trailers; a push is read from a floor, the first commit,
+      to the tip. Both steps watched green on the history and red on a clone with one bad
+      commit (DECISIONS 2026-10-11, "CI reads every commit")
 - [x] Adopt the canonical `.editorconfig` from platform/codestyle (49-line per-language version;
       mine is the 8-line minimal) plus a byte-equality drift test. Measured: prettier does not act
       on `trim_trailing_whitespace`, so this is uniformity, not a bug fix. DONE 2026-10-11: the

@@ -4868,3 +4868,33 @@ take another type, which the hash refuses before any verdict is asked.
 
 Found beside it, and a row of its own: nothing in CI reads a commit's header at all, and the
 sign-off is read on a pull request alone.
+
+## 2026-10-11: CI reads every commit
+
+Found with the entry above: CONTRIBUTING asks a conventional header, a sign-off and no attribution
+trailer of every commit, and `scripts/check-trailers.sh` says of the sign-off that "nothing else
+enforces it, so it runs both locally and in CI". In CI it ran on a pull request alone, and every
+commit in this repository is pushed, so the job has been skipped on every run; and the header was
+read by the husky hook and by nothing else. A commit made with `--no-verify`, or on a machine
+without the hooks, reached `next` unread.
+
+Settled: the job is `commits`, on a push and on a pull request, two steps: `commitlint --from
+--to` with the repository's own config, the hook's judge and no second one, then the trailers
+script over the same range. A pull request is read for its own commits, as before. A push is read
+from a floor to the tip and not for the push's own range: `ci.yml` cancels the run in flight when
+a newer push arrives, and with a range per push that run's commits would never be read. The floor
+is the repository's first commit, `c565074`, named in the workflow: the 184 commits above it pass
+both steps today, read here, with 14 warnings from commitlint on a footer with no blank line
+before it, which are not errors. The cost is seconds.
+
+What a floor commits the branch to: one commit that fails either step turns every later run red,
+on a branch that is never rewritten. That is the intent, since the alternative is a rule a single
+`--no-verify` passes unseen; and the way out is named in the workflow, moving the floor above
+that commit with the reason recorded here, never loosening a step. A squash merge of a pull
+request with several authors is the case to know: GitHub writes a `Co-authored-by` trailer into
+the squash message, which the trailers step refuses, so the one who merges edits it out, as
+CONTRIBUTING's "no other attribution trailer, ever" already asks.
+
+Watched before it was trusted, the two steps run on a clone: green on the history as it stands;
+red, both, on one commit with no conventional header and no sign-off; red on the trailers alone
+for a signed commit with an attribution trailer. The workflow itself is proven by its first run.
