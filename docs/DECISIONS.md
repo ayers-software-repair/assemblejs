@@ -4522,3 +4522,19 @@ Also in this pass, the ledger's duplicate-key row: `eslint .` does lint the conf
 off for `.ts` files on the ground that the compiler reports a duplicate, and no tsconfig includes
 a config file, so a probe file with `test` declared twice linted clean (exit 0, 2026-10-11). The
 core rule is turned back on for `*.config.{ts,js,mjs}`; the same probe now fails the lint.
+
+## 2026-10-11: the house editorconfig
+
+The ledger's row: adopt the house `.editorconfig` with a byte-equality drift test.
+
+Settled: the root `.editorconfig` is platform/codestyle's file, byte for byte, as the kit's README
+asks of every first-party repository ("Copied byte-identical into every first-party repo", read
+2026-10-11). The kit's own workflow notes that this repository, being public, does not check
+platform out with a credential in CI, so the drift test here is a hash, not a `cmp` against a
+checkout: `check:editorconfig` holds the file to the canonical's sha256 at platform `v0.54.1`
+(the file last changed before `v0.21.0`; the site-kit pin `ayersPlatform` is `v0.20.4`, which
+predates it, so the pin cannot serve), and refuses a nested `.editorconfig` as magpie's drift
+test does. Re-syncing is copying the file and recording the new hash and tag. What changes for
+an editor: Markdown keeps its trailing spaces (a hard line break), Go would indent with tabs, and
+the indent width is stated per language rather than for every file; Prettier reads the same two
+values it read before, so no formatted file changes.

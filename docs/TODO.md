@@ -875,9 +875,12 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
 - [ ] Keep husky + commitlint (already live). When the shared house check set lands, add a
       CROSS-TEST feeding the same fixture messages to commitlint and the shared script, asserting
       the same verdict, so one rule does not drift into two implementations.
-- [ ] Adopt the canonical `.editorconfig` from platform/codestyle (49-line per-language version;
+- [x] Adopt the canonical `.editorconfig` from platform/codestyle (49-line per-language version;
       mine is the 8-line minimal) plus a byte-equality drift test. Measured: prettier does not act
-      on `trim_trailing_whitespace`, so this is uniformity, not a bug fix.
+      on `trim_trailing_whitespace`, so this is uniformity, not a bug fix. DONE 2026-10-11: the
+      house file copied byte for byte (platform v0.54.1, unchanged since v0.21.0), and
+      `check:editorconfig` holds it to that file's hash and refuses a nested copy, self-tested
+      red (DECISIONS 2026-10-11, "the house editorconfig")
 - [ ] Reconcile the eslint pin: platform/codestyle pins 10.10.0, this repo carries 10.9.1. One
       version or a stated reason. Prettier already agrees at 3.9.6.
 
