@@ -64,6 +64,14 @@ test("a built project's Svelte and React assemblies share a page and an event", 
 
   // Every island is read and removed once the runtime starts, the static assembly's included.
   await expect(page.locator("script[data-assembly]")).toHaveCount(0);
+  // Each framework's module has mounted its assembly: the runtime marks the envelope. A click
+  // before that lands on markup with no handler, which is the server's markup doing its job.
+  for (const name of ["counter", "readout"]) {
+    await expect(page.locator(`assembly-root[data-name="${name}"]`)).toHaveAttribute(
+      "data-mounted",
+      "",
+    );
+  }
 
   await page.locator("#bump").click();
   await expect(page.locator("#bump")).toContainText("Clicked 1");

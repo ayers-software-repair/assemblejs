@@ -854,7 +854,10 @@ each island, and mounts each assembly through its renderer's client half.
 Declared per assembly. A static view (html, or a template with no `.client.ts` beside it)
 ships no JavaScript at all, which is a mode and not an accident; a framework view declared
 `none` is left as the server sent it, and the page it is on still carries the runtime for the
-rest.
+rest. Once a renderer has mounted an assembly, the runtime marks its envelope `data-mounted`,
+and removes the mark when it unmounts it: the one word the browser writes on an envelope, so a
+page, a test or a person can tell a hydrated assembly from one still waiting for its module.
+The server never writes it (section 2.4 is the server's set).
 
 Events are typed, page-scoped and owned by the assembly:
 

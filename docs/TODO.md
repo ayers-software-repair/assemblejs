@@ -5,12 +5,17 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the per-package reference,
-with every ledger row that waits on nobody done).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the kit at v0.54.3, with
+every ledger row that waits on nobody done).**
 
-STATE AT THIS LANDING. `origin/next` is `a8e9be1` (the API reference once per package; its `ci`
-and `deploy-site` runs are read next, the deploy exercising the new delete of retired reference
-pages). Beneath it, each pushed on 2026-10-11 with its `ci` run read green unless named: `2dd4a59`
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the runtime's
+`data-mounted` mark, which the built-page proof waits for. Beneath it `4c43b76` (the platform pin
+at `v0.54.3`, which carries the kit fold cut here, and the release notes in the reference's shape;
+`deploy-site` 38173844555 green with the kit staged at the new pin, `ci` 38173844564 green on a
+rerun of the proof that flaked, the flake this landing fixes). Beneath those, each
+pushed on 2026-10-11 with its runs read green: `e9257ae` the ledger (`ci` 38173125816); `a8e9be1`
+the API reference once per package (`ci` 38172436005, `deploy-site` 38172435999, the retire step
+run); `2dd4a59`
 the deploy retires the reference's pages (`ci` 38172087831); `e922fce` `check` reads a slot in an
 element's render, with `90bc782` a placement inside an element's shadow root refused beneath it
 (`ci` 38171625851); `5d69f9a` registrations for Gemini CLI and opencode (`ci` 38171109261);
@@ -1002,6 +1007,12 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       to `0.0.0`, the changelogs removed, the first changeset back from `.changeset/pre/`,
       `pnpm changeset version`; every package reads `1.0.0-next.0` again with one entry
       holding every change, and none waits (DECISIONS 2026-10-10, "release notes")
+- [x] The built-page proof clicked before the page had hydrated and failed three times today on
+      "Clicked 0" and "nothing yet", green on every rerun: it waited for the islands to be read,
+      which the runtime does before any module arrives, not for the mount. FIXED 2026-10-11: the
+      runtime marks a mounted envelope `data-mounted` and unmarks it on unmount, the proof waits
+      for the mark on both assemblies before it clicks, and DESIGN 9 says so (DECISIONS
+      2026-10-11, "the mark of a mounted assembly")
 - [x] The reference product writes a note's subsections as smaller headings and lists, and
       styles them in a stylesheet of its own (`magpie/site/site.css:11-14`); the kit has no rule
       for either. A fold for the kit, the platform's to make. When this site's pin has it, the
@@ -1013,6 +1024,10 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       role the kit at that tag references bound by the skin, and `release-notes.html` takes the
       reference's shape, a status line, an introduction and h3 groups with lists, its words
       brought to what the tree holds (DECISIONS 2026-10-11, "the kit at v0.54.3")
+- [ ] The pin moves from `v0.54.3` to `v0.54.4` at the next touch of `ayersPlatform`: the cto
+      seat says v0.54.3's own CI went red on a dotnet spec's clock flake, nothing in the kit,
+      and v0.54.4 (265826b) changes that one file alone, the kit bytes the same. No deploy is
+      owed to it; it rides the next pin move (cto, 2026-10-11)
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

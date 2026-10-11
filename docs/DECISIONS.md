@@ -4800,3 +4800,19 @@ table. Its words are brought to what the tree holds on this day, since the page 
 a user and the version is not yet published: the registrations name Gemini CLI and opencode, the
 agent surface renders every kind of view through the dev server and reads the contract, and
 `check`'s five rules on a view stand named. The page as text is regenerated with it.
+
+## 2026-10-11: the mark of a mounted assembly
+
+Found: the built-page proof (`browser/built.browser.ts`) failed three times today and passed on
+each rerun, on "Clicked 0" or "nothing yet" after a click. It waited for every island's script to
+be gone, which the runtime does when it starts, before any assembly's module has arrived, and
+then clicked a button whose handler React had not yet attached. The server's markup was doing its
+job; the proof was asking too early, and nothing on the page said when an assembly was live.
+
+Settled: the runtime writes one mark, `data-mounted`, on an envelope once its renderer has
+mounted the assembly, and removes it when it unmounts it (`MOUNTED_ATTRIBUTE` in core's
+vocabulary, beside the server's words and not among them: `renderEnvelope` never writes it, which
+a spec holds). A static assembly, declared `none`, is never marked. The proof waits for the mark
+on both assemblies before it clicks. A page, a test or a person has the same signal, which the
+design lacked: section 9 says it now. A retrying click in the proof would have hidden the race
+and said nothing to anyone else.

@@ -9,6 +9,7 @@ export { SEGMENT } from "./segment.js";
 export { ENVELOPE_ELEMENT } from "./envelope-element.js";
 export { ENVELOPE_ATTRIBUTE } from "./envelope-attribute.js";
 export { ISLAND_ATTRIBUTE } from "./island-attribute.js";
+export { MOUNTED_ATTRIBUTE } from "./mounted-attribute.js";
 export { FALLBACK_ATTRIBUTE } from "./fallback-attribute.js";
 export { RESPONSE_HEADER } from "./response-header.js";
 export { ISLAND_SCRIPT_TYPE } from "./island-script-type.js";
