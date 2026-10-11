@@ -680,9 +680,10 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] A framework view is read with the components it is split into: `viewModules` follows
       its imports by relative path, so a slot written in a component beside the view is the
       view's. Three mutations, each alone, watched red (2026-10-10)
-- [ ] A slot `check` still does not read, and writes into the registry as nothing: one in a
+- [x] A slot `check` still does not read, and writes into the registry as nothing: one in a
       module reached by a package's name. DESIGN 7 says so now, with what follows from it.
-      The framework guides do not: say it there. The owner chose way A in row 4a, which reads
+      The framework guides do not: say it there. SAID 2026-10-11, in the six guides' paragraph
+      on the slot (DECISIONS 2026-10-11, "the guides on a slot behind a package name"). The owner chose way A in row 4a, which reads
       nobody's source, so no choice of his gives such a slot a declaration. The other two
       this row named are read since the second reading's finding 3: a slot reached through a
       namespace import, and a Vue slot written in kebab case (DECISIONS 2026-10-10, S-07 and

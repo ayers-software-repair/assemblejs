@@ -56,7 +56,7 @@ defineProps&lt;{ data: Record&lt;string, unknown&gt; }&gt;();
       <dd><code>Slot</code> places another assembly where it stands, by name, whatever that assembly is
         written in. The server puts it there, and the page's runtime mounts it as it mounts this
         one; Vue leaves it alone when this component renders again. The name is written as a
-        string. The slot is an element of its own, <code>&lt;div data-assembly-slot="price"&gt;</code>,
+        string. <code>check</code> reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. The slot is an element of its own, <code>&lt;div data-assembly-slot="price"&gt;</code>,
         and the placed assembly stands inside it: lay it out by that element, never by what is
         inside. An assembly in a project has one view, so no
         <code>view</code> is given.

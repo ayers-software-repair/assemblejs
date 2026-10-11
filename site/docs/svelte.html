@@ -55,7 +55,7 @@
       <dd><code>slot()</code> answers the markup that places another assembly, by name, whatever that
         assembly is written in, for Svelte's own raw form to write. The server puts the assembly
         there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when
-        this component renders again. The name is written as a string. An assembly in a
+        this component renders again. The name is written as a string. <code>check</code> reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. An assembly in a
         project has one view, so the second argument, which names one, is left out. Write
         nothing that came from a visitor with <code>{@html}</code>: it is markup there, and a
         directive in it is placed like one you wrote.

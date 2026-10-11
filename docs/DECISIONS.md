@@ -4564,3 +4564,12 @@ spread may carry the route; a literal that is not an object (`export default 5`)
 implied, which is what spreading it into the page does at run time. `check` then holds nothing
 against such a page's route, the shape shows it computed, and `perf` says the route is not written
 as a literal. Two mutations, each alone, watched red.
+
+## 2026-10-11: the guides on a slot behind a package name
+
+The ledger's row: DESIGN 7 says a slot inside a component that comes from a package is a render's
+alone; the framework guides did not. Each of the six (React, Preact, Vue, Svelte, Solid, Lit) now
+says, in its paragraph on the slot, that `check` reads the slot in the view and in each component
+of the project the view imports by a relative path, and that a slot inside a component from a
+package is decided by nothing before a request. The wording is the design's; the sentence stands
+where a reader meets the slot, not in a section of its own.
