@@ -290,8 +290,15 @@ the record of what was read, and they stay in the private estate document store,
 - [x] `legacy-additions` dossier
 - [x] `legacy-tests` dossier
 - [x] Ten of the eleven dossiers' load-bearing claims refuted at the source by a second reader
-- [ ] The eleventh (`client`) verified: its first verifier died mid-run and the second one's
+- [x] The eleventh (`client`) verified: its first verifier died mid-run and the second one's
       outcome was never recorded. Open for the owner: the dossiers are outside this tree.
+      CORRECTED AND CLOSED 2026-10-11: both halves of that sentence were wrong. The second
+      reader's record is on this machine beside the dossier it read, in the ignored
+      `docs/dossiers/`, dated 2026-09-03, with a verdict, trustworthy with corrections, and each
+      correction set out. Read whole, and the design held to it: no sentence of DESIGN,
+      DECISIONS or PLAN rests on one of the claims it found wrong, and the one comment in the
+      code that names the predecessor's defect in the browser states the corrected finding
+      (DECISIONS 2026-10-11, "the eleventh dossier's verification")
 - [x] `docs/dossiers/00-BRIEF.md`: the dossiers aggregated into one design brief
 - [x] `docs/dossiers/00-AUDIT.md`: the adversarial defect hunt over the v1, eight lenses, every
       finding refuted by a second reader; 74 raised, 61 survived, fifteen design constraints
@@ -828,7 +835,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       MCP servers and the MCP configuration reference): both files are workspace formats VS Code
       reads directly, `.vscode/mcp.json` under `servers` and `.mcp.json` under `mcpServers`;
       whether one name in both is shown twice, and the working directory a `.mcp.json` server
-      starts in, the pages do not say. The read in VS Code itself remains, on a machine with it
+      starts in, the pages do not say. The read in VS Code itself remains: it wants a person at
+      its window, on this machine or any, and no seat starts a desktop app; it is the lead's to
+      route
 - [x] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
       after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
       (DECISIONS 2026-10-10, A-01). DONE 2026-10-11 for the two that read a registration from
@@ -966,6 +975,13 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
       with its reason, measured. Watched red on a rule verdict recorded wrong, a difference
       recorded that is none, and the house's script edited (DECISIONS 2026-10-11, "one rule
       for a commit's header")
+- [ ] The commit rule is settled by the cto (2026-10-11), one verdict for each of the eight
+      recorded differences, with a commitlint config the kit ships beside the script; it is on
+      a platform branch and ships in the next tag, which the cto names when it is cut. Then,
+      here: copy the script, the files it sources and the kit's commitlint config from that tag,
+      record their hashes and the tag in `check:commit-rule`, point this repository's commitlint
+      at the copy, and make the eight `differs` rows `rule` rows with the verdicts decided.
+      Waits on the tag
 - [x] Nothing in CI reads a commit's header, and the sign-off is read on a pull request alone:
       `ci.yml`'s `commit trailers` job is skipped on a push, and commitlint runs only in the
       husky hook, which `--no-verify` or a machine without the hooks passes by. Every push to

@@ -5003,3 +5003,29 @@ used, since it would run the services a second time for what the first answer al
 The agent surface's tarball budget moves, from 25000 to 27000 bytes: today's work on the dev
 server's path, the ids, the refusal's words, the failed envelopes and the island, packed it to
 25378, measured by `check:pack`.
+
+## 2026-10-11: the eleventh dossier's verification
+
+The ledger held one row of Phase 1 open since September: the eleventh dossier, the browser
+runtime's, verified, "its first verifier died mid-run and the second one's outcome was never
+recorded", and it called the dossiers outside this tree. Both were wrong. The dossiers are on
+this machine in `docs/dossiers/`, which the repository ignores, as the first entries of this file
+decided; and the second reader's record is among them, written the same night as the dossier.
+
+Its verdict: trustworthy with corrections. It confirms what a builder leans on hardest, and it
+finds four claims wrong and several imprecise, each with the reference's own lines beside it.
+The four, in this product's words: that the predecessor mounted a framework's components by a
+second path of its own, where there was one path and an adapter that looked its own root up and
+did nothing, silently, when the lookup missed; how many renderers it shipped; the form of the
+script that registered an assembly's browser half; and where the uniqueness of an id was held.
+
+Held against the public record, read whole for it on 2026-10-11: no sentence of DESIGN, of this
+file or of PLAN rests on any of the four as the dossier had them. The design that was built is
+the corrected finding: one mount path, and a renderer's browser half that is handed the element
+already resolved and returns a handle or throws (DESIGN 9; the comment on `hydrate` in the React
+renderer says so in the reader's own terms). The row is closed. The record itself stays where
+the dossiers stay.
+
+The acceptance table that the plan's B-24 names, every intent from the predecessor's tests
+mapped to a test here or struck with its reason, was marked outside this tree for the same
+mistaken reason and is workable here; it is the next entry's.
