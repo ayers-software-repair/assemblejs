@@ -5,12 +5,15 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after A-04's last rule and three
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after A-04's last rule and five
 small ledger rows).**
 
-STATE AT THIS LANDING. `origin/next` is `cb58aa6`, pushed 2026-10-11 with four commits beneath
-one `ci` run (read it to its end; a rerun on this branch cancels the run in flight, by the
-concurrency group in `ci.yml`): `cb58aa6` eslint 10.10.0 with the kit; `7faefef` the house
+STATE AT THIS LANDING. `origin/next` is `8ef8644`, pushed 2026-10-11 with two commits beneath one
+`ci` run (read it to its end): `8ef8644` the six framework guides on a slot behind a package name;
+`4367272` a page declaration `check` could not read leaves its route unknown. Beneath them
+`cb58aa6`, pushed with four commits beneath one `ci` run, 38167396655, green (a rerun on this
+branch cancels the run in flight, by the concurrency group in `ci.yml`): `cb58aa6` eslint 10.10.0
+with the kit; `7faefef` the house
 `.editorconfig` and `check:editorconfig`; `62df28e` the 404 page's absolute paths, five stale
 rows checked off, the duplicate-key lint for config files; `970a004` P5-6g's fourth rule,
 `a-colour-is-a-token`, which completes A-04 (its own run cancelled by that group when `97ddcd6`'s
@@ -26,9 +29,8 @@ the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens
 the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
 and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
 envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: the open ledger rows that need no ruling (`pageRoute` on a non-object export, the
-guides on a slot behind a package name, the build's reads through `readInside`, the agent
-surface's `assemblejs://contract`), then P5-8 (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
+NEXT: the open ledger rows that need no ruling (the build's reads through the root guard, in the
+tree; the agent surface's `assemblejs://contract`; `compose_page` by page name), then P5-8 (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
 crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
 00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
 before the day's work.
@@ -749,10 +751,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       line, which the surface now takes it from. A link that stays inside is read, and a link
       to a link is followed to where it leads (DECISIONS 2026-10-10, "nothing outside the root
       is read")
-- [ ] The build's own reads open files directly: the hash of the sources, the stylesheets it
+- [x] The build's own reads open files directly: the hash of the sources, the stylesheets it
       carries into `dist/`. A link out refuses the build at discovery before either runs, and
       that is all that holds them. Give them the same read when the build is next opened
-      (found 2026-10-10)
+      (found 2026-10-10). DONE 2026-10-11: the source hash and the files a stylesheet names
+      open through `insideRoot` (bytes), the stylesheets through `readInside`; each refuses a
+      link out, pinned by a spec apiece (DECISIONS 2026-10-11, "the build reads inside the root")
 - [x] `pageRoute` takes a declaration whose default export is not written as an object for one
       that declares no route, so `check` and the shape say the route its directory implies
       where only a run could tell. A value `check` cannot read should be unknown to it

@@ -1,12 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
 import { COMPONENTS_FILE } from "../discovery/components-file.js";
 import { TOKENS_FILE } from "../discovery/tokens-file.js";
 import type { Io } from "../io/io.js";
+import { readInside } from "../root/read-inside.js";
 import { carryReferences } from "./carry-references.js";
 
 /**
@@ -24,7 +25,7 @@ export function writeProjectStyles(root: string, io: Io): readonly string[] {
   for (const relative of [TOKENS_FILE, COMPONENTS_FILE]) {
     const file = join(root, relative);
     if (!existsSync(file)) continue;
-    const css = `${carryReferences(readFileSync(file, "utf8"), file, dirname(file), root, io)}\n`;
+    const css = `${carryReferences(readInside(root, file), file, dirname(file), root, io)}\n`;
     const hash = createHash("sha256").update(css).digest("hex").slice(0, 8);
     const name = `${basename(relative, ".css")}-${hash}.css`;
     io.write(join(root, "dist", "client", "styles", name), css);

@@ -6,6 +6,7 @@ import { basename, dirname, extname, join, resolve } from "node:path";
 import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
 import postcss from "postcss";
 import type { Io } from "../io/io.js";
+import { insideRoot } from "../root/inside-root.js";
 import { insideDirectory } from "./inside-directory.js";
 import { styleReferences } from "./style-references.js";
 
@@ -30,7 +31,9 @@ export function carryReferences(
     const served = new Map<string, string>();
     for (const reference of styleReferences(declaration.value)) {
       const [path = "", suffix = ""] = /^([^?#]*)(.*)$/.exec(reference)?.slice(1) ?? [];
-      const source = resolve(dirname(file), path);
+      // Inside the project first, as every read is, then inside the assembly's own directory,
+      // and opened only where it really leads.
+      const source = insideRoot(root, resolve(dirname(file), path));
       if (!insideDirectory(directory, source)) {
         throw new Error(`${file} names ${reference}, which is outside ${directory}`);
       }

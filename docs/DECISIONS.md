@@ -4573,3 +4573,17 @@ says, in its paragraph on the slot, that `check` reads the slot in the view and 
 of the project the view imports by a relative path, and that a slot inside a component from a
 package is decided by nothing before a request. The wording is the design's; the sentence stands
 where a reader meets the slot, not in a section of its own.
+
+## 2026-10-11: the build reads inside the root
+
+The ledger's row, found 2026-10-10: four reads of the build opened files directly, held only by
+discovery's refusal of a link out before the build runs.
+
+Settled: every one goes through the root guard. The source hash (`sourceVersion`) and the files a
+stylesheet names (`carryReferences`) read bytes, so they open `readFileSync(insideRoot(root,
+file))`, the same guard `readInside` is built on, where a text read would hash a binary source as
+text; the assemblies' and the project's stylesheets (`writeStyles`, `writeProjectStyles`) read
+through `readInside`. A file whose path is inside the project but which is a link to a file
+outside it is refused unopened with `OutsideRootError`, one spec apiece, each written against the
+unguarded read first. Discovery's refusal stands before them; this closes the gap for a link
+written after discovery, or a path the build reaches that discovery did not list.

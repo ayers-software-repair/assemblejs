@@ -4,7 +4,8 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { realIo, writeProjectStyles } from "@assemblejs/cli";
+import { OutsideRootError, realIo, writeProjectStyles } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 let root = "";
 afterEach(() => rmSync(root, { recursive: true, force: true }));
@@ -42,5 +43,10 @@ describe("writing the project's own stylesheets into the build", () => {
     ).toEqual(["components"]);
     project();
     expect(writeProjectStyles(root, realIo)).toEqual([]);
+  });
+
+  it("refuses, unopened, a tokens file that is a link out of the project", () => {
+    const linked = linkedProject({}, { "src/tokens.css": "outside:secret.css" });
+    expect(() => writeProjectStyles(linked.root, realIo)).toThrow(OutsideRootError);
   });
 });
