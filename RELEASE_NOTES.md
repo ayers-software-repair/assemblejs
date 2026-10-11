@@ -10,4 +10,12 @@ One page from every framework: each piece written in the framework its author kn
 
 **The agent surface** (`@assemblejs/mcp`) is an MCP server that every new project installs and registers, with an `AGENTS.md` beside it, so an AI agent knows the framework before it writes.
 
+**Since these notes were first written**, before the first publish: a view places a child by
+writing the directive, so an assembly holds assemblies at any depth, locally or from another
+server; a guarded assembly is guarded wherever it is placed; one request composes no more than
+256 placements and no deeper than 8, both set in the project's config file; a request nobody
+waits for composes nothing further; the agent surface answers a project's whole shape, finds its
+root from how it was started, and lists the prompts a person asks for; every static view is read
+for what it places; the twelve packages share one version.
+
 Report an issue: https://github.com/ayers-software-repair/assemblejs/issues/new/choose

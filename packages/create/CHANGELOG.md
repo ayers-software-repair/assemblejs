@@ -10,3 +10,6 @@
 
 - Updated dependencies
   - @assemblejs/cli@1.0.0-next.0
+- Each published entry point names its own specifier in a `@module` comment, which is the name the API reference lists it under. Nothing any of them exports changes.
+- The command and the library of each package are built to share one copy of the code where each carried its own. Nothing either does changes; the command line's tarball is about two thirds the size it was.
+
