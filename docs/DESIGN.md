@@ -168,7 +168,9 @@ The data island sits inside the envelope, next to the markup. The browser runtim
 parses it and removes it. It carries only what section 5.3 allows.
 
 An assembly's view may place others (section 7). Each one's envelope stands where the view
-placed it, inside its parent's, so the envelopes of a page are a tree. The runtime takes them
+placed it, inside its parent's, so the envelopes of a page are a tree; a React, Preact, Vue or
+Solid view places through its slot's own element, `<div data-assembly-slot="name">`, and the
+envelope stands inside that element (section 7). The runtime takes them
 in document order, a parent before what it holds, and each hydrates when its own module
 arrives, in either order: a parent writes nothing where a child stands. An envelope inside one
 marked `data-remote` came from that server, and is marked so too.
@@ -619,7 +621,12 @@ export type MountHandle = { unmount(): void };
   `<assembly name="cart"></assembly>` in its own markup. A framework view writes it with its renderer's
   slot, `<Slot name="cart" />` in React, Preact, Vue and Solid, `slot("cart")` in Svelte and
   Lit, which writes the same markup on the server and in the browser, so a parent hydrates
-  around the child the server placed and writes nothing into the slot when it renders again. A
+  around the child the server placed and writes nothing into the slot when it renders again.
+  The four component slots write the directive inside an element of their own,
+  `<div data-assembly-slot="cart">`, the one node the framework is told to leave alone, and
+  the child's envelope stands inside it; Svelte, Lit, html and the templates write the
+  directive bare, and the envelope stands where it was written. A view that lays the child out
+  addresses that element, `[data-assembly-slot="cart"]`, never the envelope inside it. A
   slot whose name or view changes in the browser writes a new directive there, which nothing
   composes: what a page places is decided on the server, and a child is not swapped by a render.
   No renderer reaches for a child or agrees with another about what one is, so plain HTML holds
@@ -666,7 +673,11 @@ export type MountHandle = { unmount(): void };
 - **A Lit view holds a Lit assembly only behind a shadow root.** Lit hydrates a view by reading
   every marker in its tree, and would read a Lit child's as the parent's. A shadow root hides
   them; without one the parent refuses to mount, by name, and `check` says so before a browser
-  does.
+  does. The two judge by different things, the mount by the markers it finds and `check` by the
+  renderer's name, and agree on every view this renderer renders: Lit's server render marks a
+  template written with Lit's own `html`, and a plain value, with `lit-part` comments, and
+  leaves them off only a template written with the server-only `html` of `@lit-labs/ssr`,
+  which never hydrates and so is never in danger; `check` refuses that one too, by name.
 - **No try/catch inside a renderer.** A failed render throws, the composer catches it, and the
   placement falls back. A renderer that returns its own error `<div>` produces markup that
   passes every check downstream.

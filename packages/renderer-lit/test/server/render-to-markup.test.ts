@@ -3,6 +3,7 @@
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { findPlacements } from "@assemblejs/core";
+import { html as serverHtml } from "@lit-labs/ssr";
 import { LitElement, css, html } from "lit";
 import { describe, expect, it } from "vitest";
 import { renderToMarkup } from "@assemblejs/renderer-lit";
@@ -100,5 +101,18 @@ describe("rendering a Lit view on the server", () => {
     const view = (props: AssemblyProps) =>
       html`<p>${props.events.last("counted") === undefined ? "nothing yet" : "heard"}</p>`;
     expect(renderToMarkup(view, { data: {} })).toContain("nothing yet");
+  });
+});
+
+// What the mount judges a Lit child by, held against what this renderer writes: `check` judges
+// by the renderer's name, and the two agree on every view rendered here.
+describe("the markers hydration reads", () => {
+  it("are written for a template of Lit's own html and for a plain value, and left off a server-only template", () => {
+    const marked = (view: Parameters<typeof renderToMarkup>[0]) =>
+      /<!--\/?lit-part/.test(renderToMarkup(view, { data: {} }));
+    expect(marked(() => html`<p>hi</p>`)).toBe(true);
+    // A view's type says a template; what Lit is handed is what Lit marks, a plain value too.
+    expect(marked((() => "plain text") as never)).toBe(true);
+    expect(marked(() => serverHtml`<p>server only</p>`)).toBe(false);
   });
 });

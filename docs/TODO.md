@@ -72,8 +72,10 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    Its 4c is done (`7fca321`): every placement a request refuses past its limit shares one
    id, one diagnostic and one log line, and an assembly's own address refuses an answer past
    the limit on bytes. Its 8 is done, pushed with this block: what stops when the asker
-   leaves, a placement whose settling threw, and five sentences in the design. NEXT: 6, 10
-   and 11. Row 8 held
+   leaves, a placement whose settling threw, and five sentences in the design. Its 6, 10 and
+   11 are done, pushed with this block: the slot's element said, the producer asked at depth
+   7, Lit's markers read in its source and held by a spec. The second reading is closed. Row
+   8 held
    two things to fix in code (the content endpoint and a page hand their render no signal,
    so nothing stops when the asker leaves; a placement whose settling throws renders as
    nothing where the design says an empty envelope); then 6, 10 and 11.
@@ -347,11 +349,13 @@ rowed or the owner's; the numbers are the report's.
       at render. DESIGN 3.4 said "at boot" of every loop, and says this now. The rendering
       fixture's loop is such a one: an EJS view that places itself with a view its data
       gives. It had been a Pug view, which reached its render only because nothing read Pug
-- [ ] 6. Four renderers' slots put an element of their own around the child,
+- [x] 6. Four renderers' slots put an element of their own around the child,
       `<div data-assembly-slot="name">` in React, Preact, Vue and Solid, where Svelte, Lit,
-      html and the templates write the directive bare. Neither the design nor a guide names
-      the element, and DESIGN 2.4 says each envelope stands where the view placed it. Say it,
-      or make the six the same
+      html and the templates write the directive bare. Said, 2026-10-11: a component slot
+      needs a node of its own for the framework to leave alone, so the six are not made the
+      same; DESIGN 2.4 and 7 name the element and say the envelope stands inside it, and the
+      four guides say to lay the child out by that element (DECISIONS 2026-10-11, "three
+      findings said")
 - [x] 7. The listings in DESIGN 3.1 and 3.2 lacked what nesting added and what came before
       it: `nested` on an answer, `children` on a diagnostic, the plan as a record by name with
       a page, a depth, a path, a query and params, the reasons `depth` and `cycle`, and
@@ -378,17 +382,18 @@ rowed or the owner's; the numbers are the report's.
       reading": the conformance case is retitled to what it holds, the cache's refusal is in
       `placement-cache.test.ts`, and a Svelte parent hydrating around its child is in the
       browser proof
-- [ ] 10. From the report's account of what holds, not numbered there: across a server hop
+- [x] 10. From the report's account of what holds, not numbered there: across a server hop
       the spec holds less than DESIGN 3.4's "the two headers hold depth and cycles across as
-      many servers as a page reaches". `conformance/specs/remote/nested.spec.mjs` asks the
-      producer at depth 1 and at 8 and never at 7, the last depth at which a child is still
-      placed. Ask it at 7
-- [ ] 11. Not checked by the reader, and by nobody: whether Lit's server output always
-      carries a marker. `check` judges a Lit child by its renderer's name
-      (`cli/src/check/view-problems.ts`) and the mount judges it by markers
-      (`renderer-lit/src/client/lit-assembly-in-tree.ts`), so a Lit view that renders none
-      would be refused by one and let through by the other. Read it in Lit's own
-      documentation, then hold it with a spec or say where the two differ
+      many servers as a page reaches". `conformance/specs/remote/nested.spec.mjs` asked the
+      producer at depth 1 and at 8 and never at 7. It asks at 7 now, where the child is placed
+      and marked no failure, beside 8 where it is refused (2026-10-11)
+- [x] 11. Not checked by the reader, and by nobody: whether Lit's server output always
+      carries a marker. Read in `@lit-labs/ssr` 4.1.0's own source (`lib/render.js`,
+      `lib/render-value.js`, `lib/server-template.js`): `render` marks every value with
+      `lit-part` comments, a template of Lit's `html` and a plain value alike, and leaves them
+      off only a template of the package's server-only `html`, which never hydrates. Held by a
+      spec in `renderer-lit/test/server/render-to-markup.test.ts`, and DESIGN 7 says where the
+      mount's judgement and `check`'s differ and why it does not matter (2026-10-11)
 
 ## Phase 3: the ladder
 

@@ -4064,3 +4064,27 @@ Settled:
   to a second for its manifest (2.3, `MANIFEST_DEADLINE` in `learnedManifests`); a slot whose
   name or view changes in the browser writes a directive nothing composes (7, the React slot
   makes a new object only then, and no runtime composes).
+
+## 2026-10-11: three findings said
+
+The last three rows of the second reading, each a read and a sentence rather than a change of
+behaviour.
+
+- **The slot's element is named** (finding 6). A React, Preact, Vue or Solid slot writes the
+  directive inside `<div data-assembly-slot="name">`, because each of those frameworks needs a
+  node of its own to be told to leave alone when the view renders again; Svelte, Lit, html and
+  the templates write the directive bare. Making the six the same would take that node from the
+  four, so the design says it instead: DESIGN 2.4 and 7 name the element and say the envelope
+  stands inside it, and the four guides tell an author to lay the child out by that element and
+  never by what is inside. No code changed.
+- **The producer is asked at depth 7** (finding 10), one below the cap, where its child is still
+  placed and marked no failure, beside the case at 8 where it is refused. The remote fixture:
+  22 passing.
+- **Lit's markers, read at the source** (finding 11). `@lit-labs/ssr` 4.1.0 `render` marks a
+  value with `lit-part` comments unless it is a template of the package's server-only `html`
+  (`isHydratable` in `lib/server-template.js`); a template of Lit's own `html` and a plain value
+  are both marked. So the mount, which judges a Lit child by the markers it finds, and `check`,
+  which judges by the renderer's name, agree on every view this renderer renders, and differ
+  only on a server-only template, which never hydrates and is in no danger; `check` refuses it
+  too, by name, which costs an author a shadow root they did not need. Held by a spec in
+  `renderer-lit/test/server/render-to-markup.test.ts`, said in DESIGN 7.

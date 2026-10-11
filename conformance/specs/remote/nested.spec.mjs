@@ -60,6 +60,13 @@ test("the producer refuses its own child by the ancestors and the depth it is se
   assert.equal(looped.attributes["data-failed"], undefined);
   assert.ok(await logged(looped.children[0]?.attributes["data-failed"], "producer"));
 
+  // One below the cap, a child is the last level it allows, and is placed.
+  const lastAllowed = await fromProducer("/assembly/shelf/", { "assembly-depth": "7" });
+  assert.equal(lastAllowed.status, 200);
+  const [deep] = treeOf(await lastAllowed.text());
+  assert.deepEqual(deep.children.map(nameOf), ["card"]);
+  assert.equal(deep.children[0]?.attributes["data-failed"], undefined, "placed at the cap");
+
   // At the cap, a child would be one level past it.
   const byDepth = await fromProducer("/assembly/shelf/", { "assembly-depth": "8" });
   const [capped] = treeOf(await byDepth.text());
