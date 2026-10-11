@@ -4437,3 +4437,39 @@ attributes onto is left alone, since the spread may carry the alt and the reader
 The reason is WCAG 2.2's, 1.1.1 at level A: non-text content has a text alternative that serves
 the equivalent purpose. The finding names the assembly and says to give the image an alt that
 says what it shows, or `alt=""` if it is decoration.
+
+## 2026-10-11: a control has a name
+
+The third markup rule of A-04 (D1252), on the same element readers.
+
+Settled: `a-control-has-a-name` refuses an `input`, a `select` or a `textarea` with no name the
+reader can find, in any kind of view. What names a control is read from the HTML accessibility
+API mappings (W3C HTML-AAM, section 4.1, read 2026-10-11): `aria-label` or `aria-labelledby`,
+then the `label` element, then `title`, then for a text field and a textarea `placeholder`; an
+input of type button is named by its `value`; a submit, reset or image input takes a default
+when it has none, a hidden one is not shown, and a `button` is named by its content. The reasons
+are WCAG 2.2's at level A (read 2026-10-11): 3.3.2, "labels or instructions are provided when
+content requires user input", and 4.1.2, the name of every user interface component can be
+programmatically determined.
+
+What the reader is certain of is the bound of the rule, as with the two before it:
+
+- A `label` names a control by its written `for` (`htmlFor` in JSX, which the reader lower-cases)
+  matching the control's written `id`, in any file of the view.
+- A `label` may wrap a control, which the reader of start tags cannot see: one with no written
+  `for` that stands before the control in its file, or in any other file of the view, where the
+  component tree is not read, spares the control. A `<label>Name</label><input>` with no `for`
+  therefore passes, the limit of a reader that does not pair end tags.
+- A control the view spreads onto, or whose type it computes, is left to the render; so is one
+  with a computed id while any label of the view has a computed `for`.
+- A `button` is never judged, since its name is its content; the memo's "a button with none"
+  is read as the input of type button, whose value is an attribute.
+- An empty naming attribute is no name: `aria-label=""` or a bare `title` is refused.
+
+The finding names the assembly and the control and says to give it an id and a `label for` it, or
+to wrap it in a `label`, and that an `aria-label` names a control that shows no label. Two leaf
+files carry what the rules share: `spreadElement` (moved out of `element-problems.ts`) and the
+pair `WrittenElement`, which `viewElements` now returns.
+
+The command line's tarball budget moves, from 84000 to 86000 bytes: the rule and its leaf files
+packed it to 84432, measured by `check:pack`.

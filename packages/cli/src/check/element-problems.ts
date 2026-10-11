@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
-import { COMPUTED_MARKER } from "./computed-marker.js";
+import { spreadElement } from "./spread-element.js";
+import { unnamedControls } from "./unnamed-controls.js";
 import { viewElements } from "./view-elements.js";
 
 /**
@@ -15,14 +16,9 @@ import { viewElements } from "./view-elements.js";
  *   than set in the assembly's stylesheet (DESIGN 10).
  * - `an-image-has-an-alternative`: an `img` with no `alt` at all. An empty one says the image is
  *   decoration and passes; one the view computes is present (WCAG 2.2, 1.1.1, level A).
+ * - `a-control-has-a-name`: an `input`, a `select` or a `textarea` with no name the reader can
+ *   find, as `unnamedControls` judges it (WCAG 2.2, 3.3.2 and 4.1.2, level A).
  */
-// Whether the view spreads an object onto the element: computed with no attribute of its own
-// standing as the marker, which is how every reader writes a spread.
-const spread = (element: {
-  readonly computed: boolean;
-  readonly attributes: ReadonlyMap<string, string | true>;
-}): boolean => element.computed && ![...element.attributes.values()].includes(COMPUTED_MARKER);
-
 export function elementProblems(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
@@ -39,7 +35,7 @@ export function elementProblems(
         });
       }
       // A spread may carry the alt; the reader cannot see it, so it does not refuse.
-      if (element.tag === "img" && !element.attributes.has("alt") && !spread(element)) {
+      if (element.tag === "img" && !element.attributes.has("alt") && !spreadElement(element)) {
         problems.push({
           path: file,
           rule: "an-image-has-an-alternative",
@@ -47,6 +43,14 @@ export function elementProblems(
           fix: `give the <img> an alt that says what it shows, or alt="" if it is decoration`,
         });
       }
+    }
+    for (const { file, element } of unnamedControls(written)) {
+      problems.push({
+        path: file,
+        rule: "a-control-has-a-name",
+        message: `"${name}" writes a control, <${element.tag}>, with no name: no label for it, and no aria-label or title`,
+        fix: `give the <${element.tag}> an id and a <label for> it, or wrap it in a <label>; an aria-label names a control that shows no label`,
+      });
     }
   }
   return problems;

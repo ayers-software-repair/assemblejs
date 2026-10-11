@@ -912,7 +912,13 @@ every view to the stylesheet (`a-view-has-no-inline-style`): a `style` attribute
 written or computed, in any kind of view, is refused, since it does nothing under the default
 policy and sets a value where it is used; and an `img` with no `alt` at all is refused
 (`an-image-has-an-alternative`, WCAG 2.2, 1.1.1, level A), an empty one saying the image is
-decoration, one the view computes present, one under a spread left to the render. A component here
+decoration, one the view computes present, one under a spread left to the render; and a control
+with no name is refused (`a-control-has-a-name`, WCAG 2.2, 3.3.2 and 4.1.2, level A): an `input`,
+a `select` or a `textarea` is named by a `label` for its id or one that may wrap it, by an
+`aria-label`, an `aria-labelledby` or a `title`, by a placeholder on a text field, or by the
+value of an input of type button, each a name by the HTML accessibility API mappings; a hidden,
+submit, reset or image input is named without the author, and a `button` is named by its content,
+which the reader does not see, so neither is judged. A component here
 is an element the browser makes usable, a modal `dialog` that makes the rest of the page inert
 among them; no custom element and no library per framework (owner, DECISIONS 2026-10-11, "Plain
 HTML + tokens"). The rules that hold a view to the tokens follow.

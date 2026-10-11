@@ -62,6 +62,28 @@ describe("a view has no inline style", () => {
     expect(found[0]?.fix).toContain('alt="" if it is decoration');
   });
 
+  it("refuses a control with no name in any kind of view, and passes one a label names or wraps", () => {
+    const found = problems({
+      "src/assemblies/form/form.html":
+        '<label for="n">Name</label><input id="n"><select id="s"></select><label><textarea></textarea></label>',
+      "src/assemblies/search/search.react.tsx":
+        'export default (p: { readonly rest: object }) => <><input type="search" aria-label="Search" /><input type="hidden" /><textarea id="t" /><input {...p.rest} /></>;',
+      "src/assemblies/pick/pick.vue":
+        '<template><label :for="id">P</label><select :id="id"></select></template>',
+    });
+    expect(found.map((one) => [one.rule, one.message]).sort()).toEqual([
+      [
+        "a-control-has-a-name",
+        '"form" writes a control, <select>, with no name: no label for it, and no aria-label or title',
+      ],
+      [
+        "a-control-has-a-name",
+        '"search" writes a control, <textarea>, with no name: no label for it, and no aria-label or title',
+      ],
+    ]);
+    expect(found[0]?.fix).toContain("<label for> it");
+  });
+
   it("is quiet for views with a class and no style, and for a view it cannot read", () => {
     expect(
       problems({

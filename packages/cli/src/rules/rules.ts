@@ -220,6 +220,14 @@ export const RULES: readonly Rule[] = [
     smell: "<img src=...> with no alt attribute, in any kind of view.",
   },
   {
+    id: "a-control-has-a-name",
+    rule: "An input, a select or a textarea has a name: a label for its id or one wrapping it, or an aria-label or a title where no label is shown.",
+    because:
+      "WCAG 2.2, level A: 3.3.2, labels or instructions are provided when content requires user input, and 4.1.2, the name of every user interface component can be programmatically determined. A control with no name is announced as its kind alone, and a placeholder that names a text field vanishes as it is typed into.",
+    smell:
+      "<input> with an id no label names, or no id at all; a select or a textarea beside its label but not tied to it; an input of type button with no value.",
+  },
+  {
     id: "agent-instructions-are-current",
     rule: "The agent instructions and MCP registrations a project carries are the ones its command line writes, and a CLAUDE.md beside them brings AGENTS.md in.",
     because:

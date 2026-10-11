@@ -10,6 +10,7 @@ import { readInside } from "../root/read-inside.js";
 import { readViewElements } from "./read-view-elements.js";
 import type { ViewElement } from "./view-element.js";
 import { viewModules } from "./view-modules.js";
+import type { WrittenElement } from "./written-element.js";
 
 /**
  * The elements each assembly's view writes, by name, with the file each element is in: the view
@@ -21,14 +22,14 @@ import { viewModules } from "./view-modules.js";
 export function viewElements(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
-): ReadonlyMap<string, readonly { readonly file: string; readonly element: ViewElement }[]> {
-  const found = new Map<string, { readonly file: string; readonly element: ViewElement }[]>();
+): ReadonlyMap<string, readonly WrittenElement[]> {
+  const found = new Map<string, WrittenElement[]>();
   let pug: { readonly loaded: PugCompiler | undefined } | undefined;
   for (const assembly of assemblies) {
     const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
     if (leadsOut(root, file)) continue;
     const modules = isStaticView(assembly.renderer) ? [file] : viewModules(root, file).modules;
-    const written: { readonly file: string; readonly element: ViewElement }[] = [];
+    const written: WrittenElement[] = [];
     let readable = true;
     for (const module of modules) {
       const loaded =

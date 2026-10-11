@@ -5,17 +5,22 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after P5-6e, the element reader for
-modules and Lit).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the third rule of P5-6g,
+`a-control-has-a-name`).**
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: P5-6e. Beneath it,
-each pushed on 2026-10-11 with its runs read green: `1d0b0cb` P5-6d the element reader for
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: P5-6g's third rule.
+Beneath it, each pushed on 2026-10-11 with its `ci` run read green: `fa42b64` the second rule,
+`an-image-has-an-alternative` (`ci` 38165587092); `cb84e1d` the first rule,
+`a-view-has-no-inline-style` (`ci` 38165230731); `886724e` P5-6f the element reader for Vue and
+Svelte (`ci` 38164708480); `09a6c11` P5-6e the element reader for modules and Lit (`ci`
+38164340137); `1d0b0cb` P5-6d the element reader for
 templates (`ci` 38149854085); `2a4709e` the port flake fixed (`ci` 38149271043); `49b76df` P5-6c
 the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens; `5a08454` P5-5
 the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
 and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
 envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: P5-6f (the element reader for Vue and Svelte), P5-6g (the five rules, one bite each), then
+NEXT: P5-6g's last rule, `a-colour-is-a-token` (a literal colour in an assembly's stylesheet,
+which `style-problems.ts` already parses with postcss), then
 P5-8 (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
 crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
 00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
@@ -1112,7 +1117,11 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
     - [x] `an-image-has-an-alternative` (2026-10-11): an `img` with no `alt` at all is refused in
           any kind of view; an empty, a computed or a spread one passes (DECISIONS 2026-10-11,
           "an image has an alternative")
-    - [ ] `a-control-has-a-name`
+    - [x] `a-control-has-a-name` (2026-10-11): an `input`, a `select` or a `textarea` with no
+          label for it or wrapping it, and no `aria-label`, `aria-labelledby`, `title`,
+          placeholder on a text field or value on a button input, is refused in any kind of view;
+          a spread, a computed type, a hidden, submit, reset or image input and a `button` are
+          left to the render (DECISIONS 2026-10-11, "a control has a name")
     - [ ] `a-colour-is-a-token`
 - [x] P5-7 ONE VIEW PER ASSEMBLY: as the design and the guides say today; nothing to build.
       The morning list's item 13 closes (2026-10-11)
