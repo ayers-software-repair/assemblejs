@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { buildProject, realIo, startServer } from "@assemblejs/cli";
+import { buildProject, freePort, realIo, startServer } from "@assemblejs/cli";
 import type { RunningServer } from "@assemblejs/cli";
 
 // Nested inside the example, so the project resolves the workspace's packages from its
@@ -31,7 +31,7 @@ describe("starting a built server", () => {
     const io = { ...realIo, log: (line: string) => logs.push(line), error: () => undefined };
     expect(await buildProject(root, io)).toBe(0);
 
-    process.env["ASSEMBLEJS_PORT"] = String(20000 + Math.floor(Math.random() * 20000));
+    process.env["ASSEMBLEJS_PORT"] = String(await freePort());
     server = startServer(root, io);
     try {
       const url = await server.ready;

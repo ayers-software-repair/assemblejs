@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { realIo, runDev } from "@assemblejs/cli";
+import { freePort, realIo, runDev } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 const root = mkdtempSync(join(example, ".dev-run-"));
@@ -34,7 +34,7 @@ describe("dev", () => {
       join(root, "src", "server.ts"),
       'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
     );
-    const port = String(20000 + Math.floor(Math.random() * 20000));
+    const port = String(await freePort());
     process.env["ASSEMBLEJS_PORT"] = port;
     const errors: string[] = [];
     const io = { ...realIo, log: () => undefined, error: (line: string) => errors.push(line) };
@@ -84,7 +84,7 @@ describe("dev, when the project misbehaves", () => {
         join(quiet, "src", "server.ts"),
         'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nawait (await createServer(project)).listen();\n',
       );
-      const port = String(20000 + Math.floor(Math.random() * 20000));
+      const port = String(await freePort());
       process.env["ASSEMBLEJS_PORT"] = port;
       const controller = new AbortController();
       const page = async () => (await fetch(`http://127.0.0.1:${port}/`)).text();

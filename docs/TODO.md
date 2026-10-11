@@ -1064,12 +1064,13 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
         button, which the agents fixture holds. DESIGN 10 and the tutorial say it (DECISIONS
         2026-10-11, "the components HTML has")
   - [ ] P5-6d The element reader for templates (html, EJS, Handlebars, Nunjucks)
-- [ ] FLAKE SEEN ONCE (2026-10-11, under `pnpm check` with every package's suite running at
+- [x] FLAKE SEEN ONCE (2026-10-11, under `pnpm check` with every package's suite running at
       once): `cli/test/build/build-project.test.ts`, "generates, builds and runs a project with a
       handlebars assembly", failed with the built server "exited with 1" and nothing more said;
-      green alone and in every run before and after. Make the spec say what the server printed
-      when it exits, so the next time names the cause, and look for the race in how it picks
-      its port
+      green alone and in every run before and after. Fixed the same day: the four specs that
+      drew a port by chance (`20000 + random`) ask the OS for a free one through `freePort`,
+      and the build spec says what the server printed when it exits before it listens, so a
+      next failure names its cause
   - [ ] P5-6e The element reader for modules (React, Preact, Solid) and Lit
   - [ ] P5-6f The element reader for Vue and Svelte
   - [ ] P5-6g The rules, one bite each: `a-view-has-no-inline-style`,
