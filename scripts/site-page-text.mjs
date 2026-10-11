@@ -14,7 +14,7 @@ import { Window } from "happy-dom";
 const TEXT = 3;
 const ELEMENT = 1;
 // What holds other blocks and says nothing of its own.
-const CONTAINERS = new Set(["main", "section", "div", "header", "dl"]);
+const CONTAINERS = new Set(["main", "section", "div", "header", "dl", "ul"]);
 // What stands inside a line of text.
 const INLINE = new Set(["a", "code", "span"]);
 // What a page shows and a reader of text has no use for: its links, and its mark.
@@ -107,8 +107,8 @@ export function pageText(html, file) {
         if (node.nodeType !== ELEMENT) continue;
         const tag = tagOf(node);
         if (SKIPPED.has(tag)) continue;
-        // A line of its own beside its siblings: one item of a list.
-        if (INLINE.has(tag)) {
+        // A line of its own beside its siblings: one item of a list, written as one or as a link.
+        if (INLINE.has(tag) || tag === "li") {
           listed.push(`- ${line(node.childNodes, file)}`);
           continue;
         }
@@ -116,7 +116,8 @@ export function pageText(html, file) {
         if (CONTAINERS.has(tag)) walk(node);
         else if (tag === "h1") blocks.push(`# ${line(node.childNodes, file)}`);
         else if (tag === "h2") blocks.push(`## ${line(node.childNodes, file)}`);
-        else if (tag === "dt") blocks.push(`### ${line(node.childNodes, file)}`);
+        // A note's subsection and a definition's term are both the third level of the page.
+        else if (tag === "h3" || tag === "dt") blocks.push(`### ${line(node.childNodes, file)}`);
         else if (tag === "p") blocks.push(line(node.childNodes, file));
         else if (tag === "dd") blocks.push(...described(node, file));
         else if (tag === "pre") blocks.push(fenced(node.textContent));

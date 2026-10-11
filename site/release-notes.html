@@ -24,45 +24,57 @@
        holds these to the packages' changelogs. Written by hand, for someone using the framework. -->
   <section id="v1.0.0-next.0">
     <h2>1.0.0-next.0</h2>
-    <dl>
-      <div class="item">
-        <dt>The first prerelease</dt>
-        <dd>On the <code>next</code> channel, and everything the framework is, for the first
-          time. It is versioned and not yet published: until it is, the registry has nothing
-          for <code>npm create @assemblejs</code> to find.</dd>
-      </div>
-      <div class="item">
-        <dt>The server</dt>
-        <dd>A page places assemblies by name in its template, and the server composes them into
-          one document. An assembly holds other assemblies, the way a page does. Every placement
-          has a deadline and a fallback, so one slow assembly is not a slow page. An assembly can
-          live on another server: give it a URL and nothing else changes. One can be left for
-          the browser to fetch after the page has loaded, and a page can open one stream of live
-          events that every assembly on it hears.</dd>
-      </div>
-      <div class="item">
-        <dt>The frameworks</dt>
-        <dd>React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own. EJS,
-          Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no package
-          at all. Assemblies written in different frameworks talk through the page's event bus,
-          with nothing in between.</dd>
-      </div>
-      <div class="item">
-        <dt>The command line</dt>
-        <dd><code>npm create @assemblejs</code> writes a project that runs. <code>add</code>,
-          <code>dev</code>, <code>build</code>, <code>check</code>, <code>perf</code> and
-          <code>deploy</code> take it from one assembly to a server you can put anywhere Node
-          runs.</dd>
-      </div>
-      <div class="item">
-        <dt>For an AI agent</dt>
-        <dd>Every new project is written with an <code>AGENTS.md</code> and its own MCP server,
-          installed and registered for Claude Code, Cursor and VS Code. That server reads the
-          project, adds and places an assembly, renders a plain HTML one to show what it made,
-          and checks the work against the framework's rules. It lists four prompts for the
-          things a person asks for most, and carries no model and no key of its own.</dd>
-      </div>
-    </dl>
+    <p>Versioned, on the <code>next</code> channel, and not yet published: until it is, the
+      registry has nothing for <code>npm create @assemblejs</code> to find.</p>
+    <p>Everything the framework is, for the first time: pages composed on the server from
+      assemblies written in any framework, a command line that takes a project from one assembly
+      to a server, and an agent surface that knows the framework.</p>
+
+    <h3>The server</h3>
+    <ul>
+      <li>A page places assemblies by name in its template, and the server composes them into one
+        document. An assembly holds other assemblies the way a page does.</li>
+      <li>Every placement has a deadline and a fallback, so one slow assembly is not a slow page.
+        A placement declared required is the one way a page fails from a child.</li>
+      <li>An assembly can live on another server: give it a URL and nothing else changes. A
+        server marked trusted receives the page's query; no other does.</li>
+      <li>A placement can be left for the browser to fetch after the page has loaded, and a page
+        can open one stream of live events that every assembly on it hears.</li>
+      <li>How deep a page composes, and how many placements one request may make, are set in
+        <code>assemblejs.config.ts</code>.</li>
+    </ul>
+
+    <h3>The frameworks</h3>
+    <ul>
+      <li>React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own.</li>
+      <li>EJS, Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no
+        package at all.</li>
+      <li>Assemblies written in different frameworks talk through the page's event bus, with
+        nothing in between.</li>
+    </ul>
+
+    <h3>The command line</h3>
+    <ul>
+      <li><code>npm create @assemblejs</code> writes a project that runs, with a tokens file every
+        page links, the components HTML already has styled from it, and a dark scheme.</li>
+      <li><code>add</code>, <code>dev</code>, <code>build</code>, <code>check</code>,
+        <code>perf</code> and <code>deploy</code> take it from one assembly to a server you can
+        put anywhere Node runs.</li>
+      <li><code>check</code> reads every view for what it places and what it writes: a placement
+        that would not render, a style attribute, an image with no alternative, a control with no
+        name, a colour set outside the tokens, and a tokens file whose colours do not read.</li>
+    </ul>
+
+    <h3>For an AI agent</h3>
+    <ul>
+      <li>Every new project is written with an <code>AGENTS.md</code> and its own MCP server,
+        installed and registered for Claude Code, Cursor, VS Code, Gemini CLI and opencode.</li>
+      <li>That server reads the project, the assembly contract and every rule with its reason;
+        adds and places an assembly; renders an assembly or composes a page, every kind of view,
+        through the project's own dev server; and checks the work.</li>
+      <li>It lists four prompts for the things a person asks for most, and carries no model and
+        no key of its own.</li>
+    </ul>
   </section>
 
   <footer>

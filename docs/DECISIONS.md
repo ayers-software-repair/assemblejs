@@ -4782,3 +4782,21 @@ node of its own, `@assemblejs/core`, with its three specifiers as modules under 
 over the twelve laid every specifier flat; a package with one entry point is one module, as before.
 Nothing in the site links a module page by its path, only `docs/api/index.html`, and the reference
 still reads by the specifier a user imports.
+
+## 2026-10-11: the kit at v0.54.3
+
+The ledger's row on a note's subsections, the last that waited on the kit.
+
+The fold was cut here on the lead's word (platform branch `asm/codestyle-note-fold`, `4a93154` on
+`6b989c6`, the kit's test watched red first) and tagged by the cto seat as `v0.54.3` (`69c72d4`,
+with a docs commit of its own). Verified at the source before the pin moved: the tag's `kit.css`
+holds the three rules, and every role the kit references at that tag, thirteen, is bound by this
+site's `skin.css`. `ayersPlatform` moves from `v0.20.4` to `v0.54.3`, thirty-four tags in one
+step, since the deploy stages the kit at the pin and nothing else in this repository reads it.
+
+`site/release-notes.html` takes the reference's shape, read from magpie's page: a status line and
+an introduction under the version, then h3 groups each with a list, where it had a definition
+table. Its words are brought to what the tree holds on this day, since the page is hand-kept for
+a user and the version is not yet published: the registrations name Gemini CLI and opencode, the
+agent surface renders every kind of view through the dev server and reads the contract, and
+`check`'s five rules on a view stand named. The page as text is regenerated with it.

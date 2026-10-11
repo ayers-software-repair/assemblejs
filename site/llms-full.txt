@@ -178,25 +178,35 @@ What is in each version of AssembleJS, newest first.
 
 ## 1.0.0-next.0
 
-### The first prerelease
+Versioned, on the `next` channel, and not yet published: until it is, the registry has nothing for `npm create @assemblejs` to find.
 
-On the `next` channel, and everything the framework is, for the first time. It is versioned and not yet published: until it is, the registry has nothing for `npm create @assemblejs` to find.
+Everything the framework is, for the first time: pages composed on the server from assemblies written in any framework, a command line that takes a project from one assembly to a server, and an agent surface that knows the framework.
 
 ### The server
 
-A page places assemblies by name in its template, and the server composes them into one document. An assembly holds other assemblies, the way a page does. Every placement has a deadline and a fallback, so one slow assembly is not a slow page. An assembly can live on another server: give it a URL and nothing else changes. One can be left for the browser to fetch after the page has loaded, and a page can open one stream of live events that every assembly on it hears.
+- A page places assemblies by name in its template, and the server composes them into one document. An assembly holds other assemblies the way a page does.
+- Every placement has a deadline and a fallback, so one slow assembly is not a slow page. A placement declared required is the one way a page fails from a child.
+- An assembly can live on another server: give it a URL and nothing else changes. A server marked trusted receives the page's query; no other does.
+- A placement can be left for the browser to fetch after the page has loaded, and a page can open one stream of live events that every assembly on it hears.
+- How deep a page composes, and how many placements one request may make, are set in `assemblejs.config.ts`.
 
 ### The frameworks
 
-React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own. EJS, Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no package at all. Assemblies written in different frameworks talk through the page's event bus, with nothing in between.
+- React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own.
+- EJS, Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no package at all.
+- Assemblies written in different frameworks talk through the page's event bus, with nothing in between.
 
 ### The command line
 
-`npm create @assemblejs` writes a project that runs. `add`, `dev`, `build`, `check`, `perf` and `deploy` take it from one assembly to a server you can put anywhere Node runs.
+- `npm create @assemblejs` writes a project that runs, with a tokens file every page links, the components HTML already has styled from it, and a dark scheme.
+- `add`, `dev`, `build`, `check`, `perf` and `deploy` take it from one assembly to a server you can put anywhere Node runs.
+- `check` reads every view for what it places and what it writes: a placement that would not render, a style attribute, an image with no alternative, a control with no name, a colour set outside the tokens, and a tokens file whose colours do not read.
 
 ### For an AI agent
 
-Every new project is written with an `AGENTS.md` and its own MCP server, installed and registered for Claude Code, Cursor and VS Code. That server reads the project, adds and places an assembly, renders a plain HTML one to show what it made, and checks the work against the framework's rules. It lists four prompts for the things a person asks for most, and carries no model and no key of its own.
+- Every new project is written with an `AGENTS.md` and its own MCP server, installed and registered for Claude Code, Cursor, VS Code, Gemini CLI and opencode.
+- That server reads the project, the assembly contract and every rule with its reason; adds and places an assembly; renders an assembly or composes a page, every kind of view, through the project's own dev server; and checks the work.
+- It lists four prompts for the things a person asks for most, and carries no model and no key of its own.
 
 # Documentation
 

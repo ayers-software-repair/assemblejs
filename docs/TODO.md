@@ -1002,14 +1002,17 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       to `0.0.0`, the changelogs removed, the first changeset back from `.changeset/pre/`,
       `pnpm changeset version`; every package reads `1.0.0-next.0` again with one entry
       holding every change, and none waits (DECISIONS 2026-10-10, "release notes")
-- [ ] The reference product writes a note's subsections as smaller headings and lists, and
+- [x] The reference product writes a note's subsections as smaller headings and lists, and
       styles them in a stylesheet of its own (`magpie/site/site.css:11-14`); the kit has no rule
       for either. A fold for the kit, the platform's to make. When this site's pin has it, the
       page takes the reference's shape (found 2026-10-10; for the lead). CUT 2026-10-11 on the
       lead's word: platform branch `asm/codestyle-note-fold`, `4a93154` (the three rules, as
       magpie wrote them, and a kit test watched red first) on `6b989c6` (kit.css as the kit's
-      own formatter writes it, which its hook demanded); the lead tags it. Then this site's pin
-      moves to that tag and `release-notes.html` takes the h3 and list shape
+      own formatter writes it, which its hook demanded). TAGGED `v0.54.3` (69c72d4) by the cto
+      seat, and DONE here 2026-10-11: `ayersPlatform` moves from `v0.20.4` to `v0.54.3`, every
+      role the kit at that tag references bound by the skin, and `release-notes.html` takes the
+      reference's shape, a status line, an introduction and h3 groups with lists, its words
+      brought to what the tree holds (DECISIONS 2026-10-11, "the kit at v0.54.3")
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 
