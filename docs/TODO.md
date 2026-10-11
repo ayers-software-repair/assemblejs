@@ -8,8 +8,11 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 **RESUME HERE (rewritten at every landing; this one 2026-10-11, after the kit at v0.54.3, with
 every ledger row that waits on nobody done).**
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the runtime's
-`data-mounted` mark, which the built-page proof waits for. Beneath it `4c43b76` (the platform pin
+STATE AT THIS LANDING. `origin/next` is `79ce361`: every browser proof's click waits for the
+assembly's mount through one helper (`ci` 38176113856 green). Beneath it `f526f0f`, the
+runtime's `data-mounted` mark (`ci` 38174834774 red on the styles proof's own race, which `79ce361`
+fixes; the mark itself proven here, the browser suite 42 of 42 through the sealed launcher), and
+`4c43b76` (the platform pin
 at `v0.54.3`, which carries the kit fold cut here, and the release notes in the reference's shape;
 `deploy-site` 38173844555 green with the kit staged at the new pin, `ci` 38173844564 green on a
 rerun of the proof that flaked, the flake this landing fixes). Beneath those, each
