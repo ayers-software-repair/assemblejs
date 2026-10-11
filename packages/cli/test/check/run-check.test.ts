@@ -43,4 +43,17 @@ describe("the check verb", () => {
     expect(errors[0]).toMatch(/home\.html: .*nowhere.* \([a-z-]+\): .+/);
     expect(errors.at(-1)).toBe("1 problem(s)");
   });
+
+  it("holds the project's tokens to their contrast, with the project's other findings", async () => {
+    const root = generated();
+    realIo.write(
+      join(root, "src", "tokens.css"),
+      ":root { --ink: #9a9a9a; --surface: #ffffff; }\n",
+    );
+    const { io, errors } = capture();
+    expect(await runCheck(root, io)).toBe(1);
+    expect(errors[0]).toMatch(
+      /^src\/tokens\.css: --ink on --surface is [0-9.]+:1 in the light scheme; text needs 4\.5:1 \(WCAG 2\.2, 1\.4\.3\) \(tokens-hold-their-contrast\): rebind/,
+    );
+  });
 });

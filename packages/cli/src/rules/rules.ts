@@ -197,6 +197,14 @@ export const RULES: readonly Rule[] = [
       "A relative @import, a url() naming a file that is not there, or CSS the build reports it cannot parse.",
   },
   {
+    id: "tokens-hold-their-contrast",
+    rule: "A colour role in src/tokens.css holds its contrast in both schemes: text at 4.5:1 or more against its grounds, what identifies a control at 3:1 or more.",
+    because:
+      "The numbers are WCAG 2.2's (1.4.3 and 1.4.11, level AA), and a token is the one place a colour is set, so a binding that breaks them breaks every assembly that reads it.",
+    smell:
+      "A muted ink that fades into its panel, or an accent that cannot be told from the surface, in the dark scheme most of all.",
+  },
+  {
     id: "agent-instructions-are-current",
     rule: "The agent instructions and MCP registrations a project carries are the ones its command line writes, and a CLAUDE.md beside them brings AGENTS.md in.",
     because:

@@ -1049,8 +1049,13 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
         assembly's sheet; `new` writes the estate's roles, three scales and a dark scheme as
         placeholders (`TOKENS`). DESIGN 10 and 8 and the tutorial say it (DECISIONS
         2026-10-11, "the tokens every page links")
-  - [ ] P5-6b The tokens' invariants: each colour role's contrast held by `check`, in both
-        schemes (WCAG 2.2 1.4.3 and 1.4.11)
+  - [x] P5-6b The tokens' invariants (2026-10-11): `tokenProblems` reads `src/tokens.css` by
+        scheme (`readTokens`), takes each role's contrast against its grounds by WCAG 2.2's own
+        definitions (`relativeLuminance`, `contrastRatio`) and refuses a binding under its
+        invariant (`TOKEN_INVARIANTS`: inks at 4.5:1, accents at 3:1), as the rule
+        `tokens-hold-their-contrast`, which `check` runs and `explain` answers; a value it
+        cannot judge is left alone. DESIGN 10 says it (DECISIONS 2026-10-11, "the tokens hold
+        their contrast")
   - [ ] P5-6c The stylesheet of components, styled native HTML, written by `new` beside the
         tokens, and the starter's page using it
   - [ ] P5-6d The element reader for templates (html, EJS, Handlebars, Nunjucks)

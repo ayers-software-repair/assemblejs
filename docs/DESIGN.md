@@ -894,8 +894,13 @@ sizes and the corners every assembly's stylesheet reads, declared as custom prop
 whole and unscoped, named by its content, and every page links it before any assembly's sheet
 (`styles` on the server). A new project starts with the estate's roles, three scales and a dark
 scheme, each value a placeholder that passes its contrast, and changes the values in that one
-place; the rules that hold a project to its tokens follow (owner, DECISIONS 2026-10-11, "Plain
-HTML + tokens").
+place (owner, DECISIONS 2026-10-11, "Plain HTML + tokens"). Each colour role states what must be
+true of whatever binds it, and `check` holds the file to it in both schemes
+(`tokens-hold-their-contrast`): an ink against each ground it is set on reads at 4.5:1 or more,
+and an accent against the surfaces at 3:1 or more, the numbers WCAG 2.2's own (1.4.3 and 1.4.11,
+level AA, by its definitions of relative luminance and contrast ratio). A role bound to anything
+the reader cannot judge, a variable or a named colour, is left alone, since a rule refuses only
+what it is certain of. The rules that hold a view to the tokens follow.
 
 A page links the stylesheet of every assembly in the markup it serves, at any depth, read from
 the envelopes themselves, so an answer that came from the cache is styled as one that was just

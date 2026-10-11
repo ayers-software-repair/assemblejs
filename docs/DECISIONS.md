@@ -4285,3 +4285,31 @@ Settled:
   the tokens file, 1.3 kB of CSS that every new project needs, and the writer that carries it,
   which packed the command line to 74586, measured by `check:pack`. Nothing could leave first:
   the tokens are the bite. The stylesheet of components will move it again, with its measure.
+
+## 2026-10-11: the tokens hold their contrast
+
+The second bite of A-04 (D1252, "Plain HTML + tokens"): the invariants the memo gave each colour
+role, held by `check`.
+
+Settled:
+
+- **The numbers are WCAG 2.2's.** Text against its ground at 4.5:1 or more (1.4.3, level AA) and
+  what identifies a control at 3:1 or more (1.4.11, level AA), by WCAG's own definitions of
+  relative luminance (`L = 0.2126 R + 0.7152 G + 0.0722 B` over linearised sRGB channels) and
+  contrast ratio (`(L1 + 0.05) / (L2 + 0.05)`), read from the specification on 2026-10-11 and
+  held in `relativeLuminance` and `contrastRatio`.
+- **Which pairs.** The inks, `--ink` and `--ink-muted`, against each ground text is set on,
+  `--surface`, `--surface-panel` and `--accent-wash`, at 4.5:1; the accents, `--accent`,
+  `--accent-strong` and `--accent-alt`, against the two surfaces at 3:1. Twelve invariants, in
+  `TOKEN_INVARIANTS`, each with its WCAG criterion in its words.
+- **Both schemes.** `readTokens` reads the light scheme at the top of the file and the dark one
+  as the light rebound by what the `prefers-color-scheme: dark` rule declares, as the browser
+  would have it; each invariant is held in each.
+- **Only what the reader is certain of.** A role bound to a variable, a named colour or nothing
+  is not judged; a hex colour is. A file the reader cannot parse is one finding where it breaks.
+- **One rule**, `tokens-hold-their-contrast`, in `RULE_IDS` and `RULES` with its reason and its
+  smell, run by `check` with the project's other findings and answered by `explain`. The
+  starter's tokens pass it in both schemes, which the spec holds.
+- **The command line's tarball budget moves**, from 76000 to 78000 bytes: the five modules of
+  this bite packed it to 76761, measured by `check:pack`. Each bite of A-04 that adds code moves
+  it with its own measure; none is guessed ahead.

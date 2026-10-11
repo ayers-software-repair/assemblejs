@@ -26,5 +26,6 @@ export const RULE_IDS = [
   "one-project-per-root",
   "a-project-stays-inside-its-root",
   "an-assembly-owns-its-styles",
+  "tokens-hold-their-contrast",
   "agent-instructions-are-current",
 ] as const;
