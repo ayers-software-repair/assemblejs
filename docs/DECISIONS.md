@@ -5241,3 +5241,31 @@ the sealed launcher included, until the owner changes it.
   another session's request, whichever way the edit leans; the paragraph waits for the owner's
   own word, and a row holds it. The handoff block in `docs/TODO.md` and the seat's memory carry
   the ruling until then, so no session of this seat acts on the old paragraph.
+
+## 2026-10-11: one pin
+
+`ayersPlatform` moves from `v0.54.3` to `v0.55.0`, and the tree names one platform tag where it
+named three: the site kit's, which is the pin; the root `.editorconfig`'s, `v0.54.1`; and, since
+this evening, the commit rule's, `v0.55.0`. The deploy's own comment has said from the start
+that a product has one platform pin and everything platform-sourced comes from it. Nothing held
+the copies to that.
+
+- **Read before the move.** Platform's own `ci` on `c120253`, the commit the tag names, is run
+  38184256522, green on its four jobs, read here; the cto had said a line would come only if it
+  went red, and silence was not taken for green. `sitekit/` is byte for byte the same from
+  `v0.54.3` to `v0.55.0`, so the deploy stages what it staged. The house `.editorconfig` hashes
+  the same at `v0.54.1`, `v0.54.3` and `v0.55.0`. Each of the five copies was compared with
+  that tag's file, byte for byte, before its record was moved to it.
+- **The gate.** `scripts/platform-pin.mjs` reads the pin, and `check:editorconfig` and
+  `check:commit-rule` each refuse a copy whose recorded tag is not the pin. Both watched red
+  with the copies recorded at `v0.55.0` and the pin still at `v0.54.3`, and each self-test
+  holds the refusal. What it cannot do is compare the bytes with the tag: this repository is
+  public and its CI checks nothing out with a credential, so that comparison is made on a
+  machine that has platform. What it does is make the pin unable to move, or a copy to be
+  taken from elsewhere, without each copy's record being opened.
+- **A comment that had gone stale.** `check-editorconfig.mjs` said the pin predates the house
+  file, so its own tag stood apart. That was true until the pin moved to `v0.54.3` this
+  afternoon (`4c43b76`), and it now says what holds.
+- **`site/DEPLOY.md`** says the pin's whole reach. That edit is under `site/`, so the push
+  runs the deploy, which checks platform out at the new pin: the proof that the tag can be
+  staged from.

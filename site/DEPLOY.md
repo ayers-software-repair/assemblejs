@@ -47,7 +47,10 @@ so `/assemblejs/next` does not redirect and `/assemblejs/next/` does.
 
 `site/kit/` is gitignored. The deploy reads the one platform pin, `ayersPlatform` in the root
 `package.json`, checks `platform` out at exactly that tag, and stages `sitekit/*.css` into the
-upload as `site/kit/`. Locally, symlink it for preview:
+upload as `site/kit/`. The same pin is the tag of everything else this repository takes from
+`platform`: the root `.editorconfig` and the house's commit rule under `scripts/house` are
+byte-copies at it, and `check:editorconfig` and `check:commit-rule` refuse a copy recorded at
+any other tag. Locally, symlink the kit for preview:
 
     ln -s ../../platform/sitekit site/kit
 

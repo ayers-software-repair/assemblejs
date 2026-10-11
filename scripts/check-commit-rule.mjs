@@ -16,13 +16,15 @@
 // platform/codestyle at a named tag, held to their hashes: this repository is public and its CI
 // checks nothing out with a credential. The root commitlint.config.mjs re-exports the copied
 // config, so the hook and CI judge by it. Re-syncing is copying the four files and recording
-// their hashes and the tag.
+// their hashes and the tag, which is the product's one platform pin: a tag that is not the pin
+// is refused.
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { offThePin } from "./platform-pin.mjs";
 
 export const HOUSE = {
   tag: "v0.55.0",
@@ -188,8 +190,11 @@ if (isEntryPoint) {
       flipped("house", apart),
     );
     const clean = await verdictProblems(held, recorded("commitlint"), recorded("house"));
+    const unpinned = offThePin("the house's commit rule", HOUSE.tag, "v0.0.0");
     const red =
       edited.length === Object.keys(HOUSE.files).length &&
+      unpinned.length === 1 &&
+      offThePin("the house's commit rule", HOUSE.tag, HOUSE.tag).length === 0 &&
       moved.length === 1 &&
       moved[0].includes("the rule refuses it") &&
       closed.length === 1 &&
@@ -203,12 +208,15 @@ if (isEntryPoint) {
       process.exit(1);
     }
     console.log(
-      "commit rule self-test: red on an edited copy of each of the house's files, a verdict of the rule that moved, a difference that closed and one that turned around, as required",
+      "commit rule self-test: red on an edited copy of each of the house's files, a tag that is not the pin, a verdict of the rule that moved, a difference that closed and one that turned around, as required",
     );
     process.exit(0);
   }
 
-  const problems = houseDrift((file) => readFileSync(file));
+  const problems = [
+    ...houseDrift((file) => readFileSync(file)),
+    ...offThePin("the house's commit rule", HOUSE.tag),
+  ];
   const scratch = mkdtempSync(join(tmpdir(), "commit-rule-"));
   let written = 0;
   const commitlint = async (message) =>

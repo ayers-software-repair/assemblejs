@@ -5,8 +5,8 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, with one commit rule and
-the ruling that no browser starts on this machine).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, with one platform pin and
+the overnight order).**
 
 NO BROWSER STARTS ON THIS MACHINE (D1276, 2026-10-11, the estate's standing ruling as the lead
 gave it): not for a screenshot, not for a walk, not for the Playwright suite, the sealed
@@ -15,13 +15,25 @@ in CI: the `browser proof` job of `ci`, and `deploy-site` with the staged page r
 `CLAUDE.md`'s Tooling paragraph still says the proof runs here; it is wrong until the owner
 changes it, and a row says so (DECISIONS 2026-10-11, "no browser on this machine").
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with, the third of
-three pushed together: the commit rule is one rule, commitlint under the house's config and
+THE OVERNIGHT ORDER OF 2026-10-11 (D1277, as the lead gave it): the owner is away until the
+morning. No whole-suite gate runs on this machine: not `pnpm check`, not a package's whole
+suite, not conformance. A bite's proof here is the gates it touches, a script's self-test, one
+spec file; then the push, and `ci` read job by job is the whole gate. Load is kept low and no
+lane is started. A bite that cannot be trusted without the whole suite here waits. It stands
+until the owner or the lead lifts it; the seat's open questions are on his morning list.
+
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: one platform
+pin, `ayersPlatform` at `v0.55.0`, with the root `.editorconfig` and the commit rule's copies
+recorded at that tag and both gates refusing any other (DECISIONS 2026-10-11, "one pin"). Its
+proof on this machine is the gates it touches, under the overnight order; `ci` is its whole
+gate. Beneath it, each pushed 2026-10-11 with its `ci` run read green on every job: three
+pushed together (`ci` 38185411268, its `commits` job the first to judge by the house's config;
+`deploy-site` 38185411263; staging read, the page and both text files byte for byte the
+tip's), `4dd6773` the ruling that no browser starts here recorded, `f010496` the landing
+page's description and its `og:description` lead with the headline sentence, on the lead's
+decision, and `e2ec451` the commit rule is one rule, commitlint under the house's config and
 the house's script copied from platform `v0.55.0` and held to one verdict on 51 messages
-(DECISIONS 2026-10-11, "one commit rule"); the landing page's description and its
-`og:description` lead with the headline sentence, on the lead's decision; and the ruling above
-recorded. Beneath them, each pushed 2026-10-11 with its `ci` run read green on every job:
-`5830efc` the owner's line is the landing page's headline, "The first micro-frontend framework
+(DECISIONS 2026-10-11, "one commit rule"); `5830efc` the owner's line is the landing page's headline, "The first micro-frontend framework
 for AI-enabled development", with "One page. Every framework." the line beneath it in one
 heading group and a row of its own in `site/LANDING.md`; the site's text reader knows a
 heading group (`ci` 38184326973, `deploy-site` 38184326974, and staging read: the page, its
@@ -81,8 +93,7 @@ NEXT: read the open rows afresh before believing none can be worked: on 2026-10-
 said and five could. As read that night, what remains waits on the owner (branch rulesets, the
 first publish and its notes, B-27a and B-27b, the joint session, the agent surface's install
 size; his four questions are with the lead; the public cut of the landing page; his word for
-`CLAUDE.md`'s Tooling paragraph under D1276), on platform `v0.55.0`'s own CI read green (the
-pin, `ayersPlatform`, then moves to it; nothing staged changes), on
+`CLAUDE.md`'s Tooling paragraph under D1276), on
 the promotion of `next` (the llms.txt address in AGENTS.md, P5-8's landing page), on Astra
 (the shared 404), or on a machine with VS Code (one read). A STANDING
 GATE since `84efc3f`: one commit on `next` with no conventional header or no sign-off turns
@@ -1128,13 +1139,15 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       role the kit at that tag references bound by the skin, and `release-notes.html` takes the
       reference's shape, a status line, an introduction and h3 groups with lists, its words
       brought to what the tree holds (DECISIONS 2026-10-11, "the kit at v0.54.3")
-- [ ] The pin, `ayersPlatform`, is at `v0.54.3` and moves at its next touch to the newest tag
-      whose own CI is green. The cto seat says v0.54.3's own CI went red on a dotnet spec's
-      clock flake, nothing in the kit; v0.54.4 (265826b) changes that one file alone; v0.55.0
-      (c120253) carries the commit rule, and its own CI was still being watched when the
-      rule's copies were taken from it. Measured 2026-10-11: `sitekit/` and the house
-      `.editorconfig` are byte for byte the same from v0.54.3 to v0.55.0, so the move stages
-      nothing new and no deploy is owed to it (cto, 2026-10-11)
+- [x] The pin, `ayersPlatform`, moves from `v0.54.3` to the newest tag whose own CI is green.
+      The cto seat says v0.54.3's own CI went red on a dotnet spec's clock flake, nothing in
+      the kit; v0.54.4 (265826b) changes that one file alone; v0.55.0 (c120253) carries the
+      commit rule. DONE 2026-10-11, to `v0.55.0`: its own `ci` read green here on four jobs
+      (platform run 38184256522); `sitekit/` byte for byte the same from v0.54.3, so the deploy
+      stages nothing new; and the tree names one platform tag where it named three, the root
+      `.editorconfig` and the commit rule's copies each compared with that tag's file and
+      recorded at it, with both gates refusing a recorded tag that is not the pin (DECISIONS
+      2026-10-11, "one pin")
 - [ ] `CLAUDE.md`'s Tooling paragraph tells a session to run the browser proof on this machine
       through the sealed launcher. D1276 (2026-10-11) forbids any browser process here, and
       this seat obeys it: DECISIONS, the handoff block and the seat's memory say so. The lead
