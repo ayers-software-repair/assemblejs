@@ -637,7 +637,10 @@ export type MountHandle = { unmount(): void };
   slot whose name or view changes in the browser writes a new directive there, which nothing
   composes: what a page places is decided on the server, and a child is not swapped by a render.
   No renderer reaches for a child or agrees with another about what one is, so plain HTML holds
-  React as React holds plain HTML. Markdown is prose and places nothing.
+  React as React holds plain HTML. Markdown is prose and places nothing. What `check` reads of a
+  view's source for its placements it reads for its elements too, each tag with its attributes
+  and whether the template computes it, for the rules of section 10 to hold; Markdown writes no
+  element of its own.
 - **A placement's name is written where the placement is.** What a view places is read from its
   source before any request: the build writes it beside the view, boot refuses a name with no
   assembly, a view the assembly lacks and a view that leads back to itself, and `check` says the

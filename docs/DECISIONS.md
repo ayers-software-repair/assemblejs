@@ -4340,3 +4340,24 @@ Settled:
 - **The command line's tarball budget moves**, from 78000 to 80000 bytes, as the tokens' decision
   said it would: the components the starter ships, 2 kB of CSS a new project needs, packed it to
   78575, measured by `check:pack`.
+
+## 2026-10-11: the elements a view writes
+
+The fourth bite of A-04 (D1252): the element reader for the views written as markup, which the
+rules about markup need, as the memo said, one level deeper than what S-07 built for placements.
+
+Settled:
+
+- **One tokenizer of start tags**, `readElements`: each tag outside a comment and outside a
+  script, style, textarea or title, through core's own `inertSpans`, with its attributes as
+  written, quoted, unquoted or bare, names lower-cased as the parser reads them, the first of a
+  repeated attribute kept as the parser keeps it, and `computed` where the template's marker
+  stands anywhere in the tag, so a rule knows a render may write more there.
+- **The masking shared.** `markedTemplate` and `COMPUTED_MARKER` leave `templatePlacements` for
+  modules of their own, read by the placement reader and the element reader alike, so the two
+  can never disagree on what a template computes; a plain html view is its own markup.
+- **`templateElements`** reads html, EJS, Handlebars, Nunjucks and Pug views through them, and
+  Markdown as writing no element of its own; a source that cannot be read as markup is left to
+  the render, undefined, as its placements are.
+- **Nothing refuses yet.** The readers for modules, Lit, Vue and Svelte follow, then one bite a
+  rule.

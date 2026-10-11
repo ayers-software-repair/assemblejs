@@ -1063,7 +1063,12 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
         on every page in that order; the starter's hello is a notice with a link styled as the
         button, which the agents fixture holds. DESIGN 10 and the tutorial say it (DECISIONS
         2026-10-11, "the components HTML has")
-  - [ ] P5-6d The element reader for templates (html, EJS, Handlebars, Nunjucks)
+  - [x] P5-6d The element reader for templates (2026-10-11): `readElements` reads every start
+        tag of markup with its attributes outside what the parser reads as text, and
+        `templateElements` reads a plain html, EJS, Handlebars, Nunjucks or Pug view through it
+        with what the template computes marked (`markedTemplate`, moved out of the placement
+        reader with `COMPUTED_MARKER`), Markdown as writing no element. Nothing refuses yet:
+        the rules come in their bite (DECISIONS 2026-10-11, "the elements a view writes")
 - [x] FLAKE SEEN ONCE (2026-10-11, under `pnpm check` with every package's suite running at
       once): `cli/test/build/build-project.test.ts`, "generates, builds and runs a project with a
       handlebars assembly", failed with the built server "exited with 1" and nothing more said;
