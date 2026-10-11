@@ -941,9 +941,19 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
       packages move when core moves). Do NOT swap to a commit-derived generator here. KEPT: the
       standing rule is in CLAUDE.md's Release section, and every change since 2026-10-09 carries
       a changeset (2026-10-11).
-- [ ] Keep husky + commitlint (already live). When the shared house check set lands, add a
+- [x] Keep husky + commitlint (already live). When the shared house check set lands, add a
       CROSS-TEST feeding the same fixture messages to commitlint and the shared script, asserting
-      the same verdict, so one rule does not drift into two implementations.
+      the same verdict, so one rule does not drift into two implementations. DONE 2026-10-11:
+      the house set has landed, and `check:commit-rule` runs 33 messages through commitlint and
+      a byte-copy of the house's `check-conventional.sh` at platform `v0.54.4`, held by hash,
+      and holds each verdict to the one recorded: 25 the same, 8 recorded as different, each
+      with its reason, measured. Watched red on a rule verdict recorded wrong, a difference
+      recorded that is none, and the house's script edited (DECISIONS 2026-10-11, "one rule
+      for a commit's header")
+- [ ] Nothing in CI reads a commit's header, and the sign-off is read on a pull request alone:
+      `ci.yml`'s `commit trailers` job is skipped on a push, and commitlint runs only in the
+      husky hook, which `--no-verify` or a machine without the hooks passes by. Every push to
+      `next` so far went through the hook. Hold both on a push too (found 2026-10-11)
 - [x] Adopt the canonical `.editorconfig` from platform/codestyle (49-line per-language version;
       mine is the 8-line minimal) plus a byte-equality drift test. Measured: prettier does not act
       on `trim_trailing_whitespace`, so this is uniformity, not a bug fix. DONE 2026-10-11: the
@@ -1219,7 +1229,7 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
         reads the markup outside script and style with every `{ }` expression marked from the
         inside out, a block as text, a spread as computed. Nothing refuses yet (DECISIONS
         2026-10-11, "the elements Vue and Svelte write")
-  - [ ] P5-6g The rules, one bite each (`tokens-hold-their-contrast` landed with P5-6b):
+  - [x] P5-6g The rules, one bite each (`tokens-hold-their-contrast` landed with P5-6b):
     - [x] `a-view-has-no-inline-style` (2026-10-11): `viewElements` reads every assembly's
           elements by its view's kind, the components a framework view is split into included,
           and `elementProblems` refuses a `style` attribute, written or computed, in any of the

@@ -4824,3 +4824,47 @@ helper, `clickMounted` in `browser/mounted.ts`, now stands at every click: it re
 own envelope, through a shadow root where the assembly has one, waits for the mark, then clicks.
 The runtime proof's assertion that a static envelope lacks `data-hydrated`, a word nothing ever
 wrote, reads `data-mounted` now, the word the runtime does write.
+
+## 2026-10-11: one rule for a commit's header
+
+The ledger's row from the house style rulings: when the shared house check set lands, hold
+commitlint and the house's shell script to the same verdict on the same messages, so one rule
+does not become two.
+
+The set has landed: platform/codestyle carries `check-conventional.sh`, and a cross-test of its
+own, `cross-test-conventional.sh`, twelve messages through both. Read at `v0.54.4`: that cross-test
+needs a sibling checkout with commitlint installed and its self-test skips green without one, so
+where it runs alone it holds nothing. This repository has commitlint in its own CI, which makes
+it the one place the two can be run together on every push.
+
+Settled: `check:commit-rule`, in `pnpm check`. The house's script and the two files it sources
+(`gates_range.sh`, `codestyle_key.sh`) are byte-copies under `scripts/house/`, from platform's
+`v0.54.4` tag, held to their hashes as the root `.editorconfig` is; the kit's README says this
+repository vendors the kit's scripts rather than checking platform out. The gate runs 33 messages
+through `commitlint` (21.2.2, config-conventional, this repository's config) and through the
+script's `--message` mode, and holds each verdict to the one recorded.
+
+Measured, not assumed: the two agree on 25, the house's own twelve among them, and part ways on 8.
+Read against commitlint's own sources in `node_modules` (`@commitlint/is-ignored` `defaults.js`,
+`@commitlint/config-conventional` `index.js`):
+
+| message                                 | commitlint | house script | why                                                                                           |
+| --------------------------------------- | ---------- | ------------ | --------------------------------------------------------------------------------------------- |
+| `feat(): add the thing`                 | passes     | refuses      | an empty scope is no scope to commitlint                                                      |
+| `feat: add the thing ` (trailing space) | refuses    | passes       | `header-trim`                                                                                 |
+| `Merge branch 'main' into next`         | passes     | refuses      | commitlint ignores a merge; the script skips one in a range and judges it in a hook           |
+| `fixup! feat: add the thing`            | passes     | refuses      | commitlint ignores `fixup!`, `squash!`, `amend!`                                              |
+| `1.0.0`                                 | passes     | refuses      | commitlint ignores a message that is a version alone                                          |
+| `Revert fix: the thing`                 | passes     | refuses      | commitlint ignores everything that begins `Revert `; the script takes git's quoted form alone |
+| a body line over 100 characters         | refuses    | passes       | `body-max-line-length`; the script reads the header alone                                     |
+| a footer line over 100 characters       | refuses    | passes       | `footer-max-line-length`; the same                                                            |
+
+None is this repository's to settle: which side is right in each is the house's rule, and the
+script is platform's. They are recorded as differences and held as such, so one that closes at a
+re-sync, or turns around, or a new one that opens when either side is upgraded, is a red here.
+Sent to the lead with the table. Watched red on the real tree, each alone and restored: a verdict
+of the rule recorded wrong, a difference recorded that is none, and the house's script edited to
+take another type, which the hash refuses before any verdict is asked.
+
+Found beside it, and a row of its own: nothing in CI reads a commit's header at all, and the
+sign-off is read on a pull request alone.
