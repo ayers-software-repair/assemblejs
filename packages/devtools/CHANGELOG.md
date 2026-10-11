@@ -1,5 +1,12 @@
 # @assemblejs/devtools
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- Updated dependencies [387dae6]
+  - @assemblejs/core@1.0.0-next.1
+
 ## 1.0.0-next.0
 
 ### Major Changes
