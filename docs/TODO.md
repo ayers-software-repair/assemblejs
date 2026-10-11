@@ -906,9 +906,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       `site/LANDING.md` has its row, both halves backed: the agent surface, what `new` writes,
       the prompts and the `agents` fixture for "for AI-enabled development", a dated search for
       "the first". The text reader learned the heading group, so `llms.txt` describes the site
-      by the paragraph it did. The page's title, description and `og:description` were not
-      moved (DECISIONS 2026-10-11, "the hero line stands on the front door"; found 2026-10-11,
-      reading the shared backlog's AJ.11)
+      by the paragraph it did. The page's description and its `og:description` lead with the
+      headline sentence since the commit after, on the lead's decision, each keeping what it
+      said; the title is as it was (DECISIONS 2026-10-11, "the hero line stands on the front
+      door" and "the description leads with the headline"; found 2026-10-11, reading the
+      shared backlog's AJ.11)
 - [x] The command line's suite could fail by a race: two of its spec files built
       `examples/two-frameworks` in place, at once, and a build begins by removing the
       example's `dist` and `.assemblejs` (`build/build-project.ts:58-59`), so one file's

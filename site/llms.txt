@@ -1,6 +1,6 @@
 # AssembleJS
 
-> Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+> The first micro-frontend framework for AI-enabled development. Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
 
 Build one application from UI assemblies written in React, Vue, Svelte and more. AssembleJS composes their HTML on the server and hydrates each in its own framework. Assemblies can live in your project or on another server; page events connect their interactions.
 

@@ -5202,3 +5202,14 @@ form, an autosquash marker. A revert written by hand takes the `revert` type lik
 - **Not moved: the pin.** `ayersPlatform` stays at `v0.54.3`. It names the site kit the deploy
   stages, `sitekit/` is byte for byte the same from there to `v0.55.0`, and the new tag's own
   CI was still running; the row says when it moves.
+
+## 2026-10-11: the description leads with the headline
+
+The lead decided, within the owner's order for the hero line: the landing page's `description`
+and its `og:description` take the headline sentence, and its `<title>` stays the product's
+name. Each leads with the sentence and keeps what it said after it. The description is more
+than a search result's snippet here: `scripts/site-llms.mjs` prints it as the one line that
+says what the site is, at the head of both text files, so the sentence that describes the
+product stays behind the one that sells it. `og:description` reads as the page does, the
+headline and then the line beneath it, and keeps its last two words. Both text files are
+regenerated; their first line is the new description.

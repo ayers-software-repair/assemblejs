@@ -1,6 +1,6 @@
 # AssembleJS
 
-> Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+> The first micro-frontend framework for AI-enabled development. Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
 
 Every page of this site as text, in the order [llms.txt](llms.txt) lists them. Every link is relative to this file.
 
