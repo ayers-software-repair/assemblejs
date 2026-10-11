@@ -1054,15 +1054,15 @@ told without one is `check`'s.
 Every tool answers with the change it made and the state that resulted. None of them prints
 prose for a human to re-read.
 
-| tool              | what it does                                                                                                                              |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `create_project`  | Scaffolds a project that runs.                                                                                                            |
-| `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.                                                |
-| `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position.                                            |
-| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML and the account of each child.                    |
-| `compose_page`    | Composes a page NOW and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
-| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                              |
-| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                             |
+| tool              | what it does                                                                                                                                                                                  |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create_project`  | Scaffolds a project that runs.                                                                                                                                                                |
+| `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.                                                                                                    |
+| `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position.                                                                                                |
+| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML and the account of each child.                                                                        |
+| `compose_page`    | Composes a page, by name, NOW, under the policy its declaration writes, and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
+| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                                                                                  |
+| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                                                                                 |
 
 `render_assembly` and `compose_page` are the two that matter most, and they are the reason this
 is not a wrapper. An agent that writes an assembly can immediately see what it renders and
@@ -1078,6 +1078,10 @@ what the project serves, framework and template views and services included (own
 2026-10-11, "Dev server, tool runs nothing"). Without one, a plain html view is rendered here
 with no service, so its data is empty, and a view in a framework or a template language, source
 its renderer compiles, is answered with the reason and the word to start the dev server.
+`compose_page` takes a page by its name and composes its own template under the policy its
+declaration writes, read as `check` reads it, so the agent sees the page it made and not a
+template it pasted; a placement from another server, by a url written or computed, is composed
+deferred, as the browser fills it on a served page, so the surface reaches no network (13.2).
 
 ### 13.5 What makes it expert rather than mechanical
 

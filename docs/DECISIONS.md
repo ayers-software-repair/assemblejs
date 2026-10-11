@@ -4621,3 +4621,21 @@ the agents fixture expects it among the listed ones.
 
 The agent surface's tarball budget moves, from 21500 to 24000 bytes: the resource packed it to
 23228, measured by `check:pack`.
+
+## 2026-10-11: compose_page by name
+
+The ledger's row: `compose_page` took a template, so it could not know the policy a page declares.
+
+Settled: `compose_page` takes a page by its name. `composePage` finds the page as discovery does,
+reads its template and its declaration through the root guard, reads the policy as `check` reads
+it (`readPagePolicy`), turns it into the server's placements (`pagePlacements`: each field kept
+when written as the server's type, left out when computed or wrong) and plans it with core's own
+`pagePlan`, so the plan is the one the server would make. A placement from another server, by a
+url written or computed, is composed deferred and its url dropped: the surface reaches no network
+(DESIGN 13.2), and a deferred envelope is what the browser fills on a served page. A page the
+project has not, or a declaration that cannot be read, is a problem the agent acts on. The
+template path stays as `composeTemplate`, which `composePage` calls; the prompts, the
+instructions `new` writes and the agents fixture call the tool by the page's name.
+
+The agent surface's tarball budget moves, from 24000 to 25000 bytes: the page reader packed it
+to 24039, measured by `check:pack`.

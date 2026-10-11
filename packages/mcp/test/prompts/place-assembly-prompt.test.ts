@@ -28,7 +28,7 @@ describe("the brief for placing an assembly", () => {
 
   it("has the agent see what the placement made, and read the account and not only the markup", () => {
     const brief = PLACE_ASSEMBLY_PROMPT.brief({ name: "cart", on: "home" });
-    expect(brief).toContain('call compose_page with { "template": the file\'s text }');
+    expect(brief).toContain('call compose_page with the page\'s name as "page"');
     expect(brief).toContain("call render_assembly with");
     expect(brief).toContain("a placement that fell back looks the same in the markup");
     expect(brief.indexOf("compose_page")).toBeLessThan(brief.indexOf("Call check"));

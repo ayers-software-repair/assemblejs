@@ -131,7 +131,7 @@ test("an agent follows the prompt for a page to a page that composes, and the bu
     const placed = await call("place_assembly", { page: "about", name: only });
     assert.equal(placed.ok, true, JSON.stringify(placed.problems));
 
-    const composed = await call("compose_page", { template: agent.read(file) });
+    const composed = await call("compose_page", { page: "about" });
     assert.equal(composed.ok, true, JSON.stringify(composed.problems));
     assert.deepEqual(
       composed.result.diagnostics.map((diagnostic) => diagnostic.name),

@@ -106,9 +106,7 @@ test("an agent adds an assembly, places it and composes the page, through that s
     const rendered = await call("render_assembly", { name: "greeting" });
     assert.equal(rendered.ok, true, JSON.stringify(rendered.problems));
 
-    const composed = await call("compose_page", {
-      template: read(`src/pages/${page}/${page}.html`),
-    });
+    const composed = await call("compose_page", { page });
     assert.equal(composed.ok, true, JSON.stringify(composed.problems));
     assert.deepEqual(
       composed.result.diagnostics.map((diagnostic) => diagnostic.name),

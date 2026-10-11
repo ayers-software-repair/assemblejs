@@ -49,7 +49,7 @@ describe("an agent building a page through the server's own surface", () => {
     const placed = await call("place_assembly", { page: "home", name: "cart", after: "hello" });
     expect(placed.ok).toBe(true);
 
-    const composed = await call("compose_page", { template: String(placed.result?.["template"]) });
+    const composed = await call("compose_page", { page: "home" });
     const html = String(composed.result?.["html"]);
     expect(html).toContain('data-name="hello"');
     expect(html).toContain('data-name="cart"');

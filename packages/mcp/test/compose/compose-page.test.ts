@@ -1,150 +1,77 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { createServer } from "node:http";
-import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { composePage, resolveRoot } from "@assemblejs/mcp";
 import type { ProjectRoot } from "@assemblejs/mcp";
 
 let root: ProjectRoot;
 let dir = "";
-
-const assembly = (name: string, file: string, contents: string): void => {
-  const at = join(dir, "src", "assemblies", name);
-  mkdirSync(at, { recursive: true });
-  writeFileSync(join(at, file), contents);
+const file = (path: string, contents: string): void => {
+  mkdirSync(join(dir, path, ".."), { recursive: true });
+  writeFileSync(join(dir, path), contents);
+};
+const assembly = (name: string, markup: string): void =>
+  file(`src/assemblies/${name}/${name}.html`, markup);
+const page = (name: string, template: string, declaration?: string): void => {
+  file(`src/pages/${name}/${name}.html`, template);
+  if (declaration !== undefined) file(`src/pages/${name}/${name}.page.ts`, declaration);
 };
 
 beforeEach(() => {
-  dir = mkdtempSync(join(tmpdir(), "assemblejs-mcp-"));
-  mkdirSync(join(dir, "src", "assemblies"), { recursive: true });
+  dir = mkdtempSync(join(tmpdir(), "assemblejs-mcp-page-"));
   root = resolveRoot(dir);
 });
-afterEach(() => {
-  rmSync(dir, { recursive: true, force: true });
-});
+afterEach(() => rmSync(dir, { recursive: true, force: true }));
 
-// The project's own dev server, as the agent surface finds it: a record under the root, and a
-// server answering its health and the content endpoint for what only it renders.
-const devServer = createServer((request, response) => {
-  if (request.url === "/_assemblejs/health") {
-    response.writeHead(200, { "content-type": "application/json" });
-    response.end('{"status":"ok","version":"v"}');
-    return;
-  }
-  const name = /^\/assembly\/([a-z-]+)\//.exec(request.url ?? "")?.[1] ?? "none";
-  response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-  response.end(
-    `<assembly-root data-name="${name}" data-id="x" data-view="default" data-renderer="react"><button>served ${name}</button></assembly-root>`,
-  );
-});
-let devOrigin = "";
-beforeAll(async () => {
-  await new Promise<void>((resolve) => devServer.listen(0, "127.0.0.1", resolve));
-  devOrigin = `http://127.0.0.1:${String((devServer.address() as AddressInfo).port)}`;
-});
-afterAll(() => new Promise<void>((resolve) => devServer.close(() => resolve())));
-const devRunning = (): void => {
-  mkdirSync(join(dir, ".assemblejs"), { recursive: true });
-  writeFileSync(join(dir, ".assemblejs", "dev.json"), JSON.stringify({ url: devOrigin }));
-};
-
-describe("composing through the project's dev server", () => {
-  it("asks the running server for every placement, so the page is what the project serves", async () => {
-    assembly("ok", "ok.html", "<p>on disk</p>");
-    assembly("counter", "counter.react.tsx", "export default () => null;");
-    devRunning();
-    const composed = await composePage(
-      root,
-      `<main><assembly name="ok"/><assembly name="counter"/></main>`,
-    );
-    expect(composed.problems).toEqual([]);
-    expect(composed.html).toContain("served ok");
-    expect(composed.html).toContain("served counter");
-    expect(composed.diagnostics.map((d) => d.source)).toEqual(["remote", "remote"]);
-  });
-});
-
-describe("composing a page for an agent", () => {
-  it("returns the page an agent's template actually makes", async () => {
-    assembly("header", "header.html", "<h1>Shop</h1>");
-    assembly("cart", "cart.html", "<p>Two items</p>");
-
-    const composed = await composePage(
-      root,
-      `<main><assembly name="header"/><assembly name="cart"/></main>`,
-    );
-
+describe("composing a page by its name", () => {
+  it("composes the page's own template, so the agent sees the page it made", async () => {
+    assembly("header", "<h1>Shop</h1>");
+    page("home", '<main><assembly name="header"></assembly></main>');
+    const composed = await composePage(root, "home");
     expect(composed.problems).toEqual([]);
     expect(composed.html).toContain("<h1>Shop</h1>");
-    expect(composed.html).toContain("<p>Two items</p>");
-    expect(composed.html.startsWith("<main>")).toBe(true);
-    expect(composed.diagnostics.map((d) => d.name)).toEqual(["header", "cart"]);
+    expect(composed.diagnostics.map((d) => [d.name, d.source])).toEqual([["header", "local"]]);
   });
 
-  // The half an agent cannot get from the html. A page whose placement fell back looks fine.
-  it("says which placement fell back, which the markup alone does not", async () => {
-    assembly("header", "header.html", "<h1>Shop</h1>");
-    const composed = await composePage(
-      root,
-      `<main><assembly name="header"/><assembly name="missing"/></main>`,
-      { missing: { name: "missing", view: "default", deadline: 3000, fallback: "<p>soon</p>" } },
+  it("composes under the policy the page's declaration writes: a fallback where a placement fails", async () => {
+    page(
+      "home",
+      '<main><assembly name="missing"></assembly></main>',
+      'export default { place: { missing: { fallback: "<p>soon</p>" } } };',
     );
-
-    expect(composed.html).toContain("<h1>Shop</h1>");
+    const composed = await composePage(root, "home");
     expect(composed.html).toContain("<p>soon</p>");
-    expect(composed.diagnostics[0]?.source).toBe("local");
-    expect(composed.diagnostics[1]?.source).toBe("fallback");
+    expect(composed.diagnostics[0]?.source).toBe("fallback");
     expect(composed.problems.join()).toContain("missing");
   });
 
-  it("keeps the page standing when a placement cannot render", async () => {
-    assembly("ok", "ok.html", "<p>fine</p>");
-    assembly("counter", "counter.react.tsx", "export default () => null;");
-    const composed = await composePage(
-      root,
-      `<main><assembly name="ok"/><assembly name="counter"/></main>`,
+  it("composes a placement from another server deferred, reaching no network", async () => {
+    page(
+      "home",
+      '<main><assembly name="cart"></assembly></main>',
+      'export default { place: { cart: { url: "https://shop.example.com/assembly/cart/" } } };',
     );
-    // One assembly that needs a build does not cost the agent the rest of the page.
-    expect(composed.html).toContain("<p>fine</p>");
-    expect(composed.problems.join()).toContain("only its renderer turns into markup");
+    const composed = await composePage(root, "home");
+    expect(composed.problems).toEqual([]);
+    expect(composed.diagnostics.map((d) => d.source)).toEqual(["deferred"]);
+    expect(composed.html).toContain("data-defer");
   });
 
-  it("hands back a refused template as a problem, not as a thrown error", async () => {
-    const composed = await composePage(root, `<main><assembly name="Cart"/></main>`);
-    expect(composed.html).toBe("");
-    // The agent's own mistake to fix, phrased so it can.
-    expect(composed.problems.join()).toContain("usable url segment");
+  it("answers a page the project has not, and a declaration it cannot read, as problems", async () => {
+    expect((await composePage(root, "nowhere")).problems.join()).toContain('no page "nowhere"');
+    page("home", "<main></main>", "export default { route: ");
+    const unread = await composePage(root, "home");
+    expect(unread.html).toBe("");
+    expect(unread.problems.join()).toContain('page "home" could not be read');
   });
 
   it("composes a page with no placements unchanged", async () => {
-    const composed = await composePage(root, "<main><p>static</p></main>");
+    page("home", "<main><p>static</p></main>");
+    const composed = await composePage(root, "home");
     expect(composed.html).toBe("<main><p>static</p></main>");
     expect(composed.diagnostics).toEqual([]);
-  });
-
-  it("composes what a placed assembly's own view places, and accounts for it beneath its parent", async () => {
-    assembly("shell", "shell.html", '<section><assembly name="cart"></assembly></section>');
-    assembly("cart", "cart.html", "<p>Two items</p>");
-    const composed = await composePage(root, '<main><assembly name="shell"/></main>');
-
-    expect(composed.problems).toEqual([]);
-    expect(composed.html).toMatch(/data-name="shell".*data-name="cart".*Two items/s);
-    expect(composed.diagnostics).toMatchObject([
-      { name: "shell", source: "local", children: [{ name: "cart", source: "local" }] },
-    ]);
-  });
-
-  it("says why a child fell back, though the page and its parent stand", async () => {
-    assembly("shell", "shell.html", '<section><assembly name="counter"></assembly></section>');
-    assembly("counter", "counter.react.tsx", "export default () => null;");
-    const composed = await composePage(root, '<main><assembly name="shell"/></main>');
-
-    expect(composed.diagnostics[0]).toMatchObject({ name: "shell", source: "local" });
-    expect(composed.problems).toHaveLength(1);
-    expect(composed.problems[0]).toContain("only its renderer turns into markup");
   });
 });

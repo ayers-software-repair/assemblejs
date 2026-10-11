@@ -734,9 +734,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       BUILT 2026-10-11: `describeContract` from core's vocabulary, its spec against a real
       server's three answers; listed, named in the instructions `new` writes and in the agents
       fixture (DECISIONS 2026-10-11, "the contract as an agent reads it")
-- [ ] `compose_page` takes a template, so it cannot know the policy a page declares: give it a
+- [x] `compose_page` takes a template, so it cannot know the policy a page declares: give it a
       page by name. A url a declaration computes is a mark in what `check` reads and no url;
-      a page that places another server's assembly composes with no network (13.2)
+      a page that places another server's assembly composes with no network (13.2). BUILT
+      2026-10-11: `composePage(root, name)` reads the page and its declaration as `check` does
+      and plans it with core's `pagePlan`; a remote placement is composed deferred; the
+      template path is `composeTemplate` (DECISIONS 2026-10-11, "compose_page by name")
 - [ ] Two things DESIGN 13.3 named are not built, because no source gives them: the shape of
       an assembly's data, and what is wrong on a running server with the id that finds it in
       a log. The second waits with the row above on how an agent is shown a running project;

@@ -53,15 +53,13 @@ export function createMcpServer(root: ProjectRoot): McpServer {
     {
       title: "Compose a page now",
       description:
-        "Composes a page template and returns the html with one diagnostic per placement, and beneath it one per assembly that placement's own view placed. While the project's dev server runs, every placement is asked of it, so the page is what the project serves; without one, placements are composed from the assemblies on disk, and one whose view is not plain html falls back with the reason among the problems. A placement that fell back looks identical in the markup; the diagnostic is what says it did.",
+        "Composes one of the project's pages, by name, under the policy its declaration writes, and returns the html with one diagnostic per placement, and beneath it one per assembly that placement's own view placed. While the project's dev server runs, every placement is asked of it, so the page is what the project serves; without one, placements are composed from the assemblies on disk, and one whose view is not plain html falls back with the reason among the problems. A placement from another server is composed deferred, as the browser fills it; nothing is fetched. A placement that fell back looks identical in the markup; the diagnostic is what says it did.",
       inputSchema: {
-        template: z
-          .string()
-          .describe('the page template, with <assembly name="..."></assembly> placements'),
+        page: z.string().describe("the page's name, which is its directory under src/pages"),
       },
     },
-    async ({ template }) => {
-      const composed = await composePage(root, template);
+    async ({ page }) => {
+      const composed = await composePage(root, page);
       return json({
         ok: composed.problems.length === 0,
         result: composed,

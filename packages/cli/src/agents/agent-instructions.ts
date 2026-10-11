@@ -58,7 +58,8 @@ one framework or in none, and each hydrated in the browser by its own framework.
   three endpoints, their headers and the envelope, when an assembly is served from another server.
 - Change the project with its tools: \`add_assembly\`, then \`place_assembly\` on a page or in
   another assembly's view. Then see what you made, with no server started: \`render_assembly\`
-  renders an assembly and \`compose_page\` composes a page's template, each with an account of
+  renders an assembly and \`compose_page\` composes a page by its name, under the policy its
+  declaration writes, each with an account of
   every placement. A view in a framework or a template language is source its renderer
   compiles, so both tools say that in place of showing it, and the running server shows it.
   \`check\` reports every problem with its file, its rule and its fix, and \`explain\` gives the
