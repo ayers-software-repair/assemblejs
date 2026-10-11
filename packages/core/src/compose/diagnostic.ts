@@ -23,6 +23,8 @@ export interface Diagnostic {
    * refused for passing its limit: they share one id, one line in the log and this.
    */
   readonly refused?: number;
+  /** What settling the placement threw, when it threw: a defect's words, for the log alone. */
+  readonly cause?: string;
   /**
    * How each placement the answering assembly's own view made was answered, so a page's account
    * is a tree. Absent when it placed nothing, and for an assembly another server answered: that

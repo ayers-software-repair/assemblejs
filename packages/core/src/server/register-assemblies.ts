@@ -107,6 +107,8 @@ export function registerAssemblies(
     // The depth and the ancestors the request arrived with are the ones its children are
     // composed from, so a parent on another server holds the cap and the cycle across the hop.
     const id = headers.id ?? newCorrelationId();
+    // Aborted when the asker leaves, so what its view places stops being composed for nobody.
+    const { signal } = request;
     // The visitor this address admitted is shown, of what the view places, what each child's
     // own address would show them, and no more (DESIGN 5.2).
     const admit = options.admit?.(request.headers as Readonly<Record<string, string | undefined>>);
@@ -122,6 +124,7 @@ export function registerAssemblies(
         fetch: local,
         assemblies,
         limits,
+        signal,
         ...(admit === undefined ? {} : { admit }),
         newId: randomUUID,
         now: () => performance.now(),

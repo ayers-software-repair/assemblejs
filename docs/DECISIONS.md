@@ -4015,3 +4015,52 @@ Admission`, and the server binds it to the request in `admitFor(policy, headers,
   anyone who can open the page".
 - **No setting.** Nothing turns the rule off: an assembly meant for everyone is opened by its
   address in `publicRoutes`, the memo's remedy, pinned in `admit-for.test.ts`.
+
+## 2026-10-11: what stops when the asker leaves, and a placement whose settling threw
+
+Row 8 of the second reading, two things in code and five in the design, taken as the lead ordered
+after way A.
+
+Expected: a page and an assembly's own address hand their composition the request's signal, as
+the design says a composition nobody waits for starts no further work. Found: neither route did;
+`compose` and `renderLocal` took a signal and were handed none, so a child's view whose service
+took its time still composed its children for an asker who had left. Measured against a real
+listening server (vitest, `app.listen` on port 0): a child whose service waits 150 ms and places a
+grandchild rendered that grandchild for an asker that aborted after 30 ms. Fastify 5.12.1's
+`request.signal` is what both routes read now (its `Reference/Request.md`: created lazily on first
+access, aborts when the handler timeout fires or the client disconnects; `lib/request.js` attaches
+`raw.on('close')` at that first access, and `lib/reply.js` removes the listener once the reply has
+finished), read at the top of each handler before anything is awaited. A probe on this machine
+showed the trap the lazy getter sets: for a POST whose body was read, the signal reads aborted
+once the handler has consumed the body, since the request stream's close is the same event; both
+routes here are GETs, and the spec holds them against a listening server on both Node versions
+CI runs.
+
+Settled:
+
+- **The reason is `aborted`, not `timeout`.** A placement refused before dispatch because the
+  request it belongs to had ended was given `timeout`, the reason of a deadline that elapsed,
+  which an operator would read as the assembly's slowness. It is the request's own end now, its
+  asker gone or a parent's deadline passed: `aborted`, in `FailureReason`, refused where depth,
+  cycle and too-many are.
+- **Accounted once a request.** Nobody is waiting for lines about a request nobody is waiting
+  for. `PlacementCount.refuse(reason, name, view)` keeps one account a reason, `too-many` and
+  `aborted` (`RefusedReason`), each under one id minted at the first, and `account()` answers one
+  diagnostic for each reason met, in order. The design's listings follow and `check:design`
+  holds them.
+- **A placement whose settling threw shows what a failed one shows.** The composer's rejected
+  branch rendered nothing and accounted an `invalid` with an empty id, so the page lost the
+  placement without a trace a visitor or the log could follow. `failedSettling` renders the
+  declared fallback or an empty envelope marked failed, under one id for the envelope, the
+  diagnostic and the line; the diagnostic carries `cause`, what was thrown, and `logFallbacks`
+  says it. The cache is not read for it, since the cache may be what threw: the one spec that
+  reaches the branch is a `ContentCache` whose `get` throws, and only that placement fails. A
+  placement declared required fails its page, as for any failure of its.
+- **Five sentences in the design**, each read in the code first: a parent's deadline ends its
+  child (3.3, the signal `settlePlacement` hands each request is the parent's and the deadline's
+  together); the byte cap is measured with every child composed inside (3.4, measured on the
+  rendered answer); a deferred fill sends no page id and composes under one of its own (3.5,
+  `fillDeferred` sends id, depth and params); a page that first sees a remote's version waits up
+  to a second for its manifest (2.3, `MANIFEST_DEADLINE` in `learnedManifests`); a slot whose
+  name or view changes in the browser writes a directive nothing composes (7, the React slot
+  makes a new object only then, and no runtime composes).

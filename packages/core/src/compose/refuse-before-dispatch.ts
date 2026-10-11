@@ -25,6 +25,6 @@ export function refuseBeforeDispatch(
   if (input.depth + 1 > input.limits.depth) return "depth";
   if (input.path.includes(identity(input.name, input.view))) return "cycle";
   if (input.ordinal > input.limits.placements) return "too-many";
-  if (input.signal?.aborted === true) return "timeout";
+  if (input.signal?.aborted === true) return "aborted";
   return undefined;
 }

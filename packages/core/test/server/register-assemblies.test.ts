@@ -4,6 +4,7 @@ import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { defineAssembly, localFetch, registerAssemblies } from "@assemblejs/core";
 import type { LogLine } from "@assemblejs/core";
+import { askedAndLeft, grand, slowkid } from "../fixtures/slow-child.js";
 
 const hello = defineAssembly({
   name: "hello",
@@ -60,6 +61,8 @@ beforeAll(async () => {
     ["broken", broken],
     ["heavy", heavy],
     ["shell", shell],
+    ["grand", grand],
+    ["slowkid", slowkid],
   ]);
   const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
   const log = (line: LogLine): void => void logged.push(line);
@@ -174,5 +177,17 @@ describe("an assembly whose view places a child, served", () => {
     // One level short of it, the child is one deeper and still inside the cap.
     const below = await get("/assembly/shell/", { "assembly-depth": "2" });
     expect(below.body).toContain("<p>Hello, world</p>");
+  });
+});
+
+describe("what nobody waits for", () => {
+  it("composes a child's children for an asker who waits, and none for one who left", async () => {
+    const origin = await app.listen({ port: 0, host: "127.0.0.1" });
+    await askedAndLeft(
+      origin,
+      "/assembly/slowkid/",
+      logged,
+      '1 placements inside "slowkid" were refused after aborted',
+    );
   });
 });

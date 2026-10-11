@@ -226,7 +226,7 @@ describe("how many assemblies one request places", () => {
     expect(renders).toEqual({ item: 2, leaf: 0 });
     // What was handed the count leaves the account to whoever began it.
     expect(refused).toEqual([]);
-    expect(count.account()).toMatchObject({ refused: 3, correlationId: "c-1" });
+    expect(count.account()).toMatchObject([{ refused: 3, correlationId: "c-1" }]);
     expect([...ids]).toEqual(["c-1"]);
   });
 

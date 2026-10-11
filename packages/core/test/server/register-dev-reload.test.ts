@@ -7,6 +7,7 @@ import {
   DEV_RELOAD_SCRIPT,
   DEV_RELOAD_SOURCE,
   DEV_RELOAD_STREAM,
+  createServer,
   registerAccess,
   registerDevReload,
 } from "@assemblejs/core";
@@ -65,6 +66,29 @@ describe("what reloads a page in development, mounted", () => {
     const origin = await app.listen({ port: 0, host: "127.0.0.1" });
     for (const path of [DEV_RELOAD_SCRIPT, DEV_RELOAD_STREAM]) {
       expect((await fetch(`${origin}${path}`)).status, path).toBe(401);
+    }
+  });
+});
+
+describe("a page in development", () => {
+  it("links and serves the script that reloads it after a restart, and only in development", async () => {
+    for (const mode of ["development", "production"] as const) {
+      const server = await createServer({
+        config: { mode, host: "127.0.0.1", port: 0, auth: undefined },
+        assemblies: [
+          { name: "hello", views: { default: { renderer: "html", markup: () => "<p>hi</p>" } } },
+        ],
+        pages: [{ route: "/", template: '<body><assembly name="hello"></assembly></body>' }],
+        log: () => undefined,
+      });
+      const page = (await server.inject({ method: "GET", url: "/" })).body;
+      const script = (await server.inject({ method: "GET", url: DEV_RELOAD_SCRIPT })).statusCode;
+      const stream = server.fastify.hasRoute({ method: "GET", url: DEV_RELOAD_STREAM });
+      await server.close();
+      const linked = page.includes(`src="${DEV_RELOAD_SCRIPT}?boot=`);
+      expect([linked, script, stream], mode).toEqual(
+        mode === "development" ? [true, 200, true] : [false, 404, false],
+      );
     }
   });
 });

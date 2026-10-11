@@ -286,7 +286,8 @@ describe("a composition that belongs to a request", () => {
     expect(seen.map((signal) => signal.aborted)).toEqual([true, true]);
     const late = await compose(options({ fetch, signal: request.signal }));
     expect(seen).toHaveLength(2);
-    expect(late.diagnostics.map((d) => d.reason)).toEqual(["timeout", "timeout"]);
+    // One account for both, as for those refused past the limit: nobody is waiting for lines.
+    expect(late.diagnostics).toMatchObject([{ reason: "aborted", refused: 2 }]);
   });
 
   it("hangs what an answer composed inside itself under its diagnostic, as a tree", async () => {

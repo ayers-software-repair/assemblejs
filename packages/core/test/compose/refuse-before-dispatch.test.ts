@@ -47,7 +47,7 @@ describe("what a parent refuses before it dispatches", () => {
     const request = new AbortController();
     expect(refuseBeforeDispatch(at(0, [], request.signal))).toBeUndefined();
     request.abort();
-    expect(refuseBeforeDispatch(at(0, [], request.signal))).toBe("timeout");
+    expect(refuseBeforeDispatch(at(0, [], request.signal))).toBe("aborted");
     // What the design refuses is said first, so the reason never depends on timing.
     expect(refuseBeforeDispatch(at(3, [], request.signal))).toBe("depth");
     expect(refuseBeforeDispatch(at(1, ["cart/default"], request.signal))).toBe("cycle");

@@ -7,8 +7,6 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { LogLine } from "@assemblejs/core";
 import {
   DEFAULT_LIMITS,
-  DEV_RELOAD_SCRIPT,
-  DEV_RELOAD_STREAM,
   createMemoryCache,
   createRemoteTransport,
   createServer,
@@ -16,6 +14,7 @@ import {
   localFetch,
   registerPages,
 } from "@assemblejs/core";
+import { askedAndLeft, grand, slowkid } from "../fixtures/slow-child.js";
 
 const hello = defineAssembly({
   name: "hello",
@@ -48,6 +47,8 @@ const byName = new Map([
   ["broken", broken],
   ["slow", slow],
   ["card", card],
+  ["grand", grand],
+  ["slowkid", slowkid],
 ]);
 const logged: LogLine[] = [];
 const silent = (): undefined => undefined;
@@ -87,6 +88,7 @@ beforeAll(async () => {
         place: { slow: { required: true, deadline: 20 } },
       },
       { route: "/members", template: '<body><assembly name="hello"></assembly></body>' },
+      { route: "/deep", template: '<body><assembly name="slowkid"></assembly></body>' },
     ],
     assemblies: byName,
     local: localFetch(byName, silent, DEFAULT_LIMITS),
@@ -171,27 +173,6 @@ describe("a page, mounted", () => {
     const { correlationId } = (response.json() as { error: { correlationId: string } }).error;
     expect(correlationId).not.toBe("");
     expect(logged.some((line) => line.correlationId === correlationId)).toBe(true);
-  });
-});
-
-describe("a page in development", () => {
-  it("links and serves the script that reloads it after a restart, and only in development", async () => {
-    for (const mode of ["development", "production"] as const) {
-      const server = await createServer({
-        config: { mode, host: "127.0.0.1", port: 0, auth: undefined },
-        assemblies: [{ name: "hello", views: hello.views }],
-        pages: [{ route: "/", template: '<body><assembly name="hello"></assembly></body>' }],
-        log: () => undefined,
-      });
-      const page = (await server.inject({ method: "GET", url: "/" })).body;
-      const script = (await server.inject({ method: "GET", url: DEV_RELOAD_SCRIPT })).statusCode;
-      const stream = server.fastify.hasRoute({ method: "GET", url: DEV_RELOAD_STREAM });
-      await server.close();
-      const linked = page.includes(`src="${DEV_RELOAD_SCRIPT}?boot=`);
-      expect([linked, script, stream], mode).toEqual(
-        mode === "development" ? [true, 200, true] : [false, 404, false],
-      );
-    }
   });
 });
 
@@ -295,5 +276,17 @@ describe("a page placing an assembly from another server", () => {
         ],
       }),
     ).rejects.toThrow(/not a declared remote/);
+  });
+});
+
+describe("what nobody waits for", () => {
+  it("composes a child's children for an asker who waits, and none for one who left", async () => {
+    const origin = await app.listen({ port: 0, host: "127.0.0.1" });
+    await askedAndLeft(
+      origin,
+      "/deep",
+      logged,
+      '1 placements on page "/deep" were refused after aborted, the first of them "grand"',
+    );
   });
 });

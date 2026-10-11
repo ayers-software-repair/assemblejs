@@ -23,12 +23,12 @@ export const originOf = (name) => {
  * its log, waiting a moment for a line still on its way to the file while there are fewer than
  * `atLeast` of them.
  */
-export const loggedLines = async (wanted, atLeast = 1, name = undefined) => {
+export const loggedLines = async (wanted, atLeast = 1, name = undefined, attempts = 20) => {
   const file =
     process.env[name === undefined ? "CONFORMANCE_LOG" : `CONFORMANCE_LOG_${name.toUpperCase()}`];
   if (file === undefined) throw new Error("no server log in this run");
   let found = [];
-  for (let attempt = 0; attempt < 20; attempt += 1) {
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
     found = readFileSync(file, "utf8")
       .split("\n")
       .flatMap((line) => {

@@ -80,6 +80,8 @@ export function registerPages(
       const admit = options.admit?.(
         request.headers as Readonly<Record<string, string | undefined>>,
       );
+      // Aborted when the asker leaves, so nothing further is composed for nobody.
+      const { signal } = request;
       let composed;
       try {
         composed = await compose({
@@ -92,6 +94,7 @@ export function registerPages(
           query: queryOf(request.url),
           params: request.params,
           headers,
+          signal,
           ...(admit === undefined ? {} : { admit }),
           newId: randomUUID,
           now: () => performance.now(),

@@ -5,13 +5,19 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the owner's ruling on access).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after row 8 of the second reading).**
 
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: row 4a of the
-second reading, the owner's ruling that a guarded assembly is guarded wherever it is placed.
-Beneath it, each pushed on 2026-10-10 with its runs read to their end, green, and each time the
-one its `ci` run was created at: `7fca321`, 08:16 EDT, row 4c, what a refused placement costs
-(`ci` 38051354538, `release` 38051354335); `a9e507c`,
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: row 8 of the
+second reading, what stops when the asker leaves and what a placement whose settling threw
+shows. Beneath it, pushed on 2026-10-11 with runs read to their end, green: `05297aa`, 08:43
+EDT, the revert of five files `49ec079` had carried that were another seat's (`ci` 38140381103,
+`release` 38140381111, `deploy-site` 38140381107, staging read); `49ec079`, 08:39 EDT, row 4a,
+the owner's ruling that a guarded assembly is guarded wherever it is placed (`release`
+38140108115 and `deploy-site` 38140108096 green; its `ci` 38140108094 red on the swept
+index.html alone, green again at 05297aa). Beneath those, each pushed on 2026-10-10 with its
+runs read to their end, green, and each time the one its `ci` run was created at: `7fca321`,
+08:16 EDT, row 4c, what a refused placement costs (`ci` 38051354538, `release` 38051354335);
+`a9e507c`,
 07:57 EDT, the second reading's seventh finding, the design's listings held to the source by a
 gate (`ci` 38050215470, `release` 38050215535); `40ad18e`, 07:46 EDT, row 4b, a limit on how
 many placements one request composes (`ci` 38049623776, `release` 38049623646); `3ba71b6`,
@@ -32,7 +38,7 @@ has it, and the page was drawn in the sealed browser at a desk's width and a pho
 those: the API reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows,
 `20547ae`; A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01,
 `a7d3edc`.
-Every package reads `1.0.0-next.0`; twenty-six changesets are pending. The owner's overnight
+Every package reads `1.0.0-next.0`; twenty-seven changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -65,7 +71,9 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    (`a9e507c`): the design's listings are the source's, and `check:design` holds them to it.
    Its 4c is done (`7fca321`): every placement a request refuses past its limit shares one
    id, one diagnostic and one log line, and an assembly's own address refuses an answer past
-   the limit on bytes. NEXT, by the lead's order: the rest of 8, which holds
+   the limit on bytes. Its 8 is done, pushed with this block: what stops when the asker
+   leaves, a placement whose settling threw, and five sentences in the design. NEXT: 6, 10
+   and 11. Row 8 held
    two things to fix in code (the content endpoint and a page hand their render no signal,
    so nothing stops when the asker leaves; a placement whose settling throws renders as
    nothing where the design says an empty envelope); then 6, 10 and 11.
@@ -354,17 +362,17 @@ rowed or the owner's; the numbers are the report's.
       what the reader found and three things more: a diagnostic's `view` and its `deferred`
       source, and the element a client renderer mounts into, which is `Element | ShadowRoot`
       (DECISIONS 2026-10-10, "the design's listings are held to the source")
-- [ ] 8. What the code does about a held assembly that the design does not say, each read by
-      the reader and none judged: a parent whose markup holds a directive the finder cannot
-      read fails whole; a parent's deadline ends its child too; the content endpoint hands
-      its render no signal, so the children of a parent asked over HTTP are not stopped when
-      the asker gives up; the byte cap is measured on a parent with its children inside it; a
-      deferred fill sends no page id; a page waits up to a second for a remote's manifests on
-      first sight of a version; a slot whose name or view changes in the browser writes a
-      directive nothing composes; a placement whose settling throws renders as nothing, where
-      DESIGN 3.3 says an empty envelope, and no spec reaches that branch. One of them is
-      fixed: the comment in `core/src/client/find-envelopes.ts` said the opposite of DESIGN
-      2.4, and now says what the code does
+- [x] 8. What the code does about a held assembly that the design does not say, each read by
+      the reader and none judged. Done 2026-10-11 (DECISIONS 2026-10-11, "what stops when the
+      asker leaves"): both routes hand their composition the asker's signal, a placement
+      refused for the request's end is `aborted` and accounted once a request; a placement
+      whose settling threw shows its fallback or an empty failed envelope under one id, with
+      the cause in its diagnostic and the log line, reached by a cache whose read throws; and
+      DESIGN says the five: a parent's deadline ends its child (3.3), the byte cap is measured
+      with children inside (3.4), a deferred fill sends no page id (3.5), a remote's version
+      first seen waits up to a second for its manifest (2.3), a slot changed in the browser
+      writes a directive nothing composes (7). Earlier, the comment in
+      `core/src/client/find-envelopes.ts` was made to say what the code does (DESIGN 2.4)
 - [x] 9. Three citations in the record of S-09 held less than their sentence, or pointed
       beside what holds it. Corrected where they are read, DECISIONS 2026-10-10, "the second
       reading": the conformance case is retitled to what it holds, the cache's refusal is in

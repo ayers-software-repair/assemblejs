@@ -62,8 +62,12 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
   // refusal is the point.
   const refusal = refuseBeforeDispatch(input);
   if (refusal !== undefined) {
-    // Past the limit, every refusal of the request carries one id, so one line finds them all.
-    const correlationId = refusal === "too-many" ? input.count.refuse(name, view) : input.newId();
+    // Past the limit, or once the asker has left, every refusal of the request for that reason
+    // carries one id, so one line finds them all.
+    const correlationId =
+      refusal === "too-many" || refusal === "aborted"
+        ? input.count.refuse(refusal, name, view)
+        : input.newId();
     return fallBack(input, id, at("fallback", refusal, correlationId), false);
   }
 

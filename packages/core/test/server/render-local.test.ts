@@ -292,6 +292,6 @@ describe("a view that places a child", () => {
       "default",
       given({ fetch: server(hello), signal: request.signal }),
     );
-    expect(diagnostics).toMatchObject([{ name: "hello", source: "fallback", reason: "timeout" }]);
+    expect(diagnostics).toMatchObject([{ name: "hello", source: "fallback", reason: "aborted" }]);
   });
 });

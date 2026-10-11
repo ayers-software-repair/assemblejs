@@ -31,7 +31,9 @@ export function logFallbacks(
       // A visitor not let in is no failure, and a check that broke was logged where it broke.
       log({
         correlationId: diagnostic.correlationId ?? newCorrelationId(),
-        message: `assembly "${diagnostic.name}" ${where} was answered by the ${diagnostic.source} after ${diagnostic.reason}`,
+        message:
+          `assembly "${diagnostic.name}" ${where} was answered by the ${diagnostic.source} after ${diagnostic.reason}` +
+          (diagnostic.cause === undefined ? "" : `: ${diagnostic.cause}`),
         stack: undefined,
       });
     }

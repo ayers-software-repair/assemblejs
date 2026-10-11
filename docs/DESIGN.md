@@ -119,7 +119,9 @@ The body is built by naming each field that goes in. Nothing server-private can 
 because nothing is copied wholesale: no template, no service, no filesystem path, no config.
 
 A consuming server fetches the manifest **once per version**, caches it, and refetches when a
-content response carries an `assembly-version` it has not seen. That is the whole handshake. A
+content response carries an `assembly-version` it has not seen; the page that first sees a
+version waits up to a second for its manifest before it links what it has, and concurrent first
+requests wait on the one read. That is the whole handshake. A
 manifest that cannot be fetched is a warning and a retry, never a boot failure: a page whose
 remote has no manifest still renders, its assets simply are not hoisted.
 
@@ -219,7 +221,9 @@ type FailureReason =
   | "cycle"
   | "too-many"
   // No failure of the assembly's: the visitor asking may not be shown it (5.2).
-  | "access";
+  | "access"
+  // The request's own end came first: its asker left, or a parent's deadline passed (3.3).
+  | "aborted";
 
 type Fetch = (request: AssemblyRequest) => Promise<AssemblyResponse>;
 ```
@@ -261,10 +265,13 @@ type ComposeResult = { html: string; diagnostics: readonly Diagnostic[] };
 
 type Limits = { depth: number; maxBytes: number; placements: number };
 
+// The refusals a request accounts for once, under one id each (3.4).
+type RefusedReason = "too-many" | "aborted";
+
 type PlacementCount = {
-  next(): number; // the next placement's number in the request
-  refuse(name: string, view: string): string; // the one id every refusal past the limit shares
-  account(): Diagnostic | undefined; // the one account of them, which says how many
+  next(): number; // the next placement's number, the first being one
+  refuse(reason: RefusedReason, name: string, view: string): string; // the id they share
+  account(): readonly Diagnostic[]; // one for each reason, how many and the first of them
 };
 
 type AssemblyPlan = {
@@ -290,6 +297,7 @@ type Diagnostic = {
   source: "local" | "remote" | "cache" | "fallback" | "deferred";
   reason?: FailureReason;
   correlationId?: string;
+  cause?: string; // what settling threw, when it threw (3.3)
   ms: number;
   refused?: number; // on the one account of every placement refused past the limit: how many
   children?: readonly Diagnostic[]; // what the answering assembly's own view placed
@@ -315,14 +323,23 @@ them finishes or times out, never later, and never fails because one of them did
 
 - Each placement has a **deadline**, default 3000 ms, configurable per placement, always finite.
   It is enforced with `AbortSignal.timeout`, so a slow remote is actually cancelled, not merely
-  ignored while it keeps a socket and a request context alive.
+  ignored while it keeps a socket and a request context alive. The signal a placement's request
+  carries aborts when that deadline passes and when the request the page or the assembly was
+  asked by ends, its asker gone; a parent's deadline so ends its child, and whatever was still to
+  be composed beneath either is refused before dispatch, `aborted`, and accounted once a request
+  (3.4). The server reads the asker's signal before it awaits anything, so nothing is composed
+  for a request already over.
 - Any answer that is not a `2xx` `text/html` body within the cap is a failure. A `404`, a `500`
   and a JSON body are all failures. None of them is ever rendered as content.
 - On failure the placement renders, in order: its declared **fallback**, then the **last good**
   cached response if one is held, then an empty envelope with `data-failed`. Every case appends
   a diagnostic naming the rung that answered, but the placements a request refuses for
   passing its limit, which share one (3.4). A placement the visitor may not be shown (5.2) is
-  no failure and reaches no cache: its fallback or the empty envelope, marked with no id.
+  no failure and reaches no cache: its fallback or the empty envelope, marked with no id. A
+  placement whose settling itself threw, a defect in the composer or in a cache the server was
+  given and never a failure of the assembly's, shows the same fallback or empty envelope under
+  one id for its envelope, its diagnostic and the line the server logs, which says what was
+  thrown; the cache is not read for it, since what threw may have been the cache.
 - A placement declared `required: true` turns its own failure into the page's failure, with a
   `503` and the diagnostic. This is opt-in and it is the only way a page dies from a child.
 - Placements resolve concurrently under `allSettled` semantics, and the output order is the
@@ -365,8 +382,10 @@ server.
 A request asked to place ten thousand costs what it renders and little more. Every placement
 refused for passing the limit carries one correlation id, and the request has one diagnostic
 for them all, which says how many, and one line in the log (section 12): each still leaves
-its empty failed envelope, and that id on each finds the line. An answer swollen by them is
-bounded as any answer is, by the limit on bytes, where it is placed and at its own address.
+its empty failed envelope, and that id on each finds the line. The placements a request stops
+dispatching once its asker has left are accounted the same way, under an id of their own
+(`RefusedReason`, 3.1). An answer swollen by them is bounded as any answer is, by the limit on
+bytes, measured with every child composed inside it, where it is placed and at its own address.
 
 Past the limit, which placements are refused is the order their templates were composed in:
 the order written within one, and across views rendering at once the order they finished, so
@@ -384,8 +403,9 @@ alone and is not followed, so a loop through one is a request, refused at its re
 A placement declared `defer: true` is not fetched during the page render. The server emits its
 empty envelope with `data-defer`, carrying the page's route parameters as `data-params`, and the
 browser runtime fetches the content endpoint after load, with the envelope's id, those
-parameters as `assembly-params` and the page's own query, and puts the envelope that answers in
-its place, parsed as the page was (a declarative shadow root attached), then mounts it like any
+parameters as `assembly-params`, a depth of one and the page's own query, and no page id, so
+what the deferred view places is composed under a page id of the fill's own, and puts the
+envelope that answers in its place, parsed as the page was (a declarative shadow root attached), then mounts it like any
 other. Should that fetch fail, the placement shows what any failed placement shows: its declared
 fallback, carried inert in the placeholder, in the server's failed envelope with its logged id.
 Deferring is the answer for a genuinely slow assembly that must not hold the page; everything
@@ -599,8 +619,10 @@ export type MountHandle = { unmount(): void };
   `<assembly name="cart"></assembly>` in its own markup. A framework view writes it with its renderer's
   slot, `<Slot name="cart" />` in React, Preact, Vue and Solid, `slot("cart")` in Svelte and
   Lit, which writes the same markup on the server and in the browser, so a parent hydrates
-  around the child the server placed and writes nothing into the slot when it renders again. No
-  renderer reaches for a child or agrees with another about what one is, so plain HTML holds
+  around the child the server placed and writes nothing into the slot when it renders again. A
+  slot whose name or view changes in the browser writes a new directive there, which nothing
+  composes: what a page places is decided on the server, and a child is not swapped by a render.
+  No renderer reaches for a child or agrees with another about what one is, so plain HTML holds
   React as React holds plain HTML. Markdown is prose and places nothing.
 - **A placement's name is written where the placement is.** What a view places is read from its
   source before any request: the build writes it beside the view, boot refuses a name with no

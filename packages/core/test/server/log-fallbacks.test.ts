@@ -44,6 +44,15 @@ describe("logging the placements that fell back", () => {
     expect(logged[0]?.correlationId).toMatch(/^[0-9a-f]{8}$/);
   });
 
+  it("says what settling threw, where it threw", () => {
+    const logged: LogLine[] = [];
+    const threw: Diagnostic = { ...fellBack, reason: "invalid", cause: "the cache broke" };
+    logFallbacks([threw], 'on page "/"', (line) => logged.push(line));
+    expect(logged.map((line) => line.message)).toEqual([
+      'assembly "cart" on page "/" was answered by the fallback after invalid: the cache broke',
+    ]);
+  });
+
   // A visitor not let in is no failure, and a check that broke was logged where it broke.
   it("says nothing for a placement this visitor may not be shown", () => {
     const logged: LogLine[] = [];
