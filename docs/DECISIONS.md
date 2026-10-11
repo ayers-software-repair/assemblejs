@@ -5146,3 +5146,59 @@ beneath it. Its row in `site/LANDING.md` stays, and the new line has a row of it
   with the new one is the lead's or the owner's. Every other block of the page is as another
   seat left it on 2026-10-11 (`d37f901`). The public cut of the page is the owner's; this is
   `next`, and staging.
+
+## 2026-10-11: one commit rule
+
+The cto settled the commit rule the same evening `check:commit-rule` recorded eight messages on
+which commitlint and the house's script parted: one verdict for each, and a commitlint config
+the kit ships beside the script, `codestyle/commitlint.config.mjs`. It is platform `9595638`,
+tagged `v0.55.0` at `c120253`, which this seat read on the remote with `git ls-remote` before
+copying anything.
+
+| the message                         | the rule   | the side that moved                                           |
+| ----------------------------------- | ---------- | ------------------------------------------------------------- |
+| `feat(): add the thing`             | refused    | commitlint, which took an empty scope for none                |
+| `feat: add the thing`, then a space | refused    | the script, which allowed a trailing space                    |
+| `Merge branch 'main' into next`     | not judged | the script, which judged a merge in a hook                    |
+| `fixup! feat: add the thing`        | not judged | the script                                                    |
+| `1.0.0`                             | refused    | commitlint, which let a bare version by                       |
+| `Revert fix: the thing`             | refused    | commitlint, which let by every message that begins Revert     |
+| a body line of 101 characters       | refused    | the script, which read the header alone                       |
+| a footer line of 101 characters     | refused    | the script; every line after the header, a URL's own excepted |
+
+What is not judged is what git itself writes: a merge, a revert or a reapply in git's quoted
+form, an autosquash marker. A revert written by hand takes the `revert` type like any header.
+
+- **Copied, byte for byte, and held to their hashes**: the script, changed; the kit's config,
+  new; the two files the script sources, unchanged. Four files under `scripts/house`, their
+  hashes and the tag in `check:commit-rule`.
+- **This repository's commitlint is the copy.** The root `commitlint.config.mjs` re-exports
+  the copy's default, and the `.cjs` it replaces is gone, so the hook, CI's `commits` job and
+  the gate judge by one object. A re-export, not `extends`: nothing here rests on how
+  commitlint merges an extended config's `ignores` and local rules.
+- **The fixtures are one verdict a message**, 51 of them: the kit's own self-test lists first,
+  18 it accepts and 16 it refuses, then the edges. No difference is recorded. The form for one
+  is kept and proven on a made-up message in the self-test, because an upgrade of either side
+  can open one: that is a red here and a finding for the kit, and until the kit answers it the
+  difference is written down with its reason and held.
+- **Watched red three times before green**: the new script against the hash recorded for
+  `v0.54.4`; the old rows against the new script, which reported five differences closed; one
+  verdict a row with commitlint still on its defaults, seven reds, among them a comment line
+  and git's scissors line, which only the kit's config reads the script's way. Green came
+  with the config switched and nothing else, which is also the proof that the re-export
+  carries the kit's ignores and its two rules.
+- **The formatter would have rewritten the copy at commit.** The pre-commit hook runs the
+  formatter and the linter's fixer on every staged `.mjs`, and the kit's config has lines
+  wider than this repository's. Measured before the ignore: the formatter called the copy
+  unformatted. `scripts/house` is in `.prettierignore` and in the linter's ignores, each with
+  its reason, and after the commit the committed copy is hashed again.
+- **The history passes.** CI reads every commit from a floor. Under the new config the 195
+  commits from the first to this one give no error and 14 warnings, each a footer with no
+  blank line before it; the script, asked for each of the 194 that are not merges, refuses
+  none. Both measured here before the push, because one refused commit turns every later run
+  red.
+- **`CONTRIBUTING.md`** says the three things a contributor can now be refused for that the
+  old sentence did not: a header over 100 characters, an empty scope, a long line with no URL.
+- **Not moved: the pin.** `ayersPlatform` stays at `v0.54.3`. It names the site kit the deploy
+  stages, `sitekit/` is byte for byte the same from there to `v0.55.0`, and the new tag's own
+  CI was still running; the row says when it moves.

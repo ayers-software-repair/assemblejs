@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-// One rule for a commit's header, two implementations: commitlint with config-conventional in
+// One rule for a commit's message, two implementations: commitlint under the house's config in
 // the repositories that have node, and the house's shell script, check-conventional.sh, in the
 // ones that do not. This repository is the one place both can run, so the two are held together
 // here: every message below goes through both, and each verdict is held to what is recorded.
 //
-// Where the two agree, that is the rule. Where they do not, the difference is written down with
-// its reason and held as well, so one that closes, or turns around, or a new one that opens at
-// an upgrade of either side, is a red here and never a surprise in someone's hook.
+// The house settled the rule with one verdict for every message, so no difference between the
+// two is recorded. One that opens at an upgrade of either side is a red here, and a finding for
+// the house's kit, never a surprise in someone's hook. Until the kit answers it, it can be
+// written down as a difference, with its reason, and is then held as well: one that closes or
+// turns around is a red too.
 //
-// The house's script is a byte-copy, with the two files it sources, of platform/codestyle at a
-// named tag, held to their hashes: this repository is public and its CI checks nothing out with
-// a credential. Re-syncing is copying the three files and recording their hashes and the tag.
+// The house's script, the two files it sources and its commitlint config are byte-copies of
+// platform/codestyle at a named tag, held to their hashes: this repository is public and its CI
+// checks nothing out with a credential. The root commitlint.config.mjs re-exports the copied
+// config, so the hook and CI judge by it. Re-syncing is copying the four files and recording
+// their hashes and the tag.
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -21,10 +25,11 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 export const HOUSE = {
-  tag: "v0.54.4",
+  tag: "v0.55.0",
   directory: "scripts/house",
   files: {
-    "check-conventional.sh": "c1553d0eb8b17aacead61eaadd5733734dd6352c344b61e4bc0892959127c4a1",
+    "check-conventional.sh": "e5a1139167d832dc8eecc00a50732f252c21a14799f77618c6160a0d8cee1258",
+    "commitlint.config.mjs": "8fda08245d3460ba40bbf9cf22a9bc6a46d020dbc6784580232127e3cc303848",
     "gates_range.sh": "c49e18b2b53fe1bb7fe0924954d40dd1dc422f9e082480681b90ffd224262dae",
     "codestyle_key.sh": "43dfa71cc806bcbab4d6200b627f52c8d6c9b10fdf77f58b1a527825bfdb0c93",
   },
@@ -35,75 +40,64 @@ const FAIL = false;
 const rule = (message, verdict) => ({ message, commitlint: verdict, house: verdict });
 const differs = (message, commitlint, house, why) => ({ message, commitlint, house, why });
 const LONG = "x".repeat(101);
+const SCISSORS = "# ------------------------ >8 ------------------------";
 
 /** Every message both implementations judge, with the verdict recorded for each. */
 export const FIXTURES = [
-  // The house's own cross-test fixtures, as its script lists them.
+  // The house script's own fixtures, as its self-test lists them: first the ones it accepts.
   rule("feat: add the pack consent step", PASS),
   rule("fix(console): repoint the drift pin", PASS),
   rule("refactor!: drop the legacy reader", PASS),
   rule("docs: note the pin", PASS),
-  rule("chore(deps): bump the thing", PASS),
-  rule("perf: speed up the scan", PASS),
+  rule('Revert "fix: switch profile matches back\'s letter spacing"', PASS),
+  rule('Reapply "fix: the thing"', PASS),
+  rule("Merge branch 'main' into next", PASS),
+  rule("Merge tag 'v1.0.0'", PASS),
+  rule("Merge remote-tracking branch 'origin/main'", PASS),
+  rule("Merge pull request #7 from a/b", PASS),
+  rule("fixup! feat: add the thing", PASS),
+  rule("squash! feat: add the thing", PASS),
+  rule("amend! feat: add the thing", PASS),
+  rule("feat: add the thing\n\nA body line.\n\nRefs: #7", PASS),
+  rule(`feat: add the thing\n\nSee https://example.test/${LONG} for the whole of it.`, PASS),
+  rule(`feat: add the thing\n\n# ${LONG}\nA body line.`, PASS),
+  rule(`feat: add the thing\n\nA body line.\n${SCISSORS}\ndiff --git ${LONG}`, PASS),
+  rule(`Merge branch 'side'\n\n${LONG}`, PASS),
+  // Then the ones it refuses.
   rule("Added the thing", FAIL),
   rule("feat: Add the thing", FAIL),
   rule("feat: add a thing.", FAIL),
   rule("wip: something", FAIL),
   rule("feat add the thing", FAIL),
-  rule("FEAT: add the thing", FAIL),
+  rule("Reverted the thing", FAIL),
+  rule("Revert fix: the thing", FAIL),
+  rule("1.0.0", FAIL),
+  rule("feat(): add the thing", FAIL),
+  rule("feat( ): add the thing", FAIL),
+  rule("feat: add the thing ", FAIL),
+  rule(" feat: add the thing", FAIL),
+  rule("Merged in the side branch", FAIL),
+  rule(`feat: ${LONG}`, FAIL),
+  rule(`feat: add the thing\n\n${LONG}`, FAIL),
+  rule(`feat: add the thing\n\nA body line.\n\nRefs: ${LONG}`, FAIL),
   // The edges of the same rule.
+  rule("chore(deps): bump the thing", PASS),
+  rule("perf: speed up the scan", PASS),
+  rule("FEAT: add the thing", FAIL),
   rule("feat(core)!: drop the reader", PASS),
   rule("feat(Core): add the thing", PASS),
   rule("feat: add the API", PASS),
   rule("feat: API changes", FAIL),
   rule("feat:add the thing", FAIL),
   rule("feat: ", FAIL),
-  rule(" feat: add the thing", FAIL),
   rule(`feat: ${"y".repeat(94)}`, PASS),
   rule(`feat: ${"y".repeat(95)}`, FAIL),
+  rule(`feat: add the thing\n\n${"z".repeat(100)}`, PASS),
+  rule(`feat: add the thing\n\nRefs: https://example.test/${LONG}`, PASS),
   rule('Revert "feat: add the thing"', PASS),
   rule("revert: feat: add the thing", PASS),
   rule("chore(release): 1.0.0", PASS),
   rule("Initial commit", FAIL),
-  // Where the two part ways today, each with the reason.
-  differs("feat(): add the thing", PASS, FAIL, "commitlint takes an empty scope as no scope"),
-  differs(
-    "feat: add the thing ",
-    FAIL,
-    PASS,
-    "commitlint's header-trim; the script allows a trailing space",
-  ),
-  differs(
-    "Merge branch 'main' into next",
-    PASS,
-    FAIL,
-    "commitlint ignores a merge; the script skips one in a range and judges it in a hook",
-  ),
-  differs(
-    "fixup! feat: add the thing",
-    PASS,
-    FAIL,
-    "commitlint ignores fixup!, squash! and amend!",
-  ),
-  differs("1.0.0", PASS, FAIL, "commitlint ignores a message that is a version alone"),
-  differs(
-    "Revert fix: the thing",
-    PASS,
-    FAIL,
-    "commitlint ignores every message that begins Revert; the script takes git's own quoted form alone",
-  ),
-  differs(
-    `feat: add the thing\n\n${LONG}`,
-    FAIL,
-    PASS,
-    "commitlint's body-max-line-length; the script reads the header alone",
-  ),
-  differs(
-    `feat: add the thing\n\nbody\n\nRefs: ${LONG}`,
-    FAIL,
-    PASS,
-    "commitlint's footer-max-line-length; the script reads the header alone",
-  ),
 ];
 
 const said = (verdict) => (verdict ? "passes" : "refuses");
@@ -169,29 +163,31 @@ const exits = (command, args, input) =>
 const isEntryPoint = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
 if (isEntryPoint) {
   if (process.argv[2] === "--self-test") {
-    // An edited copy of the house's script; a verdict of the rule that moved; a recorded
-    // difference that closed, and one that turned around: each refused, and the record clean.
+    // An edited copy of each of the house's files; a verdict of the rule that moved; and, on a
+    // difference made up here because none is recorded, one that closed and one that turned
+    // around: each refused, and the record clean.
+    const apart = "docs: the two part on this one";
+    const held = [
+      ...FIXTURES,
+      differs(apart, PASS, FAIL, "made up, to prove a difference is held"),
+    ];
     const recorded = (side) => async (message) =>
-      FIXTURES.find((fixture) => fixture.message === message)?.[side] ?? false;
+      held.find((fixture) => fixture.message === message)?.[side] ?? false;
     const flipped = (side, which) => async (message) =>
       (await recorded(side)(message)) !== (message === which);
     const edited = houseDrift((file) => `${readFileSync(file, "utf8")}\n# edited`);
     const moved = await verdictProblems(
-      FIXTURES,
+      held,
       flipped("commitlint", "wip: something"),
       recorded("house"),
     );
-    const closed = await verdictProblems(
-      FIXTURES,
-      flipped("commitlint", "1.0.0"),
-      recorded("house"),
-    );
+    const closed = await verdictProblems(held, flipped("commitlint", apart), recorded("house"));
     const turned = await verdictProblems(
-      FIXTURES,
-      flipped("commitlint", "1.0.0"),
-      flipped("house", "1.0.0"),
+      held,
+      flipped("commitlint", apart),
+      flipped("house", apart),
     );
-    const clean = await verdictProblems(FIXTURES, recorded("commitlint"), recorded("house"));
+    const clean = await verdictProblems(held, recorded("commitlint"), recorded("house"));
     const red =
       edited.length === Object.keys(HOUSE.files).length &&
       moved.length === 1 &&
@@ -207,7 +203,7 @@ if (isEntryPoint) {
       process.exit(1);
     }
     console.log(
-      "commit rule self-test: red on an edited copy of the house's script, a verdict of the rule that moved, a difference that closed and one that turned around, as required",
+      "commit rule self-test: red on an edited copy of each of the house's files, a verdict of the rule that moved, a difference that closed and one that turned around, as required",
     );
     process.exit(0);
   }
@@ -239,7 +235,10 @@ if (isEntryPoint) {
   for (const problem of problems) console.error(`commit rule: ${problem}`);
   if (problems.length > 0) process.exit(1);
   const apart = FIXTURES.filter((fixture) => fixture.commitlint !== fixture.house).length;
+  const count = String(FIXTURES.length);
   console.log(
-    `commit rule: commitlint and the house script at ${HOUSE.tag} give the recorded verdict on ${String(FIXTURES.length)} messages, ${String(FIXTURES.length - apart)} the same and ${String(apart)} recorded as different`,
+    apart === 0
+      ? `commit rule: commitlint under the house's config and the house script, both at ${HOUSE.tag}, give one verdict on each of ${count} messages, the one recorded`
+      : `commit rule: commitlint and the house script at ${HOUSE.tag} give the recorded verdict on ${count} messages, ${String(FIXTURES.length - apart)} the same and ${String(apart)} recorded as different`,
   );
 }

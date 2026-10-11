@@ -1010,13 +1010,16 @@ repo only. Not begun; the work hold still stands and platform/codestyle is uncom
       with its reason, measured. Watched red on a rule verdict recorded wrong, a difference
       recorded that is none, and the house's script edited (DECISIONS 2026-10-11, "one rule
       for a commit's header")
-- [ ] The commit rule is settled by the cto (2026-10-11), one verdict for each of the eight
-      recorded differences, with a commitlint config the kit ships beside the script; it is on
-      a platform branch and ships in the next tag, which the cto names when it is cut. Then,
-      here: copy the script, the files it sources and the kit's commitlint config from that tag,
-      record their hashes and the tag in `check:commit-rule`, point this repository's commitlint
-      at the copy, and make the eight `differs` rows `rule` rows with the verdicts decided.
-      Waits on the tag
+- [x] The commit rule is settled by the cto (2026-10-11), one verdict for each of the eight
+      recorded differences, with a commitlint config the kit ships beside the script. DONE
+      2026-10-11 from platform `v0.55.0` (`c120253`, read on the remote here): the script and
+      the kit's config copied byte for byte, the two files the script sources unchanged, the
+      four hashes and the tag in `check:commit-rule`; the root `commitlint.config.mjs`
+      re-exports the copy, so the hook and CI's `commits` job judge by it; the eight `differs`
+      rows are `rule` rows and no difference is recorded; 51 messages, the kit's own lists
+      first. `scripts/house` is kept from the formatter and the linter, which would have
+      rewritten the copy at commit. The history, 195 commits, passes the rule in both
+      implementations (DECISIONS 2026-10-11, "one commit rule")
 - [x] Nothing in CI reads a commit's header, and the sign-off is read on a pull request alone:
       `ci.yml`'s `commit trailers` job is skipped on a push, and commitlint runs only in the
       husky hook, which `--no-verify` or a machine without the hooks passes by. Every push to
@@ -1111,10 +1114,13 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       role the kit at that tag references bound by the skin, and `release-notes.html` takes the
       reference's shape, a status line, an introduction and h3 groups with lists, its words
       brought to what the tree holds (DECISIONS 2026-10-11, "the kit at v0.54.3")
-- [ ] The pin moves from `v0.54.3` to `v0.54.4` at the next touch of `ayersPlatform`: the cto
-      seat says v0.54.3's own CI went red on a dotnet spec's clock flake, nothing in the kit,
-      and v0.54.4 (265826b) changes that one file alone, the kit bytes the same. No deploy is
-      owed to it; it rides the next pin move (cto, 2026-10-11)
+- [ ] The pin, `ayersPlatform`, is at `v0.54.3` and moves at its next touch to the newest tag
+      whose own CI is green. The cto seat says v0.54.3's own CI went red on a dotnet spec's
+      clock flake, nothing in the kit; v0.54.4 (265826b) changes that one file alone; v0.55.0
+      (c120253) carries the commit rule, and its own CI was still being watched when the
+      rule's copies were taken from it. Measured 2026-10-11: `sitekit/` and the house
+      `.editorconfig` are byte for byte the same from v0.54.3 to v0.55.0, so the move stages
+      nothing new and no deploy is owed to it (cto, 2026-10-11)
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

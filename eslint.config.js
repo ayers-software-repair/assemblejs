@@ -18,6 +18,8 @@ export default tseslint.config(
       "**/node_modules/**",
       "coverage/**",
       "scripts/fixtures/**",
+      // The house's files are byte-copies held to their hashes; a fix here would be a drift.
+      "scripts/house/**",
       ".claude/worktrees/**",
       "site/docs/api/**",
     ],

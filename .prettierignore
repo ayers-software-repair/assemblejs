@@ -2,3 +2,5 @@ dist
 pnpm-lock.yaml
 CHANGELOG.md
 LICENSE
+# Byte-copies of the house's files, held to their hashes: never reformatted here.
+scripts/house
