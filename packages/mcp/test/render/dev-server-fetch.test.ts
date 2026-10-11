@@ -120,7 +120,7 @@ describe("asking the project's dev server for a placement", () => {
     expect((await fetch(request("holder"))).ok).toBe(true);
     expect(inside).toEqual([
       '"price" fell back inside "holder" on the dev server: its log says why, against deadbeef',
-      '"tag" fell back inside "holder" on the dev server: its log says why',
+      '"tag" fell back inside "holder" on the dev server: it gave no id and logged nothing, as it does for a placement it will not show to the one asking',
     ]);
     expect((await fetch(request("counter"))).ok).toBe(true);
     expect(inside).toHaveLength(2);

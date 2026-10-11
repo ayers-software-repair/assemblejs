@@ -1098,7 +1098,9 @@ What failed on that server is in its log, and the tools say where to look: an as
 failed there answers its fallback envelope marked with the id its failure is logged against
 (2.1), which the tool's own account and markup then carry, and each placement that fell back
 inside an answer that stands is named with its own id, read from the markup, since the
-composer's account holds nothing of what another server composed inside its answer.
+composer's account holds nothing of what another server composed inside its answer. One marked
+with no id is said to have none: that is how the server answers a placement it will not show to
+the one asking (5.2), and it logs nothing for it.
 `compose_page` takes a page by its name and composes its own template under the policy its
 declaration writes, read as `check` reads it, so the agent sees the page it made and not a
 template it pasted; a placement from another server, by a url written or computed, is composed

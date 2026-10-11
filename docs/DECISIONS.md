@@ -4931,6 +4931,14 @@ The two specs that carried one dev-server fixture, word for word, share it now f
 `test/fixtures/dev-server.ts`, with the two assemblies this needs. Five mutations, each alone,
 watched red.
 
+Corrected the same day: an envelope marked failed with no id was said to have its reason in the
+server's log, and it has none. Read in `compose/admitted.ts`, `settle-placement.ts` and
+`server/log-fallbacks.ts` ("a visitor not let in is no failure"), and held
+by the trust fixture (`inbound.spec.mjs`, the badge that "stands empty"): a placement the server
+will not show to the one asking is answered with `data-failed=""` and nothing is logged, since a
+refusal for who is asking is no failure. The tool says that now, in place of pointing at a log
+that holds nothing.
+
 ## 2026-10-11: the tools ask the dev server as a composer asks
 
 Found while proving the entry above against the artifact: P5-5, as it landed this morning

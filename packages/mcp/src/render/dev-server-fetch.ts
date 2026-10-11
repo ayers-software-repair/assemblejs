@@ -24,8 +24,12 @@ export function devServerFetch(
   failed: (line: LogLine) => void = () => undefined,
   inside: (problem: string) => void = () => undefined,
 ): Fetch {
-  const logged = (id: string): string =>
-    id === "" ? "its log says why" : `its log says why, against ${id}`;
+  // An envelope marked failed with no id is one the server logged nothing for: a placement it
+  // will not show to the one asking is answered so (DESIGN 5.2), and no log holds a reason.
+  const found = (id: string): string =>
+    id === ""
+      ? "it gave no id and logged nothing, as it does for a placement it will not show to the one asking"
+      : `its log says why, against ${id}`;
   // A request the server refused answers what was wrong with it, as JSON: the id it logged the
   // refusal against, and a line for each header that did not fit its shape (DESIGN 2.1).
   const refusal = (body: string): { readonly id: string; readonly said: string } | undefined => {
@@ -70,7 +74,7 @@ export function devServerFetch(
       if (own !== undefined) {
         failed({
           correlationId: own.id,
-          message: `"${request.name}" failed on the dev server, which answered ${String(response.status)}: ${logged(own.id)}`,
+          message: `"${request.name}" failed on the dev server, which answered ${String(response.status)}: ${found(own.id)}`,
           stack: undefined,
         });
       }
@@ -99,7 +103,7 @@ export function devServerFetch(
     }
     for (const one of failedEnvelopes(html)) {
       inside(
-        `"${one.name}" fell back inside "${request.name}" on the dev server: ${logged(one.id)}`,
+        `"${one.name}" fell back inside "${request.name}" on the dev server: ${found(one.id)}`,
       );
     }
     return { ok: true, html, source: "remote" };
