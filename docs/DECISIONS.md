@@ -5108,3 +5108,41 @@ command line writes since this afternoon.
 
 Not done here, and a row: the hero line the owner asked for on 2026-10-09 is on no page. What
 backs it is built; where it stands on the front door is with the lead.
+
+## 2026-10-11: the hero line stands on the front door
+
+The owner's line of 2026-10-09 is the landing page's headline, on the lead's go of this evening,
+which needed no new word from him: he asked for the line, and the entry of that day settled that
+it is a claim with a row. "One page. Every framework.", the headline until now, is the line
+beneath it. Its row in `site/LANDING.md` stays, and the new line has a row of its own.
+
+- **The spelling is the tree's.** His own words had the term as one word. The product's own
+  definition and the core package's published description hyphenate it, so the headline does:
+  "The first micro-frontend framework for AI-enabled development", one spelling on every
+  surface a reader sets side by side.
+- **The markup.** The two lines are one heading group, `<hgroup>`, the heading and a paragraph
+  beside it, which is the element HTML has for this (MDN, the `hgroup` element, read 2026-10-11:
+  it "allows the grouping of a heading with any secondary content, such as subheadings, an
+  alternative title, or tagline", each "a `<p>` element within the `<hgroup>`"). The headline's
+  two hyphenated words are each kept on one line, because a phone's width broke the first at its
+  hyphen. One rule styles the line beneath, in the display face and the accent, both tokens. The
+  page was drawn in the sealed browser at 1280, 768, 390 and 320 pixels wide and read at each.
+- **The text files.** `scripts/site-page-text.mjs` takes the paragraph beneath a page's `<h1>`
+  as what the page is, and `llms.txt` prints the landing page's. Read as any other paragraph,
+  the line beneath the headline would have taken the describing paragraph's place there. So the
+  reader learned the heading group: its paragraph is said where it stands, and is never the
+  page's description. The generator's self-test was given a title in a heading group and
+  watched red twice before the reader changed: the element with no way of being said, then,
+  read as a plain container, the wrong paragraph in the index. `llms.txt` is byte for byte what
+  it was; `llms-full.txt` has the new title and the line beneath it.
+- **What backs "the first".** Nothing in this repository can prove a first, and the row says
+  so. The half a gate holds is "for AI-enabled development": the agent surface, what `new`
+  writes, the prompts, the `agents` fixture. "The first" rests on two web searches of
+  2026-10-11 that found no micro-frontend framework shipping an agent surface or saying this of
+  itself, recorded with their date so that the day it stops being true is findable. No
+  competitor is named, here or on the page.
+- **Not moved.** The page's `<title>`, its `description` and its `og:description` are as they
+  were, the last of which still opens with the older line; whether a shared link should lead
+  with the new one is the lead's or the owner's. Every other block of the page is as another
+  seat left it on 2026-10-11 (`d37f901`). The public cut of the page is the owner's; this is
+  `next`, and staging.

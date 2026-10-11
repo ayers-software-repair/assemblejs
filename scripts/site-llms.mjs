@@ -122,10 +122,16 @@ if (isEntryPoint) {
   const mode = process.argv[2];
   if (mode === "--self-test") {
     // A file edited by hand, a page the files have not caught up with, and a page holding an
-    // element with no way of being said: each refused. Then written, and right.
+    // element with no way of being said: each refused. Then written, and right, the line a
+    // heading group holds beside its title said in its place and never as what the site is.
     const root = mkdtempSync(join(tmpdir(), "site-llms-"));
-    const page = (title, body) =>
-      `<html><head><meta name="description" content="What it is."></head><body><main><header><h1>${title}</h1><p>About ${title}. And more of it.</p></header>${body}<footer><p>Not said.</p></footer></main></body></html>`;
+    const page = (title, body, beside) => {
+      const heading =
+        beside === undefined
+          ? `<h1>${title}</h1>`
+          : `<hgroup><h1>${title}</h1><p>${beside}</p></hgroup>`;
+      return `<html><head><meta name="description" content="What it is."></head><body><main><header>${heading}<p>About ${title}. And more of it.</p></header>${body}<footer><p>Not said.</p></footer></main></body></html>`;
+    };
     const manifest = {
       llms: { index: "llms.txt", full: "llms-full.txt" },
       pages: [
@@ -151,6 +157,7 @@ if (isEntryPoint) {
         page(
           "Site",
           '<h2>More</h2><p>Text, a &lt;tag&gt; in it, and <code>&lt;one&gt;</code> as code.</p><section aria-label="Kinds"><span>one</span><span>two</span></section><pre>say ```x```</pre>',
+          "Its own line.",
         ),
       );
       writeFileSync(
@@ -172,7 +179,7 @@ if (isEntryPoint) {
         throw new Error(`the index it wrote is not the one expected:\n${index}`);
       for (const held of [
         "# A\n\nSource: [docs/a.html](docs/a.html)\n\nAbout A. And more of it.\n\n### `run it`\n\nSee [home](index.html).\n\n```\nin it\n```\n\nAfter.\n\n```\na `b`\n```\n",
-        "# Site\n\nSource: [index.html](index.html)\n\nAbout Site. And more of it.\n\n## More\n\nText, a \\<tag> in it, and `<one>` as code.\n\nKinds:\n\n- one\n- two\n\n````\nsay ```x```\n````\n",
+        "# Site\n\nSource: [index.html](index.html)\n\nIts own line.\n\nAbout Site. And more of it.\n\n## More\n\nText, a \\<tag> in it, and `<one>` as code.\n\nKinds:\n\n- one\n- two\n\n````\nsay ```x```\n````\n",
       ]) {
         if (!full.includes(held)) throw new Error(`the full file lacks:\n${held}\nin:\n${full}`);
       }
