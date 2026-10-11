@@ -918,7 +918,12 @@ a `select` or a `textarea` is named by a `label` for its id or one that may wrap
 `aria-label`, an `aria-labelledby` or a `title`, by a placeholder on a text field, or by the
 value of an input of type button, each a name by the HTML accessibility API mappings; a hidden,
 submit, reset or image input is named without the author, and a `button` is named by its content,
-which the reader does not see, so neither is judged. A component here
+which the reader does not see, so neither is judged. And an assembly's stylesheet reads its
+colours from the tokens and sets none of its own (`a-colour-is-a-token`): a hex colour, a colour
+function or a named colour of CSS Color Level 4 in any declaration, a custom property's included,
+is refused in a project that has `src/tokens.css`, since a colour is one decision made in one
+file; `transparent`, `currentcolor`, a string, a url and the name a `var()` reads are not colours
+set there. A component here
 is an element the browser makes usable, a modal `dialog` that makes the rest of the page inert
 among them; no custom element and no library per framework (owner, DECISIONS 2026-10-11, "Plain
 HTML + tokens"). The rules that hold a view to the tokens follow.

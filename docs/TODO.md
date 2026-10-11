@@ -5,11 +5,12 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the third rule of P5-6g,
-`a-control-has-a-name`).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the last rule of P5-6g,
+`a-colour-is-a-token`, which completes A-04).**
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: P5-6g's third rule.
-Beneath it, each pushed on 2026-10-11 with its `ci` run read green: `fa42b64` the second rule,
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: P5-6g's fourth rule.
+Beneath it, each pushed on 2026-10-11 with its `ci` run read green: `97ddcd6` the third rule,
+`a-control-has-a-name` (`ci` CI_97DDCD6); `fa42b64` the second rule,
 `an-image-has-an-alternative` (`ci` 38165587092); `cb84e1d` the first rule,
 `a-view-has-no-inline-style` (`ci` 38165230731); `886724e` P5-6f the element reader for Vue and
 Svelte (`ci` 38164708480); `09a6c11` P5-6e the element reader for modules and Lit (`ci`
@@ -19,9 +20,7 @@ the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens
 the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
 and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
 envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: P5-6g's last rule, `a-colour-is-a-token` (a literal colour in an assembly's stylesheet,
-which `style-problems.ts` already parses with postcss), then
-P5-8 (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
+NEXT: P5-8 (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
 crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
 00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
 before the day's work.
@@ -1122,7 +1121,10 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
           placeholder on a text field or value on a button input, is refused in any kind of view;
           a spread, a computed type, a hidden, submit, reset or image input and a `button` are
           left to the render (DECISIONS 2026-10-11, "a control has a name")
-    - [ ] `a-colour-is-a-token`
+    - [x] `a-colour-is-a-token` (2026-10-11): a hex colour, a colour function or a named colour
+          in any declaration of an assembly's stylesheet is refused when the project has
+          `src/tokens.css`; a token, `transparent`, `currentcolor`, a string and a url pass
+          (DECISIONS 2026-10-11, "a colour is a token"). P5-6g is complete
 - [x] P5-7 ONE VIEW PER ASSEMBLY: as the design and the guides say today; nothing to build.
       The morning list's item 13 closes (2026-10-11)
 - [ ] P5-8 assemblejs.com: the main landing page exists at `/assemblejs/` once the release

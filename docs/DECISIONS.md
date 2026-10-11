@@ -4473,3 +4473,24 @@ pair `WrittenElement`, which `viewElements` now returns.
 
 The command line's tarball budget moves, from 84000 to 86000 bytes: the rule and its leaf files
 packed it to 84432, measured by `check:pack`.
+
+## 2026-10-11: a colour is a token
+
+The last rule of A-04 (D1252), on the stylesheets `styleProblems` already parses.
+
+Settled: `a-colour-is-a-token` refuses a literal colour in any declaration of an assembly's
+stylesheet, a custom property of the assembly's own included, when the project has
+`src/tokens.css`; a project without the file has no tokens to read and is held to the markup
+rules alone, as the memo said. A literal colour is a hex colour, one of the colour functions of
+CSS Color Level 4 (`rgb`, `rgba`, `hsl`, `hsla`, `hwb`, `lab`, `lch`, `oklab`, `oklch`, `color`;
+its sections 5.1, 7, 8, 9.3, 9.4 and 10.1, read 2026-10-11) with what it holds, or one of the
+148 named colours of its section 6.1, in any case. `transparent` and `currentcolor` decide no
+colour of their own and pass; so do a string, a `url()` and the name a `var()` reads, which the
+reader blanks before it looks, so `var(--red)` and `url(red.png)` are not colours set there. A
+stylesheet the reader cannot open or parse is `styleProblems`' finding already and is passed over.
+The finding names the assembly, the property, the colour and the line, and says to read a token
+instead, a colour the tokens lack being a new role there. The reason is the memo's: a colour is
+one decision, made in one file. With it the seven answers of D1252 are all built.
+
+The command line's tarball budget moves, from 86000 to 88000 bytes: the rule, with the 148
+names, packed it to 86282, measured by `check:pack`.

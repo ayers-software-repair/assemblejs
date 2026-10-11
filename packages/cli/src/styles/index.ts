@@ -15,3 +15,6 @@ export { contrastRatio } from "./contrast-ratio.js";
 export { readTokens } from "./read-tokens.js";
 export { TOKEN_INVARIANTS } from "./token-invariants.js";
 export { tokenProblems } from "./token-problems.js";
+export { NAMED_COLOURS } from "./named-colours.js";
+export { literalColours } from "./literal-colours.js";
+export { colourProblems } from "./colour-problems.js";

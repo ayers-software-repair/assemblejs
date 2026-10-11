@@ -30,5 +30,6 @@ export const RULE_IDS = [
   "a-view-has-no-inline-style",
   "an-image-has-an-alternative",
   "a-control-has-a-name",
+  "a-colour-is-a-token",
   "agent-instructions-are-current",
 ] as const;

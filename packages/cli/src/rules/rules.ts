@@ -228,6 +228,14 @@ export const RULES: readonly Rule[] = [
       "<input> with an id no label names, or no id at all; a select or a textarea beside its label but not tied to it; an input of type button with no value.",
   },
   {
+    id: "a-colour-is-a-token",
+    rule: "An assembly's stylesheet reads its colours from src/tokens.css and sets none of its own.",
+    because:
+      "A colour is one decision, made in one file: the tokens hold their contrast in both schemes, and a page composed from assemblies written apart looks like one page only when every one reads the same roles. A literal colour in an assembly is a decision made twice, unchecked.",
+    smell:
+      "A hex colour, rgb(), hsl(), oklch() or a named colour in an assembly's .css, a custom property of its own bound to one included, in a project that has src/tokens.css.",
+  },
+  {
     id: "agent-instructions-are-current",
     rule: "The agent instructions and MCP registrations a project carries are the ones its command line writes, and a CLAUDE.md beside them brings AGENTS.md in.",
     because:
