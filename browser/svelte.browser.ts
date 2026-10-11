@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 import { bundleFixture } from "./build-fixture.mjs";
 
 // THE DAY-ONE PROOF, and the whole mission in one test.
@@ -31,11 +32,11 @@ test("a Svelte assembly and a React assembly share a page and an event", async (
   await expect(page.locator("#readout")).toHaveText("nothing yet");
 
   // One click in Svelte. The React assembly hears it, and says who sent it.
-  await page.locator("#bump").click();
+  await clickMounted(page.locator("#bump"));
   await expect(page.locator("#bump")).toContainText("1");
   await expect(page.locator("#readout")).toHaveText("counter counted 1");
 
   // Again, to prove it is a live channel and not a single delivery.
-  await page.locator("#bump").click();
+  await clickMounted(page.locator("#bump"));
   await expect(page.locator("#readout")).toHaveText("counter counted 2");
 });

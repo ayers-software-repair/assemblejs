@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 import type { Page } from "@playwright/test";
 import { freePort, saidBy } from "./child-server.js";
 
@@ -77,7 +78,7 @@ for (const framework of FRAMEWORKS) {
     release();
     // Every island's own module fetched, after which each mounts at once.
     await page.waitForLoadState("networkidle");
-    await bump.click();
+    await clickMounted(bump);
     await expect(bump).toHaveText(`${framework} 1`);
     expect(
       await host.evaluate((element) => ({
@@ -115,7 +116,7 @@ test("a deferred assembly in its own shadow root is filled into that root, style
     const host = page.locator(`assembly-root[data-name="${framework}-box"]`);
     const bump = page.locator(`#${framework}-bump`);
     await expect(bump).toHaveCSS("color", "rgb(0, 128, 0)");
-    await bump.click();
+    await clickMounted(bump);
     await expect(bump).toHaveText(`${framework} 1`);
     expect(
       await host.evaluate((element) => ({

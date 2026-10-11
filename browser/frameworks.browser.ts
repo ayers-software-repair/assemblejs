@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 import type { Page } from "@playwright/test";
 import { freePort, saidBy } from "./child-server.js";
 
@@ -93,7 +94,7 @@ for (const framework of FRAMEWORKS) {
     // Every island's own module fetched, after which each mounts at once.
     await page.waitForLoadState("networkidle");
     await expect(page.locator("script[data-assembly]")).toHaveCount(0);
-    await bump.click();
+    await clickMounted(bump);
     await expect(bump).toHaveText(`${framework} 1`);
     // The same element the server sent, adopted rather than replaced.
     expect(
@@ -110,7 +111,7 @@ test("a Vue component's scoped style applies to the markup it hydrated", async (
   await page.goto(`${origin}/`);
   // Scoped under one id in both bundles, built apart, or the server's markup would not match it.
   await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
-  await page.locator("#vue-bump").click();
+  await clickMounted(page.locator("#vue-bump"));
   await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");
 });
 
@@ -146,7 +147,7 @@ test("a deferred assembly is fetched once the page has loaded, then hydrates lik
   for (const framework of ["react", "vue"]) {
     const bump = page.locator(`#${framework}-bump`);
     await expect(bump).toHaveText(`${framework} 0`);
-    await bump.click();
+    await clickMounted(bump);
     await expect(bump).toHaveText(`${framework} 1`);
   }
   expect(errors).toEqual([]);
@@ -181,11 +182,11 @@ for (const [shell, counter] of NESTED) {
     release();
     await page.waitForLoadState("networkidle");
     await expect(page.locator("script[data-assembly]")).toHaveCount(0);
-    await bump.click();
+    await clickMounted(bump);
     await expect(bump).toHaveText(`${counter} 1`);
     const parent = page.locator(`#${shell}-shell-bump`);
-    await parent.click();
-    await parent.click();
+    await clickMounted(parent);
+    await clickMounted(parent);
     await expect(parent).toHaveText(`${shell} shell 2`);
     // The parent rendered twice more and wrote nothing into its slot: the counter is the element
     // the server sent, still in the page and still counting.
@@ -229,7 +230,7 @@ test("a deferred assembly arrives with every assembly its view places, each one 
   await page.waitForLoadState("networkidle");
   for (const [shell, counter] of NESTED) {
     const bump = page.locator(`assembly-root[data-name="${shell}-shell"] #${counter}-bump`);
-    await bump.click();
+    await clickMounted(bump);
     await expect(bump).toHaveText(`${counter} 1`);
   }
   await expect(page.locator("#vue-bump")).toHaveCSS("color", "rgb(0, 120, 60)");

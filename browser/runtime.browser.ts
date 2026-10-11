@@ -3,6 +3,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 
 // The built ESM client, loaded the way a browser will load it. Reading dist rather than src is
 // deliberate: this is the artifact that ships, and a bundler step that breaks it should break
@@ -43,7 +44,7 @@ test("a static assembly is never mounted, and keeps the markup the server sent",
   await browser.setContent(page(envelope("static", "none") + envelope("live")));
   await expect.poll(() => browser.evaluate(() => window.mounted)).toEqual(["live"]);
   await expect(browser.locator(`[data-id="static"]`)).toContainText("server markup for static");
-  await expect(browser.locator(`[data-id="static"]`)).not.toHaveAttribute("data-hydrated", "true");
+  await expect(browser.locator(`[data-id="static"]`)).not.toHaveAttribute("data-mounted");
 });
 
 test("every island is removed from the document once read", async ({ page: browser }) => {
@@ -120,6 +121,6 @@ start({ renderers: {
 
   await expect.poll(() => browser.evaluate(() => window.mounted)).toEqual(["counter", "readout"]);
   await expect(browser.locator("#readout")).toHaveText("nothing yet");
-  await browser.locator("#bump").click();
+  await clickMounted(browser.locator("#bump"));
   await expect(browser.locator("#readout")).toHaveText("heard from counter");
 });

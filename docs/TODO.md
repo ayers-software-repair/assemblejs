@@ -1012,7 +1012,10 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       which the runtime does before any module arrives, not for the mount. FIXED 2026-10-11: the
       runtime marks a mounted envelope `data-mounted` and unmarks it on unmount, the proof waits
       for the mark on both assemblies before it clicks, and DESIGN 9 says so (DECISIONS
-      2026-10-11, "the mark of a mounted assembly")
+      2026-10-11, "the mark of a mounted assembly"). The same race then showed in the styles
+      proof ("Opened 0"), so every click in every proof goes through one helper,
+      `browser/mounted.ts`, which finds the control's envelope, through a shadow root where the
+      assembly has one, and waits for its mark first (2026-10-11, same entry)
 - [x] The reference product writes a note's subsections as smaller headings and lists, and
       styles them in a stylesheet of its own (`magpie/site/site.css:11-14`); the kit has no rule
       for either. A fold for the kit, the platform's to make. When this site's pin has it, the

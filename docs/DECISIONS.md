@@ -4816,3 +4816,11 @@ a spec holds). A static assembly, declared `none`, is never marked. The proof wa
 on both assemblies before it clicks. A page, a test or a person has the same signal, which the
 design lacked: section 9 says it now. A retrying click in the proof would have hidden the race
 and said nothing to anyone else.
+
+The fix's own run then showed the same race in the styles proof, a click on a remote assembly's
+button before React had mounted it. Seventeen clicks across eight proofs each waited for something
+else, the islands read, the network idle or the markup's text, none of which is the mount; so one
+helper, `clickMounted` in `browser/mounted.ts`, now stands at every click: it reads the control's
+own envelope, through a shadow root where the assembly has one, waits for the mark, then clicks.
+The runtime proof's assertion that a static envelope lacks `data-hydrated`, a word nothing ever
+wrote, reads `data-mounted` now, the word the runtime does write.
