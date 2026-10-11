@@ -84,7 +84,9 @@ export async function runPerf(
       try {
         const route = pageRoute(root, page);
         if (route === undefined)
-          throw new Error("its route is computed, so only running the project could tell it");
+          throw new Error(
+            "its route is not written as a literal, so only running the project could tell it",
+          );
         if (route.includes("/:")) {
           io.log(`${route}: not weighed, as a parameter needs a value`);
           continue;

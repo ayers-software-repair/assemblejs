@@ -4549,3 +4549,18 @@ has not taken). The plugins admit it by their peer ranges, read in `node_modules
 typescript-eslint 8.69.0 and eslint-plugin-import-x `^8.57.0 || ^9.0.0 || ^10.0.0`,
 eslint-plugin-unicorn `>=10.4`, `@eslint/js` `^10.0.0`. `pnpm lint` ran green at the new version
 before the commit; syncpack finds one version across the workspace.
+
+## 2026-10-11: an unread declaration leaves the route unknown
+
+The ledger's row on `pageRoute`, found 2026-10-10.
+
+Found: `declaredRoute` answered the directory's route for every declaration that was not read as
+an object, so `export default makePage()`, `export default { ...base }` and a file with no
+default export all read as "declares no route", where the first two may carry one and the third
+the build refuses (the registry imports the declaration's default and spreads it into the page,
+`generate-pages.ts`). Settled: a declaration the reader did not get as a literal is unknown, as a
+computed route already was; an object with a spread among its entries is unknown too, since the
+spread may carry the route; a literal that is not an object (`export default 5`) leaves the route
+implied, which is what spreading it into the page does at run time. `check` then holds nothing
+against such a page's route, the shape shows it computed, and `perf` says the route is not written
+as a literal. Two mutations, each alone, watched red.
