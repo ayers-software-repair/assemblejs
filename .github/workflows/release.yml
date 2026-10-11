@@ -1,20 +1,12 @@
 name: release
 
-# Publishes to npm by trusted publishing (OIDC). There is no NPM_TOKEN anywhere and there never
-# will be: the trusted publisher on npmjs.com names this repository, this file, and the `release`
-# environment. CI configuration changes do not publish packages. With changesets present the action opens
-# the version pull request; with none, and a version npm does not have, it publishes. `next` is
-# in changesets pre mode (`.changeset/pre.json`, written by `changeset pre enter next`), so what
-# it publishes is `1.0.0-next.N` under the `next` tag; on `main` a version is published once.
-# GitHub releases come from each package's CHANGELOG.md, the action's default.
-#
-# THE FIRST PUBLISH IS THE OWNER'S, BY HAND (DECISIONS 2026-10-09). Until the registry has
-# @assemblejs/core, the `registry` job answers no and the publish job is skipped: a push costs the
-# gate's one request, and no run goes red on the 404 that is the plan until then.
+# Branch pushes prepare version pull requests. Only an owner-approved release tag publishes.
+# npm trusted publishing remains bound to this file and the release environment.
 
 on:
   push:
     branches: [main, next]
+    tags: ["v*"]
     paths-ignore:
       - ".github/workflows/**"
       - "pnpm-workspace.yaml"
@@ -31,68 +23,86 @@ permissions:
   contents: read
 
 jobs:
-  registry:
-    name: is the package on the registry
+  version:
+    if: github.ref_type == 'branch' && (github.ref_name == 'main' || github.ref_name == 'next')
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      published: ${{ steps.probe.outputs.published }}
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      # A 404 is the one answer that means "not yet"; any other failure is a real one and stops
-      # the run rather than letting a network fault read as "nothing to publish".
-      - name: Ask the registry for @assemblejs/core
-        id: probe
-        run: |
-          if npm view @assemblejs/core version >/dev/null 2>probe.err; then
-            echo "published=true" >> "$GITHUB_OUTPUT"
-          elif grep -q E404 probe.err; then
-            echo "published=false" >> "$GITHUB_OUTPUT"
-            echo "The registry has no @assemblejs/core yet. The first publish is the owner's, by hand; nothing publishes from here until then."
-          else
-            cat probe.err >&2
-            exit 1
-          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Prepare the version pull request
+        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
+        with:
+          commit-message: "chore: version packages"
+          pr-title: "chore: version packages"
 
-  release:
-    name: version or publish
-    needs: registry
-    if: needs.registry.outputs.published == 'true'
+  publish:
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: release
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
+      actions: read
       id-token: write
+    outputs:
+      channel: ${{ steps.channel.outputs.branch }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
-      - name: Setup pnpm
-        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
-      - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 22
           cache: pnpm
-      # A VERSION IS NEVER PUBLISHED WITHOUT ITS NOTES. The push that merges the version pull
-      # request is the one this job publishes from, and it changes no file under site/, so the
-      # deploy's own run of this gate never sees it. The script reads files and needs nothing
-      # installed.
+      - name: Check the tag and package versions
+        id: channel
+        run: node scripts/check-release-channel.mjs
+      - name: Require the channel's source and successful CI
+        env:
+          CHANNEL: ${{ steps.channel.outputs.branch }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git merge-base --is-ancestor "$GITHUB_SHA" "origin/$CHANNEL"
+          passed=$(gh run list --workflow ci.yml --commit "$GITHUB_SHA" --event push \
+            --json conclusion --jq '[.[] | select(.conclusion == "success")] | length')
+          if [ "$passed" -eq 0 ]; then
+            echo "::error::This release commit has no successful branch CI run."
+            exit 1
+          fi
       - name: Check the release notes
         run: node scripts/check-release-notes.mjs --self-test && node scripts/check-release-notes.mjs
-      - name: Install (frozen lockfile)
-        run: pnpm install --frozen-lockfile
-      - name: Build
-        run: pnpm build
-      - name: Pack check
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Check packed packages
         run: node scripts/check-pack.mjs
-      - name: npm 11.5.1 or newer, required for trusted publishing
+      - name: Set up npm trusted publishing
         run: npm install -g npm@^11.5.1 && npm --version
-      - name: Version or publish
-        uses: changesets/action@8488615a623b1b9c987934bb89eae8af6a946ac1 # v2.1.1
-        with:
-          publish-script: pnpm changeset publish
-          commit-message: "chore: version packages"
-          pr-title: "chore: version packages"
+      - name: Publish the tagged version
+        env:
+          NPM_CONFIG_PROVENANCE: "true"
+        # The checked prerelease state selects next; stable publication defaults to latest.
+        run: pnpm changeset publish --no-git-tag
+
+  site:
+    needs: publish
+    permissions:
+      contents: read
+      id-token: write
+    uses: ./.github/workflows/deploy-site.yml
+    with:
+      channel: ${{ needs.publish.outputs.channel }}
+      source-ref: ${{ github.sha }}
+    secrets: inherit

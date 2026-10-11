@@ -43,6 +43,9 @@ jobs:
       - name: Install (frozen lockfile)
         run: pnpm install --frozen-lockfile
 
+      - name: Release channel checks
+        run: node scripts/check-release-channel.mjs --self-test
+
       # ONE COMMAND, so CI and a developer's machine cannot run different sets of gates.
       #
       # This job used to name eight steps by hand and had drifted to running eight FEWER gates

@@ -2,7 +2,7 @@
 
 > Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
 
-An assembly is a piece of a page written in one UI framework. AssembleJS composes assemblies into pages on the server, whether they live in your project or on someone else's, and hydrates them in the browser. Hire a React developer, a Svelte developer and a Vue developer, and put them on the same page on their first day.
+Build one application from UI assemblies written in React, Vue, Svelte and more. AssembleJS composes their HTML on the server and hydrates each in its own framework. Assemblies can live in your project or on another server; page events connect their interactions.
 
 Every link here is relative to this file. All of these pages are one file, [llms-full.txt](llms-full.txt).
 

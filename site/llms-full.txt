@@ -8,9 +8,41 @@ Every page of this site as text, in the order [llms.txt](llms.txt) lists them. E
 
 Source: [index.html](index.html)
 
-An assembly is a piece of a page written in one UI framework. AssembleJS composes assemblies into pages on the server, whether they live in your project or on someone else's, and hydrates them in the browser. Hire a React developer, a Svelte developer and a Vue developer, and put them on the same page on their first day.
+Build one application from UI assemblies written in React, Vue, Svelte and more. AssembleJS composes their HTML on the server and hydrates each in its own framework. Assemblies can live in your project or on another server; page events connect their interactions.
 
 [Get started](start.html) [Documentation](docs/index.html) [Source](https://github.com/ayers-software-repair/assemblejs)
+
+## Three frameworks. One composed page.
+
+React
+
+Product catalogue
+
+`catalogue.react.tsx`
+
+Vue
+
+Product filters
+
+`filters.vue`
+
+Svelte
+
+Shopping cart
+
+`cart.svelte`
+
+AssembleJS composes the HTML on the server
+
+Example page layout:
+
+Filters Vue
+
+Catalogue React
+
+Cart Svelte
+
+Each assembly hydrates in its own framework. Page events connect their interactions.
 
 Frameworks you can write an assembly in:
 

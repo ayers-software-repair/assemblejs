@@ -15,6 +15,29 @@ body {
 a { color: var(--accent); }
 a:hover { color: var(--accent-strong); }
 code, pre { font-family: var(--face-mono); }
+.masthead { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.4rem; }
+.wordmark { font-size: 1.4rem; font-weight: 700; text-decoration: none; color: var(--ink); }
+.masthead nav { display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.9rem; }
+.composition { margin: 0 0 3rem; }
+.composition h2 { font-weight: 600; font-size: 1.2rem; margin-bottom: 1.25rem; }
+.assembly-inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.assembly-inputs > div { border: 1px solid var(--border); border-radius: 0.5rem; padding: 1rem; }
+.assembly-inputs p { margin: 0; }
+.assembly-inputs .framework { color: var(--accent); font-size: 0.85rem; }
+.assembly-inputs .assembly-name { margin-block: 0.4rem; font-weight: 600; }
+.assembly-inputs code { font-size: 0.8rem; overflow-wrap: anywhere; color: var(--ink-muted); }
+.composition-step { text-align: center; margin: 1.5rem 0; color: var(--ink-muted); }
+.composed-page { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 0.5rem; padding: 0.7rem; border: 1px solid var(--border); border-top: 1rem solid var(--accent); border-radius: 0.5rem; }
+.composed-page > div { padding: 2rem 0.75rem; background: var(--accent-wash); text-align: center; font-weight: 600; }
+.composed-page p { margin: 0; }
+.composed-page span { display: block; color: var(--ink-muted); font-weight: 400; }
+.composition-caption { color: var(--ink-muted); font-size: 0.9rem; }
+@media (max-width: 36rem) {
+  .masthead { align-items: start; flex-direction: column; }
+  .assembly-inputs { grid-template-columns: 1fr; }
+  .composed-page { grid-template-columns: 1fr 2fr; }
+  .composed-cart { grid-column: 1 / -1; }
+}
 
 .hero { padding: 5rem 0 3rem; }
 .hero h1 {

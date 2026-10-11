@@ -14,18 +14,38 @@
 </head>
 <body>
 
+<header class="masthead wrap">
+  <a class="wordmark" href="./" aria-label="AssembleJS home">AssembleJS</a>
+  <nav aria-label="Product navigation"><a href="docs/index.html">Documentation</a><a href="https://github.com/ayers-software-repair/assemblejs">GitHub</a></nav>
+</header>
 <main class="wrap">
   <section class="hero">
     <h1>One page. Every framework.</h1>
-    <p class="lead">An assembly is a piece of a page written in one UI framework. AssembleJS
-      composes assemblies into pages on the server, whether they live in your project or on
-      someone else's, and hydrates them in the browser. Hire a React developer, a Svelte
-      developer and a Vue developer, and put them on the same page on their first day.</p>
+    <p class="lead">Build one application from UI assemblies written in React, Vue, Svelte and
+      more. AssembleJS composes their HTML on the server and hydrates each in its own framework.
+      Assemblies can live in your project or on another server; page events connect their
+      interactions.</p>
     <p class="cta">
       <a class="solid" href="start.html">Get started</a>
       <a class="line" href="docs/index.html">Documentation</a>
       <a class="line" href="https://github.com/ayers-software-repair/assemblejs">Source</a>
     </p>
+  </section>
+
+  <section class="composition" aria-labelledby="composition-title">
+    <h2 id="composition-title">Three frameworks. One composed page.</h2>
+    <div class="assembly-inputs">
+      <div><p class="framework">React</p><p class="assembly-name">Product catalogue</p><p><code>catalogue.react.tsx</code></p></div>
+      <div><p class="framework">Vue</p><p class="assembly-name">Product filters</p><p><code>filters.vue</code></p></div>
+      <div><p class="framework">Svelte</p><p class="assembly-name">Shopping cart</p><p><code>cart.svelte</code></p></div>
+    </div>
+    <p class="composition-step">AssembleJS composes the HTML on the server</p>
+    <div class="composed-page" aria-label="Example page layout">
+      <div class="composed-filters"><p>Filters <span>Vue</span></p></div>
+      <div class="composed-catalogue"><p>Catalogue <span>React</span></p></div>
+      <div class="composed-cart"><p>Cart <span>Svelte</span></p></div>
+    </div>
+    <p class="composition-caption">Each assembly hydrates in its own framework. Page events connect their interactions.</p>
   </section>
 
   <section class="constellation" aria-label="Frameworks you can write an assembly in">
@@ -87,6 +107,7 @@
     <a href="https://github.com/ayers-software-repair/assemblejs">Source</a>
     <a href="https://github.com/ayers-software-repair/assemblejs/issues/new/choose">Report an issue</a>
     <!-- /links -->
+    <nav aria-label="Company"><a href="https://ayers.repair/">Ayers Software Repair</a><a href="https://ayers.repair/products.html">All products</a><a href="https://ayers.repair/contact.html">Contact</a></nav>
     <p>Apache-2.0. Copyright Ayers Electronics Inc. All rights reserved. Published by Ayers Electronics.</p>
   </footer>
 </main>

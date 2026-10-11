@@ -12,11 +12,30 @@ filter naming what to skip publishes whatever somebody adds next.
 
 ## Two prefixes, one folder
 
-Unlike howland and magpie, this product publishes twice, which is the npm two-channel rule
-applied to the site:
+The product's two release channels use the same site folder:
 
 - `next` publishes to `/assemblejs/next/`, alongside the `next` dist-tag.
 - `main` publishes to `/assemblejs/`, alongside `latest`.
+
+These prefixes are also served at `https://assemblejs.com/next/` and
+`https://assemblejs.com/`. The domain's distribution and the company distribution share the
+same bucket. The workflow invalidates both after uploading.
+
+## A release tag publishes the package and its site
+
+Branch pushes let Changesets prepare version pull requests; they do not publish npm packages.
+The owner cuts `v1.0.0-next.N` from `next` or `v1.0.0` from `main` after versioning, release notes
+and that commit's CI pass. `release.yml` verifies that every public package matches the tag,
+that Changesets' prerelease mode matches its channel, and that the commit belongs to the right
+branch. The `release` environment identifies npm publication through trusted publishing.
+
+After npm succeeds, that same run calls `deploy-site.yml` with the release's exact commit and
+channel. A failed npm publication cannot deploy the release's site. There is no separate
+release-listener workflow. A rerun uses the same tag and commit; it does not take newer branch
+contents. The existing site-only push and manual deployment paths remain available.
+
+The first publication still requires the owner's npm package/bootstrap and trusted-publisher
+setup. A site deployment alone does not establish that npm publication is configured or complete.
 
 The branch decides the prefix; the folder is identical. **Every link into the next channel
 carries its trailing slash**: the CloudFront prefix router redirects a bare FIRST segment only,
@@ -56,9 +75,9 @@ by: the site check does not require it to exist in the tree and does not walk th
 which links hundreds of pages of its own. Typedoc links its assets with a query that changes at
 each generation, so the week-long asset cache never serves a stale search index after a deploy.
 
-The reference refreshes when the site deploys, and the site deploys on a push that touches
-`site/**`. A push that changes only the packages does not republish it; the next site push, or a
-manual dispatch, does. Nothing is deleted from the bucket, so the page of a symbol that was
+The reference refreshes on every site deployment: a site push, a successful tagged package
+publication, or a manual dispatch. A package-only branch push does not republish it.
+Nothing is deleted from the bucket, so the page of a symbol that was
 removed stays reachable by its address until the prefix is cleared by hand.
 
 ## What is checked before it ships

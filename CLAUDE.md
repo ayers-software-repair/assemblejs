@@ -99,13 +99,16 @@ Every gate that can go red on a known-bad input has been watched doing so, and t
 
 changesets: every change under `packages/*/src` carries one, from the first changeset of
 2026-10-09, which set every package to `1.0.0-next.0` (owner, DECISIONS 2026-10-09). `next` is
-in pre mode (`.changeset/pre.json`) and publishes `1.0.0-next.N` under the `next` tag; `main`
-publishes `1.0.0` once, after the flip. The first publish of each package is the owner's, by
-hand; after it, publishing is CI only through `release.yml`'s `release` environment (npm
-trusted publishing). Nobody runs `npm publish` from a laptop and there is no npm token anywhere.
+in pre mode (`.changeset/pre.json`). Branch pushes prepare version pull requests only. An
+owner-approved `v1.0.0-next.N` tag publishes to npm `next`; a stable `v1.0.0` tag publishes to
+`latest`. `release.yml` checks the tag against every public package and the channel's branch,
+requires successful CI for that commit, and publishes through the `release` environment
+(npm trusted publishing). The same run then calls the existing site deployment at that exact
+commit: `/assemblejs/next/` or `/assemblejs/`. The first npm bootstrap remains the owner's;
+after it, registry publication is CI only. No package is published by a normal branch push.
 
 Release notes are four surfaces, the estate's one pattern: each package's `CHANGELOG.md`, which
-changesets writes and which is the GitHub release's body; `RELEASE_NOTES.md` and
+changesets writes; `RELEASE_NOTES.md` supplies the product release's notes, and
 `site/release-notes.html`, hand-kept for a user. One gate holds the page to a section for each
 version a changelog heads: in `check:site`, in the deploy, and in the release job before it
 versions or publishes, so no version is published without its notes. The notes for a version
