@@ -5,15 +5,24 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11 evening, after the correction of
-the agent's dev-server path).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, with the sentences that
+went back up).**
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: `render_assembly`
-answers the data a run of the service returned. Beneath it, each pushed 2026-10-11: `138b0b8`
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the seven places
+brought down on 2026-10-10 to "a plain html view" say both halves again, any view through the
+project's running dev server and a plain html one with nothing running (the landing page and
+its row in `site/LANDING.md`, the two READMEs, the instructions `new` writes, the brief for
+adding an assembly, the start page), and the lists of registered clients name five. Beneath
+it, each pushed 2026-10-11 with its `ci` run read green on every job: `818d5b4` the acceptance
+table, every intent of the predecessor's tests mapped or struck (`ci` 38182790063); `bb43e08`
+the eleventh dossier's row closed, with `58b0c21` the trust fixture's badge client and
+`891ee54` the words for a failed placement that has no id beneath it (`ci` 38182329355);
+`2dce47c` `render_assembly` answers the data a run of the service returned (`ci` 38181956123);
+`138b0b8`
 THE CORRECTION, the agent surface asks the dev server as a composer asks, with uuids (P5-5 as
 it landed in `5a08454` was refused by every real server with a 400; the specs' dev server is a
-real one now and the agents fixture asks through it), pushed with `48ea9bb`, what failed on the
-dev server by the id its log has; `84efc3f` CI reads every commit's header and trailers on a
+real one now and the agents fixture asks through it; `ci` 38181480326), pushed with `48ea9bb`,
+what failed on the dev server by the id its log has; `84efc3f` CI reads every commit's header and trailers on a
 push, from a floor (`ci` 38180444145 green, its `commits` job read step by step); `d798c2f`
 `check:commit-rule`, commitlint and the house's shell script held to one rule (`ci` 38180106968);
 `39f4687` the ledger; `79ce361` every browser proof's click waits for the
@@ -53,12 +62,21 @@ the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens
 the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
 and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
 envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: read the open rows afresh before believing none can be worked: on 2026-10-11 that was said
-and five could. As read that evening, what remains waits on the owner (branch rulesets, the first
-publish and its notes, B-27a and B-27b, the joint session, the agent surface's install size, the
-eleventh dossier; his five questions are with the lead), on the promotion of `next` (the llms.txt
-address in AGENTS.md, P5-8's landing page), on Astra (the shared 404), on the next touch of
-`site/` (the pin to platform `v0.54.4`), or on a machine with VS Code (one read). A STANDING
+NEXT, AND THE ONE ROW IN HAND: the hero line. The lead gave the go on 2026-10-11: the owner's
+line, the first microfrontend framework for AI-enabled development, is the landing page's
+headline, "One page. Every framework." is the line beneath it, and `site/LANDING.md` gains its
+row citing the agents fixture. Touch the headline block and the row alone: another seat's
+edits to that page (`d37f901`) stay as they are. The text reader, `scripts/site-page-text.mjs`,
+takes the paragraph beneath a page's `<h1>` as what the page is, and `llms.txt` prints the
+landing page's: a line beneath the headline must not take that paragraph's place there.
+After it, read the open rows afresh before believing none can be worked: on 2026-10-11 that
+was said and five could. As read that night, what remains waits on the owner (branch rulesets,
+the first publish and its notes, B-27a and B-27b, the joint session, the agent surface's
+install size; his four questions are with the lead), on the cto seat's next platform tag (the
+commit rule settled there: the house's files copied again, their hashes and the tag recorded
+in `check:commit-rule`, the eight recorded differences turned into rules, the pin moved), on
+the promotion of `next` (the llms.txt address in AGENTS.md, P5-8's landing page), on Astra
+(the shared 404), or on a machine with VS Code (one read). A STANDING
 GATE since `84efc3f`: one commit on `next` with no conventional header or no sign-off turns
 every later run red until the floor in `ci.yml` is moved with a recorded reason. P5-8's other half is Astra's; (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
 crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
@@ -164,9 +182,9 @@ invalid, not red. The browser proof runs here: give the suite the estate's seale
 2026-10-09, S-06). It rebuilds every package's `dist`, so never beside the unit suite.
 
 AFTER IT, in any order: the house-style rows (the section of that name below; the estate's
-record has them ready, pristine-keeping work having been allowed through the hold); the
-eleventh dossier and the acceptance table (B-27a's first half); and the open rows of Phase 3,
-each of which says what found it. Done and no longer waiting here: the API reference
+record has them ready, pristine-keeping work having been allowed through the hold); and the
+open rows of Phase 3, each of which says what found it. Done and no longer waiting here: the
+eleventh dossier and the acceptance table, B-27a's first half (2026-10-11), the API reference
 (2026-10-10), the three truth fixes and CI's breadth (2026-10-05), the two inherited guide
 claims (`67bd8bc`, `e920464`).
 
@@ -877,7 +895,21 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       brought down to what holds go back up: the landing page's "Your agent knows the
       framework" and its row in `site/LANDING.md`, the root README, the agent surface's own,
       DESIGN 13.4 and the last paragraph of 13.3, and the descriptions of the two tools (found 2026-10-10 writing A-03's briefs, which have to tell an agent it will be
-      refused; DECISIONS 2026-10-10, A-03)
+      refused; DECISIONS 2026-10-10, A-03). THE SENTENCES WENT BACK UP 2026-10-11 evening, which
+      this row was ticked without: the landing page and its row in `site/LANDING.md`, the root
+      README, the agent surface's own, the instructions `new` writes, the brief for adding an
+      assembly, the start page; each says both halves, any view through the running dev server
+      and a plain html one with nothing running. DESIGN 13.3 and 13.4 and the two tools'
+      descriptions were already current (DECISIONS 2026-10-11, "the sentences go back up")
+- [ ] The hero line the owner wants for the landing page, the first microfrontend framework
+      for AI-enabled development, is not on the page and has no row in `site/LANDING.md`.
+      DECISIONS 2026-10-09 settled that it is a claim and goes into that table paired with what
+      backs it: the agent surface, the instructions `new` writes and the prompts. All three are
+      built and proven from the tarballs as of 2026-10-11. The page's headline is "One page.
+      Every framework.", and another seat works that page. With the lead: where the line
+      stands, as the headline with the present one beneath it or beside it, is the front
+      door's and not this seat's to settle alone (found 2026-10-11, reading the shared backlog's
+      AJ.11)
 - [x] The command line's suite could fail by a race: two of its spec files built
       `examples/two-frameworks` in place, at once, and a build begins by removing the
       example's `dist` and `.assemblejs` (`build/build-project.ts:58-59`), so one file's

@@ -5085,3 +5085,26 @@ list is left neither mapped nor struck.
 
 B-27a's other two parts, the Scorecard run and the publish dry run with provenance, are Actions
 and the owner's first publish, and stay with him.
+
+## 2026-10-11: the sentences go back up
+
+On 2026-10-10 seven places said an agent renders the assembly it adds, and the agent surface
+rendered a plain html view and refused any other, so each was brought down to what held, with a
+row to bring them back when the surface could show a framework view. The owner's answer settled
+how (D1252), P5-5 built it, and the row was ticked this morning without the sentences going back,
+on a build that, as the entries above record, did not work until this evening.
+
+They go back now that the claim is proven from the tarballs against a built server, each in the
+form that holds, both halves said: any view through the project's running dev server, a plain
+html one with nothing running. The landing page's paragraph and its row in `site/LANDING.md`; the
+root README; the agent surface's README; the instructions `new` writes into `AGENTS.md`, which
+told an agent the tools show such a view nowhere; the brief for adding an assembly, whose fourth
+step told it the same; the start page. DESIGN 13.3 and 13.4 and the two tools' own descriptions
+were brought current with P5-5 and its correction.
+
+In the same pass, the lists of clients a new project is registered for, which named three in the
+root README, the agent surface's README, the tutorial and the start page, name the five the
+command line writes since this afternoon.
+
+Not done here, and a row: the hero line the owner asked for on 2026-10-09 is on no page. What
+backs it is built; where it stands on the front door is with the lead.

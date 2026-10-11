@@ -79,7 +79,7 @@ Give one a URL and another team serves it. Moving it changes a URL and nothing e
 
 ## Your agent knows the framework
 
-An MCP server ships with it, so an AI agent reads your project, adds an assembly, places it, and checks its own work against the framework's rules; a plain html view it renders on the spot, to see what it actually produced. Every new project is written with the instructions that tell an agent so, and with the server installed and registered. It carries no model and no key of its own.
+An MCP server ships with it, so an AI agent reads your project, adds an assembly, places it, checks its own work against the framework's rules, and renders what it made to see what it actually produced: any view through your running dev server, plain HTML with nothing running. Every new project is written with the instructions that tell an agent so, and with the server installed and registered. It carries no model and no key of its own.
 
 ## The whole idea, in one page template
 
@@ -158,7 +158,7 @@ A new project carries an `AGENTS.md`, the file Claude Code, Cursor and VS Code l
 
 ### And hands over the framework's own tools
 
-The project's MCP server is installed with it and registered for each of them. An agent adds an assembly, places it, and composes the page to see what it made, with no server started. `npx assemblejs check` holds the instructions to the version you installed, and `npx assemblejs add agents` rewrites them.
+The project's MCP server is installed with it and registered for each of them, and for Gemini CLI and opencode. An agent adds an assembly, places it, and composes the page to see what it made: any view while your dev server runs, plain HTML with nothing running. `npx assemblejs check` holds the instructions to the version you installed, and `npx assemblejs add agents` rewrites them.
 
 ### Ask for the common things by name
 
@@ -302,7 +302,7 @@ One project, from nothing to a deployed server, in the order you would actually 
 
 ### `npm create @assemblejs shop`
 
-Writes a project that runs: a page, one assembly, a server file that will never grow, and a package.json whose one runtime dependency is `@assemblejs/core`, the command and the agent surface being development dependencies. Beside them, for an AI agent that opens the project: an `AGENTS.md` that says what the project is and the rules its code must satisfy, and the project's own MCP server registered for Claude Code, Cursor and VS Code.
+Writes a project that runs: a page, one assembly, a server file that will never grow, and a package.json whose one runtime dependency is `@assemblejs/core`, the command and the agent surface being development dependencies. Beside them, for an AI agent that opens the project: an `AGENTS.md` that says what the project is and the rules its code must satisfy, and the project's own MCP server registered for Claude Code, Cursor, VS Code, Gemini CLI and opencode.
 
 ### `cd shop && npm install && npm run dev`
 
