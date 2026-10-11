@@ -1068,9 +1068,13 @@ generates it with typedoc and the tree never carries it (DECISIONS 2026-10-05, 2
       (its `packages` strategy, each with its own entry points), or hold it some other way, so
       that a type a user cannot import is refused (found 2026-10-10, watched: an unexported
       interface returned by an exported function passed in silence)
-- [ ] Nothing is ever deleted from the bucket, so the page of a symbol the reference no longer
+- [x] Nothing is ever deleted from the bucket, so the page of a symbol the reference no longer
       has stays reachable by its address. A sync of `docs/api/` alone could delete what it no
-      longer holds; whether the deploy's role may delete is not known here (found 2026-10-10)
+      longer holds; whether the deploy's role may delete is not known here (found 2026-10-10).
+      DONE 2026-10-11: the lead read the role from IAM (it may delete within the product's
+      prefix), and the deploy mirrors `docs/api/` with `--delete --size-only` after the three
+      syncs, deleting the retired pages and copying nothing; exercised at the next push that
+      touches `site/` (DECISIONS 2026-10-11, "the reference's retired pages")
 - [x] `RELEASES_PAT` is in this repository's secrets (2026-09-11) and the deploy's platform
       checkout passed in every run since; the OIDC role `gh-deploy-assemblejs-site` exists by
       the owner's hand (2026-10-07) after every run through 2026-10-05 failed at the AWS

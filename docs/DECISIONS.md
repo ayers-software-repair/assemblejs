@@ -4732,3 +4732,22 @@ counts, not only one that extends `LitElement` by that name: a Lit element may e
 the project's own, and a `render` on a class in a view is an element's in every case this reader
 meets. A slot in another method of the class is the view's as before, since only `render` writes
 the shadow root.
+
+## 2026-10-11: the reference's retired pages
+
+The ledger's row found 2026-10-10: nothing was deleted from the bucket, so a symbol's page the
+reference no longer generates stayed reachable, and whether the deploy's role could delete was
+not known here.
+
+The lead read the role from IAM on 2026-10-11: `gh-deploy-assemblejs-site` holds `s3:PutObject`,
+`s3:GetObject` and `s3:DeleteObject` on `assemblejs/*` of the site bucket, `s3:ListBucket` on the
+bucket, and the two invalidations. A delete is within the grant.
+
+Settled: never `--delete` across the product's prefix, since the `next` channel's prefix stands
+under it and a main deploy would erase the channel; the reference alone is mirrored, `aws s3 sync
+site/docs/api/ .../docs/api/ --delete --size-only`, after the three syncs that upload with their
+headers. The AWS CLI reference (s3 sync, read 2026-10-11): `--delete` removes what the destination
+has and the source has not, filters excepted; `--size-only` makes size the one criterion to copy.
+Every file under docs/api was uploaded moments before at the same size, so the mirror copies
+nothing and no object loses its content type or cache control; it deletes. The workflow runs on a
+push that touches `site/`, so the step is first exercised at the next such push, not by this one.

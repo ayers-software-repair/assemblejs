@@ -7,8 +7,11 @@
 # site/ IS the whole site: static pages, fonts and images vendored. Two of its directories are
 # not in the tree and are written here before the check and the sync: kit/, staged from the
 # platform pin, and docs/api/, the API reference, which typedoc generates from the packages'
-# sources (DECISIONS 2026-10-05, 2026-10-10). No `--delete`: the bucket carries other products'
-# files.
+# sources (DECISIONS 2026-10-05, 2026-10-10). No `--delete` across the prefix: the next channel's
+# prefix stands under the product's, and the bucket carries other products' files. The reference
+# alone is mirrored with `--delete`, under docs/api/, where nothing but the reference lives, so the
+# page of a symbol it no longer has does not stay reachable (the role's grant allows it within the
+# product's prefix; DECISIONS 2026-10-11).
 #
 # TWO JOBS, AND ONLY ONE HOLDS THE ROLE. The reference is generated in a job of its own, which
 # installs the workspace, builds it and runs typedoc with no token for the cloud, and hands the
@@ -194,6 +197,15 @@ jobs:
           aws s3 sync site/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/" \
             --exclude "*.md" --exclude "*.html" --exclude "*.json" --exclude "*.txt" \
             --cache-control "public, max-age=604800" --only-show-errors
+
+      # The reference's pages stand under docs/api/ and nowhere else, so this mirror deletes the
+      # page of a symbol it no longer has. Sizes alone decide what would copy, and every file was
+      # uploaded above with its headers at the same size, so nothing copies here and nothing loses
+      # its content type or cache control: the step is the delete.
+      - name: Retire the reference's pages that are no longer generated
+        run: |
+          aws s3 sync site/docs/api/ "s3://$BUCKET/${{ steps.prefix.outputs.path }}/docs/api/" \
+            --delete --size-only --only-show-errors
 
       - name: Invalidate CloudFront (this prefix only)
         run: |
