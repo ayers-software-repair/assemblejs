@@ -4751,3 +4751,34 @@ has and the source has not, filters excepted; `--size-only` makes size the one c
 Every file under docs/api was uploaded moments before at the same size, so the mirror copies
 nothing and no object loses its content type or cache control; it deletes. The workflow runs on a
 push that touches `site/`, so the step is first exercised at the next such push, not by this one.
+
+## 2026-10-11: the reference runs once per package
+
+The ledger's row found 2026-10-10: typedoc's check that a public signature names no unexported
+type never fired here. Read in typedoc 0.28.20's `dist/index.js` (`validateExports` and its
+intentionally-exported helper): a referenced type whose package is not the project's passes, and
+one typedoc project over twelve packages made that every type. The remedy the row named is the
+one taken: typedoc's `packages` entry point strategy (typedoc.org, Options.Input and
+Options.Package_Options, read 2026-10-11), which converts each package as a project of its own
+and merges the results into one site, so a type's package is the project's and the check holds.
+
+Settled: the root `typedoc.json` names `packages/*` under that strategy and, in `packageOptions`,
+the conversion options each package takes (its own `tsconfig.json`, externals and internals
+excluded, no readme); each package carries a `typedoc.json` of its own naming its entry points,
+since the strategy copies nothing from the root and the packages' entry points differ. The
+rendering options stay at the root. `tsconfig.typedoc.json`, the one program over twelve
+references, is gone: each package is read through its own. `check-reference.mjs` reads the entry
+points from the packages' files and holds them to the packages' `exports` as before; the check
+that each entry's package was referenced by the removed tsconfig goes with it, and its self-test
+says so.
+
+Watched red before it was trusted: a probe run of the strategy found `VueBlock`, an interface the
+command line's `VueDescriptor` names in its public fields and no entry point exported, and
+`MountMode`, which the core's client entry exports and the probe, reading each package's
+`src/index.ts` alone, did not see; the real configuration reads every entry point and holds the
+first alone. `VueBlock` is exported now, from its own file, as the repository's one-declaration
+rule asks of it. What the site serves changes in one way: a package with several entry points is a
+node of its own, `@assemblejs/core`, with its three specifiers as modules under it, where one run
+over the twelve laid every specifier flat; a package with one entry point is one module, as before.
+Nothing in the site links a module page by its path, only `docs/api/index.html`, and the reference
+still reads by the specifier a user imports.

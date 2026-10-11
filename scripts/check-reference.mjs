@@ -5,12 +5,13 @@
 // The API reference documents every entry point a package publishes, under the specifier a
 // user imports it by, and nothing a package does not publish.
 //
-// typedoc.json lists the entry files, and each names its specifier in a `@module` comment, which
-// is the name typedoc gives its page. Nothing ties that list to the packages' `exports`: a
-// subpath added to one and not to the other would be missing from the reference, or documented
-// and unreachable, with nothing saying so. This is the tie. It also holds each entry's package
-// to being one tsconfig.typedoc.json references, since typedoc reads an entry through the
-// program of the package it belongs to.
+// typedoc runs once per package (the root typedoc.json's `packages` strategy), so that its check
+// that a public signature names no type the package leaves unexported holds: run once over the
+// whole workspace it passed every type whose package was not the project's, which was all of
+// them. Each package's own typedoc.json lists its entry files, and each file names its specifier
+// in a `@module` comment, which is the name typedoc gives its page. Nothing ties those lists to
+// the packages' `exports`: a subpath added to one and not to the other would be missing from the
+// reference, or documented and unreachable, with nothing saying so. This is the tie.
 import {
   existsSync,
   mkdirSync,
@@ -42,18 +43,25 @@ function published(root) {
 }
 
 /** Each way the reference's entry points and the packages' exports disagree, as one line. */
+/** Every entry file the packages' own typedoc.json files list, each from the workspace root. */
+function entryFiles(root) {
+  const files = [];
+  for (const entry of readdirSync(join(root, "packages"), { withFileTypes: true })) {
+    const config = join(root, "packages", entry.name, "typedoc.json");
+    if (!entry.isDirectory() || !existsSync(config)) continue;
+    for (const file of JSON.parse(readFileSync(config, "utf8")).entryPoints ?? []) {
+      files.push(`packages/${entry.name}/${file}`);
+    }
+  }
+  return files;
+}
+
 export function referenceProblems(root) {
   const problems = [];
-  const config = JSON.parse(readFileSync(join(root, "typedoc.json"), "utf8"));
-  const referenced = new Set(
-    JSON.parse(readFileSync(join(root, "tsconfig.typedoc.json"), "utf8")).references.map(
-      (reference) => reference.path,
-    ),
-  );
   const named = new Map();
-  for (const file of config.entryPoints) {
+  for (const file of entryFiles(root)) {
     if (!existsSync(join(root, file))) {
-      problems.push(`typedoc.json lists ${file}, which does not exist`);
+      problems.push(`a package's typedoc.json lists ${file}, which does not exist`);
       continue;
     }
     const specifier = MODULE.exec(readFileSync(join(root, file), "utf8"))?.[1];
@@ -65,17 +73,13 @@ export function referenceProblems(root) {
       problems.push(`${file} and ${named.get(specifier)} both name ${specifier}`);
     }
     named.set(specifier, file);
-    const owner = file.split("/").slice(0, 2).join("/");
-    if (!referenced.has(owner)) {
-      problems.push(
-        `${file} is an entry point, and tsconfig.typedoc.json does not reference ${owner}`,
-      );
-    }
   }
   const exported = published(root);
   for (const specifier of exported) {
     if (!named.has(specifier)) {
-      problems.push(`${specifier} is published, and no entry point in typedoc.json names it`);
+      problems.push(
+        `${specifier} is published, and no entry point in its package's typedoc.json names it`,
+      );
     }
   }
   for (const [specifier, file] of named) {
@@ -89,20 +93,15 @@ export function referenceProblems(root) {
 const isEntryPoint = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
 if (isEntryPoint) {
   if (process.argv[2] === "--self-test") {
-    // A subpath published and not documented, an entry that names nothing, one that names what
-    // nobody publishes, and one whose package is not referenced: each refused, then all clean.
+    // A subpath published and not documented, an entry that names nothing, and one that names
+    // what nobody publishes: each refused, then all clean.
     const root = mkdtempSync(join(tmpdir(), "check-reference-"));
     const write = (path, contents) => {
       mkdirSync(join(root, path, ".."), { recursive: true });
       writeFileSync(join(root, path), contents);
     };
-    const settings = (entryPoints, references) => {
-      write("typedoc.json", JSON.stringify({ entryPoints }));
-      write(
-        "tsconfig.typedoc.json",
-        JSON.stringify({ references: references.map((path) => ({ path })) }),
-      );
-    };
+    const settings = (entryPoints) =>
+      write("packages/one/typedoc.json", JSON.stringify({ entryPoints }));
     try {
       write(
         "packages/one/package.json",
@@ -114,24 +113,16 @@ if (isEntryPoint) {
       write("packages/one/src/index.ts", "/** @module @x/one */\n");
       write("packages/one/src/client/index.ts", "// no name\n");
       write("packages/one/src/extra.ts", "/** @module @x/one/extra */\n");
-      settings(
-        [
-          "packages/one/src/index.ts",
-          "packages/one/src/client/index.ts",
-          "packages/one/src/extra.ts",
-        ],
-        [],
-      );
+      settings(["src/index.ts", "src/client/index.ts", "src/extra.ts"]);
       const seen = referenceProblems(root);
       const wanted = [
         "packages/one/src/client/index.ts is an entry point and names no specifier",
-        "packages/one/src/index.ts is an entry point, and tsconfig.typedoc.json does not reference packages/one",
-        "@x/one/client is published, and no entry point in typedoc.json names it",
+        "@x/one/client is published, and no entry point in its package's typedoc.json names it",
         "packages/one/src/extra.ts names @x/one/extra, which no package publishes",
       ];
       const missed = wanted.filter((start) => !seen.some((line) => line.startsWith(start)));
       write("packages/one/src/client/index.ts", "/** @module @x/one/client */\n");
-      settings(["packages/one/src/index.ts", "packages/one/src/client/index.ts"], ["packages/one"]);
+      settings(["src/index.ts", "src/client/index.ts"]);
       const clean = referenceProblems(root);
       if (missed.length > 0 || clean.length > 0) {
         console.error("reference check self-test: FAILED");
@@ -140,7 +131,7 @@ if (isEntryPoint) {
         process.exit(1);
       }
       console.log(
-        "reference check self-test: red on an export with no entry, an entry with no name, a name nobody publishes and a package not referenced, as required",
+        "reference check self-test: red on an export with no entry, an entry with no name and a name nobody publishes, as required",
       );
     } finally {
       rmSync(root, { recursive: true, force: true });

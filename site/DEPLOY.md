@@ -56,12 +56,12 @@ The landing page is this product's own and does not use the kit; every other pag
 
 ## The API reference is generated, never committed
 
-`site/docs/api/` is gitignored. `pnpm site:api` runs typedoc, configured by the root
-`typedoc.json`, over every entry point the twelve packages publish: each `src/index.ts`, and
-each subpath a package's `exports` names. It reads the sources through `tsconfig.typedoc.json`,
-whose `references` are the packages' own, so each package is read under its own compiler
-options. Each entry file names itself with a `@module` comment, so the reference reads by the
-specifier a user imports. `pnpm check:reference`, in `pnpm check`, holds the entry points to the
+`site/docs/api/` is gitignored. `pnpm site:api` runs typedoc once per package (the root
+`typedoc.json`'s `packages` strategy), each package's own `typedoc.json` naming the entry points
+it publishes: `src/index.ts`, and each subpath its `exports` names. Each package is read through
+its own `tsconfig.json`, and typedoc's check that a public signature names no unexported type
+holds within it, which one run over the twelve would have passed. Each entry file names itself
+with a `@module` comment, so the reference reads by the specifier a user imports. `pnpm check:reference`, in `pnpm check`, holds the entry points to the
 packages' `exports`, so a subpath published and not documented is refused, and the reverse; and
 it generates the whole reference with warnings as errors, so a link in a comment that leads
 nowhere fails CI and not the next deploy. `pnpm site:api` alone writes the same tree for a

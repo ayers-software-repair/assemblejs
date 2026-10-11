@@ -6,6 +6,7 @@ export { findPackage } from "./find-package.js";
 export type { SvelteCompile } from "./svelte-compile.js";
 export { loadSvelteCompiler } from "./load-svelte-compiler.js";
 export { sveltePlugin } from "./svelte-plugin.js";
+export type { VueBlock } from "./vue-block.js";
 export type { VueDescriptor } from "./vue-descriptor.js";
 export type { VueCompiler } from "./vue-compiler.js";
 export { loadVueCompiler } from "./load-vue-compiler.js";

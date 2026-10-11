@@ -794,7 +794,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [ ] VS Code is handed this server twice: its Agent Host reads `.mcp.json` and is forwarded
       `.vscode/mcp.json`, one name with two sets of arguments, and its documentation does not
       say which it keeps. Open a new project in VS Code and read what it lists; keep one file
-      for it if they collide (DECISIONS 2026-10-10, A-01)
+      for it if they collide (DECISIONS 2026-10-10, A-01). READ 2026-10-11 (code.visualstudio.com,
+      MCP servers and the MCP configuration reference): both files are workspace formats VS Code
+      reads directly, `.vscode/mcp.json` under `servers` and `.mcp.json` under `mcpServers`;
+      whether one name in both is shown twice, and the working directory a `.mcp.json` server
+      starts in, the pages do not say. The read in VS Code itself remains, on a machine with it
 - [x] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
       after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
       (DECISIONS 2026-10-10, A-01). DONE 2026-10-11 for the two that read a registration from
@@ -1062,12 +1066,16 @@ generates it with typedoc and the tree never carries it (DECISIONS 2026-10-05, 2
       does. Thirteen mutations of the three scripts, each against its self-test, and five
       known-bad inputs on the real tree, each watched red (DECISIONS 2026-10-10, "the API
       reference")
-- [ ] The reference cannot tell a type that a public signature names and no entry point
+- [x] The reference cannot tell a type that a public signature names and no entry point
       exports: typedoc's own check for it passes any type whose package is not the project's,
       and one project over twelve packages makes that all of them. Run typedoc once per package
       (its `packages` strategy, each with its own entry points), or hold it some other way, so
       that a type a user cannot import is refused (found 2026-10-10, watched: an unexported
-      interface returned by an exported function passed in silence)
+      interface returned by an exported function passed in silence). DONE 2026-10-11: typedoc
+      runs once per package, each package's `typedoc.json` naming its entry points, the gate
+      reading those; the first run found one such type, `VueBlock`, named by a public signature
+      of the command line and exported by nothing, now exported (DECISIONS 2026-10-11, "the
+      reference runs once per package")
 - [x] Nothing is ever deleted from the bucket, so the page of a symbol the reference no longer
       has stays reachable by its address. A sync of `docs/api/` alone could delete what it no
       longer holds; whether the deploy's role may delete is not known here (found 2026-10-10).

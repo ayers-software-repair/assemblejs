@@ -56,8 +56,9 @@ env:
 
 jobs:
   # THE API REFERENCE IS GENERATED HERE, NEVER COMMITTED. The toolchain ci.yml pins, on Node 22:
-  # install at the frozen lockfile, build the packages, then `pnpm site:api` runs typedoc (root
-  # typedoc.json) over every published entry point into site/docs/api/. Typedoc reads the
+  # install at the frozen lockfile, build the packages, then `pnpm site:api` runs typedoc (the
+  # root typedoc.json, once per package, each package's own typedoc.json naming its entry
+  # points) over every published entry point into site/docs/api/. Typedoc reads the
   # sources, not dist; the build runs first so that a tree whose packages do not build
   # publishes nothing. This job may read the repository and nothing else.
   reference:
