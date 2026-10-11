@@ -36,6 +36,7 @@ const input = (
   params: {},
   headers,
   signal: undefined,
+  admit: undefined,
   newId: () => "id",
   now: () => 0,
 });

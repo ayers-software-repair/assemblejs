@@ -4,6 +4,12 @@ A design memo for the owner. The lead ruled on 2026-10-10 that closing this chan
 framework promises about access, so the choice is the owner's, and that nothing is built into
 `next` until he has made it. It ends with one question.
 
+## Ruled
+
+On the morning of 2026-10-10 the owner chose A, in his words "protected protected everywhere"
+(estate D1242). It is built (DECISIONS 2026-10-11, "a guarded assembly is guarded wherever it is
+placed"). B is not ruled: it stays below as a proposal, and none of it is built.
+
 ## The fault
 
 Found by the second reading of the design (its finding 4) and measured on `next` at `16d8b92`.

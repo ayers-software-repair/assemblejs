@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import type { Admit } from "../compose/admit.js";
 import type { Fetch } from "../compose/fetch.js";
 import type { Limits } from "../compose/limits.js";
 import type { PlacementCount } from "../compose/placement-count.js";
@@ -36,6 +37,11 @@ export interface LocalRenderInput {
   readonly limits: Limits;
   /** The signal of the request this render belongs to: once it aborts, no further child is dispatched. */
   readonly signal?: AbortSignal;
+  /**
+   * What asks whether the visitor of the request this render belongs to may be shown what its
+   * view places. Without it, everyone is shown everything it places.
+   */
+  readonly admit?: Admit;
   /**
    * The count of the request this render belongs to, so its children are counted with the
    * rest of that request. A render that is itself what was asked for has none, and its

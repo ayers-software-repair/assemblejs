@@ -3964,3 +3964,54 @@ Proof: ten unit mutations, each alone, each red. Two around the rendering fixtur
 refusal given an id of its own and the count never told, the spec of one id and one line and
 both specs of the flood went red; with the byte limit not asked at an assembly's own address,
 the flood's spec at that address did.
+
+## 2026-10-11: a guarded assembly is guarded wherever it is placed
+
+The owner ruled on the morning of 2026-10-10, typed to the lead (estate D1242): "protected
+protected everywhere". Way A of `docs/studies/placement-and-access.md`, as the lead and this seat
+advised: the decision an assembly's own address makes is made again at each placement, for the
+visitor asking. Way B, the composer placing only what a view's source records, is not ruled and
+is not built; it stays in the memo as a proposal.
+
+Expected, in DESIGN 5.2 as it stood: one decision a request, of the address asked, and what that
+address placed composed without asking again, so an open page showed a guarded assembly to
+everyone. Found and measured on 2026-10-10 (the KNOWN FAULT spec): a visitor with no
+credentials, whose value a view wrote raw, was shown an assembly whose own address answered them 401.
+
+Settled:
+
+- **The composer asks, the server answers.** `settlePlacement` asks `admitted(input)` after the
+  refusals before dispatch and before the cache: a visitor who may not be shown an assembly is
+  not shown another visitor's cached answer of it either. `Admit` is `(name, view) =>
+Admission`, and the server binds it to the request in `admitFor(policy, headers, log)`, built
+  on `decideAccess`, the one decision that exists: the spec that pins where access is decided
+  now names four files, two of them callers of the one, none a second rule. Nothing of the
+  visitor reaches the composer but the answer (DESIGN 5.1 holds).
+- **Where it is asked.** `registerPages` asks for each of this server's assemblies a page
+  places; `registerAssemblies` for each a view places under the content endpoint, so an
+  assembly placed on a page shows the same as it answers at its address with the same
+  credentials. A placement whose plan names a url is not asked about: that server decides of
+  the request it is sent. A deferred placement is not asked about: the browser asks the address.
+- **What a refusal shows and costs.** The declared fallback or an empty envelope marked failed
+  with no id, a diagnostic with the new reason `access`, no log line: a visitor not let in is no
+  failure. A check that throws refuses, and what it threw is logged against an id the envelope
+  then carries, through `checkThrew`, the one line the hook writes for the same case.
+- **Decided once a visitor.** `admitFor` keeps each assembly and view's answer for the length
+  of the request, so the product's `authenticate` is asked once for each, as a `GET` of the
+  assembly's address with what the visitor sent; a default view's two addresses are tried in
+  order, the second only where the first refuses.
+- **The fixture changes under the ruling**, as the lead said it would: `/public/notice` in the
+  trust fixture placed the badge for everyone by its author's directive and now stands it
+  empty for a visitor without credentials, and `inbound.spec.mjs` says so; the KNOWN FAULT spec
+  is the spec of the rule, the red branch `security/guarded-wherever-placed` turned green by the
+  code with its two cases unchanged in substance; a new page `/public/later` defers the ledger,
+  to show the deferred case left to the address; and both boards' own addresses are opened
+  (`/assembly/board/*`, `/assembly/pinboard/*`), the memo's remedy. The first run without the
+  second showed the rule biting the fixture's own page: `/public/pinboard` stood its Pug board
+  empty for a guest, since nothing had opened the board's address, and the two Pug cases passed
+  with nothing inside to check; the boards' specs now also assert the board itself answered. With
+  the board open, the rule shows at a content endpoint too: a visitor's raw value names the
+  ledger there and is shown it only with credentials. The templates guide no longer says "for
+  anyone who can open the page".
+- **No setting.** Nothing turns the rule off: an assembly meant for everyone is opened by its
+  address in `publicRoutes`, the memo's remedy, pinned in `admit-for.test.ts`.

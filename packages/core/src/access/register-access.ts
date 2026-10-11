@@ -5,6 +5,7 @@ import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
 import type { AccessPolicy } from "./access-policy.js";
+import { checkThrew } from "./check-threw.js";
 import { decideAccess } from "./decide-access.js";
 
 /**
@@ -33,12 +34,7 @@ export function registerAccess(
         headers: request.headers as Record<string, string | undefined>,
       },
       policy,
-      (error) =>
-        log({
-          correlationId: idOf(),
-          message: `the authenticate check threw: ${error instanceof Error ? error.message : String(error)}`,
-          stack: error instanceof Error ? error.stack : undefined,
-        }),
+      (error) => log(checkThrew(idOf(), error)),
     );
     if (allowed) return;
     if (policy.authenticate === undefined && policy.basic !== undefined) {

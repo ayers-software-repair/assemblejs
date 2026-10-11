@@ -66,4 +66,5 @@ export { pageFetch } from "./page-fetch.js";
 export { localAssets } from "./local-assets.js";
 export { pageAssets } from "./page-assets.js";
 export { registerPages } from "./register-pages.js";
+export type { AdmitVisitor } from "./admit-visitor.js";
 export { createServer } from "./create-server.js";

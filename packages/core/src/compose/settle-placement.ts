@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { renderEnvelope } from "../envelope/render-envelope.js";
+import { admitted } from "./admitted.js";
 import type { AssemblyRequest } from "./assembly-request.js";
 import type { AssemblyResponse } from "./assembly-response.js";
 import { DEFAULT_DEADLINE } from "./default-deadline.js";
@@ -66,6 +67,13 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     return fallBack(input, id, at("fallback", refusal, correlationId), false);
   }
 
+  // One of this server's assemblies is shown to a visitor its own address would admit, and to
+  // no other, wherever it is placed. Asked before the cache, which holds what another was shown.
+  const admission = await admitted(input);
+  if (!admission.admitted) {
+    return fallBack(input, id, at("fallback", "access", admission.correlationId), false);
+  }
+
   // A placement that declared a lifetime is answered from its fresh entry without a request.
   const cache = placementCache(input);
   const cached = cache.read();
@@ -85,6 +93,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     params: input.params,
     headers: input.headers,
     count: input.count,
+    ...(input.admit === undefined ? {} : { admit: input.admit }),
     // Its own deadline, and the request the composition belongs to: either one ends it.
     signal:
       input.signal === undefined

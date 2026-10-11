@@ -104,7 +104,18 @@ test("a declared public route needs none: the exact one exactly, the prefix for 
   assert.equal(notice.status, 200);
   const page = await notice.text();
   assert.match(page, /open to anyone/);
-  assert.match(page, /<assembly-root\b[^>]*data-name="badge"/, "placed without credentials too");
+  // The page is open; the badge it places is not, and its own address decides who is shown it
+  // here too (DESIGN 5.2). An author who means it for everyone opens "/assembly/badge/*".
+  assert.match(
+    page,
+    /<assembly-root\b[^>]*data-name="badge"[^>]* data-failed=""/,
+    "the badge stands empty",
+  );
+  assert.ok(
+    !page.includes("for members only"),
+    "the badge's words reached a visitor without credentials",
+  );
+  assert.match(await (await signed("/public/notice")).text(), /for members only/);
   assert.equal(
     (await at("/public/nothing-here")).status,
     404,

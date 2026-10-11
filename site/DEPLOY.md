@@ -22,6 +22,14 @@ The branch decides the prefix; the folder is identical. **Every link into the ne
 carries its trailing slash**: the CloudFront prefix router redirects a bare FIRST segment only,
 so `/assemblejs/next` does not redirect and `/assemblejs/next/` does.
 
+After a successful package publication, `release.yml` explicitly dispatches this same site
+workflow on the publishing branch. A version pull request alone does not do so. For the owner's
+first manual stable publication, publishing the matching `@assemblejs/core@1.0.0` GitHub release
+starts `deploy-released-site.yml`. It verifies the tag belongs to main, matches main's stable
+core version, and exists on npm before dispatching `deploy-site.yml` on main. Publishing to npm
+without creating the GitHub release has no GitHub event; in that case dispatch the site workflow
+on main after completing the release. These paths do not publish packages or change DNS.
+
 ## The kit is referenced, never copied
 
 `site/kit/` is gitignored. The deploy reads the one platform pin, `ayersPlatform` in the root

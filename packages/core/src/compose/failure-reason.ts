@@ -4,8 +4,9 @@
 /**
  * Why reaching an assembly produced no content. Every one of these is a failure, never a page.
  *
- * `depth`, `cycle` and `too-many` are refused by the parent before it dispatches, so they never
- * reach a transport; the rest are what a transport reported.
+ * `depth`, `cycle`, `too-many` and `access` are refused by the parent before it dispatches, so
+ * they never reach a transport; the rest are what a transport reported. `access` is the one
+ * that is no failure of the assembly's: this visitor may not be shown it.
  */
 export type FailureReason =
   | "timeout"
@@ -16,4 +17,5 @@ export type FailureReason =
   | "invalid"
   | "depth"
   | "cycle"
-  | "too-many";
+  | "too-many"
+  | "access";

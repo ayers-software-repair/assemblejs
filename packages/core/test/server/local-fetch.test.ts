@@ -237,3 +237,59 @@ describe("how many assemblies one request places", () => {
     expect(renders).toEqual({ item: 9, leaf: 3 });
   });
 });
+
+describe("who is shown what a view places", () => {
+  // The decision an assembly's own address would make, made again where a view places it.
+  const guarded = () => {
+    const renders = { ledger: 0 };
+    const view = (markup: () => string) => ({ views: { default: { renderer: "html", markup } } });
+    const ledger = defineAssembly({
+      name: "ledger",
+      ...view(() => `<p>ledger ${String((renders.ledger += 1))}</p>`),
+    });
+    const board = defineAssembly({
+      name: "board",
+      ...view(() => '<assembly name="hello"></assembly><assembly name="ledger"></assembly>'),
+    });
+    const fetch = localFetch(
+      new Map([hello, ledger, board].map((one) => [one.name, one])),
+      () => undefined,
+      limits,
+    );
+    return { renders, fetch };
+  };
+
+  it("leaves out, unrendered and unfailed, what the visitor of the request may not be shown", async () => {
+    const { renders, fetch } = guarded();
+    const asked: string[] = [];
+    const answer = await fetch({
+      ...request("board"),
+      admit: (name, view) => {
+        asked.push(`${name}/${view}`);
+        return { admitted: name !== "ledger" };
+      },
+    });
+    if (!answer.ok) throw new Error(answer.detail);
+    expect(asked).toEqual(["hello/default", "ledger/default"]);
+    expect(renders.ledger).toBe(0);
+    expect(answer.html).toContain("<p>hi</p>");
+    // Its envelope stands empty, marked with no id: nothing failed, and nothing is to be found.
+    expect(answer.html).toMatch(/<assembly-root data-name="ledger"[^>]* data-failed="">/);
+    expect(answer.nested).toMatchObject([{ name: "hello" }, { name: "ledger", reason: "access" }]);
+    expect(answer.nested?.[1]).not.toHaveProperty("correlationId");
+  });
+
+  it("shows it to a visitor who may be, to everyone where nothing is asked, and marks it with the id of a check that broke", async () => {
+    const { renders, fetch } = guarded();
+    const letIn = await fetch({ ...request("board"), admit: () => ({ admitted: true }) });
+    const unasked = await fetch(request("board"));
+    expect(renders.ledger).toBe(2);
+    for (const answer of [letIn, unasked]) expect(answer.ok && answer.html).toContain("<p>ledger ");
+    const broke = await fetch({
+      ...request("board"),
+      admit: (name) =>
+        name === "ledger" ? { admitted: false, correlationId: "c-8" } : { admitted: true },
+    });
+    expect(broke.ok && broke.html).toMatch(/data-name="ledger"[^>]* data-failed="c-8"/);
+  });
+});

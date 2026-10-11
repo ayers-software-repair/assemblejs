@@ -14,6 +14,7 @@ import { renderFailure } from "../failure/render-failure.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
+import type { AdmitVisitor } from "./admit-visitor.js";
 import { buildManifest } from "./build-manifest.js";
 import { logFallbacks } from "./log-fallbacks.js";
 import { queryOf } from "./query-of.js";
@@ -34,7 +35,8 @@ interface Params {
  * privileged variant of a route. An assembly or a view this server does not have is a 404 with
  * an id, and a render that throws, or one whose answer is past the limit on bytes, is the
  * assembly's fallback under a 500, its cause in the log.
- * The content it answers holds every child the assembly's view placed, composed here.
+ * The content it answers holds every child the assembly's view placed, composed here, each
+ * one the visitor asking may be shown.
  */
 export function registerAssemblies(
   app: FastifyInstance,
@@ -47,6 +49,8 @@ export function registerAssemblies(
     /** How a child the served assembly's view places is reached: this server's own transport. */
     readonly local: Fetch;
     readonly log: (line: LogLine) => void;
+    /** Whether the visitor asking may be shown each child the view places. Everyone, if absent. */
+    readonly admit?: AdmitVisitor;
   },
 ): void {
   const { assemblies, version, limits, local, log } = options;
@@ -103,6 +107,9 @@ export function registerAssemblies(
     // The depth and the ancestors the request arrived with are the ones its children are
     // composed from, so a parent on another server holds the cap and the cycle across the hop.
     const id = headers.id ?? newCorrelationId();
+    // The visitor this address admitted is shown, of what the view places, what each child's
+    // own address would show them, and no more (DESIGN 5.2).
+    const admit = options.admit?.(request.headers as Readonly<Record<string, string | undefined>>);
     let html: string;
     try {
       const rendered = await renderLocal(resolved.assembly, resolved.view, {
@@ -115,6 +122,7 @@ export function registerAssemblies(
         fetch: local,
         assemblies,
         limits,
+        ...(admit === undefined ? {} : { admit }),
         newId: randomUUID,
         now: () => performance.now(),
       });

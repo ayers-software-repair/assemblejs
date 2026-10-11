@@ -190,7 +190,12 @@ type AssemblyRequest = {
   headers: Readonly<Record<string, string>>;
   signal: AbortSignal;
   count?: PlacementCount; // the request's count, handed on in this process only (3.4)
+  admit?: Admit; // whether the visitor may be shown a placement, in this process only (5.2)
 };
+
+// Asked of each placement of one of this server's assemblies, for the visitor asking (5.2).
+type Admit = (name: string, view: string) => Admission | Promise<Admission>;
+type Admission = { admitted: true } | { admitted: false; correlationId?: string };
 
 type AssemblyResponse =
   | {
@@ -212,7 +217,9 @@ type FailureReason =
   // Refused by the parent before it dispatches, and never a transport's to report (3.4).
   | "depth"
   | "cycle"
-  | "too-many";
+  | "too-many"
+  // No failure of the assembly's: the visitor asking may not be shown it (5.2).
+  | "access";
 
 type Fetch = (request: AssemblyRequest) => Promise<AssemblyResponse>;
 ```
@@ -242,6 +249,7 @@ type ComposeOptions = {
   path?: readonly string[];
   signal?: AbortSignal;
   count?: PlacementCount;
+  admit?: Admit;
   query?: URLSearchParams;
   params?: Readonly<Record<string, string>>;
   headers?: Readonly<Record<string, string>>;
@@ -313,7 +321,8 @@ them finishes or times out, never later, and never fails because one of them did
 - On failure the placement renders, in order: its declared **fallback**, then the **last good**
   cached response if one is held, then an empty envelope with `data-failed`. Every case appends
   a diagnostic naming the rung that answered, but the placements a request refuses for
-  passing its limit, which share one (3.4).
+  passing its limit, which share one (3.4). A placement the visitor may not be shown (5.2) is
+  no failure and reaches no cache: its fallback or the empty envelope, marked with no id.
 - A placement declared `required: true` turns its own failure into the page's failure, with a
   `503` and the diagnostic. This is opt-in and it is the only way a page dies from a child.
 - Placements resolve concurrently under `allSettled` semantics, and the output order is the
@@ -482,12 +491,22 @@ credentials or an `authenticate(request)` callback, plus a list of public routes
 **one place before anything else**, so there is no second path that disagrees with the first.
 The framework ships no user store, no login page and no session.
 
-The decision is made once for each request, of the address it asked. What a page or an
-assembly places of this server's own and renders with its answer is composed in this process
-and is not asked again, so such an assembly is shown to whoever may open anything that places
-it. A placement a page defers is the exception: the browser asks for it afterwards, at the
-assembly's own address (3.5), and that request is decided like any other. What a view can be
-made to place is therefore part of who sees what (section 7).
+The decision is made of the address a request asked, and made again, for the same visitor, of
+the address of each of this server's assemblies that the page or the view places, however the
+directive placing it came to be there (section 7): a guarded assembly is guarded wherever it is
+shown, by the one rule that guards its own address. The server binds the question to the
+request (`Admit`, 3.1), so nothing of the visitor reaches the composer but the answer, and it
+is asked before a placement is dispatched and before a cached answer is used. Refused, the
+placement shows its declared fallback or an empty envelope, marked failed and carrying no id,
+and nothing is logged: a visitor not let in is no failure. A check that throws refuses, as at
+the address, and what it threw is logged against the id the envelope then carries (12). A
+default view answers at the bare name and under its own name, and a visitor either address
+admits is let in; an assembly meant for every page is opened by its address, `/assembly/<name>/*`
+in `publicRoutes`. The product's own `authenticate` is asked once for each assembly and view a
+request places, as a GET of that address with what the visitor sent. A placement a page defers
+is asked for by the browser afterwards, at the address itself (3.5). A placement on another
+server is not asked about here: that server decides for itself, of the request it is sent, which
+carries only the headers its declaration forwards (5.1).
 
 A default content-security policy and a same-origin CORS policy ship on by default; allowlisted
 remote origins are added to the policy automatically, because they are the only extra origins
@@ -613,13 +632,14 @@ export type MountHandle = { unmount(): void };
   value wrote. A value written escaped is text and places nothing. One written with the
   engine's raw form places what it names: any assembly this server holds, with any view it has,
   as often as it is written up to how many one request may place, given the query and the
-  parameters the page was asked with, and with no credentials asked for it, since the one
-  decision was made of the address that was asked (5.2). A directive the finder refuses,
+  parameters the page was asked with, and shown only to a visitor the assembly's own address
+  would admit (5.2). A directive the finder refuses,
   written the same way, fails the view whole. What bounds it is what bounds every placement a
   view makes: this server's assemblies and no other server's, the depth cap, no assembly its
-  own ancestor, and how many one request places (3.4). So a value that came from a visitor,
-  or from anyone who may not write the view itself, is written escaped. Nothing refuses the
-  other: `check` reads a view's source for the names it writes and not for the values it
+  own ancestor, how many one request places (3.4), and who may be shown each (5.2). So a value
+  that came from a visitor, or from anyone who may not write the view itself, is written
+  escaped: written raw it places, for that visitor, any assembly open to them. Nothing refuses
+  the other: `check` reads a view's source for the names it writes and not for the values it
   writes raw, and neither boot nor a render can tell them apart.
 - **A Lit view holds a Lit assembly only behind a shadow root.** Lit hydrates a view by reading
   every marker in its tree, and would read a Lit child's as the parent's. A shadow root hides

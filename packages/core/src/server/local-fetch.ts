@@ -48,6 +48,7 @@ export function localFetch(
         limits,
         signal: request.signal,
         ...(request.count === undefined ? {} : { count: request.count }),
+        ...(request.admit === undefined ? {} : { admit: request.admit }),
         newId: randomUUID,
         now: () => performance.now(),
       });

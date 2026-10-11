@@ -33,6 +33,7 @@ const input = (plan: Partial<AssemblyPlan>, cache?: ContentCache): SettleInput =
   params: {},
   headers: {},
   signal: undefined,
+  admit: undefined,
   newId: () => "id-2",
   now: () => 0,
 });

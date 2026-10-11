@@ -16,6 +16,7 @@ import { parseContentUrl } from "../remote/parse-content-url.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
 import type { RemoteTransport } from "../remote/remote-transport.js";
 import { DEV_RELOAD_SCRIPT } from "../vocab/dev-reload-script.js";
+import type { AdmitVisitor } from "./admit-visitor.js";
 import { hoistAssets } from "./hoist-assets.js";
 import { linkStream } from "./link-stream.js";
 import { logFallbacks } from "./log-fallbacks.js";
@@ -30,9 +31,11 @@ import { queryOf } from "./query-of.js";
  * remote's from its manifest), and answer the document.
  *
  * Of the visitor's request, only the headers a placed remote declared it receives ever reach the
- * composer. A required placement that does not answer is the one way a page fails from a child,
- * and it answers 503 with an id, never the cause. Every placement that did not answer is logged
- * against its correlation id, whichever rung of the ladder covered for it.
+ * composer; whether the visitor may be shown each of this server's assemblies reaches it as a
+ * question already bound to them. A required placement that does not answer is the one way a
+ * page fails from a child, and it answers 503 with an id, never the cause. Every placement that
+ * did not answer is logged against its correlation id, whichever rung of the ladder covered for
+ * it.
  */
 export function registerPages(
   app: FastifyInstance,
@@ -51,6 +54,8 @@ export function registerPages(
      * the boot of the server that rendered it.
      */
     readonly reload?: string;
+    /** Whether the visitor asking may be shown each assembly the page places. Everyone, if absent. */
+    readonly admit?: AdmitVisitor;
   },
 ): void {
   const { assemblies, log } = options;
@@ -70,6 +75,11 @@ export function registerPages(
       for (const [name, value] of Object.entries(request.headers)) {
         if (forwarded.has(name) && typeof value === "string") headers[name] = value;
       }
+      // Of this server's assemblies the page places, the visitor is shown those their own
+      // addresses would show them (DESIGN 5.2); another server's decide for themselves.
+      const admit = options.admit?.(
+        request.headers as Readonly<Record<string, string | undefined>>,
+      );
       let composed;
       try {
         composed = await compose({
@@ -82,6 +92,7 @@ export function registerPages(
           query: queryOf(request.url),
           params: request.params,
           headers,
+          ...(admit === undefined ? {} : { admit }),
           newId: randomUUID,
           now: () => performance.now(),
         });

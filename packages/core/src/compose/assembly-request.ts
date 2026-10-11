@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import type { Admit } from "./admit.js";
 import type { PlacementCount } from "./placement-count.js";
 
 /** One request for one assembly, whether it is answered in this process or over HTTP. */
@@ -26,6 +27,12 @@ export interface AssemblyRequest {
   readonly params: Readonly<Record<string, string>>;
   readonly headers: Readonly<Record<string, string>>;
   readonly signal: AbortSignal;
+  /**
+   * What asks whether the visitor this request belongs to may be shown a placement, for a
+   * transport that renders in this process to hand on to what the assembly's own view places.
+   * Never sent to another server, which decides for itself of the request it is sent.
+   */
+  readonly admit?: Admit;
   /**
    * The count of the request this one belongs to, for a transport that renders in this
    * process to hand on: the children are then counted with their parent's request. Never sent

@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { Admit } from "./admit.js";
 import type { AssemblyPlan } from "./assembly-plan.js";
 import type { ContentCache } from "./content-cache.js";
 import type { Fetch } from "./fetch.js";
@@ -29,6 +30,13 @@ export interface ComposeOptions {
    * is dispatched, and a transport already called hears it through the signal it was given.
    */
   readonly signal?: AbortSignal;
+  /**
+   * What asks whether the request's visitor may be shown a placement of one of this server's
+   * assemblies. Asked before a placement is dispatched and before a cached answer is used, and
+   * handed on to whatever each placement composes in this process. Without it, everyone is
+   * shown everything.
+   */
+  readonly admit?: Admit;
   /**
    * The count of the request this composition belongs to, when another composition of that
    * request began it. Without one this composition begins the count, hands it on to whatever

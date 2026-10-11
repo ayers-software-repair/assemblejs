@@ -30,6 +30,7 @@ const input = (over: Partial<SettleInput> = {}): SettleInput => ({
   params: {},
   headers: {},
   signal: undefined,
+  admit: undefined,
   newId: () => "id-1",
   now: () => 0,
   ...over,
@@ -86,19 +87,22 @@ describe("settling one placement", () => {
     expect(settled.diagnostic.correlationId).toBe("c-1");
   });
 
-  it("answers a refusal before dispatch with its fallback, never with cached content", async () => {
+  it("answers a refusal before dispatch, or of the visitor, with its fallback, never with cached content", async () => {
     const cache = memory();
     cache.set("60000|cart/default", { html: "<p>cached</p>" }, 60_000);
-    const settled = await settlePlacement(
-      input({
-        path: ["page/default", "cart/default"],
-        fetch: failing,
-        cache,
-        plan: { name: "cart", view: "default", deadline: 3000, cache: { ttl: 60_000 } },
-      }),
+    const plan = { name: "cart", view: "default", deadline: 3000, cache: { ttl: 60_000 } };
+    const cycle = await settlePlacement(
+      input({ path: ["page/default", "cart/default"], fetch: failing, cache, plan }),
     );
-    expect(settled.diagnostic.reason).toBe("cycle");
-    expect(settled.html).not.toContain("cached");
+    expect(cycle.diagnostic.reason).toBe("cycle");
+    expect(cycle.html).not.toContain("cached");
+    // Another visitor's answer is in the cache; this one may not be shown it.
+    const refused = await settlePlacement(
+      input({ fetch: failing, cache, plan, admit: () => ({ admitted: false }) }),
+    );
+    expect(refused.diagnostic.reason).toBe("access");
+    expect(refused.html).toMatch(/^<assembly-root data-name="cart" [^>]*data-failed=""><script/);
+    expect(refused.html).not.toContain("cached");
   });
 
   it("renders an empty envelope marked failed, with an account, when there is nothing else", async () => {
@@ -185,9 +189,8 @@ describe("settling one placement", () => {
         },
       }),
     );
-    // An instance id is minted fresh per request, so a path of them could never collide and the
-    // cycle check would silently never fire. The target is not its own ancestor: a server that
-    // refuses a path naming itself, as DESIGN 3.4 says it does, must not refuse every request.
+    // Instance ids are minted fresh, so a path of them could never collide and the cycle check
+    // would never fire; and the target is not its own ancestor, or every request is refused.
     expect(seen).toEqual(["page/default"]);
     expect(seen).not.toContain("a-fresh-uuid");
   });
@@ -245,9 +248,8 @@ describe("settling one placement", () => {
   });
 });
 
-// Each of the following was found by an adversarial verification pass. The type says a Fetch
-// returns a Promise of a result; a type is a promise about source, not about what a caller
-// actually hands over, and every one of these took the page down.
+// A type is a promise about source, not about what a caller hands over; each of these took the
+// page down once.
 describe("a transport that does not behave", () => {
   it("answers when the transport throws before it returns", async () => {
     const settled = await settlePlacement(

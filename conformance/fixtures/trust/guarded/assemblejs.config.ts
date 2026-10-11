@@ -3,5 +3,9 @@
 import { defineConfig } from "@assemblejs/core";
 
 // The credentials are where the server runs (ASSEMBLEJS_AUTH, in the environment); what needs
-// none is a decision about the project, so it is declared here: one route exactly, one prefix.
-export default defineConfig({ publicRoutes: ["/api/open", "/public/*"] });
+// none is a decision about the project, so it is declared here: one route exactly, one prefix
+// of pages, and the two boards' addresses, so that each is open wherever it is shown. The badge
+// and the ledger are not, so an open page that places either stands it empty for a guest.
+export default defineConfig({
+  publicRoutes: ["/api/open", "/public/*", "/assembly/board/*", "/assembly/pinboard/*"],
+});

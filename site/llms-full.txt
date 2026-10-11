@@ -1594,7 +1594,7 @@ Pug's escaping leaves `'` as it is: write an attribute with Pug's own syntax, `a
 
 ### Written raw, a value is markup
 
-Each engine has a raw form as well: `<%- %>` in EJS, `{{{ }}}` in Handlebars, `| safe` in Nunjucks and `!{ }` in Pug. What it writes is not escaped, and the server reads it as it reads the rest of the template, so an `<assembly>` directive in it is placed like one you wrote: any assembly of this server, for anyone who can open the page. Write what came from a visitor escaped.
+Each engine has a raw form as well: `<%- %>` in EJS, `{{{ }}}` in Handlebars, `| safe` in Nunjucks and `!{ }` in Pug. What it writes is not escaped, and the server reads it as it reads the rest of the template, so an `<assembly>` directive in it is placed like one you wrote: any assembly of this server the visitor may be shown, since one behind a login stays behind it wherever it is placed. Write what came from a visitor escaped.
 
 ### An assembly inside this one
 

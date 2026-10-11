@@ -7,4 +7,6 @@ export { isPublicRoute } from "./is-public-route.js";
 export { matchesBasic } from "./matches-basic.js";
 export { decideAccess } from "./decide-access.js";
 export { contentSecurityPolicy } from "./content-security-policy.js";
+export { checkThrew } from "./check-threw.js";
 export { registerAccess } from "./register-access.js";
+export { admitFor } from "./admit-for.js";

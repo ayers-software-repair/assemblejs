@@ -44,6 +44,18 @@ describe("logging the placements that fell back", () => {
     expect(logged[0]?.correlationId).toMatch(/^[0-9a-f]{8}$/);
   });
 
+  // A visitor not let in is no failure, and a check that broke was logged where it broke.
+  it("says nothing for a placement this visitor may not be shown", () => {
+    const logged: LogLine[] = [];
+    const { correlationId, ...unidentified } = fellBack;
+    expect(correlationId).toBe("c-7");
+    const guarded: Diagnostic = { ...unidentified, reason: "access" };
+    logFallbacks([guarded, { ...guarded, correlationId: "c-3" }], 'on page "/"', (line) =>
+      logged.push(line),
+    );
+    expect(logged).toEqual([]);
+  });
+
   // Every placement a request refused for passing its limit shares one id, and so one line.
   it("logs one line for every placement refused past the limit, saying how many", () => {
     const logged: LogLine[] = [];

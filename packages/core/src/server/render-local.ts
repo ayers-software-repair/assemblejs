@@ -48,6 +48,7 @@ export async function renderLocal(
     params: input.params,
     ...(input.signal === undefined ? {} : { signal: input.signal }),
     ...(input.count === undefined ? {} : { count: input.count }),
+    ...(input.admit === undefined ? {} : { admit: input.admit }),
     newId: input.newId,
     now: input.now,
   });

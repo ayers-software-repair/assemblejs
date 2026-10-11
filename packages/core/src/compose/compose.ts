@@ -62,6 +62,7 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
         path: options.path ?? [],
         ordinal: count.next(),
         count,
+        admit: options.admit,
         query,
         params,
         headers,

@@ -5,11 +5,13 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-10 08:04 EDT, after what a refused placement costs).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the owner's ruling on access).**
 
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: row 4c of the
-second reading, what a refused placement costs. Beneath it, each pushed on 2026-10-10 with its
-runs read to their end, green, and each time the one its `ci` run was created at: `a9e507c`,
+STATE. Branch `next`. `origin/next` is the commit this block is pushed with: row 4a of the
+second reading, the owner's ruling that a guarded assembly is guarded wherever it is placed.
+Beneath it, each pushed on 2026-10-10 with its runs read to their end, green, and each time the
+one its `ci` run was created at: `7fca321`, 08:16 EDT, row 4c, what a refused placement costs
+(`ci` 38051354538, `release` 38051354335); `a9e507c`,
 07:57 EDT, the second reading's seventh finding, the design's listings held to the source by a
 gate (`ci` 38050215470, `release` 38050215535); `40ad18e`, 07:46 EDT, row 4b, a limit on how
 many placements one request composes (`ci` 38049623776, `release` 38049623646); `3ba71b6`,
@@ -30,7 +32,7 @@ has it, and the page was drawn in the sealed browser at a desk's width and a pho
 those: the API reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows,
 `20547ae`; A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01,
 `a7d3edc`.
-Every package reads `1.0.0-next.0`; twenty-five changesets are pending. The owner's overnight
+Every package reads `1.0.0-next.0`; twenty-six changesets are pending. The owner's overnight
 order (estate D1216): work the bites to code completion and get the landing page onto
 staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
 the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
@@ -47,21 +49,23 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    in Phase 2 below, each fixed or open. Its 1, 2 and 9 are done (`05fae8a`). Its 4 is done,
    pushed with this block: the design says what a value a view writes raw can place, and a
    spec holds it in core, in the rendering fixture and in the trust fixture, where a visitor
-   with no credentials is shown an assembly whose own address refuses them. Row 4a, beside
-   it, is that fault: the lead ruled it the owner's to settle (the morning list's item 0,
-   with the memo `docs/studies/placement-and-access.md`), and nothing for it is built into
-   `next`. Its spec is titled KNOWN FAULT; the spec of the outcome waits red on the local
-   branch `security/guarded-wherever-placed`, which the lead ruled stays local until the
-   owner has chosen. Its 3 and 5 are done (`3ba71b6`): `check` and a build read a Pug view
+   with no credentials was shown an assembly whose own address refuses them. Row 4a, beside
+   it, was that fault, the owner's to settle: he ruled on 2026-10-10 "protected protected
+   everywhere" (estate D1242), way A of the memo `docs/studies/placement-and-access.md`, and
+   it is done, pushed with this block: the access decision is made again at each placement
+   for the visitor asking, the KNOWN FAULT spec is the spec of the rule, and the trust
+   fixture's open page stands a guarded badge empty for a visitor without credentials
+   (DECISIONS 2026-10-11). Way B is not ruled and not built. Its 3 and 5 are done
+   (`3ba71b6`): `check` and a build read a Pug view
    through the project's own Pug, a template's directive that does not read as it is written
    is a finding and refuses a build, and a loop is said to be refused at boot only where each
    hop's view is written. Its 4b is done (`40ad18e`): one request composes no more than 256
    placements at every depth together, the ones past that refused before dispatch with the
    reason `too-many`, the number from a measure and no setting for it. Its 7 is done
    (`a9e507c`): the design's listings are the source's, and `check:design` holds them to it.
-   Its 4c is done, pushed with this block: every placement a request refuses past its limit
-   shares one id, one diagnostic and one log line, and an assembly's own address refuses an
-   answer past the limit on bytes. NEXT, by this seat's ranking: the rest of 8, which holds
+   Its 4c is done (`7fca321`): every placement a request refuses past its limit shares one
+   id, one diagnostic and one log line, and an assembly's own address refuses an answer past
+   the limit on bytes. NEXT, by the lead's order: the rest of 8, which holds
    two things to fix in code (the content endpoint and a page hand their render no signal,
    so nothing stops when the asker leaves; a placement whose settling throws renders as
    nothing where the design says an empty envelope); then 6, 10 and 11.
@@ -71,9 +75,8 @@ THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
    server sends; then `compose_page` by a page's name (two rows in Phase 3 below).
 
 Then registrations for the clients beyond the three, and the rows under "AFTER IT" below.
-Six rows wait on the owner and are on the estate's morning list. First, as SECURITY: how
-to close the fault of row 4a, whose memo is `docs/studies/placement-and-access.md`. Then
-A-04, whose memo is `docs/studies/built-in-components.md`; showing an agent a framework view,
+Five rows wait on the owner and are on the estate's morning list (SECURITY, row 4a, he ruled
+on 2026-10-10 and it is built). A-04, whose memo is `docs/studies/built-in-components.md`; showing an agent a framework view,
 which means running the project's code; whether the twelve packages share one version, which
 a new project's manifest and the release-notes gate are both written as if they did; folding
 the changesets waiting into the first entry before the first publish; and whether an assembly
@@ -298,17 +301,17 @@ rowed or the owner's; the numbers are the report's.
       shown to that visitor on an open page. The templates guide, the Svelte guide and the
       instructions an agent is given say to write a visitor's value escaped (DECISIONS
       2026-10-10, "a value written raw")
-- [ ] 4a. SECURITY, AND THE OWNER'S: a visitor with no credentials is shown an assembly whose
+- [x] 4a. SECURITY, AND THE OWNER'S: a visitor with no credentials was shown an assembly whose
       own address refuses them, on an open page whose view writes the visitor's value raw.
-      The lead ruled on 2026-10-10 that closing it changes what the framework promises about
-      access, so the owner chooses how, and nothing is built into `next` until he has: the
-      estate's morning list, item 0. Three ways are in `docs/studies/placement-and-access.md`:
-      the access decision follows the assembly wherever it is placed; the composer places
-      only what a view's source places (this seat's first proposal, which the registry
-      already has the record for, `AssemblyView.placements`); or both. Until then
-      `conformance/specs/trust/raw.spec.mjs` holds the fault under the title KNOWN FAULT,
-      through an EJS view and a Pug one, and the spec of the outcome nobody disputes waits
-      red on the local branch `security/guarded-wherever-placed`
+      The owner ruled on 2026-10-10, "protected protected everywhere" (estate D1242): way A
+      of `docs/studies/placement-and-access.md`, the access decision made again at each
+      placement for the visitor asking, before dispatch and before the cache. Built
+      2026-10-11: `Admit` on the composer, `admitFor` on the server from the one decision,
+      the reason `access`, no id and no line for a refusal; `conformance/specs/trust/raw.spec.mjs`
+      is the spec of the rule (the red branch's two cases, turned green by the code), and the
+      open page of the trust fixture stands its guarded badge empty for a visitor without
+      credentials. Way B (the composer places only what a view's source records) is not ruled
+      and not built (DECISIONS 2026-10-11)
 - [x] 4b. From 4: NOTHING COUNTED THE PLACEMENTS OF ONE REQUEST. The composer settled every
       directive a template held, all at once; its limits were depth and the size of one
       answer. Ordered by the lead as a plain guard that waits on nobody. One request
@@ -634,8 +637,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       view's. Three mutations, each alone, watched red (2026-10-10)
 - [ ] A slot `check` still does not read, and writes into the registry as nothing: one in a
       module reached by a package's name. DESIGN 7 says so now, with what follows from it.
-      The framework guides do not: say it there once the owner has chosen in row 4a of the
-      second reading, since one of his choices gives such a slot a declaration. The other two
+      The framework guides do not: say it there. The owner chose way A in row 4a, which reads
+      nobody's source, so no choice of his gives such a slot a declaration. The other two
       this row named are read since the second reading's finding 3: a slot reached through a
       namespace import, and a Vue slot written in kebab case (DECISIONS 2026-10-10, S-07 and
       "every static view is read")

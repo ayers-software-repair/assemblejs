@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { Admit } from "./admit.js";
 import type { AssemblyPlan } from "./assembly-plan.js";
 import type { ContentCache } from "./content-cache.js";
 import type { Fetch } from "./fetch.js";
@@ -19,6 +20,8 @@ export interface SettleInput {
   readonly path: readonly string[];
   /** This placement's number among every placement of its request, the first being one. */
   readonly ordinal: number;
+  /** What asks whether the request's visitor may be shown this placement, when anything does. */
+  readonly admit: Admit | undefined;
   /** The request's count, handed on to what this placement composes in this process. */
   readonly count: PlacementCount;
   readonly query: URLSearchParams;

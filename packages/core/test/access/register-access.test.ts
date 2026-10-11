@@ -119,7 +119,10 @@ describe("the one access decision, in front of everything", () => {
     const deciding = files.filter((file) =>
       /(code|status)\(40[13]\)|decideAccess\(|matchesBasic\(/.test(readFileSync(file, "utf8")),
     );
+    // Two callers of the one decision: the hook, of the address asked, and what asks it again
+    // of each placement's own address. Neither holds a rule of its own.
     expect(deciding.map((file) => file.slice(src.length)).sort()).toEqual([
+      "access/admit-for.ts",
       "access/decide-access.ts",
       "access/matches-basic.ts",
       "access/register-access.ts",

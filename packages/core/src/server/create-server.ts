@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { randomUUID } from "node:crypto";
 import Fastify from "fastify";
+import type { AccessPolicy } from "../access/access-policy.js";
+import { admitFor } from "../access/admit-for.js";
 import { contentSecurityPolicy } from "../access/content-security-policy.js";
 import { registerAccess } from "../access/register-access.js";
 import { DEFAULT_LIMITS } from "../compose/default-limits.js";
@@ -90,27 +92,31 @@ export async function createServer(options: ServerOptions): Promise<App> {
   // always public, because a load balancer that cannot read it takes the server out of service;
   // so are the built browser files, which a page on another origin loads to hydrate this
   // server's assemblies, and which hold nothing a visitor's browser is not sent anyway.
+  const policy: AccessPolicy = {
+    basic: config.auth,
+    authenticate: options.authenticate,
+    publicRoutes: [
+      `${FRAMEWORK_ROUTE_PREFIX}/health`,
+      `${ASSET_ROUTE_PREFIX}/*`,
+      ...(options.publicRoutes ?? []),
+    ],
+  };
   registerAccess(
     app,
-    {
-      basic: config.auth,
-      authenticate: options.authenticate,
-      publicRoutes: [
-        `${FRAMEWORK_ROUTE_PREFIX}/health`,
-        `${ASSET_ROUTE_PREFIX}/*`,
-        ...(options.publicRoutes ?? []),
-      ],
-    },
+    policy,
     options.contentSecurityPolicy ?? contentSecurityPolicy(remotes.map((remote) => remote.origin)),
     log,
   );
+  // The same policy, asked again of each assembly a page or a view places, for the visitor
+  // asking: an assembly is guarded wherever it is shown, by the rule that guards its address.
+  const admit = (sent: Readonly<Record<string, string | undefined>>) => admitFor(policy, sent, log);
 
   app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));
 
   // One transport for this server's own assemblies: a page's placements, a view's children and
   // the content endpoint's all reach an assembly through it.
   const local = localFetch(byName, log, limits);
-  registerAssemblies(app, { assemblies: byName, version, limits, local, log });
+  registerAssemblies(app, { assemblies: byName, version, limits, local, log, admit });
   registerApis(app, apis);
   registerStreams(app, apis, log);
   registerAssets(app, files);
@@ -123,6 +129,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
     remotes,
     cache: createMemoryCache(),
     log,
+    admit,
     ...(boot === undefined ? {} : { reload: boot }),
   });
   if (boot !== undefined) registerDevReload(app, log, boot);

@@ -86,6 +86,7 @@ beforeAll(async () => {
         template: '<body><assembly name="slow"></assembly></body>',
         place: { slow: { required: true, deadline: 20 } },
       },
+      { route: "/members", template: '<body><assembly name="hello"></assembly></body>' },
     ],
     assemblies: byName,
     local: localFetch(byName, silent, DEFAULT_LIMITS),
@@ -94,6 +95,8 @@ beforeAll(async () => {
     remotes: [],
     cache: createMemoryCache(),
     log: (line) => logged.push(line),
+    admit: (sent) =>
+      sent["x-guest"] === undefined ? undefined : (name) => ({ admitted: name !== "hello" }),
   });
   await app.ready();
 });
@@ -102,12 +105,14 @@ afterAll(async () => {
 });
 
 describe("a page, mounted", () => {
-  it("answers the composed document, every placement in its envelope", async () => {
+  it("answers the composed document, every placement in its envelope, each assembly's browser files linked once", async () => {
     const response = await app.inject({ method: "GET", url: "/" });
     expect(response.statusCode).toBe(200);
     expect(response.headers["content-type"]).toBe("text/html; charset=utf-8");
     expect(response.body.match(/<assembly-root/g)?.length).toBe(2);
     expect(response.body).not.toMatch(/<assembly /);
+    expect(response.body.match(/client\.js/g)?.length).toBe(1);
+    expect(response.body).toContain('<link rel="stylesheet" href="/hello.css"></head>');
   });
 
   it("names the page's stream in its head, for its runtime to open", async () => {
@@ -115,21 +120,34 @@ describe("a page, mounted", () => {
     expect(html).toContain(
       '<title>t</title><link rel="stylesheet" href="/hello.css"><meta name="assemblejs-stream" content="/live?room=a&amp;b"></head>',
     );
-    // A page that names no stream carries no element for one.
     expect((await app.inject({ method: "GET", url: "/" })).body).not.toContain("assemblejs-stream");
   });
 
-  it("links each placed assembly's browser files once", async () => {
-    const response = await app.inject({ method: "GET", url: "/" });
-    expect(response.body.match(/client\.js/g)?.length).toBe(1);
-    expect(response.body).toContain('<link rel="stylesheet" href="/hello.css"></head>');
-  });
-
-  it("serves a failing placement's fallback and the rest of the page", async () => {
+  it("serves a failing placement's fallback and the rest of the page, and logs it against the id its envelope carries", async () => {
     const response = await app.inject({ method: "GET", url: "/soft" });
     expect(response.statusCode).toBe(200);
     expect(response.body).toContain("<p>unavailable</p>");
     expect(response.body).not.toContain("hunter2");
+    const id = /data-failed="([^"]+)"/.exec(response.body)?.[1];
+    expect(id).toMatch(/.+/);
+    expect(
+      logged.some((line) => line.correlationId === id && line.message.includes("broken")),
+    ).toBe(true);
+  });
+
+  it("shows the visitor asking only what each placed assembly's own address would show them", async () => {
+    const guest = await app.inject({
+      method: "GET",
+      url: "/members",
+      headers: { "x-guest": "yes" },
+    });
+    expect(guest.statusCode).toBe(200);
+    expect(guest.body).toMatch(/<assembly-root data-name="hello"[^>]* data-failed="">/);
+    expect(guest.body).not.toContain("<p>hi</p>");
+    expect(logged.filter((line) => line.message.includes('"hello" on page "/members"'))).toEqual(
+      [],
+    );
+    expect((await app.inject({ method: "GET", url: "/members" })).body).toContain("<p>hi</p>");
   });
 
   it("answers 503 with an id, never the cause, when a required placement fails", async () => {
@@ -145,15 +163,6 @@ describe("a page, mounted", () => {
     expect(response.body).toContain(
       '<p>card</p><link rel="stylesheet" href="/card.css"></template>',
     );
-  });
-
-  it("logs every placement that fell back, against the id its envelope carries", async () => {
-    const response = await app.inject({ method: "GET", url: "/soft" });
-    const id = /data-failed="([^"]+)"/.exec(response.body)?.[1];
-    expect(id).toMatch(/.+/);
-    expect(
-      logged.some((line) => line.correlationId === id && line.message.includes("broken")),
-    ).toBe(true);
   });
 
   it("gives a required placement that timed out a real id, and logs it", async () => {
@@ -187,7 +196,6 @@ describe("a page in development", () => {
 });
 
 describe("a page placing an assembly from another server", () => {
-  // B-13's proof: two servers in one test.
   let producer: Awaited<ReturnType<typeof createServer>>;
   let producerOrigin = "";
   let consumer: Awaited<ReturnType<typeof createServer>>;
@@ -216,7 +224,6 @@ describe("a page placing an assembly from another server", () => {
       ],
     });
     const behind = (await producer.listen()).url;
-    // A recording proxy in front of the producer, so the test hears exactly what the consumer sent.
     recorder = createHttpServer((request, response) => {
       heard.push(JSON.stringify(request.headers));
       void fetch(`${behind}${request.url ?? "/"}`).then(async (answer) => {
@@ -256,7 +263,7 @@ describe("a page placing an assembly from another server", () => {
     await producer.close();
   });
 
-  it("renders it, marked with its origin, and the second request is a cache hit", async () => {
+  it("renders it, marked with its origin, the second request a cache hit, the visitor's cookie never forwarded, and falls back when it does not answer", async () => {
     const first = await consumer.inject({
       method: "GET",
       url: "/",
@@ -267,17 +274,11 @@ describe("a page placing an assembly from another server", () => {
     const second = await consumer.inject({ method: "GET", url: "/" });
     expect(second.body).toContain("<p>cart 1</p>");
     expect(renders).toBe(1);
-  });
-
-  it("never forwards the visitor's cookie", () => {
     expect(heard.length).toBeGreaterThan(0);
     expect(heard.join()).not.toContain("hunter2");
-  });
-
-  it("falls back when the remote does not answer", async () => {
-    const response = await consumer.inject({ method: "GET", url: "/gone" });
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toContain("<p>no cart</p>");
+    const gone = await consumer.inject({ method: "GET", url: "/gone" });
+    expect(gone.statusCode).toBe(200);
+    expect(gone.body).toContain("<p>no cart</p>");
   });
 
   it("refuses to boot a page placing from an origin nobody declared", async () => {

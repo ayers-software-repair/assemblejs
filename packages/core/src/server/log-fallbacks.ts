@@ -27,7 +27,8 @@ export function logFallbacks(
         message: `${String(diagnostic.refused)} placements ${where} were refused after ${String(diagnostic.reason)}, the first of them "${diagnostic.name}"`,
         stack: undefined,
       });
-    } else if (diagnostic.reason !== undefined) {
+    } else if (diagnostic.reason !== undefined && diagnostic.reason !== "access") {
+      // A visitor not let in is no failure, and a check that broke was logged where it broke.
       log({
         correlationId: diagnostic.correlationId ?? newCorrelationId(),
         message: `assembly "${diagnostic.name}" ${where} was answered by the ${diagnostic.source} after ${diagnostic.reason}`,

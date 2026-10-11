@@ -64,7 +64,10 @@ beforeAll(async () => {
   const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
   const log = (line: LogLine): void => void logged.push(line);
   const local = localFetch(assemblies, log, limits);
-  registerAssemblies(app, { assemblies, version: "v7", limits, local, log });
+  // A visitor who says so is a guest, and a guest may not be shown hello.
+  const admit = (sent: Readonly<Record<string, string | undefined>>) =>
+    sent["x-guest"] === undefined ? undefined : (name: string) => ({ admitted: name !== "hello" });
+  registerAssemblies(app, { assemblies, version: "v7", limits, local, log, admit });
   await app.ready();
 });
 afterAll(async () => {
@@ -143,6 +146,16 @@ describe("an assembly whose view places a child, served", () => {
   });
 
   // What a composer on another server sends: the headers hold the cycle across the hop.
+  it("asks, for what its view places, whether the visitor who asked may be shown it", async () => {
+    const guest = await get("/assembly/shell/", { "x-guest": "yes" });
+    expect(guest.statusCode).toBe(200);
+    expect(guest.body).toMatch(/<assembly-root data-name="hello"[^>]* data-failed="">/);
+    expect(guest.body).not.toContain("Hello, world");
+    // Nobody is let in for being asked about: a refusal is not a failure, and is not logged.
+    expect(logged.filter((line) => line.message.includes('"hello" inside "shell"'))).toEqual([]);
+    expect((await get("/assembly/shell/")).body).toContain("Hello, world");
+  });
+
   it("refuses a child the arriving path already holds, inside a parent that still answers", async () => {
     const response = await get("/assembly/shell/", { "assembly-path": "hello/default" });
     expect(response.statusCode).toBe(200);

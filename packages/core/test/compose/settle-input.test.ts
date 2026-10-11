@@ -22,6 +22,7 @@ describe("what settling a placement needs", () => {
       params: {},
       headers: {},
       signal: undefined,
+      admit: undefined,
       newId: () => "fixed",
       now: () => 0,
     };
