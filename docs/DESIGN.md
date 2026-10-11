@@ -1056,9 +1056,11 @@ but the directory the assemblies are in, so nothing else in a project can take t
 A tool that writes an assembly tells the client to list again. An assembly the project has not is answered with the
 protocol's code for a resource that is not found.
 
-One thing an agent would want is not here, because no source gives it. The shape of an
+One thing an agent would want is not in a resource, because no source gives it. The shape of an
 assembly's data is what its service returns, known to a run of it or to the project's types and
-to no reading of a file; the resource names the service. What is wrong right now on a running
+to no reading of a file; the resource names the service, and `render_assembly` answers what one
+run of it returned, from the island of the envelope the dev server answered, while that server
+runs. What is wrong right now on a running
 server, per placement, with the correlation id that finds it in a log, is a running project's
 to say, and the two tools that ask the project's dev server say it (13.4); what can be told
 without one is `check`'s.

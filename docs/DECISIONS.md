@@ -4971,3 +4971,27 @@ tools and the contract.
 
 Found beside it, a row: `render_assembly` answers `data: {}` through the dev server, though the
 island in the html it answered holds what the service returned.
+
+## 2026-10-11: the data a run returned
+
+The row found with the entry above, and with it the last of what DESIGN 13.3 named as wanted and
+not given: the shape of an assembly's data, "known to a run of it or to the project's types and
+to no reading of a file".
+
+`render_assembly` answers the html, the data and the account together (`RenderedAssembly`), and
+it answered `data: {}` on every path. Rendered here that is true, since a plain html view is
+rendered with no service. Through the dev server it was false: the server ran the service, and
+the island of the envelope it answered carries what the service returned.
+
+Settled: `islandData` reads the island of the envelope with the id the tool sent, found by the
+opening the server writes it with and ending at the first end of a script, which the island's
+encoding never holds (`encodeIslandJson` escapes `<`). One path for both transports: rendered
+here the island holds no data and the answer is empty as before; through the dev server it is one
+run's data. That is the run the design asked for, on the terms the owner set for a running project
+(D1252, "Dev server, tool runs nothing"): the dev server runs the service, the tool reads the
+answer. A reading of the project's types stays unbuilt and unasked for. The data endpoint was not
+used, since it would run the services a second time for what the first answer already holds.
+
+The agent surface's tarball budget moves, from 25000 to 27000 bytes: today's work on the dev
+server's path, the ids, the refusal's words, the failed envelopes and the island, packed it to
+25378, measured by `check:pack`.

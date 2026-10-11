@@ -7,6 +7,7 @@ import { fallbackProblems } from "../compose/fallback-problems.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { devServerFetch } from "./dev-server-fetch.js";
 import { devServerUrl } from "./dev-server-url.js";
+import { islandData } from "./island-data.js";
 import { needsTheDevServer } from "./needs-the-dev-server.js";
 import { noSuchAssembly } from "./no-such-assembly.js";
 import { projectAssemblies } from "./project-assemblies.js";
@@ -59,12 +60,13 @@ export async function renderAssembly(root: ProjectRoot, name: string): Promise<R
           (line) => logged.push(line),
           (problem) => inside.push(problem),
         );
+  // The ids a page's composer sends, which the content endpoint holds to their shape and
+  // refuses a request without (DESIGN 2.1).
+  const id = randomUUID();
   const answer = await fetch({
     name,
     view: "default",
-    // The ids a page's composer sends, which the content endpoint holds to their shape and
-    // refuses a request without (DESIGN 2.1).
-    id: randomUUID(),
+    id,
     page: randomUUID(),
     // As a page's placement is asked: one deep, with nothing above it.
     depth: 1,
@@ -85,7 +87,9 @@ export async function renderAssembly(root: ProjectRoot, name: string): Promise<R
     view: "default",
     renderer,
     html: answer.html,
-    data: {},
+    // What the island of the envelope it answered carries: what the assembly's services
+    // returned where it was rendered, which is nothing for a view rendered here with none.
+    data: islandData(answer.html, id),
     children,
     problems: fallbackProblems(children, names, logged, inside),
   };

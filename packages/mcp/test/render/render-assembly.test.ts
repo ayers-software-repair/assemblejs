@@ -36,6 +36,8 @@ describe("rendering through the project's dev server", () => {
     expect(rendered.problems).toEqual([]);
     expect(rendered.renderer).toBe("react");
     expect(rendered.html).toContain("<button>served counter</button>");
+    // What the server's own run of the service returned, read from the island it answered.
+    expect(rendered.data).toEqual({ served: "counter" });
   });
 
   it("refuses one that failed there with the id its log holds the cause against, and says what fell back inside one that stands", async () => {

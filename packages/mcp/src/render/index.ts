@@ -5,6 +5,7 @@ export { RENDERABLE_WITHOUT_A_BUILD } from "./renderable-without-a-build.js";
 export { needsTheDevServer } from "./needs-the-dev-server.js";
 export { devServerUrl } from "./dev-server-url.js";
 export { failedEnvelopes } from "./failed-envelopes.js";
+export { islandData } from "./island-data.js";
 export { devServerFetch } from "./dev-server-fetch.js";
 export { noSuchAssembly } from "./no-such-assembly.js";
 export { projectAssemblies } from "./project-assemblies.js";

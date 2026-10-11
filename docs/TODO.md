@@ -5,10 +5,18 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11, after the kit at v0.54.3, with
-every ledger row that waits on nobody done).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11 evening, after the correction of
+the agent's dev-server path).**
 
-STATE AT THIS LANDING. `origin/next` is `79ce361`: every browser proof's click waits for the
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: `render_assembly`
+answers the data a run of the service returned. Beneath it, each pushed 2026-10-11: `138b0b8`
+THE CORRECTION, the agent surface asks the dev server as a composer asks, with uuids (P5-5 as
+it landed in `5a08454` was refused by every real server with a 400; the specs' dev server is a
+real one now and the agents fixture asks through it), pushed with `48ea9bb`, what failed on the
+dev server by the id its log has; `84efc3f` CI reads every commit's header and trailers on a
+push, from a floor (`ci` 38180444145 green, its `commits` job read step by step); `d798c2f`
+`check:commit-rule`, commitlint and the house's shell script held to one rule (`ci` 38180106968);
+`39f4687` the ledger; `79ce361` every browser proof's click waits for the
 assembly's mount through one helper (`ci` 38176113856 green). Beneath it `f526f0f`, the
 runtime's `data-mounted` mark (`ci` 38174834774 red on the styles proof's own race, which `79ce361`
 fixes; the mark itself proven here, the browser suite 42 of 42 through the sealed launcher), and
@@ -45,11 +53,14 @@ the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens
 the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
 and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
 envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: nothing in this ledger waits on nobody. What remains waits on the owner (branch rulesets,
-the first publish and its notes, B-27a and B-27b, the joint session, the agent surface's install
-size), on the promotion of `next` (the llms.txt address in AGENTS.md, P5-8's landing page), on
-Astra (the shared 404), on the kit (a fold for note subsections), or on a machine with VS Code
-(one read). P5-8's other half is Astra's; (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
+NEXT: read the open rows afresh before believing none can be worked: on 2026-10-11 that was said
+and five could. As read that evening, what remains waits on the owner (branch rulesets, the first
+publish and its notes, B-27a and B-27b, the joint session, the agent surface's install size, the
+eleventh dossier; his five questions are with the lead), on the promotion of `next` (the llms.txt
+address in AGENTS.md, P5-8's landing page), on Astra (the shared 404), on the next touch of
+`site/` (the pin to platform `v0.54.4`), or on a machine with VS Code (one read). A STANDING
+GATE since `84efc3f`: one commit on `next` with no conventional header or no sign-off turns
+every later run red until the floor in `ci.yml` is moved with a recorded reason. P5-8's other half is Astra's; (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
 crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
 00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
 before the day's work.
@@ -775,9 +786,12 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       2026-10-11: `composePage(root, name)` reads the page and its declaration as `check` does
       and plans it with core's `pagePlan`; a remote placement is composed deferred; the
       template path is `composeTemplate` (DECISIONS 2026-10-11, "compose_page by name")
-- [ ] One thing DESIGN 13.3 named is not built, because no source gives it: the shape of an
+- [x] One thing DESIGN 13.3 named is not built, because no source gives it: the shape of an
       assembly's data, which wants a run of the service or a reading of the project's types,
-      and neither is decided (DECISIONS 2026-10-10, "what an agent reads"). The other it named
+      and neither is decided (DECISIONS 2026-10-10, "what an agent reads"). DECIDED by the
+      owner's answer on a running project (D1252) and BUILT 2026-10-11: a run of the service
+      is the dev server's, and `render_assembly` answers the data it returned (DECISIONS
+      2026-10-11, "the data a run returned"). The other it named
       is BUILT 2026-10-11: what is wrong on a running server, with the id that finds it in its
       log. `render_assembly` and `compose_page` answer a failed assembly with the dev server's
       own id, and name each placement that fell back inside an answer that stands, read from
@@ -1197,9 +1211,12 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       project's built server. Watched red first: five specs against the real server with the
       ids as they were sent (DECISIONS 2026-10-11, "the tools ask the dev server as a composer
       asks")
-- [ ] `render_assembly` answers `data: {}` through the dev server, though the server ran the
+- [x] `render_assembly` answers `data: {}` through the dev server, though the server ran the
       assembly's service and the island in the html it answered holds what it returned. Read
-      the island of the answer in hand (found 2026-10-11 beside the row above)
+      the island of the answer in hand (found 2026-10-11 beside the row above). DONE
+      2026-10-11: `islandData` reads the island by the envelope's id, for either transport;
+      held against the real server, whose service's data the tool answers (DECISIONS
+      2026-10-11, "the data a run returned")
 - [x] P5-6 BUILT-IN COMPONENTS AS PLAIN HTML AND TOKENS (A-04): as
       `docs/studies/built-in-components.md` proposed in that form, in its bites; no framework
       component library. The morning list's item 9 closes when the last bite lands: it landed
