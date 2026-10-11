@@ -950,7 +950,11 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [ ] B-27a estate integration and the first prerelease, which now carries the second halves
       of B-24, B-25 and B-26 (owner, DECISIONS 2026-10-05 rulings): the acceptance table from
       the `legacy-tests` dossier, the Scorecard run, and the publish dry run with provenance
-      from the `release` environment; all three are Actions or outside this tree
+      from the `release` environment; all three are Actions or outside this tree. The first of
+      the three was not outside this tree and is DONE 2026-10-11: the dossier's fourteen
+      behaviours, three redesigns and five questions, each mapped to a test here or struck with
+      its reason, every path opened (DECISIONS 2026-10-11, "the acceptance table"). The other
+      two wait on the first publish
 - [ ] B-27b the stable publish, after the cold quickstart
 
 ## House style / hooks stack (CTO ruled 2026-09-03..09; owner routed it here) — assemblejs's part
