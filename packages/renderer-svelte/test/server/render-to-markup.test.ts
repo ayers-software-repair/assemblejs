@@ -4,6 +4,7 @@ import { findPlacements } from "@assemblejs/core";
 import { describe, expect, it } from "vitest";
 import { renderToMarkup } from "@assemblejs/renderer-svelte";
 import Counter from "../fixtures/Counter.svelte";
+import Field from "../fixtures/Field.svelte";
 import Listener from "../fixtures/Listener.svelte";
 import Shell from "../fixtures/Shell.svelte";
 
@@ -35,6 +36,18 @@ describe("rendering a Svelte assembly on the server", () => {
       { name: "inner", view: "default" },
       { name: "price", view: "compact" },
     ]);
+  });
+
+  // Svelte numbers the ids `$props.id()` makes from the start of each render, so two islands
+  // on a page made the same ones. The browser half reads its id from the markup the server
+  // sent, so the server's is the one to make its own.
+  it("gives the ids a component makes the placement's id before them, so no two islands share one", () => {
+    const made = (id: string) =>
+      / id="([^"]+)"/.exec(renderToMarkup(Field, { data: {}, id }))?.[1] ?? "";
+    expect(made("aaaa")).toContain("aaaa");
+    expect(made("bbbb")).toContain("bbbb");
+    expect(made("aaaa")).not.toBe(made("bbbb"));
+    expect(renderToMarkup(Field, { data: {} })).toMatch(/ id="[^"]+-q"/);
   });
 
   it("hands the component its events, as it will hydrate with them", () => {

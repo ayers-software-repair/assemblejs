@@ -15,6 +15,8 @@ export function hydrate(component: Component): ClientRenderer {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       const app = createSSRApp(component, { data });
       app.provide(EVENTS_KEY, context.events);
+      // The ids `useId` makes carry the placement's id, as the server's render gave them.
+      app.config.idPrefix = context.id;
       // Vue's mount takes a shadow root at run time; its type names an element or a selector.
       app.mount(element as Element);
       return { unmount: () => app.unmount() };

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { act } from "react";
 import { renderToMarkup } from "@assemblejs/renderer-react";
 import { Slot, hydrate, useEvents } from "@assemblejs/renderer-react/client";
@@ -61,6 +61,34 @@ describe("hydrating a React assembly", () => {
     const { element, handle } = await mountInto({ label: "Clicked" });
     await act(async () => handle.unmount());
     expect(element.querySelector("button")).toBeNull();
+  });
+
+  // The ids a component makes carry the placement's id on the server, so they must in the browser:
+  // hydrated without it, React found other ids than the markup had.
+  it("makes the ids the server made, the placement's id before them", async () => {
+    const Field = () => {
+      const id = useId();
+      return (
+        <label htmlFor={id}>
+          q<input id={id} />
+        </label>
+      );
+    };
+    const errors = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const element = document.createElement("assembly-root");
+    element.innerHTML = renderToMarkup(Field, { data: {}, id: "aaaa" });
+    const sent = element.querySelector("input")?.id ?? "";
+    document.body.append(element);
+    const { events } = createBus().forAssembly({ id: "aaaa", name: "field", view: "default" });
+    await act(async () => {
+      hydrate(Field).mount(element, {}, { id: "aaaa", name: "field", view: "default", events });
+    });
+    const reported = errors.mock.calls.length;
+    errors.mockRestore();
+    expect(sent).toContain("aaaa");
+    expect(element.querySelector("input")?.id).toBe(sent);
+    expect(element.querySelector("label")?.getAttribute("for")).toBe(sent);
+    expect(reported).toBe(0);
   });
 
   // Written so it exercises hydrate's wiring and not the bus's. The first version subscribed

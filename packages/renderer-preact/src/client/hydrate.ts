@@ -4,6 +4,7 @@ import type { ClientRenderer, JsonObject, MountContext } from "@assemblejs/core/
 import { h, hydrate as hydrateInto, render } from "preact";
 import type { AssemblyProps } from "../props/assembly-props.js";
 import { EventsContext } from "./events-context.js";
+import { IdContext } from "./id-context.js";
 
 /**
  * Turns a Preact component into the browser half of a renderer.
@@ -14,8 +15,13 @@ import { EventsContext } from "./events-context.js";
 export function hydrate(component: (props: AssemblyProps) => unknown): ClientRenderer {
   return {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
+      // The same two contexts, in the same order, as the server rendered inside.
       hydrateInto(
-        h(EventsContext.Provider, { value: context.events }, h(component as never, { data })),
+        h(
+          IdContext.Provider,
+          { value: context.id },
+          h(EventsContext.Provider, { value: context.events }, h(component as never, { data })),
+        ),
         element,
       );
       return { unmount: () => render(null, element) };

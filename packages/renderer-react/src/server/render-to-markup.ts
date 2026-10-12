@@ -17,6 +17,10 @@ import type { AssemblyProps } from "../props/assembly-props.js";
  * The component renders inside the same events context it hydrates inside, holding the server's
  * events, so a component that calls `useEvents()` renders on the server as it does in the
  * browser instead of failing for want of a page.
+ *
+ * The ids `useId` makes are numbered from the root of each render, so every island on a page
+ * would make the same ones. Each carries the placement's id before it, which the browser half
+ * is hydrated with too.
  */
 export function renderToMarkup(
   component: (props: AssemblyProps) => unknown,
@@ -28,5 +32,6 @@ export function renderToMarkup(
       { value: serverEvents() },
       createElement(component as never, { data: input.data }),
     ),
+    { identifierPrefix: input.id ?? "" },
   );
 }

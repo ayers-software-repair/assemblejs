@@ -20,10 +20,10 @@ the server's rows are done, and so are the readers of markup (composer.2, compos
 trust.5, trust.7, and three the seat found there), a kept answer's one envelope id
 (composer.3, client.2, server.8) and what one remote answer makes the server fetch and keep
 (trust.6), and the browser runtime's (client.1, client.5, client.6, client.7; client.4 is a
-gap in the public surface and is the owner's), and an attribute's value read as markup
-(renderers.2). Next, already read with the frameworks' own documentation: an id of its own
-for each island's `useId` (renderers.1), which React, Vue and Svelte take as a prefix and
-Preact has no way to be given; then the verbs', `check`'s rules, the agent surface's and the
+gap in the public surface and is the owner's), an attribute's value read as markup
+(renderers.2), and an id of its own for each island's `useId` (renderers.1). Next: the verbs'
+rows (cli-verbs.1, .3, .5: a misnamed file ignored in silence, a link that leads nowhere),
+`check`'s rules (check-rules.2, .3, .5, .6), the agent surface's (mcp.1 to mcp.5) and the
 tests', then the minors. Then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
@@ -45,11 +45,12 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: an attribute's
-value is text (DECISIONS 2026-10-11, of that name), the audit's row on Solid, which was the
-composer's. Beneath it `b8a6414`, the mark that says an assembly is live is written when it is
-(`ci` 38200554270, whose `browser proof` job is the one that draws it). The core's tarball
-budget is 86000, moved from 82000 at a measured 82,328. Beneath it `8aa4c0c`, a kept answer is
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the ids a
+component makes are its island's own (DECISIONS 2026-10-11, of that name), the four renderers
+that gave their framework no prefix for them. Beneath it `2e7bb15`, an attribute's value is text
+(`ci` 38201174758), and `b8a6414`, the mark that says an assembly is live is written when it is
+(`ci` 38200554270, all five jobs green, its `browser proof` the one that drew it). The core's
+tarball budget is 86000, moved from 82000 at a measured 82,328. Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
 markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all five
@@ -1525,9 +1526,14 @@ The browser runtime:
 
 The renderers:
 
-- [ ] React, Preact, Vue and Svelte renderers ignore the placement id, so useId / $props.id() ids
+- [x] React, Preact, Vue and Svelte renderers ignore the placement id, so useId / $props.id() ids
       collide across assemblies on one page (workflow renderers.1, major). Claimed at
-      `packages/renderer-react/src/server/render-to-markup.ts:27`. PREMISE UNVERIFIED
+      `packages/renderer-react/src/server/render-to-markup.ts:27`. PREMISE UNVERIFIED. REPRODUCED by
+      the seat in each renderer's own suite: two renders made `_R_0_`, `v-0`, `s1` and `P0-0` both
+      times. DONE 2026-10-11: each renderer gives its framework the placement's id as the prefix it
+      takes (`identifierPrefix`, `app.config.idPrefix`, `idPrefix`), and Preact, whose hook takes
+      none, gets a `useId` from the renderer's client entry (DECISIONS 2026-10-11, "the ids a
+      component makes are its island's own").
 - [x] Solid leaves '<' unescaped in attribute values, so visitor data containing '<assembly' or
       '<!--' breaks or silently empties the assembly (workflow renderers.2, major). Claimed at
       `packages/renderer-solid/src/server/render-to-markup.ts:35`. PREMISE UNVERIFIED. REPRODUCED by

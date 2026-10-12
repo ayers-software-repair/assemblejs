@@ -3,7 +3,7 @@
 // @vitest-environment happy-dom
 import { createBus } from "@assemblejs/core/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { defineComponent, h, nextTick, onMounted, ref } from "vue";
+import { defineComponent, h, nextTick, onMounted, ref, useId } from "vue";
 import type { PropType } from "vue";
 import { renderToMarkup } from "@assemblejs/renderer-vue";
 import { Slot, hydrate, useEvents } from "@assemblejs/renderer-vue/client";
@@ -137,5 +137,30 @@ describe("a child placed in a Vue assembly", () => {
     expect([...warned.mock.calls, ...complaints.mock.calls]).toEqual([]);
     warned.mockRestore();
     complaints.mockRestore();
+  });
+});
+
+// The ids a component makes carry the placement's id on the server, so they must in the browser:
+// hydrated without it, Vue made other ids than the markup had and said so.
+describe("the ids a Vue component makes", () => {
+  it("are in the browser what the server made, the placement's id before them", async () => {
+    const Field = defineComponent({
+      setup: () => {
+        const id = useId();
+        return () => h("label", { for: id }, ["q", h("input", { id })]);
+      },
+    });
+    const warned = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const element = document.createElement("assembly-root");
+    element.innerHTML = await renderToMarkup(Field, { data: {}, id: "aaaa" });
+    const sent = element.querySelector("input")?.id ?? "";
+    const { events } = createBus().forAssembly({ id: "aaaa", name: "field", view: "default" });
+    hydrate(Field).mount(element, {}, { id: "aaaa", name: "field", view: "default", events });
+    await nextTick();
+    const mismatches = warned.mock.calls.filter((call) => String(call[0]).includes("mismatch"));
+    warned.mockRestore();
+    expect(sent).toContain("aaaa");
+    expect(element.querySelector("input")?.id).toBe(sent);
+    expect(mismatches).toEqual([]);
   });
 });

@@ -5769,3 +5769,37 @@ not the renderer's.
 - **Proof.** Nine cases watched red, then green, the Solid renderer's own among them: a
   visitor's value in an attribute, rendered by Solid with its angle brackets, places nothing
   and fails nothing.
+
+## 2026-10-11: the ids a component makes are its island's own
+
+The audit's row on the renderers' ids (renderers.1), reproduced in each renderer's own suite.
+`MarkupInput` has said since it was written that "a renderer whose hydration keys must not
+collide with another island's prefixes them with" the placement's id; Solid and Lit did, and
+four did not.
+
+- **Measured.** Two renders of one component that asks its framework for an id: React made
+  `_R_0_` both times, Vue `v-0`, Svelte `s1`, Preact `P0-0`. Every island is a render of its
+  own, so two on a page share every id they make, and a label in one names the input in the
+  other, as does every `aria-labelledby` and `aria-describedby`.
+- **Each framework has a prefix for this, read in its own documentation 2026-10-11.** React:
+  `identifierPrefix`, an option of `renderToString` that "must match the prefix passed to
+  `hydrateRoot`" (react.dev, `renderToString` and `useId`). Vue: `app.config.idPrefix`, "if
+  you have more than one Vue application instance of the same page" (vuejs.org, `useId`).
+  Svelte: `idPrefix`, an option of `render` (svelte.dev, `svelte/server`); in the browser a
+  hydrating component reads its id from the comment the server wrote beside it (read in the
+  pinned 5.57.0, `props_id`), so only the server is told. Each renderer hands the placement's
+  id to that option, the server's render from `input.id` and the browser's from the mount's.
+- **Preact has none.** Its hook builds `'P' + mask[0] + '-' + mask[1]++` from the root of the
+  render (read in the pinned 11.0.0, `hooks/src/index.js`), and nothing a caller passes
+  reaches it. So the renderer's client entry exports a `useId` of its own: Preact's, with the
+  placement's id before it, from an `IdContext` both renders provide. A Preact view imports
+  `useId` from `@assemblejs/renderer-preact/client` where it imported it from `preact/hooks`.
+  The guide's page for Preact is the site seat's and wants a sentence; a rule of `check` that
+  names the other import in a Preact view is possible and is not written.
+- **A kept answer keeps its ids its own.** The prefix is the placement's uuid, written into
+  every id a component made; read from the cache for another placement, each is replaced with
+  that placement's, the island's own account of its id with it, so the browser hydrates with
+  the id the markup has.
+- **Proof.** Each renderer's case watched red on the id above, then green, the browser half
+  hydrated over the server's markup in the DOM the suite has (Svelte's hydration is drawn in
+  `ci`, as that suite's own note says). The `browser proof` job is the one that draws them.

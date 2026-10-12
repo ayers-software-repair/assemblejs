@@ -22,6 +22,9 @@ import { EVENTS_KEY } from "../client/events-key.js";
 export async function renderToMarkup(component: Component, input: MarkupInput): Promise<string> {
   const app = createSSRApp(component, { data: input.data });
   app.provide(EVENTS_KEY, serverEvents());
+  // Each island is an app of its own, and Vue numbers the ids `useId` makes within an app: with
+  // the placement's id before them, no two islands on a page make the same one.
+  if (input.id !== undefined) app.config.idPrefix = input.id;
   let failed: { readonly error: unknown } | undefined;
   app.config.errorHandler = (error) => {
     failed ??= { error };

@@ -7,6 +7,7 @@ import {
   h,
   onServerPrefetch,
   Suspense,
+  useId,
   warn,
   watchEffect,
 } from "vue";
@@ -22,7 +23,25 @@ const Cart = defineComponent({
   setup: (given) => () => h("p", `Items: ${String(given.data["total"])}`),
 });
 
+const Field = defineComponent({
+  setup: () => {
+    const id = useId();
+    return () => h("label", { for: id }, ["q", h("input", { id })]);
+  },
+});
+
 describe("rendering a Vue assembly on the server", () => {
+  // Vue numbers the ids `useId` makes within each app, and every island is an app of its own, so
+  // two islands on a page made the same ones.
+  it("gives the ids a component makes the placement's id before them, so no two islands share one", async () => {
+    const made = async (id: string) =>
+      / id="([^"]+)"/.exec(await renderToMarkup(Field, { data: {}, id }))?.[1] ?? "";
+    expect(await made("aaaa")).toContain("aaaa");
+    expect(await made("bbbb")).toContain("bbbb");
+    expect(await made("aaaa")).not.toBe(await made("bbbb"));
+    expect(await renderToMarkup(Field, { data: {} })).toMatch(/ id="[^"]+"/);
+  });
+
   // The production run is worth having only if it loads Vue's production build, whose warn is
   // a no-op and whose error handling only reports.
   it("runs against the build the run names", () => {

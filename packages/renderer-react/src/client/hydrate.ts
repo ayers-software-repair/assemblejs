@@ -25,6 +25,8 @@ export function hydrate(component: (props: AssemblyProps) => unknown): ClientRen
           { value: context.events },
           createElement(component as never, { data }),
         ),
+        // The ids `useId` makes carry the placement's id, as the server's render gave them.
+        { identifierPrefix: context.id },
       );
       return { unmount: () => root.unmount() };
     },

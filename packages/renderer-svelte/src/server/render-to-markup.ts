@@ -22,6 +22,10 @@ export function renderToMarkup(component: unknown, input: MarkupInput): string {
   // here should buy.
   const { body } = render(component as Component<Record<string, unknown>>, {
     props: { data: input.data, events: serverEvents() },
+    // Svelte numbers the ids `$props.id()` makes from the start of each render, so every island
+    // on a page would make the same ones; each carries the placement's id before it. The browser
+    // half reads its ids from this markup, so it is given nothing more.
+    ...(input.id === undefined ? {} : { idPrefix: input.id }),
   });
   return body;
 }
