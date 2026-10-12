@@ -5,15 +5,40 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-12, after the owner's rulings at
-the seat).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-12, 10:15 EDT, at the stop the
+owner ordered).**
+
+HELD BY THE OWNER'S ORDER, relayed by the lead 2026-10-13 05:30 EDT, his words: "if you reset
+I want you to HOLD until i notify you in the moring. all lanes except the astra codex lanbe".
+The seat holds until the lead wakes it. Nothing is in hand; the tree is clean; nothing is
+pushed since `4777f6f`, the split's second cut, whose `ci` run 38261256726 was read to its
+end at 05:15 and is green in all five jobs. This block's commit is local, rebased onto the
+site seat's `5f77744`, and goes up with R-4. AT THE WAKE: take R-4. Its design, read from the
+source on 2026-10-13 before the hold and not yet written: a generator in `build/generate`
+that writes `.assemblejs/tsconfig.json` (a solution of references), `tsconfig.app.json` (the
+server file, the generated modules, the config) and one `tsconfig.<owner>.json` per owner of
+JSX with typed files (react, preact with `jsxImportSource: "preact"`, solid with
+`"solid-js"`), each composite and emitting declarations to `.assemblejs/types/`; the
+registry split by owner, `assemblies.<owner>.ts` in the owner's project with the typed
+render calls and `assemblies.ts` spreading them, so the editor's view of the registry is
+clean, which was the first experiment; each `client/<name>.ts` in its owner's project;
+`BUILD_WRITES` grown by those files; the starter writing a root `tsconfig.json` of one
+reference to `./.assemblejs`, `typescript` and `@types/node` as development dependencies
+(the conformance spec `agents/new-project` pins the two it has now, line 50, and the
+command line's test of the starter pins them too) and a `typecheck` script; and `check`
+naming `@types/react` and `@types/react-dom` when a project has a React view and lacks them,
+by a new rule in `RULE_IDS` and `RULES`, emitted by the checks and never by the build, which
+builds without them. Proof: the scaffold built and `tsc -b` exit 0; the editor experiment
+(`AUDIT` evidence `seat/written-configs/editor.mjs`) on the shop; the ten examples under
+`tsc -b` with only React's missing types left, which R-5 installs.
 
 THE OWNER RULED THREE THINGS AT THE SEAT ON 2026-10-12, AND THE WORK IN HAND IS FOUR BITES, in
 this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a row for each):
 (1) a Svelte view types what it is handed, found by Svelte's own checker, DONE;
 (2) the command line's package is split in three, `cli`, `build` and `check`, before the
 TypeScript setup is built, what would make one of the three depend on another the wrong way
-untangled first, ALL OF WHICH IS DONE (R-2, R-3); (3) the build writes the TypeScript setup, so that no file of a user's
+untangled first, ALL OF WHICH IS DONE (R-2, R-3; fourteen packages, the limits 56,700,
+45,000 and 22,200); (3) the build writes the TypeScript setup, so that no file of a user's
 needs a line saying whose JSX it is, and it lands in `build`; (4) a gate holds every example
 to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT ALONE: the two new
 packages' limits are set by his rule of the same day, the measure and a tenth more, and a
