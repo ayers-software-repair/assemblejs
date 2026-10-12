@@ -1,130 +1,59 @@
 <!doctype html>
+<!-- Copyright Ayers Electronics Inc. All rights reserved. -->
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Documentation - AssembleJS</title>
-<!-- One directory down, so the kit and the skin are reached with ../ . Relative paths only:
-     an absolute one breaks under /assemblejs/ prefix hosting. -->
-<link rel="stylesheet" href="../kit/kit.css">
-<link rel="stylesheet" href="../skin.css">
-<link rel="icon" href="../favicon.svg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Documentation — AssembleJS</title>
+  <meta name="description" content="Get started, learn a task, or find the answer to a problem.">
+  <meta property="og:title" content="Documentation — AssembleJS">
+  <meta property="og:description" content="Get started, learn a task, or find the answer to a problem.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="../favicon.svg">
+
+  <link rel="stylesheet" href="../skin.css">
+  <link rel="stylesheet" href="../kit/product.css">
+  <link rel="stylesheet" href="../kit/landing.css">
+  <link rel="stylesheet" href="../kit/docs.css">
+  <link rel="stylesheet" href="../landing-brand.css">
+  <script type="module" src="../kit/landing-background.js"></script>
+  <link rel="canonical" href="https://assemblejs.com/docs/index.html">
+  <meta property="og:url" content="https://assemblejs.com/docs/index.html">
 </head>
-<body>
-<main class="wrap">
+<body class="product-site page-manual">
+  <a class="product-skip" href="#main">Skip to content</a>
+  <div class="product-frame">
+    <div class="product-world" aria-hidden="true"><canvas id="bg" data-landing-background="weave"></canvas></div>
+    <header class="product-header">
+      <div class="product-header-inner">
+        <a class="product-brand" href="../index.html" aria-label="AssembleJS home"><img src="../mark.svg" width="28" height="34" alt="">AssembleJS</a>
+        <nav class="product-nav" aria-label="Product navigation"><!-- links --><a href="../downloads.html">Downloads</a><a href="index.html" aria-current="page">Documentation</a><a href="../support.html">Support</a><!-- /links --></nav>
+      </div>
+    </header>
+    <main class="product-main" id="main" tabindex="-1">
+      <div class="manual-layout">
+  <aside class="manual-sidebar"><nav aria-label="Documentation chapters"><ol><li><a href="../docs/index.html" aria-current="page"><span>00</span>Contents</a></li><li><a href="../install.html"><span>01</span>Installation</a></li><li><a href="../start.html"><span>02</span>Assemblies</a></li><li><a href="../docs/tutorial.html"><span>03</span>Build a page</a></li><li><a href="../docs/react.html"><span>04</span>React</a></li><li><a href="../docs/vue.html"><span>05</span>Vue</a></li><li><a href="../docs/svelte.html"><span>06</span>Svelte</a></li><li><a href="../docs/preact.html"><span>07</span>Preact</a></li><li><a href="../docs/solid.html"><span>08</span>Solid</a></li><li><a href="../docs/lit.html"><span>09</span>Lit</a></li><li><a href="../docs/templates.html"><span>10</span>Templates</a></li><li><a href="../release-notes.html"><span>11</span>Release notes</a></li></ol></nav></aside>
+  <article class="manual-article">
 
-  <header>
-    <img src="../mark.svg" alt="" width="84" height="84">
-    <h1>Documentation</h1>
-    <div class="rule"></div>
-    <p>Start with the guide for the framework you already know. They all describe the same
-      product; each one shows it in the idiom you write every day.</p>
-  </header>
+    <h1>Documentation</h1><p class="manual-deck">Get started, learn a task, or find the answer to a problem.</p>
+<section id="contents" class="manual-entry"><div><h2>Create your first application</h2><p>Start a working page, change its first assembly and add a framework.</p>
+      <a class="inline-link" href="../install.html">Open the guide <span class="action-icon arrow-right" aria-hidden="true"></span></a></div>
+      <div class="manual-capture manual-capture-preview"><span class="manual-capture-id">A01 · Screenshot to capture</span>
+      <div><strong>Your first application</strong><p>The generated application running from the released CLI.</p></div>
+      <span class="manual-capture-detail">Reuses the guide’s result capture</span></div></section>
+      <section><h2>Use AssembleJS</h2><ul class="manual-tasks"><li><a href="tutorial.html"><span><b>Compose a complete page</b><small>Build assemblies, add data and connect events.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="react.html"><span><b>Use React</b><small>React views, hydration and page events.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="vue.html"><span><b>Use Vue</b><small>Vue assemblies in a composed application.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="svelte.html"><span><b>Use Svelte</b><small>Svelte assemblies and shared page events.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="preact.html"><span><b>Use Preact</b><small>A Preact view with its own renderer.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="solid.html"><span><b>Use Solid</b><small>Solid assemblies and browser hydration.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="lit.html"><span><b>Use Lit</b><small>Web components inside a composed page.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="templates.html"><span><b>Use HTML and templates</b><small>Plain HTML, EJS, Markdown, Nunjucks, Handlebars or Pug.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="api/index.html"><span><b>API reference</b><small>Generated from the published package entry points.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li></ul></section>
+      <section><h2>Fix a problem</h2><ul class="manual-tasks"><li><a href="../install.html#troubleshooting"><span><b>The project will not start</b><small>Check the runtime and project structure.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li><li><a href="../support.html"><span><b>Report a reproducible problem</b><small>Include the package version and smallest example.</small></span><span class="action-icon arrow-right" aria-hidden="true"></span></a></li></ul></section>
+    <nav class="manual-pager" aria-label="Previous and next chapter"><a href="../index.html"><small>Previous</small>AssembleJS</a><a href="../install.html"><small>Next</small>Installation</a></nav>
+  </article>
+</div>
 
-  <h2>Start here</h2>
-  <dl>
-    <div class="item">
-      <dt><a href="../install.html">Installing</a></dt>
-      <dd>Node 22 or newer, one command, and a project that runs.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="../start.html">Getting started</a></dt>
-      <dd>Your first assembly, a second framework beside it, and what happens when one is slow.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="tutorial.html">The tutorial</a></dt>
-      <dd>One project from nothing to a deployed server, nine steps, every file from the
-        repository's own examples, its design document or its tests.</dd>
-    </div>
-  </dl>
-
-  <h2>Guides</h2>
-  <dl>
-    <div class="item">
-      <dt><a href="react.html">For React developers</a></dt>
-      <dd>A component in a file whose name says React: props, data from a service, events,
-        when it mounts, styles, the page.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="vue.html">For Vue developers</a></dt>
-      <dd>A single-file component, the same product in Vue's idiom.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="svelte.html">For Svelte developers</a></dt>
-      <dd>Svelte 5 and runes, the same product in Svelte's idiom.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="preact.html">For Preact developers</a></dt>
-      <dd>A component in a file whose name says Preact, the same product in Preact's idiom.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="solid.html">For Solid developers</a></dt>
-      <dd>A component compiled by Solid's own compiler, the same product in Solid's idiom.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="lit.html">For Lit developers</a></dt>
-      <dd>A view that places your elements, rendered into declarative shadow roots on the
-        server; the events arrive as a property.</dd>
-    </div>
-    <div class="item">
-      <dt><a href="templates.html">For template authors</a></dt>
-      <dd>EJS, Handlebars, Nunjucks, Pug and Markdown: one file, rendered on the server, no
-        JavaScript unless a file beside it asks for some.</dd>
-    </div>
-  </dl>
-
-  <h2>Reference</h2>
-  <dl>
-    <div class="item">
-      <dt><a href="api/index.html">API reference</a></dt>
-      <dd>Every published entry point of the twelve packages, generated from the sources when
-        the site deploys.</dd>
-    </div>
-  </dl>
-
-  <h2>The model</h2>
-  <dl>
-    <div class="item">
-      <dt>assembly</dt>
-      <dd>A piece of a page written in one UI framework: whole, addressable, renderable on its
-        own. Nested inside another it is a subassembly. Given a URL, it lives on another server
-        and nothing else about it changes.</dd>
-    </div>
-    <div class="item">
-      <dt>page</dt>
-      <dd>A route that renders a template which places assemblies. A page is an assembly that
-        has a route.</dd>
-    </div>
-    <div class="item">
-      <dt>service</dt>
-      <dd>A function that runs on the server before an assembly renders and returns its data.
-        The same function answers the assembly's data endpoint, so the two can never disagree.</dd>
-    </div>
-    <div class="item">
-      <dt>api</dt>
-      <dd>A route that serves data to anyone.</dd>
-    </div>
-  </dl>
-
-  <h2>The contract</h2>
-  <dl>
-    <div class="item">
-      <dt>Three endpoints per assembly</dt>
-      <dd>Content, data and manifest. Any server in any language can serve an assembly by
-        answering those three correctly, which is what makes a second team cost nothing.</dd>
-    </div>
-    <div class="item">
-      <dt>Nothing crosses to the browser but JSON</dt>
-      <dd>A named projection of six fields. Not your request, not your headers, not your
-        cookies, and never another assembly's rendered bytes.</dd>
-    </div>
-  </dl>
-
-  <footer>
-    <p><!-- links --><a href="../index.html">AssembleJS</a> &middot; <a href="../install.html">Installing</a> &middot; <a href="../start.html">Getting started</a> &middot; <a href="../release-notes.html">Release notes</a><!-- /links --></p>
-    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
-  </footer>
-
-</main>
+    </main>
+    <footer class="product-footer">
+      <div class="product-footer-inner">
+        <div class="product-footer-credit"><a class="company-link" id="back" href="https://ayers.repair/">Ayers Software Repair <span class="action-icon arrow-up-right" aria-hidden="true">↗</span></a><p>Copyright Ayers Electronics Inc. All rights reserved.</p></div>
+        <nav aria-label="Product and legal links"><a href="../release-notes.html">Release notes</a><a href="https://ayers.repair/legal/assemblejs/privacy.html">Privacy</a><a href="https://ayers.repair/legal/assemblejs/terms.html">Terms</a></nav>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>

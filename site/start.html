@@ -1,98 +1,125 @@
 <!doctype html>
+<!-- Copyright Ayers Electronics Inc. All rights reserved. -->
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Getting started - AssembleJS</title>
-<link rel="stylesheet" href="kit/kit.css">
-<link rel="stylesheet" href="skin.css">
-<link rel="icon" href="favicon.svg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting started — AssembleJS</title>
+  <meta name="description" content="An assembly is a piece of a page written in one framework. A page places assemblies. That
+      is the whole model, and the rest of this page is how you write one.">
+  <meta property="og:title" content="Getting started — AssembleJS">
+  <meta property="og:description" content="An assembly is a piece of a page written in one framework. A page places assemblies. That
+      is the whole model, and the rest of this page is how you write one.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg">
+
+  <link rel="stylesheet" href="skin.css">
+  <link rel="stylesheet" href="kit/product.css">
+  <link rel="stylesheet" href="kit/landing.css">
+  <link rel="stylesheet" href="kit/docs.css">
+  <link rel="stylesheet" href="landing-brand.css">
+  <script type="module" src="kit/landing-background.js"></script>
+  <link rel="canonical" href="https://assemblejs.com/start.html">
+  <meta property="og:url" content="https://assemblejs.com/start.html">
 </head>
-<body>
-<main class="wrap">
-
-  <header>
-    <img src="mark.svg" alt="" width="84" height="84">
-    <h1>Getting started</h1>
-    <div class="rule"></div>
-    <p>An assembly is a piece of a page written in one framework. A page places assemblies. That
+<body class="product-site page-manual">
+  <a class="product-skip" href="#main">Skip to content</a>
+  <div class="product-frame">
+    <div class="product-world" aria-hidden="true"><canvas id="bg" data-landing-background="weave"></canvas></div>
+    <header class="product-header">
+      <div class="product-header-inner">
+        <a class="product-brand" href="index.html" aria-label="AssembleJS home"><img src="mark.svg" width="28" height="34" alt="">AssembleJS</a>
+        <nav class="product-nav" aria-label="Product navigation"><!-- links --><a href="downloads.html">Downloads</a><a href="docs/index.html" aria-current="page">Documentation</a><a href="support.html">Support</a><!-- /links --></nav>
+      </div>
+    </header>
+    <main class="product-main" id="main" tabindex="-1">
+      <div class="manual-layout">
+  <aside class="manual-sidebar"><nav aria-label="Documentation chapters"><ol><li><a href="docs/index.html"><span>00</span>Contents</a></li><li><a href="install.html"><span>01</span>Installation</a></li><li><a href="start.html" aria-current="page"><span>02</span>Assemblies</a></li><li><a href="docs/tutorial.html"><span>03</span>Build a page</a></li><li><a href="docs/react.html"><span>04</span>React</a></li><li><a href="docs/vue.html"><span>05</span>Vue</a></li><li><a href="docs/svelte.html"><span>06</span>Svelte</a></li><li><a href="docs/preact.html"><span>07</span>Preact</a></li><li><a href="docs/solid.html"><span>08</span>Solid</a></li><li><a href="docs/lit.html"><span>09</span>Lit</a></li><li><a href="docs/templates.html"><span>10</span>Templates</a></li><li><a href="release-notes.html"><span>11</span>Release notes</a></li></ol></nav></aside>
+  <article class="manual-article">
+    <p class="manual-location"><a href="docs/index.html">Documentation</a> <span aria-hidden="true">/</span> Getting started</p>
+    <h1>Getting started</h1><p class="manual-deck">An assembly is a piece of a page written in one framework. A page places assemblies. That
       is the whole model, and the rest of this page is how you write one.</p>
-  </header>
 
-  <h2>Your first assembly</h2>
-  <dl>
-    <div class="item">
-      <dt>A directory is an assembly</dt>
-      <dd>Make <code>src/assemblies/cart/cart.svelte</code> and you have an assembly called
+
+<h2>Your first assembly</h2>
+<dl>
+<div class="item">
+<dt>A directory is an assembly</dt>
+<dd>Make <code>src/assemblies/cart/cart.svelte</code> and you have an assembly called
         <code>cart</code>. There is nothing to register: no import to add, no array to append
         to, no list restating the directory tree. Your server file does not grow.</dd>
-    </div>
-    <div class="item">
-      <dt>The file name says which framework</dt>
-      <dd><code>cart.svelte</code> and <code>cart.vue</code> need no help. Where an extension is
+</div>
+<div class="item">
+<dt>The file name says which framework</dt>
+<dd><code>cart.svelte</code> and <code>cart.vue</code> need no help. Where an extension is
         shared, the name carries it: <code>cart.react.tsx</code>, <code>cart.preact.tsx</code>,
         <code>cart.solid.tsx</code>. A directory listing tells you what a page is made of.</dd>
-    </div>
-    <div class="item">
-      <dt>Put it on a page</dt>
-      <dd>Write <code>&lt;assembly name="cart"&gt;&lt;/assembly&gt;</code> in a page template.
+</div>
+<div class="item">
+<dt>Put it on a page</dt>
+<dd>Write <code>&lt;assembly name="cart"&gt;&lt;/assembly&gt;</code> in a page template.
         The server replaces it with the rendered assembly.</dd>
-    </div>
-  </dl>
-
-  <h2>Adding a second framework</h2>
-  <dl>
-    <div class="item">
-      <dt>assemblejs add assembly checkout --renderer react</dt>
-      <dd>One command and one tag. The React developer and the Svelte developer work on the same
+</div>
+</dl>
+<h2>Adding a second framework</h2>
+<dl>
+<div class="item">
+<dt>assemblejs add assembly checkout --renderer react</dt>
+<dd>One command and one tag. The React developer and the Svelte developer work on the same
         page without either learning the other's framework.</dd>
-    </div>
-    <div class="item">
-      <dt>They talk through the page</dt>
-      <dd>Every assembly gets a typed events object scoped to it. One sends, another listens,
+</div>
+<div class="item">
+<dt>They talk through the page</dt>
+<dd>Every assembly gets a typed events object scoped to it. One sends, another listens,
         and neither needs an adapter, because the bus belongs to the page rather than to any
         framework's tree.</dd>
-    </div>
-  </dl>
-
-  <h2>Working with an agent</h2>
-  <dl>
-    <div class="item">
-      <dt>The project says what it is</dt>
-      <dd>A new project carries an <code>AGENTS.md</code>, the file Claude Code, Cursor and
+</div>
+</dl>
+<h2>Working with an agent</h2>
+<dl>
+<div class="item">
+<dt>The project says what it is</dt>
+<dd>A new project carries an <code>AGENTS.md</code>, the file Claude Code, Cursor and
         VS Code look for: what a page, an assembly and a placement are, how to change the
         project, and every rule its code must satisfy.</dd>
-    </div>
-    <div class="item">
-      <dt>And hands over the framework's own tools</dt>
-      <dd>The project's MCP server is installed with it and registered for each of them. An agent
-        adds an assembly, places it, and composes the page to see what it made, with no server
-        started. <code>npx assemblejs check</code> holds the instructions to the version you
+</div>
+<div class="item">
+<dt>And hands over the framework's own tools</dt>
+<dd>The project's MCP server is installed with it and registered for each of them, and for
+        Gemini CLI and opencode. An agent adds an assembly, places it, and composes the page to
+        see what it made: any view while your dev server runs, plain HTML with nothing running.
+        <code>npx assemblejs check</code> holds the instructions to the version you
         installed, and <code>npx assemblejs add agents</code> rewrites them.</dd>
-    </div>
-    <div class="item">
-      <dt>Ask for the common things by name</dt>
-      <dd>The server lists four prompts, which Claude Code and VS Code show as commands and
+</div>
+<div class="item">
+<dt>Ask for the common things by name</dt>
+<dd>The server lists four prompts, which Claude Code and VS Code show as commands and
         Cursor supports as well: add an assembly, place one, make a page, fix what
         <code>check</code> finds. Each briefs the agent the framework's way: look before adding,
         ask where it was not told, and check last.</dd>
-    </div>
-  </dl>
-
-  <h2>When one of them is slow</h2>
-  <dl>
-    <div class="item">
-      <dt>Every assembly has a deadline</dt>
-      <dd>A slow or dead assembly renders its declared fallback, or the last good content, and
+</div>
+</dl>
+<h2>When one of them is slow</h2>
+<dl>
+<div class="item">
+<dt>Every assembly has a deadline</dt>
+<dd>A slow or dead assembly renders its declared fallback, or the last good content, and
         the page still ships. One failing assembly is one failing assembly.</dd>
-    </div>
-  </dl>
+</div>
+</dl>
 
-  <footer>
-    <p><!-- links --><a href="index.html">AssembleJS</a> &middot; <a href="install.html">Installing</a> &middot; <a href="release-notes.html">Release notes</a> &middot; <a href="docs/index.html">Documentation</a><!-- /links --></p>
-    <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
-  </footer>
 
-</main>
+    <nav class="manual-pager" aria-label="Previous and next chapter"><a href="install.html"><small>Previous</small>Installation</a><a href="docs/tutorial.html"><small>Next</small>Build a page</a></nav>
+  </article>
+</div>
+
+    </main>
+    <footer class="product-footer">
+      <div class="product-footer-inner">
+        <div class="product-footer-credit"><a class="company-link" id="back" href="https://ayers.repair/">Ayers Software Repair <span class="action-icon arrow-up-right" aria-hidden="true">↗</span></a><p>Copyright Ayers Electronics Inc. All rights reserved.</p></div>
+        <nav aria-label="Product and legal links"><a href="release-notes.html">Release notes</a><a href="https://ayers.repair/legal/assemblejs/privacy.html">Privacy</a><a href="https://ayers.repair/legal/assemblejs/terms.html">Terms</a></nav>
+      </div>
+    </footer>
+  </div>
 </body>
 </html>

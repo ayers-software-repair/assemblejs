@@ -39,20 +39,29 @@ push and manual deployment paths remain available.
 The first publication still requires the owner's npm package/bootstrap and trusted-publisher
 setup. A site deployment alone does not establish that npm publication is configured or complete.
 
-The branch decides the prefix; the folder is identical. **Every link into the next channel
+Relative navigation works at both prefixes. Deployment generates canonical and Open Graph
+addresses and `sitemap.xml` for `https://assemblejs.com/` or `https://assemblejs.com/next/`.
+The same files also serve the company subpaths. Domain activation remains a launch operation;
+a prepared site does not itself enable the domain. **Every link into the next channel
 carries its trailing slash**: the CloudFront prefix router redirects a bare FIRST segment only,
 so `/assemblejs/next` does not redirect and `/assemblejs/next/` does.
 
 ## The kit is referenced, never copied
 
 `site/kit/` is gitignored. The deploy reads the one platform pin, `ayersPlatform` in the root
-`package.json`, checks `platform` out at exactly that tag, and stages `sitekit/*.css` into the
-upload as `site/kit/`. Locally, symlink it for preview:
+`package.json`, checks `platform` out at exactly that tag, and stages the public CSS, four landing modules, download controls and icons into
+`site/kit/`. This private checkout occurs only in the deployment job, using its existing
+credential. Public builds and pull-request checks need no platform access. Locally, symlink it
+for preview:
 
     ln -s ../../platform/sitekit site/kit
 
-The landing page is this product's own and does not use the kit; every other page links
-`kit/kit.css` first and `skin.css` second, in that order, because the skin overrides.
+Every page uses the same product frame, including the landing and generated API reference.
+`skin.css` binds the brand roles; `kit/product.css`, `kit/landing.css` and `kit/docs.css` own the
+layout, and `landing-brand.css` holds product-specific refinements. Templates, tests and the
+private metadata build utility are not public assets. The checked-in platform pin must name a
+release containing these files before the adoption is pushed; a local preview symlink is not a
+published dependency.
 
 ## The API reference is generated, never committed
 
@@ -65,7 +74,8 @@ specifier a user imports. `pnpm check:reference`, in `pnpm check`, holds the ent
 packages' `exports`, so a subpath published and not documented is refused, and the reverse; and
 it generates the whole reference with warnings as errors, so a link in a comment that leads
 nowhere fails CI and not the next deploy. `pnpm site:api` alone writes the same tree for a
-preview.
+preview. `scripts/site-api-theme.mjs` reads the maintained homepage header/footer and uses the
+same navigation generator as authored pages, while retaining TypeDoc search and symbol navigation.
 
 The deploy generates it in a job of its own, which installs the workspace, builds the packages
 and runs typedoc, and holds no token for the cloud: the pages reach the deploy as an artifact.
@@ -75,7 +85,8 @@ reference did not arrive, stops before the sync.
 In `pages.json` the page is declared `generated`, with the note the index for a model lists it
 by: the site check does not require it to exist in the tree and does not walk the tree it heads,
 which links hundreds of pages of its own. Typedoc links its assets with a query that changes at
-each generation, so the week-long asset cache never serves a stale search index after a deploy.
+each generation, so a cached search index is not reused after a deploy. HTML, CSS and JavaScript use
+a five-minute cache; fonts and images use seven days.
 
 The reference refreshes on every site deployment: a site push, a successful tagged package
 publication, or a manual dispatch. A package-only branch push does not republish it.

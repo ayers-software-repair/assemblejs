@@ -1,0 +1,17 @@
+/* Copyright Ayers Electronics Inc. All rights reserved. */
+/* Landing bindings; the reading palette in skin.css remains the documentation default. */
+.product-site {
+  color-scheme: dark;
+  --surface: #0b1715;
+  --surface-panel: #112520;
+  --border: #2c4940;
+  --ink: #fbfaf7;
+  --ink-muted: #b4c4bb;
+  --accent: #89c9af;
+  --accent-strong: #b9e1cd;
+  --accent-alt: #a4400f;
+  --accent-wash: #183b30;
+  --face-display: var(--face-text);
+}
+.product-signature h1 { font-weight: 650; letter-spacing: -.045em; }
+.product-signature > img { width: 84px; height: 108px; }

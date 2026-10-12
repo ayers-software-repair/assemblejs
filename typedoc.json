@@ -33,5 +33,9 @@
   "excludeInternal": true,
   "githubPages": false,
   "cacheBust": true,
-  "treatWarningsAsErrors": true
+  "treatWarningsAsErrors": true,
+  "plugin": ["./scripts/site-api-theme.mjs"],
+  "hideGenerator": true,
+  "lightHighlightTheme": "github-dark",
+  "darkHighlightTheme": "github-dark"
 }

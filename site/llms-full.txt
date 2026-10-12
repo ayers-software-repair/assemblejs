@@ -1,124 +1,88 @@
 # AssembleJS
 
-> Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+> Compose React, Vue, Svelte and more into one application. Render assemblies on the server and connect them through page events.
 
 Every page of this site as text, in the order [llms.txt](llms.txt) lists them. Every link is relative to this file.
 
-# One page. Every framework.
+# AssembleJS
 
 Source: [index.html](index.html)
 
-Build one application from UI assemblies written in React, Vue, Svelte and more. AssembleJS composes their HTML on the server and hydrates each in its own framework. Assemblies can live in your project or on another server; page events connect their interactions.
+Your frameworks. One application.
 
-[Get started](start.html) [Documentation](docs/index.html) [Source](https://github.com/ayers-software-repair/assemblejs)
+Compose React, Vue, Svelte and more into one application. Render assemblies on the server and connect them through page events.
 
-## Three frameworks. One composed page.
+- [Install AssembleJS](downloads.html)
+- [Read the manual](docs/index.html)
 
-React
+Platforms:
 
-Product catalogue
+- npm
+- Web
 
-`catalogue.react.tsx`
-
-Vue
-
-Product filters
-
-`filters.vue`
-
-Svelte
-
-Shopping cart
-
-`cart.svelte`
-
-AssembleJS composes the HTML on the server
-
-Example page layout:
-
-Filters Vue
-
-Catalogue React
-
-Cart Svelte
-
-Each assembly hydrates in its own framework. Page events connect their interactions.
-
-Frameworks you can write an assembly in:
-
-- React
-- Vue
-- Svelte
-- Preact
-- Solid
-- Lit
-- Web Components
-- Markdown
-- HTML
-- on one page, at the same time
-
-## A directory is an assembly
-
-Make a directory, put a view in it, and it exists. Nothing to register, no import to add, no list restating your own folder tree. Your server file never grows.
-
-## The file name says the framework
-
-`cart.svelte`, `cart.react.tsx`. A directory listing tells you what a page is made of, so nobody has to read a config to find out.
-
-## One slow assembly is not a slow page
-
-Every assembly carries a deadline and a fallback. A dead one degrades to its last good content and the page still ships, in the template's order.
-
-## They talk without adapters
-
-A typed event bus that belongs to the page rather than to any framework's tree, so a React assembly and a Svelte one exchange messages with nothing in between.
-
-## An assembly can live anywhere
-
-Give one a URL and another team serves it. Moving it changes a URL and nothing else: the same deadline, the same fallback, the same headers.
-
-## Your agent knows the framework
-
-An MCP server ships with it, so an AI agent reads your project, adds an assembly, places it, and checks its own work against the framework's rules; a plain html view it renders on the spot, to see what it actually produced. Every new project is written with the instructions that tell an agent so, and with the server installed and registered. It carries no model and no key of its own.
-
-## The whole idea, in one page template
-
-```
-<main>
-  <assembly name="catalogue"></assembly>   <!-- written in React  -->
-  <assembly name="cart"></assembly>        <!-- written in Svelte -->
-</main>
-```
-
-# Installing
+# Create your first application
 
 Source: [install.html](install.html)
 
-AssembleJS needs Node 22 or newer and nothing else. There is no global install: the command comes with the project it creates.
+Run an AssembleJS page, then add the frameworks you want to use.
 
-## Make a project
+## Before you start
 
-### npm create @assemblejs my-app
+Install Node.js 22 or newer. The project includes its own CLI; no global installation is required.
 
-Writes a project that runs, with one assembly in it. Use pnpm or yarn if you prefer; the generated project does not care which one made it.
+## 01Create the project
 
-### cd my-app && npm install
+```
+npm create @assemblejs@latest my-app
+cd my-app
+npm install
+npm run dev
+```
 
-Installs the framework and the one renderer your first assembly uses. A React team does not install Vue, because each renderer is its own package.
+Open the address printed by the development server.
 
-### npm run dev
+- A01 · Screenshot to capture
 
-Starts the server and prints the address. Edit an assembly and the page reloads.
+The generated application
 
-## Add it to a project you already have
+Capture the untouched generated app in a browser and its terminal address as separate frames.
 
-### npm install @assemblejs/core
+- Use the released CLI · Preserve the actual output
 
-The runtime. It brings a web server and nothing else; there is no bundler in it, and a built server starts with plain node.
+The page contains the hello assembly created by the scaffold.
 
-### npm install -D @assemblejs/cli
+Check
 
-The command that scaffolds assemblies and builds the project. It is a development dependency: production runs the build, not the command.
+The generated page opens at the server’s printed address.
+
+## 02Change an assembly
+
+Open `src/assemblies/hello/hello.html`, change its visible text and save. The development server rebuilds the page.
+
+Check
+
+The page shows your change. The assembly lives separately from the page that places it.
+
+## 03Add your framework
+
+For a Svelte assembly:
+
+```
+npx assemblejs add assembly counter --renderer svelte
+npm install @assemblejs/renderer-svelte svelte
+```
+
+Place it in `src/pages/home/home.html`:
+
+```
+<assembly name="counter"></assembly>
+```
+
+Continue with the [page-building tutorial](docs/tutorial.html) or a guide for [React](docs/react.html), [Vue](docs/vue.html) or [Svelte](docs/svelte.html).
+
+## If the page will not start
+
+Check your Node.js version, run the commands from the project directory and read the terminal error. Run `npx assemblejs check` to check the project’s structure.
 
 # Getting started
 
@@ -158,7 +122,7 @@ A new project carries an `AGENTS.md`, the file Claude Code, Cursor and VS Code l
 
 ### And hands over the framework's own tools
 
-The project's MCP server is installed with it and registered for each of them. An agent adds an assembly, places it, and composes the page to see what it made, with no server started. `npx assemblejs check` holds the instructions to the version you installed, and `npx assemblejs add agents` rewrites them.
+The project's MCP server is installed with it and registered for each of them, and for Gemini CLI and opencode. An agent adds an assembly, places it, and composes the page to see what it made: any view while your dev server runs, plain HTML with nothing running. `npx assemblejs check` holds the instructions to the version you installed, and `npx assemblejs add agents` rewrites them.
 
 ### Ask for the common things by name
 
@@ -178,109 +142,91 @@ What is in each version of AssembleJS, newest first.
 
 ## 1.0.0-next.0
 
-### The first prerelease
+The first release of AssembleJS: server composition, framework renderers and a complete project toolchain.
 
-On the `next` channel, and everything the framework is, for the first time. It is versioned and not yet published: until it is, the registry has nothing for `npm create @assemblejs` to find.
+Everything the framework is, for the first time: pages composed on the server from assemblies written in any framework, a command line that takes a project from one assembly to a server, and an agent surface that knows the framework.
 
 ### The server
 
-A page places assemblies by name in its template, and the server composes them into one document. An assembly holds other assemblies, the way a page does. Every placement has a deadline and a fallback, so one slow assembly is not a slow page. An assembly can live on another server: give it a URL and nothing else changes. One can be left for the browser to fetch after the page has loaded, and a page can open one stream of live events that every assembly on it hears.
+- A page places assemblies by name in its template, and the server composes them into one document. An assembly holds other assemblies the way a page does.
+
+- Every placement has a deadline and a fallback, so one slow assembly is not a slow page. A placement declared required is the one way a page fails from a child.
+
+- An assembly can live on another server: give it a URL and nothing else changes. A server marked trusted receives the page's query; no other does.
+
+- A placement can be left for the browser to fetch after the page has loaded, and a page can open one stream of live events that every assembly on it hears.
+
+- How deep a page composes, and how many placements one request may make, are set in `assemblejs.config.ts`.
 
 ### The frameworks
 
-React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own. EJS, Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no package at all. Assemblies written in different frameworks talk through the page's event bus, with nothing in between.
+- React, Preact, Vue, Svelte, Solid and Lit, each in a package of its own.
+
+- EJS, Handlebars, Markdown, Nunjucks and Pug in one package, and plain HTML with no package at all.
+
+- Assemblies written in different frameworks talk through the page's event bus, with nothing in between.
 
 ### The command line
 
-`npm create @assemblejs` writes a project that runs. `add`, `dev`, `build`, `check`, `perf` and `deploy` take it from one assembly to a server you can put anywhere Node runs.
+- `npm create @assemblejs` writes a project that runs, with a tokens file every page links, the components HTML already has styled from it, and a dark scheme.
+
+- `add`, `dev`, `build`, `check`, `perf` and `deploy` take it from one assembly to a server you can put anywhere Node runs.
+
+- `check` reads every view for what it places and what it writes: a placement that would not render, a style attribute, an image with no alternative, a control with no name, a colour set outside the tokens, and a tokens file whose colours do not read.
 
 ### For an AI agent
 
-Every new project is written with an `AGENTS.md` and its own MCP server, installed and registered for Claude Code, Cursor and VS Code. That server reads the project, adds and places an assembly, renders a plain HTML one to show what it made, and checks the work against the framework's rules. It lists four prompts for the things a person asks for most, and carries no model and no key of its own.
+- Every new project is written with an `AGENTS.md` and its own MCP server, installed and registered for Claude Code, Cursor, VS Code, Gemini CLI and opencode.
+
+- That server reads the project, the assembly contract and every rule with its reason; adds and places an assembly; renders an assembly or composes a page, every kind of view, through the project's own dev server; and checks the work.
+
+- It lists four prompts for the things a person asks for most, and carries no model and no key of its own.
 
 # Documentation
 
 Source: [docs/index.html](docs/index.html)
 
-Start with the guide for the framework you already know. They all describe the same product; each one shows it in the idiom you write every day.
+Get started, learn a task, or find the answer to a problem.
 
-## Start here
+## Create your first application
 
-### [Installing](install.html)
+Start a working page, change its first assembly and add a framework.
 
-Node 22 or newer, one command, and a project that runs.
+- [Open the guide](install.html)
 
-### [Getting started](start.html)
+- A01 · Screenshot to capture
 
-Your first assembly, a second framework beside it, and what happens when one is slow.
+Your first application
 
-### [The tutorial](docs/tutorial.html)
+The generated application running from the released CLI.
 
-One project from nothing to a deployed server, nine steps, every file from the repository's own examples, its design document or its tests.
+- Reuses the guide’s result capture
 
-## Guides
+## Use AssembleJS
 
-### [For React developers](docs/react.html)
+- [Compose a complete page — Build assemblies, add data and connect events.](docs/tutorial.html)
 
-A component in a file whose name says React: props, data from a service, events, when it mounts, styles, the page.
+- [Use React — React views, hydration and page events.](docs/react.html)
 
-### [For Vue developers](docs/vue.html)
+- [Use Vue — Vue assemblies in a composed application.](docs/vue.html)
 
-A single-file component, the same product in Vue's idiom.
+- [Use Svelte — Svelte assemblies and shared page events.](docs/svelte.html)
 
-### [For Svelte developers](docs/svelte.html)
+- [Use Preact — A Preact view with its own renderer.](docs/preact.html)
 
-Svelte 5 and runes, the same product in Svelte's idiom.
+- [Use Solid — Solid assemblies and browser hydration.](docs/solid.html)
 
-### [For Preact developers](docs/preact.html)
+- [Use Lit — Web components inside a composed page.](docs/lit.html)
 
-A component in a file whose name says Preact, the same product in Preact's idiom.
+- [Use HTML and templates — Plain HTML, EJS, Markdown, Nunjucks, Handlebars or Pug.](docs/templates.html)
 
-### [For Solid developers](docs/solid.html)
+- [API reference — Generated from the published package entry points.](docs/api/index.html)
 
-A component compiled by Solid's own compiler, the same product in Solid's idiom.
+## Fix a problem
 
-### [For Lit developers](docs/lit.html)
+- [The project will not start — Check the runtime and project structure.](install.html#troubleshooting)
 
-A view that places your elements, rendered into declarative shadow roots on the server; the events arrive as a property.
-
-### [For template authors](docs/templates.html)
-
-EJS, Handlebars, Nunjucks, Pug and Markdown: one file, rendered on the server, no JavaScript unless a file beside it asks for some.
-
-## Reference
-
-### [API reference](docs/api/index.html)
-
-Every published entry point of the twelve packages, generated from the sources when the site deploys.
-
-## The model
-
-### assembly
-
-A piece of a page written in one UI framework: whole, addressable, renderable on its own. Nested inside another it is a subassembly. Given a URL, it lives on another server and nothing else about it changes.
-
-### page
-
-A route that renders a template which places assemblies. A page is an assembly that has a route.
-
-### service
-
-A function that runs on the server before an assembly renders and returns its data. The same function answers the assembly's data endpoint, so the two can never disagree.
-
-### api
-
-A route that serves data to anyone.
-
-## The contract
-
-### Three endpoints per assembly
-
-Content, data and manifest. Any server in any language can serve an assembly by answering those three correctly, which is what makes a second team cost nothing.
-
-### Nothing crosses to the browser but JSON
-
-A named projection of six fields. Not your request, not your headers, not your cookies, and never another assembly's rendered bytes.
+- [Report a reproducible problem — Include the package version and smallest example.](support.html)
 
 # The tutorial
 
@@ -292,7 +238,7 @@ One project, from nothing to a deployed server, in the order you would actually 
 
 ### `npm create @assemblejs shop`
 
-Writes a project that runs: a page, one assembly, a server file that will never grow, and a package.json whose one runtime dependency is `@assemblejs/core`, the command and the agent surface being development dependencies. Beside them, for an AI agent that opens the project: an `AGENTS.md` that says what the project is and the rules its code must satisfy, and the project's own MCP server registered for Claude Code, Cursor and VS Code.
+Writes a project that runs: a page, one assembly, a server file that will never grow, and a package.json whose one runtime dependency is `@assemblejs/core`, the command and the agent surface being development dependencies. Beside them, for an AI agent that opens the project: an `AGENTS.md` that says what the project is and the rules its code must satisfy, and the project's own MCP server registered for Claude Code, Cursor, VS Code, Gemini CLI and opencode.
 
 ### `cd shop && npm install && npm run dev`
 
@@ -461,7 +407,7 @@ export default defineConfig({
 });
 ```
 
-The same file sets `limits`, how deep composition goes and how many placements one request composes, when the defaults of 8 and 256 do not fit: `limits: { depth: 4, placements: 100 }`. A value outside its bounds refuses to boot.
+`src/tokens.css` holds the project's tokens, the colour roles, distances, type sizes and corners every assembly's stylesheet reads; every page links it first, and the look of the project is changed in that one place. `src/components.css` beside it styles the elements HTML already has, the button, the field, the list, the table, the notice and the dialog, each a class and the tokens, for every kind of view to use. The same file sets `limits`, how deep composition goes and how many placements one request composes, when the defaults of 8 and 256 do not fit: `limits: { depth: 4, placements: 100 }`. A value outside its bounds refuses to boot.
 
 ## 9. Ship it
 
@@ -505,7 +451,7 @@ export default function Cart({ data }: AssemblyProps) {
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; React leaves it alone when this component renders again. The name is written in place. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; React leaves it alone when this component renders again. The name is written in place. `check` reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
 
 ```
 import { Slot } from "@assemblejs/renderer-react/client";
@@ -669,7 +615,7 @@ defineProps<{ data: Record<string, unknown> }>();
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Vue leaves it alone when this component renders again. The name is written as a string. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Vue leaves it alone when this component renders again. The name is written as a string. `check` reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
 
 ```
 <script setup lang="ts">
@@ -829,7 +775,7 @@ Writes `src/assemblies/cart/cart.svelte` and nothing else. The extension says th
 
 ### An assembly inside this one
 
-`slot()` answers the markup that places another assembly, by name, whatever that assembly is written in, for Svelte's own raw form to write. The server puts the assembly there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when this component renders again. The name is written as a string. An assembly in a project has one view, so the second argument, which names one, is left out. Write nothing that came from a visitor with `{@html}`: it is markup there, and a directive in it is placed like one you wrote.
+`slot()` answers the markup that places another assembly, by name, whatever that assembly is written in, for Svelte's own raw form to write. The server puts the assembly there, and the page's runtime mounts it as it mounts this one; Svelte leaves it alone when this component renders again. The name is written as a string. `check` reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. An assembly in a project has one view, so the second argument, which names one, is left out. Write nothing that came from a visitor with `{@html}`: it is markup there, and a directive in it is placed like one you wrote.
 
 ```
 <script lang="ts">
@@ -998,7 +944,7 @@ export default function Cart({ data }: AssemblyProps) {
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Preact leaves it alone when this component renders again. The name is written in place. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Preact leaves it alone when this component renders again. The name is written in place. `check` reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
 
 ```
 import { Slot } from "@assemblejs/renderer-preact/client";
@@ -1191,7 +1137,7 @@ export default function Cart(props: AssemblyProps) {
 
 ### An assembly inside this one
 
-`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Solid leaves it alone when this component renders again. The name is written in place. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
+`Slot` places another assembly where it stands, by name, whatever that assembly is written in. The server puts it there, and the page's runtime mounts it as it mounts this one; Solid leaves it alone when this component renders again. The name is written in place. `check` reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. The slot is an element of its own, `<div data-assembly-slot="price">`, and the placed assembly stands inside it: lay it out by that element, never by what is inside. An assembly in a project has one view, so no `view` is given.
 
 ```
 import { Slot } from "@assemblejs/renderer-solid/client";
@@ -1369,7 +1315,7 @@ export default (props: AssemblyProps) => html`<p>cart ${Object.keys(props.data).
 
 ### An assembly inside this one
 
-`slot()` places another assembly where it stands in the view's template, by name. The server puts it there, and the page's runtime mounts it as it mounts this one. The name is written as a string. An assembly in a project has one view, so the second argument, which names one, is left out.
+`slot()` places another assembly where it stands in the view's template, by name. The server puts it there, and the page's runtime mounts it as it mounts this one. The name is written as a string. `check` reads this slot here and in each component of the project the view imports by a relative path; a slot inside a component that comes from a package is a render's alone, so nothing is decided about it before a request. An assembly in a project has one view, so the second argument, which names one, is left out.
 
 ```
 import { slot } from "@assemblejs/renderer-lit/client";
@@ -1809,3 +1755,53 @@ Every problem found without building, among them a template its engine cannot re
 ### `npx assemblejs build`
 
 Writes `dist/server.js` and the browser files. Production is `node dist/server.js` with no bundler.
+
+# Downloads
+
+Source: [downloads.html](downloads.html)
+
+AssembleJS is distributed through npm. Use Node.js 22 or newer.
+
+### Create an application
+
+Start with a working page and add the frameworks you need.
+
+```
+npm create @assemblejs@latest my-app
+cd my-app
+npm install
+npm run dev
+```
+
+- [Installation guide](install.html)
+
+### Add AssembleJS to a project
+
+Install the runtime, CLI and the renderers your application uses.
+
+```
+npm install @assemblejs/core
+npm install -D @assemblejs/cli
+```
+
+- [Framework guides](docs/index.html)
+
+# Support
+
+Source: [support.html](support.html)
+
+Get help with AssembleJS.
+
+## Send us the details
+
+Include your operating system, product version, the step you tried and what happened.
+
+- [Report a problem](https://github.com/ayers-software-repair/assemblejs/issues/new/choose)
+
+Remove passwords, access tokens and private content from logs or screenshots before sharing them.
+
+- [Installation — Choose the right package and complete setup.](install.html)
+
+- [Documentation — Follow the guide for the task you are working on.](docs/index.html)
+
+- [Get started — Reach your first working result.](start.html)

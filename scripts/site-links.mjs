@@ -21,6 +21,25 @@ const REGION = /<!-- links -->([\s\S]*?)<!-- \/links -->/;
 
 /** The anchors one page's region holds, in order, as one string joined by the page's `sep`. */
 export function renderLinks(manifest, page) {
+  // Product navigation stays identical across the site. Chapter navigation belongs to
+  // the manual; it no longer turns every page's footer into the complete contents list.
+  if (manifest.navigation) {
+    const here = posix.dirname(page.file);
+    return manifest.navigation
+      .map((entry) => {
+        const href = posix.relative(here === "." ? "" : here, entry.url);
+        const section =
+          page.file === "index.html" || page.file === "404.html"
+            ? null
+            : page.file === "downloads.html"
+              ? "downloads"
+              : page.file === "support.html"
+                ? "support"
+                : "docs";
+        return `<a href="${href}"${section === entry.section ? ' aria-current="page"' : ""}>${entry.title}</a>`;
+      })
+      .join("");
+  }
   const landing = manifest.pages.find((entry) => entry.file === "index.html");
   const here = posix.dirname(page.file);
   const href = (url) => posix.relative(here === "." ? "" : here, url) || url;

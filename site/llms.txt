@@ -1,17 +1,17 @@
 # AssembleJS
 
-> Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+> Compose React, Vue, Svelte and more into one application. Render assemblies on the server and connect them through page events.
 
-Build one application from UI assemblies written in React, Vue, Svelte and more. AssembleJS composes their HTML on the server and hydrates each in its own framework. Assemblies can live in your project or on another server; page events connect their interactions.
+Your frameworks. One application.
 
 Every link here is relative to this file. All of these pages are one file, [llms-full.txt](llms-full.txt).
 
 ## Docs
 
-- [Installing](install.html): AssembleJS needs Node 22 or newer and nothing else.
+- [Installing](install.html): Run an AssembleJS page, then add the frameworks you want to use.
 - [Getting started](start.html): An assembly is a piece of a page written in one framework.
 - [Release notes](release-notes.html): What is in each version of AssembleJS, newest first.
-- [Documentation](docs/index.html): Start with the guide for the framework you already know.
+- [Documentation](docs/index.html): Get started, learn a task, or find the answer to a problem.
 - [The tutorial](docs/tutorial.html): One project, from nothing to a deployed server, in the order you would actually do it.
 - [For React developers](docs/react.html): A React assembly is a component in a file whose name says it is React.
 - [For Vue developers](docs/vue.html): A Vue assembly is a single-file component.
@@ -21,6 +21,8 @@ Every link here is relative to this file. All of these pages are one file, [llms
 - [For Lit developers](docs/lit.html): A Lit assembly is a view, `cart.lit.ts`, a function from the assembly's props to a Lit template, and the elements it places are yours.
 - [For template authors](docs/templates.html): A template assembly is one file in EJS, Handlebars, Nunjucks, Pug or Markdown, rendered on the server by its own engine and nothing else; it ships no JavaScript unless a file beside it asks for some.
 - [API reference](docs/api/index.html): Every published entry point of the twelve packages, generated from the sources when the site deploys.
+- [Downloads](downloads.html): AssembleJS is distributed through npm.
+- [Support](support.html): Get help with AssembleJS.
 
 ## Optional
 

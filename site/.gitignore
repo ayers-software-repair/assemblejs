@@ -1,2 +1,5 @@
 /kit
 /docs/api
+
+# Generated from pages.json during deployment.
+/sitemap.xml

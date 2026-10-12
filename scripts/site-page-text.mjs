@@ -14,11 +14,13 @@ import { Window } from "happy-dom";
 const TEXT = 3;
 const ELEMENT = 1;
 // What holds other blocks and says nothing of its own.
-const CONTAINERS = new Set(["main", "section", "div", "header", "dl"]);
+const CONTAINERS = new Set(["main", "section", "div", "header", "dl", "article", "figure"]);
 // What stands inside a line of text.
-const INLINE = new Set(["a", "code", "span"]);
+const INLINE = new Set(["a", "code", "span", "strong", "b", "em", "small", "i"]);
 // What a page shows and a reader of text has no use for: its links, and its mark.
-const SKIPPED = new Set(["footer", "img"]);
+const SKIPPED = new Set(["footer", "img", "nav", "aside", "svg"]);
+const decorative = (node) =>
+  node.getAttribute("aria-hidden") === "true" || node.classList.contains("manual-location");
 
 const tagOf = (node) => node.tagName.toLowerCase();
 // Words as a line holds them: their white space one space.
@@ -42,13 +44,18 @@ function line(nodes, file, code = false) {
     }
     if (node.nodeType !== ELEMENT) continue;
     const tag = tagOf(node);
+    if (decorative(node) || SKIPPED.has(tag)) continue;
+    if (tag === "br") {
+      said += " ";
+      continue;
+    }
     if (!INLINE.has(tag)) {
       throw new Error(`${file}: <${tag}> inside a line of text has no way of being said here`);
     }
     const inner = line(node.childNodes, file, code || tag === "code");
     if (tag === "code") said += `\`${inner}\``;
     else if (tag === "a") said += `[${inner}](${fromRoot(node.getAttribute("href") ?? "", file)})`;
-    else said += inner;
+    else said += tag === "small" ? ` — ${inner}` : inner;
   }
   return said.trim();
 }
@@ -106,18 +113,34 @@ export function pageText(html, file) {
         }
         if (node.nodeType !== ELEMENT) continue;
         const tag = tagOf(node);
-        if (SKIPPED.has(tag)) continue;
+        if (SKIPPED.has(tag) || decorative(node)) continue;
         // A line of its own beside its siblings: one item of a list.
         if (INLINE.has(tag)) {
-          listed.push(`- ${line(node.childNodes, file)}`);
+          const said = line([node], file);
+          if (said) listed.push(`${tag === "strong" || tag === "b" ? "" : "- "}${said}`);
           continue;
         }
         if (listed.length > 0) blocks.push(listed.splice(0).join("\n"));
         if (CONTAINERS.has(tag)) walk(node);
-        else if (tag === "h1") blocks.push(`# ${line(node.childNodes, file)}`);
+        else if (tag === "ol" || tag === "ul") {
+          let number = 0;
+          for (const item of node.children) {
+            if (tagOf(item) !== "li") throw new Error(`${file}: <${tag}> contains a non-list item`);
+            const start = blocks.length;
+            const onlyInline = [...item.children].every(
+              (child) => INLINE.has(tagOf(child)) || decorative(child),
+            );
+            if (onlyInline) blocks.push(line(item.childNodes, file));
+            else walk(item);
+            const body = blocks.splice(start).join("\n\n").replace(/^- /, "");
+            blocks.push(`${tag === "ol" ? ++number + "." : "-"} ${body.replaceAll("\n", "\n  ")}`);
+          }
+        } else if (tag === "h1") blocks.push(`# ${line(node.childNodes, file)}`);
         else if (tag === "h2") blocks.push(`## ${line(node.childNodes, file)}`);
+        else if (tag === "h3") blocks.push(`### ${line(node.childNodes, file)}`);
         else if (tag === "dt") blocks.push(`### ${line(node.childNodes, file)}`);
-        else if (tag === "p") blocks.push(line(node.childNodes, file));
+        else if (tag === "p" || tag === "figcaption" || tag === "blockquote")
+          blocks.push(line(node.childNodes, file));
         else if (tag === "dd") blocks.push(...described(node, file));
         else if (tag === "pre") blocks.push(fenced(node.textContent));
         else throw new Error(`${file}: <${tag}> has no way of being said here`);
