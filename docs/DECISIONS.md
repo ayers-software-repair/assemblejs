@@ -5734,3 +5734,38 @@ each read at the source and its case watched red against the client entry as las
   a state; a key in the project's config is the other way. Either is a public surface, so it
   is his.
 - **The core's tarball is at 81,734 bytes of its 82,000** after this entry.
+
+## 2026-10-11: an attribute's value is text
+
+The audit's row on Solid (renderers.2), reproduced, and found to be the composer's defect and
+not the renderer's.
+
+- **What was claimed.** Solid leaves `<` unescaped in an attribute's value, so a visitor's
+  value containing `<assembly` or `<!--` breaks the assembly or empties it. True of Solid:
+  its server render escapes the quote and the ampersand there, which is all HTML asks.
+- **What was found.** The readers of a view's markup had no notion of a tag: a pattern looked
+  for a comment's opening, a raw-text element's, a directive's, wherever it stood. Measured
+  with markup any view could hold, whoever rendered it: `title="<!--"` or `title="<script>"`
+  and every placement after it was passed over in silence; `title="<assembly name=&quot;x&quot;>"`
+  and the view failed, "neither self-closing nor immediately closed"; and a whole directive in
+  a single-quoted value was placed, an assembly dispatched and its markup spliced into the
+  attribute. A view that writes a visitor's value raw places what the value names, which
+  DESIGN 7 says and guards; a view that wrote it escaped as its framework escapes it did the
+  same.
+- **The fix is where the reading is.** `inertSpans` visits every tag and marks what it holds
+  between its name and its end inert, as it marks a comment and a raw-text element, so every
+  reader that asks it (the directive finder, the open paragraph, the shadow root, the closing
+  tags of head and body, the envelopes a page links for) passes over a value. `tagEnd` finds
+  the end as the tokenizer does (html.spec.whatwg.org, parsing, "Before attribute name state"
+  to "Self-closing start tag state", read 2026-10-11): a `>` inside a quoted value is the
+  value's, and a quote opens a value only after an `=`. No renderer changes; Solid's output
+  is valid and is read as it is.
+- **`<template-card>` was a `<template>`** to the shadow root reader, the same word boundary
+  the raw-text elements had. It ends a name where every reader now does.
+- **The core's tarball budget moves from 82000 to 86000.** Measured at 82,328 bytes after this
+  entry. It stood at 76,842 when the audit began; what was added since is the audit's fixes:
+  the readers of markup read as the tokenizer does, the bounds on what a remote names, the
+  kept answer's ids, the mounted mark.
+- **Proof.** Nine cases watched red, then green, the Solid renderer's own among them: a
+  visitor's value in an attribute, rendered by Solid with its angle brackets, places nothing
+  and fails nothing.

@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ErrorBoundary, Suspense, createResource } from "solid-js";
 import { describe, expect, it } from "vitest";
+import { findPlacements } from "@assemblejs/core";
 import { renderToMarkup } from "@assemblejs/renderer-solid";
-import { useEvents } from "@assemblejs/renderer-solid/client";
+import { Slot, useEvents } from "@assemblejs/renderer-solid/client";
 import type { AssemblyProps } from "@assemblejs/renderer-solid";
 import { counterMarkup } from "../fixtures/counter-markup.js";
 import { Counter } from "../fixtures/counter.js";
@@ -29,6 +30,25 @@ describe("rendering a Solid assembly on the server", () => {
     expect(renderToMarkup(Outer, { data: {}, id: "a" })).toBe(OUTER_MARKUP);
     await Late.preload();
     expect(renderToMarkup(LateIsland, { data: {}, id: "a" })).toBe(LATE_MARKUP);
+  });
+
+  // Solid escapes the quote and the ampersand in an attribute's value, which is all HTML asks,
+  // so a value arrives there with its angle brackets. A value is text to the composer: read as
+  // markup, each of these failed the assembly or ended every placement after it.
+  it("writes a visitor's value into an attribute as text the composer places nothing from", () => {
+    const Noted = (props: AssemblyProps) => (
+      <div title={String(props.data["note"])}>
+        <Slot name="cart" />
+      </div>
+    );
+    for (const note of ['<assembly name="planted"></assembly>', "<!--", "<script>", "<p>"]) {
+      const html = renderToMarkup(Noted, { data: { note } });
+      expect(html, note).toContain("<");
+      expect(
+        findPlacements(`<div>${html}</div>`).map((placement) => placement.name),
+        note,
+      ).toEqual(["cart"]);
+    }
   });
 
   // Solid writes what it serializes for its own bootstrap as an inline script: the page's policy

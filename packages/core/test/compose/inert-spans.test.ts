@@ -61,6 +61,21 @@ describe("where markup is text the parser never reads as tags", () => {
     expect(inertAt("<title>a</title-bar>TAG</title>")).toBe(true);
   });
 
+  // What a tag holds between its name and its end is its attributes, and no value of one is
+  // markup: a comment's opening written in a title is the title.
+  it("is inside a tag, among its attributes, whatever a value of one looks like", () => {
+    expect(inertAt('<div title="TAG">x</div>')).toBe(true);
+    expect(inertAt("<div title='<p> TAG'>x</div>")).toBe(true);
+    expect(inertAt("<div data-x=TAG>x</div>")).toBe(true);
+    expect(inertAt('</div title="TAG">')).toBe(true);
+    for (const opener of ["<!--", "<script>", "<style>", "<textarea>", "<title>"]) {
+      expect(inertAt(`<div title="${opener}">x</div>TAG`), opener).toBe(false);
+      expect(inertAt(`<div title='${opener}'>x</div>TAG`), opener).toBe(false);
+    }
+    // And the text after the tag is live again, a bracket in a value having ended nothing.
+    expect(inertAt('<div title="a > b">TAG</div>')).toBe(false);
+  });
+
   // Measured before: sixteen thousand scripts took a second, and twice as many four times that.
   it("reads a template of sixty thousand raw-text elements in the time its length takes", () => {
     const html = `${"<script>1</script><style>a{}</style>".repeat(30_000)}TAG`;

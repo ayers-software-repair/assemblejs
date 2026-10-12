@@ -33,6 +33,27 @@ describe("finding placements in a template", () => {
     }
   });
 
+  // An attribute's value is text. Read as markup, a visitor's value that a renderer wrote into
+  // one (some escape only the quote there, as HTML allows) failed the assembly, placed what it
+  // named, or ended every placement after it in silence.
+  it("reads nothing in an attribute's value as a directive, a comment or a raw-text element", () => {
+    for (const element of [
+      '<div title="<assembly name=&quot;x&quot;>">ok</div>',
+      `<div title='<assembly name="x"></assembly>'>ok</div>`,
+      '<div title="<!--">ok</div>',
+      '<a title="<script>">ok</a>',
+      "<input value='<textarea>'>",
+      '<span title="<p>">ok</span>',
+      "<span title='<template shadowrootmode=\"open\">'>ok</span>",
+    ]) {
+      const template = `${element}<assembly name="cart"></assembly>`;
+      expect(
+        findPlacements(template).map((placement) => placement.name),
+        element,
+      ).toEqual(["cart"]);
+    }
+  });
+
   // A script does not end at its first end tag where a script is written inside a comment
   // inside it. Read as ending there, the placement after it was dispatched into the script.
   it("finds no placement in what the browser still reads as a script's text", () => {

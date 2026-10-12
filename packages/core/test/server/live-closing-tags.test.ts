@@ -15,6 +15,11 @@ describe("finding the closing tags a browser would read as tags", () => {
     expect(liveClosingTags(html, /<\/head\s*>/gi)).toEqual([html.length - "</head>".length]);
   });
 
+  it("passes over one written in an attribute's value", () => {
+    const html = "<body data-note=\"</body>\"><p title='</body>'>x</p></body>";
+    expect(liveClosingTags(html, /<\/body\s*>/gi)).toEqual([html.length - "</body>".length]);
+  });
+
   it("finds every one, in order, whatever its case and spacing", () => {
     expect(liveClosingTags("</BODY ></body>", /<\/body\s*>/gi)).toEqual([0, 8]);
   });

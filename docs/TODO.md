@@ -20,10 +20,11 @@ the server's rows are done, and so are the readers of markup (composer.2, compos
 trust.5, trust.7, and three the seat found there), a kept answer's one envelope id
 (composer.3, client.2, server.8) and what one remote answer makes the server fetch and keep
 (trust.6), and the browser runtime's (client.1, client.5, client.6, client.7; client.4 is a
-gap in the public surface and is the owner's). Next, already read with the frameworks' own
-documentation: the renderers' (an id of its own for each island's `useId`, which React, Vue
-and Svelte take as a prefix and Preact has no way to be given, and Solid's unescaped `<`);
-then the verbs', `check`'s rules, the agent surface's and the tests', then the minors. Then the
+gap in the public surface and is the owner's), and an attribute's value read as markup
+(renderers.2). Next, already read with the frameworks' own documentation: an id of its own
+for each island's `useId` (renderers.1), which React, Vue and Svelte take as a prefix and
+Preact has no way to be given; then the verbs', `check`'s rules, the agent surface's and the
+tests', then the minors. Then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -44,16 +45,16 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the mark that
-says an assembly is live is written when it is (DECISIONS 2026-10-11, of that name), the
-browser runtime's rows; its proof here is the suites, and the `browser proof` job of its
-`ci` run is the one that draws it. Beneath it `8aa4c0c`, a kept answer is its placement's
-own, and what a remote names is bounded (`ci` 38199938079, all five jobs green). Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
-markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all
-five jobs green); and `da3c17d` (`ci` 38197595850, all five green), the first green verify
-since the audit began and the one that judged every bite before it at once. The core's
-tarball is at 81,734 bytes of 82,000: the next bite that adds to the core moves the budget
-with its measure. It had been red
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: an attribute's
+value is text (DECISIONS 2026-10-11, of that name), the audit's row on Solid, which was the
+composer's. Beneath it `b8a6414`, the mark that says an assembly is live is written when it is
+(`ci` 38200554270, whose `browser proof` job is the one that draws it). The core's tarball
+budget is 86000, moved from 82000 at a measured 82,328. Beneath it `8aa4c0c`, a kept answer is
+its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
+Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
+markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all five
+jobs green); and `da3c17d` (`ci` 38197595850, all five green), the first green verify since the
+audit began and the one that judged every bite before it at once. It had been red
 three ways on the way: another seat's emoji gate (`aecf034`, fixed by it in `d82714c`; its
 pages are its own), and two of this seat's own that the gate had hidden, a case of the command
 line's suite that read who ran it (`5ea3db0`) and a character written into a core spec where
@@ -1527,9 +1528,15 @@ The renderers:
 - [ ] React, Preact, Vue and Svelte renderers ignore the placement id, so useId / $props.id() ids
       collide across assemblies on one page (workflow renderers.1, major). Claimed at
       `packages/renderer-react/src/server/render-to-markup.ts:27`. PREMISE UNVERIFIED
-- [ ] Solid leaves '<' unescaped in attribute values, so visitor data containing '<assembly' or
+- [x] Solid leaves '<' unescaped in attribute values, so visitor data containing '<assembly' or
       '<!--' breaks or silently empties the assembly (workflow renderers.2, major). Claimed at
-      `packages/renderer-solid/src/server/render-to-markup.ts:35`. PREMISE UNVERIFIED
+      `packages/renderer-solid/src/server/render-to-markup.ts:35`. PREMISE UNVERIFIED. REPRODUCED by
+      the seat, and found to be the composer's: the readers of a view's markup read a tag's
+      attributes as markup, whoever rendered them. `title="<!--"` ended every placement after it in
+      silence, a directive's text in a value failed the view, and a whole directive in a
+      single-quoted value was placed. DONE 2026-10-11: what a tag holds between its name and its end
+      is inert to every reader (`inertSpans`, by `tagEnd`), and Solid's own suite proves a visitor's
+      value in an attribute places nothing (DECISIONS 2026-10-11, "an attribute's value is text").
 - [ ] The Renderer / RenderInput contract in DESIGN 7 is consumed by nothing; helpers and url are
       never supplied (workflow renderers.6, minor). Claimed at
       `packages/core/src/renderer/render-input.ts:13`. PREMISE UNVERIFIED

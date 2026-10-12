@@ -21,4 +21,8 @@ describe("where a template stands inside an element's own declarative shadow roo
     expect(inside('<!-- <template shadowrootmode="open"> --> |')).toBe(false);
     expect(inside('<template shadowrootmode="open"><template></template>|</template>')).toBe(true);
   });
+
+  it("is not inside an element whose name only begins like a template's", () => {
+    expect(inside('<template-card shadowrootmode="open">|</template-card>')).toBe(false);
+  });
 });

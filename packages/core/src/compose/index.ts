@@ -23,6 +23,7 @@ export { cacheKey } from "./cache-key.js";
 export { carriesCredential } from "./carries-credential.js";
 export { inertSpans } from "./inert-spans.js";
 export { scriptEnd } from "./script-end.js";
+export { tagEnd } from "./tag-end.js";
 export { withinSpans } from "./within-spans.js";
 export { findPlacements } from "./find-placements.js";
 export { openParagraphs } from "./open-paragraphs.js";

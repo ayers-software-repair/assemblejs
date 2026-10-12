@@ -1,11 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { TAG_NAME_END } from "../vocab/tag-name-end.js";
 import { inertSpans } from "./inert-spans.js";
 import { withinSpans } from "./within-spans.js";
 
 // A declarative shadow root opens with a template that names its mode; any template closes with
 // the same end tag, so the depth is counted and only the roots among them count.
-const TEMPLATE = /<(\/?)template\b([^>]*)>/gi;
+const TEMPLATE = new RegExp(`<(/?)template(?=${TAG_NAME_END})([^>]*)>`, "gi");
 const SHADOW_ROOT = /\sshadowrootmode\s*=/i;
 
 /**
