@@ -5,6 +5,7 @@
 
 export { PLACEMENT_ELEMENT } from "./placement-element.js";
 export { SEGMENT_PATTERN } from "./segment-pattern.js";
+export { TAG_NAME_END } from "./tag-name-end.js";
 export { SEGMENT } from "./segment.js";
 export { ENVELOPE_ELEMENT } from "./envelope-element.js";
 export { ENVELOPE_ATTRIBUTE } from "./envelope-attribute.js";

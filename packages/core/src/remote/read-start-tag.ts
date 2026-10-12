@@ -1,10 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { TAG_NAME_END } from "../vocab/tag-name-end.js";
 import type { ScannedAttribute } from "./scanned-attribute.js";
 import type { ScannedTag } from "./scanned-tag.js";
 
 const SPACE = /[\t\n\f\r ]/;
-const NAME_END = /[\t\n\f\r />]/;
+const NAME_END = new RegExp(TAG_NAME_END);
 const ATTRIBUTE_NAME_END = /[\t\n\f\r />=]/;
 const UNQUOTED_END = /[\t\n\f\r >]/;
 // Characters the browser accepts in these places with a parse error. Each is a place where a

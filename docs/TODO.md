@@ -16,11 +16,12 @@ then Phase 6 below, a row for every finding. The order of work, and where it sta
 blockers, each with a spec watched red first, DONE; the dev loop and the build's resolver,
 DONE; the starter, done but for its `tsconfig.json` and its guide link, which is the owner's;
 the workflow's majors, each read at the source and reproduced before it is believed, IN HAND:
-the server's rows are done, and the readers of markup are the commit this block is pushed
-with (composer.2, composer.4, trust.4, trust.5, trust.7, and two the seat found in the remote
-scanner). Next: what one remote answer makes the server fetch and keep (trust.6), with a
-cached answer's one envelope id (composer.3, server.8); then the renderers', the agent
-surface's, `check`'s rules, the verbs', the docs and the tests, then the minors; then the
+the server's rows are done, and so are the readers of markup (composer.2, composer.4, trust.4,
+trust.5, trust.7, and three the seat found there). Next, each already read at the source: a
+kept answer's one envelope id (composer.3, client.2, server.8) with what one remote answer
+makes the server fetch and keep (trust.6); the mounted mark, written before a lazy module
+mounts (client.1); then the renderers', the verbs', `check`'s rules, the agent surface's and
+the tests', then the minors. docs.2 names a page of the site seat's and is routed, not edited; then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -41,10 +42,12 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: markup is read as
-the browser reads it, in the time its length takes (DECISIONS 2026-10-11, of that name). `next`
-WAS GREEN BENEATH IT at `da3c17d` (`ci` 38197595850, all five jobs), the first green verify
-since the audit began and the one that judged every bite before this at once. It had been red
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a script ends
+where the tokenizer ends it (DECISIONS 2026-10-11, of that name), the row the commit beneath
+it left open. Beneath it `7a0abd6`, markup is read as the browser reads it, in the time its
+length takes (`ci` 38198739275, all five jobs green), and beneath that `da3c17d` (`ci`
+38197595850, all five green), the first green verify since the audit began and the one that
+judged every bite before it at once. It had been red
 three ways on the way: another seat's emoji gate (`aecf034`, fixed by it in `d82714c`; its
 pages are its own), and two of this seat's own that the gate had hidden, a case of the command
 line's suite that read who ran it (`5ea3db0`) and a character written into a core spec where
@@ -1365,12 +1368,15 @@ Trust and security:
 - [x] An element named `constructor` in a remote's answer throws inside the scanner (the seat,
       2026-10-11, `remote/start-tag-refusal.ts`): the table of containers was an object asked by
       the tag's name. REPRODUCED AND DONE 2026-10-11: it is a map (the same entry).
-- [ ] A script is ended at its first end tag by `inertSpans`; the tokenizer does not end one there
-      when a `<script` stands inside a `<!--` inside it (the seat, 2026-10-11). Read short, what
-      the browser still reads as that script's text is read as live markup: a directive written
-      there is found and dispatched, and the assembly's markup is put inside the script, which is
-      the case the inert reading exists to prevent. No placement is dropped by it. A remote's
-      answer with a comment in a script is refused already.
+- [x] A script is ended at its first end tag by `inertSpans`; the tokenizer does not end one there
+      when a `<script` stands inside a `<!--` inside it (the seat, 2026-10-11). Read short, what the
+      browser still reads as that script's text is read as live markup: a directive written there is
+      found and dispatched, and the assembly's markup is put inside the script, which is the case
+      the inert reading exists to prevent. No placement is dropped by it. A remote's answer with a
+      comment in a script is refused already. REPRODUCED in a spec: the placement was found and
+      dispatched. DONE 2026-10-11: `scriptEnd` reads a script by the tokenizer's three ways of
+      reading it, and `inertSpans` asks it (DECISIONS 2026-10-11, "a script ends where the tokenizer
+      ends it").
 
 The server:
 

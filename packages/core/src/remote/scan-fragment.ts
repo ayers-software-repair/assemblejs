@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
+import { TAG_NAME_END } from "../vocab/tag-name-end.js";
 import { OpenElements } from "./open-elements.js";
 import { readStartTag } from "./read-start-tag.js";
 import type { ScannedTag } from "./scanned-tag.js";
@@ -30,7 +31,7 @@ const STAY_MATH = new Set(["mglyph", "malignmark"]);
 // An end tag, read from where it stands.
 const END_TAG = /<\/([a-zA-Z][^\t\n\f\r />]*)[\t\n\f\r ]*>/y;
 // Where the text of each raw-text element ends: at the start of its own end tag.
-const rawEnd = (name: string): RegExp => new RegExp(`</${name}[\\t\\n\\f\\r />]`, "gi");
+const rawEnd = (name: string): RegExp => new RegExp(`</${name}${TAG_NAME_END}`, "gi");
 const RAW_END: ReadonlyMap<string, RegExp> = new Map(
   [...RAW_TEXT].map((name) => [name, rawEnd(name)]),
 );

@@ -5623,3 +5623,28 @@ standing in the scanner. What the browser does is read from the parser's specifi
   added to the remote fixture's hostile page (an answer that hides markup, and one tens of
   thousands of elements deep) against that page served by a build of the core from before
   the fix. The samples whose refusal changed were each run against that build too.
+
+## 2026-10-11: a script ends where the tokenizer ends it
+
+The row the entry above left open, closed in the next commit: it was left as one that drops no
+placement, which is true and is not the risk. The reviewer of that bite named the risk the
+other way round, and a spec showed it: in
+`<script><!-- <script> </script><assembly name="cart"></assembly> --></script>` the placement
+was found and dispatched, and its markup would have been put inside the script, the case the
+inert reading exists to prevent.
+
+- **What the tokenizer does**, read from its states (html.spec.whatwg.org, parsing, "Script
+  data state" to "Script data double escape end state", read 2026-10-11). A script's text is
+  read one of three ways. As written: its own end tag ends it, and `<!--` begins the second.
+  Escaped: two or more dashes and a `>` return to the first, the opening dashes of `<!--`
+  among them, so `<!-->` escapes nothing; its own end tag still ends the script; and
+  `<script` followed by what ends a tag's name begins the third. Escaped twice: its own end
+  tag only returns to the second, and the dashes return to the first.
+- **`scriptEnd`** reads that, a pattern for each of the three read in place, and `inertSpans`
+  asks it for a script where it asks for the first end tag of a style, a textarea or a title.
+  Twenty cases written from the states before the code, one of which the code corrected:
+  `</script -->` inside a script escaped twice ends the second escape and then the first.
+- **Where a tag's name ends is written once.** `TAG_NAME_END`, a character class as a
+  pattern's source, read by `inertSpans`, `scriptEnd`, the fragment scanner and its start tag
+  reader, which each had their own spelling of it.
+- A remote's answer with a comment in a script is still refused whole; nothing there changes.

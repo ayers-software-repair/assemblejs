@@ -33,6 +33,15 @@ describe("finding placements in a template", () => {
     }
   });
 
+  // A script does not end at its first end tag where a script is written inside a comment
+  // inside it. Read as ending there, the placement after it was dispatched into the script.
+  it("finds no placement in what the browser still reads as a script's text", () => {
+    const template =
+      '<script><!-- <script> </script><assembly name="cart"></assembly> --></script>' +
+      '<assembly name="live"></assembly>';
+    expect(findPlacements(template).map((placement) => placement.name)).toEqual(["live"]);
+  });
+
   it("reads a long template with no placement in it without reading it for anything else", () => {
     const template = "<script>1</script><p>x</p>".repeat(60_000);
     const started = performance.now();
