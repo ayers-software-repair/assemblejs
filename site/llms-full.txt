@@ -1770,7 +1770,7 @@ Source: [downloads.html](downloads.html)
 
 AssembleJS is distributed through npm. Use Node.js 22 or newer.
 
-### Create an application
+## Create an application
 
 Start with a working page and add the frameworks you need.
 
@@ -1783,7 +1783,7 @@ npm run dev
 
 - [Installation guide](install.html)
 
-### Add AssembleJS to a project
+## Add AssembleJS to a project
 
 Install the runtime, CLI and the renderers your application uses.
 
