@@ -16,6 +16,7 @@ import {
 import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
 import { agentProblems } from "../agents/agent-problems.js";
 import { buildProblems } from "../build/build-problems.js";
+import { componentProblems } from "../build/component-problems.js";
 import { templateProblems } from "../build/template-problems.js";
 import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverApis } from "../discovery/discover-apis.js";
@@ -87,6 +88,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     ...apis.problems,
     ...buildProblems(root, assemblies.assemblies),
     ...(await templateProblems(root, assemblies.assemblies)),
+    ...(await componentProblems(root, assemblies.assemblies)),
     ...views.problems,
     ...viewProblems(root, assemblies.assemblies, placeable),
     ...tokenProblems(root),

@@ -6575,3 +6575,32 @@ third is a decision and is the owner's.
   built by the built command line, and the shadow example served and read: six envelopes, six
   shadow roots, six shadow stylesheets linked, none failed, which is `shadow` read true of a
   React, a Preact, a Solid, a Lit, a Svelte and a Vue view through the new reader.
+
+## 2026-10-12: check compiles the views a build would
+
+The row left from check-rules.5: a Vue or a Svelte view that does not parse is passed over by
+`check`, and the build refuses it. Watched: with the new reading taken out of `check`, a
+project whose one Svelte view holds `<p>{</p>` is answered with no problem at all.
+
+- **Taken back from the owner.** The seat left this to him earlier today for want of a rule to
+  say it under, calling a rule's sentence DESIGN's. It is not: no page of DESIGN or of the
+  site carries a rule's sentence, and what the rule holds is already DESIGN's and the
+  build's, that `check` never answers clean for a project `build` would refuse. The rule for
+  a view that does not compile, `a-template-view-compiles`, keeps its id and is worded for
+  every view a compiler reads, a template language's or a Svelte or Vue component's.
+- **What `check` does.** Each Svelte and Vue view is compiled once, for the server, with the
+  compiler the build would compile it with, and one that throws is a problem at the view, with
+  what the compiler said on one line and the line it said it of, read as the bundler's report
+  reads it. Without the compiler there is nothing to compile with, which is already a problem
+  of its own; a view that leads out of the project is not opened.
+- **The build does not ask this.** It meets the same refusal in the bundler, at the view since
+  earlier today, and asking first would compile every Svelte and Vue view twice in each build.
+- **A project made before this is told so.** A rule's sentence is one of those a project's
+  `AGENTS.md` carries, so `check` in such a project says its instructions are not the ones
+  this version writes, and `add agents` rewrites that part. That is what the check is for.
+- **Proof.** The case red with the reading taken out of `check`, an empty answer for a broken
+  view, and green with it. Every cheap gate green; the command line's 820 cases. The built
+  `check` over the frameworks example with two views added and taken out again names
+  `zz-broken-s.svelte` and `zz-broken-v.vue`, each at line 2, and exits 1; over every example
+  and the showcase's four projects as they are, it says no problems. The command line's
+  tarball is at 100,170 bytes of its 102,000.

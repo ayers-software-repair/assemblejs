@@ -52,8 +52,9 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the modules the
-build generates type-check (DECISIONS 2026-10-12, of that name). Beneath it `0776296`, a view
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: check compiles
+the views a build would (DECISIONS 2026-10-12, of that name). Beneath it `97e7a9d`, the
+modules the build generates type-check (`ci` 38225198057). Beneath it `0776296`, a view
 its compiler refuses is reported at the view (`ci` 38222121545, all five jobs green). Beneath
 it `ebdaa27`, the gates are held to what they say, four rows of the gates, the tests and the
 READMEs (`ci` 38221521004). Beneath it `736af62`, a project is made where nothing is written over, three rows
@@ -1716,14 +1717,13 @@ The rules `check` names:
       2026-10-12: `declaredOrigins` says whether it read every remote, and a placement's origin is
       not judged where it did not (DECISIONS 2026-10-12, "check reads what it misread, and names a
       file it cannot read").
-- [ ] A Vue or a Svelte view that does not parse is passed over by `check`, which has neither
+- [x] A Vue or a Svelte view that does not parse is passed over by `check`, which has neither
       compiler: the build refuses it and `check` says nothing (the seat, 2026-10-12, left from
-      workflow check-rules.5, minor). To settle: whether `check` asks the project's own compiler,
-      as it asks the project's own Pug. READ AGAIN 2026-10-12: the build now names the view and the
-      line, and `check` could ask the same compilers. What it found needs a rule to be said
-      under, and `a-template-view-compiles` is worded for the template languages: THE OWNER'S TO
-      SETTLE, a rule's sentence being DESIGN's; the seat's advice is to widen that rule to every
-      view a compiler reads
+      workflow check-rules.5, minor). WATCHED, and left to the owner for a morning for want of a
+      rule, wrongly: a rule's sentence is in no page of DESIGN. DONE 2026-10-12: `check` compiles
+      each with the project's own compiler and names one it refuses, with the line, under
+      `a-template-view-compiles`, worded now for every view a compiler reads
+      (DECISIONS 2026-10-12, "check compiles the views a build would")
 
 The agent surface:
 

@@ -144,10 +144,11 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: "a-template-view-compiles",
-    rule: "A view written in a template language compiles in that language before anything is built or served.",
+    rule: "A view its own compiler reads, one written in a template language or a Svelte or Vue component, compiles before anything is built or served.",
     because:
-      "A template its engine cannot read fails on its first render, where the placement falls back and a visitor sees the fallback before the author sees the error. build and check compile every template view with the project's own engine, so the error is found at the desk and names the file.",
-    smell: "An unclosed block or tag in an .ejs, .hbs, .njk or .pug view that build accepted.",
+      "A template its engine cannot read fails on its first render, where the placement falls back and a visitor sees the fallback before the author sees the error. build and check compile every template view with the project's own engine, and check every Svelte and Vue view with the project's own compiler as build does, so the error is found at the desk and names the file, and check never answers clean for a view build would refuse.",
+    smell:
+      "An unclosed block or tag in an .ejs, .hbs, .njk or .pug view that build accepted, or a .svelte or .vue view check passed and build refused.",
   },
   {
     id: "policy-names-a-placement",

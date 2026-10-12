@@ -6,7 +6,8 @@ import { checkProject } from "./check-project.js";
 /**
  * The `check` verb: every problem `checkProject` finds, one per line with its file, what is
  * wrong, its rule and its fix, and exit 1 when there is any. Nothing is built or started;
- * template views are compiled, with the project's own engines, and nothing is written.
+ * template views, and Svelte and Vue views, are compiled with the project's own engines and
+ * compilers, and nothing is written.
  */
 export async function runCheck(root: string, io: Io): Promise<number> {
   const problems = await checkProject(root);
