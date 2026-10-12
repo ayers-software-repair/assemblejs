@@ -17,15 +17,17 @@ const ASSETS = "/_assemblejs/assets";
 const view = (markup: string | (() => string | Promise<string>)) => ({
   default: { renderer: "html", markup: typeof markup === "string" ? () => markup : markup },
 });
-const assets = mkdtempSync(join(tmpdir(), "outline-"));
-copyFileSync(
-  fileURLToPath(new URL("../packages/core/dist/client/index.js", import.meta.url)),
-  join(assets, "runtime.js"),
-);
-// A browser half that counts presses, so a mounted assembly is seen to be live.
-writeFileSync(
-  join(assets, "app.js"),
-  `import { start } from "./runtime.js";
+/** The built browser files of a project, written for one run of this file's hooks. */
+const build = (): string => {
+  const assets = mkdtempSync(join(tmpdir(), "outline-"));
+  copyFileSync(
+    fileURLToPath(new URL("../packages/core/dist/client/index.js", import.meta.url)),
+    join(assets, "runtime.js"),
+  );
+  // A browser half that counts presses, so a mounted assembly is seen to be live.
+  writeFileSync(
+    join(assets, "app.js"),
+    `import { start } from "./runtime.js";
 start({ renderers: { html: { mount(element) {
   const button = element.querySelector("button");
   const press = () => { button.textContent = "pressed"; };
@@ -33,11 +35,13 @@ start({ renderers: { html: { mount(element) {
   return { unmount: () => button?.removeEventListener("click", press) };
 } } } });
 `,
-);
-writeFileSync(
-  join(assets, "site.css"),
-  "body{margin:0;font:16px/1.5 sans-serif}section{margin:16px;padding:16px;background:#eee}",
-);
+  );
+  writeFileSync(
+    join(assets, "site.css"),
+    "body{margin:0;font:16px/1.5 sans-serif}section{margin:16px;padding:16px;background:#eee}",
+  );
+  return assets;
+};
 const live = { css: [], js: [`${ASSETS}/app.js`] };
 const assemblies = [
   defineAssembly({ name: "badge", mount: "none", views: view("<b>3 items</b>") }),
@@ -51,7 +55,7 @@ const assemblies = [
     assets: live,
     views: view('<section><h2>Cart</h2><button type="button">Press</button></section>'),
   }),
-  defineAssembly({ name: "kept", mount: "none", views: view("<section>Kept</section>") }),
+  defineAssembly({ name: "prices", mount: "none", views: view("<section>Prices</section>") }),
   defineAssembly({
     name: "later",
     assets: live,
@@ -69,6 +73,13 @@ const assemblies = [
     shadow: true,
     views: view("<section>In a shadow root</section>"),
   }),
+  // An assembly whose view holds two others at its top, with nothing around them.
+  defineAssembly({ name: "row", mount: "none", views: view("<section>Row</section>") }),
+  defineAssembly({
+    name: "stack",
+    mount: "none",
+    views: view('<assembly name="row"></assembly><assembly name="row"></assembly>'),
+  }),
 ];
 const pages = [
   {
@@ -76,16 +87,17 @@ const pages = [
     template:
       '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>outline</title></head><body>' +
       '<assembly name="shell"></assembly><main><assembly name="cart"></assembly>' +
-      '<assembly name="kept"></assembly><assembly name="later"></assembly>' +
-      '<assembly name="broken"></assembly><assembly name="walled"></assembly></main></body></html>',
+      '<assembly name="prices"></assembly><assembly name="later"></assembly>' +
+      '<assembly name="broken"></assembly><assembly name="walled"></assembly>' +
+      '<assembly name="stack"></assembly></main></body></html>',
     place: {
-      kept: { cache: { ttl: 60_000 } },
+      prices: { cache: { ttl: 60_000 } },
       later: { defer: true },
       broken: { fallback: "<section>Unavailable</section>" },
     },
   },
 ];
-const serve = (outline: boolean): Promise<App> =>
+const serve = (assets: string, outline: boolean): Promise<App> =>
   createServer({
     config: { mode: "production", host: "127.0.0.1", port: 0, auth: undefined },
     assemblies,
@@ -96,14 +108,16 @@ const serve = (outline: boolean): Promise<App> =>
     log: () => undefined,
   });
 
+let assets = "";
 let shown: App | undefined;
 let plain: App | undefined;
 let page = "";
 let without = "";
 
 test.beforeAll(async () => {
-  shown = await serve(true);
-  plain = await serve(false);
+  assets = build();
+  shown = await serve(assets, true);
+  plain = await serve(assets, false);
   page = (await shown.listen()).url;
   without = (await plain.listen()).url;
 });
@@ -154,7 +168,7 @@ test("a page with its outline off until asked is drawn under the default policy,
   const before = await layout(browser);
 
   await outline.getByRole("button", { name: "Outline" }).click();
-  await expect(outline.locator(".frame")).toHaveCount(7);
+  await expect(outline.locator(".frame")).toHaveCount(10);
   expect(await layout(browser)).toBe(before);
   // No envelope gained a thing: the outline reads the page and writes only its own element.
   expect(
@@ -176,12 +190,13 @@ test("each box stands where its assembly does, and says what answered it and whe
   await outline.getByRole("button", { name: "Outline" }).click();
   const chip = (name: string) => outline.locator(".chip").filter({ hasText: name });
   await expect(chip("cart")).toContainText("live");
-  await expect(chip("kept")).toContainText("kept");
+  await expect(chip("prices")).toContainText("kept");
   await expect(chip("later")).toContainText(/deferred, [\d.]+ m?s, live/);
   await expect(chip("broken")).toContainText("fallback");
   await expect(chip("badge")).toBeVisible();
 
-  // A frame for each, against the element at the top of what the assembly shows.
+  // A frame for each, against the box of what the assembly shows at its top: one element, or
+  // for an assembly that holds two others and nothing else, the two of them together.
   const frames = await Promise.all(
     (await outline.locator(".frame").all()).map((frame) => frame.boundingBox()),
   );
@@ -189,12 +204,23 @@ test("each box stands where its assembly does, and says what answered it and whe
     'assembly-root[data-name="cart"] > section',
     'assembly-root[data-name="shell"] > header',
     'assembly-root[data-name="walled"] section',
+    'assembly-root[data-name="stack"] section',
   ]) {
-    const want = await browser.locator(held).boundingBox();
+    const boxes = await Promise.all(
+      (await browser.locator(held).all()).map((element) => element.boundingBox()),
+    );
+    const sides = boxes.flatMap((box) => (box === null ? [] : [box]));
+    const x = Math.min(...sides.map((box) => box.x));
+    const y = Math.min(...sides.map((box) => box.y));
+    const want = {
+      x,
+      y,
+      width: Math.max(...sides.map((box) => box.x + box.width)) - x,
+      height: Math.max(...sides.map((box) => box.y + box.height)) - y,
+    };
     const around = frames.some(
       (frame) =>
         frame !== null &&
-        want !== null &&
         (["x", "y", "width", "height"] as const).every(
           (side) => Math.abs(frame[side] - want[side]) <= 1,
         ),
@@ -219,7 +245,7 @@ test("a visitor's choice holds from page to page, and the page beneath is used a
     "aria-pressed",
     "true",
   );
-  await expect(outline.locator(".frame")).toHaveCount(7);
+  await expect(outline.locator(".frame")).toHaveCount(10);
   // A frame takes no click: the assembly inside it does.
   const press = browser.locator('assembly-root[data-name="cart"] button');
   await expect(browser.locator('assembly-root[data-name="cart"]')).toHaveAttribute(

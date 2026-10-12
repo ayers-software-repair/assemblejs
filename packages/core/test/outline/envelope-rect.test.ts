@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { envelopeRect } from "@assemblejs/core/outline";
 
 /** A box as a browser that lays a page out would answer it. */
@@ -20,6 +20,8 @@ const envelope = (own: readonly DOMRect[], children: readonly DOMRect[]): Elemen
   }
   return element;
 };
+
+afterEach(() => vi.restoreAllMocks());
 
 describe("the box an assembly takes on the screen", () => {
   // Around a block, a browser answers an envelope's own box as the whole line the block stands
@@ -52,6 +54,33 @@ describe("the box an assembly takes on the screen", () => {
       width: 20,
       height: 10,
     });
+  });
+
+  // An assembly placed at the top of another's view is an envelope too, and its own box is its
+  // line: the parent was boxed as wide as the page around a child that is not.
+  it("measures an envelope it holds by what that one holds in its turn", () => {
+    const child = envelope([none, box(0, 40, 960, 132), none], [box(16, 40, 928, 132)]);
+    const parent = envelope([none, box(0, 40, 960, 132), none], []);
+    parent.append(child);
+    expect(envelopeRect(parent)).toEqual({ left: 16, top: 40, width: 928, height: 132 });
+  });
+
+  it("measures anything else laid out as a run of text the same way, and a block by its own box", () => {
+    const element = envelope([], []);
+    document.body.replaceChildren(element);
+    const run = document.createElement("span");
+    vi.spyOn(run, "getBoundingClientRect").mockReturnValue(box(0, 0, 960, 80));
+    const inside = document.createElement("div");
+    vi.spyOn(inside, "getBoundingClientRect").mockReturnValue(box(20, 0, 300, 80));
+    run.append(inside);
+    const block = document.createElement("div");
+    vi.spyOn(block, "getBoundingClientRect").mockReturnValue(box(20, 90, 500, 30));
+    block.append(document.createElement("p"));
+    element.append(run, block);
+    vi.spyOn(window, "getComputedStyle").mockImplementation(
+      (asked) => ({ display: asked === run ? "inline" : "block" }) as CSSStyleDeclaration,
+    );
+    expect(envelopeRect(element)).toEqual({ left: 20, top: 0, width: 500, height: 120 });
   });
 
   it("measures inside a shadow root, where the envelope has one", () => {

@@ -6038,3 +6038,30 @@ a margin. The seat's own red, found by the proof written for it, and fixed forwa
   assemblies, and a unit case holds the rule with an envelope whose own box is its line.
 - **The change's own note** is the one pending for the outline; nothing of the first measure was
   published. The core's tarball is at 95,047 bytes of its 98,000.
+
+## 2026-10-12: what an envelope holds is measured as the envelope is, and the proof keeps its files
+
+Two things, one push. The fix before this one went red in the browser proof too (`ci`
+38208234440, `browser proof`, 44 of 45 that ran), on a different case and for a reason of the
+proof's own; and a reader of that fix found the defect it fixed still standing one level down.
+
+- **The proof removed its own files.** `browser/outline.browser.ts` made its built files once,
+  when the file was loaded, and removed them when its hooks finished. A worker handed a second
+  case of the file later ran the hooks again and found the directory gone
+  (`ENOENT: scandir '/tmp/outline-…'`). The first run had not shown it because its failure
+  restarted the worker. The files are now made by the hook that needs them, each time it runs.
+- **Expected, of the fix:** a box measured from what the envelope holds is the assembly's own.
+- **Found:** only where what it holds is a block. An element inside it that the browser also
+  lays out as a run of text answers for the whole line just as the envelope did, and the first
+  such element is another envelope: an assembly whose view holds assemblies at its top, with
+  nothing around them, was still boxed as wide as the page. Watched in the owner's Chrome on the
+  pushed build, by standing one envelope inside another: `0,40,960,132` drawn around a section
+  at `16,40,928,132`.
+- **Now:** an envelope inside the envelope, or anything else there laid out as a run of text or
+  with no box of its own that holds elements, is measured by what it holds in its turn, its
+  shadow root included. On a page with an assembly that holds two others and nothing else, its
+  frame is the two of them together, `16,520,928,128`, read in Chrome; the proof holds that
+  case, and two unit cases hold the rule.
+- **One check in the proof meant nothing.** It asked that the chip of an assembly named `kept`
+  say "kept", which its name alone satisfied. The assembly is `prices` now.
+- **The change's own note** is still the one pending for the outline.
