@@ -28,6 +28,8 @@ const INTEGRATION = {
 } as const;
 // Directly inside one of MathML's, these two stay MathML rather than HTML.
 const STAY_MATH = new Set(["mglyph", "malignmark"]);
+// A comment the browser makes of `<?`, holding nothing that opens or closes a tag.
+const BOGUS_COMMENT = /<\?[^<>]*>/y;
 // An end tag, read from where it stands.
 const END_TAG = /<\/([a-zA-Z][^\t\n\f\r />]*)[\t\n\f\r ]*>/y;
 // Where the text of each raw-text element ends: at the start of its own end tag.
@@ -90,6 +92,17 @@ export function scanFragment(html: string): readonly ScannedTag[] | string {
       continue;
     }
     if (!/^<[a-zA-Z]/.test(html.slice(i, i + 2))) {
+      // `<?` begins a comment the browser ends at the next `>` (html.spec.whatwg.org, tokenization,
+      // "bogus comment state", read 2026-10-12), which is what Lit's server render writes where
+      // a template is empty. It is read as one only where nothing in it could be a tag, since
+      // the other readers of this markup do not know it for a comment.
+      BOGUS_COMMENT.lastIndex = i;
+      const bogus = BOGUS_COMMENT.exec(html);
+      if (bogus !== null) {
+        if (open.depth === 0) return "content outside the envelope";
+        i += bogus[0].length;
+        continue;
+      }
       if (html.startsWith("<!", i) || html.startsWith("<?", i)) return "markup the browser ignores";
       if (open.depth === 0) return "content outside the envelope";
       i += 1;

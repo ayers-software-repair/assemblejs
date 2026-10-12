@@ -65,6 +65,26 @@ describe("reading a remote's answer as the browser will", () => {
     }
   });
 
+  // Lit's server render writes `<?>` where a template is empty, and the browser reads `<?`
+  // as a comment that ends at the next `>`. Refused, a Lit view that rendered nothing could not
+  // be placed from another server: the placement fell back.
+  it("reads `<?` as the comment the browser makes of it, where nothing in it could be a tag", () => {
+    expect(names(wrap("<!--lit-part BRUAAAUVAAA=--><?><!--/lit-part-->"))).toEqual([
+      "assembly-root",
+    ]);
+    expect(names(wrap("<?><p>after</p>"))).toEqual(["assembly-root", "p"]);
+    expect(names(wrap('<?xml version="1.0"?><p>after</p>'))).toEqual(["assembly-root", "p"]);
+    // A tag written inside one is not a tag to the browser, and is to every other reader here.
+    expect(scanFragment(wrap("<? <assembly-root data-x>"))).toBe("markup the browser ignores");
+    expect(scanFragment(wrap("<? <p"))).toBe("markup the browser ignores");
+    // One that never ends takes the envelope's own end with it.
+    expect(scanFragment('<assembly-root data-name="a"><? </assembly-root')).toBe(
+      "markup the browser ignores",
+    );
+    expect(scanFragment(`<?>${wrap("")}`)).toBe("content outside the envelope");
+    expect(scanFragment(wrap("<!x>"))).toBe("markup the browser ignores");
+  });
+
   it("refuses comments and raw text the browser ends somewhere else", () => {
     for (const inner of [
       "<!-->",
@@ -76,7 +96,6 @@ describe("reading a remote's answer as the browser will", () => {
       "<script>open",
       "<style>a</style x>",
       "<![CDATA[x]]>",
-      "<?x?>",
     ]) {
       expect(refused(wrap(inner)), inner).toBe(true);
     }

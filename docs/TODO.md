@@ -52,9 +52,12 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a Lit element
-waits for its view (DECISIONS 2026-10-12, of that name), the first defect the showcase found
-and fixed. Beneath it `0a50a97`, this record alone (`ci` 38209360682, all five jobs green), and
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: an empty Lit view
+can be placed from another server (DECISIONS 2026-10-12, of that name), the showcase's second
+find. Beneath it `3c1b7fc`, the view lets go of an element it binds nothing to (`ci`
+38211659176, all five jobs green), the fix for the red of `caef196`, a Lit element waits for its view, the showcase's first find (`ci`
+38210828288: four jobs green, `browser proof` red on the frameworks example's Lit shell).
+Beneath it `0a50a97`, this record alone (`ci` 38209360682, all five jobs green), and
 `a4583cf`, what an envelope holds is measured as the envelope is,
 and the proof keeps its files (DECISIONS 2026-10-12, of that name; `ci` 38208877783, all five
 jobs green, the outline's four cases among the 46 the `browser proof` passed). Beneath it
@@ -1820,6 +1823,11 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       2026-10-12, "a Lit element waits for its view"). It works while both carry one version of
       Lit. Needs a design: each bundle's element base patched by its own support whatever
       loads last.
+- [x] FOUND BY THE SHOWCASE: a Lit view that renders nothing fell back when placed from another
+      server. Lit's server render writes `<?>` for an empty template, and the reader of a
+      remote's answer refused it. DONE 2026-10-12: `<?` is read as the comment the browser
+      makes of it, where nothing in it could be a tag (DECISIONS 2026-10-12, "an empty Lit view
+      can be placed from another server")
 - [ ] FOUND BY THE SHOWCASE: `check` says "is a ejs assembly" (`a-view-needs-its-renderer`); the
       article does not follow the renderer's name.
 - [ ] The showcase projects: extremely complex, real-world, made with the command line as a

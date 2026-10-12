@@ -6128,3 +6128,26 @@ own suite green, the examples not walked before the push.
   counts and wears its own colour, no element is left marked, and the console is empty.
 - **The rule the seat takes from it:** a renderer's change is walked on the built examples in a
   real browser before it is pushed, since the browser proof cannot run here.
+
+## 2026-10-12: an empty Lit view can be placed from another server
+
+Found by the showcase. The catalogue's roast scale renders nothing for a product that is not
+beans; on the shop's page, placed from the catalogue's server, it was a fallback.
+
+- **Expected:** what a renderer writes is well inside what the reader of a remote's answer
+  reads (`scan-fragment.ts` said so).
+- **Found:** Lit's server render writes `<?>` where a template is empty
+  (`<!--lit-part …--><?><!--/lit-part-->`), and the reader refused `<?` as "markup the browser
+  ignores". The shop logged `did not answer one envelope` and showed the fallback. On the
+  catalogue's own page, where nothing reads it as a remote's, the same view was fine.
+- **Now:** `<?` is read as the browser reads it, a comment that ends at the next `>`
+  (html.spec.whatwg.org, tokenization, "bogus comment state", read 2026-10-12), where nothing
+  in it could be a tag: one that holds a `<` is still refused, since the other readers of this
+  markup do not know it for a comment and would read a tag written inside it as one; and one
+  that never ends is still refused, since it takes the envelope's end with it. The case that
+  held `<?x?>` refused said the browser ends it somewhere else, which it does not.
+- **Proof.** Unit cases red before and green after; the scanner's browser proof generates
+  such comments now, so Chromium is asked of each one the reader accepts. Asked ahead of it in
+  the owner's Chrome, with the proof's own generator and its own check: of 400 accepted answers
+  that hold one, in each of the proof's twelve contexts, a template and a shadow root, none
+  left its envelope, and the browser made 3,144 comments of them.

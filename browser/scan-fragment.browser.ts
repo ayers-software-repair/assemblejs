@@ -32,6 +32,12 @@ const OTHER = [
   "<p a=b=c>",
   "\u0000",
   "\r",
+  // The comment a browser makes of a question mark, which Lit's server render writes.
+  "<?>",
+  "<?x?>",
+  '<?xml version="1.0"?>',
+  "<? ",
+  "<?<b>",
   // Balanced pairs random tokens would rarely form, so the cases that need them are generated.
   "<assembly-root data-nested></assembly-root>",
   "<plaintext></plaintext>",
