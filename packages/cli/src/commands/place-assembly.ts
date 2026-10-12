@@ -1,58 +1,63 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findPlacements } from "@assemblejs/core";
+import { TAG_NAME_END, findPlacements, headEnd, inertSpans } from "@assemblejs/core";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import type { PlacementPosition } from "./placement-position.js";
+import { writeTag } from "./write-tag.js";
 
-const BODY_OPEN = /<body\b(?:[^>"']|"[^"]*"|'[^']*')*>/gi;
-const BODY_CLOSE = /<\/body\s*>/gi;
-// Text in which a tag is not a tag: a comment, and the contents of a script or a style.
-const INERT = /<!--[\s\S]*?-->|<script\b[\s\S]*?<\/script\s*>|<style\b[\s\S]*?<\/style\s*>/gi;
+// A tag is read by its whole name, as the tokenizer reads one: `<body-card>` is not the body.
+const opening = (name: string): RegExp =>
+  new RegExp(`<${name}(?=${TAG_NAME_END})(?:[^>"']|"[^"]*"|'[^']*')*>`, "gi");
+const closing = (name: string): RegExp => new RegExp(`</${name}(?=${TAG_NAME_END})[^>]*>`, "gi");
+const BODY_OPEN = opening("body");
+const BODY_CLOSE = closing("body");
+const HTML_OPEN = opening("html");
+const HTML_CLOSE = closing("html");
+const HEAD_CLOSE = closing("head");
 
-/** Each match of a tag outside inert text, with where it ends. */
-const live = (html: string, tag: RegExp): Array<{ start: number; end: number }> => {
-  const inert = [...html.matchAll(INERT)].map((match) => [
-    match.index,
-    match.index + match[0].length,
-  ]);
-  return [...html.matchAll(tag)]
-    .filter((match) => !inert.some(([from = 0, to = 0]) => match.index >= from && match.index < to))
-    .map((match) => ({ start: match.index, end: match.index + match[0].length }));
+/**
+ * The stretch of a template that a page shows, which is where a placement at its start or its
+ * end goes: what its body holds, or, in a template that writes no body, what follows its head,
+ * its html tag or its doctype, as far as the end of the document. A view has none of them, and
+ * is the stretch whole. `within` says the stretch opens on the tag of the element that holds
+ * it, and `closed` that it ends on one.
+ */
+const shown = (
+  template: string,
+): { from: number; to: number; within: boolean; opened: boolean; closed: boolean } => {
+  const inert = inertSpans(template);
+  const live = (tag: RegExp): RegExpExecArray[] =>
+    [...template.matchAll(tag)].filter((found) => !inert(found.index));
+  const head = live(HEAD_CLOSE).at(-1);
+  const open = live(BODY_OPEN)[0] ?? head ?? live(HTML_OPEN)[0];
+  const close = live(BODY_CLOSE).at(-1) ?? live(HTML_CLOSE).at(-1);
+  // With no closing head tag, where a head ends is after the doctype, or the very start.
+  const from = open === undefined ? headEnd(template) : open.index + open[0].length;
+  return {
+    from,
+    to: close?.index ?? template.length,
+    within: open !== undefined && open !== head,
+    opened: from > 0,
+    closed: close !== undefined,
+  };
 };
 
 /**
  * A page template with one more placement in it, at a named position, or why it cannot be put
- * there. Beside a neighbour means beside that assembly's directive; a neighbour the template
- * does not place is a problem that lists the ones it does, never a guess at where it meant.
+ * there; with how many times the template places that assembly now, as a second placing is
+ * allowed and is not always meant. Beside a neighbour means beside that assembly's directive;
+ * a neighbour the template does not place is a problem that lists the ones it does, never a
+ * guess at where it meant. The tag is laid out as the file is: on a line of its own at the
+ * indentation of what it stands beside, in the file's own line ending, and inline only where
+ * what it stands beside shares its line.
  */
 export function placeAssembly(
   template: string,
   name: string,
   position: PlacementPosition,
   path: string,
-): { readonly template: string } | { readonly problem: ProjectProblem } {
+): { readonly template: string; readonly placed: number } | { readonly problem: ProjectProblem } {
   const tag = `<assembly name="${name}"></assembly>`;
-  return insert(template, tag, position, path);
-}
-
-function insert(
-  template: string,
-  tag: string,
-  position: PlacementPosition,
-  path: string,
-): { readonly template: string } | { readonly problem: ProjectProblem } {
-  if ("at" in position) {
-    if (position.at === "start") {
-      const open = live(template, BODY_OPEN)[0];
-      const at = open === undefined ? 0 : open.end;
-      return { template: `${template.slice(0, at)}\n${tag}${template.slice(at)}` };
-    }
-    const close = live(template, BODY_CLOSE).at(-1);
-    const at = close === undefined ? template.length : close.start;
-    return { template: `${template.slice(0, at)}${tag}\n${template.slice(at)}` };
-  }
-
-  const neighbour = "after" in position ? position.after : position.before;
   let placements;
   try {
     placements = findPlacements(template);
@@ -66,22 +71,38 @@ function insert(
       },
     };
   }
+  const placed = placements.filter((placement) => placement.name === name).length + 1;
+
+  if ("at" in position) {
+    const { from, to, within, opened, closed } = shown(template);
+    const content = template.slice(from, to);
+    const first = content.search(/\S/);
+    if (first === -1) {
+      // Nothing is shown yet: the first child of the element that holds it, one step in.
+      return opened || !closed
+        ? { template: writeTag(template, tag, from, from, within), placed }
+        : { template: writeTag(template, tag, to, to, true), placed };
+    }
+    const at = position.at === "start" ? from + first : from + content.trimEnd().length;
+    return { template: writeTag(template, tag, at, position.at === "start" ? at : at - 1), placed };
+  }
+
+  const neighbour = "after" in position ? position.after : position.before;
   const found = placements.find((placement) => placement.name === neighbour);
   if (found === undefined) {
-    const placed = placements.map((placement) => placement.name);
+    const names = placements.map((placement) => placement.name);
     return {
       problem: {
         path,
         rule: "a-placement-names-an-assembly",
         message: `the template does not place "${neighbour}"`,
         fix:
-          placed.length === 0
+          names.length === 0
             ? 'it places nothing yet; use { "at": "end" }'
-            : `place it beside one it does: ${placed.join(", ")}`,
+            : `place it beside one it does: ${names.join(", ")}`,
       },
     };
   }
-  return "after" in position
-    ? { template: `${template.slice(0, found.end)}\n${tag}${template.slice(found.end)}` }
-    : { template: `${template.slice(0, found.start)}${tag}\n${template.slice(found.start)}` };
+  const at = "after" in position ? found.end : found.start;
+  return { template: writeTag(template, tag, at, found.start), placed };
 }

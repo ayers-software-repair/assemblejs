@@ -17,6 +17,18 @@ describe("the renderers a build can wire", () => {
     expect(Object.hasOwn(RENDERER_PACKAGES, "html")).toBe(false);
   });
 
+  // Svelte and Vue views are compiled by the compiler the project installed, so it must have one.
+  it("names the framework itself for the two a build compiles with the project's own compiler", () => {
+    expect(
+      Object.values(RENDERER_PACKAGES).flatMap(({ name, compiler }) =>
+        compiler === undefined ? [] : [[name, compiler]],
+      ),
+    ).toEqual([
+      ["svelte", "svelte"],
+      ["vue", "vue"],
+    ]);
+  });
+
   it("renders every template language through the one templates package", () => {
     for (const name of ["ejs", "handlebars", "markdown", "nunjucks", "pug"]) {
       expect(RENDERER_PACKAGES[name]).toEqual({

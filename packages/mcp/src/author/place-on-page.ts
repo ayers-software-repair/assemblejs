@@ -61,9 +61,17 @@ export function placeOnPage(
     result: {
       written: [file],
       inserted: `<assembly name="${name}"></assembly>`,
+      placed: placed.placed,
       template: placed.template,
     },
     problems: [],
-    next: [`see the page with compose_page on ${file}`],
+    next: [
+      ...(placed.placed > 1
+        ? [
+            `"${name}" is placed ${String(placed.placed)} times on this page now: take one out if another was not meant`,
+          ]
+        : []),
+      `see the page with compose_page on ${file}`,
+    ],
   };
 }

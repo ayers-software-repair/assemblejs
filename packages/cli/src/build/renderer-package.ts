@@ -7,6 +7,11 @@ export interface RendererPackage {
   /** Exports `renderToMarkup(view, input)`, and `hydrate(view)` from its `/client` entry. */
   readonly package: string;
   /**
+   * The framework's own package, where the build compiles a view with the compiler the project
+   * installed (Svelte, Vue), so the project must have installed it for a view to build.
+   */
+  readonly compiler?: string;
+  /**
    * A module of the package the page must load before any assembly's own, when the framework
    * needs one installed first (Lit's hydration support).
    */

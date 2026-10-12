@@ -21,6 +21,17 @@ describe("adding an assembly through the agent surface", () => {
     expect(answer.next?.join()).toContain("place_assembly");
   });
 
+  // An agent met it at check, one call later, when the tool that wrote the view could say it.
+  it("says first what to install, where the project has not installed the view's renderer", () => {
+    const dir = mkdtempSync(join(tmpdir(), "mcp-add-"));
+    expect(addAssembly(resolveRoot(dir), "cart", "svelte").next).toEqual([
+      "install svelte: this project has Svelte assemblies and svelte is not installed",
+      'install @assemblejs/renderer-svelte: "cart" is a svelte assembly and @assemblejs/renderer-svelte is not installed',
+      'place it with place_assembly, or by writing <assembly name="cart"></assembly> into a page template',
+    ]);
+    expect(addAssembly(resolveRoot(dir), "nav", "html").next).toHaveLength(1);
+  });
+
   it("refuses with the fix, and writes nothing", () => {
     const dir = mkdtempSync(join(tmpdir(), "mcp-add-"));
     const answer = addAssembly(resolveRoot(dir), "Cart", "html");

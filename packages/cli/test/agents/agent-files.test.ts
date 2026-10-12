@@ -132,4 +132,47 @@ describe("what a project that has agent files is written with", () => {
       "opencode.json",
     ]);
   });
+
+  // A checkout that ends its lines with a carriage return and a line feed was handed files that
+  // ended them both ways: its own lines its way, and every line added the other.
+  it("ends what it adds to a file as that file ends its lines", () => {
+    const ended = (text: string): string => text.replaceAll("\n", "\r\n");
+    const own = `# shop\n\nOur own notes.\n\n${STALE}\n\n## Deploys\n\nOn Fridays.\n`;
+    expect(agentFiles("shop", having({ ...fresh, "AGENTS.md": ended(own) })).files).toEqual({
+      "AGENTS.md": ended(own.replace(STALE, agentInstructions())),
+    });
+    const bare = "# shop\n\nOur own notes.\n";
+    expect(agentFiles("shop", having({ ...fresh, "AGENTS.md": ended(bare) })).files).toEqual({
+      "AGENTS.md": ended(`${bare}\n${agentInstructions()}\n`),
+    });
+    const claude = "# Claude Code\n\nUse plan mode under src/billing.\n";
+    expect(agentFiles("shop", having({ ...fresh, "CLAUDE.md": ended(claude) })).files).toEqual({
+      "CLAUDE.md": ended(`@AGENTS.md\n\n${claude}`),
+    });
+    const listed = '{\n  "mcpServers": {\n    "other": {\n      "command": "x"\n    }\n  }\n}\n';
+    const { files } = agentFiles("shop", having({ ...fresh, ".mcp.json": ended(listed) }));
+    expect(files[".mcp.json"]).toBe(
+      ended(
+        `${JSON.stringify({ mcpServers: { other: { command: "x" }, assemblejs: MCP_REGISTRATIONS[0]?.entry } }, null, 2)}\n`,
+      ),
+    );
+  });
+
+  // An editor on Windows may open a file with one. It is not a comment, and the JSON after it
+  // reads whole.
+  it("reads a file through a byte order mark, and writes it back with the mark first", () => {
+    const mark = String.fromCharCode(0xfeff);
+    const answer = agentFiles(
+      "shop",
+      having({ ...fresh, ".mcp.json": `${mark}{}`, "CLAUDE.md": `${mark}Ours alone.\n` }),
+    );
+    expect(answer.unreadable).toEqual([]);
+    expect(answer.files[".mcp.json"]).toBe(`${mark}${fresh[".mcp.json"] ?? ""}`);
+    expect(answer.files["CLAUDE.md"]).toBe(`${mark}@AGENTS.md\n\nOurs alone.\n`);
+    // One that is current behind its mark is not written at all.
+    expect(
+      agentFiles("shop", having({ ...fresh, ".mcp.json": `${mark}${fresh[".mcp.json"] ?? ""}` }))
+        .files,
+    ).toEqual({});
+  });
 });

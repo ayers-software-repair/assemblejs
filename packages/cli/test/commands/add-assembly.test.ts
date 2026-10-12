@@ -19,6 +19,14 @@ const project = (): string => {
   writeFileSync(join(root, "package.json"), "{}");
   return root;
 };
+/** A project that has installed one renderer, as far as a build looks to find it. */
+const installed = (): string => {
+  const root = project();
+  const at = join(root, "node_modules", "@assemblejs", "renderer-react");
+  mkdirSync(at, { recursive: true });
+  writeFileSync(join(at, "package.json"), "{}");
+  return root;
+};
 const quiet = (): { io: Io; said: string[]; errors: string[] } => {
   const said: string[] = [];
   const errors: string[] = [];
@@ -77,5 +85,27 @@ describe("adding an assembly from the command line", () => {
     expect(addAssembly("cart", "html", root, io)).toBe(1);
     expect(errors).toHaveLength(1);
     expect(errors.join()).toMatch(/a link that leads nowhere/);
+  });
+
+  // check and the dev log said it; the command that had just written the view did not.
+  it("says what the view's renderer needs that the project has not installed", () => {
+    const root = project();
+    const { io, said } = quiet();
+    expect(addAssembly("board", "svelte", root, io)).toBe(0);
+    expect(said.join("\n")).toContain(
+      '"board" is a svelte assembly and @assemblejs/renderer-svelte is not installed: install @assemblejs/renderer-svelte',
+    );
+    expect(said.join("\n")).toContain(
+      "this project has Svelte assemblies and svelte is not installed: install svelte",
+    );
+  });
+
+  it("says nothing of a renderer the project has installed, or of plain html", () => {
+    const { io, said } = quiet();
+    expect(addAssembly("panel", "react", installed(), io)).toBe(0);
+    expect(said.join("\n")).not.toContain("not installed");
+    const plain = quiet();
+    expect(addAssembly("cart", "html", project(), plain.io)).toBe(0);
+    expect(plain.said.join("\n")).not.toContain("not installed");
   });
 });

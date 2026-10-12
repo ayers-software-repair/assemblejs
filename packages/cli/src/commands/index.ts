@@ -13,4 +13,5 @@ export { planAssembly } from "./plan-assembly.js";
 export { noProject } from "./no-project.js";
 export { addAssembly } from "./add-assembly.js";
 export type { PlacementPosition } from "./placement-position.js";
+export { writeTag } from "./write-tag.js";
 export { placeAssembly } from "./place-assembly.js";

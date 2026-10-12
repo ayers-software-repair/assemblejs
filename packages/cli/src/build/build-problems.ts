@@ -2,13 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { aRenderer } from "../discovery/a-renderer.js";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import { styleProblems } from "../styles/style-problems.js";
-import { findPackage } from "./find-package.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
+import { rendererProblems } from "./renderer-problems.js";
 
 /**
  * Everything that would stop a project building, found before the bundler runs: no server file,
@@ -33,46 +32,18 @@ export function buildProblems(
       fix: "add the server file `assemblejs new` writes, which hands createServer the generated project",
     });
   }
-  // The frameworks whose views the build compiles with the project's own compiler.
-  for (const [renderer, framework, named] of [
-    ["svelte", "svelte", "Svelte"],
-    ["vue", "vue", "Vue"],
-  ] as const) {
-    if (
-      assemblies.some((assembly) => assembly.renderer === renderer) &&
-      findPackage(root, framework) === undefined
-    ) {
-      problems.push({
-        path: join(root, "package.json"),
-        rule: "a-view-needs-its-renderer",
-        message: `this project has ${named} assemblies and ${framework} is not installed`,
-        fix: `install ${framework}`,
-      });
-    }
-  }
+  // The framework a project lacks is one thing to install, said once however many views need it.
+  const said = new Set<string>();
   for (const assembly of assemblies) {
-    if (assembly.renderer === "html") continue;
+    for (const problem of rendererProblems(root, assembly.name, assembly.renderer, assembly.view)) {
+      if (said.has(problem.message)) continue;
+      said.add(problem.message);
+      problems.push(problem);
+    }
     const known = Object.hasOwn(RENDERER_PACKAGES, assembly.renderer)
       ? RENDERER_PACKAGES[assembly.renderer]
       : undefined;
-    if (known === undefined) {
-      problems.push({
-        path: assembly.view,
-        rule: "a-view-needs-its-renderer",
-        message: `"${assembly.name}" is ${aRenderer(assembly.renderer)} assembly, which this version cannot build yet`,
-        fix: `write it for one of: html, ${Object.keys(RENDERER_PACKAGES).join(", ")}`,
-      });
-      continue;
-    }
-    if (findPackage(root, known.package) === undefined) {
-      problems.push({
-        path: assembly.view,
-        rule: "a-view-needs-its-renderer",
-        message: `"${assembly.name}" is ${aRenderer(known.name)} assembly and ${known.package} is not installed`,
-        fix: `install ${known.package}`,
-      });
-    }
-    if (assembly.client !== undefined && known.template !== true) {
+    if (known !== undefined && assembly.client !== undefined && known.template !== true) {
       problems.push({
         path: assembly.client,
         rule: "one-framework-per-assembly",

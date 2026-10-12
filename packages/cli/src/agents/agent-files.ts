@@ -1,6 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { isDeepStrictEqual } from "node:util";
+import { BYTE_ORDER_MARK } from "../io/byte-order-mark.js";
+import { lineEnding } from "../io/line-ending.js";
 import { agentInstructions } from "./agent-instructions.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { AGENTS_IMPORT } from "./agents-import.js";
@@ -10,6 +12,11 @@ import { instructionsIn } from "./instructions-in.js";
 import { MCP_REGISTRATIONS } from "./mcp-registrations.js";
 import { registeredEntry } from "./registered-entry.js";
 
+/** Text with its lines ended as a file ends its own, to be written into that file. */
+const endedAs = (text: string, file: string): string => text.replaceAll("\n", lineEnding(file));
+/** The byte order mark a file opens with, which stays first in what is written back. */
+const markOf = (file: string): string => (file.startsWith(BYTE_ORDER_MARK) ? BYTE_ORDER_MARK : "");
+
 /**
  * What a project is written with for the agents that will work in it, as the files to write
  * given the ones it has: `AGENTS.md`, which says what the project is and the rules its code
@@ -18,7 +25,8 @@ import { registeredEntry } from "./registered-entry.js";
  *
  * A project that has none of them is written all of them. In one that has some, only this
  * command line's own part of each is written: its marked part of `AGENTS.md`, the one import in
- * `CLAUDE.md`, its own server in a registration. A file that is already right is not among the
+ * `CLAUDE.md`, its own server in a registration, each ended as that file ends its lines and
+ * behind the byte order mark it opens with. A file that is already right is not among the
  * answer, and a registration that cannot be read is named in `unreadable` and never written.
  */
 export function agentFiles(
@@ -35,15 +43,18 @@ export function agentFiles(
     agents === undefined
       ? `# ${name}\n\n${instructions}\n`
       : written === undefined
-        ? `${agents.trimEnd()}\n\n${instructions}\n`
+        ? `${agents.trimEnd()}${endedAs(`\n\n${instructions}\n`, agents)}`
         : written.text === instructions
           ? agents
-          : `${agents.slice(0, written.start)}${instructions}${agents.slice(written.end)}`;
+          : `${agents.slice(0, written.start)}${endedAs(instructions, agents)}${agents.slice(written.end)}`;
 
   const [claude] = CLAUDE_FILES;
   if (!CLAUDE_FILES.some((path) => bringsInAgents(path, existing(path) ?? ""))) {
     const own = existing(claude);
-    wanted[claude] = own === undefined ? `${AGENTS_IMPORT}\n` : `${AGENTS_IMPORT}\n\n${own}`;
+    wanted[claude] =
+      own === undefined
+        ? `${AGENTS_IMPORT}\n`
+        : `${markOf(own)}${endedAs(`${AGENTS_IMPORT}\n\n`, own)}${own.slice(markOf(own).length)}`;
   }
 
   for (const registration of MCP_REGISTRATIONS) {
@@ -65,7 +76,8 @@ export function agentFiles(
       ...(typeof servers === "object" && servers !== null ? servers : {}),
       [AGENT_SERVER.name]: registration.entry,
     };
-    wanted[registration.path] = `${JSON.stringify(file, null, 2)}\n`;
+    wanted[registration.path] =
+      `${markOf(source ?? "")}${endedAs(`${JSON.stringify(file, null, 2)}\n`, source ?? "")}`;
   }
 
   return {

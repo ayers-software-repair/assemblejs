@@ -20,6 +20,7 @@ export { jsxSource } from "./jsx-source.js";
 export { jsxPlugin } from "./jsx-plugin.js";
 export { sharedOptions } from "./shared-options.js";
 export { sourceVersion } from "./source-version.js";
+export { rendererProblems } from "./renderer-problems.js";
 export { buildProblems } from "./build-problems.js";
 export type { TemplateCompilerLoader } from "./template-compiler-loader.js";
 export { loadTemplateCompiler } from "./load-template-compiler.js";

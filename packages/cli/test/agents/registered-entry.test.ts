@@ -34,4 +34,10 @@ describe("this project's agent surface, as a registration file holds it", () => 
     expect(() => registeredEntry(claude, "null")).toThrow(/not a JSON object/);
     expect(() => registeredEntry(claude, '{\n  // ours\n  "mcpServers": {}\n}')).toThrow();
   });
+
+  // A byte order mark is no part of the JSON, and JSON.parse refuses it as if it were.
+  it("is read through a byte order mark, which an editor may open a file with", () => {
+    const source = `${String.fromCharCode(0xfeff)}{ "mcpServers": { "assemblejs": { "command": "node" } } }`;
+    expect(registeredEntry(claude, source).entry).toEqual({ command: "node" });
+  });
 });

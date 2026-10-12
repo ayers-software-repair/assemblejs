@@ -107,10 +107,17 @@ export function placeInView(
     result: {
       written: [file],
       inserted: `<assembly name="${name}"></assembly>`,
+      placed: placed.placed,
       template: placed.template,
     },
     problems: [],
     next: [
+      ...(placed.placed > 1
+        ? [
+            `"${name}" is placed ${String(placed.placed)} times in this view now: take one out if another was not meant`,
+          ]
+        : []),
+
       renderer === "html"
         ? `see "${name}" inside it with render_assembly on ${parent}`
         : `build the project to see it: a ${renderer} view renders only through its engine`,

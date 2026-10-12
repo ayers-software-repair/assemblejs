@@ -55,6 +55,22 @@ describe("placing an assembly through the agent surface", () => {
     );
   });
 
+  // A second call for the same assembly placed it again and said only ok.
+  it("says a second placing of the same assembly, which is allowed and may not be meant", () => {
+    const dir = project();
+    const once = placeOnPage(resolveRoot(dir), "home", "cart", { at: "end" });
+    expect(once.result).toMatchObject({ placed: 1 });
+    expect(once.next).toEqual(["see the page with compose_page on src/pages/home/home.html"]);
+    const again = placeOnPage(resolveRoot(dir), "home", "cart", { at: "end" });
+    expect(again).toMatchObject({ ok: true, result: { placed: 2 } });
+    expect(again.next?.[0]).toBe(
+      '"cart" is placed 2 times on this page now: take one out if another was not meant',
+    );
+    expect(readFileSync(join(dir, "src", "pages", "home", "home.html"), "utf8")).toBe(
+      '<body>\n<assembly name="nav"></assembly>\n<assembly name="cart"></assembly>\n<assembly name="cart"></assembly>\n</body>',
+    );
+  });
+
   it("passes on the command line's refusal of a neighbour the template does not place", () => {
     const dir = project();
     expect(placeOnPage(resolveRoot(dir), "home", "cart", { before: "footer" }).ok).toBe(false);

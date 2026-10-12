@@ -2,3 +2,5 @@
 // SPDX-License-Identifier: Apache-2.0
 export type { Io } from "./io.js";
 export { realIo } from "./real-io.js";
+export { lineEnding } from "./line-ending.js";
+export { BYTE_ORDER_MARK } from "./byte-order-mark.js";

@@ -52,9 +52,11 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: where a placement
-may stand, by the parser's own rules (DECISIONS 2026-10-12, of that name), three of the
-audit's minors. Beneath it `d95cd40`, perf does not fail a project for guarding a page (`ci`
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: what is written
+into a file is written as the file is laid out (DECISIONS 2026-10-12, of that name), four rows
+of the command line and the agent surface. Beneath it `6dacf89`, where a placement may stand,
+by the parser's own rules, three of the audit's minors (`ci` 38215202253, all five jobs
+green). Beneath it `d95cd40`, perf does not fail a project for guarding a page (`ci`
 38214252176). Beneath it `774b709`, the
 market, a showcase of four servers, in `examples/market` (`ci` 38213628041, all five jobs
 green, the showcase's eight cases among the 54 the `browser proof` passed, on their first
@@ -84,7 +86,7 @@ island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value
 38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
 when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
 tarball budgets: the core's 98000, moved from 86000 at a measured 94,991 and at 96,873 now; the command line's
-98000, moved from 94000 at a measured 94,039; the agent surface's is at 26,709 of 27,000.
+98000, moved from 94000 at a measured 94,039 and at 96,752 now; the agent surface's is at 26,902 of 27,000.
 Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
@@ -1344,10 +1346,12 @@ a spec watched red first, or struck with its reason.
       runtime chunks, 20.7 kB, before anything mounts, and whose React assembly then fetches 218 kB.
       A page with a route parameter is "not weighed", so the most complex page is outside every
       budget
-- [ ] The agent's `place_assembly` damages the template's layout: with `after` it writes the tag at
+- [x] The agent's `place_assembly` damages the template's layout: with `after` it writes the tag at
       column 0 beneath a neighbour indented eight; with no position it writes it between `</body>`'s
       indentation and `</body>`. A second call for the same assembly on the same page places it
-      again and says ok
+      again and says ok. DONE 2026-10-12: the tag is laid out as the file is, held to the
+      starter's own page byte for byte, and a second placing is said first of what to do next
+      (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
 - [ ] The agent surface has nothing that takes a route's parameters or a query: `compose_page` and
       `render_assembly` on `/product/:sku` always render with no sku, so an agent never sees a page
       that has a parameter as a visitor does
@@ -1362,8 +1366,10 @@ a spec watched red first, or struck with its reason.
       (DECISIONS 2026-10-11, "the starter and the arguments")
 - [x] `add assembly` with no name answers: "" is not a usable assembly name, call it "assembly".
       DONE 2026-10-11: it says a name is needed, with the command
-- [ ] `add assembly --renderer svelte` does not say the renderer's packages are not installed;
-      `check` and the dev log do
+- [x] `add assembly --renderer svelte` does not say the renderer's packages are not installed;
+      `check` and the dev log do. DONE 2026-10-12: it says what `check` would, through the one
+      reading the build asks, and so does the agent surface's `add_assembly`
+      (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
 - [ ] `packages/.gitkeep` is tracked and the directory holds twelve packages
 
 Seen working in his Chrome on the scratch showcase, twelve renderers on five pages with three apis: events from React to Svelte and from Vue to React; a Preact view fed by the page's stream after a POST to an api; a Solid view answered by its fallback at 300 ms; a Lit view deferred, then filled and mounted; Pug, Handlebars, Nunjucks, EJS and Markdown; a checkout, with typed keys against the production build, that placed an order and emptied the cart across frameworks.
@@ -1716,9 +1722,12 @@ The agent surface:
 - [ ] Tools throw raw filesystem or root errors instead of a structured refusal; a symlinked
       dev.json takes down render_assembly and compose_page entirely (workflow mcp.7, minor). Claimed
       at `packages/mcp/src/render/dev-server-url.ts:18`. PREMISE UNVERIFIED
-- [ ] Placement insert mis-reads <body-card> as <body>, and both place_assembly and add agents write
+- [x] Placement insert mis-reads <body-card> as <body>, and both place_assembly and add agents write
       mixed line endings into CRLF files (workflow mcp.8, minor). Claimed at
-      `packages/cli/src/commands/place-assembly.ts:6`. PREMISE UNVERIFIED
+      `packages/cli/src/commands/place-assembly.ts:6`. PREMISE UNVERIFIED. READ and watched red by
+      the seat, both halves, and wider: a tag inside an attribute was the body too, and a
+      template with no body took a placement before its doctype. DONE 2026-10-12
+      (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
 
 Packaging:
 
@@ -1759,9 +1768,12 @@ Docs against code:
       2026-10-12, "check says what it passed over, and add writes only into a project").
 - [ ] install.html says the new project installs 'the one renderer your first assembly uses'; it
       installs none (workflow docs.5, minor). Claimed at `site/install.html:33`. PREMISE UNVERIFIED
-- [ ] `add agents` calls a UTF-8 BOM 'a comment' and refuses the whole run; `check` then says 'no
+- [x] `add agents` calls a UTF-8 BOM 'a comment' and refuses the whole run; `check` then says 'no
       problems' for the file it could not read (workflow docs.6, minor). Claimed at
-      `packages/cli/src/agents/add-agents.ts:23`. PREMISE UNVERIFIED
+      `packages/cli/src/agents/add-agents.ts:23`. PREMISE UNVERIFIED. READ and watched red by the
+      seat. DONE 2026-10-12: a registration is read through the mark by `add agents` and `check`
+      alike, and written back behind it. That `check` is silent of a registration it cannot
+      read is kept, with its reason (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
 - [ ] Tutorial step 7's api sample imports ./price-feed.js, which no step creates (workflow docs.7,
       minor). Claimed at `site/docs/tutorial.html:175`. PREMISE UNVERIFIED
 - [ ] Package READMEs lag the code: cli README lists 3 of the 5 MCP registrations, root README omits

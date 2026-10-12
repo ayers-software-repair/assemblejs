@@ -18,8 +18,8 @@ export const RENDERER_PACKAGES: Readonly<Record<string, RendererPackage>> = {
   preact: { name: "preact", package: "@assemblejs/renderer-preact" },
   react: { name: "react", package: "@assemblejs/renderer-react" },
   solid: { name: "solid", package: "@assemblejs/renderer-solid" },
-  svelte: { name: "svelte", package: "@assemblejs/renderer-svelte" },
-  vue: { name: "vue", package: "@assemblejs/renderer-vue" },
+  svelte: { name: "svelte", package: "@assemblejs/renderer-svelte", compiler: "svelte" },
+  vue: { name: "vue", package: "@assemblejs/renderer-vue", compiler: "vue" },
   ...Object.fromEntries(
     TEMPLATE_RENDERERS.map((name) => [
       name,

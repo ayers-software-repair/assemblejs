@@ -6269,5 +6269,85 @@ tests.3), each read at the source and reproduced before it was believed.
 - **Proof.** Each case red on the committed reader and green after; a new reader,
   `strictParents`, with its own cases, one of them ten thousand rows in under a second. Every
   cheap gate, every suite and all five conformance fixtures green, and `check` says no
-  problems of every example and of the showcase's four projects. The core's tarball is at
-  96,873 bytes of its 98,000.
+  problems of every example the command line builds and of the showcase's four projects; of
+  `examples/html`, which is not one, it says there is no `src/server.ts` (the next entry). The
+  core's tarball is at 96,873 bytes of its 98,000.
+
+## 2026-10-12: what is written into a file is written as the file is laid out
+
+Four rows of the audit and the showcase, on the command line and the agent surface (mcp.8,
+docs.6, and the seat's two of 2026-10-11: `place_assembly` damages a template's layout and
+places twice in silence; `add assembly` does not say a renderer is not installed). Each read at
+the source and watched red on the committed code before it was changed.
+
+- **A placement is laid out as the file is** (the seat's row, true). The writer put a line feed
+  and the tag wherever it was asked: at column 0 beneath a neighbour indented eight, and
+  between a closing body tag and its own indentation. It is one rule now, in a writer of its
+  own (`writeTag`): where nothing but whitespace follows the place on its line the tag is a new
+  line beneath, where nothing but whitespace comes before it a new line above, and anywhere
+  else it is written inline with nothing added, because whitespace between two things on a
+  line may show. The line is indented as what it stands beside is, and ends as the file ends
+  its lines. A body that holds nothing has nothing to stand beside, so its first child goes one
+  step in, the step being the least any line of the file is indented by: that is what the
+  starter's own page does, and the proof is the starter's page itself. Placing into
+  `pageDocument` gives, byte for byte, the `pageDocument` that places the assembly, at the
+  start, at the end, before and after, into an empty body, and again with every line ended by a
+  carriage return and a line feed.
+- **The body is read as the parser reads it** (mcp.8, true, and wider than the row). The row
+  said `<body-card>` was taken for the body: it was, a word boundary standing where the end of
+  a tag's name belongs. Reading it found more. The writer kept a reader of its own for what is
+  not markup, which knew a comment, a script and a style and not an attribute, so
+  `<div title="<body>">` was the body too; it reads the core's `inertSpans` now, and its tags
+  by the core's `TAG_NAME_END`, and its own reader is gone. And a template with no body tag
+  took a placement at its start at offset 0, before the doctype, which puts a browser in quirks
+  mode: it goes after the head's closing tag, or the html tag, or the doctype, whichever the
+  template writes last of those, and at its end before a closing html tag where there is no
+  closing body.
+- **A second placing is said, not refused.** A page may place one assembly twice, each with its
+  own attributes, and nothing in DESIGN or the core says otherwise, so the writer does not
+  refuse it. It answers how many times the template places the assembly now, and the agent
+  surface's two tools say so first of what to do next when that is more than once. To count,
+  the template is read before anything is written, wherever the placement was asked for: one
+  that cannot be read is refused at the start and the end as it already was beside a
+  neighbour.
+- **What `add agents` adds takes the file's own line ending** (mcp.8, true). Its part of an
+  `AGENTS.md`, the import above a `CLAUDE.md` and a registration were written with line feeds
+  into files that ended their lines otherwise. Each is ended as the file it goes into ends its
+  first line.
+- **A byte order mark is not a comment** (docs.6, true). A registration that opened with one was
+  refused as "not JSON, which a comment in it is enough to cause", and the whole run with it.
+  The one reader of a registration passes over the mark, so `add agents` and `check` both read
+  the file, and what is written back keeps the mark first; so does a `CLAUDE.md` the import is
+  put above. The row's second half, that `check` says nothing of a registration it cannot
+  read, stands as it was written: `check` judges only what this command line wrote, and a
+  registration it cannot read is the project's own file in a form a client may well accept. A
+  problem there would fail every `check` of a project for a file `add agents` cannot mend, and
+  `check` has no way to say a thing without failing for it (`runCheck` prints its problems and
+  exits 1, or prints "no problems"). The one who needs to know is told where it matters:
+  `add agents` names the file and its mend when it refuses the run for it.
+- **Adding a view says what it needs** (the seat's row, true). `check` and the dev log named a
+  renderer that was not installed, and the command that had just written the view did not. The
+  reading is one function now, `rendererProblems`, asked by the build of every assembly and by
+  `add assembly` and the agent surface's `add_assembly` of the one just written; the table of
+  renderers names the framework a build compiles with the project's own compiler (Svelte, Vue),
+  where the build's problems had held that list a second time.
+- **Seen, and not a defect.** `check` says of `examples/html` that there is no `src/server.ts`
+  to build. That example is the smallest server the contract allows, one `server.mjs` started
+  by plain node with no build (its own first comment, and unchanged since 2026-10-03): it is
+  not a project the command line builds, and `check` says so truly.
+- **Not in this bite.** `new .` and the name it suggests (packaging.5) go with `create_project`
+  (mcp.6), as both ask what a directory may already hold when a project is made in it. The
+  stack a refused boot prints is a bite of its own: its mend is in the starter's server file,
+  ten examples and a README, or in the core.
+- **Proof.** Sixteen cases red on the committed code and green after: twelve of the placement
+  writer's thirteen, two of the agent files', the reader of a registration, and `add assembly`. Every cheap gate green, the command line's 782 cases and the agent surface's 189,
+  every other package's suite, and the agents fixture. Then at the artifact: a project made by
+  the built `new`, and the built agent surface driven over stdio as a client drives it, six
+  calls. Two assemblies added, the Svelte one answered with what to install first; four
+  placements, each on a line of its own at the body's indentation; the second placing of one
+  said first of what to do next; a child written into a view beneath its last line. And the
+  built `add agents` over an `AGENTS.md`, a `CLAUDE.md` and a registration that ended their
+  lines with a carriage return and a line feed, the registration behind a byte order mark:
+  every line of each ends the one way after it (100 of 100, 3 of 3, 11 of 11) and the mark is
+  first. The command line's tarball is at 96,752 bytes of its 98,000, and the agent surface's
+  at 26,902 of its 27,000.

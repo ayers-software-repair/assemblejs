@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { DeadLinkError, planAssembly, realIo } from "@assemblejs/cli";
+import { DeadLinkError, planAssembly, realIo, rendererProblems } from "@assemblejs/cli";
 import { isOccupied } from "../root/is-occupied.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
@@ -9,7 +9,9 @@ import type { ToolResult } from "../server/tool-result.js";
 /**
  * Writes an assembly for a named renderer, through the command line's own decision, and answers
  * with every file written and the tag that places it, because an assembly nobody placed is the
- * commonest half-finished state there is.
+ * commonest half-finished state there is. Where the project has not installed what the view's
+ * renderer needs, installing it is the first thing said to do next, as `check` would refuse the
+ * view until it is.
  */
 export function addAssembly(root: ProjectRoot, name: string, renderer: string): ToolResult {
   // The name is judged before it is ever joined onto a path, so "../x" is refused with its fix
@@ -34,6 +36,11 @@ export function addAssembly(root: ProjectRoot, name: string, renderer: string): 
     ok: true,
     result: { written, tag: plan.tag },
     problems: [],
-    next: [`place it with place_assembly, or by writing ${plan.tag} into a page template`],
+    next: [
+      ...rendererProblems(root.path, name, renderer, written[0] ?? "").map(
+        (problem) => `${problem.fix}: ${problem.message}`,
+      ),
+      `place it with place_assembly, or by writing ${plan.tag} into a page template`,
+    ],
   };
 }

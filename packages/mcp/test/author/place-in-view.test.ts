@@ -42,7 +42,19 @@ describe("placing one assembly in another's view through the agent surface", () 
     // A template in a language that holds the directive as markup is written the same way.
     expect(placeInView(resolveRoot(dir), "card", "cart", { at: "end" }).ok).toBe(true);
     expect(readFileSync(join(dir, "src/assemblies/card/card.ejs"), "utf8")).toBe(
-      '<article><%= data.title %></article><assembly name="cart"></assembly>\n',
+      '<article><%= data.title %></article>\n<assembly name="cart"></assembly>',
+    );
+  });
+
+  it("says a second placing of the same child, which is allowed and may not be meant", () => {
+    const dir = project(FILES);
+    const once = placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
+    expect(once.result).toMatchObject({ placed: 1 });
+    expect(once.next?.join()).not.toContain("times");
+    const again = placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
+    expect(again).toMatchObject({ ok: true, result: { placed: 2 } });
+    expect(again.next?.[0]).toBe(
+      '"cart" is placed 2 times in this view now: take one out if another was not meant',
     );
   });
 

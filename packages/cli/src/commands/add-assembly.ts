@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join, resolve } from "node:path";
+import { rendererProblems } from "../build/renderer-problems.js";
 import type { Io } from "../io/io.js";
 import { insideRoot } from "../root/inside-root.js";
 import { OutsideRootError } from "../root/outside-root-error.js";
@@ -9,7 +10,9 @@ import { planAssembly } from "./plan-assembly.js";
 
 /**
  * Adds an assembly to the project at a directory, and answers the command's exit code: what
- * was written and the tag that places it, or the one problem and its fix.
+ * was written and the tag that places it, or the one problem and its fix. Where the project has
+ * not installed what the view's renderer needs, it says so as `check` would, having written the
+ * view: an assembly that will not build until something is installed is said to be one.
  *
  * Only into a project, and only inside it. A directory with no `package.json` is not one, so a
  * mistyped `--cwd` writes nothing; and every path is asked of the root guard before it is
@@ -45,5 +48,9 @@ export function addAssembly(name: string, renderer: string, cwd: string, io: Io)
   }
   // The one thing that is NOT written: the author's own server file. It never grows.
   io.log(`\nadd it to a page with ${plan.tag}`);
+  const [view = ""] = Object.keys(plan.files);
+  for (const problem of rendererProblems(cwd, name, renderer, join(cwd, view))) {
+    io.log(`${problem.message}: ${problem.fix}`);
+  }
   return 0;
 }
