@@ -44,7 +44,7 @@ a value for a route's parameter, a dynamic route that cannot answer 404, the cop
 on generated modules, what a handler may return as JSON, `CLAUDE.md`, the first prerelease.
 His answer on whose JSX a file is also decides whether any gate can type-check `examples/`,
 which none does: 64 errors of that kind stand in the ten, and the seat's advice, tried on
-all of them, leaves none. FINDINGS 53 to 61 in the evidence directory are the state at the
+all of them, leaves none. FINDINGS 53 to 62 in the evidence directory are the state at the
 end. A SESSION THAT RESUMES HERE HAS NO BITE TO TAKE: it reads
 `origin/next`'s last run, and anything a seat or the owner has added to this file since, and
 says so to the lead.
@@ -1404,7 +1404,11 @@ a spec watched red first, or struck with its reason.
       none; an `interface` is refused too. Measured 2026-10-12, five cases. Nothing is wrong at
       run time. THE OWNER'S TO SETTLE, as it is what the contract's own JSON types mean; the
       seat's advice is to let a member of an object be absent in what a handler returns. The
-      showcase's four handlers declare what they answer (DECISIONS 2026-10-12, "a view that says what its data holds is taken by its renderer")
+      showcase's four handlers declare what they answer (DECISIONS 2026-10-12, "a view that says what its data holds is taken by its renderer").
+      THE ADVICE TRIED 2026-10-12, as a type in a probe: it takes the two undeclared shapes,
+      from an api and from a service, plain and async, still refuses a `Date`, a function, a
+      `bigint` and a bare `undefined`, and refuses an `interface` as today's does (DECISIONS
+      2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
 - [ ] Every module the build generates into a project is headed with Ayers Electronics'
       copyright line, beside the line that says it is generated
       (`packages/cli/src/generate/generated-header.ts`). An identity string in a file made of the
@@ -1962,7 +1966,12 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       browser evaluates without a break, and that puts Lit's runtime in what a page with a Lit
       assembly loads before anything mounts, where today it arrives with the first Lit assembly.
       Weight for isolation is THE OWNER'S TO SETTLE; the seat's advice is to take it, as two
-      servers on one page is the product.
+      servers on one page is the product. THE WEIGHT, MEASURED 2026-10-12 in the built
+      frameworks example: the one chunk a Lit assembly fetches as it mounts today that is
+      Lit's, its runtime with the hydration support, is 10,021 bytes, 3,936 gzipped. That is
+      the most the design would move to before anything mounts; beside it, the entry and what
+      it imports before it runs are 22,462 bytes, 9,317 gzipped
+      (DECISIONS 2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
 - [x] FOUND BY THE SHOWCASE: a Lit view that renders nothing fell back when placed from another
       server. Lit's server render writes `<?>` for an empty template, and the reader of a
       remote's answer refused it. DONE 2026-10-12: `<?` is read as the comment the browser

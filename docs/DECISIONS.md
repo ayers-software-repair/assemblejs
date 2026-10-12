@@ -6816,3 +6816,35 @@ that one example measured spoke for ten, is the one a reader caught. It is tried
 - **Not measured.** What an editor shows, which no command line can say; and a project
   installed from the registry, where React's types are its own dependency and not the
   workspace's.
+
+## 2026-10-12: the seat's advice on a handler's return tried, and on Lit's isolation weighed
+
+The seat's advice on a handler that answers one of two shapes was stated and not tried, as
+the advice on JSX had been. Tried the same day, as a type in a probe of TypeScript 6.0.3: an
+object whose members may each be absent, and everything else as `JsonValue` has it. Today's
+side of the probe is the core's own text, read where it is declared: `JsonValue`,
+`JsonObject`, what an api's `handle` returns and what a service's `run` returns.
+
+- **What it takes.** From an api: one expression of two shapes, two returns of two shapes,
+  and an async handler of two shapes. From a service: two shapes, plain and async. All five
+  are refused by today's types. A declared union and one shape with an optional member, as
+  today's do.
+- **What it still refuses.** A `Date`, a function and a `bigint` as a member, and a bare
+  `undefined` as the whole answer: nothing that cannot cross as JSON is let in by it. An
+  `interface`, which it refuses as today's does, having no index signature; that part of the
+  row is not answered by the advice, and wants a sentence in the guide whichever way he rules.
+- **Seen beside it.** Under TypeScript's `exactOptionalPropertyTypes`, today's types take
+  all five as they stand. That is a project's setting and not the framework's to turn on.
+- **Not tried.** The type in the core itself: which of the 24 files that name the contract's
+  JSON types would take the wider one, a handler's return and no more, is the design the
+  owner's word decides. The probe and what it printed are kept in the audit's evidence
+  directory, `seat/json-return/`.
+- **And the weight on the row of Lit's one hydration hook, which had no number.** The seat
+  advised taking "the weight" of each bundle bringing its own Lit with its support, and had
+  not said what it weighs. Read off the built frameworks example by following each module's
+  static imports: a Lit assembly fetches three files as it mounts, its own, a chunk of 804
+  bytes it shares with every renderer, and one that is Lit's runtime with the hydration
+  support, 10,021 bytes, 3,936 gzipped. That chunk is the most the design would move to
+  before anything mounts. The entry and what it imports before it runs are 22,462 bytes,
+  9,317 gzipped today. Which pages would carry it is the design's to say and is not
+  measured.
