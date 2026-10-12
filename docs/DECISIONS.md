@@ -6891,3 +6891,70 @@ true and it is more.
 - **What the seat does from today, without waiting.** It raises none. A change that goes
   over waits on its row with its measure. And a report of a landing names any limit or gate
   the change moved, which the resume block now asks of every session.
+
+## 2026-10-12: the owner at the seat
+
+He read the seat's report with a reader's notes beside it and ruled three things. His words
+are given as he typed them; where he chose from what the seat put to him, the choice is
+quoted.
+
+- **No line in a user's file.** "people shouldnt need comment line sor things by default?" Put
+  the three ways TypeScript can learn whose JSX a file is, he chose "The build writes it".
+  The seat's advice of a line heading each `.tsx` of a Preact or Solid assembly, with `check`
+  naming a file that lacks it, is withdrawn wherever it stands: it had been priced as eleven
+  lines in the examples, and it was a rule for every file every user would ever write.
+- **What that rests on, tried by hand before he was asked.** A script wrote, for each of the
+  ten examples, what a build could: one TypeScript project for each owner of JSX, one for
+  what the assemblies share and one for the server and the generated modules, named from a
+  root `tsconfig.json` through `.assemblejs/`, as Nuxt names the ones it generates (Nuxt's
+  pages on `tsconfig.json` and project references, read 2026-10-12). With no line in any
+  file and React's types found: no error in any of the ten under `tsc -b`, every project
+  built and none skipped, the declarations a referenced project must emit written without
+  complaint. The control, the same with no owner named: 35, the count of the entry above.
+  Without React's types: the errors of React's missing types and no other. And what an
+  editor shows, asked of TypeScript's own language server with nothing built: each view in
+  its own project and clean, through the two levels of naming. Today, with no setup, one
+  Preact view of the shop shows 36 errors there.
+- **What the trial says the build-out must do.** Decide whose a file is once, by the build's
+  own definition, where the trial read the file's name a second time. Mend what an editor
+  shows of two generated modules: there, though not under `tsc -b`, the two that take a
+  Solid view showed an error, the view's JSX read as the including project's. A browser
+  module takes one view and can go in its owner's project. The registry imports every
+  owner's views and can go in none: how it is written must change, and that is not tried.
+  The question put to him said "in the editor too" of the count of no errors; it was true of
+  every view and of every file a user writes, and not of those two. Write no project with
+  nothing in it, which the compiler refuses. And place a `.tsx` that sits outside every
+  assembly, which the build compiles as whatever imports it and no example has: it goes in
+  the project of what imports it. Not measured: whether `dev` rewrites the setup when an
+  assembly is added while it runs. The setup is generated, so a fresh clone and its editor
+  have none until the first `dev` or `build`.
+- **The command line in three.** Asked whose word raises a size limit, since the build-out
+  would take the command line over its own, he answered "why not split it?" Told what a
+  split is and is not, he chose "Split into three first": `cli` keeps the verbs, `build`
+  turns a project into a server, `check` reads a project and names problems, and the
+  TypeScript setup lands in `build`. What he was told: the package holds fifteen areas, the
+  rules of `check` a quarter of its source; its tarball is 209,744 bytes of JavaScript and
+  131,017 of declarations, published because the agent surface and `create` use it as a
+  library; a split makes nothing smaller for a user, who installs the same code in more
+  packages, each with its own licence file; in five places two areas import each other and
+  must be untangled first; and two more names are his to set up on npm.
+- **Whose word raises a limit is not answered by it.** A split sets limits afresh, and
+  someone chooses them. The seat chooses none: each new package's measure goes to him.
+- **Every framework's own checker.** A reader's second note said the count of the entry
+  above covered TypeScript's files and no others, and it is so: the twelve Vue and Svelte
+  views of the examples, 398 lines with `lang="ts"`, were read by no pass, the generated
+  modules being told to pass over those imports; and the typed-view mend of the morning was
+  proven for four renderers, Vue's and Svelte's being read and not run. Run then, from a
+  scratch install: Vue's checker (vue-tsc 3.3.13) over the six Vue views, no error, and red
+  on a line made wrong on purpose; Svelte's (svelte-check 4.7.6) over the six Svelte views,
+  two errors. Asked whether the gate on the examples should run both, he chose "Yes, both
+  checkers".
+- **What Svelte's checker found, the seat's to mend.** Both errors are a callback's
+  parameter left `any` because the view's props are. Of the six Svelte views in the
+  examples four take props and none types them, and two fixtures of the rendering proof and
+  two of the renderer's own tests are the same; the renderer hands a view `data` and
+  `events` and its published
+  `AssemblyProps` declares `data` alone, so typing by it loses `events`; the scaffold writes
+  an untyped line; the site teaches it. A test pins the type to `data` alone, written when
+  the shape was meant to match React's, where events come by a hook. The type will say what
+  the renderer hands.
