@@ -5,6 +5,7 @@ import { carriesCredential } from "./carries-credential.js";
 import type { Diagnostic } from "./diagnostic.js";
 import { heldAssemblies } from "./held-assemblies.js";
 import { holdsFailedEnvelope } from "./holds-failed-envelope.js";
+import { reissueIds } from "./reissue-ids.js";
 import type { SettleInput } from "./settle-input.js";
 
 /**
@@ -20,9 +21,12 @@ import type { SettleInput } from "./settle-input.js";
  * of them would be shown to that visitor: a guarded assembly is guarded inside a cached answer
  * as it is anywhere. Where asking throws, or what an answer holds was never recorded, it is no
  * answer; where no control is on, nothing is asked.
+ *
+ * An answer is kept with the ids its first composition minted, and is read as the placement's
+ * own that asks: its envelope with the id that placement was given, and each inside it a new one.
  */
 export function placementCache(input: SettleInput): {
-  read(): Promise<string | undefined>;
+  read(id: string): Promise<string | undefined>;
   write(html: string, version: string | undefined, nested?: readonly Diagnostic[]): void;
 } {
   const ttl = input.plan?.cache?.ttl ?? 0;
@@ -31,18 +35,20 @@ export function placementCache(input: SettleInput): {
   // page with a longer one cached.
   const key = `${ttl}|${cacheKey(input.name, input.view, input.query, input.plan?.url, input.headers, input.params)}`;
   return {
-    read: async () => {
+    read: async (id) => {
       const held = cache?.get(key);
-      if (held === undefined || input.admit === undefined) return held?.html;
-      if (held.holds === undefined) return undefined;
-      try {
-        for (const { name, view } of held.holds) {
-          if (!(await input.admit(name, view)).admitted) return undefined;
+      if (held === undefined) return undefined;
+      if (input.admit !== undefined) {
+        if (held.holds === undefined) return undefined;
+        try {
+          for (const { name, view } of held.holds) {
+            if (!(await input.admit(name, view)).admitted) return undefined;
+          }
+        } catch {
+          return undefined;
         }
-      } catch {
-        return undefined;
       }
-      return held.html;
+      return reissueIds(held.html, id, input.newId);
     },
     write: (html, version, nested) => {
       if (holdsFailedEnvelope(html)) return;

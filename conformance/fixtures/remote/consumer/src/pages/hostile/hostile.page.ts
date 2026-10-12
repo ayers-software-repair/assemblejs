@@ -17,5 +17,6 @@ export default definePage({
     hidden: { url: from(hostile, "hidden") },
     heading: { url: from(hostile, "heading") },
     deep: { url: from(hostile, "deep") },
+    crowd: { url: from(hostile, "crowd") },
   },
 });

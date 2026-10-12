@@ -26,6 +26,23 @@ describe("stamping a remote's answer with its origin", () => {
     });
   });
 
+  // How many assemblies an answer holds is its server's to say, and each is a manifest to read.
+  it("refuses an answer holding more assemblies inside it than it is let", () => {
+    const child = (n: number) =>
+      `<assembly-root data-name="c${String(n)}" data-view="default"></assembly-root>`;
+    const holding = (count: number) =>
+      `<assembly-root data-name="shell">${Array.from({ length: count }, (_, n) => child(n)).join("")}</assembly-root>`;
+    expect(markRemote(holding(3), origin, 3)).toMatchObject({ nested: { length: 3 } });
+    expect(markRemote(holding(4), origin, 3)).toEqual({
+      refused: "an answer holding 4 assemblies inside it, where a page here may place 3",
+    });
+    // The same assembly many times over is one assembly, and one manifest.
+    expect(markRemote(holding(1).replace(child(0), child(0).repeat(9)), origin, 3)).toMatchObject({
+      nested: { length: 1 },
+    });
+    expect(markRemote(holding(9), origin)).toMatchObject({ nested: { length: 9 } });
+  });
+
   it("stamps every envelope inside the answer, not only the outer one", () => {
     const nested = `<assembly-root data-name="a"><assembly-root data-name="b"></assembly-root></assembly-root>`;
     const marked = markRemote(nested, origin);

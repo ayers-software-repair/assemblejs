@@ -360,6 +360,10 @@ them finishes or times out, never later, and never fails because one of them did
   given and never a failure of the assembly's, shows the same fallback or empty envelope under
   one id for its envelope, its diagnostic and the line the server logs, which says what was
   thrown; the cache is not read for it, since what threw may have been the cache.
+- An answer read from the cache, fresh or as the last good one, is an instance of its own: its
+  envelope carries the id this placement was given and each envelope inside it a new one,
+  wherever the kept one was written. However many placements one kept answer serves, no two
+  envelopes on a page share an id, which the browser mounts once.
 - A placement declared `required: true` turns its own failure into the page's failure, with a
   `503` and the diagnostic. This is opt-in and it is the only way a page dies from a child.
 - Placements resolve concurrently under `allSettled` semantics, and the output order is the

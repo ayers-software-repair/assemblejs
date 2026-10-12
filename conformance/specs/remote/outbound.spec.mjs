@@ -23,8 +23,14 @@ const HIDING = {
   heading: `<svg><h1>${planted}</h1></svg>`,
 };
 const DEPTH = 40_000;
+// More assemblies in one answer than a page of the consumer may place, each a manifest to read.
+const CROWD = 300;
+// A name of letters alone for each of them, as an assembly's name is.
+const crowded = (n) => `one${n.toString(26).replace(/\d/g, (digit) => "qrstuvwxyz"[digit])}`;
+const manifests = [];
 const hostile = createServer((request, response) => {
   const path = new URL(request.url ?? "/", "http://hostile").pathname;
+  if (path.endsWith("/manifest/")) manifests.push(path);
   if (path === "/assembly/typed/") {
     response.writeHead(200, { "content-type": "application/json" }).end('{"not":"html"}');
   } else if (path === "/assembly/moved/") {
@@ -55,6 +61,13 @@ const hostile = createServer((request, response) => {
     response
       .writeHead(200, { "content-type": "text/html; charset=utf-8" })
       .end(envelope(request, name, HIDING[name]));
+  } else if (path === "/assembly/crowd/") {
+    const held = Array.from({ length: CROWD }, (_, n) =>
+      envelope({ headers: { "assembly-id": `c${n}` } }, crowded(n), ""),
+    ).join("");
+    response
+      .writeHead(200, { "content-type": "text/html; charset=utf-8", "assembly-version": "v1" })
+      .end(envelope(request, "crowd", held));
   } else if (path === "/assembly/deep/") {
     const deep = `${"<div>".repeat(DEPTH)}<p class="deep">deep</p>${"</div>".repeat(DEPTH)}`;
     response
@@ -151,4 +164,17 @@ test("an answer nested tens of thousands of elements deep is read in the time it
   const page = await (await visit()).text();
   assert.ok(Date.now() - started < 2000, `the page took ${Date.now() - started}ms`);
   assert.match(byName(page, "deep")?.inner ?? "", /<p class="deep">deep<\/p>/);
+});
+
+// Each assembly an answer holds is a manifest the composing server reads, and how many it holds
+// is the remote's to say: this many started a read apiece, all at once.
+test("an answer holding more assemblies than a page may place is refused, and no manifest of theirs is read", async () => {
+  manifests.length = 0;
+  const page = await (await visit()).text();
+  assert.ok(await logged(byName(page, "crowd")?.attributes["data-failed"], "consumer"));
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  assert.deepEqual(
+    manifests.filter((path) => path.startsWith("/assembly/one")),
+    [],
+  );
 });

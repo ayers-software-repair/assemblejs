@@ -17,11 +17,12 @@ blockers, each with a spec watched red first, DONE; the dev loop and the build's
 DONE; the starter, done but for its `tsconfig.json` and its guide link, which is the owner's;
 the workflow's majors, each read at the source and reproduced before it is believed, IN HAND:
 the server's rows are done, and so are the readers of markup (composer.2, composer.4, trust.4,
-trust.5, trust.7, and three the seat found there). Next, each already read at the source: a
-kept answer's one envelope id (composer.3, client.2, server.8) with what one remote answer
-makes the server fetch and keep (trust.6); the mounted mark, written before a lazy module
-mounts (client.1); then the renderers', the verbs', `check`'s rules, the agent surface's and
-the tests', then the minors. docs.2 names a page of the site seat's and is routed, not edited; then the
+trust.5, trust.7, and three the seat found there), a kept answer's one envelope id
+(composer.3, client.2, server.8) and what one remote answer makes the server fetch and keep
+(trust.6). Next, already read at the source: the mounted mark, written before a lazy module
+mounts (client.1), with the runtime's minors; then the renderers' (an id of its own for each
+island's `useId`, and Solid's unescaped `<`), the verbs', `check`'s rules, the agent
+surface's and the tests', then the minors. docs.2 names a page of the site seat's and is routed, not edited; then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -42,12 +43,13 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a script ends
-where the tokenizer ends it (DECISIONS 2026-10-11, of that name), the row the commit beneath
-it left open. Beneath it `7a0abd6`, markup is read as the browser reads it, in the time its
-length takes (`ci` 38198739275, all five jobs green), and beneath that `da3c17d` (`ci`
-38197595850, all five green), the first green verify since the audit began and the one that
-judged every bite before it at once. It had been red
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a kept answer is
+its placement's own, and what a remote names is bounded (DECISIONS 2026-10-11, of that name).
+Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
+markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all
+five jobs green); and `da3c17d` (`ci` 38197595850, all five green), the first green verify
+since the audit began and the one that judged every bite before it at once. The core's
+tarball is at 80,815 bytes of 82,000. It had been red
 three ways on the way: another seat's emoji gate (`aecf034`, fixed by it in `d82714c`; its
 pages are its own), and two of this seat's own that the gate had hidden, a case of the command
 line's suite that read who ran it (`5ea3db0`) and a character written into a core spec where
@@ -1346,9 +1348,17 @@ Trust and security:
       sixty-four thousand deep in 32 ms; a step in the remote fixture, watched red against the old
       build (DECISIONS 2026-10-11, "markup is read as the browser reads it, in the time its length
       takes").
-- [ ] One remote answer triggers unbounded concurrent manifest fetches, with no private-address
+- [x] One remote answer triggers unbounded concurrent manifest fetches, with no private-address
       check and unbounded map growth (workflow trust.6, major, disputed by one of its refuters).
-      Claimed at `packages/core/src/remote/learned-manifests.ts:84`. PREMISE UNVERIFIED
+      Claimed at `packages/core/src/remote/learned-manifests.ts:84`. PREMISE UNVERIFIED. REPRODUCED
+      by the seat: one answer naming three thousand assemblies opened 512 manifest reads at once, as
+      many as the remote's listener took; five such answers, 4,620 reads, 10,381 log lines and 100
+      MiB. DONE 2026-10-11: an answer naming more assemblies than a page here may place is refused
+      whole (`markRemote` takes `limits.placements`), and the manifests kept, the children
+      remembered for one url and the reads in flight each have a bound; a step in the remote
+      fixture. The claim of no private-address check is the lookup window DECISIONS 2026-10-03
+      already records as bounded (DECISIONS 2026-10-11, "a kept answer is its placement's own, and
+      what a remote names is bounded").
 - [x] localAssets/inertSpans is quadratic in the remote's markup and re-runs on every page view
       (workflow trust.7, minor). Claimed at `packages/core/src/server/local-assets.ts:47`. PREMISE
       UNVERIFIED. MEASURED by the seat: sixteen thousand envelopes, 604 ms. DONE 2026-10-11 with
@@ -1422,10 +1432,12 @@ The server:
       `server/read-composition-headers.ts:64`. DONE 2026-10-11: the fallback has no prototype, as
       the parameters it reads have and as DESIGN 8 says (DECISIONS 2026-10-11, "what a server would
       fail at, it refuses before it listens").
-- [ ] A page placement with cache.ttl reuses one envelope id for every later request and for
+- [x] A page placement with cache.ttl reuses one envelope id for every later request and for
       repeated placements on the same page (compose/, outside the assigned scope) (workflow
       server.8, minor). Claimed at `packages/core/src/compose/placement-cache.ts:24`. PREMISE
-      UNVERIFIED
+      UNVERIFIED. The same defect as workflow composer.3, REPRODUCED by the seat and DONE 2026-10-11
+      with it (DECISIONS 2026-10-11, "a kept answer is its placement's own, and what a remote names
+      is bounded").
 
 The composer:
 
@@ -1437,9 +1449,15 @@ The composer:
       tag's name ends where the tokenizer ends it, an end tag may hold anything after its name, and
       `liveClosingTags`, which had a second copy of the pattern, asks the one reader (DECISIONS
       2026-10-11, "markup is read as the browser reads it, in the time its length takes").
-- [ ] A cache hit re-serves the first render's envelope id, so one page can carry duplicate ids and
+- [x] A cache hit re-serves the first render's envelope id, so one page can carry duplicate ids and
       the browser skips mounting the later copies (workflow composer.3, major). Claimed at
-      `packages/core/src/compose/settle-placement.ts:86`. PREMISE UNVERIFIED
+      `packages/core/src/compose/settle-placement.ts:86`. PREMISE UNVERIFIED. READ at
+      `compose/placement-cache.ts` and `client/start.ts:39` AND REPRODUCED by the seat: a page
+      placing one kept assembly twice carried two ids on four envelopes. DONE 2026-10-11:
+      `reissueIds` makes a kept answer the asking placement's own, its envelope with the id that
+      placement was given and each inside it a new one, wherever the old id is written; a step in
+      the remote fixture on a page that places one kept assembly twice (DECISIONS 2026-10-11, "a
+      kept answer is its placement's own, and what a remote names is bounded").
 - [x] findPlacements is quadratic and runs on every render, even when the markup has no directive
       (workflow composer.4, major). Claimed at `packages/core/src/compose/inert-spans.ts:37`.
       PREMISE UNVERIFIED. READ AND MEASURED by the seat: a megabyte of sixteen thousand scripts, 1.1
@@ -1464,9 +1482,11 @@ The browser runtime:
 - [ ] data-mounted is written before the assembly's module has loaded, and stays on after a missing
       module or a throwing mount (workflow client.1, major). Claimed at
       `packages/core/src/client/start.ts:96`. PREMISE UNVERIFIED
-- [ ] A cached placement repeats one data-id on a page, and the runtime silently never hydrates the
+- [x] A cached placement repeats one data-id on a page, and the runtime silently never hydrates the
       second envelope (workflow client.2, major). Claimed at
-      `packages/core/src/compose/placement-cache.ts:58`. PREMISE UNVERIFIED
+      `packages/core/src/compose/placement-cache.ts:58`. PREMISE UNVERIFIED. The same defect as
+      workflow composer.3, REPRODUCED by the seat and DONE 2026-10-11 with it (DECISIONS 2026-10-11,
+      "a kept answer is its placement's own, and what a remote names is bounded").
 - [ ] Last-value replay cannot be opted into for assembly-sent topics in a built project (workflow
       client.4, major, disputed by one of its refuters). Claimed at
       `packages/cli/src/generate/generate-client-entry.ts:38`. PREMISE UNVERIFIED

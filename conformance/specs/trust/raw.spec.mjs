@@ -106,7 +106,13 @@ test("a kept answer that holds a guarded assembly is not shown to a guest after 
   const [shelf] = treeOf(shown);
   assert.deepEqual(shelf.children.map(nameOf), ["ledger"]);
   assert.equal(shelf.children[0].attributes["data-failed"], "", "refused, and marked so");
-  // The member's answer is still the kept one: the same envelope, by its id.
-  const again = treeOf(await (await signed("/public/kept")).text());
-  assert.equal(again[0].attributes["data-id"], treeOf(member)[0].attributes["data-id"]);
+  // The member's answer is still the kept one, composed once: the shelf says how many times it
+  // has been, and the guest between them made that one more. It is an instance of its own all
+  // the same, with an id the first did not have.
+  const composed = (page) => /<p class="composed">(\d+)<\/p>/.exec(page)?.[1];
+  const again = await (await signed("/public/kept")).text();
+  assert.ok(composed(member) !== undefined);
+  assert.equal(composed(again), composed(member));
+  assert.notEqual(composed(shown), composed(member));
+  assert.notEqual(treeOf(again)[0].attributes["data-id"], treeOf(member)[0].attributes["data-id"]);
 });

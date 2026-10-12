@@ -1,0 +1,5 @@
+---
+"@assemblejs/core": patch
+---
+
+A kept answer is the placement's own that asks for it, and what another server's answers name is bounded. An answer was kept with the ids its first composition minted and answered as kept with the same ones: two placements of one kept assembly on a page carried one id, and the browser, which mounts an id once, left the second as markup. Read from the cache, an answer's envelope takes the id its placement was given and each assembly inside it a new one, wherever the old id is written (`reissueIds`). One remote answer could name thousands of assemblies inside it and start a manifest read for every one at once, a log line for every one that failed, and an entry kept for every one that did not: an answer naming more than a page here may place is refused (`markRemote` takes the bound, the server's `limits.placements`), and the manifests kept, the children remembered for one url and the reads in flight each have a bound. `placementCache`'s `read` takes the id the placement was given.

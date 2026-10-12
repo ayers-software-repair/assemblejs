@@ -23,7 +23,7 @@ export async function fallBack(
   diagnostic: Diagnostic,
   cached: boolean,
 ): Promise<SettledPlacement> {
-  const last = cached ? await placementCache(input).read() : undefined;
+  const last = cached ? await placementCache(input).read(id) : undefined;
   const held =
     last === undefined
       ? undefined

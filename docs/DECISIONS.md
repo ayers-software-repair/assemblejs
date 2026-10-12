@@ -5648,3 +5648,50 @@ inert reading exists to prevent.
   pattern's source, read by `inertSpans`, `scriptEnd`, the fragment scanner and its start tag
   reader, which each had their own spelling of it.
 - A remote's answer with a comment in a script is still refused whole; nothing there changes.
+
+## 2026-10-11: a kept answer is its placement's own, and what a remote names is bounded
+
+Four of the audit's rows (composer.3, client.2 and server.8, which are one defect, and
+trust.6), each reproduced against the built package first.
+
+- **A kept answer carried the ids of its first composition.** The cache holds an answer as it
+  was composed, envelope ids and all, and a hit handed it back as kept. Measured on a page
+  placing one kept assembly twice, its view placing a child: the second request's four
+  envelopes carried two ids. The browser runtime mounts an id once (`client/start.ts`: an id
+  it has mounted is passed over), so the second placement stayed the markup the server sent,
+  and the account of the placement named an id no envelope had. `reissueIds` makes a kept
+  answer the asking placement's own: the outermost envelope takes the id that placement was
+  given, each envelope inside it a new one, and each old id is replaced wherever it is
+  written, on the envelope, on its island, in the island's own account and anywhere its view
+  wrote it. `placementCache`'s `read` takes the id, so the fresh hit and the last good answer
+  on the ladder are both the placement's own.
+- **Only an id shaped as a composer mints them is given again.** A uuid can be told from the
+  text around it and replaced everywhere; another server's id of another shape cannot, and is
+  left. A remote that is not this framework and mints short ids keeps them, repeated, where
+  its kept answer is placed twice; that is its runtime's to mount.
+- **How many assemblies an answer holds was the remote's to say, without a bound.** Each
+  nested envelope of a name of its own is a manifest the composing server reads. Measured,
+  one answer of three thousand: 512 reads open on the remote at once, which is as many as its
+  listener took, the rest waiting; after five such answers 4,620 reads, 10,381 log lines for
+  the ones that timed out, and the process 100 MiB larger, every one of those names kept.
+  Three bounds now. An answer naming more assemblies inside it than a page of this server
+  may place (`limits.placements`, 256 unless set) is refused whole, as invalid, before any
+  manifest is asked for: `markRemote` takes the bound. The manifests kept (4,096) and the
+  children remembered for one url (1,024) let the oldest go, read again if seen again. And no
+  more than 256 reads are in flight; one past that is left for the next time its assembly is
+  seen, as one that could not be read already is, with one log line when the bound is reached
+  and none for each read left waiting.
+- **The row's third claim is settled already.** A manifest is read from the origin the
+  content was just fetched from, by a second lookup of the same name. That a name may answer
+  differently between two lookups is the rebinding window this log already records, bounded
+  by the exact allowlist and refused redirects (2026-10-03, "remote assemblies", the
+  private-range rule); nothing new.
+- **Proof.** Eleven cases watched red, then green; the probes re-run. The remote fixture
+  gains a page that places one kept assembly twice and a hostile answer naming three hundred
+  assemblies, each step watched red against a build of the core from before the fix.
+- **A step that told a kept answer by its id tells it another way.** The trust fixture's step
+  for a kept answer holding a guarded assembly said the member's second answer was the kept
+  one because its envelope had the first's id, which is the defect this entry removes; the
+  wide proof went red on it before the push. The shelf counts how often it is composed, and
+  the step holds the member's second answer to the first's count and to an id of its own.
+- **The core's tarball is at 80,815 bytes of its 82,000** after this entry and the one above.

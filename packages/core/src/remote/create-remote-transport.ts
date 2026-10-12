@@ -35,6 +35,8 @@ import type { RemoteTransport } from "./remote-transport.js";
 export function createRemoteTransport(options: {
   readonly remotes: readonly RemoteDefinition[];
   readonly maxBytes: number;
+  /** The most assemblies one answer may hold inside it: what a page of this server may place. */
+  readonly placements?: number;
   readonly log: (line: LogLine) => void;
   /** Every address a host resolves to. The system resolver unless a test supplies one. */
   readonly resolve?: (host: string) => Promise<readonly string[]>;
@@ -123,7 +125,7 @@ export function createRemoteTransport(options: {
       const body = await readCapped(response, options.maxBytes);
       if (body === undefined)
         return failure("too-large", `${url} answered more than ${options.maxBytes} bytes`);
-      const marked = markRemote(body, target.origin);
+      const marked = markRemote(body, target.origin, options.placements);
       if ("refused" in marked) {
         return failure("invalid", `${url} did not answer one envelope: ${marked.refused}`);
       }

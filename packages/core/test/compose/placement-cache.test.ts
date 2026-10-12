@@ -45,7 +45,9 @@ describe("one placement's view of the server's cache", () => {
   it("reads and writes for a placement that declared a lifetime", async () => {
     const cache = memory();
     placementCache(input(cache, { cache: { ttl: 1000 } })).write("<p>cart</p>", undefined);
-    expect(await placementCache(input(cache, { cache: { ttl: 1000 } })).read()).toBe("<p>cart</p>");
+    expect(await placementCache(input(cache, { cache: { ttl: 1000 } })).read("mine")).toBe(
+      "<p>cart</p>",
+    );
   });
 
   it("neither reads nor writes for one that declared none, whatever another page cached", async () => {
@@ -53,7 +55,7 @@ describe("one placement's view of the server's cache", () => {
     placementCache(input(cache, {})).write("<p>mine</p>", undefined);
     expect(cache.store.size).toBe(0);
     placementCache(input(cache, { cache: { ttl: 1000 } })).write("<p>theirs</p>", undefined);
-    expect(await placementCache(input(cache, {})).read()).toBeUndefined();
+    expect(await placementCache(input(cache, {})).read("mine")).toBeUndefined();
   });
 
   it("neither reads nor writes for a request carrying a credential", async () => {
@@ -62,7 +64,9 @@ describe("one placement's view of the server's cache", () => {
     placementCache(input(cache, plan, { authorization: "Bearer x" })).write("<p>x</p>", undefined);
     expect(cache.store.size).toBe(0);
     placementCache(input(cache, plan)).write("<p>shared</p>", undefined);
-    expect(await placementCache(input(cache, plan, { cookie: "s=1" })).read()).toBeUndefined();
+    expect(
+      await placementCache(input(cache, plan, { cookie: "s=1" })).read("mine"),
+    ).toBeUndefined();
   });
 
   it("never writes an answer holding a failed envelope: a failure is not content", async () => {
@@ -74,16 +78,68 @@ describe("one placement's view of the server's cache", () => {
     placementCache(input(cache, plan)).write(shell(child(' data-failed="c-1"')), undefined);
     expect(cache.store.size).toBe(0);
     placementCache(input(cache, plan)).write(shell(child("")), undefined);
-    expect(await placementCache(input(cache, plan)).read()).toBe(shell(child("")));
+    expect(await placementCache(input(cache, plan)).read("mine")).toBe(shell(child("")));
   });
 
   it("keeps what each lifetime cached apart, so a shorter one never reads a longer one's", async () => {
     const cache = memory();
     placementCache(input(cache, { cache: { ttl: 60_000 } })).write("<p>long</p>", undefined);
-    expect(await placementCache(input(cache, { cache: { ttl: 1000 } })).read()).toBeUndefined();
-    expect(await placementCache(input(cache, { cache: { ttl: 60_000 } })).read()).toBe(
+    expect(
+      await placementCache(input(cache, { cache: { ttl: 1000 } })).read("mine"),
+    ).toBeUndefined();
+    expect(await placementCache(input(cache, { cache: { ttl: 60_000 } })).read("mine")).toBe(
       "<p>long</p>",
     );
+  });
+});
+
+// An answer is kept with the ids its first composition minted. Answered as kept, two placements
+// of it on one page carried one id, and the browser, which mounts an id once, left the second.
+describe("a kept answer, read for another placement", () => {
+  const A = "11111111-1111-4111-8111-111111111111";
+  const B = "22222222-2222-4222-8222-222222222222";
+  const MINE = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+  const idsOf = (html: string): string[] =>
+    [...html.matchAll(/<assembly-root[^>]* data-id="([^"]+)"/g)].map((found) => found[1] ?? "");
+
+  it("is that placement's own: its envelope takes the id asked with, and each inside it a new one", async () => {
+    const cache = memory();
+    const kept = `<assembly-root data-name="cart" data-id="${A}"><assembly-root data-name="row" data-id="${B}"></assembly-root><script data-assembly="${A}">{"id":"${A}"}</script></assembly-root>`;
+    const plan = { cache: { ttl: 1000 } };
+    placementCache(input(cache, plan)).write(kept, undefined);
+    const mint = { ...input(cache, plan), newId: () => "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb" };
+    const read = (await placementCache(mint).read(MINE)) ?? "";
+    expect(idsOf(read)).toEqual([MINE, "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb"]);
+    expect(read).toContain(`<script data-assembly="${MINE}">{"id":"${MINE}"}</script>`);
+    expect(read).not.toContain(A);
+  });
+
+  it("through a server: two placements of one kept assembly on a page carry four ids, each with its island", async () => {
+    const view = (name: string, markup: string) =>
+      defineAssembly({ name, views: { default: { renderer: "html", markup: () => markup } } });
+    const app = await createServer({
+      config: { mode: "production", host: "127.0.0.1", port: 0, auth: undefined },
+      log: () => undefined,
+      assemblies: [view("badge", "<b>b</b>"), view("shell", '<assembly name="badge"></assembly>')],
+      pages: [
+        {
+          route: "/",
+          template:
+            '<body><assembly name="shell"></assembly><assembly name="shell"></assembly></body>',
+          place: { shell: { cache: { ttl: 60_000 } } },
+        },
+      ],
+    });
+    try {
+      await app.inject({ method: "GET", url: "/" });
+      const page = (await app.inject({ method: "GET", url: "/" })).body;
+      const ids = idsOf(page);
+      expect(ids).toHaveLength(4);
+      expect(new Set(ids).size).toBe(4);
+      for (const id of ids) expect(page, id).toContain(`data-assembly="${id}"`);
+    } finally {
+      await app.close();
+    }
   });
 });
 
@@ -118,32 +174,32 @@ describe("a cached answer that holds another assembly", () => {
       undefined,
       nested,
     );
-    expect(await placementCache(asked(cache, only("badge", "balance"))).read()).toBe(
+    expect(await placementCache(asked(cache, only("badge", "balance"))).read("mine")).toBe(
       "<p>member</p>",
     );
-    expect(await placementCache(asked(cache, only("badge"))).read()).toBeUndefined();
-    expect(await placementCache(asked(cache, only())).read()).toBeUndefined();
+    expect(await placementCache(asked(cache, only("badge"))).read("mine")).toBeUndefined();
+    expect(await placementCache(asked(cache, only())).read("mine")).toBeUndefined();
     // Where no control is on, everyone is shown everything, and nothing is asked.
-    expect(await placementCache(asked(cache, undefined)).read()).toBe("<p>member</p>");
+    expect(await placementCache(asked(cache, undefined)).read("mine")).toBe("<p>member</p>");
   });
 
   it("is no answer under a control when what it holds was not recorded, or asking throws", async () => {
     const cache = whole();
     cache.set("1000|cart/default", { html: "<p>unrecorded</p>" }, 1000);
-    expect(await placementCache(asked(cache, only("badge"))).read()).toBeUndefined();
-    expect(await placementCache(asked(cache, undefined)).read()).toBe("<p>unrecorded</p>");
+    expect(await placementCache(asked(cache, only("badge"))).read("mine")).toBeUndefined();
+    expect(await placementCache(asked(cache, undefined)).read("mine")).toBe("<p>unrecorded</p>");
     placementCache(asked(cache, only("badge"))).write("<p>held</p>", undefined, [placed("badge")]);
     const broken: Admit = () => {
       throw new Error("the directory is down");
     };
-    expect(await placementCache(asked(cache, broken)).read()).toBeUndefined();
+    expect(await placementCache(asked(cache, broken)).read("mine")).toBeUndefined();
   });
 
   it("is not asked about a placement the browser fills later, which holds no content", async () => {
     const cache = whole();
     const later: Diagnostic = { ...placed("reviews"), source: "deferred" };
     placementCache(asked(cache, only())).write("<p>shell</p>", undefined, [later]);
-    expect(await placementCache(asked(cache, only())).read()).toBe("<p>shell</p>");
+    expect(await placementCache(asked(cache, only())).read("mine")).toBe("<p>shell</p>");
   });
 
   it("through a server: the visitor after a member is not shown the member's guarded child", async () => {
@@ -174,7 +230,7 @@ describe("a cached answer that holds another assembly", () => {
       const after = await get();
       expect(after).toContain("sidebar");
       expect(after).not.toContain("BALANCE-9912");
-      // A member is still answered from the cache: the same envelope id as the member before.
+      // A member is still answered from the cache.
       const again = await get({ "x-token": "member" });
       expect(again).toContain("BALANCE-9912");
     } finally {

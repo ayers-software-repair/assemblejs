@@ -120,3 +120,64 @@ describe("what an answer held inside it", () => {
     expect(logged[0]?.message).toMatch(/broken\/default\/manifest\/ could not be read/);
   });
 });
+
+// Which assemblies an answer holds is the other server's to say, and it may name new ones with
+// every answer: three thousand in one answer started a read for every one at once.
+describe("what another server's answers can make this one ask for and keep", () => {
+  const name = (prefix: string, n: number) => `${prefix}${"abcdefghij"[n] ?? "z"}`;
+  const children = (prefix: string, count: number) =>
+    Array.from({ length: count }, (_, n) => {
+      const url = parseContentUrl(`${origin}/assembly/${name(prefix, n)}/default/`);
+      if (url === undefined) throw new Error("not a content url");
+      return url;
+    });
+
+  it("has no more reads in flight than its bound, says so once, and asks for the rest when next seen", async () => {
+    const logged: LogLine[] = [];
+    const learned = learnedManifests({
+      maxBytes: 4096,
+      log: (line) => logged.push(line),
+      reads: 3,
+    });
+    learned.learn(content("crowd"), manifest("crowd"), origin, "v1", children("crowd", 6));
+    await learned.assets(content("crowd"));
+    const read = () => Array.from({ length: 6 }, (_, n) => readsOf(name("crowd", n)));
+    // The answer's own, and the first two it held.
+    expect([readsOf("crowd"), ...read()]).toEqual([1, 1, 1, 0, 0, 0, 0]);
+    expect(logged.map((line) => line.message)).toEqual([
+      expect.stringMatching(
+        /^3 remote manifests are being read at once, the most this server reads/,
+      ),
+    ]);
+    learned.learn(content("crowd"), manifest("crowd"), origin, "v1", children("crowd", 6));
+    await learned.assets(content("crowd"));
+    expect(read()).toEqual([1, 1, 1, 1, 1, 0]);
+  });
+
+  it("keeps no more manifests than its bound: the oldest is let go, and read again when seen again", async () => {
+    const learned = learnedManifests({ maxBytes: 4096, log: () => undefined, kept: 3 });
+    for (const [n, held] of children("keep", 5).entries()) {
+      learned.learn(held.content, held.manifest, origin, "v1", []);
+      await learned.assets(held.content);
+      expect(readsOf(name("keep", n))).toBe(1);
+    }
+    const [first, , , , last] = children("keep", 5);
+    if (first === undefined || last === undefined) throw new Error("no children");
+    learned.learn(last.content, last.manifest, origin, "v1", []);
+    learned.learn(first.content, first.manifest, origin, "v1", []);
+    await learned.assets(first.content);
+    expect([readsOf(name("keep", 4)), readsOf(name("keep", 0))]).toEqual([1, 2]);
+  });
+
+  it("remembers no more of what one url's answers held than its bound, the newest of them", async () => {
+    const learned = learnedManifests({ maxBytes: 4096, log: () => undefined, held: 2 });
+    for (const held of children("held", 4)) {
+      learned.learn(content("frame"), manifest("frame"), origin, "v9", [held]);
+    }
+    const files = ["frame", name("held", 2), name("held", 3)];
+    expect(await learned.assets(content("frame"))).toEqual({
+      css: files.map((file) => `${origin}/${file}.css`),
+      js: files.map((file) => `${origin}/${file}.js`),
+    });
+  });
+});

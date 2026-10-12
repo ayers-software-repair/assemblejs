@@ -23,10 +23,14 @@ import type { ScannedAttribute } from "./scanned-attribute.js";
  * endpoint it answers at on that origin: the page links their browser files as it links the
  * answer's own. An envelope marked failed is a fallback and needs none; one whose name or view
  * is not a segment names no endpoint the contract describes, and is left out.
+ *
+ * How many it names is the remote's to say, and each is a manifest this server then reads. An
+ * answer naming more than `most`, where a bound is given, is refused whole.
  */
 export function markRemote(
   html: string,
   origin: string,
+  most = Number.POSITIVE_INFINITY,
 ):
   { readonly html: string; readonly nested: readonly ContentUrl[] } | { readonly refused: string } {
   const tags = scanFragment(html);
@@ -56,6 +60,11 @@ export function markRemote(
     const kept = attributes.map((attribute) => ` ${attribute.source}`).join("");
     marked += `${html.slice(from, tag.start)}<${tag.name}${extra}${kept}>`;
     from = tag.end;
+  }
+  if (nested.size > most) {
+    return {
+      refused: `an answer holding ${String(nested.size)} assemblies inside it, where a page here may place ${String(most)}`,
+    };
   }
   return { html: marked + html.slice(from), nested: [...nested.values()] };
 }

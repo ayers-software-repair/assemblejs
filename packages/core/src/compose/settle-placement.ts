@@ -84,7 +84,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
 
   // A placement that declared a lifetime is answered from its fresh entry without a request.
   const cache = placementCache(input);
-  const cached = await cache.read();
+  const cached = await cache.read(id);
   if (cached !== undefined) return { html: cached, diagnostic: at("cache") };
 
   const deadline = plan?.deadline ?? DEFAULT_DEADLINE;

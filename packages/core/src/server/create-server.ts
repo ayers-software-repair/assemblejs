@@ -139,7 +139,12 @@ export async function createServer(options: ServerOptions): Promise<App> {
     assemblies: byName,
     local,
     limits,
-    remote: createRemoteTransport({ remotes, maxBytes: limits.maxBytes, log }),
+    remote: createRemoteTransport({
+      remotes,
+      maxBytes: limits.maxBytes,
+      placements: limits.placements,
+      log,
+    }),
     remotes,
     cache: createMemoryCache(),
     ...(options.styles === undefined ? {} : { styles: options.styles }),
