@@ -1,5 +1,7 @@
 <script lang="ts">
-  let { events } = $props();
+  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+
+  let { events }: AssemblyProps = $props();
   let count = $state(0);
   let heard = $state("nothing");
   $effect(() => events.on("counted", (message) => (heard = message.from.name)));

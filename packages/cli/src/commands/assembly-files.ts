@@ -55,7 +55,9 @@ export default function ${pascal(name)}(props: AssemblyProps) {
   svelte: (name) => [
     `${name}.svelte`,
     `<script lang="ts">
-  let { data } = $props();
+  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+
+  let { data }: AssemblyProps = $props();
 </script>
 
 <p>${name} {Object.keys(data).length}</p>

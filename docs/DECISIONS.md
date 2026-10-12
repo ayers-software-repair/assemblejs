@@ -6958,3 +6958,44 @@ quoted.
   an untyped line; the site teaches it. A test pins the type to `data` alone, written when
   the shape was meant to match React's, where events come by a hook. The type will say what
   the renderer hands.
+
+## 2026-10-12: a Svelte view types what it is handed
+
+The first bite of the owner's rulings, and the one a checker found: R-1.
+
+- **Expected.** That the type each renderer publishes for a view's props says what the
+  renderer hands the view, as the React, Preact, Solid and Lit ones do.
+- **Found.** The Svelte renderer hands a view `data` and `events`, on the server and in the
+  browser, and says so in its own comments; its `AssemblyProps` declared `data` alone, and a
+  test pinned it to that one key. So a Svelte view could type its props and lose `events`,
+  or leave them untyped and read both as `any`, which is what `add assembly` wrote and what
+  every Svelte view in the repository did. Nothing read a Svelte view's types, so nothing
+  said so, until Svelte's own checker was run: two errors in the examples, a callback's
+  parameter left `any` in each.
+- **Done.** `AssemblyProps` declares `events`, of the type the core publishes for them. The
+  scaffold writes `let { data }: AssemblyProps = $props();` with the type imported, as it
+  wrote every other framework's view already. The four example views that take props, the
+  rendering fixture's two and the renderer's own two fixtures type theirs, with the shape of
+  their data where they read a field of it. The renderer's README shows the line.
+- **The test that pinned one key is replaced.** It asserted the keys of an object it had
+  just written, which holds nothing of a type. The two cases now read `data` and `events`
+  off the type, and a type that lacks either fails the package's type-check.
+- **Watched.** The type-check of the renderer red on the new cases with the type as it was,
+  three errors, `events` not being in it; green with it. Svelte's checker (4.7.6, from a
+  scratch install) over every Svelte view of the examples: two errors before, none after,
+  in five projects. Over the renderer's own fixtures: none, and one warning of Svelte's
+  that is the fixture's purpose, a value read once as the component starts.
+- **Not checked where it stands.** The rendering fixture's views: the checker cannot find
+  the fixture's packages from its directory, which has no install of its own, and says so
+  of an import the fixture already had. They are typed as the others are and built by the
+  conformance run.
+- **Left, and named.** The scaffold's Vue view types its data as a plain record and not by
+  the Vue renderer's `AssemblyProps`; Vue's checker passes it. The site's Svelte page and
+  tutorial teach the untyped line: the site seat's, told through the lead.
+- **Proof.** The scaffold's new case red with the untyped line put back and green with the
+  typed one. Every cheap gate, lint, the module gate; the renderer's suite, 14 cases, and the
+  command line's, 827; the rendering fixture's conformance run, every spec, with its two
+  typed views built and served. No limit moved: the command line packs to 101,032 bytes of
+  its 102,000, six more than before. Nothing is walked in a browser, as nothing a browser
+  loads changed: the renderer's change is an interface and a type import, which emit no
+  JavaScript before or after, and a view's annotation is taken out by Svelte's compiler.

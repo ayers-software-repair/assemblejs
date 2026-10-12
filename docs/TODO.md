@@ -10,7 +10,7 @@ the seat).**
 
 THE OWNER RULED THREE THINGS AT THE SEAT ON 2026-10-12, AND THE WORK IN HAND IS FOUR BITES, in
 this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a row for each):
-(1) a Svelte view types what it is handed, found by Svelte's own checker, the seat's to mend;
+(1) a Svelte view types what it is handed, found by Svelte's own checker, DONE;
 (2) the command line's package is split in three, `cli`, `build` and `check`, before the
 TypeScript setup is built, what would make one of the three depend on another the wrong way
 untangled first; (3) the build writes the TypeScript setup, so that no file of a user's
@@ -2037,7 +2037,7 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
 His words and what each rests on are in DECISIONS 2026-10-12, "the owner at the seat". The
 rows are taken in this order; each is a bite with its own proof and its own push.
 
-- [ ] R-1 A Svelte view types what it is handed. Svelte's own checker, run over the six
+- [x] R-1 A Svelte view types what it is handed. Svelte's own checker, run over the six
       Svelte views of the examples, found two errors, both a callback's parameter left `any`
       because the view's props are. Counted 2026-10-12: of the six, four take props and none
       types them (`basket`, `board`, `counter`, `svelte-counter`), and so do two of the
@@ -2047,9 +2047,10 @@ rows are taken in this order; each is a bite with its own proof and its own push
       published `AssemblyProps` declares `data` alone, so a view that types its props by it
       cannot read `events`; the scaffold writes `let { data } = $props()` untyped
       (`cli/src/commands/assembly-files.ts`); and the site's Svelte page and tutorial teach
-      the untyped line (the site seat's, told through the lead). To mend: the type says what
-      is handed, the scaffold types its props, the eight views and fixtures type theirs,
-      Svelte's checker green over them
+      the untyped line (the site seat's, told through the lead). DONE 2026-10-12: the type
+      says what is handed, the scaffold types its props, the eight views and fixtures type
+      theirs, and Svelte's checker finds nothing in the examples
+      (DECISIONS 2026-10-12, "a Svelte view types what it is handed")
 - [ ] R-2 What would make one of the three packages depend on another the wrong way,
       untangled before anything moves. First the map of which area goes to which package;
       then each import that crosses a line of that map upward. Two areas that import each

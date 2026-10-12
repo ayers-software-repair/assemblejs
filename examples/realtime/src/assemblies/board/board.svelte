@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
 
-  let { events } = $props();
+  let { events }: AssemblyProps = $props();
   let price = $state("waiting");
   let ready = $state(false);
   onMount(() => {
