@@ -52,10 +52,11 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a page shows how
-it was put together, the outline (DECISIONS 2026-10-12, of that name), whose browser spec,
-`browser/outline.browser.ts`, has its first run in this push's `browser proof`. Beneath it
-`bab70a1`, a dev server on every interface is still the project's own (`ci` 38204821744, all
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: an outline's box
+is the assembly's, not the line it stands in (DECISIONS 2026-10-12, of that name), the fix for
+the one red of `6da4971`, a page shows how it was put together, the outline (`ci` 38207626887:
+four jobs green, `browser proof` red on one of the outline's four cases, 45 of 46 passed).
+Beneath it `bab70a1`, a dev server on every interface is still the project's own (`ci` 38204821744, all
 five jobs green), a follow-up to `b203cb5`. Beneath it `8be3bce`, two gates of the identity law read any case (`ci`
 38204158830, all five jobs green), and `b203cb5`, the agent surface asks only this machine's
 dev server, and only for so long, its five rows. Beneath it `d047674`, check reads what it misread, and names a file it cannot

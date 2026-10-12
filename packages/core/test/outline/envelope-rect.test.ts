@@ -22,14 +22,25 @@ const envelope = (own: readonly DOMRect[], children: readonly DOMRect[]): Elemen
 };
 
 describe("the box an assembly takes on the screen", () => {
-  it("is the smallest that holds the envelope's own boxes and the top of what it holds", () => {
+  // Around a block, a browser answers an envelope's own box as the whole line the block stands
+  // in, so a section with a margin was boxed from one edge of the page to the other.
+  it("is the smallest that holds the top of what the envelope holds, and not the envelope's line", () => {
     expect(
-      envelopeRect(envelope([box(10, 10, 0, 18)], [box(10, 20, 300, 80), box(10, 110, 200, 40)])),
-    ).toEqual({
+      envelopeRect(
+        envelope(
+          [none, box(0, 40, 960, 132), none],
+          [box(16, 40, 928, 132), box(16, 180, 200, 40)],
+        ),
+      ),
+    ).toEqual({ left: 16, top: 40, width: 928, height: 180 });
+  });
+
+  it("is the envelope's own box where it holds nothing that takes room", () => {
+    expect(envelopeRect(envelope([box(10, 10, 80, 18)], [none]))).toEqual({
       left: 10,
       top: 10,
-      width: 300,
-      height: 140,
+      width: 80,
+      height: 18,
     });
   });
 
@@ -44,10 +55,10 @@ describe("the box an assembly takes on the screen", () => {
   });
 
   it("measures inside a shadow root, where the envelope has one", () => {
-    const element = envelope([], []);
+    const element = envelope([box(0, 50, 960, 24)], []);
     const inner = document.createElement("p");
-    vi.spyOn(inner, "getBoundingClientRect").mockReturnValue(box(0, 50, 120, 24));
+    vi.spyOn(inner, "getBoundingClientRect").mockReturnValue(box(16, 50, 120, 24));
     element.attachShadow({ mode: "open" }).append(inner);
-    expect(envelopeRect(element)).toEqual({ left: 0, top: 50, width: 120, height: 24 });
+    expect(envelopeRect(element)).toEqual({ left: 16, top: 50, width: 120, height: 24 });
   });
 });

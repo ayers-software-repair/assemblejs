@@ -932,8 +932,9 @@ choice is kept in their own browser and reaches no server.
 - **It moves nothing.** The outline is drawn over the page, in one element the browser adds
   after the body (`assemblejs-outline`) with a root of its own. No envelope gains an attribute,
   a style or a child, so a page with its outline on is laid out as the page without it, and
-  the envelope's set (section 2.4) is unchanged. A box is measured, not asked of the envelope,
-  which the browser lays out as a run of text.
+  the envelope's set (section 2.4) is unchanged. A box is measured from what the envelope
+  holds, not asked of the envelope, which the browser lays out as a run of text and answers for
+  as the whole line a block stands in.
 - **It is told by the server, per request.** The server writes one data block on the page after
   composing it, the account of that composition (section 5.3), outside everything the page
   placed. Nothing of it is written into an answer, so nothing that is kept holds a word of it,

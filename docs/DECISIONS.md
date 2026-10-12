@@ -6017,3 +6017,24 @@ any project switches it on, in development or in production. This is that mode, 
   dialog, which the browser keeps above everything. Another server's account of what it
   composed is in its own log, so those boxes say what holds them. How long the server took to
   fill a deferred placement is not on the page; the box says when it arrived.
+
+## 2026-10-12: an outline's box is the assembly's, not the line it stands in
+
+The outline's first run in the browser proof was red on one of its four cases (`ci`
+38207626887, `browser proof`; the other four jobs green): no frame stood around a section with
+a margin. The seat's own red, found by the proof written for it, and fixed forward.
+
+- **Expected:** a box is the smallest that holds the envelope's own boxes and the top of what it
+  holds, which on the two scratch servers was each assembly's own box to the pixel.
+- **Found:** around a block, Chromium answers an envelope's own box as the whole line the block
+  stands in (`getClientRects` on the envelope: three boxes, the middle one the page's width).
+  Nothing on the scratch pages had a margin at its sides, so the two were the same there. On
+  the proof's page a section with sixteen pixels of margin was boxed from one edge of the page
+  to the other: read in the owner's Chrome on a copy of the proof's page, `0,40,960,132` drawn
+  where the section stands at `16,40,928,132`.
+- **Now:** a box is measured from what the envelope holds, its elements and the words written
+  straight into it, and from the envelope itself only where it holds nothing that takes room.
+  On the same page the three frames the proof asks for stand within a pixel of their
+  assemblies, and a unit case holds the rule with an envelope whose own box is its line.
+- **The change's own note** is the one pending for the outline; nothing of the first measure was
+  published. The core's tarball is at 95,047 bytes of its 98,000.
