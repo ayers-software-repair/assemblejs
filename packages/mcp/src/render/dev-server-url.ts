@@ -3,9 +3,10 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { DEV_RECORD } from "@assemblejs/cli";
-import { FRAMEWORK_ROUTE_PREFIX, loopbackHost } from "@assemblejs/core";
+import { FRAMEWORK_ROUTE_PREFIX } from "@assemblejs/core";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
+import { ownAddress } from "./own-address.js";
 
 /**
  * The url of the project's own dev server, when one runs: `dev` records it under the root while
@@ -14,9 +15,10 @@ import { withinRoot } from "../root/within-root.js";
  * developer's machine, and only to show what the project itself serves (DESIGN 13.4, 13.6).
  *
  * The record is a file under the project, whoever wrote it. So the address in it is believed
- * only where it is this machine's own, plain http on a loopback name, and is not asked for
- * otherwise; and the health it answers is believed only where it is the framework's, since
- * another program on the port a dev server left may answer any path with a 200.
+ * only where it is this machine's own, plain http on a loopback name or on an address of one of
+ * its interfaces, and is not asked for otherwise; and the health it answers is believed only
+ * where it is the framework's, since another program on the port a dev server left may answer
+ * any path with a 200.
  */
 export async function devServerUrl(root: ProjectRoot): Promise<string | undefined> {
   const file = join(root.path, DEV_RECORD);
@@ -32,7 +34,7 @@ export async function devServerUrl(root: ProjectRoot): Promise<string | undefine
   }
   try {
     const recorded = new URL(url);
-    if (recorded.protocol !== "http:" || !loopbackHost(recorded.host)) return undefined;
+    if (recorded.protocol !== "http:" || !ownAddress(recorded.host)) return undefined;
     const health = await fetch(`${url}${FRAMEWORK_ROUTE_PREFIX}/health`, {
       signal: AbortSignal.timeout(1000),
     });

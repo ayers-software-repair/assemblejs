@@ -3,7 +3,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
-import { tmpdir } from "node:os";
+import { networkInterfaces, tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { devServerUrl, resolveRoot } from "@assemblejs/mcp";
@@ -83,6 +83,27 @@ describe("finding the project's dev server", () => {
     const port = origin.split(":").at(-1) ?? "";
     record(JSON.stringify({ url: `http://localhost:${port}` }));
     expect(await devServerUrl(root)).toBe(`http://localhost:${port}`);
+  });
+
+  // A dev server told to listen on one of the machine's own addresses is this machine's too: it
+  // is asked there, as one on loopback is. Held to loopback alone, it was not seen.
+  it("is the url for an address of one of this machine's own interfaces", async () => {
+    const own = Object.values(networkInterfaces())
+      .flat()
+      .find((one) => one !== undefined && !one.internal && one.family === "IPv4")?.address;
+    // A machine with no interface but loopback has no such address to ask.
+    if (own === undefined) return;
+    const everywhere = createServer((request, response) => {
+      response.writeHead(request.url === "/_assemblejs/health" ? 200 : 404, {
+        "content-type": "application/json",
+      });
+      response.end('{"status":"ok","version":"v"}');
+    });
+    await new Promise<void>((resolve) => everywhere.listen(0, "0.0.0.0", resolve));
+    const url = `http://${own}:${String((everywhere.address() as AddressInfo).port)}`;
+    record(JSON.stringify({ url }));
+    expect(await devServerUrl(root)).toBe(url);
+    await new Promise<void>((resolve) => everywhere.close(() => resolve()));
   });
 
   // An address another program took after a dev server died may answer 200 for any path at all.

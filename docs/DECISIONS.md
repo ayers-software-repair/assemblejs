@@ -5933,3 +5933,25 @@ Both hold a hard law, so a hole in either is a hole in the law.
   attribution reached a push before anything refused it. The pattern is read in any case and
   names that line by what it says, one message is held to both rules, and the self-test
   holds four attributions red and a body that merely uses the words green.
+
+## 2026-10-12: a dev server on every interface is still the project's own
+
+A follow-up to the entry before last, found by reading it again before the next bite. That
+entry made the agent surface believe a recorded address only where it is a loopback name.
+Two ways of running `dev` that worked before it then did not, each watched red.
+
+- **Expected:** the record holds an address the agent surface can ask.
+- **Found:** with `ASSEMBLEJS_HOST=::` (or `0.0.0.0`), `dev` recorded `http://[::]:PORT`, the
+  address it listens on and one nobody can be asked at; and with the host set to one of the
+  machine's own addresses, a dev server on the local network, the record was refused as
+  another machine's (`expected undefined to be 'http://10.0.0.82:44077'`). In both the tools
+  fell back to rendering without the server and said nothing of why.
+- **Now:** `askedAt` turns the two every-interface addresses into this machine's loopback of
+  the same family as `dev` writes the record, and `ownAddress` believes a host that is a
+  loopback name or an address of one of this machine's interfaces. A host that is neither is
+  still another machine's and is not asked, which is the rule the first entry was for.
+- **Not done:** a name that resolves to this machine (a hosts-file name) is not looked up. It
+  would be a lookup on every tool call for a setup nobody has reported; the record's own
+  author can write the address.
+- **Proof.** Both cases red before, green after; every cheap gate of `pnpm check` and both
+  packages' suites green here. The agent surface's tarball is at 26,709 bytes of its 27,000.

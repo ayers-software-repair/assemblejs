@@ -28,10 +28,12 @@ view, a link that leads nowhere, `add` writing outside a project), and the rules
 comment that placed, a file that does not compile, an origin from the environment), and the
 agent surface's (mcp.1 to mcp.5: an address believed whatever it named, a render with no
 deadline, a circle written and called done). EVERY MAJOR OF THE WORKFLOW IS NOW DONE, GONE OR
-THE OWNER'S (client.4). Next: the tests' rows and the minors, read as the majors were; the
-starter's `tsconfig.json`. Then the
-outline mode he asked for, in the framework; then the showcase projects, extremely complex,
-into `examples/`.
+THE OWNER'S (client.4). Next, in this order: the outline mode he asked for, in the framework
+(off by default, a project's own switch, boxes round every assembly that say what it is, where
+it came from and how long it took); then the showcase projects, extremely complex, made with
+the command line as a user and the agent surface as an agent, each with that switch, into
+`examples/`; then the minors and the tests' rows, read as the majors were, and the starter's
+`tsconfig.json`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
 far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
 workflow was his order, and his Chrome is driven through the extension (the seat still starts
@@ -50,16 +52,19 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the agent surface
-asks only this machine's dev server, and only for so long (DECISIONS 2026-10-12, of that name),
-its five rows. Beneath it `d047674`, check reads what it misread, and names a file it cannot
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a dev server on
+every interface is still the project's own (DECISIONS 2026-10-12, of that name), a follow-up to
+`b203cb5`. Beneath it `8be3bce`, two gates of the identity law read any case (`ci`
+38204158830, all five jobs green), and `b203cb5`, the agent surface asks only this machine's
+dev server, and only for so long, its five rows. Beneath it `d047674`, check reads what it misread, and names a file it cannot
 read (`ci` 38203784739); `4618293`, check says what it passed over, and add writes only into a
 project (`ci` 38202881918, all five jobs green); `f62a4ec`, the ids a component makes are its
 island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value is text (`ci`
 38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
 when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
 tarball budgets: the core's 86000, moved from 82000 at a measured 82,328; the command line's
-98000, moved from 94000 at a measured 94,039; the agent surface's is at 26,492 of 27,000. Beneath it `8aa4c0c`, a kept answer is
+98000, moved from 94000 at a measured 94,039; the agent surface's is at 26,709 of 27,000.
+Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
 markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all five

@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { buildProject } from "../build/build-project.js";
 import { CONFIG_FILE } from "../discovery/config-file.js";
 import type { Io } from "../io/io.js";
+import { askedAt } from "./asked-at.js";
 import { DEV_RECORD } from "./dev-record.js";
 import { folded } from "./folded.js";
 import type { RunningServer } from "./running-server.js";
@@ -61,7 +62,7 @@ export async function runDev(
     void started.ready.then((url) => {
       if (server !== started) return;
       if (url === undefined) io.error("the server stopped; waiting for a change");
-      else io.write(record, `${JSON.stringify({ url })}\n`);
+      else io.write(record, `${JSON.stringify({ url: askedAt(url) })}\n`);
     });
   };
   const runs = folded(step);
