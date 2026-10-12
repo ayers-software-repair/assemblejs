@@ -17,9 +17,10 @@ untangled first, WHICH IS DONE (R-2), the cutting itself being R-3; (3) the buil
 needs a line saying whose JSX it is, and it lands in `build`; (4) a gate holds every example
 to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT ALONE: the two new
 packages' limits are set by his rule of the same day, the measure and a tenth more, and a
-later raise wants the lead's yes first. HE THEN ANSWERED NINE MORE, asked one at a time: R-6
-to R-12 of Phase 7 are rows of work the seat owns now, and the same phase lists what was not
-asked. What follows is the state the audit left.
+later raise wants the lead's yes first. HE THEN ANSWERED EVERY QUESTION THE SEAT HAD, asked
+one at a time, and took its recommendation on the last three: R-6 to R-20 of Phase 7 are
+rows of work the seat owns now. NOTHING IS LEFT FOR HIM TO DECIDE but the day of the first
+prerelease, which is his token and his tag. What follows is the state the audit left.
 
 THE AUDIT WAS THE WORK BEFORE IT (owner, 2026-10-11 evening; DECISIONS 2026-10-11, "the audit"). He
 did not believe the framework was complete, and it was not. Read, in this order:
@@ -1019,6 +1020,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       protocol SDK's dependencies on express and hono. All are development dependencies and
       none reaches a deploy. Bundling the SDK into `@assemblejs/mcp`, with its notices, would
       make it one package: the owner's to say (morning list; DECISIONS 2026-10-10, A-01)
+      RULED 2026-10-12, by "I take your recommendations": bundled (Phase 7, R-18)
 - [x] A-03 MCP prompts for the common tasks, listed by the protocol: `add_assembly`,
       `place_assembly`, `make_page` and `fix_findings`, each a brief that gives the order,
       where to stop and ask, and what an answer means. Proved from the tarballs in the
@@ -1084,6 +1086,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       sent to, the channel's `/assemblejs/next/` or the product's `/assemblejs/`, and that
       address answers (found 2026-10-10 writing A-02; the product's address deploys from
       `main`, which has no site yet)
+      RULED 2026-10-12, by "I take your recommendations" (Phase 7, R-19)
 - [x] A-04 built-in components and best practices: the design memo and the owner's answer
       first, then the starter design system, the accessible components and the `check` rules,
       each rule watched red (owner, 2026-10-09, PLAN 4.1). BUILT in P5-6a to P5-6g, the last
@@ -1464,6 +1467,7 @@ a spec watched red first, or struck with its reason.
       says `/next/` whatever the channel; five conformance assertions pin the address. Each
       package's `homepage` is on a host that does not resolve today. The owner's to settle: what the
       link names
+      RULED 2026-10-12, by "I take your recommendations" (Phase 7, R-19)
 - [ ] `perf` weighs the scripts a document links and nothing they import
       (`perf/measure-page.ts:62-77`): 576 B for a page whose one script statically imports two
       runtime chunks, 20.7 kB, before anything mounts, and whose React assembly then fetches 218 kB.
@@ -1473,6 +1477,8 @@ a spec watched red first, or struck with its reason.
       weighs what a module imports before it runs"). LEFT, AND THE OWNER'S: whether a budget holds
       what an assembly fetches as it mounts, and where a value for a route's parameter is written
       so such a page can be weighed
+      RULED 2026-10-12: everything, shown in two parts, and example addresses in the config
+      (Phase 7, R-17)
 - [x] The agent's `place_assembly` damages the template's layout: with `after` it writes the tag at
       column 0 beneath a neighbour indented eight; with no position it writes it between `</body>`'s
       indentation and `</body>`. A second call for the same assembly on the same page places it
@@ -2046,6 +2052,7 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       the heaviest pages are the ones no budget holds. A design: where a value comes from. THE
       OWNER'S, and one question with the row on what `perf` weighs, above, which says both
       halves that are left.
+      RULED 2026-10-12 (Phase 7, R-17)
 
 ## Phase 7: the owner's rulings of 2026-10-12, at the seat
 
@@ -2131,10 +2138,35 @@ rows are taken in this order; each is a bite with its own proof and its own push
 - [ ] R-11 `events.keep(topic)`: an assembly says which topic keeps its last message
 - [ ] R-12 A service can say the thing does not exist, and the page answers 404 with the
       project's not-found page; an address with a trailing slash answers as the one without
-- [ ] NOT ASKED 2026-10-12, each wanting a measure or being his launch: two servers on one
-      page (FINDINGS 35 to 37); what a `perf` budget holds of mounting, and a value for a
-      route's parameter; the agent surface's 90 packages and whether its SDK is bundled;
-      what the starter's guide link names; the first prerelease
+- [ ] R-14 One bus for a page, which a remote server's runtime joins only where the page's
+      project says so for that server, as `forward` and `trusted` are said (FINDINGS 35;
+      owner, 2026-10-12, "Yes, opt in per remote server")
+- [ ] R-15 An api answers a browser's call from any page, with nothing to configure and
+      nobody to redeploy; a server can switch it off. His own correction of the seat's first
+      advice, that each server name its callers: "that doesnt make sense shouldnt you jsut be
+      able to add it? otherwise the other team ahs to redeploy their server..." It gives
+      nothing away while an api cannot see who asks; an api that reads the visitor (R-16) is
+      not opened this way (FINDINGS 36)
+- [ ] R-16 An api learns who is asking and a page does not: an api reads the request's
+      cookies and headers and may answer with a status, a cookie or a redirect; a service
+      and a page stay a function of the address, kept and placed from another server as now
+      (FINDINGS 37; owner, 2026-10-12, "Apis learn who is asking, pages do not")
+- [ ] R-17 `perf` weighs what a page loads before anything mounts and what its assemblies
+      fetch as they mount, shows both, and holds the total to the budget; and the config
+      lists one example address for each page whose address has a parameter, weighed by
+      `perf` and asked for by `check` (owner, 2026-10-12, "Everything, shown in two parts"
+      and "In the project's config, beside the budgets")
+- [ ] R-18 The protocol SDK bundled into `@assemblejs/mcp` with its notices, so the agent
+      surface is one package to a new project and not 90; what it uses of the SDK and no
+      more. Its limit will rise: measured first, and the lead's yes before it lands
+- [ ] R-19 The address a new project is sent to: the starter's guide link and the agent
+      instructions' `llms.txt` name the docs of the channel the project was made from,
+      `/next/` for a prerelease and the product's own for a stable, on an address that
+      answers the day that channel first publishes
+- [ ] R-20 The first prerelease is cut when Phase 7 is done and its last run is green: the
+      seat says so, the owner adds the token and cuts the tag
+      (R-18 to R-20 by his "I take your recommendations", 2026-10-12, the seat's
+      recommendation on each being what the row says)
 - [ ] R-13 The release publishes a name npm has never seen. RULED 2026-10-12, after the seat
       had promised a script for him to run: "first prerelease should be the next ones only
       and these are done by workflow not by a script I run", and of the first publish, "Yes:

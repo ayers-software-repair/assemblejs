@@ -7104,3 +7104,38 @@ reader's note said what that script was: the first prerelease, in public, by his
 - **Supersedes** the ledger's older line that the first publish of each package is by his
   hand, and `CLAUDE.md`'s that "the first npm bootstrap remains the owner's": what remains
   his is a token and a setting, not a publish.
+
+## 2026-10-12: the owner at the seat, the ones not asked
+
+The seat had told him five things were not asked, each wanting a measure or being his
+launch. He answered "no ask me the ones not asked." They were asked, one at a time.
+
+- **Events between two servers: "Yes, opt in per remote server".** A page has one bus; a
+  server the page places assemblies from joins it only where the page's project says so
+  for that server, as `forward` and `trusted` are said. A remote is another's code, so the
+  default stays off (FINDINGS 35).
+- **A remote assembly calling its own server: "Open by default", and the seat's first advice
+  refused.** The seat advised that each server name the pages allowed to call it. His
+  answer: "that doesnt make sense shouldnt you jsut be able to add it? otherwise the other
+  team ahs to redeploy their server..." He was right, and the reason a better way exists is
+  in the product already: no cookie and no header reaches an api, so its answer is the same
+  for whoever asks and is public to anyone who asks the server directly. An api therefore
+  answers a browser's call from any page, with nothing to configure; a server can switch it
+  off; an api that reads the visitor, below, is not opened this way (FINDINGS 36).
+- **Who is asking: "Apis learn who is asking, pages do not".** An api reads the request's
+  cookies and headers and may answer with a status, a cookie or a redirect: sign-in, a form
+  that lands on a page, data for one visitor. A service and a page stay a function of the
+  address, which is what lets an answer be kept and placed from another server; a part for
+  one visitor asks an api from the browser (FINDINGS 37).
+- **What `perf` weighs: "Everything, shown in two parts".** What loads before anything
+  mounts and what a page's assemblies fetch as they mount, both shown, the budget holding
+  the total. And of pages whose address has a parameter: "In the project's config, beside
+  the budgets", one example address for each, weighed by `perf` and asked for by `check`.
+- **"I take your recommendations".** Said of what was left, which the seat then states so
+  that the record holds what was taken. The agent surface's SDK is bundled into
+  `@assemblejs/mcp`, what it uses and no more, with its notices, one package to a new
+  project where there were 90; its limit rises by the rule of limits, measured and with
+  the lead's yes. The starter's guide link and the agent instructions' `llms.txt` name the
+  docs of the channel a project was made from, on an address that answers the day that
+  channel first publishes. The first prerelease is cut when Phase 7 is done and green: the
+  seat says so, he adds the token and cuts the tag.
