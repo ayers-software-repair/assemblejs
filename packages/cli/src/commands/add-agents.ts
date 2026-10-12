@@ -3,11 +3,11 @@
 import { basename, join } from "node:path";
 import type { Io } from "@assemblejs/build";
 import { outsideProblems } from "@assemblejs/build";
-import { agentFiles } from "../agents/agent-files.js";
-import { AGENT_SERVER } from "../agents/agent-server.js";
-import { cannotRegister } from "../agents/cannot-register.js";
-import { manifestOf } from "../agents/manifest-of.js";
-import { textIn } from "../agents/text-in.js";
+import { agentFiles } from "@assemblejs/check";
+import { AGENT_SERVER } from "@assemblejs/check";
+import { cannotRegister } from "@assemblejs/check";
+import { manifestOf } from "@assemblejs/check";
+import { textIn } from "@assemblejs/check";
 import { noProject } from "./no-project.js";
 
 /**

@@ -11,8 +11,9 @@ import {
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { realIo } from "@assemblejs/build";
+import { AGENT_SERVER, MCP_REGISTRATIONS, agentFiles, agentInstructions } from "@assemblejs/check";
 import { describe, expect, it } from "vitest";
-import { addAgents, agentFiles, agentInstructions } from "@assemblejs/cli";
+import { addAgents } from "@assemblejs/cli";
 
 const project = (files: Readonly<Record<string, string>> = {}): string => {
   const root = mkdtempSync(join(tmpdir(), "add-agents-"));
@@ -136,5 +137,20 @@ describe("the add agents command", () => {
       "# Shared by every project here\n",
     );
     expect(existsSync(join(root, ".mcp.json"))).toBe(false);
+  });
+});
+
+describe("the command line, as the agent files name it", () => {
+  it("is the package a project's agent surface is said to be built on", () => {
+    const own = JSON.parse(
+      readFileSync(new URL("../../package.json", import.meta.url), "utf8"),
+    ) as { name: string };
+    expect(AGENT_SERVER.commandLine).toBe(own.name);
+  });
+
+  // The package's README named three of them after there were five.
+  it("names in its README each file it registers the agent surface in", () => {
+    const readme = readFileSync(new URL("../../README.md", import.meta.url), "utf8");
+    for (const { path } of MCP_REGISTRATIONS) expect(readme, path).toContain(`\`${path}\``);
   });
 });

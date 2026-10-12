@@ -20,8 +20,12 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, per
 - `@assemblejs/build`: what turns a project into a server and its browser files: what is
   known of a project by its directories, the modules generated for it, the bundles, the dev
   loop. `@assemblejs/cli` brings it.
-- `@assemblejs/cli` (it holds the rules `check` names, and writes a new project its `AGENTS.md`
-  and MCP registrations, which `check` holds current and `add agents` rewrites),
+- `@assemblejs/check`: what reads a project and names what is wrong with it: the rules
+  `check` names, every problem found without building, a project's shape, what its pages
+  weigh, and the text of the files written for a project's agents. `@assemblejs/cli` brings
+  it.
+- `@assemblejs/cli` (the verbs; it writes a new project its `AGENTS.md` and MCP registrations,
+  which `check` holds current and `add agents` rewrites),
   `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent surface: an MCP
   server that reads the project, creates one, adds and places an assembly, checks it, renders
   and composes, explains every rule `check` names, and lists the prompts a person asks an
@@ -89,7 +93,7 @@ Enforced, and every one of these is a script in `pnpm check` rather than a claim
 `check:modules` (dependency-cruiser: no cycles, no orphans, layer direction), `lint` (eslint,
 import order and kebab filenames), `check:unused` (knip: a file or export nothing reads),
 `check:versions` (syncpack: one version of a dependency across the workspace),
-`check:one-version` (the thirteen packages name one version and sit in one changesets fixed group),
+`check:one-version` (the fourteen packages name one version and sit in one changesets fixed group),
 `check:editorconfig` (the root `.editorconfig` is the house file, byte for byte, at a named platform tag),
 `check:commit-rule` (commitlint and the house's shell script give the recorded verdict on the same messages), `check:exports`,
 `check:pack` and `check:publish` (publint and are-the-types-wrong on the real tarball),
@@ -104,7 +108,7 @@ Every gate that can go red on a known-bad input has been watched doing so, and t
 ## Release
 
 changesets: every change under `packages/*/src` carries one, from the first changeset of
-2026-10-09, which set every package to `1.0.0-next.0` (owner, DECISIONS 2026-10-09). The thirteen
+2026-10-09, which set every package to `1.0.0-next.0` (owner, DECISIONS 2026-10-09). The fourteen
 packages share one version: one fixed group in `.changeset/config.json` moves them together,
 and `check:one-version` holds it (owner, DECISIONS 2026-10-11, "One number"). `next` is
 in pre mode (`.changeset/pre.json`). Versions and release notes are prepared in a normal

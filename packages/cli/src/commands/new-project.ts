@@ -6,8 +6,8 @@ import { isDirectory } from "@assemblejs/build";
 import { suggestName } from "@assemblejs/build";
 import { isOccupied } from "@assemblejs/build";
 import { outsideProblems } from "@assemblejs/build";
-import { cannotRegister } from "../agents/cannot-register.js";
-import { textIn } from "../agents/text-in.js";
+import { cannotRegister } from "@assemblejs/check";
+import { textIn } from "@assemblejs/check";
 import { projectInto } from "./project-into.js";
 import { PROJECT_NAME } from "./project-name.js";
 

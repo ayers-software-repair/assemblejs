@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { agentFiles } from "../agents/agent-files.js";
-import { MCP_REGISTRATIONS } from "../agents/mcp-registrations.js";
+import { agentFiles } from "@assemblejs/check";
+import { MCP_REGISTRATIONS } from "@assemblejs/check";
 import { COMPONENTS } from "./components.js";
 import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";

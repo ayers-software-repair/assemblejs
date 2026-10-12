@@ -13,7 +13,7 @@ this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a
 (1) a Svelte view types what it is handed, found by Svelte's own checker, DONE;
 (2) the command line's package is split in three, `cli`, `build` and `check`, before the
 TypeScript setup is built, what would make one of the three depend on another the wrong way
-untangled first, WHICH IS DONE (R-2), the cutting itself being R-3; (3) the build writes the TypeScript setup, so that no file of a user's
+untangled first, ALL OF WHICH IS DONE (R-2, R-3); (3) the build writes the TypeScript setup, so that no file of a user's
 needs a line saying whose JSX it is, and it lands in `build`; (4) a gate holds every example
 to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT ALONE: the two new
 packages' limits are set by his rule of the same day, the measure and a tenth more, and a
@@ -2094,15 +2094,17 @@ rows are taken in this order; each is a bite with its own proof and its own push
       build's areas held from the checks' and the verbs' (DECISIONS 2026-10-12, "the build
       does not read the checks"). DONE the same day of (b), (c) and the rule's second half
       (DECISIONS 2026-10-12, "the checks do not read the verbs")
-- [ ] R-3 `@assemblejs/build` and `@assemblejs/check` cut from `@assemblejs/cli`: `cli` keeps
+- [x] R-3 `@assemblejs/build` and `@assemblejs/check` cut from `@assemblejs/cli`: `cli` keeps
       the verbs, `build` turns a project into a server, `check` reads a project and names
       problems; the agent surface and `create` take from the two what they took from the
       command line. With it: the one-version gate and the changesets group at fourteen, the
       release's list of packages, the reference, the READMEs, DESIGN. The limits by the
       owner's rule, the measure and a tenth more. DONE 2026-10-12 OF THE FIRST CUT:
       `@assemblejs/build` is a package, the command line depends on it, and their limits are
-      56,700 and 61,500 (DECISIONS 2026-10-12, "the build is a package of its own"). LEFT:
-      the second cut, `@assemblejs/check`
+      56,700 and 61,500 (DECISIONS 2026-10-12, "the build is a package of its own"). DONE
+      THE SAME DAY OF THE SECOND: `@assemblejs/check` is a package, the command line is its
+      verbs, and the three limits are 56,700, 45,000 and 22,200 (DECISIONS 2026-10-12, "the
+      checks are a package of their own, and the command line is its verbs")
 - [ ] R-4 The build writes the TypeScript setup into `.assemblejs/`, and the starter a root
       `tsconfig.json` that names it, so no file needs a line saying whose JSX it is. A NEW
       PROJECT IS READY BY DEFAULT (owner, 2026-10-12): the starter also lists `typescript`
@@ -2119,11 +2121,11 @@ rows are taken in this order; each is a bite with its own proof and its own push
       the Vue views and Svelte's over the Svelte ones. React's types in the seven examples
       that hold a React view; the two checkers as development dependencies of this
       repository only
-- [ ] THE RULE OF LIMITS (owner, 2026-10-12, "Size plus 10%, avp approves raises"): a new
+- [x] THE RULE OF LIMITS (owner, 2026-10-12, "Size plus 10%, avp approves raises"): a new
       package, or one just split, has its limit set by the seat at its measured size and a
       tenth more; any later raise wants the lead's yes before it lands, with the measure and
-      what the bytes bought, and is named in the report to the owner. To do with it: the
-      three limits after the split, set by this rule in R-3
+      what the bytes bought, and is named in the report to the owner. DONE of what it asked
+      at once: the three limits after the split, set by it in R-3. The rule itself stands
 - [ ] R-6 What a handler returns may leave a member out: the type takes an api or a service
       that answers one of two shapes. Tried as a type first (DECISIONS 2026-10-12, "the
       seat's advice on a handler's return tried"). An `interface` is still refused: one

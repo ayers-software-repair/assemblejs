@@ -27,7 +27,7 @@ const work = mkdtempSync(join(tmpdir(), "assemblejs-proof-"));
 const tarballs = join(work, "tarballs");
 
 // The starter, and every package of ours it writes into a project.
-const packed = ["create", "core", "build", "cli", "mcp"];
+const packed = ["create", "core", "build", "check", "cli", "mcp"];
 step(`build and pack ${packed.join(", ")}, so the tarballs are the source at this commit`);
 sh("pnpm", [...packed.flatMap((name) => ["--filter", `@assemblejs/${name}`]), "build"], ".");
 for (const name of packed) {
@@ -47,7 +47,7 @@ sh(
   [
     "exec",
     "--yes",
-    ...["create", "cli", "build", "core"].map((name) => `--package=${tarball(name)}`),
+    ...["create", "cli", "check", "build", "core"].map((name) => `--package=${tarball(name)}`),
     "--",
     "create-assemblejs",
     "my-app",
@@ -67,9 +67,9 @@ for (const field of ["dependencies", "devDependencies"]) {
     }
   }
 }
-// One copy of core, of the build and of the command line, whoever asks for them: the tarball.
+// One copy of core, the build, the checks and the command line, whoever asks: the tarball.
 manifest.overrides = Object.fromEntries(
-  ["core", "build", "cli"].map((name) => [`@assemblejs/${name}`, `file:${tarball(name)}`]),
+  ["core", "build", "check", "cli"].map((name) => [`@assemblejs/${name}`, `file:${tarball(name)}`]),
 );
 writeFileSync(join(app, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 sh("npm", ["install", "--no-audit", "--no-fund"], app);
@@ -79,7 +79,13 @@ console.log(sh("npx", ["assemblejs", "build"], app).trim());
 
 step("prune every development dependency");
 sh("npm", ["prune", "--omit=dev", "--no-audit", "--no-fund"], app);
-for (const gone of ["esbuild", "@assemblejs/build", "@assemblejs/cli", "@assemblejs/mcp"]) {
+for (const gone of [
+  "esbuild",
+  "@assemblejs/build",
+  "@assemblejs/check",
+  "@assemblejs/cli",
+  "@assemblejs/mcp",
+]) {
   if (existsSync(join(app, "node_modules", gone))) throw new Error(`${gone} is still installed`);
   console.log(`${gone}: not installed`);
 }

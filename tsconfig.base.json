@@ -20,6 +20,7 @@
       "@assemblejs/core/client": ["./packages/core/src/client/index.ts"],
       "@assemblejs/core/outline": ["./packages/core/src/outline/index.ts"],
       "@assemblejs/build": ["./packages/build/src/index.ts"],
+      "@assemblejs/check": ["./packages/check/src/index.ts"],
       "@assemblejs/cli": ["./packages/cli/src/index.ts"],
       "@assemblejs/create": ["./packages/create/src/index.ts"],
       "@assemblejs/mcp": ["./packages/mcp/src/index.ts"],

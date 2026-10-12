@@ -17,6 +17,8 @@ export default function buildExamples() {
       "--filter",
       "@assemblejs/build",
       "--filter",
+      "@assemblejs/check",
+      "--filter",
       "@assemblejs/cli",
       "--filter",
       "@assemblejs/renderer-react",

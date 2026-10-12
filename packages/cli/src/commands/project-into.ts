@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { lineEnding } from "@assemblejs/build";
-import { agentFiles } from "../agents/agent-files.js";
+import { agentFiles } from "@assemblejs/check";
 import { projectFiles } from "./project-files.js";
 
 // What a directory may hold of the starter's own and still take a project: its author's

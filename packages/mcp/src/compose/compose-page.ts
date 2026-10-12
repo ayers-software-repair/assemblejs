@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { isAbsolute, join } from "node:path";
 import { discoverPages, readInside } from "@assemblejs/build";
-import { pageRoute, readPagePolicy } from "@assemblejs/cli";
-import type { PagePolicy } from "@assemblejs/cli";
+import { pageRoute, readPagePolicy } from "@assemblejs/check";
+import type { PagePolicy } from "@assemblejs/check";
 import { pagePlan, routeParameters } from "@assemblejs/core";
 import type { ProjectRoot } from "../root/project-root.js";
 import type { ArrivedWith } from "./arrived-with.js";

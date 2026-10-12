@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { PagePolicy } from "@assemblejs/cli";
+import type { PagePolicy } from "@assemblejs/check";
 import type { PagePlacement } from "@assemblejs/core";
 
 const isObject = (value: unknown): value is Readonly<Record<string, unknown>> =>

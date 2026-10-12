@@ -1,11 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildProject, realIo } from "@assemblejs/build";
+import { MCP_REGISTRATIONS, agentFiles, runCheck, runPerf } from "@assemblejs/check";
 import { describe, expect, it } from "vitest";
-import { MCP_REGISTRATIONS, agentFiles, projectFiles } from "@assemblejs/cli";
+import { projectFiles } from "@assemblejs/cli";
 import { capture } from "../../../build/test/fixtures/capture.js";
 import { serve } from "../../../build/test/fixtures/serve.js";
 
@@ -90,6 +92,54 @@ describe("building a project with styles and no browser script", { timeout: 60_0
       expect(page).not.toContain('<script type="module"');
       const href = /href="(\/_assemblejs\/assets\/styles\/hello-[0-9a-f]{8}\.css)"/.exec(page)?.[1];
       expect(await serve(root, String(href))).toContain('assembly-root[data-name="hello"] .hi');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("what the checks make of a new project", { timeout: 60_000 }, () => {
+  // B-20's proof, its first half: a generated project passes check.
+  it("passes check as it is written, and check says so", async () => {
+    const root = mkdtempSync(join(tmpdir(), "new-checked-"));
+    try {
+      for (const [path, contents] of Object.entries(projectFiles("checked"))) {
+        realIo.write(join(root, path), contents);
+      }
+      const { io, logs, errors } = capture();
+      expect(await runCheck(root, io)).toBe(0);
+      expect(errors).toEqual([]);
+      expect(logs).toEqual(["no problems"]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("is built, run in production and weighed by perf, page by page", async () => {
+    const root = mkdtempSync(join(example, ".dev-perf-"));
+    try {
+      for (const [path, contents] of Object.entries(projectFiles("weighed"))) {
+        realIo.write(join(root, path), contents);
+      }
+      realIo.write(join(root, "src", "assemblies", "hello", "hello.css"), ".hi { color: red }\n");
+      // A page at the route its own file declares, not the one its directory implies.
+      realIo.write(
+        join(root, "src", "pages", "shop", "shop.html"),
+        '<body><assembly name="hello"></assembly></body>',
+      );
+      realIo.write(
+        join(root, "src", "pages", "shop", "shop.page.ts"),
+        'import { definePage } from "@assemblejs/core";\nexport default definePage({ route: "/store" });\n',
+      );
+      const { io, logs, errors } = capture();
+      expect(await runPerf(root, io)).toBe(0);
+      expect(errors).toEqual([]);
+      const line = logs.find((entry) => entry.startsWith("/  document"));
+      expect(logs.some((entry) => entry.startsWith("/store  document"))).toBe(true);
+      expect(line).toMatch(
+        // The styles weigh the tokens every page links and the assembly's own sheet.
+        /^\/ {2}document \d+ B \(\d+ B gzip\) {2}styles (?:[1-9]\d* B|\d+(?:\.\d+)? kB) \((?:\d+ B|\d+(?:\.\d+)? kB) gzip\) {2}scripts 0 B \(0 B gzip\)$/,
+      );
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

@@ -56,12 +56,12 @@ module.exports = {
       name: "the-checks-do-not-read-the-verbs",
       severity: "error",
       comment:
-        "The middle layer of the three: what reads a project and names problems, the agent " +
-        "files' text among it, takes nothing from the verbs that call it. It did once: the " +
-        "text of the agent files took the list of renderers from the commands, and the verb " +
-        "that writes those files lived beside the text.",
-      from: { path: "^packages/cli/src/(rules|check|shape|perf|agents)/" },
-      to: { path: "^packages/cli/src/(commands|run|deploy)/" },
+        "The middle package of the three: what reads a project and names problems, the agent " +
+        "files' text among it, takes nothing from the verbs that call it, in its source or " +
+        "its tests. It did once: the text of the agent files took the list of renderers from " +
+        "the commands, and the verb that writes those files lived beside the text.",
+      from: { path: "^packages/check/(src|test)/" },
+      to: { path: "^packages/cli/" },
     },
     {
       name: "no-bundler-at-runtime",

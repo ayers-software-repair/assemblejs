@@ -455,7 +455,7 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
 
-  packages/cli:
+  packages/check:
     dependencies:
       '@assemblejs/build':
         specifier: workspace:*
@@ -469,6 +469,40 @@ importers:
       esbuild:
         specifier: 0.28.2
         version: 0.28.2
+    devDependencies:
+      '@arethetypeswrong/cli':
+        specifier: 0.18.5
+        version: 0.18.5
+      '@types/node':
+        specifier: 26.4.1
+        version: 26.4.1
+      publint:
+        specifier: 0.3.24
+        version: 0.3.24
+      tsup:
+        specifier: 8.5.1
+        version: 8.5.1(jiti@2.7.0)(postcss@8.5.28)(typescript@6.0.3)(yaml@2.9.0)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: 4.1.11
+        version: 4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
+
+  packages/cli:
+    dependencies:
+      '@assemblejs/build':
+        specifier: workspace:*
+        version: link:../build
+      '@assemblejs/check':
+        specifier: workspace:*
+        version: link:../check
+      '@assemblejs/core':
+        specifier: workspace:*
+        version: link:../core
+      acorn:
+        specifier: 8.18.0
+        version: 8.18.0
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: 0.18.5
@@ -571,6 +605,9 @@ importers:
       '@assemblejs/build':
         specifier: workspace:*
         version: link:../build
+      '@assemblejs/check':
+        specifier: workspace:*
+        version: link:../check
       '@assemblejs/cli':
         specifier: workspace:*
         version: link:../cli

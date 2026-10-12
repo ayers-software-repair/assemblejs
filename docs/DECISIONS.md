@@ -7201,3 +7201,41 @@ checks until then and depends on the build.
 - **`CLAUDE.md`, by his leave of the same day, three facts.** Thirteen packages where it
   said twelve, and the build in its list; `perf` among the verbs; and that the browser proof
   does not run on this machine, where it gave the command to run it here.
+
+## 2026-10-12: the checks are a package of their own, and the command line is its verbs
+
+R-3's second cut, and with it the split the owner ordered is made: `@assemblejs/build`,
+`@assemblejs/check`, `@assemblejs/cli`.
+
+- **What moved.** Five areas and their mirrored tests: `rules`, `check`, `shape`, `perf` and
+  `agents`. What is left in the command line is `commands`, `run` and `deploy`: the verbs,
+  what `new` writes, and the command itself.
+- **Nothing of the checks' source read the verbs.** Three of their tests did, for one thing:
+  the files of a new project, which they wrote to have a project to stand on. A package
+  beneath the command line cannot ask it for the starter, so the checks' tests have a right
+  project of their own, a fixture of a manifest, a server file, one assembly on one page
+  and the agent files this version writes. What the starter itself must satisfy is held
+  where the starter is: the command line's test of it now has the two cases that were the
+  proof of the rest, that a new project passes `check` as it is written, and that `perf`
+  builds it, runs it in production and weighs it page by page.
+- **Held.** The module gate's second rule is of packages too: nothing in the checks, their
+  tests among them, imports the command line.
+- **The limits, by the owner's rule.** The checks pack to 40,852 bytes: 45,000. The command
+  line packs to 20,100, a fifth of what it was this morning: 22,200, down from 61,500 an
+  hour ago and 102,000 before that. The build is as it was, 51,531 of 56,700. The three
+  together are 112,483 where the one was 101,290: 11,193 more, two more copies of the
+  licence, the notice and a README, and what no longer compresses beside what. A project
+  installs that much more and is otherwise as it was.
+- **`CLAUDE.md`.** Fourteen packages, and the checks in its list; the command line said to
+  hold the verbs, where it was said to hold the rules.
+- **Two cases spoke of "this package" and meant the command line.** That the agent surface
+  is said to be built on the package whose manifest sits beside the test, and that that
+  package's README names every file it registers the surface in. Moved with their source
+  they read the checks' manifest and README and failed, which is how they were found; they
+  are in the command line's test of `add agents`, where "this package" is again true.
+- **Proof.** Every cheap gate, lint, the module gate, the unused-code gate, the types of the
+  five packages, the reference, the gates that read a tarball. The suites: the build's 400
+  cases, the checks' 295, the command line's 135, the agent surface's 209, the starter's 3;
+  the checks' and the command line's were 429 together an hour before and are one more,
+  the case that a new project passes `check`. And the five conformance fixtures on the
+  packed path, where the command line's tarball installs the two it now depends on.

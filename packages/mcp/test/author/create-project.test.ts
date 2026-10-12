@@ -11,7 +11,7 @@ import {
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { OutsideRootError } from "@assemblejs/build";
-import { MCP_REGISTRATIONS, agentInstructions, agentProblems } from "@assemblejs/cli";
+import { MCP_REGISTRATIONS, agentInstructions, agentProblems } from "@assemblejs/check";
 import { describe, expect, it } from "vitest";
 import { createProject, resolveRoot } from "@assemblejs/mcp";
 

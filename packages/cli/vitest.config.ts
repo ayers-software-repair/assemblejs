@@ -15,6 +15,7 @@ export default defineConfig({
     alias: {
       "@assemblejs/cli": src("./src/index.ts"),
       "@assemblejs/build": src("../build/src/index.ts"),
+      "@assemblejs/check": src("../check/src/index.ts"),
       "@assemblejs/core": src("../core/src/index.ts"),
     },
   },

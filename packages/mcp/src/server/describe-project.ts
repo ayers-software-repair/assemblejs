@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readShape } from "@assemblejs/cli";
+import { readShape } from "@assemblejs/check";
 import type { ProjectRoot } from "../root/project-root.js";
 import type { DescribedProject } from "./described-project.js";
 

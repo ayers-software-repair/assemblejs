@@ -90,6 +90,7 @@ const packages = [
     "create",
     "core",
     "build",
+    "check",
     "cli",
     "mcp",
     ...[...declared.values()].flatMap((fixture) =>

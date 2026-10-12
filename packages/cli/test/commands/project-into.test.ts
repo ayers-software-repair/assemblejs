@@ -1,7 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { agentFiles } from "@assemblejs/check";
 import { describe, expect, it } from "vitest";
-import { agentFiles, projectFiles, projectInto } from "@assemblejs/cli";
+import { projectFiles, projectInto } from "@assemblejs/cli";
 
 /** What a directory holds, as the two questions asked of it: a file's text, and anything there. */
 const holding = (files: Readonly<Record<string, string | null>>) =>

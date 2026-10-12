@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { AGENT_SERVER, ownVersion } from "@assemblejs/cli";
+import { AGENT_SERVER } from "@assemblejs/check";
+import { ownVersion } from "@assemblejs/cli";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { registerAuthoringTools } from "./register-authoring-tools.js";

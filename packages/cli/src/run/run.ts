@@ -5,13 +5,13 @@ import { buildProject } from "@assemblejs/build";
 import { runDev } from "@assemblejs/build";
 import { RENDERERS } from "@assemblejs/build";
 import type { Io } from "@assemblejs/build";
-import { runCheck } from "../check/run-check.js";
+import { runCheck } from "@assemblejs/check";
+import { runPerf } from "@assemblejs/check";
 import { addAgents } from "../commands/add-agents.js";
 import { addAssembly } from "../commands/add-assembly.js";
 import { newProject } from "../commands/new-project.js";
 import { ownVersion } from "../commands/own-version.js";
 import { runDeploy } from "../deploy/run-deploy.js";
-import { runPerf } from "../perf/run-perf.js";
 import { readArguments } from "./read-arguments.js";
 
 const USAGE = `assemblejs <command>

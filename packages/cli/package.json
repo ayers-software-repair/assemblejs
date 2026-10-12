@@ -46,9 +46,9 @@
   },
   "dependencies": {
     "@assemblejs/build": "workspace:*",
+    "@assemblejs/check": "workspace:*",
     "@assemblejs/core": "workspace:*",
-    "acorn": "8.18.0",
-    "esbuild": "0.28.2"
+    "acorn": "8.18.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
