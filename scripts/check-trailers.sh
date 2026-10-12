@@ -16,7 +16,10 @@
 #        check-trailers.sh                    the commits this branch has and its upstream lacks
 #        check-trailers.sh --message <file>   one message (the commit-msg hook)
 set -euo pipefail
-FORBIDDEN='^(Co-Authored-By|Co-authored-by|Generated with|Claude-Session|Assisted-by|Generated-by):'
+# Read whatever its case, since a trailer's key is: `co-authored-by:` is the trailer
+# `Co-Authored-By:` is. And the line a coding agent appends by default is no trailer at all, a
+# sentence with a mark before it and no colon after, so it is named by what it says.
+FORBIDDEN='^(co-authored-by|claude-session|assisted-by|generated-by)[[:space:]]*:|generated with \[?claude'
 SIGNOFF='^Signed-off-by: .+ <.+@.+>$'
 
 if [ "${1:-}" = "--self-test" ]; then
@@ -51,15 +54,32 @@ if [ "${1:-}" = "--self-test" ]; then
   if (cd "$repo" && bash "$self" "$unsigned" "$attributed" >/dev/null 2>&1); then
     echo "trailer gate self-test FAILED: it accepted an attribution trailer" >&2; exit 1
   fi
+  # A key in another case is the same trailer, and the line an agent appends by default, a mark
+  # and a sentence with no colon, is an attribution all the same. Each was let through.
+  for attribution in 'co-authored-by: A Tool <tool@example.com>' 'CO-AUTHORED-BY: A Tool <tool@example.com>' \
+    $'\U0001F916 Generated with [Claude Code](https://claude.com/claude-code)' 'Generated with Claude Code'; do
+    printf 'feat: a change\n\nbody\n\n%s\nSigned-off-by: A Person <a@example.com>\n' "$attribution" > "$tmp"
+    if bash "$0" --message "$tmp" >/dev/null 2>&1; then
+      echo "trailer gate self-test FAILED: it accepted the attribution \"$attribution\"" >&2; exit 1
+    fi
+  done
+  # A body that says how something was generated is no attribution.
+  printf 'feat: a change\n\nThe reference is generated with the compiler, and co-authored-by is a word here.\n\nSigned-off-by: A Person <a@example.com>\n' > "$tmp"
+  bash "$0" --message "$tmp" >/dev/null || { echo "trailer gate self-test FAILED: it refused a body that is no attribution" >&2; exit 1; }
   # With no range and no upstream there is nothing to compare with, and it says so.
   if (cd "$repo" && bash "$self" >/dev/null 2>&1); then
     echo "trailer gate self-test FAILED: it passed with no range and no upstream" >&2; exit 1
   fi
-  echo "trailer gate self-test: red on a missing sign-off and on an attribution trailer, in a message and in a range; green on signed ones, as required"
+  echo "trailer gate self-test: red on a missing sign-off and on an attribution, a trailer in any case and an agent's default line, in a message and in a range; green on signed ones, as required"
   exit 0
 fi
 
 if [ "${1:-}" = "--message" ]; then
+  # Held to both rules where it is written, as a range is: the hook that reads one message let an
+  # attribution through for CI to find after the push.
+  if grep -Eiq "$FORBIDDEN" "$2"; then
+    echo "commit message carries an attribution, which no commit here does: remove the line" >&2; exit 1
+  fi
   if ! grep -Eq "$SIGNOFF" "$2"; then
     echo "commit message lacks a Signed-off-by trailer (use git commit -s)" >&2; exit 1
   fi
@@ -76,7 +96,7 @@ if [ -z "$base" ]; then
 fi
 for sha in $(git rev-list "$base".."$head"); do
   body=$(git log -1 --format=%B "$sha")
-  if printf '%s\n' "$body" | grep -Eq "$FORBIDDEN"; then
+  if printf '%s\n' "$body" | grep -Eiq "$FORBIDDEN"; then
     echo "$sha: forbidden attribution trailer" >&2; fail=1
   fi
   if ! printf '%s\n' "$body" | grep -Eq "$SIGNOFF"; then

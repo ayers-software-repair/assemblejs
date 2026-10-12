@@ -1748,17 +1748,26 @@ Tests that cannot fail:
       UNVERIFIED. The same defect as workflow composer.2, REPRODUCED by the seat and DONE 2026-10-11
       with it (DECISIONS 2026-10-11, "markup is read as the browser reads it, in the time its length
       takes").
-- [ ] Attribution-trailer gate misses the default Claude Code trailer and any lower-case
+- [x] Attribution-trailer gate misses the default Claude Code trailer and any lower-case
       co-authored-by (workflow tests.2, minor). Claimed at `scripts/check-trailers.sh:17`. PREMISE
-      UNVERIFIED
+      UNVERIFIED. READ at `scripts/check-trailers.sh` AND WATCHED: its self-test went red on each of
+      four attributions once they were added to it, a key in lower case and in capitals and the line
+      an agent appends by default, with its mark and without. A third hole beside the two: the form
+      that reads one message, which is the commit hook, held it to the sign-off alone. DONE
+      2026-10-12: the pattern is read in any case and names that line by what it says, and one
+      message is held to both rules.
 - [ ] placement cache.ttl: unit undocumented (it is milliseconds), and unlike deadline it is never
       validated at boot (workflow tests.3, minor). Claimed at
       `packages/core/src/server/placement-problems.ts:71`. PREMISE UNVERIFIED
 - [ ] Mirror gate exempts any source whose name merely ends in 'index' or 'bin', so such files need
       no test (workflow tests.4, minor). Claimed at `scripts/check-mirror.mjs:66`. PREMISE
       UNVERIFIED
-- [ ] Identity gate regex is case-sensitive, so ZJayers, iCloud, MERIDIANVEGA and ASMBL pass
-      (workflow tests.5, minor). Claimed at `scripts/identity-gate.sh:20`. PREMISE UNVERIFIED
+- [x] Identity gate regex is case-sensitive, so each of its four names passes in any other case
+      of its letters (workflow tests.5, minor). Claimed at `scripts/identity-gate.sh:20`. READ AND
+      WATCHED 2026-10-12: with the four written in the other case of every letter as a fixture, the
+      gate's self-test refused none of them. DONE 2026-10-12: the pattern is read in any case, the
+      self-test holds it to that fixture, and the one line of the tree it then refused was this
+      row, which spelled them.
 - [ ] Organization gate self-test checks that each rule number fires, not each branch, so inverting
       several checks still passes (workflow tests.6, minor). Claimed at
       `scripts/check-organization.mjs:211`. PREMISE UNVERIFIED

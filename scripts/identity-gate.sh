@@ -40,7 +40,9 @@ scan() {
     echo "identity gate: the file list is empty, which is a broken scan and not a clean tree" >&2
     return 1
   fi
-  if printf '%s\n' "$files" | xargs -r grep -EIn "$PATTERN"; then
+  # Whatever its case: a name is the name it is in capitals too, and read as written the gate
+  # let each of these by under any other spelling of its letters.
+  if printf '%s\n' "$files" | xargs -r grep -EIin "$PATTERN"; then
     echo "identity gate: forbidden identity string found (matches above)" >&2
     fail=1
   fi
@@ -72,10 +74,16 @@ if [ "${1:-}" = "--self-test" ]; then
   output=$(find "$fixtures" -type f | scan 2>&1) && {
     echo "identity gate self-test FAILED: the gate passed a known-bad tree" >&2; exit 1; }
 
-  hits=$(printf '%s\n' "$output" | grep -cE "$PATTERN" || true)
+  hits=$(printf '%s\n' "$output" | grep -ciE "$PATTERN" || true)
   if [ "$hits" -lt 4 ]; then
     echo "identity gate self-test FAILED: the identity rule reported $hits match(es), expected 4 or more" >&2
     printf '%s\n' "$output" >&2
+    exit 1
+  fi
+  # The same four in the other case of every letter, which a pattern read as written lets by.
+  recased=$(printf '%s\n' "$output" | grep -c "$fixtures/other-case.txt:" || true)
+  if [ "$recased" -lt 4 ]; then
+    echo "identity gate self-test FAILED: $recased of the four names were refused in another case" >&2
     exit 1
   fi
   for law in publisher author organization; do
@@ -92,7 +100,7 @@ if [ "${1:-}" = "--self-test" ]; then
     echo "identity gate self-test FAILED: only $count tracked file(s) would be scanned" >&2; exit 1
   fi
 
-  echo "identity gate self-test: refused a known-bad tree on $hits identity match(es) and on the publisher, author and organization rules, over $count real file(s)"
+  echo "identity gate self-test: refused a known-bad tree on $hits identity match(es), four of them in another case, and on the publisher, author and organization rules, over $count real file(s)"
   exit 0
 fi
 

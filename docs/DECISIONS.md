@@ -5915,3 +5915,21 @@ case watched red.
   a name whose directory is there and broken, a name `add_assembly` refuses as taken.
 - **Proof.** Eight cases watched red, then green. The agent surface's tarball is at 26,492
   bytes of its 27,000.
+
+## 2026-10-12: two gates of the identity law read any case
+
+Two of the audit's rows on the gates (tests.2, tests.5), each watched letting its case by.
+Both hold a hard law, so a hole in either is a hole in the law.
+
+- **The identity gate matched its names as written.** Each of the four passed in any other
+  case of its letters: with all four written in the other case of every letter as a fixture,
+  the gate refused none of them. It reads any case now, its self-test holds it to that
+  fixture, and the one line of the tree it then refused was the audit's own row, which
+  spelled them; the row says it another way.
+- **The trailer gate matched two spellings of one key, and a line no agent writes.** A
+  trailer's key in lower case or in capitals passed, and so did the line a coding agent
+  appends by default, which is a sentence with a mark before it and no colon after. And the
+  form that reads one message, which is the commit hook, held it to the sign-off alone, so an
+  attribution reached a push before anything refused it. The pattern is read in any case and
+  names that line by what it says, one message is held to both rules, and the self-test
+  holds four attributions red and a body that merely uses the words green.
