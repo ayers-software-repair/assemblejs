@@ -19,7 +19,9 @@ import { EventsContext } from "./events-context.js";
  * re-render rather than adopt. Each assembly mounts on its own and at its own time, so each gets
  * a fresh state of its own.
  */
-export function hydrate(component: Component<AssemblyProps>): ClientRenderer {
+export function hydrate<D extends JsonObject>(
+  component: Component<AssemblyProps<D>>,
+): ClientRenderer {
   return {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       (globalThis as { _$HY?: unknown })._$HY = {
@@ -42,7 +44,8 @@ export function hydrate(component: Component<AssemblyProps>): ClientRenderer {
             createComponent(EventsContext.Provider, {
               value: context.events,
               get children() {
-                return createComponent(component, { data });
+                // What the island carried, which the view's author says is D.
+                return createComponent(component, { data: data as D });
               },
             }),
           element,

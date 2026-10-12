@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { MarkupInput } from "@assemblejs/core";
+import type { JsonObject, MarkupInput } from "@assemblejs/core";
 import { serverEvents } from "@assemblejs/core/client";
 import { h } from "preact";
 import { renderToString } from "preact-render-to-string";
@@ -18,8 +18,8 @@ import type { AssemblyProps } from "../props/assembly-props.js";
  * events, so a component that calls `useEvents()` renders on the server as in the browser; and
  * inside the placement's id, which this package's `useId` puts before the ids it makes.
  */
-export function renderToMarkup(
-  component: (props: AssemblyProps) => unknown,
+export function renderToMarkup<D extends JsonObject>(
+  component: (props: AssemblyProps<D>) => unknown,
   input: MarkupInput,
 ): string {
   return renderToString(

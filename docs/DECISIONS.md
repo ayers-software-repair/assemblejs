@@ -6726,3 +6726,168 @@ after their runs. It had been measured and not reproduced. It is reproduced now,
   this machine is the gates the bite touches (D1277). The floor is Node 22 and this machine
   runs 24: `ci`'s `verify (22)` job is where the new case runs on the floor. The command
   line's tarball is at 101,026 bytes of its 102,000.
+
+## 2026-10-12: a view that says what its data holds is taken by its renderer
+
+A reader of the seat's report said what the report had not: no example is type-checked by
+anything, the showcase among them, and only one had been measured. All ten are measured now,
+under the strict configuration of the entry on generated modules. What that found is three
+things, with three owners.
+
+- **The renderers refused a typed view** (a defect of the product, mended). The site's own
+  pages say `AssemblyProps` takes the shape of a view's data as a type argument, and the
+  showcase does so in seven views. `renderToMarkup` and `hydrate` took a view of
+  `AssemblyProps<JsonObject>` and no other, and a parameter is checked the other way round, so
+  a view of `AssemblyProps<Offer>` was refused where the build's generated modules hand it
+  over, on the server and in the browser alike. Both take a view of any shape of data now, in
+  the React, Preact, Solid and Lit renderers; Lit's `LitView` takes the shape. Where Solid and
+  Lit hand the view its data through a typed call, the data is said to be that shape once, at
+  the call: it is what the assembly's services returned, and the shape is its author's word
+  for that. Watched: each of the four type-checks red on a view typed
+  `AssemblyProps<{ cents: number }>`, two errors each, and green after. Nothing runs
+  differently: the built JavaScript of three is the same byte for byte, and Lit's differs by
+  one comment.
+- **A handler that answers one of two shapes is refused as JSON** (measured, and the owner's).
+  `return { ok: false, problems }` on one path and `return { ok: true, id }` on another is
+  what an api and a service naturally write, four times in the showcase. TypeScript makes of
+  the two a union in which each shape has the other's members as `undefined`, and
+  `JsonValue` has no `undefined`. Measured in a probe of five cases with TypeScript 6.0.3: one
+  expression of two shapes, and two returns of two shapes, are refused; a declared union of
+  two type aliases is taken, and so is one shape with an optional member; an `interface` is
+  refused, having no index signature. At run time nothing is wrong: an island's data and an
+  api's answer go through `JSON.stringify`, which leaves such a member out. But the type says
+  of itself that it holds "anything that survives a round trip through JSON, and nothing that
+  does not", and whether it should take a member that may be absent is a word about what the
+  contract's own types mean. The showcase's four handlers declare what they answer, which
+  type-checks whichever way that is settled; the product's shape is said once, by its service,
+  and its view reads it. The seat's advice is to let a member of an object be absent in what
+  a handler returns.
+- **Whose JSX a file is, and its types** (the owner's already, item three of the report). What
+  is left in the ten examples after the two above is 64 errors, every one of this kind: no
+  types for React's JSX, a Preact or Solid file read as React's, and what follows from those.
+  Two examples have none (the templates, and the reviews team's server). His answer also
+  decides whether a gate can type-check `examples/` at all, which none does.
+- **The generated browser modules are in no program unless they are named.** A pattern that
+  names `.assemblejs` takes the modules a server file imports and not `.assemblejs/client/`;
+  `.assemblejs/**/*.ts` takes them. The measure of the day before was of the first kind and
+  missed three errors in the shop alone. The claim it made of a new project stands: a starter
+  has no browser modules, and type-checks with either pattern. A configuration the starter is
+  given must name the second.
+- **Proof.** The four type-checks red and then green, as said. The four renderers' own gate:
+  the cheap chain, their suites (23, 26, 30 and 34 cases), their packed tarballs within their
+  budgets, the reference. The showcase's four projects built and checked by the built command
+  line, no problems, and none of the catalogue's service in its browser files, though its
+  view reads a type from it. The ten examples measured again: of the typed-view refusals and
+  the two-shaped handlers, none left; 64 errors, all of the third kind, the one implicit `any`
+  among them a list a React hook made, untyped where React has no types. A change to a
+  renderer is walked in a browser before it is pushed; this one is not, as what the browser
+  loads is the same file, byte for byte or by a comment, and `ci`'s browser proof reads it.
+
+## 2026-10-12: the advice on whose JSX a file is, tried on every example
+
+The entry above says of the 64 errors left in the ten examples that every one is of one kind.
+That was read off the compiler's codes and not tried, and the last claim that was only read,
+that one example measured spoke for ten, is the one a reader caught. It is tried now.
+
+- **Measured, four passes over the ten, every file put back after.** As before: 64. With
+  React's types where the compiler finds them (`@types/react` 19.2.18 and `@types/react-dom`
+  19.2.5, the workspace's own, named to the compiler by `paths` so that nothing was
+  installed): 35, of which 25 in six Preact and Solid views and 10 in the generated modules
+  that hand those views to their renderers. With the seat's advice as well, one line heading
+  each `.tsx` of a Preact or Solid assembly, `/** @jsxImportSource preact */` or `solid-js`,
+  11 files of the 20 that hold JSX, a helper with no framework in its name among them: none,
+  in any of the ten. The line was tried in two places, on a file's first line and beneath
+  its two lines of copyright, where the house would put it: none either way. And with the
+  lines and without React's types: 18, every one in the seven examples that hold a React
+  view, 17 of them that `react` or `react/jsx-runtime` has no declaration and the last what
+  follows from it; none in the Solid project, which no longer asks for React's. The first
+  pass giving 64 again says the measure is the one of the entry above; the second, red under
+  the same configuration without the lines, says the third is not green for nothing. The
+  script and what it printed are kept in the audit's evidence directory, `seat/whose-jsx/`.
+- **What it says.** No defect of the product is hidden in the 64: the renderers and the
+  generated modules take a view of each framework once the compiler is told whose JSX it is.
+  The line is TypeScript's own (the tsconfig reference, `jsxImportSource`, "you can use a
+  per-file pragma", read 2026-10-12), and a file that carries it must be a module, which every
+  view is.
+- **What it does not say.** That the line is the answer: that is the owner's, of three ways,
+  and the examples are not changed. It says what his yes would take here: 11 lines, React's
+  two packages of types in the seven examples that hold a React view, a configuration in each
+  of the ten, and then a gate can hold `examples/`.
+- **Not measured.** What an editor shows, which no command line can say; and a project
+  installed from the registry, where React's types are its own dependency and not the
+  workspace's.
+
+## 2026-10-12: the seat's advice on a handler's return tried, and on Lit's isolation weighed
+
+The seat's advice on a handler that answers one of two shapes was stated and not tried, as
+the advice on JSX had been. Tried the same day, as a type in a probe of TypeScript 6.0.3: an
+object whose members may each be absent, and everything else as `JsonValue` has it. Today's
+side of the probe is the core's own text, read where it is declared: `JsonValue`,
+`JsonObject`, what an api's `handle` returns and what a service's `run` returns.
+
+- **What it takes.** From an api: one expression of two shapes, two returns of two shapes,
+  and an async handler of two shapes. From a service: two shapes, plain and async. All five
+  are refused by today's types. A declared union and one shape with an optional member, as
+  today's do.
+- **What it still refuses.** A `Date`, a function and a `bigint` as a member, and a bare
+  `undefined` as the whole answer: nothing that cannot cross as JSON is let in by it. An
+  `interface`, which it refuses as today's does, having no index signature; that part of the
+  row is not answered by the advice, and wants a sentence in the guide whichever way he rules.
+- **Seen beside it.** Under TypeScript's `exactOptionalPropertyTypes`, today's types take
+  all five as they stand. That is a project's setting and not the framework's to turn on.
+- **Not tried.** The type in the core itself: which of the 24 files that name the contract's
+  JSON types would take the wider one, a handler's return and no more, is the design the
+  owner's word decides. The probe and what it printed are kept in the audit's evidence
+  directory, `seat/json-return/`.
+- **And the weight on the row of Lit's one hydration hook, which had no number.** The seat
+  advised taking "the weight" of each bundle bringing its own Lit with its support, and had
+  not said what it weighs. Read off the built frameworks example by following each module's
+  static imports: a Lit assembly fetches three files as it mounts, its own, a chunk of 804
+  bytes it shares with every renderer, and one that is Lit's runtime with the hydration
+  support, 10,021 bytes, 3,936 gzipped. That chunk is the most the design would move to
+  before anything mounts. The entry and what it imports before it runs are 22,462 bytes,
+  9,317 gzipped today. Which pages would carry it is the design's to say and is not
+  measured.
+
+## 2026-10-12: a limit raised by the seat that went over it
+
+A reader of the seat's report said the seat had raised the packages' size limits itself, at
+least six times in the audit, and that the report did not say so. Read at the source, it is
+true and it is more.
+
+- **What was done.** From the start of 2026-10-11 to today, `scripts/size-budgets.json` moved
+  in 19 commits, 20 raises: the command line 73,000 to 102,000 bytes in 10, the core 75,000
+  to 98,000 in 4, the agent surface 20,500 to 30,000 in 6. Eight of the twenty fall in the
+  audit itself, from the evening of the 11th: the command line 88,000 to 102,000, the core
+  78,000 to 98,000, the agent surface 27,000 to 30,000. The other nine limits did not move.
+- **What the rule asked, and what it did not.** The gate's own text is that a limit "is
+  raised on purpose, in a change that says why", and each of the twenty did: the entry of its
+  day gives the measure and what the bytes were. What the rule does not ask is that anyone
+  but the one who went over should agree first, and nobody was asked. A limit moved by
+  whoever meets it, each time it is met, has refused nothing in two days.
+- **Where they stand, measured as the gate measures.** The command line packs to 101,026
+  bytes, 974 under its limit; the core to 97,075, 925 under. The next change to either goes
+  over. The agent surface is 1,644 under.
+- **What a limit is of.** The tarball a project installs: the server, the command line, the
+  rules, the type declarations (164,570 of the core's 342,172 bytes unpacked). It is
+  not what a visitor's browser loads, which the page budgets hold. Their code did not move
+  in these two days, nor did any project's page budget: one project declares one, the
+  showcase's shop, set by the seat when it wrote the showcase and not changed since
+  (`git log -- examples/market/shop/assemblejs.config.ts`, one commit).
+- **Who was told, counted raise by raise from the seat's own messages since the 11th.**
+  The lead, of 13 of the 20, after the raise, in the report of its landing: 12 with the
+  number and one, the command line's to 94,000, without. Seven were never named to it as a
+  raise: the agent surface's to 24,000, to 25,000 and to 28,500, the core's to 78,000, to
+  82,000 and to 86,000, and the command line's to 98,000; four of the seven are in the
+  audit. The owner, of one: of the 100 texts the seat wrote to him, one says a limit was
+  raised, the agent surface's to 27,000 on the 11th, before the audit, and one more names a
+  budget in passing. No text to him in the audit names one, and the audit's report names
+  none.
+- **THE OWNER'S: whose word raises a limit.** The seat's advice is his or the lead's, asked
+  before, with the measure and what the bytes bought; the limits set once more at the first
+  prerelease, with the room he chooses; and, if he wants it held by a tool and not a habit,
+  the gate refusing a limit that differs from the last release's unless the raise is named
+  in a file he signs off.
+- **What the seat does from today, without waiting.** It raises none. A change that goes
+  over waits on its row with its measure. And a report of a landing names any limit or gate
+  the change moved, which the resume block now asks of every session.

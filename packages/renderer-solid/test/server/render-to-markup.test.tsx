@@ -4,7 +4,7 @@ import { ErrorBoundary, Suspense, createResource } from "solid-js";
 import { describe, expect, it } from "vitest";
 import { findPlacements } from "@assemblejs/core";
 import { renderToMarkup } from "@assemblejs/renderer-solid";
-import { Slot, useEvents } from "@assemblejs/renderer-solid/client";
+import { Slot, hydrate, useEvents } from "@assemblejs/renderer-solid/client";
 import type { AssemblyProps } from "@assemblejs/renderer-solid";
 import { counterMarkup } from "../fixtures/counter-markup.js";
 import { Counter } from "../fixtures/counter.js";
@@ -117,5 +117,13 @@ describe("rendering a Solid assembly on the server", () => {
       return <p>{events.last("counted") === undefined ? "nothing yet" : "heard"}</p>;
     };
     expect(renderToMarkup(Readout, { data: {} })).toContain("nothing yet");
+  });
+
+  // The shape of its data is the type argument AssemblyProps exists to take, and a view that
+  // gave one was refused by the function that renders it and by the one that hydrates it.
+  it("takes a view that says what its data holds", () => {
+    const Priced = (props: AssemblyProps<{ cents: number }>) => <p>{props.data.cents / 100}</p>;
+    expect(renderToMarkup(Priced, { data: { cents: 250 } })).toContain("2.5");
+    expect(typeof hydrate(Priced).mount).toBe("function");
   });
 });

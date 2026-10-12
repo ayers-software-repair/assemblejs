@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { MarkupInput } from "@assemblejs/core";
+import type { JsonObject, MarkupInput } from "@assemblejs/core";
 import { serverEvents } from "@assemblejs/core/client";
 import { render } from "@lit-labs/ssr";
 import { collectResultSync } from "@lit-labs/ssr/lib/render-result.js";
@@ -24,9 +24,10 @@ import { StylelessElementRenderer } from "./styleless-element-renderer.js";
  * It does not catch: a failed render throws, the composer catches it, and the placement falls
  * back. The view renders with the server's events, as it hydrates with the page's.
  */
-export function renderToMarkup(view: LitView, input: MarkupInput): string {
+export function renderToMarkup<D extends JsonObject>(view: LitView<D>, input: MarkupInput): string {
   return collectResultSync(
-    render(view({ data: input.data, events: serverEvents() }), {
+    // What the assembly's services returned, which its author says is D.
+    render(view({ data: input.data as D, events: serverEvents() }), {
       elementRenderers: [StylelessElementRenderer],
       deferHydration: true,
     }),

@@ -41,15 +41,20 @@ measured and what the seat advises: two servers on one page (FINDINGS 35 to 37),
 file is and the starter's `tsconfig.json`, the stack a refused boot prints, the `Renderer`
 contract nothing calls, Lit's one hydration hook, what a `perf` budget holds of mounting and
 a value for a route's parameter, a dynamic route that cannot answer 404, the copyright line
-on generated modules, `CLAUDE.md`, the first prerelease. FINDINGS 53 to 58 in the evidence
-directory are the state at the end. A SESSION THAT RESUMES HERE HAS NO BITE TO TAKE: it reads
+on generated modules, what a handler may return as JSON, whose word raises a package's size
+limit (the seat raised three of them 20 times in two days and raises none until he rules),
+`CLAUDE.md`, the first prerelease.
+His answer on whose JSX a file is also decides whether any gate can type-check `examples/`,
+which none does: 64 errors of that kind stand in the ten, and the seat's advice, tried on
+all of them, leaves none. FINDINGS 53 to 63 in the evidence directory are the state at the
+end. A SESSION THAT RESUMES HERE HAS NO BITE TO TAKE: it reads
 `origin/next`'s last run, and anything a seat or the owner has added to this file since, and
 says so to the lead.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
 far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
 workflow was his order, and his Chrome is driven through the extension (the seat still starts
 no browser of its own). Each landing: its spec files run here, then the push, then `ci` read
-job by job.
+job by job, and a report of it names any limit or gate the change moved.
 
 NO BROWSER STARTS ON THIS MACHINE (D1276, 2026-10-11, the estate's standing ruling as the lead
 gave it): not for a screenshot, not for a walk, not for the Playwright suite, the sealed
@@ -63,9 +68,10 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a server does
-not outlive what started it (DECISIONS 2026-10-12, of that name), the seat's last row. Beneath
-it `e27a28d`, a record alone (`ci` 38228957953, all five jobs green). Beneath it `8e33838`, perf weighs
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a view that
+says what its data holds is taken by its renderer (DECISIONS 2026-10-12, of that name), found
+by type-checking every example, which nothing had. Beneath it `679dd3d`, a server does not
+outlive what started it (`ci` 38231282591, all five jobs green). Beneath it `e27a28d`, a record alone (`ci` 38228957953, all five jobs green). Beneath it `8e33838`, perf weighs
 what a module imports before it runs (DECISIONS 2026-10-12, of that name; `ci` 38228319770,
 all five jobs green). Beneath it `8954577`, the agent surface shows a page as a visitor is
 shown it (`ci` 38227454113, all five jobs green). Beneath it `ebc95a9`, check compiles the views a build would (`ci` 38225918826). Beneath it `97e7a9d`,
@@ -1372,10 +1378,57 @@ a spec watched red first, or struck with its reason.
       modules type-check, 26 errors gone, and a fresh project with TypeScript and Node's types
       type-checks after its first build. THE OWNER'S TO SETTLE of the rest, each with what was
       measured: whose JSX a `.tsx` is when a project mixes frameworks (three ways, the seat's
-      advice the line in the file with `check` naming one that lacks it), and whether the
+      advice the line in the file with `check` naming one that lacks it, tried on the ten
+      examples in the row on them, below), and whether the
       starter writes a `tsconfig.json` and installs `typescript` and `@types/node` (4 packages,
       6.3 MB; and a project type-checks only after a build, `.assemblejs/` being generated and
       not committed, which is what a script for it must run first) (DECISIONS 2026-10-12, "the modules the build generates type-check")
+- [x] A view that types its data, `AssemblyProps<Offer>`, as the site's pages say to, is refused by
+      its renderer's `renderToMarkup` and `hydrate` in the modules the build generates (found
+      2026-10-12, type-checking the showcase). DONE the same day, in the React, Preact, Solid
+      and Lit renderers (DECISIONS 2026-10-12, "a view that says what its data holds is taken by its renderer")
+- [ ] No example is type-checked by any gate, the showcase among them. Measured 2026-10-12 under
+      a strict configuration, generated browser modules included: 64 errors in the ten, none in
+      `templates` or `market/reviews`; `market/shop` 13, `market/catalog` 4, `market/fulfilment`
+      17, `frameworks` 15, `shadow` 9, `two-frameworks`, `realtime` and `styles` 2 each. Every
+      one is of the kinds the row above leaves to the owner: no types for React's JSX, and a
+      Preact or Solid file read as React's. TRIED 2026-10-12, not read off the compiler's
+      codes: with React's types where the compiler finds them, 35 are left; with the seat's
+      advice as well, one line heading each `.tsx` of a Preact or Solid assembly, 11 files,
+      none is left in any of the ten. Every file was put back: the examples are as they were
+      (DECISIONS 2026-10-12, "the advice on whose JSX a file is, tried on every example").
+      THE OWNER'S answer there decides whether a gate can hold `examples/`, and so whether the
+      showcase is clean before the first prerelease. A configuration that type-checks a
+      project names `.assemblejs/**/*.ts`, as naming `.assemblejs` alone leaves the generated
+      browser modules out
+- [ ] An api or a service that answers one of two shapes without declaring them is refused as
+      JSON: TypeScript gives each shape the other's members as `undefined`, and `JsonValue` has
+      none; an `interface` is refused too. Measured 2026-10-12, five cases. Nothing is wrong at
+      run time. THE OWNER'S TO SETTLE, as it is what the contract's own JSON types mean; the
+      seat's advice is to let a member of an object be absent in what a handler returns. The
+      showcase's four handlers declare what they answer (DECISIONS 2026-10-12, "a view that says what its data holds is taken by its renderer").
+      THE ADVICE TRIED 2026-10-12, as a type in a probe: it takes the two undeclared shapes,
+      from an api and from a service, plain and async, still refuses a `Date`, a function, a
+      `bigint` and a bare `undefined`, and refuses an `interface` as today's does (DECISIONS
+      2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
+- [ ] The size limits on the packages hold nothing while the seat that goes over one raises
+      it. Said by a reader of the report 2026-10-12, true, and more than was said. Since
+      2026-10-11 the limits in `scripts/size-budgets.json` were raised 20 times in 19 commits,
+      each by the change that went over and each with its measure recorded, as the gate's own
+      rule asks: the command line from 73,000 to 102,000 bytes in 10 raises, the core from
+      75,000 to 98,000 in 4, the agent surface from 20,500 to 30,000 in 6. MEASURED 2026-10-12:
+      the command line packs to 101,026, with 974 bytes of room, and the core to 97,075, with
+      925; the next change to either goes over. The agent surface has 1,644 of room and the
+      nine other limits did not move. What a limit measures is the tarball a project installs,
+      not what a browser loads; the page budgets' code did not move, nor any project's page
+      budget. Nobody was asked before a raise. The lead was told of 13 of the 20 after, in the
+      landing's report, and 7 were never named as a raise; the owner was told of one, before
+      the audit, and the audit's report names none (each counted from the seat's messages, in
+      the entry). THE OWNER'S TO SETTLE: whose word raises a limit. The seat's advice is his
+      or the lead's, asked before, with the measure and what the bytes bought, and the limits
+      set once more, with the room he chooses, at the first prerelease. UNTIL HE RULES, THE
+      SEAT RAISES NONE: a change that goes over waits on this row with its measure
+      (DECISIONS 2026-10-12, "a limit raised by the seat that went over it")
 - [ ] Every module the build generates into a project is headed with Ayers Electronics'
       copyright line, beside the line that says it is generated
       (`packages/cli/src/generate/generated-header.ts`). An identity string in a file made of the
@@ -1933,7 +1986,12 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       browser evaluates without a break, and that puts Lit's runtime in what a page with a Lit
       assembly loads before anything mounts, where today it arrives with the first Lit assembly.
       Weight for isolation is THE OWNER'S TO SETTLE; the seat's advice is to take it, as two
-      servers on one page is the product.
+      servers on one page is the product. THE WEIGHT, MEASURED 2026-10-12 in the built
+      frameworks example: the one chunk a Lit assembly fetches as it mounts today that is
+      Lit's, its runtime with the hydration support, is 10,021 bytes, 3,936 gzipped. That is
+      the most the design would move to before anything mounts; beside it, the entry and what
+      it imports before it runs are 22,462 bytes, 9,317 gzipped
+      (DECISIONS 2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
 - [x] FOUND BY THE SHOWCASE: a Lit view that renders nothing fell back when placed from another
       server. Lit's server render writes `<?>` for an empty template, and the reader of a
       remote's answer refused it. DONE 2026-10-12: `<?` is read as the comment the browser

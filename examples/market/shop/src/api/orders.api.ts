@@ -9,13 +9,17 @@ import { stock } from "../shop/stock.js";
 const text = (value: unknown, most: number): string =>
   typeof value === "string" ? value.trim().slice(0, most) : "";
 
+// What placing an order answers: the order's id, or why it was not placed. Said as a type, as
+// an api that answers one of two shapes has to say which two they are.
+type Answer = { ok: true; id: string } | { ok: false; problems: string[] };
+
 // Places an order: priced again here, held to the shelves, taken off them, and handed to the
 // fulfilment team's server. An api answers data and nothing else, so a refusal is data too:
 // `{ ok: false, problems }`, which the form shows.
 export default defineApi({
   path: "/api/orders",
   method: "POST",
-  handle: async ({ body }) => {
+  handle: async ({ body }): Promise<Answer> => {
     const sent = (typeof body === "object" && body !== null ? body : {}) as {
       [key: string]: unknown;
     };

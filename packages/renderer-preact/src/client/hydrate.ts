@@ -12,7 +12,9 @@ import { IdContext } from "./id-context.js";
  * `mount` receives the element already resolved, or the assembly's own shadow root, and returns
  * a handle the runtime calls; unmounting renders nothing into the same container.
  */
-export function hydrate(component: (props: AssemblyProps) => unknown): ClientRenderer {
+export function hydrate<D extends JsonObject>(
+  component: (props: AssemblyProps<D>) => unknown,
+): ClientRenderer {
   return {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       // The same two contexts, in the same order, as the server rendered inside.

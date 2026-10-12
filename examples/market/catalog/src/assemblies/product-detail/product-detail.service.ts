@@ -5,13 +5,29 @@ import { CATEGORIES, price, productBySku } from "../../catalogue/products.js";
 
 const GRINDS = ["Whole bean", "Filter", "Press", "Espresso"];
 
+/** A product as its page shows it. */
+export type Found = {
+  found: true;
+  sku: string;
+  name: string;
+  blurb: string;
+  price: string;
+  mark: string;
+  tone: string;
+  category: { slug: string; name: string };
+  grinds: string[];
+  grind: string;
+};
+/** What the page is given for a sku the catalogue does not hold. */
+export type Missing = { found: false; sku: string };
+
 // The page's route names the product (`/p/:sku`). One that is not in the catalogue is answered
 // as data like any other: the view says so, since a service cannot answer "not found". The
 // grind a visitor chose is in the page's query, which is where the shop's buy box reads it too:
 // two teams' assemblies on one page share no bus, and they do share the address.
 export default defineService({
   name: "product",
-  run: ({ params, query }) => {
+  run: ({ params, query }): Found | Missing => {
     const product = productBySku(params["sku"]);
     if (product === undefined) return { found: false, sku: params["sku"] ?? "" };
     const category = CATEGORIES.find((one) => one.slug === product.category);

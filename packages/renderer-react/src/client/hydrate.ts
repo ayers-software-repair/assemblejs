@@ -13,7 +13,9 @@ import { EventsContext } from "./events-context.js";
  * adapter that looked its own root up would no-op silently when the lookup missed, which is the
  * predecessor's defect: nothing appeared and nothing said why.
  */
-export function hydrate(component: (props: AssemblyProps) => unknown): ClientRenderer {
+export function hydrate<D extends JsonObject>(
+  component: (props: AssemblyProps<D>) => unknown,
+): ClientRenderer {
   return {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       const root = hydrateRoot(

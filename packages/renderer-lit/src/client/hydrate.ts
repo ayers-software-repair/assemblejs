@@ -28,7 +28,7 @@ const DEFERRED = "defer-hydration";
  * A view that holds a Lit assembly in its own tree is refused before Lit reads a marker, by
  * name: Lit would read that assembly's markers as the view's.
  */
-export function hydrate(view: LitView): ClientRenderer {
+export function hydrate<D extends JsonObject>(view: LitView<D>): ClientRenderer {
   return {
     mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext) {
       const container = element as HTMLElement;
@@ -38,7 +38,8 @@ export function hydrate(view: LitView): ClientRenderer {
           `the Lit view of "${context.name}" cannot hold the Lit assembly "${placed.getAttribute(ENVELOPE_ATTRIBUTE.name) ?? ""}" in its own tree: Lit hydrates a view by reading every marker under it, and would read that assembly's as this view's own. Give that assembly a shadow root of its own, with \`export const shadow = true\` in its view.`,
         );
       }
-      hydrateLit(view({ data, events: context.events }), container);
+      // What the island carried, which the view's author says is D.
+      hydrateLit(view({ data: data as D, events: context.events }), container);
       // The view's own elements, and not those of an assembly it places, which are that
       // assembly's view's to let go.
       const children = findEnvelopes(element);

@@ -8,6 +8,7 @@ import { LitElement, css, html } from "lit";
 import { describe, expect, it } from "vitest";
 import { renderToMarkup } from "@assemblejs/renderer-lit";
 import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import { hydrate } from "@assemblejs/renderer-lit/client";
 import { BUTTON_MARKUP } from "../fixtures/button-markup.js";
 import { buttonView } from "../fixtures/button-view.js";
 import { SHELL_MARKUP } from "../fixtures/shell-markup.js";
@@ -125,5 +126,14 @@ describe("the markers hydration reads", () => {
     // A view's type says a template; what Lit is handed is what Lit marks, a plain value too.
     expect(marked((() => "plain text") as never)).toBe(true);
     expect(marked(() => serverHtml`<p>server only</p>`)).toBe(false);
+  });
+
+  // The shape of its data is the type argument AssemblyProps exists to take, and a view that
+  // gave one was refused by the function that renders it and by the one that hydrates it.
+  it("takes a view that says what its data holds", () => {
+    const priced = (props: AssemblyProps<{ cents: number }>) =>
+      html`<p>${props.data.cents / 100}</p>`;
+    expect(renderToMarkup(priced, { data: { cents: 250 } })).toContain("2.5");
+    expect(typeof hydrate(priced).mount).toBe("function");
   });
 });
