@@ -5,11 +5,11 @@ import { loadPug } from "../build/load-pug.js";
 import type { PugCompiler } from "../build/pug-compiler.js";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { isStaticView } from "../discovery/is-static-view.js";
+import { viewModules } from "../placements/view-modules.js";
 import { leadsOut } from "../root/leads-out.js";
 import { readInside } from "../root/read-inside.js";
 import { readViewElements } from "./read-view-elements.js";
 import type { ViewElement } from "./view-element.js";
-import { viewModules } from "./view-modules.js";
 import type { WrittenElement } from "./written-element.js";
 
 /**

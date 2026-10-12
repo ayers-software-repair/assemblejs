@@ -3,7 +3,7 @@
 import { parse } from "acorn";
 import type { AnyNode, Expression, SpreadElement } from "acorn";
 import { transformSync } from "esbuild";
-import { COMPUTED_MARKER } from "./computed-marker.js";
+import { COMPUTED_MARKER } from "../placements/computed-marker.js";
 import { readElements } from "./read-elements.js";
 import type { ViewElement } from "./view-element.js";
 

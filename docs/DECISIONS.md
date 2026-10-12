@@ -6999,3 +6999,29 @@ The first bite of the owner's rulings, and the one a checker found: R-1.
   its 102,000, six more than before. Nothing is walked in a browser, as nothing a browser
   loads changed: the renderer's change is an interface and a type import, which emit no
   JavaScript before or after, and a view's annotation is taken out by Svelte's compiler.
+
+## 2026-10-12: the build does not read the checks
+
+The first move of R-2, the untangling before the command line is split in three.
+
+- **The map, before anything moved.** `build` takes the areas that turn a project into a
+  server (`io`, `root`, `discovery`, `styles`, `generate`, `build`, `dev`), `check` the ones
+  that read a project and name problems (`rules`, `check`, `shape`, `perf`, and what the
+  agent files say), `cli` the verbs (`commands`, `run`, `deploy`). The count of pairs that
+  import each other, five, was the wrong measure: two areas that stay in one package may
+  import each other. What matters is an import that crosses a line of the map upward, and
+  there were two.
+- **This one.** The build refuses a project by what its views place, and the reader of that
+  lived in `check`: `build/build-project.ts` took `viewFindings` from it. The reader and
+  the seventeen files of `check` it reads, 39,314 bytes of source, are an area of their own
+  now, `placements`, beneath the build, and their eighteen tests moved with them. `check`
+  and `shape` take from it what they took from their own directory.
+- **Held by the module gate.** A rule refuses an import from any of the build's areas into
+  any of the checks' or the verbs'. Watched: green as the tree stands, and red on a line
+  added to the build that reads one of the checks' files.
+- **Nothing a user sees.** Every name the package exports is exported as before, the tests
+  import the package and not a path, and its 827 cases pass unchanged. The tarball is 33
+  bytes more, 101,065 of its 102,000: an index for the new area. No limit moved.
+- **Left of R-2.** The other crossing, `check` taking `agentProblems` from `agents`: the
+  list of renderers goes down to `discovery`, the verb that writes the agent files goes to
+  `commands`, and the rule takes its second half.

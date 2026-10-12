@@ -2068,7 +2068,9 @@ rows are taken in this order; each is a bite with its own proof and its own push
       (`view-findings` and the six files of `check` it reads), to an area of its own beneath
       the build; (b) `commands/renderers.ts`, the list of renderers, to `discovery`; (c)
       `agents/add-agents.ts`, the verb, to `commands`; (d) the rule, watched refusing an
-      import made the wrong way
+      import made the wrong way. DONE 2026-10-12 of (a), and of (d) its first half, the
+      build's areas held from the checks' and the verbs' (DECISIONS 2026-10-12, "the build
+      does not read the checks"). LEFT: (b), (c), and the rule's second half
 - [ ] R-3 `@assemblejs/build` and `@assemblejs/check` cut from `@assemblejs/cli`: `cli` keeps
       the verbs, `build` turns a project into a server, `check` reads a project and names
       problems; the agent surface and `create` take from the two what they took from the

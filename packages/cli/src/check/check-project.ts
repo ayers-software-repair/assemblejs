@@ -25,6 +25,8 @@ import { discoverPages } from "../discovery/discover-pages.js";
 import { fromRoot } from "../discovery/from-root.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { readBudgets } from "../perf/read-budgets.js";
+import { unreadableSource } from "../placements/unreadable-source.js";
+import { viewFindings } from "../placements/view-findings.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import { OutsideRootError } from "../root/outside-root-error.js";
 import { readInside } from "../root/read-inside.js";
@@ -38,8 +40,6 @@ import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
 import { readPagePolicy } from "./read-page-policy.js";
-import { unreadableSource } from "./unreadable-source.js";
-import { viewFindings } from "./view-findings.js";
 import { viewProblems } from "./view-problems.js";
 
 const NO_POLICY: PagePolicy = { place: {}, remote: new Map(), stream: undefined };

@@ -3,7 +3,6 @@
 import { existsSync, renameSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { build } from "esbuild";
-import { viewFindings } from "../check/view-findings.js";
 import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
@@ -14,6 +13,7 @@ import { generatePages } from "../generate/generate-pages.js";
 import { generateProject } from "../generate/generate-project.js";
 import { generateRegistry } from "../generate/generate-registry.js";
 import type { Io } from "../io/io.js";
+import { viewFindings } from "../placements/view-findings.js";
 import { writeProjectStyles } from "../styles/write-project-styles.js";
 import { writeStyles } from "../styles/write-styles.js";
 import { buildProblems } from "./build-problems.js";

@@ -41,6 +41,19 @@ module.exports = {
       to: { couldNotResolve: true },
     },
     {
+      name: "the-build-does-not-read-the-checks",
+      severity: "error",
+      comment:
+        "The command line is three layers that become three packages: what turns a project " +
+        "into a server, what reads a project and names problems, and the verbs. The lowest " +
+        "importing a higher one would make the packages depend on each other in a ring. It " +
+        "did once: the build took what a view places from the checks.",
+      from: {
+        path: "^packages/cli/src/(io|root|discovery|styles|generate|placements|build|dev)/",
+      },
+      to: { path: "^packages/cli/src/(rules|check|shape|perf|agents|commands|run|deploy)/" },
+    },
+    {
       name: "no-bundler-at-runtime",
       severity: "error",
       comment:

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { COMPUTED_MARKER } from "./computed-marker.js";
+import { COMPUTED_MARKER } from "../placements/computed-marker.js";
 import { spreadElement } from "./spread-element.js";
 import type { ViewElement } from "./view-element.js";
 import type { WrittenElement } from "./written-element.js";

@@ -10,6 +10,7 @@ export * from "./dev/index.js";
 export * from "./commands/index.js";
 export * from "./rules/index.js";
 export * from "./agents/index.js";
+export * from "./placements/index.js";
 export * from "./check/index.js";
 export * from "./shape/index.js";
 export * from "./perf/index.js";

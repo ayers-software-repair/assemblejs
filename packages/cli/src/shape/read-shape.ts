@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 import { isAbsolute, join, resolve } from "node:path";
 import { hasBrowserHalf } from "../check/has-browser-half.js";
-import { viewFindings } from "../check/view-findings.js";
 import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
 import { fromRoot } from "../discovery/from-root.js";
+import { viewFindings } from "../placements/view-findings.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import type { AssemblyShape } from "./assembly-shape.js";
 import { COMPUTED } from "./computed.js";
