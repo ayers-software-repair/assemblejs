@@ -31,10 +31,10 @@ describe("what is checked about the values this server sends as headers", () => 
   });
 
   it("refuses what the platform itself refuses to write, a character past its range among them", () => {
-    for (const value of ["1.0\r\n2", "1.0\u0000", "1.0-☃"]) {
+    for (const value of ["1.0\r\n2", "1.0\u0000", "1.0-\u2603"]) {
       expect(sentHeaderProblems({ "the version": value }), JSON.stringify(value)).toHaveLength(1);
     }
-    expect(sentHeaderProblems({ "the version": "1.0.0-next.3+café" })).toEqual([]);
+    expect(sentHeaderProblems({ "the version": "1.0.0-next.3+caf\u00e9" })).toEqual([]);
   });
 });
 
