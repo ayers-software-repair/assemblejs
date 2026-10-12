@@ -52,8 +52,9 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the agent surface
-shows a page as a visitor is shown it (DECISIONS 2026-10-12, of that name). Beneath it
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: perf weighs what a
+module imports before it runs (DECISIONS 2026-10-12, of that name). Beneath it `8954577`, the
+agent surface shows a page as a visitor is shown it (`ci` 38227454113). Beneath it
 `ebc95a9`, check compiles the views a build would (`ci` 38225918826). Beneath it `97e7a9d`,
 the modules the build generates type-check (`ci` 38225198057, all five jobs green). Beneath
 it `0776296`, a view
@@ -1375,7 +1376,11 @@ a spec watched red first, or struck with its reason.
       (`perf/measure-page.ts:62-77`): 576 B for a page whose one script statically imports two
       runtime chunks, 20.7 kB, before anything mounts, and whose React assembly then fetches 218 kB.
       A page with a route parameter is "not weighed", so the most complex page is outside every
-      budget
+      budget. READ AND WATCHED 2026-10-12. DONE of the half that is a measurement: what each module
+      a page links imports before it runs is weighed, each file once (DECISIONS 2026-10-12, "perf
+      weighs what a module imports before it runs"). LEFT, AND THE OWNER'S: whether a budget holds
+      what an assembly fetches as it mounts, and where a value for a route's parameter is written
+      so such a page can be weighed
 - [x] The agent's `place_assembly` damages the template's layout: with `after` it writes the tag at
       column 0 beneath a neighbour indented eight; with no position it writes it between `</body>`'s
       indentation and `</body>`. A second call for the same assembly on the same page places it
@@ -1906,7 +1911,12 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       (`packages/renderer-lit/src/client/hydration-support.ts`; the stack in DECISIONS
       2026-10-12, "a Lit element waits for its view"). It works while both carry one version of
       Lit. Needs a design: each bundle's element base patched by its own support whatever
-      loads last.
+      loads last. READ AGAIN 2026-10-12, and a call, not a mend: the way the seat sees is for
+      each bundle's support to bring its own Lit element base with it, in the one stretch a
+      browser evaluates without a break, and that puts Lit's runtime in what a page with a Lit
+      assembly loads before anything mounts, where today it arrives with the first Lit assembly.
+      Weight for isolation is THE OWNER'S TO SETTLE; the seat's advice is to take it, as two
+      servers on one page is the product.
 - [x] FOUND BY THE SHOWCASE: a Lit view that renders nothing fell back when placed from another
       server. Lit's server render writes `<?>` for an empty template, and the reader of a
       remote's answer refused it. DONE 2026-10-12: `<?` is read as the comment the browser
@@ -1928,7 +1938,9 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       (DECISIONS 2026-10-12, "perf does not fail a project for guarding a page")
 - [ ] FOUND BY THE SHOWCASE: `perf` weighs no page whose route has a parameter, and has no way
       to be given a value. In the showcase that is the product page, the shelf and the order:
-      the heaviest pages are the ones no budget holds. A design: where a value comes from.
+      the heaviest pages are the ones no budget holds. A design: where a value comes from. THE
+      OWNER'S, and one question with the row on what `perf` weighs, above, which says both
+      halves that are left.
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

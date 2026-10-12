@@ -17,6 +17,24 @@ const files: Record<string, string> = {
     '<script src="/c.js" type="MODULE"></script><script src="/d.js"></script>' +
     '<link rel="modulepreload" href="/e.js"><script type="application/json" src="/data.json"></script>' +
     '<script nomodule src="/legacy.js"></script>',
+  // A module that imports before it runs: two chunks, one of them twice and one in a circle
+  // back to it, a file from another origin, and one more it only asks for later.
+  "/modules":
+    '<script type="module" src="/entry.js"></script><link rel="modulepreload" href="/ahead.js">' +
+    '<script src="/classic.js"></script>',
+  "/entry.js":
+    'import { a } from "./chunk-a.js";\nimport "/shared.js";\nexport * from "./chunk-b.js";\n' +
+    'export { c } from "./chunk-a.js";\nexport const later = () => import("./lazy.js");\nexport { a };',
+  "/chunk-a.js":
+    'import "./shared.js";\nimport "https://cdn.example/lib.js";\nexport const a = 1;\nexport const c = 2;',
+  "/chunk-b.js": 'import "./entry.js";\nexport const b = 1;',
+  "/shared.js": "export const shared = 1;",
+  "/ahead.js": 'import "./shared.js";\nexport const ahead = 1;',
+  // A classic script imports nothing, whatever its text holds.
+  "/classic.js": "var text = 'import \"./never.js\";';",
+  "/lazy.js": "export const lazy = 1;",
+  "/unparsed": '<script type="module" src="/not-javascript.js"></script>',
+  "/not-javascript.js": "this is ( not javascript",
   "/authored":
     '<link href="/a.css?x=1&#x26;y=2" rel="stylesheet" /><script src="/c.js" type="module"></script>' +
     '<link rel="stylesheet" href="https://cdn.example/font.css"><assembly-root data-name="cart" data-failed="8f212c16"></assembly-root>',
@@ -84,6 +102,43 @@ describe("measuring a page", () => {
     });
     expect(asked).not.toContain("/data.json");
     expect(asked).not.toContain("/legacy.js");
+  });
+
+  // A page's one linked script was weighed and the chunks it imports were not: 576 bytes
+  // reported for a page that loaded twenty thousand before anything mounted.
+  it("weighs what a module script imports before it runs, each file once, and not what it asks for later", async () => {
+    asked.length = 0;
+    const weight = await measurePage(origin, "/modules");
+    const loaded = [
+      "/entry.js",
+      "/chunk-a.js",
+      "/chunk-b.js",
+      "/shared.js",
+      "/ahead.js",
+      "/classic.js",
+    ];
+    expect(weight?.scripts).toEqual({
+      bytes: loaded
+        .map((file) => (files[file] ?? "").length)
+        .reduce((total, size) => total + size, 0),
+      gzip: loaded
+        .map((file) => bytes(files[file] ?? "").gzip)
+        .reduce((total, size) => total + size, 0),
+    });
+    for (const file of loaded)
+      expect(
+        asked.filter((url) => url === file),
+        file,
+      ).toHaveLength(1);
+    expect(asked).not.toContain("/lazy.js");
+    expect(asked).not.toContain("/never.js");
+    // An import from another origin is named, as a file a page links from one is.
+    expect(weight?.elsewhere).toEqual(["https://cdn.example/lib.js"]);
+  });
+
+  it("weighs a module it cannot read as JavaScript, and follows nothing from it", async () => {
+    const weight = await measurePage(origin, "/unparsed");
+    expect(weight?.scripts).toEqual(bytes(files["/not-javascript.js"] ?? ""));
   });
 
   it("abandons a request in flight when it is told to stop", async () => {

@@ -6641,3 +6641,37 @@ sku, and an agent never saw the page a visitor does.
   under the 28,500 it was given this morning: the two tools' descriptions say what they take,
   and the tools that show a project have a file of their own. The budget is 30,000. The
   core's is at 97,075 of its 98,000 with the reader of a route's parameters in it.
+
+## 2026-10-12: perf weighs what a module imports before it runs
+
+A row of the audit's second pass: `perf` weighs the scripts a document links and nothing they
+import. DESIGN says what it weighs is what a page sends a visitor before anything mounts, and
+a module's imports are loaded before the module runs a line, so the row is a measurement that
+did not hold to its own claim. Watched: a page whose module imports four files was weighed at
+259 bytes where it loads 421.
+
+- **What is followed.** Each script a page links as a module, or preloads as one, is read for
+  every specifier it imports from and exports from, those for theirs, to the end, each file
+  weighed once whatever the number of ways to it and whatever circle it stands in. A classic
+  script imports nothing, whatever its text holds. Only what a browser resolves against a
+  module is followed: a path that starts with `/`, `./` or `../`, or an address in full; a
+  bare name is one a browser refuses. An import from another origin is named with the files a
+  page links from one, and is not fetched.
+- **What is not, and is the owner's.** What a module asks for with `import()` is loaded when
+  that line runs, which in this framework is when an assembly mounts: it is after "before
+  anything mounts", and whether a page's budget should hold what its assemblies fetch as they
+  mount is a decision about what the budget is. And a page whose route has a parameter is
+  still not weighed, for want of a value nobody has said where to write. Both stay on the row.
+- **A module that does not parse** is weighed and nothing is followed from it. What a browser
+  makes of such a file is not `perf`'s to say.
+- **A project's budget is held to the truer figure.** The frameworks example was reported at
+  7.9 kB of script and is 22.5 kB: its one linked entry of 7,908 bytes and the two chunks it
+  imports, 13,977 and 577, summed by hand to the 22,462 `perf` now says.
+- **Proof.** The case red on `perf` as it stood, 259 bytes for 421, and green after; the
+  reader's own cases, a bundler's spelling with nothing between the words among them. Every
+  cheap gate green and the command line's 826 cases. The built `perf` over the frameworks
+  example, beside yesterday's packed one over the same build. And over the showcase's shop
+  with its three other servers running: 40.8 kB of script on each page it weighs, 15.0 kB
+  gzipped, within the 90,000 it declares, exit 0. Run alone the shop's home falls back, its
+  shelves being another server's, and `perf` exits 1 for that, as it did before this bite.
+  The command line's tarball is at 100,793 bytes of its 102,000.
