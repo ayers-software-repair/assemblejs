@@ -5,8 +5,8 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, in the middle of the
-audit the owner ordered).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-12, at the end of the audit the
+owner ordered).**
 
 THE AUDIT IS THE WORK IN HAND (owner, 2026-10-11 evening; DECISIONS 2026-10-11, "the audit"). He
 did not believe the framework was complete, and it was not. Read, in this order:
@@ -32,8 +32,17 @@ THE OWNER'S (client.4). THE OUTLINE HE ASKED FOR IS DONE, in the framework: `out
 project's config, a switch on every page, a box round every assembly that says what it is,
 where it came from and when (DECISIONS 2026-10-12, "a page shows how it was put together").
 THE SHOWCASE HE ASKED FOR IS DONE: `examples/market`, a shop of four servers (DECISIONS
-2026-10-12, "the market, a showcase of four servers"). Next: the minors and the tests' rows,
-read as the majors were, the rows the showcase added, and the starter's `tsconfig.json`.
+2026-10-12, "the market, a showcase of four servers"). THE MINORS AND THE TESTS' ROWS ARE
+DONE TOO, read as the majors were, and so are the rows the showcase added and the build's
+half of the starter's type-checking. NOTHING OF THE SEAT'S OWN IS LEFT BUT ONE ROW, the
+harnesses' leaked servers, measured and not reproduced. Every other open row is the owner's,
+the site seat's, or wants a person at a window, and each of the owner's says what was
+measured and what the seat advises: two servers on one page (FINDINGS 35 to 37), whose JSX a
+file is and the starter's `tsconfig.json`, the stack a refused boot prints, the `Renderer`
+contract nothing calls, Lit's one hydration hook, what a `perf` budget holds of mounting and
+a value for a route's parameter, a dynamic route that cannot answer 404, the copyright line
+on generated modules, `CLAUDE.md`, the first prerelease. FINDINGS 53 to 56 in the evidence
+directory are the state at the end.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
 far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
 workflow was his order, and his Chrome is driven through the extension (the seat still starts
@@ -52,10 +61,11 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: perf weighs what a
-module imports before it runs (DECISIONS 2026-10-12, of that name). Beneath it `8954577`, the
-agent surface shows a page as a visitor is shown it (`ci` 38227454113). Beneath it
-`ebc95a9`, check compiles the views a build would (`ci` 38225918826). Beneath it `97e7a9d`,
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: this record
+alone, the block above brought to the end of the audit. Beneath it `8e33838`, perf weighs
+what a module imports before it runs (DECISIONS 2026-10-12, of that name; `ci` 38228319770,
+all five jobs green). Beneath it `8954577`, the agent surface shows a page as a visitor is
+shown it (`ci` 38227454113, all five jobs green). Beneath it `ebc95a9`, check compiles the views a build would (`ci` 38225918826). Beneath it `97e7a9d`,
 the modules the build generates type-check (`ci` 38225198057, all five jobs green). Beneath
 it `0776296`, a view
 its compiler refuses is reported at the view (`ci` 38222121545, all five jobs green). Beneath
@@ -1403,7 +1413,8 @@ a spec watched red first, or struck with its reason.
       servers on SIGINT and SIGTERM (`conformance/harness/run.mjs:74`). What is left is a run
       killed outright, and a server a spec file starts itself when the runner above it is
       stopped: the three found were of runs stopped from outside. Not reproduced, and open at
-      that
+      that. One more measure the same day: the trust fixture stopped from outside with SIGTERM
+      while three of its servers were up left none, so what is left is a kill no handler hears
 - [x] The command line cannot say its version: `--version`, `-v` and `version` are each an unknown
       command. DONE 2026-10-11: `--version` and `-v` print the version its package.json holds
       (DECISIONS 2026-10-11, "the starter and the arguments")
