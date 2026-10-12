@@ -8,6 +8,8 @@ export type { AssemblyPlan } from "./assembly-plan.js";
 export type { Limits } from "./limits.js";
 export type { Diagnostic } from "./diagnostic.js";
 export type { ContentCache } from "./content-cache.js";
+export type { CachedContent } from "./cached-content.js";
+export { heldAssemblies } from "./held-assemblies.js";
 export type { Placement } from "./placement.js";
 export type { ComposeOptions } from "./compose-options.js";
 export type { ComposeResult } from "./compose-result.js";

@@ -1190,11 +1190,14 @@ a spec watched red first, or struck with its reason.
       it, `requestedPath`, each segment decoded once and an encoded slash kept; a core spec and a
       step of the `trust` fixture hold it, the first watched red (DECISIONS 2026-10-11, "an address
       is its every spelling")
-- [ ] A cached placement shows a guarded child to a visitor the guard refuses (workflow composer.1
+- [x] A cached placement shows a guarded child to a visitor the guard refuses (workflow composer.1
       and trust.1). With a cache lifetime on an open assembly whose view places a guarded one, the
       visitor after a member is served the guarded markup; with none, not. Reproduced by the seat
       over a real socket. `compose/settle-placement.ts:79-86` asks admission of the outer placement
-      alone before the cache is read, against DESIGN 5.2
+      alone before the cache is read, against DESIGN 5.2. DONE 2026-10-11: an answer is kept with
+      the assemblies it holds and read for a visitor only when each would be shown to them, on a
+      fresh hit and on the fallback rung alike; specs in core and a step of the `trust` fixture,
+      watched red (DECISIONS 2026-10-11, "a kept answer knows what it holds")
 - [x] A link whose target climbs out through another link is read as inside the root (workflow
       trust.2). `esc -> sub/../note.txt` with `sub` a link out: `readInside` returns the outside
       file and `leadsOut` says false. Reproduced by the seat with the installed command line.

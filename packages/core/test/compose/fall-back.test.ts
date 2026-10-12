@@ -39,8 +39,8 @@ const input = (plan: Partial<AssemblyPlan>, cache?: ContentCache): SettleInput =
 });
 
 describe("the rungs after a failure", () => {
-  it("shows the declared fallback before any last good content, marked failed", () => {
-    const settled = fallBack(
+  it("shows the declared fallback before any last good content, marked failed", async () => {
+    const settled = await fallBack(
       input({ fallback: "<p>stand-in</p>", cache: { ttl: 60_000 } }, holding("<p>yesterday</p>")),
       "id-1",
       failure,
@@ -51,8 +51,8 @@ describe("the rungs after a failure", () => {
     expect(settled.diagnostic.source).toBe("fallback");
   });
 
-  it("answers with the last good content when it declared a lifetime and no fallback", () => {
-    const settled = fallBack(
+  it("answers with the last good content when it declared a lifetime and no fallback", async () => {
+    const settled = await fallBack(
       input({ cache: { ttl: 60_000 } }, holding("<p>yesterday</p>")),
       "id-1",
       failure,
@@ -62,14 +62,19 @@ describe("the rungs after a failure", () => {
     expect(settled.diagnostic).toEqual({ ...failure, source: "cache" });
   });
 
-  it("never reads what another page cached when it declared no lifetime of its own", () => {
-    const settled = fallBack(input({}, holding("<p>another page's</p>")), "id-1", failure, true);
+  it("never reads what another page cached when it declared no lifetime of its own", async () => {
+    const settled = await fallBack(
+      input({}, holding("<p>another page's</p>")),
+      "id-1",
+      failure,
+      true,
+    );
     expect(settled.html).not.toContain("another page's");
     expect(settled.html).toMatch(/^<assembly-root data-name="cart" [^>]*data-failed="c-1">/);
   });
 
-  it("does not read the cache when it is told the cache may not answer", () => {
-    const settled = fallBack(
+  it("does not read the cache when it is told the cache may not answer", async () => {
+    const settled = await fallBack(
       input({ cache: { ttl: 60_000 } }, holding("<p>cached</p>")),
       "id-1",
       failure,
@@ -78,15 +83,15 @@ describe("the rungs after a failure", () => {
     expect(settled.html).not.toContain("cached");
   });
 
-  it("renders an empty envelope marked failed when there is nothing else", () => {
-    const settled = fallBack(input({}), "id-1", failure, true);
+  it("renders an empty envelope marked failed when there is nothing else", async () => {
+    const settled = await fallBack(input({}), "id-1", failure, true);
     expect(settled.html).toMatch(/^<assembly-root data-name="cart" [^>]*data-failed="c-1">/);
   });
 });
 
 describe("a required placement", () => {
-  it("does not die when the cache still holds its last good content", () => {
-    const settled = fallBack(
+  it("does not die when the cache still holds its last good content", async () => {
+    const settled = await fallBack(
       input({ required: true, cache: { ttl: 60_000 } }, holding("<p>yesterday</p>")),
       "id-1",
       failure,
@@ -96,9 +101,9 @@ describe("a required placement", () => {
     expect(settled.html).toBe("<p>yesterday</p>");
   });
 
-  it("dies when nothing holds it, whatever fallback it declared", () => {
-    expect(() =>
+  it("dies when nothing holds it, whatever fallback it declared", async () => {
+    await expect(
       fallBack(input({ required: true, fallback: "<p>x</p>" }), "id-1", failure, true),
-    ).toThrow(/required assembly "cart"/);
+    ).rejects.toThrow(/required assembly "cart"/);
   });
 });

@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { CachedContent } from "../compose/cached-content.js";
 import type { ContentCache } from "../compose/content-cache.js";
 
 /**
@@ -8,10 +9,7 @@ import type { ContentCache } from "../compose/content-cache.js";
  * so a page whose query varies without bound cannot grow it without bound.
  */
 export function createMemoryCache(capacity = 1000, now: () => number = Date.now): ContentCache {
-  const entries = new Map<
-    string,
-    { readonly html: string; readonly version?: string; readonly until: number }
-  >();
+  const entries = new Map<string, { readonly content: CachedContent; readonly until: number }>();
   return {
     get: (key) => {
       const held = entries.get(key);
@@ -20,13 +18,11 @@ export function createMemoryCache(capacity = 1000, now: () => number = Date.now)
         entries.delete(key);
         return undefined;
       }
-      return held.version === undefined
-        ? { html: held.html }
-        : { html: held.html, version: held.version };
+      return held.content;
     },
     set: (key, value, ttl) => {
       entries.delete(key);
-      entries.set(key, { ...value, until: now() + ttl });
+      entries.set(key, { content: value, until: now() + ttl });
       while (entries.size > capacity) {
         const oldest = entries.keys().next().value;
         if (oldest === undefined) break;

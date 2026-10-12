@@ -5350,3 +5350,36 @@ followed, the part of a path not yet written is carried over, and a chain past f
 loop. Two specs hold it, each watched red on the old follower: the follower's own, on a link
 whose target climbs out and back, and the guard's, where `leadsOut` must say so
 (`src/climbs.ts: expected false to be true`).
+
+## 2026-10-11: a kept answer knows what it holds
+
+The audit's second blocker. A placement's answer is the assembly's envelope with every
+assembly its view placed composed inside it, for the visitor who asked. Settling a placement
+asked whether this visitor may be shown the outer assembly, then read the cache, and a hit was
+the whole answer as it was composed for someone else. An open assembly whose view places a
+guarded one, kept by its page for a lifetime, was therefore served to every visitor after the
+first member, the guarded assembly's markup inside it, while that assembly's own address went
+on answering 401. The guard against keeping a credentialled answer never tripped: the headers
+the composer sees are the ones a remote declared it wants, not the visitor's own.
+
+- **An answer is kept with the assemblies it holds**, read off the account of what the
+  answering view placed, at any depth: `CachedContent.holds`. A placement the browser fills
+  later is not among them; the answer holds its place alone and its address decides for it.
+- **It is read for a visitor only when each of them would be shown to that visitor**, by the
+  same `Admit` the request already carries, so each is asked once a request however often it is
+  placed. This is DESIGN 5.2's own sentence, "asked before a cached answer is used", made true
+  of what the answer holds and not of its outside alone. On a fresh hit and on the fallback
+  rung alike, which is why the ladder is asynchronous now.
+- **Refused, the cache is passed over and the placement is composed for this visitor**, who is
+  shown the open assembly with the guarded one refused inside it. That answer holds a failed
+  envelope and is never written, so the member's entry is not replaced by a guest's.
+- **What was not recorded is no one's a control decides about.** An entry with no `holds`, from
+  a cache that keeps only what it knows, is not read while a control is on; a check that throws
+  refuses. With no control on, nothing is asked and nothing changed.
+- **Not chosen:** refusing to keep any answer that holds another assembly while a control is on.
+  It is simpler and it would have ended caching for every composed assembly on a guarded
+  server, the members' own included.
+- **Proof.** Core specs of the placement cache and of a server composed twice for two visitors,
+  watched red (`expected '<body>...' not to contain 'BALANCE-9912'`); a step of the `trust`
+  fixture, a kept page asked as a guest, a member and a guest again over HTTP; the seat's own
+  run of the old tarball, which showed the guest the member's content.
