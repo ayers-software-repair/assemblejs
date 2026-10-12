@@ -6604,3 +6604,40 @@ project whose one Svelte view holds `<p>{</p>` is answered with no problem at al
   `zz-broken-s.svelte` and `zz-broken-v.vue`, each at line 2, and exits 1; over every example
   and the showcase's four projects as they are, it says no problems. The command line's
   tarball is at 100,170 bytes of its 102,000.
+
+## 2026-10-12: the agent surface shows a page as a visitor is shown it
+
+A row the showcase added: `compose_page` and `render_assembly` take nothing of a route's
+parameters or a query, so the product page of a shop, `/p/:sku`, was always composed with no
+sku, and an agent never saw the page a visitor does.
+
+- **True by reading, and the wiring was already there.** The composer takes a page's
+  parameters and query, the transport carries them in the composition headers and the
+  address, and the two tools sent neither. Both take `params` and `query` now and hand them
+  on. Nothing in the core changed.
+- **A page's values are held to its route.** `compose_page` reads the route the page's own
+  file declares, as `perf` and `check` read it, and a value for a parameter that route has not
+  is the call's mistake: refused before anything is composed, naming the ones it has. A
+  parameter the call left out is composed without, as it always was, and said among the
+  problems, since a visitor always arrives with one; the answer is then not `ok`, which is the
+  point of the row. A route the file computes is known to nothing that does not run the
+  project, and its page is held to no parameters. An assembly has no route of its own, so
+  `render_assembly` hands on whatever it is given.
+- **One reading of a route's parameters.** Three places told them by themselves: the server's
+  route table kept the segments that begin with a colon, `perf` looked for `/:` in a route's
+  text, and this bite's first cut wrote a third. It is `routeParameters` in the core, beside
+  the reader of what a flat route is, and all three read it.
+- **The tools that show a project are registered in a file of their own**
+  (`registerSeeingTools`), as the tools that change one are, and the prompts and the
+  resources. The file that wires the surface to the protocol is that wiring and nothing else.
+- **Proof.** A real server of the framework stands in for the project's dev server in the
+  suite, with an assembly whose service answers what it was asked with: the parameters and
+  the query arrive in its island through both tools, called as functions and over the
+  protocol. With the two tools handing nothing on and no route read, as they were, four cases
+  fail: the three of `compose_page` and the one of `render_assembly`; the case of a computed
+  route stays green, as it holds nothing new. The agents fixture asks the built surface over
+  stdio, against the server of a project the starter wrote.
+- **The agent surface's budget moves at its measure.** Its tarball packs to 28,356 bytes, 144
+  under the 28,500 it was given this morning: the two tools' descriptions say what they take,
+  and the tools that show a project have a file of their own. The budget is 30,000. The
+  core's is at 97,075 of its 98,000 with the reader of a route's parameters in it.

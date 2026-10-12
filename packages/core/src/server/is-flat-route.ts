@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { routeParameters } from "./route-parameters.js";
 
 // Literal segments and whole-segment parameters, with an optional trailing slash. Anything else
 // (an optional or regex parameter, two in one segment, a query or fragment marker) either
@@ -17,6 +18,6 @@ export function isFlatRoute(path: string): boolean {
   if (!FLAT.test(path)) return false;
   const segments = path.split("/");
   if (segments.some((segment) => segment === "." || segment === "..")) return false;
-  const names = segments.filter((segment) => segment.startsWith(":"));
+  const names = routeParameters(path);
   return new Set(names).size === names.length;
 }

@@ -36,6 +36,7 @@ export { queryOf } from "./query-of.js";
 export { writeLogLine } from "./write-log-line.js";
 export { insideForm } from "./inside-form.js";
 export { isFlatRoute } from "./is-flat-route.js";
+export { routeParameters } from "./route-parameters.js";
 export { routeKey } from "./route-key.js";
 export { reservedPrefix } from "./reserved-prefix.js";
 export { pagePlan } from "./page-plan.js";

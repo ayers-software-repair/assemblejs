@@ -7,6 +7,7 @@ import { devServerFetch } from "../render/dev-server-fetch.js";
 import { devServerUrl } from "../render/dev-server-url.js";
 import { projectAssemblies } from "../render/project-assemblies.js";
 import type { ProjectRoot } from "../root/project-root.js";
+import type { ArrivedWith } from "./arrived-with.js";
 import type { ComposedPage } from "./composed-page.js";
 import { fallbackProblems } from "./fallback-problems.js";
 
@@ -24,11 +25,15 @@ import { fallbackProblems } from "./fallback-problems.js";
  * is what the project serves, framework views included, and nothing of the project's code runs
  * here (DESIGN 13.4). Without one there is no HTTP: an agent asking what this page looks like
  * should not need a port, and a remote assembly is not this tool's question.
+ *
+ * What a visitor arrives with, the route's parameters and the query, is given to every
+ * placement's request as a page's composer gives it.
  */
 export async function composeTemplate(
   root: ProjectRoot,
   template: string,
   plan: Readonly<Record<string, AssemblyPlan>> = {},
+  arrived: ArrivedWith = {},
 ): Promise<ComposedPage> {
   const assemblies = projectAssemblies(root);
   const logged: LogLine[] = [];
@@ -47,6 +52,8 @@ export async function composeTemplate(
               (problem) => inside.push(problem),
             ),
       limits: DEFAULT_LIMITS,
+      params: arrived.params ?? {},
+      query: new URLSearchParams(arrived.query),
       // The ids a page's composer sends, which the content endpoint holds to their shape and
       // refuses a request without (DESIGN 2.1).
       page: randomUUID(),

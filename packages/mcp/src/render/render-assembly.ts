@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { DEFAULT_LIMITS, localFetch } from "@assemblejs/core";
 import type { LogLine } from "@assemblejs/core";
+import type { ArrivedWith } from "../compose/arrived-with.js";
 import { fallbackProblems } from "../compose/fallback-problems.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { devServerFetch } from "./dev-server-fetch.js";
@@ -34,11 +35,15 @@ const RENDER_DEADLINE = 10_000;
  * approximated. Showing an agent something that is not what will ship is worse than showing it
  * nothing, because it will believe it. A child that is one is shown as the server shows a child
  * that did not render, with that reason among the problems.
+ *
+ * Its services are given what a visitor arrived with, where the call says: the parameters of
+ * the route of a page it is placed on, and a query.
  */
 export async function renderAssembly(
   root: ProjectRoot,
   name: string,
   deadline = RENDER_DEADLINE,
+  arrived: ArrivedWith = {},
 ): Promise<RenderedAssembly> {
   const assemblies = projectAssemblies(root);
   const names = [...assemblies.keys()];
@@ -82,8 +87,8 @@ export async function renderAssembly(
     // As a page's placement is asked: one deep, with nothing above it.
     depth: 1,
     path: [],
-    query: new URLSearchParams(),
-    params: {},
+    query: new URLSearchParams(arrived.query),
+    params: arrived.params ?? {},
     headers: {},
     signal: waited,
   });

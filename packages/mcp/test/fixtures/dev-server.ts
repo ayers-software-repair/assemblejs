@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { createServer, defineAssembly } from "@assemblejs/core";
+import { createServer, defineAssembly, defineService } from "@assemblejs/core";
 import type { App, LogLine } from "@assemblejs/core";
 import { afterAll, beforeAll } from "vitest";
 
@@ -43,6 +43,24 @@ const holder = defineAssembly({
   },
 });
 
+// One whose service answers what it was asked with, so a spec sees a route's parameters and a
+// query arrive where a visitor's would.
+const asked = defineAssembly({
+  name: "asked",
+  views: {
+    default: {
+      renderer: "html",
+      services: [
+        defineService({
+          name: "asked",
+          run: ({ params, query }) => ({ params: { ...params }, query: Object.fromEntries(query) }),
+        }),
+      ],
+      markup: () => "<p>asked</p>",
+    },
+  },
+});
+
 /**
  * The project's own dev server, as the agent surface finds it: a real server of the framework,
  * listening, started for the specs of the file that asks, with what it logged and `runningFor`,
@@ -62,7 +80,7 @@ export function devServer(): {
   beforeAll(async () => {
     app = await createServer({
       config: { mode: "production", host: "127.0.0.1", port: 0, auth: undefined },
-      assemblies: [served("counter"), served("cart"), served("ok"), failing, holder],
+      assemblies: [served("counter"), served("cart"), served("ok"), failing, holder, asked],
       log: (line) => lines.push(line),
     });
     origin = (await app.listen()).url;

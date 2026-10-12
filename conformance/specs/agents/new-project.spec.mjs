@@ -281,6 +281,18 @@ test("the page the agent composed is the page the project's build serves", async
       const rendered = await call("render_assembly", { name: "greeting" });
       assert.equal(rendered.ok, true, JSON.stringify(rendered.problems));
       assert.deepEqual(named(rendered.result.html), [["greeting", "<p>greeting</p>"]]);
+      // Both take what a visitor arrives with, and the server holds what it is sent of it to
+      // the contract: a route's parameters in their header, a query in the address.
+      const visited = await call("render_assembly", {
+        name: "greeting",
+        params: { sku: "kb-250" },
+        query: { grind: "espresso" },
+      });
+      assert.equal(visited.ok, true, JSON.stringify(visited.problems));
+      // A value for a parameter the page's route has not is the call's mistake, and is said.
+      const mistaken = await call("compose_page", { page, params: { sku: "kb-250" } });
+      assert.equal(mistaken.ok, false);
+      assert.match(String(mistaken.problems[0]), /has no parameter "sku": it has none/);
     } finally {
       await client.close();
       rmSync(join(root, ".assemblejs", "dev.json"), { force: true });

@@ -60,6 +60,20 @@ describe("rendering through the project's dev server", () => {
     expect(logged).toEqual(expect.arrayContaining(ids));
   });
 
+  // Rendered for nobody, an assembly of a page whose route has a parameter was shown with the
+  // data of no product at all.
+  it("gives its services what the visitor of the call arrived with", async () => {
+    assembly("asked", "asked.html", "<p>on disk</p>");
+    dev.runningFor(dir);
+    const rendered = await renderAssembly(root, "asked", undefined, {
+      params: { sku: "kb-250" },
+      query: { grind: "espresso" },
+    });
+    expect(rendered.problems).toEqual([]);
+    expect(rendered.data).toEqual({ params: { sku: "kb-250" }, query: { grind: "espresso" } });
+    expect((await renderAssembly(root, "asked")).data).toEqual({ params: {}, query: {} });
+  });
+
   it("asks it for a plain html view too, so what is shown is what the project serves", async () => {
     assembly("cart", "cart.html", "<p>on disk</p>");
     dev.runningFor(dir);

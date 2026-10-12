@@ -52,9 +52,11 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: check compiles
-the views a build would (DECISIONS 2026-10-12, of that name). Beneath it `97e7a9d`, the
-modules the build generates type-check (`ci` 38225198057). Beneath it `0776296`, a view
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the agent surface
+shows a page as a visitor is shown it (DECISIONS 2026-10-12, of that name). Beneath it
+`ebc95a9`, check compiles the views a build would (`ci` 38225918826). Beneath it `97e7a9d`,
+the modules the build generates type-check (`ci` 38225198057, all five jobs green). Beneath
+it `0776296`, a view
 its compiler refuses is reported at the view (`ci` 38222121545, all five jobs green). Beneath
 it `ebdaa27`, the gates are held to what they say, four rows of the gates, the tests and the
 READMEs (`ci` 38221521004). Beneath it `736af62`, a project is made where nothing is written over, three rows
@@ -91,8 +93,8 @@ project (`ci` 38202881918, all five jobs green); `f62a4ec`, the ids a component 
 island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value is text (`ci`
 38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
 when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
-tarball budgets: the core's 98000, moved from 86000 at a measured 94,991 and at 96,873 now; the command line's
-102000, moved from 98000 at a measured 98,472; the agent surface's 28500, moved from 27000 at a measured 27,063.
+tarball budgets: the core's 98000, moved from 86000 at a measured 94,991 and at 97,075 now; the command line's
+102000, moved from 98000 at a measured 98,472; the agent surface's 30000, moved from 28500 at a measured 28,356.
 Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
@@ -1380,9 +1382,11 @@ a spec watched red first, or struck with its reason.
       again and says ok. DONE 2026-10-12: the tag is laid out as the file is, held to the
       starter's own page byte for byte, and a second placing is said first of what to do next
       (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
-- [ ] The agent surface has nothing that takes a route's parameters or a query: `compose_page` and
+- [x] The agent surface has nothing that takes a route's parameters or a query: `compose_page` and
       `render_assembly` on `/product/:sku` always render with no sku, so an agent never sees a page
-      that has a parameter as a visitor does
+      that has a parameter as a visitor does. DONE 2026-10-12: both take `params` and `query`, a
+      page's are held to the route it declares, and one left out is said
+      (DECISIONS 2026-10-12, "the agent surface shows a page as a visitor is shown it")
 - [ ] A dynamic route cannot answer 404: `/product/nope-99` is a 200, because a service returns data
       and nothing lets it or the page say not found. `/products/` with a trailing slash is a 404
       where `/products` is a 200. Neither is in DESIGN: the owner's to settle

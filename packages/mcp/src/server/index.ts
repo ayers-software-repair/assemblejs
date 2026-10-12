@@ -11,6 +11,7 @@ export type { DescribedContract } from "./described-contract.js";
 export { describeContract } from "./describe-contract.js";
 export { RESOURCE_NOT_FOUND } from "./resource-not-found.js";
 export { registerResources } from "./register-resources.js";
+export { registerSeeingTools } from "./register-seeing-tools.js";
 export { createMcpServer } from "./create-mcp-server.js";
 export { registerAuthoringTools } from "./register-authoring-tools.js";
 export { registerPrompts } from "./register-prompts.js";

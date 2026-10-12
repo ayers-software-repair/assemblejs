@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { routeParameters } from "@assemblejs/core";
 import type { PageBudgets } from "@assemblejs/core";
 import { buildProject } from "../build/build-project.js";
 import { pageRoute } from "../check/page-route.js";
@@ -88,7 +89,7 @@ export async function runPerf(
           throw new Error(
             "its route is not written as a literal, so only running the project could tell it",
           );
-        if (route.includes("/:")) {
+        if (routeParameters(route).length > 0) {
           io.log(`${route}: not weighed, as a parameter needs a value`);
           continue;
         }

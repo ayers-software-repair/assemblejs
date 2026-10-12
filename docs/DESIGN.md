@@ -1145,15 +1145,15 @@ without one is `check`'s.
 Every tool answers with the change it made and the state that resulted. None of them prints
 prose for a human to re-read.
 
-| tool              | what it does                                                                                                                                                                                  |
-| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `create_project`  | Scaffolds a project that runs.                                                                                                                                                                |
-| `add_assembly`    | Writes an assembly for a named renderer, and returns the files, the tag that places it, and what to install first where the project has not installed that renderer.                          |
-| `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position, laid out as the file is; and says when that assembly is now placed there more than once.       |
-| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML and the account of each child.                                                                        |
-| `compose_page`    | Composes a page, by name, NOW, under the policy its declaration writes, and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
-| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                                                                                  |
-| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                                                                                 |
+| tool              | what it does                                                                                                                                                                                                                      |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create_project`  | Scaffolds a project that runs.                                                                                                                                                                                                    |
+| `add_assembly`    | Writes an assembly for a named renderer, and returns the files, the tag that places it, and what to install first where the project has not installed that renderer.                                                              |
+| `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position, laid out as the file is; and says when that assembly is now placed there more than once.                                           |
+| `render_assembly` | Renders one assembly NOW, for the visitor the call describes, what its view places composed inside it, and returns its HTML and the account of each child.                                                                        |
+| `compose_page`    | Composes a page, by name, NOW, for the visitor the call describes, under the policy its declaration writes, and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
+| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                                                                                                                      |
+| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                                                                                                                     |
 
 `render_assembly` and `compose_page` are the two that matter most, and they are the reason this
 is not a wrapper. An agent that writes an assembly can immediately see what it renders and
@@ -1180,6 +1180,12 @@ the one asking (5.2), and it logs nothing for it.
 declaration writes, read as `check` reads it, so the agent sees the page it made and not a
 template it pasted; a placement from another server, by a url written or computed, is composed
 deferred, as the browser fills it on a served page, so the surface reaches no network (13.2).
+Both take what a visitor arrives with, a value for each parameter of the page's route and a
+query, and every placement's request is given them as a page's composer gives them, so a page
+at `/product/:sku` is shown as one product's and not as nobody's. `compose_page` holds the
+values to the route its page declares: one for a parameter the route has not is refused, and a
+parameter left out is composed without and said among the problems, as no visitor arrives
+without it.
 
 ### 13.5 What makes it expert rather than mechanical
 
