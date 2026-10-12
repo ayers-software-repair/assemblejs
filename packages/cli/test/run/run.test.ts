@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { projectFiles, realIo, run } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
 
@@ -70,30 +70,6 @@ describe("the verbs that read a project", () => {
 });
 
 describe("new", () => {
-  afterEach(() => void vi.unstubAllEnvs());
-  it("writes a project that runs", () => {
-    vi.stubEnv("npm_config_user_agent", "npm/11.0.0 node/v24.0.0");
-    const { io, written } = fake();
-    expect(run(["new", "my-app"], io)).toBe(0);
-    expect([...written.keys()].sort()).toEqual([
-      "my-app/.cursor/mcp.json",
-      "my-app/.gemini/settings.json",
-      "my-app/.gitignore",
-      "my-app/.mcp.json",
-      "my-app/.vscode/mcp.json",
-      "my-app/AGENTS.md",
-      "my-app/CLAUDE.md",
-      "my-app/README.md",
-      "my-app/opencode.json",
-      "my-app/package.json",
-      "my-app/src/assemblies/hello/hello.html",
-      "my-app/src/components.css",
-      "my-app/src/pages/home/home.html",
-      "my-app/src/server.ts",
-      "my-app/src/tokens.css",
-    ]);
-  });
-
   // The agent instructions and registrations among them are held current by check from then on.
   it("writes a project its own check passes", async () => {
     const parent = mkdtempSync(join(tmpdir(), "new-"));
@@ -104,33 +80,10 @@ describe("new", () => {
     expect(lines).toEqual(["no problems"]);
   });
 
-  it("refuses a directory that already exists rather than writing into it", () => {
-    const { io, written, errors } = fake(["my-app"]);
-    expect(run(["new", "my-app"], io)).toBe(1);
-    expect(written.size).toBe(0);
-    expect(errors.join()).toContain("already exists");
-  });
-
-  it("refuses a directory whose name cannot name a package, with one that can", () => {
-    const { io, written, errors } = fake();
-    expect(run(["new", "My App"], io)).toBe(2);
-    expect(written.size).toBe(0);
-    expect(errors.join()).toContain("try my-app");
-  });
-
   it("needs a directory", () => {
     const { io, errors } = fake();
     expect(run(["new"], io)).toBe(2);
     expect(errors.join()).toContain("needs a directory");
-  });
-
-  it("writes into an absolute directory where it says, not beneath where it ran", () => {
-    const { io, written, logs } = fake();
-    const directory = join(tmpdir(), "target", "my-app");
-    expect(run(["new", directory, "--cwd", join(tmpdir(), "ran-in")], io)).toBe(0);
-    expect(written.has(`${directory.replaceAll("\\", "/")}/package.json`)).toBe(true);
-    expect([...written.keys()].some((path) => path.includes("ran-in"))).toBe(false);
-    expect(logs.join("\n")).toContain(`cd ${directory}`);
   });
 });
 

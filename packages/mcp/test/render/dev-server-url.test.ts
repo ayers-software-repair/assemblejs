@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { networkInterfaces, tmpdir } from "node:os";
@@ -42,6 +42,20 @@ afterEach(() => rmSync(dir, { recursive: true, force: true }));
 describe("finding the project's dev server", () => {
   it("is nothing when dev left no record", async () => {
     expect(await devServerUrl(root)).toBeUndefined();
+  });
+
+  // The guard refuses such a path by throwing, and the throw ended every tool that asks for a
+  // dev server: a record this project's own guard will not read is no record.
+  it("is nothing for a record that is a link out of the project, or a link to nothing", async () => {
+    const outside = mkdtempSync(join(tmpdir(), "assemblejs-outside-"));
+    writeFileSync(join(outside, "dev.json"), JSON.stringify({ url: origin }));
+    mkdirSync(join(dir, ".assemblejs"), { recursive: true });
+    symlinkSync(join(outside, "dev.json"), join(dir, ".assemblejs", "dev.json"));
+    expect(await devServerUrl(root)).toBeUndefined();
+    rmSync(join(dir, ".assemblejs", "dev.json"));
+    symlinkSync(join(outside, "no-such-record.json"), join(dir, ".assemblejs", "dev.json"));
+    expect(await devServerUrl(root)).toBeUndefined();
+    rmSync(outside, { recursive: true, force: true });
   });
 
   it("is the recorded url once that server answers its health", async () => {

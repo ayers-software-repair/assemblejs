@@ -1,7 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { DeadLinkError, planAssembly, realIo, rendererProblems } from "@assemblejs/cli";
-import { isOccupied } from "../root/is-occupied.js";
+import { DeadLinkError, isOccupied, planAssembly, realIo, rendererProblems } from "@assemblejs/cli";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";

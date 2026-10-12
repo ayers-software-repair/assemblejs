@@ -26,7 +26,7 @@ export function planAssembly(
         path,
         rule: "directory-is-an-assembly",
         message: `"${name}" is not a usable assembly name; lower case, starting with a letter`,
-        fix: `call it "${suggestName(name)}"`,
+        fix: `call it "${suggestName(name, "assembly")}"`,
       },
     };
   }

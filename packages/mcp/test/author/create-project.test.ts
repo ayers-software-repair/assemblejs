@@ -51,6 +51,40 @@ describe("scaffolding a project through the agent surface", () => {
     expect(readFileSync(join(dir, "src", "server.ts"), "utf8")).toBe("// the author's own");
   });
 
+  // A repository made on a forge a minute ago: a README, what git passes over, a licence. It was
+  // refused as holding a project, and the agent was sent to add an assembly to it.
+  it("scaffolds into a root that holds a README and a .gitignore, and keeps what they say", () => {
+    const dir = mkdtempSync(join(tmpdir(), "mcp-create-"));
+    writeFileSync(join(dir, "README.md"), "# Ours\n");
+    writeFileSync(join(dir, ".gitignore"), "node_modules\n.env\n");
+    writeFileSync(join(dir, "LICENSE"), "Ours.\n");
+    const answer = createProject(resolveRoot(dir), "shop");
+    expect(answer.ok).toBe(true);
+    const written = (answer.result as { written: string[] }).written;
+    expect(written).toEqual(expect.arrayContaining(["package.json", ".gitignore"]));
+    expect(written).not.toContain("README.md");
+    expect(readFileSync(join(dir, "README.md"), "utf8")).toBe("# Ours\n");
+    expect(readFileSync(join(dir, ".gitignore"), "utf8")).toBe(
+      "node_modules\n.env\ndist/\n.assemblejs/\ndeploy/\n",
+    );
+    expect(readFileSync(join(dir, "LICENSE"), "utf8")).toBe("Ours.\n");
+  });
+
+  // Sent to add_assembly, an agent adds one to a root with no project in it.
+  it("says to move aside what is in the way, where that is not a project", () => {
+    const dir = mkdtempSync(join(tmpdir(), "mcp-create-"));
+    mkdirSync(join(dir, "src"));
+    writeFileSync(join(dir, "src", "notes.txt"), "ours");
+    expect(createProject(resolveRoot(dir), "shop").problems).toEqual([
+      {
+        path: "src/",
+        rule: "one-project-per-root",
+        message: "this root already holds src/, which a new project would write over",
+        fix: "move it aside, or make the project in a root that does not hold it",
+      },
+    ]);
+  });
+
   // The registration that started this server in an empty directory is the commonest of them.
   it("scaffolds into a root that holds only what a project carries for its agents, and keeps it", () => {
     const dir = mkdtempSync(join(tmpdir(), "mcp-create-"));
@@ -103,7 +137,7 @@ describe("scaffolding a project through the agent surface", () => {
     const answer = createProject(resolveRoot(dir), "shop");
     expect(answer.problems[0]).toMatchObject({
       rule: "one-project-per-root",
-      message: "this root already holds a project: AGENTS.md",
+      message: "this root already holds AGENTS.md, which a new project would write over",
     });
     expect(existsSync(join(dir, "package.json"))).toBe(false);
   });

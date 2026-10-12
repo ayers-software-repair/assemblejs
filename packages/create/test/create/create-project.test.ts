@@ -1,5 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { Io } from "@assemblejs/cli";
 import { describe, expect, it } from "vitest";
 import { createProject } from "@assemblejs/create";
@@ -23,6 +28,19 @@ describe("npm create @assemblejs", () => {
     expect(createProject(["my-app"], io)).toBe(0);
     expect([...written.keys()]).toContain("my-app/src/pages/home/home.html");
     expect([...written.keys()]).toContain("my-app/src/server.ts");
+  });
+
+  // `npm create @assemblejs .`, in a directory made for the project, was refused as a name.
+  it("makes the project in the directory it runs in, when that is the one named", () => {
+    const here = join(mkdtempSync(join(tmpdir(), "create-")), "my-shop");
+    mkdirSync(here);
+    const bin = fileURLToPath(new URL("../../dist/bin.js", import.meta.url));
+    const said = execFileSync(process.execPath, [bin, "."], { cwd: here, encoding: "utf8" });
+    expect(JSON.parse(readFileSync(join(here, "package.json"), "utf8"))).toMatchObject({
+      name: "my-shop",
+    });
+    expect(said).toContain("wrote package.json");
+    expect(said).not.toContain("cd ");
   });
 
   it("asks nothing, and says how to call it when it is given no directory or too much", () => {

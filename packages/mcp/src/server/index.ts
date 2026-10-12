@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 export type { ToolResult } from "./tool-result.js";
+export { answering } from "./answering.js";
 export type { DescribedProject } from "./described-project.js";
 export { describeProject } from "./describe-project.js";
 export type { DescribedAssembly } from "./described-assembly.js";

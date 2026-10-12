@@ -5,6 +5,7 @@ export { DeadLinkError } from "./dead-link-error.js";
 export { deadLink } from "./dead-link.js";
 export { followLinks } from "./follow-links.js";
 export { insideRoot } from "./inside-root.js";
+export { isOccupied } from "./is-occupied.js";
 export { leadsOut } from "./leads-out.js";
 export { readInside } from "./read-inside.js";
 export { outsideProblems } from "./outside-problems.js";

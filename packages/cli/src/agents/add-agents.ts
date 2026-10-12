@@ -6,6 +6,7 @@ import type { Io } from "../io/io.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import { agentFiles } from "./agent-files.js";
 import { AGENT_SERVER } from "./agent-server.js";
+import { cannotRegister } from "./cannot-register.js";
 import { manifestOf } from "./manifest-of.js";
 import { textIn } from "./text-in.js";
 
@@ -26,9 +27,7 @@ export function addAgents(root: string, io: Io): number {
   const { files, unreadable } = agentFiles(manifest.name ?? basename(root), existing);
   if (unreadable.length > 0) {
     for (const path of unreadable) {
-      io.error(
-        `${path} is not JSON, which a comment in it is enough to cause, and a server cannot be added to it without losing what it holds: correct it or remove it, then run this again`,
-      );
+      io.error(`${cannotRegister(path)}: correct it or remove it, then run this again`);
     }
     return 1;
   }

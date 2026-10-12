@@ -59,7 +59,7 @@ export function discoverAssemblies(root: string): {
         path: at,
         rule: "directory-is-an-assembly",
         message: `"${name}" is not a usable assembly name; names are lower case, start with a letter, and use hyphens`,
-        fix: `rename the directory to "${suggestName(name)}"`,
+        fix: `rename the directory to "${suggestName(name, "assembly")}"`,
       });
       continue;
     }

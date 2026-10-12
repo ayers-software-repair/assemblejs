@@ -53,7 +53,7 @@ export function discoverPages(root: string): {
         path: at,
         rule: "a-directory-is-a-page",
         message: `page "${name}" is not a usable name; lower case, starting with a letter`,
-        fix: `rename the directory to "${suggestName(name)}"`,
+        fix: `rename the directory to "${suggestName(name, "page")}"`,
       });
       continue;
     }

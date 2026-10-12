@@ -6,13 +6,10 @@ import { z } from "zod";
 import { composePage } from "../compose/compose-page.js";
 import { renderAssembly } from "../render/render-assembly.js";
 import type { ProjectRoot } from "../root/project-root.js";
+import { answering } from "./answering.js";
 import { registerAuthoringTools } from "./register-authoring-tools.js";
 import { registerPrompts } from "./register-prompts.js";
 import { registerResources } from "./register-resources.js";
-
-const json = (value: unknown) => ({
-  content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }],
-});
 
 /**
  * The agent surface, wired to the protocol.
@@ -34,9 +31,9 @@ export function createMcpServer(root: ProjectRoot): McpServer {
         "Renders an assembly and returns the envelope the server would emit, with every assembly its view places composed inside it, the account of each, and any problems. While the project's dev server runs (npx assemblejs dev), that server renders it, framework and template views included, and nothing of the project's code runs here; without one, a plain html view is rendered here with no service, so its data is empty, and any other view is answered with the reason. Use it right after writing one, to see what it actually produced rather than guessing.",
       inputSchema: { name: z.string().describe("the assembly's name, which is its directory") },
     },
-    async ({ name }) => {
+    answering(async ({ name }) => {
       const rendered = await renderAssembly(root, name);
-      return json({
+      return {
         ok: rendered.problems.length === 0,
         result: rendered,
         problems: rendered.problems,
@@ -44,8 +41,8 @@ export function createMcpServer(root: ProjectRoot): McpServer {
           rendered.problems.length === 0
             ? [`place it on a page with <assembly name="${name}"></assembly>`]
             : [],
-      });
-    },
+      };
+    }),
   );
 
   server.registerTool(
@@ -58,14 +55,14 @@ export function createMcpServer(root: ProjectRoot): McpServer {
         page: z.string().describe("the page's name, which is its directory under src/pages"),
       },
     },
-    async ({ page }) => {
+    answering(async ({ page }) => {
       const composed = await composePage(root, page);
-      return json({
+      return {
         ok: composed.problems.length === 0,
         result: composed,
         problems: composed.problems,
-      });
-    },
+      };
+    }),
   );
 
   server.registerTool(
@@ -76,17 +73,17 @@ export function createMcpServer(root: ProjectRoot): McpServer {
         "The reason behind one of the framework's rules, so an agent can decide rather than comply.",
       inputSchema: { id: z.string().describe("the rule's id, from assemblejs://rules") },
     },
-    ({ id }) => {
+    answering(({ id }) => {
       const rule = findRule(id);
-      return json({
+      return {
         ok: rule !== undefined,
         result: rule ?? null,
         problems:
           rule === undefined
             ? [`there is no rule "${id}". The ids are: ${RULES.map((r) => r.id).join(", ")}`]
             : [],
-      });
-    },
+      };
+    }),
   );
 
   registerAuthoringTools(server, root);

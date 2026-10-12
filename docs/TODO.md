@@ -52,9 +52,11 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: what is written
-into a file is written as the file is laid out (DECISIONS 2026-10-12, of that name), four rows
-of the command line and the agent surface. Beneath it `6dacf89`, where a placement may stand,
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a project is made
+where nothing is written over (DECISIONS 2026-10-12, of that name), three rows of the command
+line and the agent surface. Beneath it `3117cdb`, what is written into a file is written as
+the file is laid out, four rows of the two (`ci` 38218518886, all five jobs green). Beneath it
+`6dacf89`, where a placement may stand,
 by the parser's own rules, three of the audit's minors (`ci` 38215202253, all five jobs
 green). Beneath it `d95cd40`, perf does not fail a project for guarding a page (`ci`
 38214252176). Beneath it `774b709`, the
@@ -86,7 +88,7 @@ island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value
 38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
 when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
 tarball budgets: the core's 98000, moved from 86000 at a measured 94,991 and at 96,873 now; the command line's
-98000, moved from 94000 at a measured 94,039 and at 96,752 now; the agent surface's is at 26,902 of 27,000.
+102000, moved from 98000 at a measured 98,472; the agent surface's 28500, moved from 27000 at a measured 27,063.
 Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
@@ -1320,7 +1322,14 @@ a spec watched red first, or struck with its reason.
 - [ ] A server that refuses to boot prints an uncaught stack: the starter's `src/server.ts` awaits
       `createServer` at the top level, so a BootError, a refusal with a plain sentence for each
       problem, reaches the terminal as a Node stack trace with the sentences inside it (found
-      2026-10-11, in the dev log)
+      2026-10-11, in the dev log). READ 2026-10-12, and not mended: three errors reach the
+      terminal this way, a `BootError`, a `ConfigError` from `readConfig`, and a failed `listen`
+      such as a port in use. A catch in the server file would mend it in the starter, ten
+      examples and a README, and DESIGN 12 and the rule `the-server-file-never-grows` say that
+      file hands `createServer` the project and does nothing else; a call in the core that does
+      the whole job (reads the config, builds, listens, says where, and on a refusal prints its
+      sentences and exits 1) would bring the file back to the two lines DESIGN shows, and is a
+      new public word. THE OWNER'S TO SETTLE; the seat's advice is the call in the core
 - [ ] A Svelte view that does not parse is reported at the generated module and not at the view:
       `.assemblejs/client/broken.ts:10 Unexpected token` with a svelte.dev address, for
       `src/assemblies/broken/broken.svelte` holding `<p>{</p>` (found 2026-10-11, in the dev log of
@@ -1716,12 +1725,18 @@ The agent surface:
       and watched red for `place_assembly`. DONE 2026-10-12: both say to mend the directory that is
       there, where they said to add what `add` refuses as taken (DECISIONS 2026-10-12, "the agent
       surface asks only this machine's dev server, and only for so long").
-- [ ] create_project refuses a root that holds only a README.md or .gitignore, and sends the agent
+- [x] create_project refuses a root that holds only a README.md or .gitignore, and sends the agent
       to add_assembly (workflow mcp.6, minor). Claimed at
-      `packages/mcp/src/author/create-project.ts:52`. PREMISE UNVERIFIED
-- [ ] Tools throw raw filesystem or root errors instead of a structured refusal; a symlinked
+      `packages/mcp/src/author/create-project.ts:52`. PREMISE UNVERIFIED. REPRODUCED by the seat
+      over stdio with the built server. DONE 2026-10-12: a README is kept, a `.gitignore` is
+      added to, and the decision is one the command line's `new` asks too
+      (DECISIONS 2026-10-12, "a project is made where nothing is written over")
+- [x] Tools throw raw filesystem or root errors instead of a structured refusal; a symlinked
       dev.json takes down render_assembly and compose_page entirely (workflow mcp.7, minor). Claimed
-      at `packages/mcp/src/render/dev-server-url.ts:18`. PREMISE UNVERIFIED
+      at `packages/mcp/src/render/dev-server-url.ts:18`. PREMISE UNVERIFIED. REPRODUCED by the seat
+      over stdio: a guard that throws, tested as if it answered false. DONE 2026-10-12: such a
+      record is no record, and every tool answers a refusal as an answer
+      (DECISIONS 2026-10-12, "a project is made where nothing is written over")
 - [x] Placement insert mis-reads <body-card> as <body>, and both place_assembly and add agents write
       mixed line endings into CRLF files (workflow mcp.8, minor). Claimed at
       `packages/cli/src/commands/place-assembly.ts:6`. PREMISE UNVERIFIED. READ and watched red by
@@ -1745,9 +1760,12 @@ Packaging:
 - [ ] site/install.html says `npm install` in a new project installs "the one renderer your first
       assembly uses", but the scaffold has none (workflow packaging.4, minor). Claimed at
       `site/install.html:32`. PREMISE UNVERIFIED
-- [ ] `new .` (create in the current directory) is refused with a message that suggests the name
+- [x] `new .` (create in the current directory) is refused with a message that suggests the name
       "assembly" (workflow packaging.5, minor). Claimed at
-      `packages/cli/src/discovery/suggest-name.ts:14`. PREMISE UNVERIFIED
+      `packages/cli/src/discovery/suggest-name.ts:14`. PREMISE UNVERIFIED. REPRODUCED by the seat with the
+      built command line. DONE 2026-10-12: `new .` makes the project where the command works,
+      named for the directory, and a name with nothing usable in it is answered with the
+      caller's own example (DECISIONS 2026-10-12, "a project is made where nothing is written over")
 
 Docs against code:
 

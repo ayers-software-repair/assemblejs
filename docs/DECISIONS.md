@@ -6351,3 +6351,71 @@ the source and watched red on the committed code before it was changed.
   every line of each ends the one way after it (100 of 100, 3 of 3, 11 of 11) and the mark is
   first. The command line's tarball is at 96,752 bytes of its 98,000, and the agent surface's
   at 26,902 of its 27,000.
+
+## 2026-10-12: a project is made where nothing is written over
+
+Three rows of the audit (packaging.5, mcp.6, mcp.7), each reproduced with the built tools before
+it was believed: `new .` answered `"." cannot name a package; lower case with hyphens: try
+assembly`; `create_project`, over stdio, in a root holding a README and a `.gitignore`, answered
+"this root already holds a project" and sent the agent to `add_assembly`; and a `dev.json` that
+was a link out of the root made `render_assembly` and `compose_page` answer one line of an
+error's text.
+
+- **One decision of what a directory may hold** (packaging.5 and mcp.6, true, and one question).
+  `new` refused any directory that was there, and `create_project` any root holding a file the
+  starter writes, the README and the `.gitignore` among them, which is every repository a
+  minute after it is made on a forge. Both ask `projectInto` now. What the starter does not
+  write is left alone. A README is the author's and is kept as it is. A `.gitignore` keeps
+  every line and gains the starter's entries it lacks, in its own line ending, since a first
+  commit made without them carries the build's output; an entry is compared without its
+  leading and trailing slash, so `dist` is not added beside `/dist`. The files a project
+  carries for its agents are brought up to date as `add agents` does it. Any other file the
+  starter writes, anything under `src`, and anything that is no file to read where a kept one
+  goes, stands in the way: it is named and nothing is written. `create_project` says to add an
+  assembly only where what stands there is a `package.json`; anything else it says to move
+  aside.
+- **`new` into a directory that is there is allowed, which it was not.** It said "already
+  exists" of an empty directory. It is refused now only for what it holds, as the agent
+  surface's is, and `.` and `./` are the directory the command works in: the project is named
+  for the directory as it resolves, and the lines that say what to do next leave out a `cd`
+  to where the command already is. Nothing is written through a link that leads out of the
+  directory, asked of the root guard before the first write as `add agents` asks it. What the
+  old refusal also covered is kept by a line of its own: a name that a file holds, or a link
+  to nothing, is no directory to make a project in, and is refused in a sentence. Without it
+  the first write failed in the system's words and a stack, which the first cut of this bite
+  did, caught before it was pushed.
+- **Whether anything is at a path is one reader's to say.** The command line asked
+  `existsSync`, to which a link that points at nothing is a free place, and a write through
+  one lands wherever it points. The agent surface had the reader that counts such a link
+  (`isOccupied`); it is the command line's now, and the agent surface reads the command
+  line's.
+- **A suggested name is the caller's kind of thing** (packaging.5's other half). A name with
+  nothing usable in it was answered "assembly" whatever was being named: a project, a page, an
+  api file. Each caller gives its own example, so a project is told `my-app`.
+- **A refusal is an answer** (mcp.7, true, and one dead guard beneath it). `devServerUrl` held
+  `if (!withinRoot(...))`, and the guard never answers false: it throws. So a record that was a
+  link out of the project ended every tool that asks for a dev server. The record is read
+  inside the reading that already takes anything unreadable as no record. Above it, every tool
+  is registered through one wrapper, `answering`: a path the guard refuses is answered in the
+  words `check` uses of one, with its rule and its fix; what the system refuses of a read or a
+  write is answered in a sentence that carries the system's own; and anything else is a fault
+  of this server's, not a refusal, and is thrown on for the protocol to report as an error.
+  The two helpers that carried an answer as JSON, one in each file that registered tools, are
+  that wrapper's one.
+- **Two budgets move, each at its measure.** The command line's tarball packs to 98,472 bytes
+  and its budget goes from 98,000 to 102,000: it takes the decision above, `new` as a command
+  of its own, and the reader the agent surface gave it. The agent surface's packs to 27,063
+  and its budget goes from 27,000 to 28,500; it stood 98 bytes under before this bite.
+- **Proof.** Seven cases of the agent surface red on the committed code and green after: three
+  of `create_project`, the dev record, and three over the protocol, where the answer had been a
+  line that was not JSON; and one of `new`, a file where the directory was named, red on this
+  bite's own first cut. Every cheap gate green; the command line's 800 cases, the agent
+  surface's 199 and the create package's 3; every other suite, and the agents fixture. Then at
+  the artifact, with the built tools. `new .` in an empty directory, named for it, with no
+  `cd` in what it says next. `new .` beside a README, a `.gitignore` and a licence, the first
+  two ending their lines with a carriage return and a line feed: fourteen files written, the
+  README as it was, the `.gitignore` three entries longer in its own ending. `new .` and
+  `new taken` where a `package.json` stood, each refused in a line. The create package's own
+  command with a dot. `create_project` over stdio in a repository holding a README and a
+  `.gitignore`. And `render_assembly` answering ok with the dev record still a link out of the
+  root.

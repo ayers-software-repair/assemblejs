@@ -46,7 +46,7 @@ export function discoverApis(root: string): {
         path: `${at}/${file}`,
         rule: "an-api-file-is-an-api",
         message: `"${file}" is not a usable api file name; lower case, starting with a letter`,
-        fix: `rename it to "${suggestName(file.slice(0, -".api.ts".length))}.api.ts"`,
+        fix: `rename it to "${suggestName(file.slice(0, -".api.ts".length), "api")}.api.ts"`,
       });
     } else if (nearly !== null) {
       const [, stem] = nearly;
@@ -57,7 +57,7 @@ export function discoverApis(root: string): {
         fix:
           stem === undefined
             ? "rename it for the api it declares, or remove it"
-            : `rename it to "${suggestName(stem)}.api.ts", or remove it`,
+            : `rename it to "${suggestName(stem, "api")}.api.ts", or remove it`,
       });
     }
   }

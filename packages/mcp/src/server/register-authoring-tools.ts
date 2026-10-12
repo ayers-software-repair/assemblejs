@@ -9,11 +9,8 @@ import { createProject } from "../author/create-project.js";
 import { placeInView } from "../author/place-in-view.js";
 import { placeOnPage } from "../author/place-on-page.js";
 import type { ProjectRoot } from "../root/project-root.js";
+import { answering } from "./answering.js";
 import type { ToolResult } from "./tool-result.js";
-
-const json = (value: ToolResult) => ({
-  content: [{ type: "text" as const, text: JSON.stringify(value, null, 2) }],
-});
 
 /**
  * The tools that change a project, and the one that checks it: the command line's own logic,
@@ -23,9 +20,9 @@ const json = (value: ToolResult) => ({
 export function registerAuthoringTools(server: McpServer, root: ProjectRoot): void {
   // Each assembly is a resource of its own, so a tool that wrote one tells a client that listed
   // them to list again.
-  const listedAgain = (result: ToolResult) => {
+  const listedAgain = (result: ToolResult): ToolResult => {
     if (result.ok) server.sendResourceListChanged();
-    return json(result);
+    return result;
   };
 
   server.registerTool(
@@ -33,10 +30,10 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
     {
       title: "Scaffold a project that runs",
       description:
-        "Writes the smallest project that runs into this root: one page placing one assembly, and no framework nobody asked for. Refuses a root that already holds a project.",
+        "Writes the smallest project that runs into this root: one page placing one assembly, and no framework nobody asked for. A README the root already holds is kept, and a .gitignore is added to. Refuses a root that holds anything else the starter would write, and names it.",
       inputSchema: { name: z.string().describe("the package name, lower case with hyphens") },
     },
-    ({ name }) => listedAgain(createProject(root, name)),
+    answering(({ name }) => listedAgain(createProject(root, name))),
   );
 
   server.registerTool(
@@ -50,7 +47,7 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         renderer: z.string().describe(RENDERERS.join(", ")).default("html"),
       },
     },
-    ({ name, renderer }) => listedAgain(addAssembly(root, name, renderer)),
+    answering(({ name, renderer }) => listedAgain(addAssembly(root, name, renderer))),
   );
 
   server.registerTool(
@@ -73,22 +70,20 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         before: z.string().optional().describe("place it before this assembly's placement"),
       },
     },
-    ({ page, in: parent, name, at, after, before }) => {
+    answering(({ page, in: parent, name, at, after, before }) => {
       const position =
         after !== undefined ? { after } : before !== undefined ? { before } : { at: at ?? "end" };
       if ((page === undefined) === (parent === undefined)) {
-        return json({
+        return {
           ok: false,
           result: null,
           problems: ["name where it goes: a page, or the assembly it is placed in, and not both"],
-        });
+        };
       }
-      return json(
-        parent === undefined
-          ? placeOnPage(root, page ?? "", name, position)
-          : placeInView(root, parent, name, position),
-      );
-    },
+      return parent === undefined
+        ? placeOnPage(root, page ?? "", name, position)
+        : placeInView(root, parent, name, position);
+    }),
   );
 
   server.registerTool(
@@ -99,6 +94,6 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         "Runs the checks in process and returns every finding with its file, its rule and its fix. Nothing is built and no shell is run.",
       inputSchema: {},
     },
-    async () => json(await checkRoot(root)),
+    answering(() => checkRoot(root)),
   );
 }

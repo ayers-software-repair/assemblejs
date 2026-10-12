@@ -1,9 +1,9 @@
 {
-  "@assemblejs/cli": 98000,
+  "@assemblejs/cli": 102000,
   "@assemblejs/core": 98000,
   "@assemblejs/create": 7000,
   "@assemblejs/devtools": 8500,
-  "@assemblejs/mcp": 27000,
+  "@assemblejs/mcp": 28500,
   "@assemblejs/renderer-lit": 9200,
   "@assemblejs/renderer-preact": 8900,
   "@assemblejs/renderer-react": 9100,

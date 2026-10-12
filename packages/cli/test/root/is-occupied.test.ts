@@ -4,7 +4,7 @@ import { mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { isOccupied } from "@assemblejs/mcp";
+import { isOccupied } from "@assemblejs/cli";
 
 describe("whether anything is at a path", () => {
   it("counts a file, and a link that points at nothing, and not an empty place", () => {

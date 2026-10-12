@@ -1,7 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { DEV_RECORD } from "@assemblejs/cli";
 import { FRAMEWORK_ROUTE_PREFIX } from "@assemblejs/core";
 import type { ProjectRoot } from "../root/project-root.js";
@@ -21,11 +20,11 @@ import { ownAddress } from "./own-address.js";
  * any path with a 200.
  */
 export async function devServerUrl(root: ProjectRoot): Promise<string | undefined> {
-  const file = join(root.path, DEV_RECORD);
-  if (!withinRoot(root, file)) return undefined;
   let url: string;
   try {
-    const record: unknown = JSON.parse(readFileSync(file, "utf8"));
+    // The guard refuses a record that leads out of the project, or nowhere, by throwing: such a
+    // record is no record, like one that cannot be read.
+    const record: unknown = JSON.parse(readFileSync(withinRoot(root, DEV_RECORD), "utf8"));
     if (typeof record !== "object" || record === null || !("url" in record)) return undefined;
     if (typeof record.url !== "string") return undefined;
     url = record.url;

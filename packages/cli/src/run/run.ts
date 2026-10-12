@@ -1,24 +1,22 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { basename, isAbsolute, join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { addAgents } from "../agents/add-agents.js";
 import { buildProject } from "../build/build-project.js";
 import { runCheck } from "../check/run-check.js";
 import { addAssembly } from "../commands/add-assembly.js";
+import { newProject } from "../commands/new-project.js";
 import { ownVersion } from "../commands/own-version.js";
-import { projectFiles } from "../commands/project-files.js";
-import { PROJECT_NAME } from "../commands/project-name.js";
 import { RENDERERS } from "../commands/renderers.js";
 import { runDeploy } from "../deploy/run-deploy.js";
 import { runDev } from "../dev/run-dev.js";
-import { suggestName } from "../discovery/suggest-name.js";
 import type { Io } from "../io/io.js";
 import { runPerf } from "../perf/run-perf.js";
 import { readArguments } from "./read-arguments.js";
 
 const USAGE = `assemblejs <command>
 
-  new <directory>              scaffold a project that runs
+  new <directory>              scaffold a project that runs; . is the directory you are in
   add assembly <name> [--renderer <name>]
                                add an assembly; a directory IS an assembly
   add agents                   write the agent instructions and MCP registrations, or bring
@@ -75,31 +73,6 @@ export function run(argv: readonly string[], io: Io): number | Promise<number> {
   io.error(`unknown command "${command}"`);
   io.error(USAGE);
   return 2;
-}
-
-function newProject(directory: string | undefined, cwd: string, io: Io): number {
-  if (directory === undefined || directory === "") {
-    io.error("new needs a directory: assemblejs new my-app");
-    return 2;
-  }
-  const name = basename(directory);
-  if (!PROJECT_NAME.test(name)) {
-    io.error(`"${name}" cannot name a package; lower case with hyphens: try ${suggestName(name)}`);
-    return 2;
-  }
-  // An absolute directory is where it says; any other is beneath where the command works.
-  const root = isAbsolute(directory) ? directory : join(cwd, directory);
-  if (io.exists(root)) {
-    io.error(`${directory} already exists`);
-    return 1;
-  }
-  const manager = (process.env["npm_config_user_agent"] ?? "npm").split("/")[0] ?? "npm";
-  for (const [path, contents] of Object.entries(projectFiles(name, manager))) {
-    io.write(join(root, path), contents);
-    io.log(`wrote ${join(directory, path)}`);
-  }
-  io.log(`\n  cd ${directory}\n  ${manager} install\n  ${manager} run dev`);
-  return 0;
 }
 
 function add(rest: readonly string[], renderer: string, cwd: string, io: Io): number {
