@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, rmSync } from "node:fs";
+import { existsSync, renameSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { build } from "esbuild";
 import { viewFindings } from "../check/view-findings.js";
@@ -17,12 +17,14 @@ import type { Io } from "../io/io.js";
 import { writeProjectStyles } from "../styles/write-project-styles.js";
 import { writeStyles } from "../styles/write-styles.js";
 import { buildProblems } from "./build-problems.js";
+import { BUILD_WRITES } from "./build-writes.js";
 import { bundleClient } from "./bundle-client.js";
 import { describeBuildFailure } from "./describe-build-failure.js";
 import { loadCompilers } from "./load-compilers.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 import { sharedOptions } from "./shared-options.js";
 import { sourceVersion } from "./source-version.js";
+import { stagedIo } from "./staged-io.js";
 import { templateProblems } from "./template-problems.js";
 import { unreadPlacements } from "./unread-placements.js";
 
@@ -34,8 +36,18 @@ import { unreadPlacements } from "./unread-placements.js";
  * because its entry's hashed name is what the server's registry links. The server bundle keeps
  * every package external, so the running server imports its framework and renderers from the
  * project's own dependencies and nothing of the build comes with it.
+ *
+ * A build is made whole beside `dist` and replaces it only once it has succeeded: a build that
+ * fails leaves the last one as it was, and a server running from `dist` loses nothing while the
+ * next build is made. `settle` is asked between the two, when the build stands whole and before
+ * it replaces anything: a caller with a server running from `dist` stops it there, and one that
+ * answers no leaves `dist` as it was and the new build unused.
  */
-export async function buildProject(root: string, io: Io): Promise<number> {
+export async function buildProject(
+  root: string,
+  io: Io,
+  settle?: () => Promise<boolean>,
+): Promise<number> {
   const found = discoverAssemblies(root);
   const pages = discoverPages(root);
   const apis = discoverApis(root);
@@ -58,9 +70,14 @@ export async function buildProject(root: string, io: Io): Promise<number> {
   }
 
   const generated = join(root, ".assemblejs");
-  // Both are rewritten whole, so nothing a previous build wrote can outlive what made it.
-  rmSync(join(root, "dist"), { recursive: true, force: true });
-  rmSync(generated, { recursive: true, force: true });
+  const output = join(root, "dist");
+  const building = join(generated, "building");
+  // What a build writes is rewritten whole, so nothing a previous build wrote can outlive what
+  // made it; what stands beside it in the generated directory is not the build's to remove.
+  for (const written of BUILD_WRITES) {
+    rmSync(join(generated, written), { recursive: true, force: true });
+  }
+  const staged = stagedIo(io, output, building);
   const browser = found.assemblies.filter(
     (assembly) => !isStaticView(assembly.renderer) || assembly.client !== undefined,
   );
@@ -70,11 +87,16 @@ export async function buildProject(root: string, io: Io): Promise<number> {
     const script =
       browser.length === 0
         ? undefined
-        : await bundleClient(root, browser, compilers, io, (file, css) =>
-            componentCss.set(file, css),
+        : await bundleClient(
+            root,
+            browser,
+            compilers,
+            io,
+            (file, css) => componentCss.set(file, css),
+            building,
           );
-    const styles = writeStyles(root, found.assemblies, componentCss, io);
-    const projectStyles = writeProjectStyles(root, io);
+    const styles = writeStyles(root, found.assemblies, componentCss, staged);
+    const projectStyles = writeProjectStyles(root, staged);
     const packages = Object.fromEntries(
       Object.values(RENDERER_PACKAGES).map((known) => [known.name, known.package]),
     );
@@ -106,12 +128,20 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       format: "esm",
       target: "node22",
       packages: "external",
-      outfile: join(root, "dist", "server.js"),
+      outfile: join(building, "server.js"),
     });
   } catch (error) {
+    rmSync(building, { recursive: true, force: true });
     for (const line of describeBuildFailure(error)) io.error(line);
     return 1;
   }
+
+  if (settle !== undefined && !(await settle())) {
+    rmSync(building, { recursive: true, force: true });
+    return 0;
+  }
+  rmSync(output, { recursive: true, force: true });
+  renameSync(building, output);
 
   io.log(
     `built ${found.assemblies.length} assembly(s), ${pages.pages.length} page(s), ${apis.apis.length} api(s) into dist/`,

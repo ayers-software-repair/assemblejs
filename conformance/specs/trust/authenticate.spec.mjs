@@ -42,6 +42,20 @@ test("a declared public route needs no check", async () => {
   assert.equal((await at("/api/open")).status, 200);
 });
 
+// The path a check or a public route is asked about is the path the router reads, decoded: an
+// encoded spelling of an address is that address, whichever way the rule about it leans.
+test("a rule written about a path holds for every spelling of that path", async () => {
+  assert.equal((await at("/api/staff", "shop")).status, 200);
+  assert.equal((await at("/api/staff", "visitors")).status, 401);
+  for (const spelled of ["/api/%73taff", "/%61pi/staff", "/api/staf%66"]) {
+    const refused = await at(spelled, "visitors");
+    assert.equal(refused.status, 401, spelled);
+    assert.ok(!(await refused.text()).includes("lovelace"), spelled);
+    assert.equal((await at(spelled, "shop")).status, 200, spelled);
+  }
+  assert.equal((await at("/api/%6Fpen")).status, 200, "a public route by another spelling");
+});
+
 test("the project's own policy replaces the default on every html answer, as written", async () => {
   for (const path of ["/", "/assembly/hello/"]) {
     assert.equal((await at(path, "shop")).headers.get("content-security-policy"), DECLARED, path);

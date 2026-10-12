@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { cacheKey } from "./cache-key.js";
 import { carriesCredential } from "./carries-credential.js";
+import type { Diagnostic } from "./diagnostic.js";
+import { heldAssemblies } from "./held-assemblies.js";
 import { holdsFailedEnvelope } from "./holds-failed-envelope.js";
 import type { SettleInput } from "./settle-input.js";
 
@@ -12,10 +14,16 @@ import type { SettleInput } from "./settle-input.js";
  * answer belongs to one visitor. And never an answer holding a failed envelope: a failure is
  * not content, and one cached inside a good parent would be served for the whole lifetime, long
  * after the child inside it had recovered.
+ *
+ * An answer holds what its assembly's view placed, composed for the visitor who filled the
+ * cache. So it is written with the assemblies it holds, and read for a visitor only when each
+ * of them would be shown to that visitor: a guarded assembly is guarded inside a cached answer
+ * as it is anywhere. Where asking throws, or what an answer holds was never recorded, it is no
+ * answer; where no control is on, nothing is asked.
  */
 export function placementCache(input: SettleInput): {
-  read(): string | undefined;
-  write(html: string, version: string | undefined): void;
+  read(): Promise<string | undefined>;
+  write(html: string, version: string | undefined, nested?: readonly Diagnostic[]): void;
 } {
   const ttl = input.plan?.cache?.ttl ?? 0;
   const cache = ttl > 0 && !carriesCredential(input.headers) ? input.cache : undefined;
@@ -23,10 +31,26 @@ export function placementCache(input: SettleInput): {
   // page with a longer one cached.
   const key = `${ttl}|${cacheKey(input.name, input.view, input.query, input.plan?.url, input.headers, input.params)}`;
   return {
-    read: () => cache?.get(key)?.html,
-    write: (html, version) => {
+    read: async () => {
+      const held = cache?.get(key);
+      if (held === undefined || input.admit === undefined) return held?.html;
+      if (held.holds === undefined) return undefined;
+      try {
+        for (const { name, view } of held.holds) {
+          if (!(await input.admit(name, view)).admitted) return undefined;
+        }
+      } catch {
+        return undefined;
+      }
+      return held.html;
+    },
+    write: (html, version, nested) => {
       if (holdsFailedEnvelope(html)) return;
-      cache?.set(key, version === undefined ? { html } : { html, version }, ttl);
+      cache?.set(
+        key,
+        { html, ...(version === undefined ? {} : { version }), holds: heldAssemblies(nested) },
+        ttl,
+      );
     },
   };
 }

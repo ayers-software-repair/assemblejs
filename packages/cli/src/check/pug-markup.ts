@@ -1,11 +1,17 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { PLACEMENT_ELEMENT } from "@assemblejs/core";
-
 type Node = Readonly<Record<string, unknown>>;
 
 const isNode = (value: unknown): value is Node =>
   typeof value === "object" && value !== null && !Array.isArray(value);
+
+// A written value as a render writes it into an attribute.
+const escaped = (value: string): string =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 
 // A string written in place, as Pug holds an attribute's value: its source, quotes and all.
 const written = (value: unknown): string | undefined =>
@@ -21,12 +27,14 @@ const written = (value: unknown): string | undefined =>
  * of directives to read as it reads a page's template. `computed` stands wherever the template
  * computes what it writes.
  *
- * A directive is the tag `assembly(name="cart")`, written here with every attribute it was
- * given and whatever is inside it, so what makes one unreadable is refused by the reader that
- * refuses it at a render. Text is kept as written,
- * which is how Pug writes it: a directive in a line of html or in text is one. Every other tag
- * is its name around what it holds, so what stands in a script or a style is still text to the
- * reader; what its own attributes hold is not read. A comment Pug writes is written. A mixin,
+ * A tag is written with every attribute it was given, as a render writes them, and whatever is
+ * inside it: so the directive `assembly(name="cart")` is one, what makes one unreadable is
+ * refused by the reader that refuses it at a render, and every other element reads to the rules
+ * as it does in any other kind of view, its alt, its label and its style where it wrote them.
+ * A written value is escaped as a render escapes it, so markup inside an attribute is not
+ * markup here either. Text is kept as written,
+ * which is how Pug writes it: a directive in a line of html or in text is one. What stands in a
+ * script or a style is still text to the reader. A comment Pug writes is written. A mixin,
  * a loop and each branch of a condition are taken as written, since some render writes them.
  *
  * A tag whose own name is computed is no directive here: only a render knows what it is.
@@ -37,7 +45,8 @@ export function pugMarkup(tree: unknown, computed: string): string {
     const name = String(one["name"]);
     // A name alone is written as Pug writes it, with its own name for its value.
     if (one["val"] === true) return ` ${name}="${name}"`;
-    return ` ${name}="${written(one["val"]) ?? computed}"`;
+    const value = written(one["val"]);
+    return ` ${name}="${value === undefined ? computed : escaped(value)}"`;
   };
   const visit = (value: unknown): void => {
     if (Array.isArray(value)) {
@@ -60,11 +69,9 @@ export function pugMarkup(tree: unknown, computed: string): string {
     } else if (type === "Tag" || type === "InterpolatedTag") {
       const name = type === "Tag" ? String(value["name"]) : computed;
       markup += `<${name}`;
-      if (name.toLowerCase() === PLACEMENT_ELEMENT) {
-        for (const one of [value["attrs"]].flat()) if (isNode(one)) markup += attribute(one);
-        // Attributes handed over as an object are whatever a render makes them.
-        if ([value["attributeBlocks"]].flat().some(isNode)) markup += ` ${computed}`;
-      }
+      for (const one of [value["attrs"]].flat()) if (isNode(one)) markup += attribute(one);
+      // Attributes handed over as an object are whatever a render makes them.
+      if ([value["attributeBlocks"]].flat().some(isNode)) markup += ` ${computed}`;
       markup += ">";
       visit(value["block"]);
       markup += `</${name}>`;

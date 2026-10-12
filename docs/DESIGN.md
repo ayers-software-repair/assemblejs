@@ -299,8 +299,15 @@ type AssemblyPlan = {
 };
 
 type ContentCache = {
-  get(key: string): { html: string; version?: string } | undefined;
-  set(key: string, value: { html: string; version?: string }, ttl: number): void;
+  get(key: string): CachedContent | undefined;
+  set(key: string, value: CachedContent, ttl: number): void;
+};
+
+type CachedContent = {
+  html: string;
+  version?: string;
+  // each assembly the answer holds, at any depth: who must be let in before it is theirs
+  holds?: readonly { name: string; view: string }[];
 };
 
 type Diagnostic = {
@@ -529,12 +536,19 @@ credentials or an `authenticate(request)` callback, plus a list of public routes
 **one place before anything else**, so there is no second path that disagrees with the first.
 The framework ships no user store, no login page and no session.
 
-The decision is made of the address a request asked, and made again, for the same visitor, of
+The decision is made of the address a request asked, read as the router reads it: the path
+without its query, each segment decoded once, so an encoded spelling of an address is that
+address and a rule about a path holds for every way of writing it. An encoded slash stays
+encoded, as the router keeps it, and a path that does not decode is refused as a bad request.
+It is made again, for the same visitor, of
 the address of each of this server's assemblies that the page or the view places, however the
 directive placing it came to be there (section 7): a guarded assembly is guarded wherever it is
 shown, by the one rule that guards its own address. The server binds the question to the
 request (`Admit`, 3.1), so nothing of the visitor reaches the composer but the answer, and it
-is asked before a placement is dispatched and before a cached answer is used. Refused, the
+is asked before a placement is dispatched and before a cached answer is used. A cached answer
+holds what its assembly's view placed, composed for the visitor who filled the cache, so it is
+kept with the assemblies it holds and is a visitor's only when each of them would be shown to
+that visitor; otherwise the placement is composed again for them. Refused, the
 placement shows its declared fallback or an empty envelope, marked failed and carrying no id,
 and nothing is logged: a visitor not let in is no failure. A check that throws refuses, as at
 the address, and what it threw is logged against the id the envelope then carries (12). A

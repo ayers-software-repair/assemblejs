@@ -75,7 +75,8 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
   }
 
   // One of this server's assemblies is shown to a visitor its own address would admit, and to
-  // no other, wherever it is placed. Asked before the cache, which holds what another was shown.
+  // no other, wherever it is placed. Asked before the cache, which holds what another was shown
+  // and asks the same of every assembly its answer holds.
   const admission = await admitted(input);
   if (!admission.admitted) {
     return fallBack(input, id, at("fallback", "access", admission.correlationId), false);
@@ -83,7 +84,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
 
   // A placement that declared a lifetime is answered from its fresh entry without a request.
   const cache = placementCache(input);
-  const cached = cache.read();
+  const cached = await cache.read();
   if (cached !== undefined) return { html: cached, diagnostic: at("cache") };
 
   const deadline = plan?.deadline ?? DEFAULT_DEADLINE;
@@ -116,7 +117,7 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
     return fallBack(input, id, at("fallback", "too-large", correlationId), true);
   }
   if (answer.ok) {
-    cache.write(answer.html, answer.version);
+    cache.write(answer.html, answer.version, answer.nested);
     const diagnostic = at(answer.source);
     // What the assembly composed inside itself hangs under it, so the account is a tree.
     return {

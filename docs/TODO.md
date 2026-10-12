@@ -5,8 +5,23 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, with one platform pin and
-the overnight order).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-11 night, in the middle of the
+audit the owner ordered).**
+
+THE AUDIT IS THE WORK IN HAND (owner, 2026-10-11 evening; DECISIONS 2026-10-11, "the audit"). He
+did not believe the framework was complete, and it was not. Read, in this order:
+`~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/README.md`, which holds his orders
+in his words, the state and the plan; `AUDIT-REPORT.md` beside it, the report he was sent;
+then Phase 6 below, a row for every finding. The order of work: the four blockers, each with a
+spec watched red first (the first is done and is the commit this block is pushed with: an
+encoded spelling of a guarded address); the dev loop and the build's resolver; the starter;
+the workflow's majors, each read at the source before it is believed; then the outline mode he
+asked for, in the framework; then the showcase projects, extremely complex, into `examples/`.
+A scratch showcase, its source saved in that evidence directory, was the stranger test and is
+far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
+workflow was his order, and his Chrome is driven through the extension (the seat still starts
+no browser of its own). Each landing: its spec files run here, then the push, then `ci` read
+job by job.
 
 NO BROWSER STARTS ON THIS MACHINE (D1276, 2026-10-11, the estate's standing ruling as the lead
 gave it): not for a screenshot, not for a walk, not for the Playwright suite, the sealed
@@ -15,18 +30,17 @@ in CI: the `browser proof` job of `ci`, and `deploy-site` with the staged page r
 `CLAUDE.md`'s Tooling paragraph still says the proof runs here; it is wrong until the owner
 changes it, and a row says so (DECISIONS 2026-10-11, "no browser on this machine").
 
-THE OVERNIGHT ORDER OF 2026-10-11 (D1277, as the lead gave it): the owner is away until the
-morning. No whole-suite gate runs on this machine: not `pnpm check`, not a package's whole
-suite, not conformance. A bite's proof here is the gates it touches, a script's self-test, one
-spec file; then the push, and `ci` read job by job is the whole gate. Load is kept low and no
-lane is started. A bite that cannot be trusted without the whole suite here waits. It stands
-until the owner or the lead lifts it; the seat's open questions are on his morning list.
+THE OVERNIGHT ORDER OF 2026-10-11 (D1277, as the lead gave it) asked for no whole-suite gate on
+this machine and a low load while the owner was away. He came back to the seat that evening
+and his own orders for the audit govern while he works it. Without him at the seat it stands
+again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: one platform
-pin, `ayersPlatform` at `v0.55.0`, with the root `.editorconfig` and the commit rule's copies
-recorded at that tag and both gates refusing any other (DECISIONS 2026-10-11, "one pin"). Its
-proof on this machine is the gates it touches, under the overnight order; `ci` is its whole
-gate. Beneath it, each pushed 2026-10-11 with its `ci` run read green on every job: three
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: access is decided
+of the path as the router reads it (DECISIONS 2026-10-11, "an address is its every spelling"),
+with the audit's ledger. Beneath it, each pushed 2026-10-11 with its `ci` run read green on
+every job: `45ea049` one platform pin, `ayersPlatform` at `v0.55.0`, with the root
+`.editorconfig` and the commit rule's copies recorded at that tag and both gates refusing any
+other (`ci` 38185734645, `deploy-site` 38185734677, the kit staged from the new tag); three
 pushed together (`ci` 38185411268, its `commits` job the first to judge by the house's config;
 `deploy-site` 38185411263; staging read, the page and both text files byte for byte the
 tip's), `4dd6773` the ruling that no browser starts here recorded, `f010496` the landing
@@ -1154,6 +1168,366 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       asked this seat to amend the paragraph. A session does not edit an instruction file at
       another session's request, whichever way the edit leans, so the paragraph waits for the
       owner's own word, or his hand (found 2026-10-11)
+
+## Phase 6: the audit of 2026-10-11, the owner's order
+
+He did not believe the framework was complete, and it was not (DECISIONS 2026-10-11, "the audit").
+Two sources. The seat used it as a stranger does, from packed tarballs, in a terminal and in his
+Chrome; and a workflow of eleven read-only finders, each finding put to refuters, reviewed the
+source: 84 findings, of which 66 stand, 6 are disputed and 12 were refuted by their own skeptics.
+The whole of it, each finding with its input and its probe, is kept outside this tree at
+`~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/`. A row from the workflow says
+PREMISE UNVERIFIED until the seat has read it at the source and reproduced it; then it is fixed with
+a spec watched red first, or struck with its reason.
+
+### Reproduced by the seat: the blockers
+
+- [x] An encoded spelling of a guarded address passed the access check (workflow server.1 and
+      trust.3). `/%61dmin/users` answered 200 where `/admin/users` answered 401, and
+      `/assembly/secre%74/` served a guarded assembly: the check was handed the path as sent
+      (`access/register-access.ts:25`) and the router decoded it. Reproduced by the seat over a real
+      socket from the tarball. DONE 2026-10-11: the decision is made of the path as the router reads
+      it, `requestedPath`, each segment decoded once and an encoded slash kept; a core spec and a
+      step of the `trust` fixture hold it, the first watched red (DECISIONS 2026-10-11, "an address
+      is its every spelling")
+- [x] A cached placement shows a guarded child to a visitor the guard refuses (workflow composer.1
+      and trust.1). With a cache lifetime on an open assembly whose view places a guarded one, the
+      visitor after a member is served the guarded markup; with none, not. Reproduced by the seat
+      over a real socket. `compose/settle-placement.ts:79-86` asks admission of the outer placement
+      alone before the cache is read, against DESIGN 5.2. DONE 2026-10-11: an answer is kept with
+      the assemblies it holds and read for a visitor only when each would be shown to them, on a
+      fresh hit and on the fallback rung alike; specs in core and a step of the `trust` fixture,
+      watched red (DECISIONS 2026-10-11, "a kept answer knows what it holds")
+- [x] A link whose target climbs out through another link is read as inside the root (workflow
+      trust.2). `esc -> sub/../note.txt` with `sub` a link out: `readInside` returns the outside
+      file and `leadsOut` says false. Reproduced by the seat with the installed command line.
+      `packages/cli/src/root/follow-links.ts:31` resolves the target lexically. DONE 2026-10-11:
+      the follower walks a link's target a step at a time from where the link stands, so a link
+      along it is followed before the step back after it; two specs, each watched red, hold the
+      follower and the guard (DECISIONS 2026-10-11, "a link's target is walked")
+- [x] `check` misreads every Pug view (workflow check-rules.1): an `img` with an alt and an `input`
+      with an aria-label are each given the finding, and an inline style is given none. Reproduced
+      by the seat on the showcase. `packages/cli/src/check/pug-markup.ts:63` writes attributes for
+      the placement element alone. DONE 2026-10-11: every tag is written with its attributes, a
+      written value escaped as a render escapes it; specs of the markup and of the elements read
+      from it, watched red (DECISIONS 2026-10-11, "a Pug view is read with its attributes")
+
+### Found by the seat, using it
+
+- [x] One Svelte view makes every build take 17 to 23 seconds:
+      `packages/cli/src/build/jsx-plugin.ts:36-44` takes every relative import in the bundle, those
+      inside node_modules too, and asks `build.resolve` for each from JavaScript, and Svelte ships
+      its runtime as about 120 source files. Timed by renderer: html 0.9 s, each other renderer 1.0
+      to 1.8 s, Svelte alone 16.7 s. With importers under node_modules left to the default, in a
+      scratch copy of the installed file, 4.4 s. DONE 2026-10-11: the plugin leaves a package's own
+      imports to the default; a spec with a package of relative imports, watched red (two questions
+      asked, none wanted) (DECISIONS 2026-10-11, "the dev loop")
+- [x] `dev` queues one build for every burst of changes and never folds them into one
+      (`dev/run-dev.ts:54-60`, `watch-sources.ts` at 100 ms): eleven `add assembly` commands and a
+      page edit left a backlog of whole builds. DONE 2026-10-11: changes made while a build runs are
+      folded into one build after it (`dev/folded.ts`), and the sources are watched from before the
+      first build; specs watched red by mutation (DECISIONS 2026-10-11, "the dev loop")
+- [x] `dev` crashes the server it has just started: a step ends when the server is spawned, the next
+      queued build begins with `rmSync(dist)` (`build/build-project.ts:62`), and the booting server
+      dies with a raw stack, `ENOENT ... scandir dist/client/` from core's `listAssets` or
+      `Cannot find module dist/server.js`. Seen three times in a minute. DONE 2026-10-11: a build is
+      made beside `dist` and replaces it only once it is whole, and `dev` stops the old server
+      between the two, so no build removes a running server's files (DECISIONS 2026-10-11, "the dev
+      loop")
+- [x] During every rebuild the running server's files are gone, since the build removes `dist`
+      first, so a request in that window fails: the open tab asked for a script and the server
+      logged ENOENT with a stack. A build that fails after the removal leaves "the last good build"
+      with no files (workflow cli-verbs.2 says the same). DONE 2026-10-11 with the row above; a
+      build that fails leaves the last `dist` whole and removes only its own files from
+      `.assemblejs`, so the record stands. A dev spec, watched red (`expected 500 to be 200`), and a
+      build spec hold it (DECISIONS 2026-10-11, "the dev loop")
+- [x] A build reads the sources at different moments: its registry held 3 assemblies and its page
+      template placed 13, so the built server refused to boot and threw the BootError as an uncaught
+      stack. DONE 2026-10-11 for `dev`: a build during which a source changed is left unused and the
+      build after it is of the sources as they are, so no server is started from a build made of two
+      moments. The uncaught stack a refused boot prints is its own row below
+- [ ] A server that refuses to boot prints an uncaught stack: the starter's `src/server.ts` awaits
+      `createServer` at the top level, so a BootError, a refusal with a plain sentence for each
+      problem, reaches the terminal as a Node stack trace with the sentences inside it (found
+      2026-10-11, in the dev log)
+- [ ] A Svelte view that does not parse is reported at the generated module and not at the view:
+      `.assemblejs/client/broken.ts:10 Unexpected token` with a svelte.dev address, for
+      `src/assemblies/broken/broken.svelte` holding `<p>{</p>` (found 2026-10-11, in the dev log of
+      the fixed loop)
+- [ ] A new project's first page is not styled as a page: `tokens.css` and `components.css` set
+      roles and classes and nothing on `body`, so the page is white, black and Times New Roman, and
+      in the dark scheme the tokens flip beneath it: a dark notice on a white page, and a link in
+      the light accent on white. No `color-scheme` is declared. Seen in Chrome
+- [ ] A new project has no `tsconfig.json`: the compiler's defaults give "Cannot use JSX unless the
+      '--jsx' flag is provided" on every `.tsx` view, no types for React (the documented install
+      line names no `@types/react`) or for node, and the generated `.assemblejs/assemblies.ts`
+      itself does not type-check
+- [ ] The starter's hello page links `https://www.assemblejs.com/next/docs/tutorial.html`
+      (`commands/project-files.ts:51`), which answers 404 until the owner launches the domain, and
+      says `/next/` whatever the channel; five conformance assertions pin the address. Each
+      package's `homepage` is on a host that does not resolve today. The owner's to settle: what the
+      link names
+- [ ] `perf` weighs the scripts a document links and nothing they import
+      (`perf/measure-page.ts:62-77`): 576 B for a page whose one script statically imports two
+      runtime chunks, 20.7 kB, before anything mounts, and whose React assembly then fetches 218 kB.
+      A page with a route parameter is "not weighed", so the most complex page is outside every
+      budget
+- [ ] The agent's `place_assembly` damages the template's layout: with `after` it writes the tag at
+      column 0 beneath a neighbour indented eight; with no position it writes it between `</body>`'s
+      indentation and `</body>`. A second call for the same assembly on the same page places it
+      again and says ok
+- [ ] The agent surface has nothing that takes a route's parameters or a query: `compose_page` and
+      `render_assembly` on `/product/:sku` always render with no sku, so an agent never sees a page
+      that has a parameter as a visitor does
+- [ ] A dynamic route cannot answer 404: `/product/nope-99` is a 200, because a service returns data
+      and nothing lets it or the page say not found. `/products/` with a trailing slash is a 404
+      where `/products` is a 200. Neither is in DESIGN: the owner's to settle
+- [ ] The repository's own harnesses leak servers: three `node dist/server.js`, two from conformance
+      runs and one from the command line suite's dev spec, were still listening eleven to twelve
+      hours after their runs, orphaned. Which path fails to stop them is not yet found
+- [ ] The command line cannot say its version: `--version`, `-v` and `version` are each an unknown
+      command
+- [ ] `add assembly` with no name answers: "" is not a usable assembly name, call it "assembly"
+- [ ] `add assembly --renderer svelte` does not say the renderer's packages are not installed;
+      `check` and the dev log do
+- [ ] `packages/.gitkeep` is tracked and the directory holds twelve packages
+
+Seen working in his Chrome on the scratch showcase, twelve renderers on five pages with three apis: events from React to Svelte and from Vue to React; a Preact view fed by the page's stream after a POST to an api; a Solid view answered by its fallback at 300 ms; a Lit view deferred, then filled and mounted; Pug, Handlebars, Nunjucks, EJS and Markdown; a checkout, with typed keys against the production build, that placed an order and emptied the cart across frameworks.
+
+### From the workflow, by area, each PREMISE UNVERIFIED until the seat reads it
+
+Trust and security:
+
+- [ ] scanFragment misses MathML annotation-xml as an HTML integration point, so a remote's answer
+      can leave its envelope (dangling markup) and smuggle unstamped envelopes (workflow trust.4,
+      major). Claimed at `packages/core/src/remote/scan-fragment.ts:20`. PREMISE UNVERIFIED
+- [ ] One hostile remote answer freezes the whole server: scanFragment is super-quadratic in nesting
+      depth and synchronous (workflow trust.5, major). Claimed at
+      `packages/core/src/remote/scan-fragment.ts:99`. PREMISE UNVERIFIED
+- [ ] One remote answer triggers unbounded concurrent manifest fetches, with no private-address
+      check and unbounded map growth (workflow trust.6, major, disputed by one of its refuters).
+      Claimed at `packages/core/src/remote/learned-manifests.ts:84`. PREMISE UNVERIFIED
+- [ ] localAssets/inertSpans is quadratic in the remote's markup and re-runs on every page view
+      (workflow trust.7, minor). Claimed at `packages/core/src/server/local-assets.ts:47`. PREMISE
+      UNVERIFIED
+- [ ] ASSEMBLEJS_HOST set to an empty string is accepted as the host and can bind every interface
+      (workflow trust.8, minor). Claimed at `packages/core/src/config/read-config.ts:28`. PREMISE
+      UNVERIFIED
+
+The server:
+
+- [ ] A multi-line (or newline-bearing) contentSecurityPolicy or version boots, then every HTML
+      answer is a 500 whose body leaks the exception message (workflow server.2, major). Claimed at
+      `packages/core/src/server/access-problems.ts:27`. PREMISE UNVERIFIED
+- [ ] ASSEMBLEJS_HOST set to an empty string is accepted and binds every interface; host is never
+      validated (workflow server.3, major). Claimed at `packages/core/src/config/read-config.ts:28`.
+      PREMISE UNVERIFIED
+- [ ] Service ordering errors (duplicate name, unknown 'after', cycle) are not boot errors; the
+      server boots and every request for that assembly 500s (workflow server.4, major). Claimed at
+      `packages/core/src/service/run-services.ts:26`. PREMISE UNVERIFIED
+- [ ] View lookup falls through Object.prototype: /assembly/<name>/constructor/ is a logged 500,
+      /toString/api/ a 200, `/__proto__/manifest/` a bogus 200 manifest (workflow server.5, major).
+      Claimed at `packages/core/src/server/register-assemblies.ts:65`. PREMISE UNVERIFIED
+- [ ] Router-level 400 (malformed percent escape) answers Fastify's own body: no correlation id,
+      echoes the path, no nosniff (workflow server.6, minor). Claimed at
+      `packages/core/src/server/register-failures.ts:37`. PREMISE UNVERIFIED
+- [ ] Route params handed to services have Object.prototype at the assembly endpoints when no
+      assembly-params header is sent (workflow server.7, minor). Claimed at
+      `packages/core/src/server/read-composition-headers.ts:64`. PREMISE UNVERIFIED
+- [ ] A page placement with cache.ttl reuses one envelope id for every later request and for
+      repeated placements on the same page (compose/, outside the assigned scope) (workflow
+      server.8, minor). Claimed at `packages/core/src/compose/placement-cache.ts:24`. PREMISE
+      UNVERIFIED
+
+The composer:
+
+- [ ] A custom element named `title-*`, `style-*`, `script-*` or `textarea-*` silently disables every later
+      <assembly> directive (workflow composer.2, major). Claimed at
+      `packages/core/src/compose/inert-spans.ts:6`. PREMISE UNVERIFIED
+- [ ] A cache hit re-serves the first render's envelope id, so one page can carry duplicate ids and
+      the browser skips mounting the later copies (workflow composer.3, major). Claimed at
+      `packages/core/src/compose/settle-placement.ts:86`. PREMISE UNVERIFIED
+- [ ] findPlacements is quadratic and runs on every render, even when the markup has no directive
+      (workflow composer.4, major). Claimed at `packages/core/src/compose/inert-spans.ts:37`.
+      PREMISE UNVERIFIED
+- [ ] A view named like an Object.prototype key is treated as existing: 500 and 200 instead of 404
+      (workflow composer.5, minor). Claimed at `packages/core/src/server/register-assemblies.ts:65`.
+      PREMISE UNVERIFIED
+- [ ] The open-paragraph check refuses valid pages: table, form, li, dd and dt start tags also close
+      a paragraph (workflow composer.7, minor). Claimed at
+      `packages/core/src/compose/open-paragraphs.ts:8`. PREMISE UNVERIFIED
+- [ ] A directive placed directly inside table, tbody, tr or select is accepted, but the browser
+      moves the envelope and drops its cells (workflow composer.8, minor). Claimed at
+      `packages/core/src/compose/find-placements.ts:41`. PREMISE UNVERIFIED
+
+The browser runtime:
+
+- [ ] data-mounted is written before the assembly's module has loaded, and stays on after a missing
+      module or a throwing mount (workflow client.1, major). Claimed at
+      `packages/core/src/client/start.ts:96`. PREMISE UNVERIFIED
+- [ ] A cached placement repeats one data-id on a page, and the runtime silently never hydrates the
+      second envelope (workflow client.2, major). Claimed at
+      `packages/core/src/compose/placement-cache.ts:58`. PREMISE UNVERIFIED
+- [ ] Last-value replay cannot be opted into for assembly-sent topics in a built project (workflow
+      client.4, major, disputed by one of its refuters). Claimed at
+      `packages/cli/src/generate/generate-client-entry.ts:38`. PREMISE UNVERIFIED
+- [ ] A valid-JSON island that is not an object (null) makes start() throw and aborts mounting of
+      every later assembly (workflow client.5, minor). Claimed at
+      `packages/core/src/client/start.ts:98`. PREMISE UNVERIFIED
+- [ ] A listener removed during a send is still called, and a subscription made after release is
+      never released (workflow client.6, minor). Claimed at
+      `packages/core/src/client/events/create-bus.ts:68`. PREMISE UNVERIFIED
+- [ ] An assembly whose mount throws part-way keeps live event subscriptions (workflow client.7,
+      minor). Claimed at `packages/core/src/client/start.ts:81`. PREMISE UNVERIFIED
+
+The renderers:
+
+- [ ] React, Preact, Vue and Svelte renderers ignore the placement id, so useId / $props.id() ids
+      collide across assemblies on one page (workflow renderers.1, major). Claimed at
+      `packages/renderer-react/src/server/render-to-markup.ts:27`. PREMISE UNVERIFIED
+- [ ] Solid leaves '<' unescaped in attribute values, so visitor data containing '<assembly' or
+      '<!--' breaks or silently empties the assembly (workflow renderers.2, major). Claimed at
+      `packages/renderer-solid/src/server/render-to-markup.ts:35`. PREMISE UNVERIFIED
+- [ ] The Renderer / RenderInput contract in DESIGN 7 is consumed by nothing; helpers and url are
+      never supplied (workflow renderers.6, minor). Claimed at
+      `packages/core/src/renderer/render-input.ts:13`. PREMISE UNVERIFIED
+
+The command line:
+
+- [ ] Misnamed service, client, page declaration and api files are silently ignored; check says "no
+      problems" (workflow cli-verbs.1, major). Claimed at
+      `packages/cli/src/discovery/discover-assemblies.ts:100`. PREMISE UNVERIFIED
+- [x] A failed rebuild in dev deletes the last good build's browser files and dev record,
+      contradicting "leaves the last good server running" (workflow cli-verbs.2, major). Claimed at
+      `packages/cli/src/build/build-project.ts:62`. PREMISE UNVERIFIED. READ AND REPRODUCED by the
+      seat (the dev spec failed with `expected 500 to be 200` on the old loop). DONE 2026-10-11 with
+      the seat's rows above (DECISIONS 2026-10-11, "the dev loop")
+- [ ] A dangling symlink under src crashes build/dev/deploy with a bare ENOENT, while check reports
+      no problems (workflow cli-verbs.3, major). Claimed at
+      `packages/cli/src/build/source-version.ts:24`. PREMISE UNVERIFIED
+- [ ] A README.md or a test/story file beside a view makes the whole assembly invalid (workflow
+      cli-verbs.4, major, disputed by one of its refuters). Claimed at
+      `packages/cli/src/discovery/discover-assemblies.ts:66`. PREMISE UNVERIFIED
+- [ ] `add assembly` writes through a symlinked src/assemblies out of the project, and crashes with
+      a stack trace on a dangling link (workflow cli-verbs.5, major, disputed by one of its
+      refuters). Claimed at `packages/cli/src/run/run.ts:115`. PREMISE UNVERIFIED
+- [ ] `--flag=value` is not parsed: `--cwd=dir` and `--renderer=react` are silently ignored and
+      swallow the next argument (workflow cli-verbs.6, major). Claimed at
+      `packages/cli/src/run/run.ts:49`. PREMISE UNVERIFIED
+- [ ] `new` with an absolute path creates the project nested under the current directory and logs
+      the wrong location (workflow cli-verbs.7, major). Claimed at `packages/cli/src/run/run.ts:85`.
+      PREMISE UNVERIFIED
+- [ ] `add assembly` / `add agents` run in a mistyped --cwd or a non-project directory create
+      directories and report success (workflow cli-verbs.8, minor). Claimed at
+      `packages/cli/src/run/run.ts:99`. PREMISE UNVERIFIED
+
+The rules `check` names:
+
+- [ ] A spread plus one dynamic attribute is no longer treated as a spread, so JSX, Vue and Svelte
+      views get false alt and name findings (workflow check-rules.2, major). Claimed at
+      `packages/cli/src/check/spread-element.ts:13`. PREMISE UNVERIFIED
+- [ ] A React or Preact class component's render() is reported as a Lit element's shadow root
+      (workflow check-rules.3, major). Claimed at `packages/cli/src/check/script-placements.ts:46`.
+      PREMISE UNVERIFIED
+- [ ] A commented-out Slot in a Vue or Svelte view counts as a live placement (workflow
+      check-rules.4, major). Claimed at `packages/cli/src/check/vue-placements.ts:37`. PREMISE
+      UNVERIFIED
+- [ ] check exits 0 with 'no problems' on an api file or a framework view that does not parse
+      (workflow check-rules.5, major). Claimed at `packages/cli/src/check/check-project.ts:139`.
+      PREMISE UNVERIFIED
+- [ ] Remotes declared through a variable, constant or env value make check refuse a placement from
+      a declared remote (workflow check-rules.6, major). Claimed at
+      `packages/cli/src/check/declared-origins.ts:15`. PREMISE UNVERIFIED
+
+The agent surface:
+
+- [ ] Dev-server record is trusted blindly: any url in .assemblejs/dev.json is fetched, loopback or
+      not (workflow mcp.1, major). Claimed at `packages/mcp/src/render/dev-server-url.ts:24`.
+      PREMISE UNVERIFIED
+- [ ] Health check believes any HTTP server that answers 200, so a stale dev.json shows another
+      app's HTML as the assembly (workflow mcp.2, major, disputed by one of its refuters). Claimed
+      at `packages/mcp/src/render/dev-server-url.ts:29`. PREMISE UNVERIFIED
+- [ ] render_assembly has no deadline: a dev server that accepts the request and never answers hangs
+      the tool (workflow mcp.3, major). Claimed at `packages/mcp/src/render/render-assembly.ts:77`.
+      PREMISE UNVERIFIED
+- [ ] place_assembly writes an indirect cycle and answers ok:true; only the direct self-placement is
+      refused (workflow mcp.4, major). Claimed at `packages/mcp/src/author/place-in-view.ts:68`.
+      PREMISE UNVERIFIED
+- [ ] An assembly directory with two view files (or none) is 'no assembly' to every tool, 'already
+      exists' to add_assembly, and 'add it' to check: an unresolvable loop (workflow mcp.5, major,
+      disputed by one of its refuters). Claimed at `packages/mcp/src/author/add-assembly.ts:19`.
+      PREMISE UNVERIFIED
+- [ ] create_project refuses a root that holds only a README.md or .gitignore, and sends the agent
+      to add_assembly (workflow mcp.6, minor). Claimed at
+      `packages/mcp/src/author/create-project.ts:52`. PREMISE UNVERIFIED
+- [ ] Tools throw raw filesystem or root errors instead of a structured refusal; a symlinked
+      dev.json takes down render_assembly and compose_page entirely (workflow mcp.7, minor). Claimed
+      at `packages/mcp/src/render/dev-server-url.ts:18`. PREMISE UNVERIFIED
+- [ ] Placement insert mis-reads <body-card> as <body>, and both place_assembly and add agents write
+      mixed line endings into CRLF files (workflow mcp.8, minor). Claimed at
+      `packages/cli/src/commands/place-assembly.ts:6`. PREMISE UNVERIFIED
+
+Packaging:
+
+- [ ] `new` with an absolute directory writes the project under the current directory, and reports
+      the absolute path as written (workflow packaging.1, major). Claimed at
+      `packages/cli/src/run/run.ts:96`. PREMISE UNVERIFIED
+- [ ] A freshly scaffolded project cannot `pnpm install` on pnpm 11: esbuild's postinstall is
+      unapproved and the scaffold carries no allowBuilds (workflow packaging.2, major). Claimed at
+      `packages/cli/src/commands/project-files.ts:25`. PREMISE UNVERIFIED
+- [ ] site/install.html says `npm install` in a new project installs "the one renderer your first
+      assembly uses", but the scaffold has none (workflow packaging.4, minor). Claimed at
+      `site/install.html:32`. PREMISE UNVERIFIED
+- [ ] `new .` (create in the current directory) is refused with a message that suggests the name
+      "assembly" (workflow packaging.5, minor). Claimed at
+      `packages/cli/src/discovery/suggest-name.ts:14`. PREMISE UNVERIFIED
+
+Docs against code:
+
+- [ ] `assemblejs new <absolute path>` writes the project under the current directory, then tells
+      you to cd to the absolute path (workflow docs.1, major). Claimed at
+      `packages/cli/src/run/run.ts:87`. PREMISE UNVERIFIED
+- [ ] install.html 'Add it to a project you already have' leaves a project that cannot build or run,
+      and never says what is missing (workflow docs.2, major). Claimed at `site/install.html:42`.
+      PREMISE UNVERIFIED
+- [ ] Any other view-looking file in an assembly directory (README.md, cart.test.tsx) makes the
+      assembly 'have more than one view file' (workflow docs.4, minor). Claimed at
+      `packages/cli/src/discovery/renderer-for-view.ts:24`. PREMISE UNVERIFIED
+- [ ] install.html says the new project installs 'the one renderer your first assembly uses'; it
+      installs none (workflow docs.5, minor). Claimed at `site/install.html:33`. PREMISE UNVERIFIED
+- [ ] `add agents` calls a UTF-8 BOM 'a comment' and refuses the whole run; `check` then says 'no
+      problems' for the file it could not read (workflow docs.6, minor). Claimed at
+      `packages/cli/src/agents/add-agents.ts:23`. PREMISE UNVERIFIED
+- [ ] Tutorial step 7's api sample imports ./price-feed.js, which no step creates (workflow docs.7,
+      minor). Claimed at `site/docs/tutorial.html:175`. PREMISE UNVERIFIED
+- [ ] Package READMEs lag the code: cli README lists 3 of the 5 MCP registrations, root README omits
+      `perf` (workflow docs.8, minor). Claimed at `packages/cli/README.md:19`. PREMISE UNVERIFIED
+
+Tests that cannot fail:
+
+- [ ] A custom element named `title-*`, `style-*`, `script-*` or `textarea-*` silently disables every
+      placement after it (server renders a raw <assembly> tag, and check says 'no problems')
+      (workflow tests.1, major). Claimed at `packages/core/src/compose/inert-spans.ts:3`. PREMISE
+      UNVERIFIED
+- [ ] Attribution-trailer gate misses the default Claude Code trailer and any lower-case
+      co-authored-by (workflow tests.2, minor). Claimed at `scripts/check-trailers.sh:17`. PREMISE
+      UNVERIFIED
+- [ ] placement cache.ttl: unit undocumented (it is milliseconds), and unlike deadline it is never
+      validated at boot (workflow tests.3, minor). Claimed at
+      `packages/core/src/server/placement-problems.ts:71`. PREMISE UNVERIFIED
+- [ ] Mirror gate exempts any source whose name merely ends in 'index' or 'bin', so such files need
+      no test (workflow tests.4, minor). Claimed at `scripts/check-mirror.mjs:66`. PREMISE
+      UNVERIFIED
+- [ ] Identity gate regex is case-sensitive, so ZJayers, iCloud, MERIDIANVEGA and ASMBL pass
+      (workflow tests.5, minor). Claimed at `scripts/identity-gate.sh:20`. PREMISE UNVERIFIED
+- [ ] Organization gate self-test checks that each rule number fires, not each branch, so inverting
+      several checks still passes (workflow tests.6, minor). Claimed at
+      `scripts/check-organization.mjs:211`. PREMISE UNVERIFIED
+- [ ] events-context tests for React and Preact assert nothing about the claim in their title
+      (workflow tests.7, minor). Claimed at
+      `packages/renderer-react/test/client/events-context.test.tsx:9`. PREMISE UNVERIFIED
+
+Refuted by their own skeptics and not rows: 12, listed with the reasons in the evidence directory's `workflow-findings-index.md`.
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

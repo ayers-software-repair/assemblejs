@@ -35,4 +35,22 @@ describe("where a path really leads", () => {
     symlinkSync(join(dir, "loop1"), join(dir, "loop2"));
     expect(() => followLinks(join(dir, "loop1"))).toThrow(/more than 40 links/);
   });
+
+  // Found 2026-10-11. A link's target is a path like any other: a link along it is followed
+  // before the step back that comes after it, as the kernel does. Read as text, `out/../note`
+  // is `note` beside the link, and the file really opened is another.
+  it("follows a link inside a link's target before the step back after it", () => {
+    const dir = scratch();
+    mkdirSync(join(dir, "root"));
+    mkdirSync(join(dir, "elsewhere", "deep"), { recursive: true });
+    symlinkSync(join(dir, "elsewhere", "deep"), join(dir, "root", "out"));
+    symlinkSync("out/../note.txt", join(dir, "root", "esc"));
+    expect(followLinks(join(dir, "root", "esc"))).toBe(join(dir, "elsewhere", "note.txt"));
+    // The same steps written in the path itself, and through a link that names its target whole.
+    expect(followLinks(join(dir, "root") + "/out/../note.txt")).toBe(
+      join(dir, "elsewhere", "note.txt"),
+    );
+    symlinkSync(`${join(dir, "root")}/out/../../elsewhere/./deep/x`, join(dir, "root", "far"));
+    expect(followLinks(join(dir, "root", "far"))).toBe(join(dir, "elsewhere", "deep", "x"));
+  });
 });

@@ -13,7 +13,8 @@ import { sharedOptions } from "./shared-options.js";
 
 /**
  * Writes each assembly's browser half as its own module and bundles them behind one entry, split
- * so each assembly is its own file. Answers the entry's url, the one script a page links.
+ * so each assembly is its own file, into `client/` of the build's output, which is `dist` unless
+ * the build is being made beside it. Answers the entry's url, the one script a page links.
  */
 export async function bundleClient(
   root: string,
@@ -21,6 +22,7 @@ export async function bundleClient(
   compilers: Compilers,
   io: Io,
   onCss?: (file: string, css: string) => void,
+  output: string = join(root, "dist"),
 ): Promise<string> {
   const generated = join(root, ".assemblejs");
   for (const assembly of assemblies) {
@@ -39,7 +41,7 @@ export async function bundleClient(
   });
   io.write(join(generated, "client.ts"), generateClientEntry(assemblies, setups));
 
-  const outdir = join(root, "dist", "client");
+  const outdir = join(output, "client");
   const result = await build({
     ...sharedOptions({
       root,

@@ -66,6 +66,105 @@ describe("dev", () => {
   });
 });
 
+// Found 2026-10-11. A build begins by removing dist, and a build that fails after that had
+// left "the last good build" running with no files: its stylesheets and scripts gone, and the
+// record the agent surface reads removed with the generated directory.
+describe("dev, while a later build runs or fails", () => {
+  it("keeps the last good build whole: its page, its browser files and its record", async () => {
+    const kept = mkdtempSync(join(example, ".dev-kept-"));
+    try {
+      const hello = join(kept, "src", "assemblies", "hello");
+      mkdirSync(hello, { recursive: true });
+      mkdirSync(join(kept, "src", "pages", "home"), { recursive: true });
+      writeFileSync(join(kept, "package.json"), "{}");
+      writeFileSync(join(hello, "hello.html"), "<p>good</p>");
+      writeFileSync(join(hello, "hello.css"), "p { margin: 0; }");
+      writeFileSync(
+        join(kept, "src", "pages", "home", "home.html"),
+        '<html><head></head><body><assembly name="hello"></assembly></body></html>',
+      );
+      writeFileSync(
+        join(kept, "src", "server.ts"),
+        'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
+      );
+      const port = String(await freePort());
+      process.env["ASSEMBLEJS_PORT"] = port;
+      const errors: string[] = [];
+      const controller = new AbortController();
+      const at = (path: string) => fetch(`http://127.0.0.1:${port}${path}`);
+      const done = runDev(
+        kept,
+        { ...realIo, log: () => undefined, error: (line) => errors.push(line) },
+        controller.signal,
+      );
+      try {
+        await until(async () => (await (await at("/")).text()).includes("good"));
+        const sheet = /href="([^"]+hello-[^"]+\.css)"/.exec(await (await at("/")).text())?.[1];
+        // Not asked for yet: a file the server has not read is one it must still find.
+        expect(sheet).toBeDefined();
+        const record = join(kept, ".assemblejs", "dev.json");
+        await until(async () => existsSync(record));
+        // A view that does not parse: the bundler refuses it, after the build has begun and
+        // before it has written one browser file.
+        mkdirSync(join(kept, "src", "assemblies", "broken"));
+        writeFileSync(join(kept, "src", "assemblies", "broken", "broken.svelte"), "<p>{</p>");
+        await until(async () => errors.some((line) => line.includes("still running")));
+        expect(await (await at("/")).text()).toContain("good");
+        expect((await at(sheet ?? "")).status).toBe(200);
+        expect(existsSync(record)).toBe(true);
+      } finally {
+        controller.abort();
+        delete process.env["ASSEMBLEJS_PORT"];
+      }
+      expect(await done).toBe(0);
+    } finally {
+      rmSync(kept, { recursive: true, force: true });
+    }
+  });
+});
+
+// Found 2026-10-11. Every burst of changes queued a whole build of its own, and a build made
+// while the sources moved was started all the same.
+describe("dev, when changes arrive while it builds", () => {
+  it("folds them into one build after it, and starts only a build of the sources as they are", async () => {
+    const busy = mkdtempSync(join(example, ".dev-busy-"));
+    mkdirSync(join(busy, "src"));
+    const settled: boolean[] = [];
+    let builds = 0;
+    let slow = true;
+    const controller = new AbortController();
+    const done = runDev(
+      busy,
+      { ...realIo, log: () => undefined, error: () => undefined },
+      controller.signal,
+      async (_root, _io, settle) => {
+        builds += 1;
+        if (slow) await new Promise((resolve) => setTimeout(resolve, 900));
+        // Whether dev takes this build: it does not start one the sources moved under.
+        settled.push((await settle?.()) ?? false);
+        return 1;
+      },
+    );
+    try {
+      await until(async () => builds === 1);
+      // Five saves, each its own burst, all while the first build runs.
+      for (let save = 0; save < 5; save += 1) {
+        writeFileSync(join(busy, "src", `note-${String(save)}.txt`), "changed");
+        await new Promise((resolve) => setTimeout(resolve, 130));
+      }
+      slow = false;
+      await until(async () => settled.length === 2);
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      expect(builds).toBe(2);
+      expect(settled).toEqual([false, true]);
+    } finally {
+      controller.abort();
+      await done;
+      rmSync(busy, { recursive: true, force: true });
+    }
+  });
+});
+
 describe("dev, when the project misbehaves", () => {
   it("keeps rebuilding for a server that never says it is listening, and stops it at the end", async () => {
     const quiet = mkdtempSync(join(example, ".dev-quiet-"));

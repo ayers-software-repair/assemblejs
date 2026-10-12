@@ -17,13 +17,13 @@ import type { SettledPlacement } from "./settled-placement.js";
  * answered it; otherwise it fails the page. `cached` says whether the cache may answer at all,
  * which a placement refused before dispatch may not: the refusal is the point.
  */
-export function fallBack(
+export async function fallBack(
   input: SettleInput,
   id: string,
   diagnostic: Diagnostic,
   cached: boolean,
-): SettledPlacement {
-  const last = cached ? placementCache(input).read() : undefined;
+): Promise<SettledPlacement> {
+  const last = cached ? await placementCache(input).read() : undefined;
   const held =
     last === undefined
       ? undefined

@@ -6,6 +6,7 @@ export type { AccessPolicy } from "./access-policy.js";
 export { isPublicRoute } from "./is-public-route.js";
 export { matchesBasic } from "./matches-basic.js";
 export { decideAccess } from "./decide-access.js";
+export { requestedPath } from "./requested-path.js";
 export { contentSecurityPolicy } from "./content-security-policy.js";
 export { checkThrew } from "./check-threw.js";
 export { registerAccess } from "./register-access.js";

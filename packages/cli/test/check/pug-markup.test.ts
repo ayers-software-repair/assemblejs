@@ -21,7 +21,7 @@ const PRICE = [{ name: "price", view: "default" }];
 describe("a Pug template as the markup its directives are written in", () => {
   it("writes a directive tag as Pug writes it, wherever in the template it stands", () => {
     expect(markup('section.nest\n  assembly(name="price")')).toBe(
-      '<section><assembly name="price"></assembly></section>',
+      '<section class="nest"><assembly name="price"></assembly></section>',
     );
     expect(placed('assembly(name="price" view="wide")/')).toEqual([
       { name: "price", view: "wide" },
@@ -73,5 +73,28 @@ describe("a Pug template as the markup its directives are written in", () => {
     expect(placed('//\n  <assembly name="price"></assembly>')).toEqual([]);
     expect(placed("script.\n  const s = '<assembly name=\"price\"></assembly>';")).toEqual([]);
     expect(placed("div(title=\"<assembly name='price'/>\")")).toEqual([]);
+  });
+
+  // Found 2026-10-11. Only a directive's attributes were written, so every rule that reads an
+  // element's attributes read a Pug view as having none: an img with an alt had none, an input
+  // with a label had none, and an inline style was never seen.
+  it("writes every tag's attributes, as a render writes them", () => {
+    expect(markup('img(src="a.png" alt="A stoneware cup")')).toBe(
+      '<img src="a.png" alt="A stoneware cup"></img>',
+    );
+    expect(markup('input#q.wide(aria-label="Search the shop" required)')).toBe(
+      '<input id="q" class="wide" aria-label="Search the shop" required="required"></input>',
+    );
+    expect(markup('p(style="color:red") hi')).toBe('<p style="color:red">hi</p>');
+    // What the template computes stands as the marker, in a value or as the attributes whole.
+    expect(markup("img(alt=data.name)")).toBe('<img alt="computed"></img>');
+    expect(markup("div&attributes(data.more)")).toBe("<div computed></div>");
+  });
+
+  it("escapes a written value as a render does, so markup in an attribute is not markup", () => {
+    expect(markup("a(title='<assembly name=\"price\"/> & more') t")).toBe(
+      '<a title="&lt;assembly name=&quot;price&quot;/&gt; &amp; more">t</a>',
+    );
+    expect(placed("a(title='<assembly name=\"price\"></assembly>') t")).toEqual([]);
   });
 });

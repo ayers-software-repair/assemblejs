@@ -89,3 +89,24 @@ test("a deferred placement of a guarded assembly is left to its own address, whi
   assert.equal((await at("/assembly/ledger/default/")).status, 401);
   assert.equal((await signed("/assembly/ledger/default/")).status, 200);
 });
+
+// What a page keeps for a lifetime was composed for the visitor who filled the cache. It is
+// another visitor's only when each assembly inside it would be shown to them.
+test("a kept answer that holds a guarded assembly is not shown to a guest after a member", async () => {
+  const before = await (await at("/public/kept")).text();
+  assert.match(before, /the shelf, open to all/);
+  assert.ok(!before.includes("kept for members"), "a guest, first");
+  const member = await (await signed("/public/kept")).text();
+  assert.match(member, /the ledger, kept for members/);
+  const after = await at("/public/kept");
+  assert.equal(after.status, 200);
+  const shown = await after.text();
+  assert.match(shown, /the shelf, open to all/);
+  assert.ok(!shown.includes("kept for members"), "a guest, after the member filled the cache");
+  const [shelf] = treeOf(shown);
+  assert.deepEqual(shelf.children.map(nameOf), ["ledger"]);
+  assert.equal(shelf.children[0].attributes["data-failed"], "", "refused, and marked so");
+  // The member's answer is still the kept one: the same envelope, by its id.
+  const again = treeOf(await (await signed("/public/kept")).text());
+  assert.equal(again[0].attributes["data-id"], treeOf(member)[0].attributes["data-id"]);
+});

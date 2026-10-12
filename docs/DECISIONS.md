@@ -5269,3 +5269,185 @@ the copies to that.
 - **`site/DEPLOY.md`** says the pin's whole reach. That edit is under `site/`, so the push
   runs the deploy, which checks platform out at the new pin: the proof that the tag can be
   staged from.
+
+## 2026-10-11: the audit
+
+The owner, at this seat on the evening of 2026-10-11, after the seat told him the code was
+complete: "compelte all code items yoiu can. then ultracode audit. use it in scratch as much as
+you can to test it. find bugs. brutally review it. I have a hard time believing its complete".
+He was right, and the seat's sentence was wrong. Green CI was what it rested on, and CI proves
+what the fixtures do.
+
+- **What his words changed, for this work.** "Ultracode" is his order for a workflow of agents,
+  so the ruling of 2026-10-09 against sub tasks does not hold for it; the estate's rule that a
+  workflow runs Sonnet alone does, and every agent ran Sonnet. The overnight order's limits on
+  load, relayed by the lead, gave way to his own word. D1276 did not: the seat starts no
+  browser. He logged into his own Chrome ("ive logged into claude in chrome. use that to test")
+  and the seat drives that through the extension.
+- **Two sources.** The seat used the framework as a stranger does: the twelve tarballs packed
+  from `45ea049`, a project made by `npm create`, every renderer added, a shop of thirteen
+  assemblies on five pages written with the command line and the documentation, run under
+  `dev`, `build`, `perf` and `deploy`, driven in his Chrome and through the installed MCP
+  server. And a workflow of eleven read-only finders, one to an area, read the source and
+  probed the built packages, each finding then put to one or two refuters told to count doubt
+  as a refutation: 141 agents, 84 findings, 66 standing, 6 disputed, 12 refuted.
+- **What it found** is Phase 6 of `docs/TODO.md`, a row each. Four blockers, each reproduced by
+  the seat before it was a row: an encoded spelling of a guarded address passes the access
+  check; a cached placement shows a guarded child to a visitor the guard refuses; a link whose
+  target climbs out through another link is read as inside the root; `check` misreads every
+  Pug view. Using it found a build of seventeen seconds for any project with a Svelte view, a
+  dev loop that deletes the files of the server it has just started, and a starter whose first
+  page is unstyled and whose first link is dead.
+- **A workflow's finding is not a fact here until the seat has read it.** Each of its rows says
+  PREMISE UNVERIFIED until then. The evidence, every finding with its input and probe, is kept
+  outside this tree, in the estate's audit records, because the scratch directory is under
+  `/tmp`.
+- **His further orders of the same evening**, each a row: the scratch projects become showcase
+  projects under `examples/`, "production grade", "complex proejcts real world scenarious",
+  "extremely complex. not very simple", the first written with the command line as a user and
+  the second through the MCP server as an agent; and "a mode on each to enable the boxes around
+  them that tell you when and where things are so you can see how it works". Asked where that
+  mode lives, he chose the framework: one outline mode, off by default, that any project
+  switches on in development or in production.
+
+## 2026-10-11: an address is its every spelling
+
+The audit's first blocker. The access decision was handed the request's path as it was sent
+(`register-access.ts`), and the router decodes a path before it matches. So a rule a product
+writes about a path, `path.startsWith("/admin")` in its `authenticate`, was asked about
+`/%61dmin/users`, said yes, and the router served `/admin/users`. A guarded assembly's own
+address and its data and manifest endpoints fell the same way. Under basic credentials nothing
+fell, since every address is then refused alike; under a check or a public route written by
+path, everything did.
+
+- **The decision is made of the path as the router reads it.** `requestedPath` is the one
+  reading: the path without its query, each segment decoded once. Decoding once is what the
+  router does, so what an encoded percent sign leaves is not decoded again. An encoded slash
+  stays encoded, as the router keeps it inside a segment: decoding never joins two segments or
+  splits one, so a public route `/assembly/widget/*` is not matched by a path that hides its
+  slashes. A segment that does not decode has no address, and is a 400.
+- **The same reading serves a public route**, so `/api/%6Fpen` is the public `/api/open` it
+  spells, where before it was refused: the rule leans both ways and holds both ways.
+- **Proof.** A core spec with a check written by path, watched red on the code as it stood
+  (`/%61dmin/users: expected 200 to be 401`), and a step of the `trust` fixture, which asks the
+  built server every spelling of a guarded api over HTTP; its known-bad case is the tarball of
+  `45ea049`, which the seat had watched answer 200 over a raw socket. DESIGN 5.2 says it.
+
+## 2026-10-11: a link's target is walked
+
+The audit's third blocker. `followLinks` followed every link along a path, and resolved a
+link's own target as text: `resolve(current, readlinkSync(next))`. Text resolution removes a
+step back together with the step before it, without asking whether that step was a link. So
+`esc -> out/../note.txt`, with `out` a link to a directory outside the project, read as
+`note.txt` beside the link, inside the root; the system opens `out` first, lands outside, steps
+back there, and opens a file the guard never saw. `readInside` returned it, and `leadsOut` said
+the path stayed in.
+
+The follower now reads a path as the system does, a step at a time, and a link's target is more
+steps taken from where the link stands, or from the root when the target names one. A step back
+is taken from where the walk really is. Nothing else about it moved: a link to nothing is
+followed, the part of a path not yet written is carried over, and a chain past forty links is a
+loop. Two specs hold it, each watched red on the old follower: the follower's own, on a link
+whose target climbs out and back, and the guard's, where `leadsOut` must say so
+(`src/climbs.ts: expected false to be true`).
+
+## 2026-10-11: a kept answer knows what it holds
+
+The audit's second blocker. A placement's answer is the assembly's envelope with every
+assembly its view placed composed inside it, for the visitor who asked. Settling a placement
+asked whether this visitor may be shown the outer assembly, then read the cache, and a hit was
+the whole answer as it was composed for someone else. An open assembly whose view places a
+guarded one, kept by its page for a lifetime, was therefore served to every visitor after the
+first member, the guarded assembly's markup inside it, while that assembly's own address went
+on answering 401. The guard against keeping a credentialled answer never tripped: the headers
+the composer sees are the ones a remote declared it wants, not the visitor's own.
+
+- **An answer is kept with the assemblies it holds**, read off the account of what the
+  answering view placed, at any depth: `CachedContent.holds`. A placement the browser fills
+  later is not among them; the answer holds its place alone and its address decides for it.
+- **It is read for a visitor only when each of them would be shown to that visitor**, by the
+  same `Admit` the request already carries, so each is asked once a request however often it is
+  placed. This is DESIGN 5.2's own sentence, "asked before a cached answer is used", made true
+  of what the answer holds and not of its outside alone. On a fresh hit and on the fallback
+  rung alike, which is why the ladder is asynchronous now.
+- **Refused, the cache is passed over and the placement is composed for this visitor**, who is
+  shown the open assembly with the guarded one refused inside it. That answer holds a failed
+  envelope and is never written, so the member's entry is not replaced by a guest's.
+- **What was not recorded is no one's a control decides about.** An entry with no `holds`, from
+  a cache that keeps only what it knows, is not read while a control is on; a check that throws
+  refuses. With no control on, nothing is asked and nothing changed.
+- **Not chosen:** refusing to keep any answer that holds another assembly while a control is on.
+  It is simpler and it would have ended caching for every composed assembly on a guarded
+  server, the members' own included.
+- **Proof.** Core specs of the placement cache and of a server composed twice for two visitors,
+  watched red (`expected '<body>...' not to contain 'BALANCE-9912'`); a step of the `trust`
+  fixture, a kept page asked as a guest, a member and a guest again over HTTP; the seat's own
+  run of the old tarball, which showed the guest the member's content.
+
+## 2026-10-11: a Pug view is read with its attributes
+
+The audit's fourth blocker. `check` reads a Pug view through the markup made from the tree the
+project's own Pug parses, and that markup was first written for one reader, the reader of
+placements: it kept a directive's attributes and wrote every other tag as its bare name. The
+three element rules, which came later and "hold in any kind of view", read the same markup. So
+in a Pug view an `img` with an alt was reported as having none, an `input` with an `aria-label`
+as having no name, and a `style` attribute was never seen: two false findings on correct views,
+of the kind that gets a rule turned off, and one rule silently not applied.
+
+Every tag is written with the attributes it was given now. A written value is escaped as Pug's
+render escapes it, which also keeps true what the old markup got by omission: markup inside an
+attribute's value, a directive included, is not markup. What the template computes stands as
+the marker, as in every other template language, in a value or, for attributes handed over as
+an object, as a bare attribute, which the rules already read as a spread. Specs of the markup
+and of the elements read from it through the installed Pug, watched red (`Received: "<img></img>"`).
+
+## 2026-10-11: the dev loop
+
+Using the framework as its documentation says found that `dev` did not survive a project of
+any size. Four faults, one after another, each made worse by the one before.
+
+- **A build took seventeen seconds for one Svelte view.** The JSX plugin's `onResolve` took
+  every relative import in the bundle and asked esbuild to resolve it, to learn whether a
+  project file with no framework in its name is reached from one that has; it asked about the
+  imports inside packages too, each a round trip between esbuild and JavaScript. React, Preact
+  and Vue ship bundled; Svelte ships its runtime as about 120 source files of relative imports,
+  and a trace showed 3,040 opens of those files and one directory read 347 times. Timed in a
+  scratch project by renderer: html 0.9 s, each other renderer 1.0 to 1.8 s, Svelte 16.7 s.
+  A package's own imports are not the project's, and are left to the default now. A spec with
+  a package of relative imports listens for the plugin's questions: two were asked, none are.
+- **Every burst of changes queued a whole build.** `dev` chained one build per burst, 100 ms
+  apart, so eleven `add assembly` commands were a backlog of builds, each of the whole
+  project. Changes made while a build runs are one build after it (`folded`), and the sources
+  are watched from before the first build, so a change during it is not missed.
+- **A build deleted the files of the server that was running.** A build began by removing
+  `dist`. The server `dev` had just started from `dist` died with
+  `ENOENT ... scandir dist/client/` or `Cannot find module dist/server.js`; a build that
+  failed after that left
+  "the last good build" with no files; and the generated directory went too, with the record
+  the agent surface reads. A build is made whole beside `dist`, in `.assemblejs/building`, and
+  replaces `dist` only once it has succeeded. Between the two the caller is asked (`settle`):
+  `dev` stops the old server there, so it serves its own files to its last request, and
+  the new one starts from a `dist` that is whole. A build removes from `.assemblejs` what a
+  build writes (`BUILD_WRITES`) and nothing else. For the `build` command this means a failed
+  build leaves the last `dist` in place and says it failed by its exit, where it used to leave
+  none: nothing half-made is ever in `dist`.
+- **A build could be made of two moments.** Sources read at the start and at the end of a long
+  build disagreed, and the server built from them refused to boot. A build during which a
+  source changed is left unused; the build after it is of the sources as they are.
+
+Not chosen: running the dev server from a copy of each build. It keeps the build untouched and
+moves the server one directory deeper than production runs it, and a project that reads a file
+beside its build would then find it in one and not the other; `dev` runs `node dist/server.js`
+as production does, and that sentence stays true.
+
+The writers of browser files still address `dist`; the build hands them an io that writes what
+is addressed there beneath the directory being built (`stagedIo`). Giving each writer the
+directory was the other way, and touched five signatures and their specs for the same effect.
+
+Proof: specs of each part, the dev loop's two watched red on the old loop (`expected 500 to be
+200`) and by mutation (`expected [ true, true ] to deeply equal [ false, true ]`); the command
+line's suite, 689 specs in 12.6 s where it took 21. Then the artifact: tarballs packed from
+this tree and the scratch shop of thirteen assemblies installed from them. It builds in 5.1 to
+5.4 s where it took 20. Under `dev`, eight saves 0.4 s apart and then a Svelte view that does
+not parse left the page and its script answering 200 at every probe, logged one "the last good
+build is still running", kept the record, and built once when the view was removed.
