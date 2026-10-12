@@ -52,15 +52,18 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with, which changes
-this record alone. Beneath it `a4583cf`, what an envelope holds is measured as the envelope is,
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a Lit element
+waits for its view (DECISIONS 2026-10-12, of that name), the first defect the showcase found
+and fixed. Beneath it `0a50a97`, this record alone (`ci` 38209360682, all five jobs green), and
+`a4583cf`, what an envelope holds is measured as the envelope is,
 and the proof keeps its files (DECISIONS 2026-10-12, of that name; `ci` 38208877783, all five
 jobs green, the outline's four cases among the 46 the `browser proof` passed). Beneath it
 `88101ed`, an outline's box is the assembly's, not the line it stands in (`ci` 38208234440: four
 jobs green, `browser proof` red on the proof's own files), and `6da4971`, a page shows how it
 was put together, the outline (`ci` 38207626887: four jobs green, `browser proof` red on one of
 the outline's four cases). THE SHOWCASE IS IN HAND, in the scratchpad from packed tarballs: a
-marketplace of four servers, the catalogue's built and serving; what designing it found of the
+marketplace of four servers (the shop, the catalogue, reviews and fulfilment), all four built
+and serving on this machine and an order followed across them; what designing it found of the
 framework is in the evidence directory's FINDINGS 35 to 37, three calls that are the owner's
 (two servers on one page share no bus; a remote assembly cannot call its own server; nothing
 of who is asking reaches a service or an api). Beneath it `bab70a1`, a dev server on every interface is still the project's own (`ci` 38204821744, all
@@ -1805,6 +1808,20 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       (`ci` 38208877783).
 - [ ] The site has no page for the outline: the configuration reference and a guide page want
       it (the site seat's; the lead is told).
+- [x] FOUND BY THE SHOWCASE: a Lit element whose template is made from a property the view sets
+      hydrated before the view set it, threw `shorter than expected iterable` and was drawn
+      twice. DONE 2026-10-12: the server marks each element a Lit view holds `defer-hydration`,
+      Lit's own mark, and it hydrates when its view does (DECISIONS 2026-10-12, "a Lit element
+      waits for its view")
+- [ ] FOUND BY THE SHOWCASE, not fixed: Lit's hydration support is one hook on the page, and on
+      a page with Lit assemblies from two servers the last bundle to load owns it, so the other
+      server's elements are updated by a copy of Lit that is not theirs
+      (`packages/renderer-lit/src/client/hydration-support.ts`; the stack in DECISIONS
+      2026-10-12, "a Lit element waits for its view"). It works while both carry one version of
+      Lit. Needs a design: each bundle's element base patched by its own support whatever
+      loads last.
+- [ ] FOUND BY THE SHOWCASE: `check` says "is a ejs assembly" (`a-view-needs-its-renderer`); the
+      article does not follow the renderer's name.
 - [ ] The showcase projects: extremely complex, real-world, made with the command line as a
       user and the agent surface as an agent, each with its outline on, tested in the owner's
       Chrome, then into `examples/`.

@@ -16,6 +16,11 @@ import { StylelessElementRenderer } from "./styleless-element-renderer.js";
  * which the page's default policy refuses, and the browser half adopts the same styles as
  * constructed sheets when the element hydrates. So an element is styled once it hydrates.
  *
+ * Each element the view holds is marked to hydrate only when the view does, which is when the
+ * view sets what the element renders from: a view's module defines its elements before the view
+ * hydrates, and an element left to hydrate as soon as it is defined renders from what its
+ * constructor set, against markup the server rendered from the view's data.
+ *
  * It does not catch: a failed render throws, the composer catches it, and the placement falls
  * back. The view renders with the server's events, as it hydrates with the page's.
  */
@@ -23,6 +28,7 @@ export function renderToMarkup(view: LitView, input: MarkupInput): string {
   return collectResultSync(
     render(view({ data: input.data, events: serverEvents() }), {
       elementRenderers: [StylelessElementRenderer],
+      deferHydration: true,
     }),
   );
 }

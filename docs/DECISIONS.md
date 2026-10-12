@@ -6065,3 +6065,38 @@ proof's own; and a reader of that fix found the defect it fixed still standing o
 - **One check in the proof meant nothing.** It asked that the chip of an assembly named `kept`
   say "kept", which its name alone satisfied. The assembly is `prices` now.
 - **The change's own note** is still the one pending for the outline.
+
+## 2026-10-12: a Lit element waits for its view
+
+Found by the showcase, on its second page. The catalogue team's product page holds a Lit
+element that shows a scale, its steps handed to it as a property; in the owner's Chrome it was
+drawn twice, with `Error: Unhandled shorter than expected iterable` in the console, on the
+shop's page and on the catalogue server's own.
+
+- **Expected:** a Lit view's elements hydrate the markup the server rendered for them.
+- **Found:** they hydrated before the view had given them anything. A view's module defines
+  its elements, so they are upgraded the moment it loads, and Lit hydrates an element as soon
+  as it is defined; the view's own hydration, which is what sets an element's properties, comes
+  after. An element whose template is made from a property rendered from what its constructor
+  set, an empty list against the three items the server sent, and Lit threw and rendered the
+  list again beside the first. Every Lit element the suites had was made from attributes or its
+  own state, which the constructor and the markup agree on.
+- **Now:** the server marks each element a view holds `defer-hydration`, which is Lit's own
+  mark for it (`deferHydration` of `@lit-labs/ssr`'s render, "to signal that the elements should
+  not automatically hydrate", lit.dev, SSR server usage, read 2026-10-12). Lit's hydration of
+  the view sets the element's properties and removes the mark, and the element hydrates then.
+  A view that never mounts leaves its elements as the server sent them, which is what never
+  mounting means.
+- **Proof.** The server case red before (the markup had no mark) and green after; the browser
+  half's case hydrates that markup with the element defined first, adopts the server's two
+  items and renders a third when the property changes, and was watched red on the markup the
+  server used to send. Every cheap gate, every suite and the rendering fixture green; its
+  tarball is at 8,369 bytes of 9,200. And in the owner's Chrome, from fresh tarballs: the scale
+  is drawn once, three steps and the right one lit, on the catalogue's page and on the shop's
+  page that holds Lit assemblies from three servers, with nothing in the console.
+- **Seen beside it, and not fixed here.** Lit's support for hydration is one hook on the page,
+  `globalThis.litElementHydrateSupport`, and each server's bundle sets it. On a page that holds
+  Lit assemblies from two servers the last bundle to load owns the hook, so the other's
+  elements are updated by a copy of Lit that is not theirs: the stack of the error above ran
+  from the reviews server's chunk into the catalogue's element. With one version of Lit on
+  both it works. A row holds it.

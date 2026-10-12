@@ -7,6 +7,9 @@ import { BUTTON_MARKUP } from "../fixtures/button-markup.js";
 import { buttonView } from "../fixtures/button-view.js";
 import { shellHolding } from "../fixtures/shell-markup.js";
 import { shellView } from "../fixtures/shell-view.js";
+import { STEPS_MARKUP } from "../fixtures/steps-markup.js";
+import { stepsView } from "../fixtures/steps-view.js";
+import type { ProbeSteps } from "../fixtures/steps-view.js";
 
 const mountInto = (into?: ShadowRoot) => {
   const element = document.createElement("assembly-root");
@@ -59,6 +62,54 @@ describe("hydrating a Lit view", () => {
     const { container, handle } = mountInto();
     handle.unmount();
     expect(container.querySelector("button")).toBeNull();
+  });
+});
+
+// A view's module defines its elements before the view hydrates, so an element left to hydrate
+// as soon as it is defined rendered from what its constructor set: against the list the server
+// sent, Lit threw "shorter than expected iterable" and the list was rendered twice.
+describe("an element whose list the view sets", () => {
+  /** The page as the browser parsed it: each declared shadow root attached to its element. */
+  const parsed = (markup: string): HTMLElement => {
+    const element = document.createElement("assembly-root");
+    document.body.append(element);
+    element.innerHTML = markup;
+    for (const declared of element.querySelectorAll("template[shadowrootmode]")) {
+      const root = (declared.parentElement as HTMLElement).attachShadow({ mode: "open" });
+      root.append((declared as HTMLTemplateElement).content);
+      declared.remove();
+    }
+    return element;
+  };
+  const mount = (element: HTMLElement) => {
+    const { events } = createBus().forAssembly({ id: "a", name: "steps", view: "default" });
+    return hydrate(stepsView).mount(
+      element,
+      { steps: ["light", "dark"] },
+      { id: "a", name: "steps", view: "default", events },
+    );
+  };
+
+  it("hydrates once the view has given it the list, adopting what the server sent", async () => {
+    const element = parsed(STEPS_MARKUP);
+    const steps = element.querySelector("probe-steps") as ProbeSteps;
+    const server = [...(steps.shadowRoot?.querySelectorAll("li") ?? [])];
+    expect(server).toHaveLength(2);
+    // Defined, and so upgraded, before the view hydrates: it holds off, and renders nothing.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect([...(steps.shadowRoot?.querySelectorAll("li") ?? [])]).toEqual(server);
+    expect(steps.hasAttribute("defer-hydration")).toBe(true);
+
+    mount(element);
+    await steps.updateComplete;
+    expect(steps.hasAttribute("defer-hydration")).toBe(false);
+    expect(steps.steps).toEqual(["light", "dark"]);
+    expect([...(steps.shadowRoot?.querySelectorAll("li") ?? [])]).toEqual(server);
+
+    // Live: what the view's property says next is what it shows.
+    steps.steps = ["light", "medium", "dark"];
+    await steps.updateComplete;
+    expect(steps.shadowRoot?.querySelectorAll("li")).toHaveLength(3);
   });
 });
 

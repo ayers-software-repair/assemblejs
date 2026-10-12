@@ -12,6 +12,8 @@ import { BUTTON_MARKUP } from "../fixtures/button-markup.js";
 import { buttonView } from "../fixtures/button-view.js";
 import { SHELL_MARKUP } from "../fixtures/shell-markup.js";
 import { shellView } from "../fixtures/shell-view.js";
+import { STEPS_MARKUP } from "../fixtures/steps-markup.js";
+import { stepsView } from "../fixtures/steps-view.js";
 
 // One Lit element rendered by the built package, with the browser half loaded before Lit's
 // element base or after it. A view that places a child imports its slot from the browser half,
@@ -79,6 +81,15 @@ describe("rendering a Lit view on the server", () => {
     // Its styles are adopted when it hydrates; an inline <style> the page's policy refuses is not
     // sent.
     expect(out).not.toContain("<style>");
+  });
+
+  // Left to hydrate as soon as it is defined, an element renders from what its constructor set,
+  // before the view has given it anything: a list the server rendered is then longer than the
+  // one it has, Lit throws, and the list is rendered a second time beside the first.
+  it("marks an element to hydrate only once the view has set what it renders from", () => {
+    const out = renderToMarkup(stepsView, { data: { steps: ["light", "dark"] } });
+    expect(out).toBe(STEPS_MARKUP);
+    expect(out).toMatch(/<probe-steps\s+defer-hydration>/);
   });
 
   it("escapes what it renders, because Lit does", () => {
