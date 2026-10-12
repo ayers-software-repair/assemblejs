@@ -29,5 +29,7 @@ export { engineSaid } from "./engine-said.js";
 export { templateProblems } from "./template-problems.js";
 export { unreadPlacements } from "./unread-placements.js";
 export { describeBuildFailure } from "./describe-build-failure.js";
+export { BUILD_WRITES } from "./build-writes.js";
+export { stagedIo } from "./staged-io.js";
 export { bundleClient } from "./bundle-client.js";
 export { buildProject } from "./build-project.js";

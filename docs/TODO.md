@@ -1214,26 +1214,46 @@ a spec watched red first, or struck with its reason.
 
 ### Found by the seat, using it
 
-- [ ] One Svelte view makes every build take 17 to 23 seconds:
+- [x] One Svelte view makes every build take 17 to 23 seconds:
       `packages/cli/src/build/jsx-plugin.ts:36-44` takes every relative import in the bundle, those
       inside node_modules too, and asks `build.resolve` for each from JavaScript, and Svelte ships
       its runtime as about 120 source files. Timed by renderer: html 0.9 s, each other renderer 1.0
       to 1.8 s, Svelte alone 16.7 s. With importers under node_modules left to the default, in a
-      scratch copy of the installed file, 4.4 s
-- [ ] `dev` queues one build for every burst of changes and never folds them into one
+      scratch copy of the installed file, 4.4 s. DONE 2026-10-11: the plugin leaves a package's own
+      imports to the default; a spec with a package of relative imports, watched red (two questions
+      asked, none wanted) (DECISIONS 2026-10-11, "the dev loop")
+- [x] `dev` queues one build for every burst of changes and never folds them into one
       (`dev/run-dev.ts:54-60`, `watch-sources.ts` at 100 ms): eleven `add assembly` commands and a
-      page edit left a backlog of whole builds
-- [ ] `dev` crashes the server it has just started: a step ends when the server is spawned, the next
+      page edit left a backlog of whole builds. DONE 2026-10-11: changes made while a build runs are
+      folded into one build after it (`dev/folded.ts`), and the sources are watched from before the
+      first build; specs watched red by mutation (DECISIONS 2026-10-11, "the dev loop")
+- [x] `dev` crashes the server it has just started: a step ends when the server is spawned, the next
       queued build begins with `rmSync(dist)` (`build/build-project.ts:62`), and the booting server
       dies with a raw stack, `ENOENT ... scandir dist/client/` from core's `listAssets` or
-      `Cannot find module dist/server.js`. Seen three times in a minute
-- [ ] During every rebuild the running server's files are gone, since the build removes `dist`
+      `Cannot find module dist/server.js`. Seen three times in a minute. DONE 2026-10-11: a build is
+      made beside `dist` and replaces it only once it is whole, and `dev` stops the old server
+      between the two, so no build removes a running server's files (DECISIONS 2026-10-11, "the dev
+      loop")
+- [x] During every rebuild the running server's files are gone, since the build removes `dist`
       first, so a request in that window fails: the open tab asked for a script and the server
       logged ENOENT with a stack. A build that fails after the removal leaves "the last good build"
-      with no files (workflow cli-verbs.2 says the same)
-- [ ] A build reads the sources at different moments: its registry held 3 assemblies and its page
+      with no files (workflow cli-verbs.2 says the same). DONE 2026-10-11 with the row above; a
+      build that fails leaves the last `dist` whole and removes only its own files from
+      `.assemblejs`, so the record stands. A dev spec, watched red (`expected 500 to be 200`), and a
+      build spec hold it (DECISIONS 2026-10-11, "the dev loop")
+- [x] A build reads the sources at different moments: its registry held 3 assemblies and its page
       template placed 13, so the built server refused to boot and threw the BootError as an uncaught
-      stack
+      stack. DONE 2026-10-11 for `dev`: a build during which a source changed is left unused and the
+      build after it is of the sources as they are, so no server is started from a build made of two
+      moments. The uncaught stack a refused boot prints is its own row below
+- [ ] A server that refuses to boot prints an uncaught stack: the starter's `src/server.ts` awaits
+      `createServer` at the top level, so a BootError, a refusal with a plain sentence for each
+      problem, reaches the terminal as a Node stack trace with the sentences inside it (found
+      2026-10-11, in the dev log)
+- [ ] A Svelte view that does not parse is reported at the generated module and not at the view:
+      `.assemblejs/client/broken.ts:10 Unexpected token` with a svelte.dev address, for
+      `src/assemblies/broken/broken.svelte` holding `<p>{</p>` (found 2026-10-11, in the dev log of
+      the fixed loop)
 - [ ] A new project's first page is not styled as a page: `tokens.css` and `components.css` set
       roles and classes and nothing on `body`, so the page is white, black and Times New Roman, and
       in the dark scheme the tokens flip beneath it: a dark notice on a white page, and a link in
@@ -1377,9 +1397,11 @@ The command line:
 - [ ] Misnamed service, client, page declaration and api files are silently ignored; check says "no
       problems" (workflow cli-verbs.1, major). Claimed at
       `packages/cli/src/discovery/discover-assemblies.ts:100`. PREMISE UNVERIFIED
-- [ ] A failed rebuild in dev deletes the last good build's browser files and dev record,
+- [x] A failed rebuild in dev deletes the last good build's browser files and dev record,
       contradicting "leaves the last good server running" (workflow cli-verbs.2, major). Claimed at
-      `packages/cli/src/build/build-project.ts:62`. PREMISE UNVERIFIED
+      `packages/cli/src/build/build-project.ts:62`. PREMISE UNVERIFIED. READ AND REPRODUCED by the
+      seat (the dev spec failed with `expected 500 to be 200` on the old loop). DONE 2026-10-11 with
+      the seat's rows above (DECISIONS 2026-10-11, "the dev loop")
 - [ ] A dangling symlink under src crashes build/dev/deploy with a bare ENOENT, while check reports
       no problems (workflow cli-verbs.3, major). Claimed at
       `packages/cli/src/build/source-version.ts:24`. PREMISE UNVERIFIED

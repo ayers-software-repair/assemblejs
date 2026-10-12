@@ -164,4 +164,48 @@ describe("compiling each JSX file through its own framework's runtime", () => {
     writeFileSync(join(root, "bad.react.tsx"), "export const a = 1;\nexport const = ;");
     await expect(bundle([join(root, "bad.react.tsx")], [])).rejects.toThrow(/bad\.react\.tsx:2:/);
   });
+
+  // Found 2026-10-11. The plugin asked esbuild to resolve every relative import in the bundle,
+  // a package's own too, each a round trip from JavaScript. Svelte ships its runtime as about
+  // 120 source files full of them, and one Svelte view made every build take seventeen seconds.
+  it("asks about a relative import only where the project wrote it, never inside a package", async () => {
+    const root = mkdtempSync(join(tmpdir(), "jsx-packages-"));
+    const pkg = join(root, "node_modules", "runtime");
+    mkdirSync(join(pkg, "internal"), { recursive: true });
+    writeFileSync(join(pkg, "package.json"), '{ "name": "runtime", "main": "index.js" }');
+    writeFileSync(join(pkg, "index.js"), 'export { a } from "./internal/a.js";');
+    writeFileSync(join(pkg, "internal", "a.js"), 'export { b as a } from "./b.js";');
+    writeFileSync(join(pkg, "internal", "b.js"), "export const b = 1;");
+    mkdirSync(join(root, "a"));
+    writeFileSync(join(root, "a", "row.tsx"), "export const Row = () => <li>row</li>;");
+    writeFileSync(
+      join(root, "a", "a.react.tsx"),
+      'import { a } from "runtime";\nimport { Row } from "./row.js";\nexport default () => <ul data-a={a}><Row /></ul>;',
+    );
+    // The plugin's own questions reach the plugins after it, marked as asked by a plugin.
+    const asked: string[] = [];
+    const result = await build({
+      entryPoints: [join(root, "a", "a.react.tsx")],
+      bundle: true,
+      write: false,
+      jsx: "automatic",
+      format: "esm",
+      external: ["react"],
+      plugins: [
+        jsxPlugin([], "client"),
+        {
+          name: "listens",
+          setup(listening) {
+            listening.onResolve({ filter: /^\.\.?\// }, (args) => {
+              if (args.pluginData !== undefined) asked.push(`${args.path} from ${args.importer}`);
+              return undefined;
+            });
+          },
+        },
+      ],
+    });
+    expect(result.outputFiles[0]?.text).toMatch(/b = 1/);
+    expect(asked.filter((one) => one.includes("node_modules"))).toEqual([]);
+    expect(asked).toEqual([`./row.js from ${join(root, "a", "a.react.tsx")}`]);
+  });
 });

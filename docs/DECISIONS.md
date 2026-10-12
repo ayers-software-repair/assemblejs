@@ -5400,3 +5400,54 @@ attribute's value, a directive included, is not markup. What the template comput
 the marker, as in every other template language, in a value or, for attributes handed over as
 an object, as a bare attribute, which the rules already read as a spread. Specs of the markup
 and of the elements read from it through the installed Pug, watched red (`Received: "<img></img>"`).
+
+## 2026-10-11: the dev loop
+
+Using the framework as its documentation says found that `dev` did not survive a project of
+any size. Four faults, one after another, each made worse by the one before.
+
+- **A build took seventeen seconds for one Svelte view.** The JSX plugin's `onResolve` took
+  every relative import in the bundle and asked esbuild to resolve it, to learn whether a
+  project file with no framework in its name is reached from one that has; it asked about the
+  imports inside packages too, each a round trip between esbuild and JavaScript. React, Preact
+  and Vue ship bundled; Svelte ships its runtime as about 120 source files of relative imports,
+  and a trace showed 3,040 opens of those files and one directory read 347 times. Timed in a
+  scratch project by renderer: html 0.9 s, each other renderer 1.0 to 1.8 s, Svelte 16.7 s.
+  A package's own imports are not the project's, and are left to the default now. A spec with
+  a package of relative imports listens for the plugin's questions: two were asked, none are.
+- **Every burst of changes queued a whole build.** `dev` chained one build per burst, 100 ms
+  apart, so eleven `add assembly` commands were a backlog of builds, each of the whole
+  project. Changes made while a build runs are one build after it (`folded`), and the sources
+  are watched from before the first build, so a change during it is not missed.
+- **A build deleted the files of the server that was running.** A build began by removing
+  `dist`. The server `dev` had just started from `dist` died with
+  `ENOENT ... scandir dist/client/` or `Cannot find module dist/server.js`; a build that
+  failed after that left
+  "the last good build" with no files; and the generated directory went too, with the record
+  the agent surface reads. A build is made whole beside `dist`, in `.assemblejs/building`, and
+  replaces `dist` only once it has succeeded. Between the two the caller is asked (`settle`):
+  `dev` stops the old server there, so it serves its own files to its last request, and
+  the new one starts from a `dist` that is whole. A build removes from `.assemblejs` what a
+  build writes (`BUILD_WRITES`) and nothing else. For the `build` command this means a failed
+  build leaves the last `dist` in place and says it failed by its exit, where it used to leave
+  none: nothing half-made is ever in `dist`.
+- **A build could be made of two moments.** Sources read at the start and at the end of a long
+  build disagreed, and the server built from them refused to boot. A build during which a
+  source changed is left unused; the build after it is of the sources as they are.
+
+Not chosen: running the dev server from a copy of each build. It keeps the build untouched and
+moves the server one directory deeper than production runs it, and a project that reads a file
+beside its build would then find it in one and not the other; `dev` runs `node dist/server.js`
+as production does, and that sentence stays true.
+
+The writers of browser files still address `dist`; the build hands them an io that writes what
+is addressed there beneath the directory being built (`stagedIo`). Giving each writer the
+directory was the other way, and touched five signatures and their specs for the same effect.
+
+Proof: specs of each part, the dev loop's two watched red on the old loop (`expected 500 to be
+200`) and by mutation (`expected [ true, true ] to deeply equal [ false, true ]`); the command
+line's suite, 689 specs in 12.6 s where it took 21. Then the artifact: tarballs packed from
+this tree and the scratch shop of thirteen assemblies installed from them. It builds in 5.1 to
+5.4 s where it took 20. Under `dev`, eight saves 0.4 s apart and then a Svelte view that does
+not parse left the page and its script answering 200 at every probe, logged one "the last good
+build is still running", kept the record, and built once when the view was removed.

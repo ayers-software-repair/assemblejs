@@ -35,6 +35,9 @@ export function jsxPlugin(
     setup(build) {
       build.onResolve({ filter: /^\.\.?\// }, async (args) => {
         if (args.pluginData === RESOLVING || args.importer === "") return undefined;
+        // A package's own imports are not the project's: asking about each is a round trip, and
+        // a framework that ships its runtime as source has thousands of them.
+        if (IN_A_PACKAGE.test(args.importer)) return undefined;
         const resolved = await build.resolve(args.path, {
           importer: args.importer,
           resolveDir: args.resolveDir,
@@ -57,7 +60,7 @@ export function jsxPlugin(
         return undefined;
       });
       build.onLoad({ filter: /\.[jt]sx$/ }, async (args) => {
-        if (/[\\/]node_modules[\\/]/.test(args.path)) return undefined;
+        if (IN_A_PACKAGE.test(args.path)) return undefined;
         const frameworks = wanted.get(args.path);
         if (jsxSource(args.path, assemblies) === undefined && (frameworks?.size ?? 0) > 1) {
           throw new Error(conflict(args.path, [...(frameworks ?? [])]));
@@ -81,6 +84,9 @@ export function jsxPlugin(
     },
   };
 }
+
+// A file the project did not write: one under a node_modules directory.
+const IN_A_PACKAGE = /[\\/]node_modules[\\/]/;
 
 // Marks the resolution this plugin asks for itself, so it does not see its own request.
 const RESOLVING = Symbol("assemblejs-jsx resolving");
