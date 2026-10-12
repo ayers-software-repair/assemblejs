@@ -34,6 +34,58 @@ describe("discovering assemblies", () => {
     ]);
   });
 
+  // Prose, a test and a story stand beside a view in every project. Each was counted as a view
+  // of its own, and the assembly was then no assembly at all.
+  it("reads prose, a test and a story beside a view as what they are", () => {
+    assembly("cart", [
+      "cart.react.tsx",
+      "README.md",
+      "notes.md",
+      "cart.test.tsx",
+      "cart.react.test.tsx",
+      "cart.stories.tsx",
+      "cart.spec.ts",
+    ]);
+    assembly("about", ["about.md", "README.md"]);
+    const { assemblies, problems } = discoverAssemblies(project);
+    expect(problems).toEqual([]);
+    expect(assemblies.map((a) => [a.name, a.renderer, a.view.split("/").at(-1)])).toEqual([
+      ["about", "markdown", "about.md"],
+      ["cart", "react", "cart.react.tsx"],
+    ]);
+  });
+
+  // A service or a browser half under any other name is not read, and nothing said so.
+  it("names a file that is nearly a service or a browser half, with the name that would be read", () => {
+    assembly("cart", [
+      "cart.html",
+      "cart.services.ts",
+      "service.ts",
+      "client.ts",
+      "cart.clients.ts",
+    ]);
+    assembly("price", ["price.html", "cart.service.ts"]);
+    assembly("tally", ["tally.html", "tally.service.ts", "audit.service.ts", "tally.client.ts"]);
+    const { assemblies, problems } = discoverAssemblies(project);
+    expect(assemblies.map((a) => a.name)).toEqual(["cart", "price", "tally"]);
+    expect(problems.map((problem) => [problem.rule, problem.message, problem.fix])).toEqual([
+      ...["cart.clients.ts", "cart.services.ts", "client.ts", "service.ts"].map((file) => {
+        const kind = file.includes("client") ? "client" : "service";
+        const what = kind === "client" ? "browser half" : "service";
+        return [
+          "directory-is-an-assembly",
+          `"${file}" is not read: this assembly's ${what} is "cart.${kind}.ts"`,
+          `rename it to "cart.${kind}.ts", or remove it`,
+        ];
+      }),
+      [
+        "directory-is-an-assembly",
+        '"cart.service.ts" is not read: this assembly\'s service is "price.service.ts"',
+        'rename it to "price.service.ts", or remove it',
+      ],
+    ]);
+  });
+
   it("finds the optional siblings without being told about them", () => {
     assembly("cart", ["cart.svelte", "cart.client.ts", "cart.css", "extra.css"]);
     const [found] = discoverAssemblies(project).assemblies;

@@ -189,7 +189,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: "a-project-stays-inside-its-root",
-    rule: "Every file a project is made of is inside its root. A link, or an import by a relative path, that leads out of the root is not read.",
+    rule: "Every file a project is made of is inside its root. A link, or an import by a relative path, that leads out of the root is not read, and neither is a link that leads nowhere.",
     because:
       "check and the agent surface read a project's sources, and an agent is shown what they read. A link out of the root would show it a file its person never put in the project: a key, a token, another project's source. So every reader stops at the root, after each link is followed to where it really leads, and says where it stopped; the file is not opened, not even to say that it does not compile. What two projects share comes in as a package, by its name.",
     smell:

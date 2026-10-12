@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { OutsideRootError, insideRoot } from "@assemblejs/cli";
+import { DeadLinkError, OutsideRootError, insideRoot } from "@assemblejs/cli";
 
 const root = "/home/dev/app";
 
@@ -70,6 +70,17 @@ describe("resolving a path inside the project", () => {
     symlinkSync(join(outside, "gone"), join(dir, "gone"));
     expect(() => insideRoot(dir, "README.md")).toThrow(OutsideRootError);
     expect(() => insideRoot(dir, "gone", "deeper", "x.html")).toThrow(OutsideRootError);
+  });
+
+  // Inside or out, what a link to nothing would open is nothing: a read fails as the system
+  // fails it, and a write makes a file where nobody looked.
+  it("refuses a link that leads nowhere, and a path beneath one, saying which it is", () => {
+    const root = mkdtempSync(join(tmpdir(), "root-"));
+    symlinkSync("no-such-file.css", join(root, "gone.css"));
+    symlinkSync("no-such-directory", join(root, "lost"));
+    expect(() => insideRoot(root, "gone.css")).toThrow(DeadLinkError);
+    expect(() => insideRoot(root, "lost", "new.html")).toThrow(/is a link that leads nowhere/);
+    expect(() => insideRoot(root, "gone.css")).toThrow(OutsideRootError);
   });
 
   it("allows a link that leads somewhere else inside the root, and refuses a loop", () => {

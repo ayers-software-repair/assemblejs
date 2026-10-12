@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { planAssembly, realIo } from "@assemblejs/cli";
+import { DeadLinkError, planAssembly, realIo } from "@assemblejs/cli";
 import { isOccupied } from "../root/is-occupied.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
@@ -16,11 +16,14 @@ export function addAssembly(root: ProjectRoot, name: string, renderer: string): 
   // rather than reaching the root guard as a path.
   const judged = planAssembly(name, renderer, false);
   if ("problem" in judged) return { ok: false, result: null, problems: [judged.problem] };
-  const plan = planAssembly(
-    name,
-    renderer,
-    isOccupied(withinRoot(root, "src", "assemblies", name)),
-  );
+  // A link to nothing where the assembly would stand holds its name, as anything there does.
+  let taken = true;
+  try {
+    taken = isOccupied(withinRoot(root, "src", "assemblies", name));
+  } catch (error) {
+    if (!(error instanceof DeadLinkError)) throw error;
+  }
+  const plan = planAssembly(name, renderer, taken);
   if ("problem" in plan) return { ok: false, result: null, problems: [plan.problem] };
   const written: string[] = [];
   for (const [path, contents] of Object.entries(plan.files)) {

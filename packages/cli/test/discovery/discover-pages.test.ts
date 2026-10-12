@@ -85,3 +85,35 @@ describe("discovering pages", () => {
     });
   });
 });
+
+// A declaration under any other name is not read, and the page was served by its defaults with
+// nothing saying so.
+describe("a file that is nearly a page's declaration", () => {
+  it("is named, with the name that would be read", () => {
+    const { pages, problems } = discoverPages(
+      project({
+        home: ["home.html", "home.pages.ts", "page.ts"],
+        about: ["about.html", "home.page.ts"],
+        shop: ["shop.html", "shop.page.ts", "notes.ts"],
+      }),
+    );
+    expect(pages.map((page) => page.name)).toEqual(["about", "home", "shop"]);
+    expect(problems.map((problem) => [problem.rule, problem.message, problem.fix])).toEqual([
+      [
+        "a-directory-is-a-page",
+        '"home.page.ts" is not read: this page\'s declaration is "about.page.ts"',
+        'rename it to "about.page.ts", or remove it',
+      ],
+      [
+        "a-directory-is-a-page",
+        '"home.pages.ts" is not read: this page\'s declaration is "home.page.ts"',
+        'rename it to "home.page.ts", or remove it',
+      ],
+      [
+        "a-directory-is-a-page",
+        '"page.ts" is not read: this page\'s declaration is "home.page.ts"',
+        'rename it to "home.page.ts", or remove it',
+      ],
+    ]);
+  });
+});

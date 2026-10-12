@@ -20,10 +20,10 @@ export function sourceVersion(root: string): string {
     for (const entry of readdirSync(at, { withFileTypes: true })) {
       const path = join(at, entry.name);
       // A link is a path like any other, followed to where it leads; the read below refuses one
-      // that leads out of the root.
-      const found = statSync(path);
-      if (found.isDirectory()) walk(path);
-      else if (found.isFile()) files.push(path);
+      // that leads out of the root. One that leads nowhere is no source: check names it.
+      const found = statSync(path, { throwIfNoEntry: false });
+      if (found?.isDirectory() === true) walk(path);
+      else if (found?.isFile() === true) files.push(path);
     }
   };
   walk(join(root, "src"));

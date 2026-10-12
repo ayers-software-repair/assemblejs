@@ -185,7 +185,7 @@ describe("add agents", () => {
 
 describe("add assembly", () => {
   it("writes the assembly and nothing else", () => {
-    const { io, written, logs } = fake();
+    const { io, written, logs } = fake(["package.json"]);
     expect(run(["add", "assembly", "cart", "--renderer", "svelte"], io)).toBe(0);
     expect([...written.keys()].sort()).toEqual(["src/assemblies/cart/cart.svelte"]);
     // The one thing it does NOT touch is the author's own server file.
@@ -194,7 +194,7 @@ describe("add assembly", () => {
   });
 
   it("defaults to a plain template, so no framework arrives unasked", () => {
-    const { io, written } = fake();
+    const { io, written } = fake(["package.json"]);
     run(["add", "assembly", "cart"], io);
     expect([...written.keys()]).toContain("src/assemblies/cart/cart.html");
   });
@@ -208,20 +208,20 @@ describe("add assembly", () => {
 
   it("refuses a name that could never be an assembly", () => {
     for (const name of ["Cart", "1cart", "cart name", "../etc"]) {
-      const { io, written } = fake();
+      const { io, written } = fake(["package.json"]);
       expect(run(["add", "assembly", name], io)).toBe(2);
       expect(written.size).toBe(0);
     }
   });
 
   it("refuses a renderer it cannot scaffold, and names the ones it can", () => {
-    const { io, errors } = fake();
+    const { io, errors } = fake(["package.json"]);
     expect(run(["add", "assembly", "cart", "--renderer", "angular"], io)).toBe(2);
     expect(errors.join()).toContain("html");
   });
 
   it("refuses to overwrite an assembly that exists", () => {
-    const { io, written } = fake(["src/assemblies/cart"]);
+    const { io, written } = fake(["package.json", "src/assemblies/cart"]);
     expect(run(["add", "assembly", "cart"], io)).toBe(1);
     expect(written.size).toBe(0);
   });

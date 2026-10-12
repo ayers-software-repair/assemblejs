@@ -4,8 +4,8 @@ import { basename, isAbsolute, join, resolve } from "node:path";
 import { addAgents } from "../agents/add-agents.js";
 import { buildProject } from "../build/build-project.js";
 import { runCheck } from "../check/run-check.js";
+import { addAssembly } from "../commands/add-assembly.js";
 import { ownVersion } from "../commands/own-version.js";
-import { planAssembly } from "../commands/plan-assembly.js";
 import { projectFiles } from "../commands/project-files.js";
 import { PROJECT_NAME } from "../commands/project-name.js";
 import { RENDERERS } from "../commands/renderers.js";
@@ -65,7 +65,7 @@ export function run(argv: readonly string[], io: Io): number | Promise<number> {
 
   if (command === "new") return newProject(rest[0], cwd, io);
   if (command === "add" && rest[0] === "agents") return addAgents(resolve(cwd), io);
-  if (command === "add") return addAssembly(rest, flags.get("renderer") ?? "html", cwd, io);
+  if (command === "add") return add(rest, flags.get("renderer") ?? "html", cwd, io);
   if (command === "build") return buildProject(resolve(cwd), io);
   if (command === "dev") return runDev(resolve(cwd), io, interrupted());
   if (command === "check") return runCheck(resolve(cwd), io);
@@ -102,7 +102,7 @@ function newProject(directory: string | undefined, cwd: string, io: Io): number 
   return 0;
 }
 
-function addAssembly(rest: readonly string[], renderer: string, cwd: string, io: Io): number {
+function add(rest: readonly string[], renderer: string, cwd: string, io: Io): number {
   const [what, name] = rest;
   if (what !== "assembly") {
     io.error(`add what? try: assemblejs add assembly <name>, or assemblejs add agents`);
@@ -112,18 +112,7 @@ function addAssembly(rest: readonly string[], renderer: string, cwd: string, io:
     io.error("add assembly needs a name: assemblejs add assembly <name>");
     return 2;
   }
-  const plan = planAssembly(name, renderer, io.exists(join(cwd, "src", "assemblies", name)));
-  if ("problem" in plan) {
-    io.error(`${plan.problem.message}: ${plan.problem.fix}`);
-    return plan.usage ? 2 : 1;
-  }
-  for (const [path, contents] of Object.entries(plan.files)) {
-    io.write(join(cwd, path), contents);
-    io.log(`wrote ${path}`);
-  }
-  // The one thing that is NOT written: the author's own server file. It never grows.
-  io.log(`\nadd it to a page with ${plan.tag}`);
-  return 0;
+  return addAssembly(name, renderer, cwd, io);
 }
 
 /**

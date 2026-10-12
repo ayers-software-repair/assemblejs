@@ -108,6 +108,18 @@ describe("the add agents command", () => {
     expect(depended.logs.join("\n")).not.toContain("npm install");
   });
 
+  // A mistyped --cwd made the directory and wrote a project's agent files into it.
+  it("writes nothing where there is no project, and says where it looked", () => {
+    const nowhere = join(project(), "no-such-project");
+    const { io, logs, errors } = told();
+    expect(addAgents(nowhere, io)).toBe(1);
+    expect(existsSync(nowhere)).toBe(false);
+    expect(logs).toEqual([]);
+    expect(errors).toEqual([
+      `there is no project at ${nowhere}: run this in a project's directory, or name one with --cwd`,
+    ]);
+  });
+
   // What stands outside the project is not this project's to rewrite.
   it("writes nothing through a link that leads out of the project, and nothing else either", () => {
     const outside = project({ "AGENTS.md": "# Shared by every project here\n" });

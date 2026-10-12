@@ -8,6 +8,7 @@ import type { DiscoveredPage } from "./discovered-page.js";
 import { isDirectory } from "./is-directory.js";
 import type { ProjectProblem } from "./project-problem.js";
 import { suggestName } from "./suggest-name.js";
+import { unreadDeclarations } from "./unread-declarations.js";
 
 /**
  * Every page of a project: each directory under its `src/pages`. Like an assembly, a directory
@@ -73,7 +74,12 @@ export function discoverPages(root: string): {
       declaration: files.includes(`${name}.page.ts`) ? `${at}/${name}.page.ts` : undefined,
     };
     pages.push(found);
-    problems.push(...outsideProblems(root, [found.template, found.declaration]));
+    problems.push(
+      ...outsideProblems(root, [found.template, found.declaration]),
+      ...unreadDeclarations(at, [...files].sort(), name, "a-directory-is-a-page", [
+        { kind: "page", what: "page's declaration" },
+      ]),
+    );
   }
   return { pages, problems };
 }

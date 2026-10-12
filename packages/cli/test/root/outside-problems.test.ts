@@ -42,3 +42,32 @@ describe("one finding for each path that leads out of the project", () => {
     expect(rule?.because).toMatch(/an agent is shown what they read/);
   });
 });
+
+// A link that leads nowhere is not read either, and a reader that tried threw what the system
+// said of the missing file, a stack and all, in check and in build alike.
+describe("one finding for each path that is a link to nothing", () => {
+  const { root } = linkedProject(
+    { "src/assemblies/cart/cart.html": "<p>cart</p>" },
+    { "src/assemblies/cart/gone.css": "no-such-file.css", "src/pages": "no-such-directory" },
+  );
+  const at = (path: string): string => join(root, path);
+
+  it("says that it leads nowhere, by the same rule, and what to do", () => {
+    expect(outsideProblems(root, [at("src/assemblies/cart/gone.css")])).toEqual([
+      {
+        path: at("src/assemblies/cart/gone.css"),
+        rule: "a-project-stays-inside-its-root",
+        message: "gone.css is a link that leads nowhere, and nothing is read through it",
+        fix: "remove the link, or put the file it names where it points",
+      },
+    ]);
+    expect(outsideProblems(root, [at("src/pages"), at("src/assemblies/cart/cart.html")])).toEqual([
+      expect.objectContaining({ message: expect.stringContaining("pages is a link that leads") }),
+    ]);
+  });
+
+  it("is named by a rule whose words cover it", () => {
+    const rule = RULES.find((one) => one.id === "a-project-stays-inside-its-root");
+    expect(rule?.rule).toMatch(/a link that leads nowhere/);
+  });
+});

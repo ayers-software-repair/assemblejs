@@ -5803,3 +5803,47 @@ four did not.
 - **Proof.** Each renderer's case watched red on the id above, then green, the browser half
   hydrated over the server's markup in the DOM the suite has (Svelte's hydration is drawn in
   `ci`, as that suite's own note says). The `browser proof` job is the one that draws them.
+
+## 2026-10-12: check says what it passed over, and add writes only into a project
+
+Five of the audit's rows on the command line (cli-verbs.1, .3, .4, .5, .8), each reproduced
+with the built command line in a project it had just made.
+
+- **A file that is nearly a declaration was left out in silence.** A service is read as
+  `<name>.service.ts`, a page's declaration as `<name>.page.ts`, an api as `<name>.api.ts` in
+  `src/api`. Measured: with `hello.services.ts`, `service.ts`, `hello.clients.ts`,
+  `home.pages.ts`, `page.ts` and `src/apis/orders.apis.ts` in a new project, `check` said "no
+  problems". Each is a finding now, under the rule its directory already had, with the name
+  that would be read. What is named is narrow on purpose: the kind with no name before it, its
+  plural, and another's name on it where the directory has none of its own. A module of the
+  author's beside the one that is read (`audit.service.ts` beside `cart.service.ts`, `db.ts`
+  in `src/api`) is theirs and is left alone, since `check`'s findings stop a build.
+- **A README beside a view made its assembly no assembly.** Markdown is a renderer, and a file
+  with a word before `.tsx` reads as that word's framework, so `README.md`, `notes.md`,
+  `cart.test.tsx` and `cart.stories.tsx` were each a view; two views is "more than one view
+  file", and the page that placed the assembly was then told there was no such assembly and to
+  add it. `isView` says what a view is: named for its renderer, not the browser half, not a
+  test, a spec or a story, and for Markdown only the file named for the assembly.
+- **That advice was a circle.** A placement naming an assembly whose directory is there and
+  broken was told to `add` it, and `add` refuses a name that is taken (the agent surface's row
+  mcp.5 is the same circle). It is told to mend the directory, whose own finding says how.
+- **A link that leads nowhere ended every verb in the system's own error.** Measured: a
+  dangling link to a stylesheet in an assembly's directory, and `check`, `build` and so `dev`
+  and `deploy` each threw `ENOENT` with a stack. The root guard refuses such a link now, and a
+  path beneath one (`DeadLinkError`, one of its refusals, so every reader that passes over a
+  path leading out passes over this); `outsideProblems` says which of the two a path is, under
+  the one rule, whose words now cover both; and the walk that hashes a build's sources passes
+  over it. The agent surface's `add_assembly` answered "already exists" for a name a dead link
+  holds, through a guard that let the link by; it catches the refusal and answers the same.
+- **`add assembly` wrote wherever its path led.** Its writes went through no guard: with
+  `src/assemblies` a link out of the project it wrote the assembly outside and said it had,
+  with one that led nowhere it threw, and with a `--cwd` that named no directory it made the
+  directory and reported success. It asks the root guard first, as `add_assembly` does, and
+  writes only where a `package.json` is. It moved to a file of its own to be tested there.
+  `add agents` made the directory of a mistyped `--cwd` the same way, and refuses the same
+  way, in the same words (`noProject`).
+- **The browser half named for its assembly is the one read** where there are two; the first
+  by name was, whichever that was.
+- **Proof.** Thirty cases watched red, then green; the five reproductions run again with the
+  rebuilt command line, each answered in a line. The command line's tarball is at 92,628 bytes
+  of its 94,000.

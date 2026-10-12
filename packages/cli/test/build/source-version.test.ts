@@ -32,6 +32,15 @@ describe("the version of a build's output", () => {
     expect(sourceVersion(moved)).not.toBe(sourceVersion(project("<p>a</p>")));
   });
 
+  // The walk asked the system what each entry was, and a link to nothing answered with a throw.
+  it("passes over a link that leads nowhere, which check names, and hashes the rest", () => {
+    const { root } = linkedProject(
+      { "package.json": "{}", "src/assemblies/a/a.html": "<p>a</p>" },
+      { "src/assemblies/a/gone.css": "no-such-file.css", "src/lost": "no-such-directory" },
+    );
+    expect(sourceVersion(root)).toMatch(/^[0-9a-f]{12}$/);
+  });
+
   it("refuses, unopened, a source that is a link out of the project", () => {
     const { root } = linkedProject(
       { "package.json": "{}", "src/assemblies/a/a.html": "<p>a</p>" },

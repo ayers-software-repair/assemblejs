@@ -25,6 +25,36 @@ describe("discovering apis", () => {
     });
   });
 
+  // A file that is nearly an api, and a directory that is nearly the one read, were left out of
+  // the build with nothing saying so.
+  it("names a file that is nearly an api, and a directory that is nearly the one it reads", () => {
+    const root = mkdtempSync(join(tmpdir(), "api-"));
+    mkdirSync(join(root, "src", "api"), { recursive: true });
+    mkdirSync(join(root, "src", "apis"), { recursive: true });
+    for (const file of ["api/orders.apis.ts", "api/api.ts", "api/db.ts", "apis/time.api.ts"]) {
+      writeFileSync(join(root, "src", file), "");
+    }
+    const { apis, problems } = discoverApis(root);
+    expect(apis).toEqual([]);
+    expect(problems.map((problem) => [problem.rule, problem.message, problem.fix])).toEqual([
+      [
+        "an-api-file-is-an-api",
+        '"api.ts" is not read: an api file is named "<name>.api.ts"',
+        "rename it for the api it declares, or remove it",
+      ],
+      [
+        "an-api-file-is-an-api",
+        '"orders.apis.ts" is not read: an api file is named "<name>.api.ts"',
+        'rename it to "orders.api.ts", or remove it',
+      ],
+      [
+        "an-api-file-is-an-api",
+        '"src/apis" is not read: api files are in "src/api"',
+        "move its files into src/api, or remove it",
+      ],
+    ]);
+  });
+
   it("is empty for a project with no api directory", () => {
     expect(discoverApis(join(tmpdir(), "no-such-project"))).toEqual({ apis: [], problems: [] });
   });

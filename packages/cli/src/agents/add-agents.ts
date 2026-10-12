@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { basename, join } from "node:path";
+import { noProject } from "../commands/no-project.js";
 import type { Io } from "../io/io.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import { agentFiles } from "./agent-files.js";
@@ -13,10 +14,14 @@ import { textIn } from "./text-in.js";
  * is written with, or brings the ones it has up to date, and says which files it wrote. A
  * registration it cannot read, or a file that leads out of the project, stops it before
  * anything is written, so a project is never left with some of its agent files rewritten and
- * one not.
+ * one not. A directory with no `package.json` is no project, and nothing is written there.
  */
 export function addAgents(root: string, io: Io): number {
   const existing = textIn(root);
+  if (existing("package.json") === undefined) {
+    io.error(noProject(root));
+    return 1;
+  }
   const manifest = manifestOf(existing("package.json"));
   const { files, unreadable } = agentFiles(manifest.name ?? basename(root), existing);
   if (unreadable.length > 0) {

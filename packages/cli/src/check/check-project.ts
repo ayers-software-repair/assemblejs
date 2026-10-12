@@ -32,6 +32,7 @@ import { tokenProblems } from "../styles/token-problems.js";
 import { declaredOrigins } from "./declared-origins.js";
 import { elementProblems } from "./element-problems.js";
 import { hasBrowserHalf } from "./has-browser-half.js";
+import { missingAssemblyFix } from "./missing-assembly-fix.js";
 import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
@@ -257,10 +258,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
           path: page.template,
           rule: "a-placement-names-an-assembly",
           message: problem.message,
-          fix:
-            names.length === 0
-              ? `add it: assemblejs add assembly ${problem.name}`
-              : `add it, or place one that exists: ${names.join(", ")}`,
+          fix: missingAssemblyFix(root, problem.name, names),
         });
       }
     }

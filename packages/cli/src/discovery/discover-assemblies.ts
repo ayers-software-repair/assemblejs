@@ -6,10 +6,12 @@ import { leadsOut } from "../root/leads-out.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import type { DiscoveredAssembly } from "./discovered-assembly.js";
 import { isDirectory } from "./is-directory.js";
+import { isView } from "./is-view.js";
 import { pickView } from "./pick-view.js";
 import type { ProjectProblem } from "./project-problem.js";
 import { rendererForView } from "./renderer-for-view.js";
 import { suggestName } from "./suggest-name.js";
+import { unreadDeclarations } from "./unread-declarations.js";
 
 /**
  * Every assembly of a project: each directory under its `src/assemblies`. A directory IS an
@@ -63,9 +65,7 @@ export function discoverAssemblies(root: string): {
     }
 
     const files = readdirSync(at).sort();
-    const views = files.filter(
-      (file) => rendererForView(file) !== undefined && !file.endsWith(".client.ts"),
-    );
+    const views = files.filter((file) => isView(name, file));
     if (views.length === 0) {
       const unnamed = files.find((file) => /\.(tsx|jsx)$/.test(file));
       problems.push(
@@ -96,7 +96,10 @@ export function discoverAssemblies(root: string): {
       continue;
     }
 
-    const client = files.find((file) => file.endsWith(".client.ts"));
+    // The browser half named for the assembly, or the one there is under another name.
+    const client =
+      files.find((file) => file === `${name}.client.ts`) ??
+      files.find((file) => file.endsWith(".client.ts"));
     const service = files.find((file) => file === `${name}.service.ts`);
     const found: DiscoveredAssembly = {
       name,
@@ -110,6 +113,11 @@ export function discoverAssemblies(root: string): {
     assemblies.push(found);
     problems.push(
       ...outsideProblems(root, [found.view, found.client, found.service, ...found.styles]),
+      ...unreadDeclarations(at, files, name, "directory-is-an-assembly", [
+        { kind: "service", what: "assembly's service" },
+        // Any one browser half is read, whatever stands before its last two words.
+        { kind: "client", what: "assembly's browser half", shared: true },
+      ]),
     );
   }
   return { assemblies, problems };

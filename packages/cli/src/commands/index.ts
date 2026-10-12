@@ -10,5 +10,7 @@ export { PNPM_SETTINGS } from "./pnpm-settings.js";
 export { projectFiles } from "./project-files.js";
 export { assemblyFiles } from "./assembly-files.js";
 export { planAssembly } from "./plan-assembly.js";
+export { noProject } from "./no-project.js";
+export { addAssembly } from "./add-assembly.js";
 export type { PlacementPosition } from "./placement-position.js";
 export { placeAssembly } from "./place-assembly.js";

@@ -21,10 +21,11 @@ trust.5, trust.7, and three the seat found there), a kept answer's one envelope 
 (composer.3, client.2, server.8) and what one remote answer makes the server fetch and keep
 (trust.6), and the browser runtime's (client.1, client.5, client.6, client.7; client.4 is a
 gap in the public surface and is the owner's), an attribute's value read as markup
-(renderers.2), and an id of its own for each island's `useId` (renderers.1). Next: the verbs'
-rows (cli-verbs.1, .3, .5: a misnamed file ignored in silence, a link that leads nowhere),
-`check`'s rules (check-rules.2, .3, .5, .6), the agent surface's (mcp.1 to mcp.5) and the
-tests', then the minors. Then the
+(renderers.2), an id of its own for each island's `useId` (renderers.1), and the command
+line's (cli-verbs.1, .3, .4, .5, .8: a misnamed file ignored in silence, a README taken for a
+view, a link that leads nowhere, `add` writing outside a project). Next: `check`'s rules
+(check-rules.2, .3, .5, .6), the agent surface's (mcp.1 to mcp.5, of which the circle between
+`check` and `add` is closed) and the tests', then the minors. Then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -45,12 +46,14 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the ids a
-component makes are its island's own (DECISIONS 2026-10-11, of that name), the four renderers
-that gave their framework no prefix for them. Beneath it `2e7bb15`, an attribute's value is text
-(`ci` 38201174758), and `b8a6414`, the mark that says an assembly is live is written when it is
-(`ci` 38200554270, all five jobs green, its `browser proof` the one that drew it). The core's
-tarball budget is 86000, moved from 82000 at a measured 82,328. Beneath it `8aa4c0c`, a kept answer is
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: check says what it
+passed over, and add writes only into a project (DECISIONS 2026-10-12, of that name), the
+command line's five rows. Beneath it `f62a4ec`, the ids a component makes are its island's own
+(`ci` 38201904230, all five jobs green); `2e7bb15`, an attribute's value is text (`ci`
+38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
+when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
+core's tarball budget is 86000, moved from 82000 at a measured 82,328; the command line's is at
+92,628 of 94,000. Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
 markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all five
@@ -1549,23 +1552,41 @@ The renderers:
 
 The command line:
 
-- [ ] Misnamed service, client, page declaration and api files are silently ignored; check says "no
+- [x] Misnamed service, client, page declaration and api files are silently ignored; check says "no
       problems" (workflow cli-verbs.1, major). Claimed at
-      `packages/cli/src/discovery/discover-assemblies.ts:100`. PREMISE UNVERIFIED
+      `packages/cli/src/discovery/discover-assemblies.ts:100`. PREMISE UNVERIFIED. REPRODUCED by the
+      seat with the built command line: six such files in a new project, and `check` said no
+      problems. DONE 2026-10-12: a file that is nearly a declaration and is not read is a finding
+      with the name that would be, narrowly: the kind with no name, its plural, another's name where
+      the directory has none of its own, and a `src/apis` (DECISIONS 2026-10-12, "check says what it
+      passed over, and add writes only into a project").
 - [x] A failed rebuild in dev deletes the last good build's browser files and dev record,
       contradicting "leaves the last good server running" (workflow cli-verbs.2, major). Claimed at
       `packages/cli/src/build/build-project.ts:62`. PREMISE UNVERIFIED. READ AND REPRODUCED by the
       seat (the dev spec failed with `expected 500 to be 200` on the old loop). DONE 2026-10-11 with
       the seat's rows above (DECISIONS 2026-10-11, "the dev loop")
-- [ ] A dangling symlink under src crashes build/dev/deploy with a bare ENOENT, while check reports
+- [x] A dangling symlink under src crashes build/dev/deploy with a bare ENOENT, while check reports
       no problems (workflow cli-verbs.3, major). Claimed at
-      `packages/cli/src/build/source-version.ts:24`. PREMISE UNVERIFIED
-- [ ] A README.md or a test/story file beside a view makes the whole assembly invalid (workflow
+      `packages/cli/src/build/source-version.ts:24`. PREMISE UNVERIFIED. REPRODUCED by the seat, and
+      `check` crashed too: `ENOENT` and a stack from each. DONE 2026-10-12: the root guard refuses a
+      link that leads nowhere and a path beneath one (`DeadLinkError`), `check` names it under the
+      root rule, and the walk that hashes the sources passes over it (DECISIONS 2026-10-12, "check
+      says what it passed over, and add writes only into a project").
+- [x] A README.md or a test/story file beside a view makes the whole assembly invalid (workflow
       cli-verbs.4, major, disputed by one of its refuters). Claimed at
-      `packages/cli/src/discovery/discover-assemblies.ts:66`. PREMISE UNVERIFIED
-- [ ] `add assembly` writes through a symlinked src/assemblies out of the project, and crashes with
+      `packages/cli/src/discovery/discover-assemblies.ts:66`. PREMISE UNVERIFIED. REPRODUCED by the
+      seat: a README beside `hello.html`, and `check` said two views and then that the page placed
+      no such assembly. DONE 2026-10-12: `isView` says what a view is, and a test, a spec, a story
+      and prose are not; a placement whose assembly's directory is there and broken is told to mend
+      it, not to add it (DECISIONS 2026-10-12, "check says what it passed over, and add writes only
+      into a project").
+- [x] `add assembly` writes through a symlinked src/assemblies out of the project, and crashes with
       a stack trace on a dangling link (workflow cli-verbs.5, major, disputed by one of its
-      refuters). Claimed at `packages/cli/src/run/run.ts:115`. PREMISE UNVERIFIED
+      refuters). Claimed at `packages/cli/src/run/run.ts:115`. PREMISE UNVERIFIED. REPRODUCED by the
+      seat: the assembly written outside the project with exit 0, and a stack on a link to nothing.
+      DONE 2026-10-12: `add assembly` asks the root guard before it writes, as the agent surface's
+      does, and says either in a line (DECISIONS 2026-10-12, "check says what it passed over, and
+      add writes only into a project").
 - [x] `--flag=value` is not parsed: `--cwd=dir` and `--renderer=react` are silently ignored and
       swallow the next argument (workflow cli-verbs.6, major). Claimed at
       `packages/cli/src/run/run.ts:49`. PREMISE UNVERIFIED. READ at `run/run.ts:45-52` AND
@@ -1576,9 +1597,12 @@ The command line:
       the wrong location (workflow cli-verbs.7, major). Claimed at `packages/cli/src/run/run.ts:85`.
       PREMISE UNVERIFIED. READ at `run/run.ts:85` AND REPRODUCED by the seat in a red spec. DONE
       2026-10-11: an absolute directory is where it says
-- [ ] `add assembly` / `add agents` run in a mistyped --cwd or a non-project directory create
+- [x] `add assembly` / `add agents` run in a mistyped --cwd or a non-project directory create
       directories and report success (workflow cli-verbs.8, minor). Claimed at
-      `packages/cli/src/run/run.ts:99`. PREMISE UNVERIFIED
+      `packages/cli/src/run/run.ts:99`. PREMISE UNVERIFIED. REPRODUCED by the seat for both: each
+      made the directory, wrote into it and reported success. DONE 2026-10-12: neither writes
+      anything where there is no `package.json`, and each says where it looked (DECISIONS
+      2026-10-12, "check says what it passed over, and add writes only into a project").
 
 The rules `check` names:
 
