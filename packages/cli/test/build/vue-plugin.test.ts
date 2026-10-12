@@ -1,11 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 import { describe, expect, it } from "vitest";
-import { loadVueCompiler, vuePlugin } from "@assemblejs/cli";
+import { describeBuildFailure, loadVueCompiler, vuePlugin } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));
 
@@ -38,5 +39,30 @@ describe("compiling .vue files in a bundle", () => {
     expect(id).toBeDefined();
     expect(server).toContain(`data-v-${String(id)}`);
     expect(css.join()).toContain(`.x[data-v-${String(id)}]`);
+  });
+
+  // As a Svelte view was: the bundler named the module that imported the component.
+  it("reports a component Vue cannot parse at the component, on the line Vue names", async () => {
+    const compiler = await loadVueCompiler(example);
+    if (compiler === undefined) throw new Error("no Vue compiler");
+    const root = mkdtempSync(join(tmpdir(), "vue-plugin-"));
+    writeFileSync(join(root, "broken.vue"), "<template>\n  <p>{{ </p>\n</template>\n");
+    writeFileSync(
+      join(root, "entry.js"),
+      'import view from "./broken.vue";\nexport default view;\n',
+    );
+    const failed: unknown = await build({
+      entryPoints: [join(root, "entry.js")],
+      absWorkingDir: root,
+      bundle: true,
+      write: false,
+      format: "esm",
+      logLevel: "silent",
+      plugins: [vuePlugin(compiler, root, "client")],
+    }).catch((error: unknown) => error);
+    const said = describeBuildFailure(failed);
+    expect(said).toHaveLength(1);
+    expect(said[0]).toMatch(/^broken\.vue:2 /);
+    expect(said[0]).not.toContain(root);
   });
 });

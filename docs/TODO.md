@@ -52,9 +52,10 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the gates are held
-to what they say (DECISIONS 2026-10-12, of that name), four rows of the gates, the tests and
-the READMEs. Beneath it `736af62`, a project is made where nothing is written over, three rows
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a view its
+compiler refuses is reported at the view (DECISIONS 2026-10-12, of that name). Beneath it
+`ebdaa27`, the gates are held to what they say, four rows of the gates, the tests and the
+READMEs (`ci` 38221521004). Beneath it `736af62`, a project is made where nothing is written over, three rows
 of the command line and the agent surface (`ci` 38220661562). Beneath it `3117cdb`, what is written into a file is written as
 the file is laid out, four rows of the two (`ci` 38218518886, all five jobs green). Beneath it
 `6dacf89`, where a placement may stand,
@@ -1333,10 +1334,11 @@ a spec watched red first, or struck with its reason.
       the whole job (reads the config, builds, listens, says where, and on a refusal prints its
       sentences and exits 1) would bring the file back to the two lines DESIGN shows, and is a
       new public word. THE OWNER'S TO SETTLE; the seat's advice is the call in the core
-- [ ] A Svelte view that does not parse is reported at the generated module and not at the view:
+- [x] A Svelte view that does not parse is reported at the generated module and not at the view:
       `.assemblejs/client/broken.ts:10 Unexpected token` with a svelte.dev address, for
       `src/assemblies/broken/broken.svelte` holding `<p>{</p>` (found 2026-10-11, in the dev log of
-      the fixed loop)
+      the fixed loop). DONE 2026-10-12: a Svelte and a Vue view are each reported at the view, on
+      the line its compiler names (DECISIONS 2026-10-12, "a view its compiler refuses is reported at the view")
 - [x] A new project's first page is not styled as a page: `tokens.css` and `components.css` set
       roles and classes and nothing on `body`, so the page is white, black and Times New Roman, and
       in the dark scheme the tokens flip beneath it: a dark notice on a white page, and a link in
@@ -1698,7 +1700,11 @@ The rules `check` names:
 - [ ] A Vue or a Svelte view that does not parse is passed over by `check`, which has neither
       compiler: the build refuses it and `check` says nothing (the seat, 2026-10-12, left from
       workflow check-rules.5, minor). To settle: whether `check` asks the project's own compiler,
-      as it asks the project's own Pug.
+      as it asks the project's own Pug. READ AGAIN 2026-10-12: the build now names the view and the
+      line, and `check` could ask the same compilers. What it found needs a rule to be said
+      under, and `a-template-view-compiles` is worded for the template languages: THE OWNER'S TO
+      SETTLE, a rule's sentence being DESIGN's; the seat's advice is to widen that rule to every
+      view a compiler reads
 
 The agent surface:
 

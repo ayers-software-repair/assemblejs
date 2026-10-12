@@ -11,7 +11,9 @@ const message = (error: unknown): string =>
  * it (a string-building render for the server, a hydrating one for the browser), and its styles,
  * `<style scoped>` scoped by Vue under the same id on both sides so hydration matches, its
  * `v-bind()` variables rendered by the server as by the browser. A compile error throws, with
- * Vue's own message, and so does a part of the component this build does not compile.
+ * Vue's own message and, of one found in parsing, Vue's own error as its cause, which says
+ * where; and so does a part of the component this build does not compile. Which file it was
+ * is the caller's to say.
  */
 export function compileVue(
   compiler: VueCompiler,
@@ -20,10 +22,10 @@ export function compileVue(
 ): { readonly code: string; readonly loader: "ts" | "js"; readonly css: string } {
   const { filename, id, side } = options;
   const { descriptor, errors } = compiler.parse(source, { filename });
-  if (errors.length > 0) throw new Error(`${filename}: ${errors.map(message).join("; ")}`);
+  if (errors.length > 0) throw new Error(errors.map(message).join("; "), { cause: errors[0] });
   const unsupported = unsupportedParts(descriptor);
   if (unsupported.length > 0) {
-    throw new Error(`${filename} uses what this build does not compile: ${unsupported.join(", ")}`);
+    throw new Error(`it uses what this build does not compile: ${unsupported.join(", ")}`);
   }
   const scopeId = `data-v-${id}`;
   const scoped = descriptor.styles.some((style) => style.scoped === true);
@@ -62,7 +64,7 @@ export function compileVue(
       },
     });
     if (template.errors.length > 0) {
-      throw new Error(`${filename}: ${template.errors.map(message).join("; ")}`);
+      throw new Error(template.errors.map(message).join("; "));
     }
     lines.push(template.code.replace(`export function ${render}(`, `function ${render}(`));
     lines.push(`_sfc_main.${render} = ${render};`);
@@ -79,7 +81,7 @@ export function compileVue(
         isProd: true,
       });
       if (compiled.errors.length > 0) {
-        throw new Error(`${filename}: ${compiled.errors.map(message).join("; ")}`);
+        throw new Error(compiled.errors.map(message).join("; "));
       }
       return compiled.code;
     })

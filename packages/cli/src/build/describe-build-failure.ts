@@ -3,7 +3,8 @@
 
 /**
  * The lines a failed bundle is reported with: each of the bundler's errors with the file and line
- * it names, or the thrown error's message when the failure was not the bundler's.
+ * it names, the file alone where it names no line, or the thrown error's message when the
+ * failure was not the bundler's.
  */
 export function describeBuildFailure(error: unknown): readonly string[] {
   if (
@@ -18,11 +19,13 @@ export function describeBuildFailure(error: unknown): readonly string[] {
         text?: string;
         location?: { file?: string; line?: number } | null;
       }>
-    ).map((message) =>
-      message.location?.file === undefined
-        ? String(message.text)
-        : `${message.location.file}:${String(message.location.line)} ${String(message.text)}`,
-    );
+    ).map((message) => {
+      if (message.location?.file === undefined) return String(message.text);
+      // Lines count from one: none, or nought, is an error of the file and of no line of it.
+      const line = message.location.line;
+      const at = line === undefined || line === 0 ? "" : `:${String(line)}`;
+      return `${message.location.file}${at} ${String(message.text)}`;
+    });
   }
   return [error instanceof Error ? error.message : String(error)];
 }

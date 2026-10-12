@@ -44,14 +44,22 @@ describe("compiling a single-file component", () => {
     expect(client.css).toBe("");
   });
 
-  it("throws with Vue's own message for a component it cannot compile", () => {
-    expect(() =>
-      compileVue(compiler, "<template><p>{{ </p></template>", {
+  // Which file it was is the caller's to say, at the place Vue's own error names.
+  it("throws with Vue's own message for a component it cannot parse, and Vue's error as its cause", () => {
+    let thrown: unknown;
+    try {
+      compileVue(compiler, "<template>\n<p>{{ </p></template>", {
         filename: "/p/z.vue",
         id: "x",
         side: "client",
-      }),
-    ).toThrow(/z\.vue/);
+      });
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(Error);
+    expect((thrown as Error).message).toMatch(/\S/);
+    expect((thrown as Error).message).not.toContain("z.vue");
+    expect((thrown as Error).cause).toMatchObject({ loc: { start: { line: 2 } } });
   });
 
   it("renders the variables v-bind() reads in its styles on the server, as the browser will", () => {

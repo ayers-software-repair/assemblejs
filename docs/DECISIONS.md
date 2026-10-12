@@ -6465,3 +6465,44 @@ guards.
   release, as the design's own rule is that nothing ships that is not used.
 - **Proof.** Each case above red before its mend, as said. Every cheap gate green, and the
   suites of the three packages whose tests changed.
+
+## 2026-10-12: a view its compiler refuses is reported at the view
+
+One row the seat found in the dev log on 2026-10-11: a Svelte view that does not parse was
+reported at the module the build generates, `.assemblejs/client/broken.ts:10 Unexpected token`,
+for a mistake in `src/assemblies/broken/broken.svelte`.
+
+- **True, and of Vue as well.** Watched with each project compiler through the real bundler.
+  Svelte's refusal of `<p>{</p>` on a view's second line came back as `entry.js:1`, the module
+  that imported the view. Vue's refusal of an interpolation never closed came back at a line
+  of this command line's own code, with the component's absolute path in its text. Anything
+  else a compiler threw was reported where it was thrown.
+- **The cause is the bundler's and is documented.** A plugin that throws is reported by where
+  the file was imported or where the throw happened. A plugin answers its errors, each with
+  the place it is an error of (esbuild.github.io/plugins, `OnLoadResult` and its own Svelte
+  example, read 2026-10-12). Both plugins answer them now through one converter,
+  `viewRefusal`: the view's own file, named from where the build works as the bundler names
+  every other file, and the line the compiler names with that line's text.
+- **Where each compiler says the line.** Svelte's error carries `start`, its line counted from
+  one (svelte 5.57.0, `src/compiler/utils/compile_diagnostic.js`, read 2026-10-12). Vue's
+  carries `loc.start`, and the suite holds the real compiler to it: the error `compileVue`
+  throws for a component that does not parse gives Vue's own as its cause, and that cause
+  names line 2 of a component whose mistake is on its second line. The column is not carried.
+  Svelte counts it from nought and the base of Vue's was not read, and what a build prints
+  names the file and the line.
+- **An error with no line is the file's alone.** What Vue says of a template it parsed and
+  could not compile is placed within the template's own text, not the file's, so it is
+  reported at the component with no line. The line that reports a failed bundle printed
+  `file:0` for such an error; it prints the file.
+- **Not done, and why.** `check` still passes over a Svelte or a Vue view that does not parse
+  (the row from check-rules.5). `check` could now ask the project's compilers as it asks its
+  template engines, and to say what it found it needs a rule. The one for a view that does
+  not compile, `a-template-view-compiles`, is worded for the template languages, and a rule's
+  sentence is part of what DESIGN lists. Widening it is the owner's; the seat's advice is to
+  widen it to every view a compiler reads.
+- **Proof.** Three cases red on the committed plugins and green after; the converter's own
+  cases; every cheap gate green and the command line's 810 cases. Then the built command line
+  over the frameworks example with two views added and taken out again:
+  `src/assemblies/zz-broken-s/zz-broken-s.svelte:2 Unexpected token` and
+  `src/assemblies/zz-broken-v/zz-broken-v.vue:2 Interpolation end sign was not found.`, exit 1.
+  The command line's tarball is at 99,110 bytes of its 102,000.
