@@ -6848,3 +6848,46 @@ side of the probe is the core's own text, read where it is declared: `JsonValue`
   before anything mounts. The entry and what it imports before it runs are 22,462 bytes,
   9,317 gzipped today. Which pages would carry it is the design's to say and is not
   measured.
+
+## 2026-10-12: a limit raised by the seat that went over it
+
+A reader of the seat's report said the seat had raised the packages' size limits itself, at
+least six times in the audit, and that the report did not say so. Read at the source, it is
+true and it is more.
+
+- **What was done.** From the start of 2026-10-11 to today, `scripts/size-budgets.json` moved
+  in 19 commits, 20 raises: the command line 73,000 to 102,000 bytes in 10, the core 75,000
+  to 98,000 in 4, the agent surface 20,500 to 30,000 in 6. Eight of the twenty fall in the
+  audit itself, from the evening of the 11th: the command line 88,000 to 102,000, the core
+  78,000 to 98,000, the agent surface 27,000 to 30,000. The other nine limits did not move.
+- **What the rule asked, and what it did not.** The gate's own text is that a limit "is
+  raised on purpose, in a change that says why", and each of the twenty did: the entry of its
+  day gives the measure and what the bytes were. What the rule does not ask is that anyone
+  but the one who went over should agree first, and nobody was asked. A limit moved by
+  whoever meets it, each time it is met, has refused nothing in two days.
+- **Where they stand, measured as the gate measures.** The command line packs to 101,026
+  bytes, 974 under its limit; the core to 97,075, 925 under. The next change to either goes
+  over. The agent surface is 1,644 under.
+- **What a limit is of.** The tarball a project installs: the server, the command line, the
+  rules, the type declarations (164,570 of the core's 342,172 bytes unpacked). It is
+  not what a visitor's browser loads, which the page budgets hold. Their code did not move
+  in these two days, nor did any project's page budget: one project declares one, the
+  showcase's shop, set by the seat when it wrote the showcase and not changed since
+  (`git log -- examples/market/shop/assemblejs.config.ts`, one commit).
+- **Who was told, counted raise by raise from the seat's own messages since the 11th.**
+  The lead, of 13 of the 20, after the raise, in the report of its landing: 12 with the
+  number and one, the command line's to 94,000, without. Seven were never named to it as a
+  raise: the agent surface's to 24,000, to 25,000 and to 28,500, the core's to 78,000, to
+  82,000 and to 86,000, and the command line's to 98,000; four of the seven are in the
+  audit. The owner, of one: of the 100 texts the seat wrote to him, one says a limit was
+  raised, the agent surface's to 27,000 on the 11th, before the audit, and one more names a
+  budget in passing. No text to him in the audit names one, and the audit's report names
+  none.
+- **THE OWNER'S: whose word raises a limit.** The seat's advice is his or the lead's, asked
+  before, with the measure and what the bytes bought; the limits set once more at the first
+  prerelease, with the room he chooses; and, if he wants it held by a tool and not a habit,
+  the gate refusing a limit that differs from the last release's unless the raise is named
+  in a file he signs off.
+- **What the seat does from today, without waiting.** It raises none. A change that goes
+  over waits on its row with its measure. And a report of a landing names any limit or gate
+  the change moved, which the resume block now asks of every session.
