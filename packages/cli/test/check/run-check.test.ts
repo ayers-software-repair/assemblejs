@@ -3,9 +3,10 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { realIo } from "@assemblejs/build";
+import type { Io } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { projectFiles, realIo, runCheck } from "@assemblejs/cli";
-import type { Io } from "@assemblejs/cli";
+import { projectFiles, runCheck } from "@assemblejs/cli";
 
 const capture = () => {
   const logs: string[] = [];

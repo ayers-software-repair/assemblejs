@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { cpSync, existsSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
-import { buildProject } from "../build/build-project.js";
-import type { Io } from "../io/io.js";
+import { buildProject } from "@assemblejs/build";
+import type { Io } from "@assemblejs/build";
 import { deployPackage } from "./deploy-package.js";
 import { deployProblems } from "./deploy-problems.js";
 import { serverImports } from "./server-imports.js";

@@ -1,10 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { afterAll, describe, expect, it } from "vitest";
 import { checkProject } from "@assemblejs/cli";
+import { templatedProject } from "../../../build/test/fixtures/templated-project.js";
 
 const project = (files: Record<string, string>): string => {
   const root = mkdtempSync(join(tmpdir(), "check-"));
@@ -171,130 +173,118 @@ describe("checking a project", () => {
   });
 });
 
-describe("reading placement policy as boot does", () => {
-  const hello = { "src/assemblies/hello/hello.html": "<p>hi</p>" };
-  const live = {
-    "src/assemblies/live/live.html": "<p>live</p>",
-    "src/assemblies/live/live.client.ts": "export default { mount: () => ({ unmount: () => 0 }) };",
-  };
-  const apis = {
-    "src/api/ticks.api.ts": 'export default { path: "/api/ticks", stream: () => undefined };',
-    "src/api/time.api.ts": 'export default { path: "/api/time", handle: () => null };',
-  };
-  const shop = {
-    "assemblejs.config.ts": "export default { remotes: [{ origin: 'https://s.ex' }] };",
-  };
-  // A framework view here has no renderer installed, which build reports on its own.
-  const still = {
-    "src/assemblies/still/still.react.tsx": 'export const mount = "none";\nexport default () => 0;',
-    "src/assemblies/wake/wake.react.tsx": "export default () => 0;",
-  };
-  const FAR = "https://s.ex/assembly/far/";
-  const one = (name: string, view?: string) =>
-    `<assembly name="${name}"${view === undefined ? "" : ` view="${view}"`}></assembly>`;
-  const place = (policy: string) => `export default { place: { ${policy} } };`;
-  const page = async (
-    template: string,
-    declaration?: string,
-    files: Record<string, string> = hello,
-  ) =>
-    (
-      await checkProject(
-        project({
-          "src/server.ts": "",
-          "src/pages/home/home.html": `<body>${template}</body>`,
-          ...(declaration === undefined ? {} : { "src/pages/home/home.page.ts": declaration }),
-          ...files,
-        }),
-      )
-    ).filter((finding) => finding.rule !== "a-view-needs-its-renderer");
-  const said = async (template: string, declaration?: string, files?: Record<string, string>) =>
-    (await page(template, declaration, files)).map((finding) => finding.message).join();
+// The example that installs Svelte and Vue: a project nested in it finds their compilers.
+const FRAMEWORKS = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));
+const made: string[] = [];
+afterAll(() => {
+  for (const root of made) rmSync(root, { recursive: true, force: true });
+});
+// Each view in an assembly named for its file, in a project that would build: beneath the
+// example that installs the templates package, or wherever else it is told to stand.
+const viewed = (views: Record<string, string>, at?: string): string =>
+  templatedProject(
+    made,
+    {
+      "package.json": "{}",
+      "src/server.ts": "",
+      "src/pages/home/home.html": "<body></body>",
+      ...Object.fromEntries(
+        Object.entries(views).map(([name, source]) => [
+          `src/assemblies/${name.split(".")[0] ?? name}/${name}`,
+          source,
+        ]),
+      ),
+    },
+    at,
+  );
+const rulesOf = async (root: string): Promise<string[]> =>
+  (await checkProject(root)).map((problem) => problem.rule);
 
-  it("reports a view the assembly lacks in the template, and policy where it is declared", async () => {
-    expect(await page(one("hello", "wide"))).toEqual([
+// Each of these check once answered clean, of a project the build then refused.
+describe("a view the build would refuse, said by check", { timeout: 60_000 }, () => {
+  it("is a Svelte view its own compiler cannot read", async () => {
+    const root = viewed({ "bad-board.svelte": "<p>{</p>\n" }, FRAMEWORKS);
+    expect(await rulesOf(root)).toContain("a-template-view-compiles");
+  });
+
+  it("is the missing compiler and no more, where the project has none", async () => {
+    const rules = await rulesOf(viewed({ "bad-board.svelte": "<p>{</p>\n" }, tmpdir()));
+    expect(rules).toContain("a-view-needs-its-renderer");
+    expect(rules).not.toContain("a-template-view-compiles");
+  });
+
+  it("is the missing templates package and no more, where the project has none", async () => {
+    const rules = await rulesOf(viewed({ "bad-ejs.ejs": "<% if (data.n) { %>" }, tmpdir()));
+    expect(rules).toContain("a-view-needs-its-renderer");
+    expect(rules).not.toContain("a-template-view-compiles");
+  });
+
+  it("is a template its engine cannot read, and that one finding alone", async () => {
+    const root = viewed({ "bad-njk.njk": "{% for x in data.list %}never closed" });
+    expect(await checkProject(root)).toEqual([
       expect.objectContaining({
-        path: "src/pages/home/home.html",
-        rule: "a-placement-names-an-assembly",
-        message: expect.stringMatching(/view "wide" it does not have/),
+        path: "src/assemblies/bad-njk/bad-njk.njk",
+        rule: "a-template-view-compiles",
       }),
     ]);
-    const findings = await page(one("hello"), place('stale: {}, hello: "soon"'));
-    expect(findings).toHaveLength(2);
-    for (const finding of findings) {
-      expect(finding).toMatchObject({
-        path: "src/pages/home/home.page.ts",
-        rule: "policy-names-a-placement",
-        fix: expect.stringMatching(/a name the template places/),
-      });
+  });
+
+  // An engine says what it could not read, and would say it of a file outside the project.
+  it("says nothing of a template view that leads out of the project", async () => {
+    const outside = mkdtempSync(join(tmpdir(), "template-outside-"));
+    made.push(outside);
+    writeFileSync(join(outside, "secret.ejs"), "<p>SECRET-TEMPLATE <%= data.missing( %></p>");
+    const root = viewed({ "ok-ejs.ejs": "<p><%= data.n %></p>" });
+    mkdirSync(join(root, "src", "assemblies", "out"));
+    symlinkSync(join(outside, "secret.ejs"), join(root, "src", "assemblies", "out", "out.ejs"));
+    expect(JSON.stringify(await checkProject(root))).not.toContain("SECRET");
+  });
+});
+
+// Each of these was passed over: check said no problems of a file the build then stopped on.
+describe("a file that does not compile, said by check", () => {
+  const written = (files: Readonly<Record<string, string>>): string => {
+    const root = mkdtempSync(join(tmpdir(), "unreadable-"));
+    for (const [path, contents] of Object.entries({ "package.json": "{}", ...files })) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), contents);
     }
-    expect(findings.map((f) => f.message).join()).toMatch(/never places.*not an object/);
+    return root;
+  };
+  const found = async (files: Readonly<Record<string, string>>) =>
+    (await checkProject(written(files)))
+      .filter((problem) => problem.rule === "a-source-file-compiles")
+      .map((problem) => [problem.path, problem.message.split(":")[0]]);
+
+  it("is a finding where it is an api", async () => {
+    expect(
+      await found({
+        "src/api/broken.api.ts": 'export default defineApi({ path: "/api/x", handle: (',
+      }),
+    ).toEqual([["src/api/broken.api.ts", "broken.api.ts does not compile"]]);
   });
 
-  it("refuses what boot refuses, by the same rules, and passes what boot passes", async () => {
-    for (const [template, declaration, files, expected] of [
-      [
-        one("hello"),
-        place("hello: { defer: true, required: true }"),
-        hello,
-        /both deferred and required/,
-      ],
-      [one("hello"), place("hello: { defer: true }"), hello, /nothing would fill it/],
-      [one("hello") + one("live"), place("hello: { defer: true }"), { ...hello, ...live }, /^$/],
-      [one("live"), place("live: { defer: true, deadline: 500 }"), live, /nothing reads/],
-      [one("hello"), place("hello: { deadline: 0 }"), hello, /positive, finite/],
-      [one("hello"), place("hello: { deadline: -1 }"), hello, /positive, finite/],
-      [one("hello"), place("hello: { deadline: 1500 }"), hello, /^$/],
-      [one("hello"), place("hello: null"), hello, /not an object/],
-      [one("far"), place(`far: { defer: true, url: "${FAR}" }`), shop, /across origins/],
-      [one("far"), place("far: { defer: true, url: process.env.FAR }"), shop, /across origins/],
-      [one("far"), place('far: { url: "https://s.ex/far" }'), shop, /not an assembly's content/],
-      [`<form>${one("far")}</form>`, place(`far: { url: "${FAR}" }`), shop, /inside a <form>/],
-      [one("far"), place(`far: { url: "${FAR}" }`), shop, /^$/],
-      // A framework view declared never to mount puts no runtime on the page; one not declared does.
-      [one("still"), place("still: { defer: true }"), still, /nothing would fill it/],
-      [one("still") + one("wake"), place("still: { defer: true }"), still, /^$/],
-    ] as const) {
-      expect(await said(template, declaration, files), declaration).toMatch(expected);
-    }
+  it("is a finding where it is a view written as a module, or a component of one", async () => {
+    expect(
+      await found({
+        "src/assemblies/photo/photo.react.tsx":
+          'export default function Photo() {\n  return <figure><img alt="x" /></figcaption>;\n}\n',
+        "src/assemblies/cart/cart.preact.tsx":
+          'import { Row } from "./row.js";\nexport default () => <ul><Row /></ul>;\n',
+        "src/assemblies/cart/row.tsx": "export const Row = () => <li>;\n",
+      }),
+    ).toEqual([
+      ["src/assemblies/cart/row.tsx", "row.tsx does not compile"],
+      ["src/assemblies/photo/photo.react.tsx", "photo.react.tsx does not compile"],
+    ]);
   });
 
-  it("reports a budget perf could not read, where it is declared, without building", async () => {
-    const [finding] = await page(one("hello"), undefined, {
-      ...hello,
-      "assemblejs.config.ts": "export default { budgets: { document: 0 } };",
-    });
-    expect(finding).toMatchObject({
-      path: "assemblejs.config.ts",
-      rule: "a-budget-is-whole-bytes",
-      message: expect.stringMatching(/document is not a whole number/),
-    });
-  });
-
-  it("reads nothing it cannot read: a computed policy, deadline or flag is not reported either way", async () => {
-    const computed =
-      "const ms = Number(process.env.MS);\nconst flag = process.env.D === '1';\nexport default { place: { hello: { deadline: ms, defer: flag }, other: policy() } };\nfunction policy() { return {}; }";
-    expect(await page(one("hello"), computed)).toEqual([]);
-  });
-
-  it("holds the stream a page names to a streaming api without parameters, on a page with a runtime", async () => {
-    const both = { ...hello, ...live, ...apis };
-    const stream = (path: string) => `export default { stream: ${path} };`;
-    for (const [template, declaration, expected] of [
-      [one("hello") + one("live"), stream('"/api/ticks"'), /^$/],
-      [one("hello") + one("live"), stream('"/api/time"'), /not the path of a streaming api/],
-      [one("hello"), stream('"/api/ticks"'), /nothing would open it/],
-      [one("hello") + one("live"), stream("process.env.S"), /^$/],
-      // A template that cannot be read: the path is still held, what would open it is not.
-      ['<assembly nam="x"></assembly>', stream('"/nowhere"'), /streaming api(?!.*would open)/],
-    ] as const) {
-      expect(await said(template, declaration, both), declaration).toMatch(expected);
-    }
-    const [finding] = await page(one("hello"), stream('"/api/time"'), { ...hello, ...apis });
-    expect(finding).toMatchObject({
-      path: "src/pages/home/home.page.ts",
-      rule: "a-page-opens-one-stream",
-      fix: expect.stringMatching(/streaming api/),
-    });
+  it("is none where every file compiles", async () => {
+    expect(
+      await found({
+        "src/api/time.api.ts": 'export default { path: "/api/time", handle: () => ({}) };',
+        "src/assemblies/photo/photo.react.tsx": "export default () => <p>photo</p>;",
+      }),
+    ).toEqual([]);
   });
 });

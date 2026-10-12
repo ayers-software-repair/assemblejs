@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { BYTE_ORDER_MARK } from "../io/byte-order-mark.js";
-import { lineEnding } from "../io/line-ending.js";
+import { BYTE_ORDER_MARK } from "@assemblejs/build";
+import { lineEnding } from "@assemblejs/build";
 
 /** Where the line that holds an offset begins: after a byte order mark, in a file's first. */
 const lineStart = (text: string, at: number): number => {

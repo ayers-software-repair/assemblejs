@@ -4,9 +4,11 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { realIo, startServer } from "@assemblejs/build";
+import { freePort } from "@assemblejs/build";
+import type { Io } from "@assemblejs/build";
 import { afterAll, describe, expect, it } from "vitest";
-import { freePort, projectFiles, realIo, runDeploy, startServer } from "@assemblejs/cli";
-import type { Io } from "@assemblejs/cli";
+import { projectFiles, runDeploy } from "@assemblejs/cli";
 
 // Nested in an example, so the deploy resolves the workspace's packages as one whose
 // dependencies were installed would.

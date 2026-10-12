@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ProjectProblem } from "../discovery/project-problem.js";
+import type { ProjectProblem } from "@assemblejs/build";
 import type { ApiShape } from "./api-shape.js";
 import type { AssemblyShape } from "./assembly-shape.js";
 import type { PageShape } from "./page-shape.js";

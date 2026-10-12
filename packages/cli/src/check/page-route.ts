@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { isAbsolute, join } from "node:path";
-import type { DiscoveredPage } from "../discovery/discovered-page.js";
-import { readInside } from "../root/read-inside.js";
+import type { DiscoveredPage } from "@assemblejs/build";
+import { readInside } from "@assemblejs/build";
 import { declaredRoute } from "./declared-route.js";
 import { readDefaultExport } from "./read-default-export.js";
 

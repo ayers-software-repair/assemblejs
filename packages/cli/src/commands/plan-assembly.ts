@@ -1,9 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { ProjectProblem } from "@assemblejs/build";
+import { RENDERERS } from "@assemblejs/build";
+import { suggestName } from "@assemblejs/build";
 import { SEGMENT } from "@assemblejs/core";
-import type { ProjectProblem } from "../discovery/project-problem.js";
-import { RENDERERS } from "../discovery/renderers.js";
-import { suggestName } from "../discovery/suggest-name.js";
 import { assemblyFiles } from "./assembly-files.js";
 
 /**

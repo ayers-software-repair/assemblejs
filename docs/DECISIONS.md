@@ -7159,3 +7159,45 @@ launch. He answered "no ask me the ones not asked." They were asked, one at a ti
 - **Its cost, not yet measured.** A hop on each such call, and the relay itself in the
   framework: what it passes on, what it refuses, and its deadline are R-15's design.
 - **Supersedes** the bullet of the entry above that says "Open by default".
+
+## 2026-10-12: the build is a package of its own
+
+R-3's first cut. The second, `@assemblejs/check`, follows it; the command line holds the
+checks until then and depends on the build.
+
+- **What moved.** Eight areas of the command line's source, 132 files, with their mirrored
+  tests: `io`, `root`, `discovery`, `styles`, `generate`, `placements`, `build`, `dev`. And
+  one helper the map had not seen: `freePort`, which lived with `perf` and which the build's
+  own tests need, went down to `dev`. Nothing of the build's source read what stayed behind;
+  that had been untangled first.
+- **Every name crossing the new line was exported already.** The command line, the agent
+  surface and the starter import from `@assemblejs/build` what they took from
+  `@assemblejs/cli` or by a relative path, 37 source files and 172 imports rewritten by one
+  script. The command line no longer exports the build's names: a thing published twice can
+  drift.
+- **What the build's tests had been holding for other packages.** Eight of them asserted
+  through `check`, the rules, the scaffold or the starter's tokens, which a package beneath
+  those cannot depend on. Each such case went to the test of what it holds: the scaffold's
+  four builds to the scaffold's tests, the starter's tokens to its own, the rules' words to
+  the rules', and what `check` says of a view or a file the build refuses to
+  `check-project`'s, whose cases on placement policy went to the policy reader's test to
+  make room under the ceiling. No assertion was dropped. Three helpers the moved cases
+  share with the build's own are fixtures of the build's tests, which the command line's
+  tests read, as they read the linked project.
+- **Held.** The module gate's first rule is now of packages: nothing in the build, its
+  tests among it, imports the command line.
+- **Proof.** Every cheap gate, lint, the module gate, the types of the four packages the cut
+  touches, the reference, the gates that read a tarball. The suites: the build's 400 cases
+  and the command line's 429, which were 827 together, two more for cases written apart
+  that had been one; the agent surface's 209; the starter's 3. And on the packed path, where
+  a tarball's own dependencies are what is installed: the five conformance fixtures, each a
+  project made by the packed starter, built by the packed command line and served.
+- **The limits, by the owner's rule of the same day, the measure and a tenth more.** The
+  build packs to 51,531 bytes: 56,700. The command line packs to 55,840 where it packed to
+  101,290: 61,500, down from 102,000. The two together are 6,081 more than the one was, a
+  second copy of the licence, the notice and a README, and what no longer compresses beside
+  what. The agent surface and the starter are 27 and 9 bytes more, an import line each, and
+  their limits stand.
+- **`CLAUDE.md`, by his leave of the same day, three facts.** Thirteen packages where it
+  said twelve, and the build in its list; `perf` among the verbs; and that the browser proof
+  does not run on this machine, where it gave the command to run it here.

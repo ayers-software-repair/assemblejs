@@ -1,8 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildProject, realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
 import { MCP_REGISTRATIONS, agentFiles, projectFiles } from "@assemblejs/cli";
+import { capture } from "../../../build/test/fixtures/capture.js";
+import { serve } from "../../../build/test/fixtures/serve.js";
 
 describe("the smallest project that runs", () => {
   const files = projectFiles("my-app");
@@ -66,5 +71,27 @@ describe("the smallest project that runs", () => {
 
   it("ignores the generated module rather than committing it", () => {
     expect(files[".gitignore"]).toContain(".assemblejs/");
+  });
+});
+
+// Nested in an example, so the project resolves the workspace's packages as installed.
+const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
+
+describe("building a project with styles and no browser script", { timeout: 60_000 }, () => {
+  it("serves its stylesheets all the same", async () => {
+    const root = mkdtempSync(join(example, ".dev-styles-"));
+    try {
+      for (const [path, contents] of Object.entries(projectFiles("plain"))) {
+        realIo.write(join(root, path), contents);
+      }
+      writeFileSync(join(root, "src", "assemblies", "hello", "hello.css"), ".hi { color: red }");
+      expect(await buildProject(root, capture().io)).toBe(0);
+      const page = await serve(root, "/");
+      expect(page).not.toContain('<script type="module"');
+      const href = /href="(\/_assemblejs\/assets\/styles\/hello-[0-9a-f]{8}\.css)"/.exec(page)?.[1];
+      expect(await serve(root, String(href))).toContain('assembly-root[data-name="hello"] .hi');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

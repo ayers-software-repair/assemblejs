@@ -3,8 +3,9 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { discoverAssemblies } from "@assemblejs/build";
 import { afterEach, describe, expect, it } from "vitest";
-import { discoverAssemblies, elementProblems } from "@assemblejs/cli";
+import { elementProblems } from "@assemblejs/cli";
 
 let root = "";
 afterEach(() => rmSync(root, { recursive: true, force: true }));

@@ -1,7 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { COMPUTED_MARKER } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED_MARKER, spreadElement } from "@assemblejs/cli";
+import { spreadElement } from "@assemblejs/cli";
 
 const element = (computed: boolean, attributes: [string, string | true][]) => ({
   tag: "img",

@@ -3,9 +3,10 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { OutsideRootError, realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { OutsideRootError, pageRoute, realIo } from "@assemblejs/cli";
-import { linkedProject } from "../fixtures/linked-project.js";
+import { pageRoute } from "@assemblejs/cli";
+import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const page = (declaration?: string) => {
   const root = mkdtempSync(join(tmpdir(), "route-"));

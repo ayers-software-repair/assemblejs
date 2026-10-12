@@ -1,7 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { COMPUTED_MARKER } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED_MARKER, readElements } from "@assemblejs/cli";
+import { readElements } from "@assemblejs/cli";
 
 const tags = (markup: string) => readElements(markup).map((element) => element.tag);
 

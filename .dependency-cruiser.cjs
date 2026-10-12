@@ -44,23 +44,22 @@ module.exports = {
       name: "the-build-does-not-read-the-checks",
       severity: "error",
       comment:
-        "The command line is three layers that become three packages: what turns a project " +
-        "into a server, what reads a project and names problems, and the verbs. The lowest " +
-        "importing a higher one would make the packages depend on each other in a ring. It " +
-        "did once: the build took what a view places from the checks.",
-      from: {
-        path: "^packages/cli/src/(io|root|discovery|styles|generate|placements|build|dev)/",
-      },
-      to: { path: "^packages/cli/src/(rules|check|shape|perf|agents|commands|run|deploy)/" },
+        "The command line is three layers in three packages: what turns a project into a " +
+        "server, what reads a project and names problems, and the verbs. The lowest reading " +
+        "a higher one would make the packages depend on each other in a ring. It did once: " +
+        "the build took what a view places from the checks. Its tests are held to it too, " +
+        "so that what a suite needs is what its package depends on.",
+      from: { path: "^packages/build/(src|test)/" },
+      to: { path: "^packages/(cli|check)/" },
     },
     {
       name: "the-checks-do-not-read-the-verbs",
       severity: "error",
       comment:
-        "The middle layer of the command line's three: what reads a project and names " +
-        "problems, the agent files' text among it, takes nothing from the verbs that call " +
-        "it. It did once: the text of the agent files took the list of renderers from the " +
-        "commands, and the verb that writes those files lived beside the text.",
+        "The middle layer of the three: what reads a project and names problems, the agent " +
+        "files' text among it, takes nothing from the verbs that call it. It did once: the " +
+        "text of the agent files took the list of renderers from the commands, and the verb " +
+        "that writes those files lived beside the text.",
       from: { path: "^packages/cli/src/(rules|check|shape|perf|agents)/" },
       to: { path: "^packages/cli/src/(commands|run|deploy)/" },
     },

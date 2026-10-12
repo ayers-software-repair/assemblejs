@@ -1,7 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { COMPUTED_MARKER } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED_MARKER, readElements, unnamedControls } from "@assemblejs/cli";
+import { readElements, unnamedControls } from "@assemblejs/cli";
 
 // Each element of the markup in one file, as the template reader writes it.
 const inFile = (file: string, markup: string) =>

@@ -2098,8 +2098,11 @@ rows are taken in this order; each is a bite with its own proof and its own push
       the verbs, `build` turns a project into a server, `check` reads a project and names
       problems; the agent surface and `create` take from the two what they took from the
       command line. With it: the one-version gate and the changesets group at fourteen, the
-      release's list of packages, the reference, the READMEs, DESIGN. THE TWO NEW LIMITS ARE
-      THE OWNER'S: the seat brings each package's measure and sets none
+      release's list of packages, the reference, the READMEs, DESIGN. The limits by the
+      owner's rule, the measure and a tenth more. DONE 2026-10-12 OF THE FIRST CUT:
+      `@assemblejs/build` is a package, the command line depends on it, and their limits are
+      56,700 and 61,500 (DECISIONS 2026-10-12, "the build is a package of its own"). LEFT:
+      the second cut, `@assemblejs/check`
 - [ ] R-4 The build writes the TypeScript setup into `.assemblejs/`, and the starter a root
       `tsconfig.json` that names it, so no file needs a line saying whose JSX it is. A NEW
       PROJECT IS READY BY DEFAULT (owner, 2026-10-12): the starter also lists `typescript`

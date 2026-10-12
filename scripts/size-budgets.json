@@ -1,5 +1,6 @@
 {
-  "@assemblejs/cli": 102000,
+  "@assemblejs/build": 56700,
+  "@assemblejs/cli": 61500,
   "@assemblejs/core": 98000,
   "@assemblejs/create": 7000,
   "@assemblejs/devtools": 8500,

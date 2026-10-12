@@ -3,7 +3,7 @@
 import { mkdirSync, mkdtempSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { OutsideRootError } from "@assemblejs/cli";
+import { OutsideRootError } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
 import { resolveRoot, withinRoot } from "@assemblejs/mcp";
 

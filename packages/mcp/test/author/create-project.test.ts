@@ -10,12 +10,8 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import {
-  MCP_REGISTRATIONS,
-  OutsideRootError,
-  agentInstructions,
-  agentProblems,
-} from "@assemblejs/cli";
+import { OutsideRootError } from "@assemblejs/build";
+import { MCP_REGISTRATIONS, agentInstructions, agentProblems } from "@assemblejs/cli";
 import { describe, expect, it } from "vitest";
 import { createProject, resolveRoot } from "@assemblejs/mcp";
 

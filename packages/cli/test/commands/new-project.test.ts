@@ -10,9 +10,10 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
+import { realIo } from "@assemblejs/build";
+import type { Io } from "@assemblejs/build";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { newProject, realIo } from "@assemblejs/cli";
-import type { Io } from "@assemblejs/cli";
+import { newProject } from "@assemblejs/cli";
 
 /** An io that writes nowhere, and keeps what it was told. */
 const fake = () => {

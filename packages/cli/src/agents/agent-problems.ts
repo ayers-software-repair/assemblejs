@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import type { ProjectProblem } from "../discovery/project-problem.js";
-import { outsideProblems } from "../root/outside-problems.js";
+import type { ProjectProblem } from "@assemblejs/build";
+import { outsideProblems } from "@assemblejs/build";
 import { agentInstructions } from "./agent-instructions.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { AGENTS_IMPORT } from "./agents-import.js";

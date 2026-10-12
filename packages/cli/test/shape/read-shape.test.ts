@@ -3,9 +3,10 @@
 import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { isAbsolute, join, relative } from "node:path";
+import { realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD, readShape, realIo } from "@assemblejs/cli";
-import { linkedProject } from "../fixtures/linked-project.js";
+import { COMPUTED, UNREAD, readShape } from "@assemblejs/cli";
+import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const REACT = 'import { Slot } from "@assemblejs/renderer-react/client";\n';
 

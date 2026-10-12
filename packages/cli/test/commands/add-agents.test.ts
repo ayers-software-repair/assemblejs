@@ -10,8 +10,9 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
+import { realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { addAgents, agentFiles, agentInstructions, realIo } from "@assemblejs/cli";
+import { addAgents, agentFiles, agentInstructions } from "@assemblejs/cli";
 
 const project = (files: Readonly<Record<string, string>> = {}): string => {
   const root = mkdtempSync(join(tmpdir(), "add-agents-"));

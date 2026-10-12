@@ -5,9 +5,10 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { realIo } from "@assemblejs/build";
+import type { Io } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { projectFiles, realIo, run } from "@assemblejs/cli";
-import type { Io } from "@assemblejs/cli";
+import { projectFiles, run } from "@assemblejs/cli";
 
 const fake = (existing: readonly string[] = []) => {
   const written = new Map<string, string>();

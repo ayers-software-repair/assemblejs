@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { BYTE_ORDER_MARK } from "../io/byte-order-mark.js";
+import { BYTE_ORDER_MARK } from "@assemblejs/build";
 import { AGENT_SERVER } from "./agent-server.js";
 import type { McpRegistration } from "./mcp-registration.js";
 

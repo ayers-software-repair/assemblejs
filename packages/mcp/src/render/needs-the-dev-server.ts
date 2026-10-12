@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { aRenderer } from "@assemblejs/cli";
+import { aRenderer } from "@assemblejs/build";
 
 /**
  * Why a view that is not plain html is refused, not approximated, while no dev server runs: its

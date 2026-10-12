@@ -49,6 +49,7 @@
     "vitest": "4.1.11"
   },
   "dependencies": {
+    "@assemblejs/build": "workspace:*",
     "@assemblejs/cli": "workspace:*",
     "@assemblejs/core": "workspace:*",
     "@modelcontextprotocol/sdk": "1.30.0",

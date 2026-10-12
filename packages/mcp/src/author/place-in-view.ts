@@ -1,14 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readFileSync } from "node:fs";
-import {
-  discoverAssemblies,
-  isOccupied,
-  placeAssembly,
-  realIo,
-  viewFindings,
-} from "@assemblejs/cli";
-import type { PlacementPosition, ProjectProblem } from "@assemblejs/cli";
+import { discoverAssemblies, isOccupied, realIo, viewFindings } from "@assemblejs/build";
+import type { ProjectProblem } from "@assemblejs/build";
+import { placeAssembly } from "@assemblejs/cli";
+import type { PlacementPosition } from "@assemblejs/cli";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";

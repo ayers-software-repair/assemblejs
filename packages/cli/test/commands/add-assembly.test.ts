@@ -10,9 +10,10 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { realIo } from "@assemblejs/build";
+import type { Io } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { addAssembly, realIo } from "@assemblejs/cli";
-import type { Io } from "@assemblejs/cli";
+import { addAssembly } from "@assemblejs/cli";
 
 const project = (): string => {
   const root = mkdtempSync(join(tmpdir(), "add-"));

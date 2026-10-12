@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { resolve } from "node:path";
-import { OutsideRootError, outsideProblems } from "@assemblejs/cli";
+import { OutsideRootError, outsideProblems } from "@assemblejs/build";
 import type { ToolResult } from "./tool-result.js";
 
 /**

@@ -12,6 +12,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@assemblejs/mcp": src("./src/index.ts"),
+      "@assemblejs/build": src("../build/src/index.ts"),
       "@assemblejs/cli": src("../cli/src/index.ts"),
       "@assemblejs/core": src("../core/src/index.ts"),
     },

@@ -2,6 +2,23 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import type { ProjectProblem } from "@assemblejs/build";
+import { templateProblems } from "@assemblejs/build";
+import { CONFIG_FILE } from "@assemblejs/build";
+import { discoverApis } from "@assemblejs/build";
+import { discoverAssemblies } from "@assemblejs/build";
+import { discoverPages } from "@assemblejs/build";
+import { fromRoot } from "@assemblejs/build";
+import { componentProblems } from "@assemblejs/build";
+import { buildProblems } from "@assemblejs/build";
+import { unreadableSource } from "@assemblejs/build";
+import { viewFindings } from "@assemblejs/build";
+import { outsideProblems } from "@assemblejs/build";
+import { OutsideRootError } from "@assemblejs/build";
+import { readInside } from "@assemblejs/build";
+import { colourProblems } from "@assemblejs/build";
+import { tokenProblems } from "@assemblejs/build";
+import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
 import {
   apiProblems,
   findPlacements,
@@ -13,25 +30,8 @@ import {
   streamPaths,
   streamProblems,
 } from "@assemblejs/core";
-import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
 import { agentProblems } from "../agents/agent-problems.js";
-import { buildProblems } from "../build/build-problems.js";
-import { componentProblems } from "../build/component-problems.js";
-import { templateProblems } from "../build/template-problems.js";
-import { CONFIG_FILE } from "../discovery/config-file.js";
-import { discoverApis } from "../discovery/discover-apis.js";
-import { discoverAssemblies } from "../discovery/discover-assemblies.js";
-import { discoverPages } from "../discovery/discover-pages.js";
-import { fromRoot } from "../discovery/from-root.js";
-import type { ProjectProblem } from "../discovery/project-problem.js";
 import { readBudgets } from "../perf/read-budgets.js";
-import { unreadableSource } from "../placements/unreadable-source.js";
-import { viewFindings } from "../placements/view-findings.js";
-import { outsideProblems } from "../root/outside-problems.js";
-import { OutsideRootError } from "../root/outside-root-error.js";
-import { readInside } from "../root/read-inside.js";
-import { colourProblems } from "../styles/colour-problems.js";
-import { tokenProblems } from "../styles/token-problems.js";
 import { declaredOrigins } from "./declared-origins.js";
 import { elementProblems } from "./element-problems.js";
 import { hasBrowserHalf } from "./has-browser-half.js";

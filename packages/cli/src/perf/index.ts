@@ -11,5 +11,4 @@ export { formatWeight } from "./format-weight.js";
 export { PAGE_PARTS } from "./page-parts.js";
 export { readBudgets } from "./read-budgets.js";
 export { overBudget } from "./over-budget.js";
-export { freePort } from "./free-port.js";
 export { runPerf } from "./run-perf.js";

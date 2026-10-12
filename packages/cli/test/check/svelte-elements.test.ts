@@ -1,7 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { COMPUTED_MARKER } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED_MARKER, svelteElements } from "@assemblejs/cli";
+import { svelteElements } from "@assemblejs/cli";
 
 const shown = (source: string) =>
   svelteElements(source).map((element) => ({

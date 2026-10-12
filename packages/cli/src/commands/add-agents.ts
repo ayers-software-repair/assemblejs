@@ -1,13 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { basename, join } from "node:path";
+import type { Io } from "@assemblejs/build";
+import { outsideProblems } from "@assemblejs/build";
 import { agentFiles } from "../agents/agent-files.js";
 import { AGENT_SERVER } from "../agents/agent-server.js";
 import { cannotRegister } from "../agents/cannot-register.js";
 import { manifestOf } from "../agents/manifest-of.js";
 import { textIn } from "../agents/text-in.js";
-import type { Io } from "../io/io.js";
-import { outsideProblems } from "../root/outside-problems.js";
 import { noProject } from "./no-project.js";
 
 /**

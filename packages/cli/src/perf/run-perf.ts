@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import type { RunningServer } from "@assemblejs/build";
+import type { Io } from "@assemblejs/build";
+import { buildProject } from "@assemblejs/build";
+import { startServer } from "@assemblejs/build";
+import { CONFIG_FILE } from "@assemblejs/build";
+import { discoverPages } from "@assemblejs/build";
+import { freePort } from "@assemblejs/build";
 import { routeParameters } from "@assemblejs/core";
 import type { PageBudgets } from "@assemblejs/core";
-import { buildProject } from "../build/build-project.js";
 import { pageRoute } from "../check/page-route.js";
-import type { RunningServer } from "../dev/running-server.js";
-import { startServer } from "../dev/start-server.js";
-import { CONFIG_FILE } from "../discovery/config-file.js";
-import { discoverPages } from "../discovery/discover-pages.js";
-import type { Io } from "../io/io.js";
 import { formatWeight } from "./format-weight.js";
-import { freePort } from "./free-port.js";
 import { measurePage } from "./measure-page.js";
 import { overBudget } from "./over-budget.js";
 import { readBudgets } from "./read-budgets.js";

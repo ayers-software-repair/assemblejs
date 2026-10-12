@@ -44,6 +44,7 @@
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "dependencies": {
+    "@assemblejs/build": "workspace:*",
     "@assemblejs/cli": "workspace:*"
   },
   "devDependencies": {

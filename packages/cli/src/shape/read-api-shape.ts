@@ -1,9 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { fromRoot } from "@assemblejs/build";
+import { readInside } from "@assemblejs/build";
 import { readDefaultExport } from "../check/read-default-export.js";
 import { UNWRITTEN } from "../check/unwritten.js";
-import { fromRoot } from "../discovery/from-root.js";
-import { readInside } from "../root/read-inside.js";
 import type { ApiShape } from "./api-shape.js";
 import { COMPUTED } from "./computed.js";
 import { fieldAsWritten } from "./field-as-written.js";

@@ -3,9 +3,10 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD, readSettingsShape, realIo } from "@assemblejs/cli";
-import { linkedProject } from "../fixtures/linked-project.js";
+import { COMPUTED, UNREAD, readSettingsShape } from "@assemblejs/cli";
+import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const settings = (source?: string) => {
   const root = mkdtempSync(join(tmpdir(), "settings-shape-"));

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { readViewExport } from "@assemblejs/cli";
-import { linkedProject } from "../fixtures/linked-project.js";
+import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const file = (name: string, source: string): string => {
   const path = join(mkdtempSync(join(tmpdir(), "view-export-")), name);

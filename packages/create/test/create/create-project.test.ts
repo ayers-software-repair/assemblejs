@@ -5,7 +5,7 @@ import { mkdirSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Io } from "@assemblejs/cli";
+import type { Io } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
 import { createProject } from "@assemblejs/create";
 

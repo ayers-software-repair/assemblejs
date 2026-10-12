@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-// The twelve packages share one version (owner, DECISIONS 2026-10-11, "One number"). Two things
+// The thirteen packages share one version (owner, DECISIONS 2026-10-11, "One number"). Two things
 // make that true and this gate holds both: every packages/*/package.json names the same version,
 // and .changeset/config.json keeps every package in one fixed group, so a changeset to any of
 // them moves them all. A package left out of the group would be versioned alone, and the

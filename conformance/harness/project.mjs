@@ -43,7 +43,7 @@ export function project(fixture, work, tarball, packages) {
     [
       "exec",
       "--yes",
-      ...["create", "cli", "core"].map((name) => `--package=${tarball(name)}`),
+      ...["create", "cli", "build", "core"].map((name) => `--package=${tarball(name)}`),
       "--",
       "create-assemblejs",
       "app",
@@ -74,10 +74,10 @@ export function project(fixture, work, tarball, packages) {
     }
     Object.assign(manifest.dependencies, peersOf(name));
   }
-  // One copy of core and of the command line whoever asks for them, a renderer or the agent
+  // One copy of core, the build and the command line whoever asks for them, a renderer or the agent
   // surface: the tarball, never a registry version.
   manifest.overrides = Object.fromEntries(
-    ["core", "cli"].map((name) => [`${ours}${name}`, `file:${tarball(name)}`]),
+    ["core", "build", "cli"].map((name) => [`${ours}${name}`, `file:${tarball(name)}`]),
   );
   writeFileSync(join(root, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
   sh("npm", ["install", "--no-audit", "--no-fund"], root);

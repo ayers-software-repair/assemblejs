@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { RENDERERS } from "../discovery/renderers.js";
+import { RENDERERS } from "@assemblejs/build";
 import { RULES } from "../rules/rules.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { INSTRUCTION_MARKERS } from "./instruction-markers.js";

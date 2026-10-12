@@ -1,7 +1,14 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { buildProject, realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { assemblyFiles } from "@assemblejs/cli";
+import { assemblyFiles, planAssembly, projectFiles } from "@assemblejs/cli";
+import { builtScripts } from "../../../build/test/fixtures/built-scripts.js";
+import { capture } from "../../../build/test/fixtures/capture.js";
+import { serve } from "../../../build/test/fixtures/serve.js";
 
 describe("what a new assembly is made of", () => {
   it("names the view file so its framework is visible from a directory listing", () => {
@@ -55,4 +62,50 @@ describe("what a new assembly is made of", () => {
     expect(assemblyFiles("cart", "angular")).toBeUndefined();
     expect(assemblyFiles("cart", "constructor")).toBeUndefined();
   });
+});
+
+// Nested in the example that installs the templates package.
+const templates = fileURLToPath(new URL("../../../../examples/templates/", import.meta.url));
+
+describe("building what the command line scaffolds, in each template language", () => {
+  it.each([
+    ["ejs", "<p>notice</p>"],
+    ["handlebars", "<p>notice</p>"],
+    ["markdown", "<h1>notice</h1>"],
+    ["nunjucks", "<p>notice</p>"],
+    ["pug", "<p>notice</p>"],
+  ])(
+    "generates, builds and runs a project with a %s assembly",
+    { timeout: 60_000 },
+    async (renderer, markup) => {
+      const root = mkdtempSync(join(templates, ".dev-scaffold-"));
+      try {
+        for (const [path, contents] of Object.entries(projectFiles(renderer))) {
+          realIo.write(join(root, path), contents);
+        }
+        const plan = planAssembly("notice", renderer, false);
+        if ("problem" in plan) throw new Error(plan.problem.message);
+        for (const [path, contents] of Object.entries(plan.files)) {
+          realIo.write(join(root, path), contents);
+        }
+        const home = join(root, "src", "pages", "home", "home.html");
+        writeFileSync(home, readFileSync(home, "utf8").replace("</body>", `${plan.tag}\n</body>`));
+        const { io, errors } = capture();
+        expect(await buildProject(root, io)).toBe(0);
+        expect(errors).toEqual([]);
+        const page = await serve(root, "/");
+        expect(page).toMatch(
+          new RegExp(
+            `<assembly-root data-name="notice"[^>]*data-renderer="${renderer}"[^>]*>${markup}`,
+          ),
+        );
+        // Server markup and nothing more: no browser half, so no script on the page and none
+        // built, which would serve the template's source as a public asset.
+        expect(page).not.toContain('<script type="module"');
+        expect(builtScripts(root)).toEqual([]);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
 });

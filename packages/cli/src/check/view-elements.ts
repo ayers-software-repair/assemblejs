@@ -1,13 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { isAbsolute, join } from "node:path";
-import { loadPug } from "../build/load-pug.js";
-import type { PugCompiler } from "../build/pug-compiler.js";
-import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
-import { isStaticView } from "../discovery/is-static-view.js";
-import { viewModules } from "../placements/view-modules.js";
-import { leadsOut } from "../root/leads-out.js";
-import { readInside } from "../root/read-inside.js";
+import type { PugCompiler } from "@assemblejs/build";
+import type { DiscoveredAssembly } from "@assemblejs/build";
+import { loadPug } from "@assemblejs/build";
+import { isStaticView } from "@assemblejs/build";
+import { viewModules } from "@assemblejs/build";
+import { leadsOut } from "@assemblejs/build";
+import { readInside } from "@assemblejs/build";
 import { readViewElements } from "./read-view-elements.js";
 import type { ViewElement } from "./view-element.js";
 import type { WrittenElement } from "./written-element.js";

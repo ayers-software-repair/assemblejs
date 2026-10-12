@@ -3,9 +3,10 @@
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { OutsideRootError } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { OutsideRootError, readApi } from "@assemblejs/cli";
-import { linkedProject } from "../fixtures/linked-project.js";
+import { readApi } from "@assemblejs/cli";
+import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const api = (source: string): ReturnType<typeof readApi> => {
   const root = mkdtempSync(join(tmpdir(), "read-api-"));

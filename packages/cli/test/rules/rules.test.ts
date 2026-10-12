@@ -1,7 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { RULE_IDS } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { RULE_IDS, RULES } from "@assemblejs/cli";
+import { RULES } from "@assemblejs/cli";
 
 describe("what the framework knows", () => {
   it("gives every rule a reason and a smell, not just a sentence", () => {
@@ -27,6 +28,16 @@ describe("what the framework knows", () => {
     ]) {
       expect(ids).toContain(needed);
     }
+  });
+
+  // Each is a rule a finding names from beneath the checks, where its words cannot be read.
+  it("says why of the rules the build's own findings name", () => {
+    const rule = (id: string) => RULES.find((one) => one.id === id);
+    expect(rule("a-source-file-compiles")?.because).toMatch(/cannot see/);
+    expect(rule("a-project-stays-inside-its-root")?.because).toMatch(
+      /an agent is shown what they read/,
+    );
+    expect(rule("a-project-stays-inside-its-root")?.rule).toMatch(/a link that leads nowhere/);
   });
 
   it("answers every rule a project problem can name, so explain never misses one", () => {

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Io } from "@assemblejs/cli";
+import type { Io } from "@assemblejs/build";
 import { run } from "@assemblejs/cli";
 
 const USAGE = "npm create @assemblejs <directory>";

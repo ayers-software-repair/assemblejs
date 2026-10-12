@@ -3,9 +3,10 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD, readApiShape, realIo } from "@assemblejs/cli";
-import { linkedProject } from "../fixtures/linked-project.js";
+import { COMPUTED, UNREAD, readApiShape } from "@assemblejs/cli";
+import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const api = (source: string) => {
   const root = mkdtempSync(join(tmpdir(), "api-shape-"));

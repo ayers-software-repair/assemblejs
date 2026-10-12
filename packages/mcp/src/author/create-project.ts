@@ -1,14 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import {
-  PROJECT_NAME,
-  cannotRegister,
-  isOccupied,
-  projectInto,
-  realIo,
-  suggestName,
-  textIn,
-} from "@assemblejs/cli";
+import { isOccupied, realIo, suggestName } from "@assemblejs/build";
+import { PROJECT_NAME, cannotRegister, projectInto, textIn } from "@assemblejs/cli";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";
