@@ -3,6 +3,8 @@ packages:
   # The examples are real installs of the real package, so an example that stops working is
   # a failure the workspace notices rather than a file nobody runs.
   - "examples/*"
+  # The showcase is four servers, each a team's own project, under one directory.
+  - "examples/market/*"
 
 # pnpm 11 replaced onlyBuiltDependencies with allowBuilds, and refuses the install rather than
 # running an unapproved build script. The old key is silently inert, which is why a working

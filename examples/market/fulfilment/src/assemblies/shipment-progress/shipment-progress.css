@@ -1,0 +1,47 @@
+.shipment {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--corner);
+  background: var(--surface-panel);
+}
+.shipment h2 {
+  margin: 0;
+  font: 600 var(--text-3) / 1.25 var(--face-display);
+}
+.shipment-to,
+.shipment-next {
+  margin: 0;
+  color: var(--ink-muted);
+}
+.shipment-steps {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.shipment-steps li {
+  padding: var(--space-2);
+  border-block-start: 4px solid var(--border);
+  color: var(--ink-muted);
+  font-size: var(--text-1);
+}
+.shipment-steps li.done {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.shipment-steps li.now {
+  border-color: var(--accent-alt);
+  color: var(--ink);
+  font-weight: 600;
+}
+@media (max-width: 40rem) {
+  .shipment-steps {
+    grid-auto-flow: row;
+  }
+}

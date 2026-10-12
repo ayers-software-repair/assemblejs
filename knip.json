@@ -50,6 +50,66 @@
       ],
       "project": ["src/**/*.{ts,tsx,svelte}"],
       "ignoreDependencies": ["@assemblejs/renderer-svelte"]
+    },
+    "examples/market/shop": {
+      "entry": [
+        "src/server.ts",
+        "assemblejs.config.ts",
+        "src/assemblies/*/*.{ts,tsx,svelte}",
+        "src/api/*.api.ts",
+        "src/pages/*/*.page.ts"
+      ],
+      "project": ["src/**/*.{ts,tsx,svelte}"],
+      "ignoreDependencies": [
+        "@assemblejs/renderer-.*",
+        "lit",
+        "preact",
+        "react",
+        "react-dom",
+        "solid-js",
+        "svelte",
+        "vue"
+      ]
+    },
+    "examples/market/catalog": {
+      "entry": [
+        "src/server.ts",
+        "assemblejs.config.ts",
+        "src/assemblies/*/*.{ts,tsx}",
+        "src/api/*.api.ts",
+        "src/pages/*/*.page.ts"
+      ],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": [
+        "@assemblejs/renderer-.*",
+        "lit",
+        "preact",
+        "react",
+        "react-dom",
+        "vue"
+      ]
+    },
+    "examples/market/reviews": {
+      "entry": [
+        "src/server.ts",
+        "assemblejs.config.ts",
+        "src/assemblies/*/*.ts",
+        "src/api/*.api.ts",
+        "src/pages/*/*.page.ts"
+      ],
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": ["@assemblejs/renderer-.*", "lit", "vue"]
+    },
+    "examples/market/fulfilment": {
+      "entry": [
+        "src/server.ts",
+        "assemblejs.config.ts",
+        "src/assemblies/*/*.{ts,tsx}",
+        "src/api/*.api.ts",
+        "src/pages/*/*.page.ts"
+      ],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignoreDependencies": ["@assemblejs/renderer-.*", "solid-js"]
     }
   }
 }

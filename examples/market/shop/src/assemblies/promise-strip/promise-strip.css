@@ -1,0 +1,18 @@
+.promises {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-3);
+  border-radius: var(--corner);
+  background: var(--accent-wash);
+  list-style: none;
+}
+.promises li {
+  display: grid;
+  gap: var(--space-1);
+}
+.promises span {
+  color: var(--ink-muted);
+  font-size: var(--text-1);
+}

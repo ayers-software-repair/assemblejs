@@ -13,6 +13,9 @@
     "**/docs/**",
     "**/*-lock.yaml",
     "LICENSE",
-    "**/.claude/**"
+    "**/.claude/**",
+    "**/examples/market/*/src/tokens.css",
+    "**/examples/market/*/src/components.css",
+    "**/examples/market/*/src/server.ts"
   ]
 }

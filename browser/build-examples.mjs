@@ -29,6 +29,8 @@ export default function buildExamples() {
       "--filter",
       "@assemblejs/renderer-lit",
       "--filter",
+      "@assemblejs/renderer-templates",
+      "--filter",
       "@assemblejs/devtools",
       "build",
     ],
@@ -40,6 +42,11 @@ export default function buildExamples() {
     "examples/frameworks",
     "examples/shadow",
     "examples/realtime",
+    // The showcase: four servers, each a project of its own.
+    "examples/market/catalog",
+    "examples/market/reviews",
+    "examples/market/fulfilment",
+    "examples/market/shop",
   ]) {
     execFileSync(process.execPath, ["packages/cli/dist/bin.js", "build", "--cwd", example], {
       cwd: root,

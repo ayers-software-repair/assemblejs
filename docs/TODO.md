@@ -52,9 +52,11 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: an empty Lit view
-can be placed from another server (DECISIONS 2026-10-12, of that name), the showcase's second
-find. Beneath it `3c1b7fc`, the view lets go of an element it binds nothing to (`ci`
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the market, a
+showcase of four servers, in `examples/market` (DECISIONS 2026-10-12, of that name), whose
+browser spec has its first run in this push's `browser proof`; read it before anything else.
+Beneath it `d7a8792`, an empty Lit view can be placed from another server (`ci` 38212157143,
+all five jobs green), the showcase's second find. Beneath it `3c1b7fc`, the view lets go of an element it binds nothing to (`ci`
 38211659176, all five jobs green), the fix for the red of `caef196`, a Lit element waits for its view, the showcase's first find (`ci`
 38210828288: four jobs green, `browser proof` red on the frameworks example's Lit shell).
 Beneath it `0a50a97`, this record alone (`ci` 38209360682, all five jobs green), and
@@ -64,10 +66,10 @@ jobs green, the outline's four cases among the 46 the `browser proof` passed). B
 `88101ed`, an outline's box is the assembly's, not the line it stands in (`ci` 38208234440: four
 jobs green, `browser proof` red on the proof's own files), and `6da4971`, a page shows how it
 was put together, the outline (`ci` 38207626887: four jobs green, `browser proof` red on one of
-the outline's four cases). THE SHOWCASE IS IN HAND, in the scratchpad from packed tarballs: a
-marketplace of four servers (the shop, the catalogue, reviews and fulfilment), all four built
-and serving on this machine and an order followed across them; what designing it found of the
-framework is in the evidence directory's FINDINGS 35 to 37, three calls that are the owner's
+the outline's four cases). THE SHOWCASE IS LANDED: `examples/market`, a shop of four servers
+(the shop, the catalogue, reviews and fulfilment). What making it found of the framework is in
+the evidence directory's FINDINGS 35 to 43: two defects fixed, and three calls that are the
+owner's
 (two servers on one page share no bus; a remote assembly cannot call its own server; nothing
 of who is asking reaches a service or an api). Beneath it `bab70a1`, a dev server on every interface is still the project's own (`ci` 38204821744, all
 five jobs green), a follow-up to `b203cb5`. Beneath it `8be3bce`, two gates of the identity law read any case (`ci`
@@ -1830,9 +1832,20 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       can be placed from another server")
 - [ ] FOUND BY THE SHOWCASE: `check` says "is a ejs assembly" (`a-view-needs-its-renderer`); the
       article does not follow the renderer's name.
-- [ ] The showcase projects: extremely complex, real-world, made with the command line as a
+- [x] The showcase projects: extremely complex, real-world, made with the command line as a
       user and the agent surface as an agent, each with its outline on, tested in the owner's
-      Chrome, then into `examples/`.
+      Chrome, then into `examples/`. DONE 2026-10-12: `examples/market`, a shop of four servers
+      (DECISIONS 2026-10-12, "the market, a showcase of four servers"), with
+      `browser/market.browser.ts` in the browser proof.
+- [ ] The site does not name the showcase: the examples it lists want `examples/market` (the
+      site seat's; the lead is told).
+- [ ] FOUND BY THE SHOWCASE: `perf` exits 1 on a project that guards a page. It asks every page
+      as a stranger, the staff's page answers 401, and that is counted a failure
+      (`packages/cli/src/perf/measure-page.ts:38`). A guarded page is not one a stranger can
+      weigh: say so, as a route with a parameter is said, and do not fail.
+- [ ] FOUND BY THE SHOWCASE: `perf` weighs no page whose route has a parameter, and has no way
+      to be given a value. In the showcase that is the product page, the shelf and the order:
+      the heaviest pages are the ones no budget holds. A design: where a value comes from.
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

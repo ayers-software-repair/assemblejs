@@ -1,0 +1,81 @@
+.shelf {
+  display: grid;
+  gap: var(--space-3);
+}
+.shelf-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: end;
+  justify-content: space-between;
+}
+.shelf-head h1 {
+  margin: 0;
+  font: 600 var(--text-4) / 1.2 var(--face-display);
+}
+.shelf-blurb,
+.shelf-count {
+  margin: 0;
+  color: var(--ink-muted);
+}
+.shelf-count {
+  font-size: var(--text-1);
+}
+.shelf-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.card {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--corner);
+  background: var(--surface);
+}
+.card-link {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--ink);
+  text-decoration: none;
+}
+.card-link:hover .card-name,
+.card-link:focus-visible .card-name {
+  text-decoration: underline;
+}
+.card-name {
+  font: 600 var(--text-3) / 1.25 var(--face-display);
+}
+.card-blurb {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-1);
+}
+.card-price {
+  margin: 0;
+  font-weight: 600;
+}
+.tile {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--corner);
+  font: 600 var(--text-4) / 1 var(--face-display);
+}
+.tile-a {
+  background: var(--accent);
+  color: var(--surface);
+}
+.tile-b {
+  background: var(--accent-alt);
+  color: var(--surface);
+}
+.tile-c {
+  background: var(--surface-panel);
+  color: var(--accent-strong);
+}

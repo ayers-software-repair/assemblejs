@@ -1,0 +1,21 @@
+<section class="depot" aria-labelledby="depot-title">
+  <h2 id="depot-title">In the depot</h2>
+  {% if data.shipments.length == 0 %}
+  <p class="notice">Nothing yet. Place an order in the shop and it appears here.</p>
+  {% else %}
+  <table class="table">
+    <thead>
+      <tr><th scope="col">Order</th><th scope="col">Going to</th><th scope="col">Step</th></tr>
+    </thead>
+    <tbody>
+      {% for shipment in data.shipments %}
+      <tr>
+        <th scope="row"><a href="/orders/{{ shipment.order | urlencode }}"><code>{{ shipment.short }}</code></a></th>
+        <td>{{ shipment.city }}</td>
+        <td>{{ shipment.step }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>

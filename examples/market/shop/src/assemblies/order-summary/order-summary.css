@@ -1,0 +1,17 @@
+.order {
+  display: grid;
+  gap: var(--space-3);
+  max-inline-size: 44rem;
+}
+.order h1 {
+  margin: 0;
+  font: 600 var(--text-4) / 1.2 var(--face-display);
+}
+.order-lead,
+.order-note {
+  margin: 0;
+}
+.order-note {
+  color: var(--ink-muted);
+  font-size: var(--text-1);
+}

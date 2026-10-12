@@ -1,0 +1,12 @@
+.door {
+  max-inline-size: 26rem;
+}
+.door h1 {
+  margin: 0;
+  font: 600 var(--text-4) / 1.2 var(--face-display);
+}
+.door-said {
+  min-block-size: 1.5em;
+  margin: 0;
+  color: var(--accent-alt);
+}

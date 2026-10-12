@@ -1,0 +1,8 @@
+<ul class="promises">
+  {% for promise in data.promises %}
+  <li>
+    <strong>{{ promise.title }}</strong>
+    <span>{{ promise.words }}</span>
+  </li>
+  {% endfor %}
+</ul>

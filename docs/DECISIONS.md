@@ -6151,3 +6151,69 @@ beans; on the shop's page, placed from the catalogue's server, it was a fallback
   the owner's Chrome, with the proof's own generator and its own check: of 400 accepted answers
   that hold one, in each of the proof's twelve contexts, a template and a shadow root, none
   left its envelope, and the browser made 3,144 comments of them.
+
+## 2026-10-12: the market, a showcase of four servers
+
+The owner's order of 2026-10-11, in his words: "ideally you use the cli like a user, then the
+mcp like an ai, etc. to make production grade projects. THose will be our showcase projects and
+examples/", "complex proejcts real world scenarious", "nad they need to be extremely complex.
+not very simple", "with a mode on each to enable the boxes around them". `examples/market` is
+that: a shop, Pour & Grind, as four servers, each one team's own project, and every page a
+visitor sees composed on the shop's server from all of them.
+
+- **What it is.** `shop` (the pages, header, search, basket, checkout, stock, a staff board;
+  fourteen assemblies in twelve kinds of view, six apis, one a stream, nine pages), `catalog`
+  (shelves, products, facts; six assemblies), `reviews` (two) and `fulfilment` (two). A product
+  page is twelve assemblies from three servers. Remote placements with deadlines, fallbacks, a
+  required one, kept answers and a deferred one; a remote trusted with the query; the product's
+  own access check over a page, an assembly and an api; a stream onto the page's bus; budgets;
+  and the outline on in every project.
+- **How it was made.** In the scratchpad from packed tarballs, as a stranger: the shop and the
+  catalogue begun with `assemblejs new` and `add assembly`, the reviews and fulfilment servers
+  begun through the agent surface (`create_project`, `add_assembly`, then `check`, and for
+  reviews `place_assembly`, `render_assembly` and `compose_page`). Every view, service, api and
+  page template was then written by hand, those two servers' included: `place_assembly` put its
+  tags where the layout did not want them, and the agent surface takes no route parameter, so
+  it could not show a product's reviews (both rows already open). Walked in the owner's Chrome on this machine: a shelf
+  narrowed, a grind chosen, a basket, a checkout, an order followed across three servers, the
+  staff door, and each page with a server down. Screenshots are with the audit's evidence.
+- **What it found, and what was done.** A Lit element drawn twice (fixed, "a Lit element waits
+  for its view" and the entry after it); an empty Lit view refused from another server (fixed,
+  "an empty Lit view can be placed from another server"); and three things the framework does
+  not do that a shop wants, which are the owner's calls and which the showcase is built inside
+  and says on its own About page: two servers' assemblies on one page share no bus, a remote
+  assembly cannot call its own server from the browser, and nothing of who is asking reaches a
+  service or an api. So where two teams must agree the address carries it (the grind), the
+  basket is the browser's and the server prices it, and an order is found by its address.
+- **What bringing it into the workspace cost.** Each `new` makes one server, so the showcase
+  is four packages under one directory, and the workspace names `examples/market/*`. The
+  packages' own versions, `workspace:*`, the frameworks at the workspace's versions, the unused
+  gate told of each, and the header on every `.ts`. Three decisions:
+  1. **The files `new` writes for an agent are not carried** (`AGENTS.md`, `CLAUDE.md`, the five
+     MCP registrations), as no example carries them: an instruction file under `examples/`
+     would be read by any session working there as its own, and the registrations name a
+     server the example does not install.
+  2. **Three scaffold files are set aside from the duplication gate**, in each of the four:
+     `src/tokens.css`, `src/components.css` and `src/server.ts`, which `new` writes the same in
+     every project it makes. Four teams' repositories hold four copies; here they stand side by
+     side and took the gate from under four in a hundred to over. Everything else of the
+     showcase is counted, and a bare control the shop styled in three assemblies is one class
+     in its stylesheet now. The gate is at 3.35.
+  3. **Its proof is one browser spec that runs in order**, `browser/market.browser.ts`: eight
+     cases against the four built servers, an order placed by one being the stock the next
+     reads. It has not run yet and runs in CI; each of its checks was made by hand on the
+     running showcase in the owner's Chrome first.
+- **No key is written down.** The staff door wants a key. `start.mjs` takes `STAFF_KEY` from the
+  environment and, where there is none, makes one for the run and prints it; the browser spec
+  makes its own. A default written into the example would have been the default credential the
+  framework's own rule refuses.
+- **Its budgets, and what `perf` made of them.** The five pages `perf` can ask weigh at most
+  2.3 kB of document, 3.2 kB of styles and 3.3 kB of scripts, gzipped, against budgets of 14,
+  12 and 90. It weighs none of the three whose route has a parameter, the product page among
+  them, and it exits 1 on the staff's page, which answers a stranger 401: three rows, the last
+  the next bite.
+- **One showcase, and not a second.** He asked for complexity before number, and this is four
+  projects. A second of another kind is not started; the rows still open come first.
+- **The lockfile.** `pnpm install` for the four also rewrote one line it had left stale: the
+  command line's test runner is now resolved against the esbuild the command line itself
+  depends on (0.28.2) and not the one tsup brings (0.27.7). Its suite is green on it.

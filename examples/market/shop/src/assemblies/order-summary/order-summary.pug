@@ -1,0 +1,27 @@
+section.order(aria-labelledby="order-title")
+  if data.found
+    h1#order-title Thank you, #{data.name}
+    p.order-lead Order #[code= data.short] was placed on #{data.placed} and is going to #{data.city}.
+    table.table
+      thead
+        tr
+          th(scope="col") What
+          th(scope="col") How many
+          th(scope="col") Sum
+      tbody
+        each line in data.lines
+          tr
+            th(scope="row")= line.name
+            td= line.quantity
+            td= line.sum
+      tfoot
+        tr
+          th(scope="row" colspan="2") Total
+          td
+            strong= data.total
+    p.order-note Keep this page's address: it is the only way back to this order.
+  else
+    h1#order-title We have no such order
+    p.notice.notice--strong This address does not lead to an order. It may be from before the shop was last restarted: a showcase keeps its orders in memory.
+    p
+      a(href="/c/all") Back to the shelves

@@ -1,0 +1,12 @@
+.viewed h2 {
+  margin: 0 0 var(--space-2);
+  font: 600 var(--text-3) / 1.25 var(--face-display);
+}
+.viewed ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

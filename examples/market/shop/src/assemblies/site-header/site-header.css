@@ -1,0 +1,22 @@
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-panel);
+}
+.brand {
+  color: var(--ink);
+  font: 600 var(--text-3) / 1 var(--face-display);
+  text-decoration: none;
+}
+.site-links {
+  display: flex;
+  gap: var(--space-3);
+  margin-inline-end: auto;
+}
+.site-links a {
+  color: var(--ink);
+}

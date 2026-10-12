@@ -1,0 +1,9 @@
+<nav class="shelves" aria-label="Shelves">
+  <ul>
+    {{#each data.shelves}}
+    <li>
+      <a href="/c/{{slug}}"{{#if here}} aria-current="page"{{/if}}>{{name}} <span class="shelves-count">{{count}}</span></a>
+    </li>
+    {{/each}}
+  </ul>
+</nav>

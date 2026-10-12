@@ -1,0 +1,28 @@
+{
+  "name": "@assemblejs/example-market-catalog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The showcase's catalogue team: the shelves, each product and its facts, placed on the shop's pages from this server.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/renderer-lit": "workspace:*",
+    "@assemblejs/renderer-preact": "workspace:*",
+    "@assemblejs/renderer-react": "workspace:*",
+    "@assemblejs/renderer-templates": "workspace:*",
+    "@assemblejs/renderer-vue": "workspace:*",
+    "lit": "3.3.3",
+    "preact": "11.0.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "vue": "3.5.43"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}

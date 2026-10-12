@@ -1,0 +1,21 @@
+{
+  "name": "@assemblejs/example-market-fulfilment",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The showcase's fulfilment team: where each parcel is, told of orders by the shop's server and placed on its order page from this one.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/renderer-solid": "workspace:*",
+    "@assemblejs/renderer-templates": "workspace:*",
+    "solid-js": "1.9.15"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}

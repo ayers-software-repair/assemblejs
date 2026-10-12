@@ -1,0 +1,22 @@
+{
+  "name": "@assemblejs/example-market-reviews",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "The showcase's reviews team: what people said of each product, placed on the shop's product pages from this server.",
+  "scripts": {
+    "build": "assemblejs build",
+    "dev": "assemblejs dev",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@assemblejs/core": "workspace:*",
+    "@assemblejs/renderer-lit": "workspace:*",
+    "@assemblejs/renderer-vue": "workspace:*",
+    "lit": "3.3.3",
+    "vue": "3.5.43"
+  },
+  "devDependencies": {
+    "@assemblejs/cli": "workspace:*"
+  }
+}

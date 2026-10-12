@@ -1,0 +1,37 @@
+.basket {
+  display: grid;
+  gap: var(--space-3);
+  max-inline-size: 48rem;
+}
+.basket h1 {
+  margin: 0;
+  font: 600 var(--text-4) / 1.2 var(--face-display);
+}
+.basket input {
+  inline-size: 4.5rem;
+}
+.basket-note {
+  display: block;
+  color: var(--ink-muted);
+  font-size: var(--text-1);
+  font-weight: 400;
+}
+.basket-remove {
+  padding: var(--space-1) var(--space-2);
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--text-1);
+}
+.basket-remove:hover {
+  border-color: var(--ink);
+  background: var(--surface-panel);
+}
+.basket-quiet {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

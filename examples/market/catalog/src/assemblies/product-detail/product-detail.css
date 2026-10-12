@@ -1,0 +1,66 @@
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+.detail-trail {
+  grid-column: 1 / -1;
+  color: var(--ink-muted);
+  font-size: var(--text-1);
+}
+.detail-views {
+  display: grid;
+  gap: var(--space-2);
+}
+.detail-picks {
+  display: flex;
+  gap: var(--space-2);
+}
+.pick {
+  inline-size: 3rem;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 2px solid var(--border);
+}
+.pick[aria-pressed="true"] {
+  border-color: var(--ink);
+}
+.detail-words h1 {
+  margin: 0;
+  font: 600 var(--text-4) / 1.2 var(--face-display);
+}
+.detail-price {
+  margin: var(--space-2) 0;
+  font-size: var(--text-3);
+  font-weight: 600;
+}
+.detail-grind {
+  display: flex;
+  gap: var(--space-2);
+  align-items: end;
+}
+.tile {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--corner);
+  font: 600 4rem / 1 var(--face-display);
+}
+.tile-a {
+  background: var(--accent);
+  color: var(--surface);
+}
+.tile-b {
+  background: var(--accent-alt);
+  color: var(--surface);
+}
+.tile-c {
+  background: var(--surface-panel);
+  color: var(--accent-strong);
+}
+@media (max-width: 40rem) {
+  .detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

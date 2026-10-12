@@ -1,0 +1,28 @@
+.board {
+  display: grid;
+  gap: var(--space-2);
+  max-inline-size: 52rem;
+}
+.board h1 {
+  margin: 0;
+  font: 600 var(--text-4) / 1.2 var(--face-display);
+}
+.board-said {
+  min-block-size: 1.5em;
+  margin: 0;
+  color: var(--ink-muted);
+}
+.board-none td:first-of-type {
+  color: var(--accent-alt);
+  font-weight: 600;
+}
+.board-set {
+  display: flex;
+  gap: var(--space-2);
+}
+.board-set input {
+  inline-size: 5rem;
+}
+.board-set button {
+  padding: var(--space-1) var(--space-3);
+}
