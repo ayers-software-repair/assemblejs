@@ -15,6 +15,9 @@ export default tseslint.config(
   {
     ignores: [
       "**/dist/**",
+      // What a build generates into a project, an example's among them: written for the bundler
+      // and the compiler and by no hand, and there only on a machine that has built it.
+      "**/.assemblejs/**",
       "**/node_modules/**",
       "coverage/**",
       "scripts/fixtures/**",

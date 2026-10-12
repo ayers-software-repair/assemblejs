@@ -52,9 +52,10 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a view its
-compiler refuses is reported at the view (DECISIONS 2026-10-12, of that name). Beneath it
-`ebdaa27`, the gates are held to what they say, four rows of the gates, the tests and the
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the modules the
+build generates type-check (DECISIONS 2026-10-12, of that name). Beneath it `0776296`, a view
+its compiler refuses is reported at the view (`ci` 38222121545, all five jobs green). Beneath
+it `ebdaa27`, the gates are held to what they say, four rows of the gates, the tests and the
 READMEs (`ci` 38221521004). Beneath it `736af62`, a project is made where nothing is written over, three rows
 of the command line and the agent surface (`ci` 38220661562). Beneath it `3117cdb`, what is written into a file is written as
 the file is laid out, four rows of the two (`ci` 38218518886, all five jobs green). Beneath it
@@ -1349,7 +1350,19 @@ a spec watched red first, or struck with its reason.
 - [ ] A new project has no `tsconfig.json`: the compiler's defaults give "Cannot use JSX unless the
       '--jsx' flag is provided" on every `.tsx` view, no types for React (the documented install
       line names no `@types/react`) or for node, and the generated `.assemblejs/assemblies.ts`
-      itself does not type-check
+      itself does not type-check. MEASURED 2026-10-12, 39 errors on the frameworks example
+      under a strict configuration, of three causes. DONE of the build's two: the generated
+      modules type-check, 26 errors gone, and a fresh project with TypeScript and Node's types
+      type-checks after its first build. THE OWNER'S TO SETTLE of the rest, each with what was
+      measured: whose JSX a `.tsx` is when a project mixes frameworks (three ways, the seat's
+      advice the line in the file with `check` naming one that lacks it), and whether the
+      starter writes a `tsconfig.json` and installs `typescript` and `@types/node` (4 packages,
+      6.3 MB; and a project type-checks only after a build, `.assemblejs/` being generated and
+      not committed, which is what a script for it must run first) (DECISIONS 2026-10-12, "the modules the build generates type-check")
+- [ ] Every module the build generates into a project is headed with Ayers Electronics'
+      copyright line, beside the line that says it is generated
+      (`packages/cli/src/generate/generated-header.ts`). An identity string in a file made of the
+      project's own directories: THE OWNER'S (found 2026-10-12)
 - [ ] The starter's hello page links `https://www.assemblejs.com/next/docs/tutorial.html`
       (`commands/project-files.ts:51`), which answers 404 until the owner launches the domain, and
       says `/next/` whatever the channel; five conformance assertions pin the address. Each
@@ -1374,7 +1387,13 @@ a spec watched red first, or struck with its reason.
       where `/products` is a 200. Neither is in DESIGN: the owner's to settle
 - [ ] The repository's own harnesses leak servers: three `node dist/server.js`, two from conformance
       runs and one from the command line suite's dev spec, were still listening eleven to twelve
-      hours after their runs, orphaned. Which path fails to stop them is not yet found
+      hours after their runs, orphaned. Which path fails to stop them is not yet found. READ AND MEASURED
+      2026-10-12: each of the five fixtures run to its end leaves no server (counted after each),
+      and neither did eight runs of the command line's suite that day. The harness stops its
+      servers on SIGINT and SIGTERM (`conformance/harness/run.mjs:74`). What is left is a run
+      killed outright, and a server a spec file starts itself when the runner above it is
+      stopped: the three found were of runs stopped from outside. Not reproduced, and open at
+      that
 - [x] The command line cannot say its version: `--version`, `-v` and `version` are each an unknown
       command. DONE 2026-10-11: `--version` and `-v` print the version its package.json holds
       (DECISIONS 2026-10-11, "the starter and the arguments")

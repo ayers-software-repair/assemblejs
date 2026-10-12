@@ -54,7 +54,9 @@ describe("generating the registry the built server imports", () => {
       found("cart", "cart.html", "html"),
       found("hi", "hi.react.tsx", "react"),
     ]);
-    expect(source).toContain('import view_cart from "../src/assemblies/cart/cart.html";');
+    expect(source).toContain(
+      '// @ts-ignore: not TypeScript, and read by the build\nimport view_cart from "../src/assemblies/cart/cart.html";',
+    );
     expect(source).toContain('import * as view_hi from "../src/assemblies/hi/hi.react.js";');
     expect(source).not.toContain("readdir");
     expect(source).not.toContain("import(");
@@ -98,8 +100,8 @@ describe("generating the registry the built server imports", () => {
       found("hi", "hi.react.tsx", "react"),
       found("cart", "cart.html", "html"),
     ]);
-    expect(source).toContain("mount: view_hi.mount");
-    expect(source).toContain("shadow: view_hi.shadow");
+    expect(source).toContain("mount: said(view_hi).mount");
+    expect(source).toContain("shadow: said(view_hi).shadow");
     expect(source).not.toContain("view_cart.mount");
   });
 
@@ -144,7 +146,7 @@ describe("generating the registry the built server imports", () => {
       new Map([["hi", { scoped: "/s/hi-1.css", shadow: "/s/hi-1.shadow.css" }]]),
     );
     expect(source).toContain(
-      'css: [view_hi.shadow === true ? "/s/hi-1.shadow.css" : "/s/hi-1.css"]',
+      'css: [said(view_hi).shadow === true ? "/s/hi-1.shadow.css" : "/s/hi-1.css"]',
     );
   });
 
@@ -171,5 +173,37 @@ describe("generating the registry the built server imports", () => {
     expect(source).not.toMatch(/name: "cart".*mount:/);
     expect(source).not.toContain("view_cart.shadow");
     expect(source).not.toContain("renderToMarkup");
+  });
+
+  // A project that type-checks was failed by this module: it read `mount` and `shadow` off
+  // every framework view, most of which export neither, and imported files the compiler has
+  // no declaration for.
+  it("reads what a view says of itself through one typed reader, written once where one is read", () => {
+    const framework = generate(
+      [found("hi", "hi.react.tsx", "react"), found("yo", "yo.react.tsx", "react")],
+      "/c.js",
+    );
+    expect(framework.match(/^const said = /gm)).toHaveLength(1);
+    expect(framework).toContain('readonly mount?: AssemblyDefinition["mount"];');
+    expect(framework).toContain('readonly shadow?: AssemblyDefinition["shadow"];');
+    expect(framework).not.toMatch(/view_\w+\.(mount|shadow)/);
+    // A project of plain views reads nothing of the kind, and is not written the reader.
+    expect(generate([found("cart", "cart.html", "html")])).not.toContain("said");
+  });
+
+  it("has the compiler pass over the import of a view that is not TypeScript, and no other", () => {
+    const source = generate([
+      found("board", "board.svelte", "svelte"),
+      found("panel", "panel.vue", "vue"),
+      found("hi", "hi.react.tsx", "react", { service: "/p/src/assemblies/hi/hi.service.ts" }),
+      found("meter", "meter.lit.ts", "lit"),
+    ]);
+    const ignored = [...source.matchAll(/\/\/ @ts-ignore[^\n]*\nimport ([^\n]+)/g)].map(
+      (found) => found[1],
+    );
+    expect(ignored).toEqual([
+      '* as view_board from "../src/assemblies/board/board.svelte";',
+      '* as view_panel from "../src/assemblies/panel/panel.vue";',
+    ]);
   });
 });

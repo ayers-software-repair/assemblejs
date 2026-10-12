@@ -3,6 +3,7 @@
 export { GENERATED_HEADER } from "./generated-header.js";
 export { identifierFor } from "./identifier-for.js";
 export { importPath } from "./import-path.js";
+export { importOf } from "./import-of.js";
 export { generateRegistry } from "./generate-registry.js";
 export { generatePages } from "./generate-pages.js";
 export { generateApis } from "./generate-apis.js";

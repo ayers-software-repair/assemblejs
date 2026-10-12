@@ -3,6 +3,7 @@
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import { GENERATED_HEADER } from "./generated-header.js";
+import { importOf } from "./import-of.js";
 import { importPath } from "./import-path.js";
 
 /**
@@ -21,7 +22,7 @@ export function generateClientModule(
 `;
   }
   return `${GENERATED_HEADER}import { hydrate } from "${rendererPackage ?? `@assemblejs/renderer-${assembly.renderer}`}/client";
-import View from "${importPath(from, assembly.view)}";
+${importOf("View", from, assembly.view)}
 
 export default hydrate(View);
 `;

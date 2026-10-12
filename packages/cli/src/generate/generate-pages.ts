@@ -3,7 +3,7 @@
 import type { DiscoveredPage } from "../discovery/discovered-page.js";
 import { GENERATED_HEADER } from "./generated-header.js";
 import { identifierFor } from "./identifier-for.js";
-import { importPath } from "./import-path.js";
+import { importOf } from "./import-of.js";
 
 /**
  * The module the built server imports its pages from. Each page is its template, read at build
@@ -14,11 +14,11 @@ export function generatePages(pages: readonly DiscoveredPage[], from: string): s
   const imports: string[] = [];
   const entries = pages.map((page) => {
     const template = identifierFor("template", page.name);
-    imports.push(`import ${template} from "${importPath(from, page.template)}";`);
+    imports.push(importOf(template, from, page.template));
     const fields = [`route: ${JSON.stringify(page.route)}`];
     if (page.declaration !== undefined) {
       const declared = identifierFor("page", page.name);
-      imports.push(`import ${declared} from "${importPath(from, page.declaration)}";`);
+      imports.push(importOf(declared, from, page.declaration));
       fields.push(`...${declared}`);
     }
     fields.push(`template: ${template}`);

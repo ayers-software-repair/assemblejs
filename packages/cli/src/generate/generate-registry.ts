@@ -8,7 +8,7 @@ import { TEMPLATE_RENDERERS } from "../discovery/template-renderers.js";
 import type { AssemblyStyles } from "../styles/assembly-styles.js";
 import { GENERATED_HEADER } from "./generated-header.js";
 import { identifierFor } from "./identifier-for.js";
-import { importPath } from "./import-path.js";
+import { importOf } from "./import-of.js";
 
 // A view's path from the project root, which the generated module's directory sits in: what a
 // template's errors name it by.
@@ -20,6 +20,20 @@ const projectPath = (from: string, file: string): string =>
 const TEMPLATE_PACKAGE = "@assemblejs/renderer-templates";
 const TEMPLATE_RENDER = "render_template";
 
+// How the registry reads what a framework view says of itself. A view may export `mount` and
+// `shadow` and most export neither, and a property read off a module that does not export it
+// is an error to the compiler. Read through this, one that is missing is undefined, as it is
+// when the module runs, and one that is there is still held to the type the definition gives.
+const SAID = "said";
+const SAYS = `
+type ViewModule = {
+  readonly default: unknown;
+  readonly mount?: AssemblyDefinition["mount"];
+  readonly shadow?: AssemblyDefinition["shadow"];
+};
+const ${SAID} = (view: ViewModule): ViewModule => view;
+`;
+
 /**
  * The module the built server imports its assemblies from, and the author never opens.
  *
@@ -28,7 +42,8 @@ const TEMPLATE_RENDER = "render_template";
  * a plain html view is its own markup; a template view is its source, rendered by its engine. A
  * framework view's own `mount` and `shadow` exports, when it has them, say when its browser half
  * runs and whether it renders in its own shadow root; a module without one reads as undefined,
- * the default; a view in its own shadow root links the stylesheet built for that root instead of
+ * the default, and is read so that a project that type-checks is not failed for the export it
+ * left out; a view in its own shadow root links the stylesheet built for that root instead of
  * the one scoped to its envelope. An assembly with a browser half links the build's client
  * entry; one without is declared `none`, so it ships no JavaScript at all. What a view's source
  * is known to place is written beside it, for boot to hold and to link ahead of a deferral.
@@ -55,18 +70,14 @@ export function generateRegistry(
     const view = identifierFor("view", assembly.name);
     const html = isStaticView(assembly.renderer);
     const template = TEMPLATE_RENDERERS.includes(assembly.renderer);
-    imports.push(
-      html
-        ? `import ${view} from "${importPath(options.from, assembly.view)}";`
-        : `import * as ${view} from "${importPath(options.from, assembly.view)}";`,
-    );
+    imports.push(importOf(html ? view : `* as ${view}`, options.from, assembly.view));
     if (!html) renderers.add(assembly.renderer);
     if (template) templates = options.packages[assembly.renderer] ?? TEMPLATE_PACKAGE;
 
     const fields = [`renderer: "${assembly.renderer}"`];
     if (assembly.service !== undefined) {
       const service = identifierFor("service", assembly.name);
-      imports.push(`import ${service} from "${importPath(options.from, assembly.service)}";`);
+      imports.push(importOf(service, options.from, assembly.service));
       fields.push(`services: [${service}]`);
     }
     fields.push(
@@ -82,14 +93,14 @@ export function generateRegistry(
     const parts = [`name: "${assembly.name}"`, `views: { default: { ${fields.join(", ")} } }`];
     const browser = !html || assembly.client !== undefined;
     if (!browser) parts.push(`mount: "none"`);
-    else if (!html) parts.push(`mount: ${view}.mount`, `shadow: ${view}.shadow`);
+    else if (!html) parts.push(`mount: ${SAID}(${view}).mount`, `shadow: ${SAID}(${view}).shadow`);
     const styles = options.styles?.get(assembly.name);
     const css =
       styles === undefined
         ? ""
         : styles.shadow === undefined
           ? JSON.stringify(styles.scoped)
-          : `${view}.shadow === true ? ${JSON.stringify(styles.shadow)} : ${JSON.stringify(styles.scoped)}`;
+          : `${SAID}(${view}).shadow === true ? ${JSON.stringify(styles.shadow)} : ${JSON.stringify(styles.scoped)}`;
     const js = browser ? options.script : undefined;
     if (css !== "" || js !== undefined) {
       parts.push(`assets: { css: [${css}], js: [${js === undefined ? "" : JSON.stringify(js)}] }`);
@@ -108,7 +119,7 @@ export function generateRegistry(
   return `${GENERATED_HEADER}
 import type { AssemblyDefinition } from "@assemblejs/core";
 ${[...rendererImports, ...imports].join("\n")}
-
+${entries.some((entry) => entry.includes(`${SAID}(`)) ? SAYS : ""}
 export const assemblies: readonly AssemblyDefinition[] = [
 ${entries.join("\n")}
 ];

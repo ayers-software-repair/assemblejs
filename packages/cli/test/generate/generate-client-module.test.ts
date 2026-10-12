@@ -27,6 +27,18 @@ describe("one assembly's browser half, as its own module", () => {
     expect(source).toContain("export default hydrate(View);");
   });
 
+  it("has the compiler pass over the import of a Svelte or a Vue view, which it cannot read", () => {
+    const source = generateClientModule(
+      assembly({ view: "/p/src/assemblies/hi/hi.svelte", renderer: "svelte" }),
+      "/p/.assemblejs/client",
+      undefined,
+    );
+    expect(source).toContain(
+      '// @ts-ignore: not TypeScript, and read by the build\nimport View from "../../src/assemblies/hi/hi.svelte";',
+    );
+    expect(source).toContain('import { hydrate } from "@assemblejs/renderer-svelte/client";');
+  });
+
   it("re-exports a plain html view's own browser behaviour", () => {
     const source = generateClientModule(
       assembly({

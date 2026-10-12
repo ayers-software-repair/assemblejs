@@ -22,8 +22,11 @@ describe("generating the pages the built server imports", () => {
       ],
       "/p/.assemblejs",
     );
-    expect(source).toContain('import template_home from "../src/pages/home/home.html";');
+    expect(source).toContain(
+      '// @ts-ignore: not TypeScript, and read by the build\nimport template_home from "../src/pages/home/home.html";',
+    );
     expect(source).toContain('import page_shop from "../src/pages/shop/shop.page.js";');
+    expect(source).not.toContain("@ts-ignore: not TypeScript, and read by the build\nimport page_");
     expect(source).toContain('{ route: "/", template: template_home },');
     expect(source).toContain('{ route: "/shop", ...page_shop, template: template_shop },');
     expect(source).toContain("GENERATED");
