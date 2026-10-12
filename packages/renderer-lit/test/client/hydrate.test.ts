@@ -9,7 +9,7 @@ import { shellHolding } from "../fixtures/shell-markup.js";
 import { shellView } from "../fixtures/shell-view.js";
 import { STEPS_MARKUP } from "../fixtures/steps-markup.js";
 import { stepsView } from "../fixtures/steps-view.js";
-import type { ProbeSteps } from "../fixtures/steps-view.js";
+import type { ProbeCount, ProbeSteps } from "../fixtures/steps-view.js";
 
 const mountInto = (into?: ShadowRoot) => {
   const element = document.createElement("assembly-root");
@@ -110,6 +110,30 @@ describe("an element whose list the view sets", () => {
     steps.steps = ["light", "medium", "dark"];
     await steps.updateComplete;
     expect(steps.shadowRoot?.querySelectorAll("li")).toHaveLength(3);
+  });
+
+  // Lit lets go of an element as it sets what the view binds to it, and of no other: one the
+  // view gives nothing was marked to wait, and waited for ever.
+  it("lets go of an element the view gives nothing, which hydrates all the same", async () => {
+    const element = parsed(STEPS_MARKUP);
+    const count = element.querySelector("probe-count") as ProbeCount;
+    const server = count.shadowRoot?.querySelector("button");
+    mount(element);
+    expect(count.hasAttribute("defer-hydration")).toBe(false);
+    await count.updateComplete;
+    expect(count.shadowRoot?.querySelector("button")).toBe(server);
+    server?.click();
+    await count.updateComplete;
+    expect(server?.textContent).toBe("1");
+  });
+
+  it("leaves an element inside another's root to that element", () => {
+    const element = parsed(STEPS_MARKUP);
+    const inner = document.createElement("probe-count");
+    inner.setAttribute("defer-hydration", "");
+    element.querySelector("probe-steps")?.shadowRoot?.append(inner);
+    mount(element);
+    expect(inner.hasAttribute("defer-hydration")).toBe(true);
   });
 });
 

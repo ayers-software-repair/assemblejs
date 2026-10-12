@@ -6100,3 +6100,31 @@ shop's page and on the catalogue server's own.
   elements are updated by a copy of Lit that is not theirs: the stack of the error above ran
   from the reviews server's chunk into the catalogue's element. With one version of Lit on
   both it works. A row holds it.
+
+## 2026-10-12: a Lit element the view binds nothing to is let go by the view
+
+The fix before this one was red in the browser proof (`ci` 38210828288, `browser proof`, 45 of
+46): the Lit shell of the frameworks example, an element with nothing bound to it, no longer
+counted. The seat's own red, its sixth, and the second of this kind: a renderer changed, its
+own suite green, the examples not walked before the push.
+
+- **Expected:** marked to wait, every element a view holds is let go by Lit's hydration of the
+  view.
+- **Found:** Lit lets go of an element as it sets what the view binds to it, and of no other.
+  Its server render writes the marker its hydration stops at only for an element with a binding
+  or one inside another element (`@lit-labs/ssr` `render-value.js`, `possible-node-marker`), so
+  an element at the top of a view with nothing bound to it was marked `defer-hydration` and
+  never let go: the server's markup, with no handler on it, for ever. Every Lit view of the
+  showcase binds something, which is why the seat's check in Chrome did not see it.
+- **Now:** once the view has hydrated, the browser half removes the mark from each of the
+  view's own elements that still carries it: those in the view's tree that are not inside an
+  assembly it places, which is that assembly's view's to let go, nor inside another element's
+  shadow root, which Lit lets go as that element hydrates.
+- **Proof.** The fixture view holds both kinds, and the browser half's case for the unbound one
+  was red before (`defer-hydration` still on it) and is green; a third case holds that an
+  element inside another's root is left alone. And walked in the owner's Chrome on the built
+  frameworks example, the page that went red: the Lit shell counts to 2, the React assembly it
+  holds is the element the server sent and counts, the Lit counter a Solid assembly holds
+  counts and wears its own colour, no element is left marked, and the console is empty.
+- **The rule the seat takes from it:** a renderer's change is walked on the built examples in a
+  real browser before it is pushed, since the browser proof cannot run here.

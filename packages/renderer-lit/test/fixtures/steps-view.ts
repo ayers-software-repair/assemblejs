@@ -21,9 +21,26 @@ export class ProbeSteps extends LitElement {
 }
 customElements.define("probe-steps", ProbeSteps);
 
+/** An element the view gives nothing: its state is its own. */
+export class ProbeCount extends LitElement {
+  static override properties = { count: { state: true } };
+  declare count: number;
+
+  constructor() {
+    super();
+    this.count = 0;
+  }
+
+  override render() {
+    return html`<button type="button" @click=${() => (this.count += 1)}>${this.count}</button>`;
+  }
+}
+customElements.define("probe-count", ProbeCount);
+
 /**
- * A view that hands an element its list as a property. Both test projects build it: the server
- * one renders it, the browser one hydrates it.
+ * A view that hands one element its list as a property and another nothing at all. Both test
+ * projects build it: the server one renders it, the browser one hydrates it.
  */
 export const stepsView = (props: AssemblyProps) =>
-  html`<probe-steps .steps=${props.data["steps"] as string[]}></probe-steps>`;
+  html`<probe-steps .steps=${props.data["steps"] as string[]}></probe-steps
+    ><probe-count></probe-count>`;
