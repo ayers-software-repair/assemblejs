@@ -41,7 +41,9 @@ measured and what the seat advises: two servers on one page (FINDINGS 35 to 37),
 file is and the starter's `tsconfig.json`, the stack a refused boot prints, the `Renderer`
 contract nothing calls, Lit's one hydration hook, what a `perf` budget holds of mounting and
 a value for a route's parameter, a dynamic route that cannot answer 404, the copyright line
-on generated modules, `CLAUDE.md`, the first prerelease. FINDINGS 53 to 58 in the evidence
+on generated modules, what a handler may return as JSON, `CLAUDE.md`, the first prerelease.
+His answer on whose JSX a file is also decides whether any gate can type-check `examples/`,
+which none does: 64 errors of that kind stand in the ten. FINDINGS 53 to 60 in the evidence
 directory are the state at the end. A SESSION THAT RESUMES HERE HAS NO BITE TO TAKE: it reads
 `origin/next`'s last run, and anything a seat or the owner has added to this file since, and
 says so to the lead.
@@ -63,9 +65,10 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a server does
-not outlive what started it (DECISIONS 2026-10-12, of that name), the seat's last row. Beneath
-it `e27a28d`, a record alone (`ci` 38228957953, all five jobs green). Beneath it `8e33838`, perf weighs
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a view that
+says what its data holds is taken by its renderer (DECISIONS 2026-10-12, of that name), found
+by type-checking every example, which nothing had. Beneath it `679dd3d`, a server does not
+outlive what started it (`ci` 38231282591, all five jobs green). Beneath it `e27a28d`, a record alone (`ci` 38228957953, all five jobs green). Beneath it `8e33838`, perf weighs
 what a module imports before it runs (DECISIONS 2026-10-12, of that name; `ci` 38228319770,
 all five jobs green). Beneath it `8954577`, the agent surface shows a page as a visitor is
 shown it (`ci` 38227454113, all five jobs green). Beneath it `ebc95a9`, check compiles the views a build would (`ci` 38225918826). Beneath it `97e7a9d`,
@@ -1376,6 +1379,25 @@ a spec watched red first, or struck with its reason.
       starter writes a `tsconfig.json` and installs `typescript` and `@types/node` (4 packages,
       6.3 MB; and a project type-checks only after a build, `.assemblejs/` being generated and
       not committed, which is what a script for it must run first) (DECISIONS 2026-10-12, "the modules the build generates type-check")
+- [x] A view that types its data, `AssemblyProps<Offer>`, as the site's pages say to, is refused by
+      its renderer's `renderToMarkup` and `hydrate` in the modules the build generates (found
+      2026-10-12, type-checking the showcase). DONE the same day, in the React, Preact, Solid
+      and Lit renderers (DECISIONS 2026-10-12, "a view that says what its data holds is taken by its renderer")
+- [ ] No example is type-checked by any gate, the showcase among them. Measured 2026-10-12 under
+      a strict configuration, generated browser modules included: 64 errors in the ten, none in
+      `templates` or `market/reviews`; `market/shop` 13, `market/catalog` 4, `market/fulfilment`
+      17, `frameworks` 15, `shadow` 9, `two-frameworks`, `realtime` and `styles` 2 each. Every
+      one is of the kinds the row above leaves to the owner: no types for React's JSX, and a
+      Preact or Solid file read as React's. THE OWNER'S answer there decides whether a gate can
+      hold `examples/`, and so whether the showcase is clean before the first prerelease. A
+      configuration that type-checks a project names `.assemblejs/**/*.ts`, as naming
+      `.assemblejs` alone leaves the generated browser modules out
+- [ ] An api or a service that answers one of two shapes without declaring them is refused as
+      JSON: TypeScript gives each shape the other's members as `undefined`, and `JsonValue` has
+      none; an `interface` is refused too. Measured 2026-10-12, five cases. Nothing is wrong at
+      run time. THE OWNER'S TO SETTLE, as it is what the contract's own JSON types mean; the
+      seat's advice is to let a member of an object be absent in what a handler returns. The
+      showcase's four handlers declare what they answer (DECISIONS 2026-10-12, "a view that says what its data holds is taken by its renderer")
 - [ ] Every module the build generates into a project is headed with Ayers Electronics'
       copyright line, beside the line that says it is generated
       (`packages/cli/src/generate/generated-header.ts`). An identity string in a file made of the

@@ -6726,3 +6726,59 @@ after their runs. It had been measured and not reproduced. It is reproduced now,
   this machine is the gates the bite touches (D1277). The floor is Node 22 and this machine
   runs 24: `ci`'s `verify (22)` job is where the new case runs on the floor. The command
   line's tarball is at 101,026 bytes of its 102,000.
+
+## 2026-10-12: a view that says what its data holds is taken by its renderer
+
+A reader of the seat's report said what the report had not: no example is type-checked by
+anything, the showcase among them, and only one had been measured. All ten are measured now,
+under the strict configuration of the entry on generated modules. What that found is three
+things, with three owners.
+
+- **The renderers refused a typed view** (a defect of the product, mended). The site's own
+  pages say `AssemblyProps` takes the shape of a view's data as a type argument, and the
+  showcase does so in seven views. `renderToMarkup` and `hydrate` took a view of
+  `AssemblyProps<JsonObject>` and no other, and a parameter is checked the other way round, so
+  a view of `AssemblyProps<Offer>` was refused where the build's generated modules hand it
+  over, on the server and in the browser alike. Both take a view of any shape of data now, in
+  the React, Preact, Solid and Lit renderers; Lit's `LitView` takes the shape. Where Solid and
+  Lit hand the view its data through a typed call, the data is said to be that shape once, at
+  the call: it is what the assembly's services returned, and the shape is its author's word
+  for that. Watched: each of the four type-checks red on a view typed
+  `AssemblyProps<{ cents: number }>`, two errors each, and green after. Nothing runs
+  differently: the built JavaScript of three is the same byte for byte, and Lit's differs by
+  one comment.
+- **A handler that answers one of two shapes is refused as JSON** (measured, and the owner's).
+  `return { ok: false, problems }` on one path and `return { ok: true, id }` on another is
+  what an api and a service naturally write, four times in the showcase. TypeScript makes of
+  the two a union in which each shape has the other's members as `undefined`, and
+  `JsonValue` has no `undefined`. Measured in a probe of five cases with TypeScript 6.0.3: one
+  expression of two shapes, and two returns of two shapes, are refused; a declared union of
+  two type aliases is taken, and so is one shape with an optional member; an `interface` is
+  refused, having no index signature. At run time nothing is wrong: an island's data and an
+  api's answer go through `JSON.stringify`, which leaves such a member out. But the type says
+  of itself that it holds "anything that survives a round trip through JSON, and nothing that
+  does not", and whether it should take a member that may be absent is a word about what the
+  contract's own types mean. The showcase's four handlers declare what they answer, which
+  type-checks whichever way that is settled; the product's shape is said once, by its service,
+  and its view reads it. The seat's advice is to let a member of an object be absent in what
+  a handler returns.
+- **Whose JSX a file is, and its types** (the owner's already, item three of the report). What
+  is left in the ten examples after the two above is 64 errors, every one of this kind: no
+  types for React's JSX, a Preact or Solid file read as React's, and what follows from those.
+  Two examples have none (the templates, and the reviews team's server). His answer also
+  decides whether a gate can type-check `examples/` at all, which none does.
+- **The generated browser modules are in no program unless they are named.** A pattern that
+  names `.assemblejs` takes the modules a server file imports and not `.assemblejs/client/`;
+  `.assemblejs/**/*.ts` takes them. The measure of the day before was of the first kind and
+  missed three errors in the shop alone. The claim it made of a new project stands: a starter
+  has no browser modules, and type-checks with either pattern. A configuration the starter is
+  given must name the second.
+- **Proof.** The four type-checks red and then green, as said. The four renderers' own gate:
+  the cheap chain, their suites (23, 26, 30 and 34 cases), their packed tarballs within their
+  budgets, the reference. The showcase's four projects built and checked by the built command
+  line, no problems, and none of the catalogue's service in its browser files, though its
+  view reads a type from it. The ten examples measured again: of the typed-view refusals and
+  the two-shaped handlers, none left; 64 errors, all of the third kind, the one implicit `any`
+  among them a list a React hook made, untyped where React has no types. A change to a
+  renderer is walked in a browser before it is pushed; this one is not, as what the browser
+  loads is the same file, byte for byte or by a comment, and `ci`'s browser proof reads it.

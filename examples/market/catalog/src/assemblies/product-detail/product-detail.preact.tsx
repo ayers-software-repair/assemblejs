@@ -2,20 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { AssemblyProps } from "@assemblejs/renderer-preact";
 import { useState } from "preact/hooks";
-
-type Found = {
-  found: true;
-  sku: string;
-  name: string;
-  blurb: string;
-  price: string;
-  mark: string;
-  tone: string;
-  category: { slug: string; name: string };
-  grinds: string[];
-  grind: string;
-};
-type Missing = { found: false; sku: string };
+import type { Found, Missing } from "./product-detail.service.js";
 
 const TONES = ["a", "b", "c"];
 

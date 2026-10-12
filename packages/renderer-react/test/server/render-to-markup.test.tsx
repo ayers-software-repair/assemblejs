@@ -3,7 +3,7 @@
 import { useId } from "react";
 import { describe, expect, it } from "vitest";
 import { renderToMarkup } from "@assemblejs/renderer-react";
-import { useEvents } from "@assemblejs/renderer-react/client";
+import { hydrate, useEvents } from "@assemblejs/renderer-react/client";
 import type { AssemblyProps } from "@assemblejs/renderer-react";
 
 const Cart = ({ data }: AssemblyProps) => <p>Items: {String(data["total"])}</p>;
@@ -61,5 +61,13 @@ describe("rendering a React assembly on the server", () => {
       return <p>{events.last("counted") === undefined ? "nothing yet" : "heard"}</p>;
     };
     expect(renderToMarkup(Readout, { data: {} })).toBe("<p>nothing yet</p>");
+  });
+
+  // The shape of its data is the type argument AssemblyProps exists to take, and a view that
+  // gave one was refused by the function that renders it and by the one that hydrates it.
+  it("takes a view that says what its data holds", () => {
+    const Priced = ({ data }: AssemblyProps<{ cents: number }>) => <p>{data.cents / 100}</p>;
+    expect(renderToMarkup(Priced, { data: { cents: 250 } })).toBe("<p>2.5</p>");
+    expect(typeof hydrate(Priced).mount).toBe("function");
   });
 });

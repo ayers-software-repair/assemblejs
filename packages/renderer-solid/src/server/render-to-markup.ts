@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { MarkupInput } from "@assemblejs/core";
+import type { JsonObject, MarkupInput } from "@assemblejs/core";
 import { serverEvents } from "@assemblejs/core/client";
 import { createComponent } from "solid-js";
 import type { Component } from "solid-js";
@@ -24,13 +24,17 @@ import type { AssemblyProps } from "../props/assembly-props.js";
  * server's events, so a component that calls `useEvents()` renders on the server as in the
  * browser.
  */
-export function renderToMarkup(component: Component<AssemblyProps>, input: MarkupInput): string {
+export function renderToMarkup<D extends JsonObject>(
+  component: Component<AssemblyProps<D>>,
+  input: MarkupInput,
+): string {
   const html = renderToString(
     () =>
       createComponent(EventsContext.Provider, {
         value: serverEvents(),
         get children() {
-          return createComponent(component, { data: input.data });
+          // What the assembly's services returned, which its author says is D.
+          return createComponent(component, { data: input.data as D });
         },
       }),
     { renderId: input.id ?? "" },

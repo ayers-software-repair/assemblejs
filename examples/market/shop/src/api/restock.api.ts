@@ -3,12 +3,15 @@
 import { defineApi } from "@assemblejs/core";
 import { stock } from "../shop/stock.js";
 
+// What setting a level answers: the level as it now stands, or that what was sent was not one.
+type Answer = { ok: true; sku: string; left: number } | { ok: false };
+
 // Staff set a level. The address is guarded by the project's own access check
 // (assemblejs.config.ts), so only a signed-in member of staff reaches this.
 export default defineApi({
   path: "/api/restock",
   method: "POST",
-  handle: ({ body }) => {
+  handle: ({ body }): Answer => {
     const { sku, left } = (typeof body === "object" && body !== null ? body : {}) as {
       sku?: unknown;
       left?: unknown;
