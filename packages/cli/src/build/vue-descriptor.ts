@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import type { VueBlock } from "./vue-block.js";
 
 /** The parts of a parsed single-file component a build reads, as Vue's compiler describes them. */
 export interface VueDescriptor {
@@ -13,10 +14,4 @@ export interface VueDescriptor {
   })[];
   /** The expressions `v-bind()` in the component's styles reads. */
   readonly cssVars: readonly string[];
-}
-
-/** What every block of a single-file component may say about itself. */
-interface VueBlock {
-  readonly lang?: string;
-  readonly src?: string;
 }

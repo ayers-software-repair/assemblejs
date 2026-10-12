@@ -1,7 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import { Window } from "happy-dom";
 import { pageText } from "./site-page-text.mjs";
 import { renderLinks } from "./site-links.mjs";
 
@@ -32,6 +34,39 @@ test("new unsupported content still fails rather than disappearing from the text
     () => pageText("<main><h1>A</h1><p>B.</p><canvas>Unknown</canvas></main>", "a.html"),
     /canvas.*no way/,
   );
+});
+
+test("heading groups keep the strapline without mistaking it for the page description", () => {
+  const page = pageText(
+    "<main><hgroup><h1>Framework</h1><p>The strapline.</p></hgroup><p>The description.</p><ul><li>A feature.</li></ul></main>",
+    "index.html",
+  );
+  assert.equal(page.title, "Framework");
+  assert.equal(page.lede, "The description.");
+  assert.deepEqual(page.blocks, [
+    "# Framework",
+    "The strapline.",
+    "The description.",
+    "- A feature.",
+  ]);
+});
+
+test("404 recovery links keep the product prefix at an unknown nested address", () => {
+  const html = readFileSync(new URL("../site/404.html", import.meta.url), "utf8");
+  for (const host of ["https://assemblejs.com", "https://ayers.repair"]) {
+    const window = new Window({ url: host + "/assemblejs/missing/deep/page.html" });
+    try {
+      window.document.write(html);
+      assert.equal(window.document.querySelector("base"), null);
+      const address = (selector) => window.document.querySelector(selector).href;
+      assert.equal(address(".product-brand"), host + "/assemblejs/index.html");
+      assert.equal(address(".product-nav a"), host + "/assemblejs/downloads.html");
+      assert.equal(address('link[rel="stylesheet"]'), host + "/assemblejs/skin.css");
+      assert.equal(address(".product-skip"), window.location.href + "#main");
+    } finally {
+      void window.happyDOM.close();
+    }
+  }
 });
 
 test("product navigation resolves correctly for nested guides and marks the active section", () => {

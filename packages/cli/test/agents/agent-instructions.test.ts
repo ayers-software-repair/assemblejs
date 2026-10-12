@@ -40,6 +40,7 @@ describe("what an agent that opens a project is told", () => {
     for (const named of [
       "`assemblejs://project`",
       "`assemblejs://rules`",
+      "`assemblejs://contract`",
       "`add_assembly`",
       "`place_assembly`",
       "`render_assembly`",
@@ -63,9 +64,12 @@ describe("what an agent that opens a project is told", () => {
   });
 
   // An agent told that it will be shown a view, and shown a refusal, has been told wrong.
-  it("says which views the tools show at once, and where the rest are seen", () => {
+  it("says which views the tools show with the dev server running, and which with none", () => {
     expect(visible).toContain(
-      "A view in a framework or a template language is source its renderer\n  compiles, so both tools say that in place of showing it, and the running server shows it.",
+      "While the project's dev server runs\n  (`npx assemblejs dev`), both ask it, so any view is shown as the project serves it",
+    );
+    expect(visible).toContain(
+      "With none running, a plain html view is rendered on the spot and a\n  view in a framework or a template language is answered with the reason",
     );
   });
 

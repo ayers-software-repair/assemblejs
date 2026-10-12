@@ -10,6 +10,7 @@ const fake = () => {
   const io: Io = {
     write: (path, contents) => void written.set(path.replaceAll("\\", "/"), String(contents)),
     exists: () => false,
+    remove: () => undefined,
     log: () => undefined,
     error: (line) => errors.push(line),
   };

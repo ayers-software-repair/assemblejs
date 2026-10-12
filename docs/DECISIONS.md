@@ -4229,3 +4229,1043 @@ Settled:
 - **Held in the remote fixture**: the consumer trusts its producer, a page passes its query to
   the producer's `echo`, and the outbound spec goes on holding the query away from the hostile
   remote, which is declared and not trusted.
+
+## 2026-10-11: the dev server renders for the agent
+
+The owner's answer of this morning (D1252, "Dev server, tool runs nothing") to how an agent is
+shown a framework view. The agent surface rendered a plain html view in process and refused every
+other, since a framework or template view is source its renderer compiles and running the
+project's code in the tool was never the design (13.6).
+
+Settled:
+
+- **`dev` records where it listens.** `.assemblejs/dev.json` under the root holds `{ url }` from
+  the moment the server says it is listening until dev stops it, or restarts it on a change; the
+  command line's io gains `remove` for it. The directory is already ignored by a new project.
+- **The tools ask that server.** `devServerUrl` reads the record and asks the server's health
+  before believing it, so a record a dead dev left is nothing; `devServerFetch` is the composer's
+  transport for a running project, asking the content endpoint for each placement with the
+  composition headers and the query, as a page asks another server. With a dev server running,
+  `render_assembly` asks it for any assembly and `compose_page` for every placement, so what the
+  agent is shown is what the project serves, services and all; without one, the tools do as
+  before, and the refusal of a framework view now says to start the dev server
+  (`needsTheDevServer`, in place of `needsABuild`).
+- **The tool still runs nothing of the project's.** The one address it reaches is the dev server
+  on this machine, at the recorded url, said in DESIGN 13.4 and 13.6.
+- **The agent surface's tarball budget moves**, from 20500 to 21500 bytes: the two modules that
+  find and ask the dev server packed it to 20817, measured by `check:pack`, and the budget is
+  raised to hold them with the usual room, on purpose and with the measure, as the rule for a
+  budget asks.
+
+Corrected the same day, by "the tools ask the dev server as a composer asks" below: as this
+landed, the tools sent ids the content endpoint refuses, and no request to a real dev server was
+answered. The proof this entry rested on was a stand-in server in the specs.
+
+## 2026-10-11: the tokens every page links
+
+The first bite of A-04 as the owner chose it (D1252, "Plain HTML + tokens"): the tokens file and
+its link, as `docs/studies/built-in-components.md` proposed and left to the seat to decide.
+
+Settled:
+
+- **One file, `src/tokens.css`**, custom properties at `:root`: the estate's colour roles as the
+  site's own skin names them (`--surface`, `--surface-panel`, `--border`, `--ink`, `--ink-muted`,
+  `--accent`, `--accent-strong`, `--accent-alt`, `--accent-wash`, the three faces), three scales
+  (`--space-1..4`, `--text-1..4`, `--corner`), and a dark scheme rebinding the colours under
+  `prefers-color-scheme`. `new` writes it with placeholder values that pass their contrast; the
+  look is the author's to set there and nowhere else.
+- **Carried whole and unscoped.** `writeTokens` reads the file, carries every file it names as an
+  assembly's sheet is carried, and writes it to the build named by its content's hash, so a
+  changed token is a new url. It is not scoped to an envelope: a custom property at `:root` is
+  inherited by every assembly, one in a shadow root included, and a scoped selector would reach
+  none of them.
+- **Linked first on every page.** `createServer` takes `styles`, the urls every page links before
+  any assembly's sheet; the built project declares the tokens there, and `pageAssets` puts them
+  ahead. A project without the file has no tokens and links none.
+- **What follows**, in bites as the memo laid them out: the invariants `check` holds the tokens
+  to, the stylesheet of components and the starter's use of it, the element readers, and the
+  five rules.
+- **The command line's tarball budget moves**, from 73000 to 76000 bytes: the starter now ships
+  the tokens file, 1.3 kB of CSS that every new project needs, and the writer that carries it,
+  which packed the command line to 74586, measured by `check:pack`. Nothing could leave first:
+  the tokens are the bite. The stylesheet of components will move it again, with its measure.
+
+## 2026-10-11: the tokens hold their contrast
+
+The second bite of A-04 (D1252, "Plain HTML + tokens"): the invariants the memo gave each colour
+role, held by `check`.
+
+Settled:
+
+- **The numbers are WCAG 2.2's.** Text against its ground at 4.5:1 or more (1.4.3, level AA) and
+  what identifies a control at 3:1 or more (1.4.11, level AA), by WCAG's own definitions of
+  relative luminance (`L = 0.2126 R + 0.7152 G + 0.0722 B` over linearised sRGB channels) and
+  contrast ratio (`(L1 + 0.05) / (L2 + 0.05)`), read from the specification on 2026-10-11 and
+  held in `relativeLuminance` and `contrastRatio`.
+- **Which pairs.** The inks, `--ink` and `--ink-muted`, against each ground text is set on,
+  `--surface`, `--surface-panel` and `--accent-wash`, at 4.5:1; the accents, `--accent`,
+  `--accent-strong` and `--accent-alt`, against the two surfaces at 3:1. Twelve invariants, in
+  `TOKEN_INVARIANTS`, each with its WCAG criterion in its words.
+- **Both schemes.** `readTokens` reads the light scheme at the top of the file and the dark one
+  as the light rebound by what the `prefers-color-scheme: dark` rule declares, as the browser
+  would have it; each invariant is held in each.
+- **Only what the reader is certain of.** A role bound to a variable, a named colour or nothing
+  is not judged; a hex colour is. A file the reader cannot parse is one finding where it breaks.
+- **One rule**, `tokens-hold-their-contrast`, in `RULE_IDS` and `RULES` with its reason and its
+  smell, run by `check` with the project's other findings and answered by `explain`. The
+  starter's tokens pass it in both schemes, which the spec holds.
+- **The command line's tarball budget moves**, from 76000 to 78000 bytes: the five modules of
+  this bite packed it to 76761, measured by `check:pack`. Each bite of A-04 that adds code moves
+  it with its own measure; none is guessed ahead.
+
+## 2026-10-11: the components HTML has
+
+The third bite of A-04 (D1252, "Plain HTML + tokens"): the stylesheet of components the memo's
+option A describes, written by `new` beside the tokens, and the starter's use of it.
+
+Settled:
+
+- **A component is an element HTML already has, a class, and the tokens.** `src/components.css`
+  styles the button (`.button`, and `button` itself), the field with its label (`.field`), the
+  link, the list, the table, the notice and the dialog, each with its focus ring
+  (`:focus-visible`, as the estate's kit draws it) and its states (hover, disabled, invalid, the
+  dialog's backdrop). Every value is a token or a plain length; the sheet names no colour of its
+  own, which the spec holds, so the colour rule to come has nothing to refuse in it.
+- **Carried and linked after the tokens.** `writeProjectStyles` replaces `writeTokens`: the two
+  project sheets, each optional, written whole and unscoped and named by content, in that order,
+  which is the order every page links them. Unscoped on purpose: the components style the
+  elements every kind of view writes, so a scope would reach none of them.
+- **The starter uses it.** The new project's one assembly is a notice holding the greeting and a
+  link to the tutorial styled as the button, so a project's first page already reads as set,
+  and the agents fixture holds that markup through the tools and the built server. A modal
+  `dialog` is styled and not opened: the starter ships no script, and HTML's own attributes for
+  opening one (`command`, `commandfor`, read on MDN 2026-10-11) are newer than the element and
+  not yet baseline across browsers, so the starter does not rely on them.
+- **The command line's tarball budget moves**, from 78000 to 80000 bytes, as the tokens' decision
+  said it would: the components the starter ships, 2 kB of CSS a new project needs, packed it to
+  78575, measured by `check:pack`.
+
+## 2026-10-11: the elements a view writes
+
+The fourth bite of A-04 (D1252): the element reader for the views written as markup, which the
+rules about markup need, as the memo said, one level deeper than what S-07 built for placements.
+
+Settled:
+
+- **One tokenizer of start tags**, `readElements`: each tag outside a comment and outside a
+  script, style, textarea or title, through core's own `inertSpans`, with its attributes as
+  written, quoted, unquoted or bare, names lower-cased as the parser reads them, the first of a
+  repeated attribute kept as the parser keeps it, and `computed` where the template's marker
+  stands anywhere in the tag, so a rule knows a render may write more there.
+- **The masking shared.** `markedTemplate` and `COMPUTED_MARKER` leave `templatePlacements` for
+  modules of their own, read by the placement reader and the element reader alike, so the two
+  can never disagree on what a template computes; a plain html view is its own markup.
+- **`templateElements`** reads html, EJS, Handlebars, Nunjucks and Pug views through them, and
+  Markdown as writing no element of its own; a source that cannot be read as markup is left to
+  the render, undefined, as its placements are.
+- **Nothing refuses yet.** The readers for modules, Lit, Vue and Svelte follow, then one bite a
+  rule.
+
+## 2026-10-11: the elements a module writes
+
+The fifth bite of A-04 (D1252): the element reader for views written as modules, React, Preact
+and Solid through JSX and Lit through its templates, as the memo laid it out.
+
+Settled:
+
+- **JSX is read off the syntax tree `check` already builds**: esbuild's automatic runtime
+  compiles each element to a call of `jsx`, `jsxs` or `jsxDEV` with the tag as a string and the
+  props as an object, and `scriptElements` reads those calls, under whatever names the module
+  imports them from a `jsx-runtime` or `jsx-dev-runtime`. A prop written in place is kept, a
+  computed one stands as the marker, a boolean written `true` is a bare attribute, a spread makes
+  the element computed, and a component, whose tag is not a string, is passed over as nothing
+  the browser sees here.
+- **Lit through its templates**: each `html` template's fixed parts, joined by the marker where
+  its expressions go, are read by the same tokenizer the template views use.
+- **Names are lower-cased** as the browser reads them (`className` reads as `classname`, which
+  the rules account for). `at` is where the element stands in the compiled module, near enough to
+  find the tag by; a finding names the file and the tag.
+- **Nothing refuses yet.** Vue and Svelte follow, then one bite a rule.
+- **The command line's tarball budget moves**, from 80000 to 82000 bytes: the module reader
+  packed it to 80782, measured by `check:pack`.
+
+## 2026-10-11: the elements Vue and Svelte write
+
+The sixth bite of A-04 (D1252): the last two element readers, as the memo laid them out: the
+markup of a Vue or Svelte component read as elements, with the same tokenizer as the rest.
+
+Settled:
+
+- **Vue**: the `<template>` part as markup, every `{{ }}` standing as the marker. An attribute
+  bound with `:name` or `v-bind:name` is the attribute `name` with the marker for its value and
+  makes the element computed; a directive (`v-if`, `v-for`, `@`, `v-on:`, `#slot`) writes no
+  attribute the browser reads and is left out; `v-bind` of a whole object makes the element
+  computed. A component with no template writes no element.
+- **Svelte**: everything outside the script and style, every `{ }` expression standing as the
+  marker from the inside out where they nest, so a block is text between tags and `alt={value}`
+  is the attribute with the marker for its value; a spread makes its element computed.
+- **One tokenizer for all six kinds of view** now reads the elements: `templateElements`,
+  `scriptElements`, `vueElements` and `svelteElements` all end in `readElements`, so no two
+  readers disagree on what a tag or an attribute is. The rules follow, one bite each.
+
+## 2026-10-11: a view has no inline style
+
+The first rule of A-04's markup rules (D1252), on the element readers the bites before built.
+
+Settled:
+
+- **`viewElements`** reads every assembly's elements by its view's kind, as the placement reader
+  reads its placements: the view and, for a framework view, each component it is split into,
+  Pug through the project's own Pug, and leaves out a view it cannot read, so the rules say
+  nothing of what the reader is not certain of.
+- **`a-view-has-no-inline-style`** refuses a `style` attribute on any element, written or
+  computed, in any of the six kinds of view: `style="..."` in markup, `style={{ }}` in JSX,
+  `:style` in Vue (read as `style` bound), `style={look}` in Svelte. The reason is the memo's: a
+  style attribute does nothing under the default content security policy (DESIGN 5.2), and it
+  is a value invented where it is used, where the tokens and the stylesheet are the one place a
+  look is set (DESIGN 10). The finding names the assembly and the element and says to move the
+  style into a `.css` file in the assembly's directory.
+- **Next**: `an-image-has-an-alternative`, `a-control-has-a-name`, `a-colour-is-a-token`, each
+  its own bite.
+- **The command line's tarball budget moves**, from 82000 to 84000 bytes: the aggregator and the
+  rule packed it to 82549, measured by `check:pack`.
+
+## 2026-10-11: an image has an alternative
+
+The second markup rule of A-04 (D1252), on the same element readers.
+
+Settled: `an-image-has-an-alternative` refuses an `img` with no `alt` attribute at all, in any
+kind of view. An empty `alt` passes, since it says the image is decoration; an `alt` the view
+computes passes, since it is present and only a render knows its text; an `img` the view spreads
+attributes onto is left alone, since the spread may carry the alt and the reader cannot see it.
+The reason is WCAG 2.2's, 1.1.1 at level A: non-text content has a text alternative that serves
+the equivalent purpose. The finding names the assembly and says to give the image an alt that
+says what it shows, or `alt=""` if it is decoration.
+
+## 2026-10-11: a control has a name
+
+The third markup rule of A-04 (D1252), on the same element readers.
+
+Settled: `a-control-has-a-name` refuses an `input`, a `select` or a `textarea` with no name the
+reader can find, in any kind of view. What names a control is read from the HTML accessibility
+API mappings (W3C HTML-AAM, section 4.1, read 2026-10-11): `aria-label` or `aria-labelledby`,
+then the `label` element, then `title`, then for a text field and a textarea `placeholder`; an
+input of type button is named by its `value`; a submit, reset or image input takes a default
+when it has none, a hidden one is not shown, and a `button` is named by its content. The reasons
+are WCAG 2.2's at level A (read 2026-10-11): 3.3.2, "labels or instructions are provided when
+content requires user input", and 4.1.2, the name of every user interface component can be
+programmatically determined.
+
+What the reader is certain of is the bound of the rule, as with the two before it:
+
+- A `label` names a control by its written `for` (`htmlFor` in JSX, which the reader lower-cases)
+  matching the control's written `id`, in any file of the view.
+- A `label` may wrap a control, which the reader of start tags cannot see: one with no written
+  `for` that stands before the control in its file, or in any other file of the view, where the
+  component tree is not read, spares the control. A `<label>Name</label><input>` with no `for`
+  therefore passes, the limit of a reader that does not pair end tags.
+- A control the view spreads onto, or whose type it computes, is left to the render; so is one
+  with a computed id while any label of the view has a computed `for`.
+- A `button` is never judged, since its name is its content; the memo's "a button with none"
+  is read as the input of type button, whose value is an attribute.
+- An empty naming attribute is no name: `aria-label=""` or a bare `title` is refused.
+
+The finding names the assembly and the control and says to give it an id and a `label for` it, or
+to wrap it in a `label`, and that an `aria-label` names a control that shows no label. Two leaf
+files carry what the rules share: `spreadElement` (moved out of `element-problems.ts`) and the
+pair `WrittenElement`, which `viewElements` now returns.
+
+The command line's tarball budget moves, from 84000 to 86000 bytes: the rule and its leaf files
+packed it to 84432, measured by `check:pack`.
+
+## 2026-10-11: a colour is a token
+
+The last rule of A-04 (D1252), on the stylesheets `styleProblems` already parses.
+
+Settled: `a-colour-is-a-token` refuses a literal colour in any declaration of an assembly's
+stylesheet, a custom property of the assembly's own included, when the project has
+`src/tokens.css`; a project without the file has no tokens to read and is held to the markup
+rules alone, as the memo said. A literal colour is a hex colour, one of the colour functions of
+CSS Color Level 4 (`rgb`, `rgba`, `hsl`, `hsla`, `hwb`, `lab`, `lch`, `oklab`, `oklch`, `color`;
+its sections 5.1, 7, 8, 9.3, 9.4 and 10.1, read 2026-10-11) with what it holds, or one of the
+148 named colours of its section 6.1, in any case. `transparent` and `currentcolor` decide no
+colour of their own and pass; so do a string, a `url()` and the name a `var()` reads, which the
+reader blanks before it looks, so `var(--red)` and `url(red.png)` are not colours set there. A
+stylesheet the reader cannot open or parse is `styleProblems`' finding already and is passed over.
+The finding names the assembly, the property, the colour and the line, and says to read a token
+instead, a colour the tokens lack being a new role there. The reason is the memo's: a colour is
+one decision, made in one file. With it the seven answers of D1252 are all built.
+
+The command line's tarball budget moves, from 86000 to 88000 bytes: the rule, with the 148
+names, packed it to 86282, measured by `check:pack`.
+
+## 2026-10-11: the domain's 404 page
+
+P5-8's second half, as far as this repository reaches.
+
+Found: `site/404.html` linked its kit, skin, mark, icon and pages by relative paths, and a
+distribution serves a custom error page at whatever address was not found, so on
+`assemblejs.com/docs/nowhere.html` every one of those paths would resolve under `docs/` and
+miss. Fixed: every path on the page is absolute from the domain's root, which the prefix router
+sends to `/assemblejs/` (`ayers.repair/infra/cloudfront/prefix-router.js`, read 2026-10-11).
+Until the promotion of `next` to `main` puts the main channel there, the page served from the
+`next` prefix reaches for a kit that is not yet at the root, which is the state the row names.
+
+Not this repository's: the company distribution maps 403 and 404 to `/404.html` at the bucket's
+root, the business site's page (`README-functions.md` there, config read 2026-09-23). For the
+domain to show this page, its error response names `/assemblejs/404.html`; whether the domain is
+a distribution of its own or an alias of the company's is in AWS, not in any repository, and
+this seat has no credentials to read it. The morning list carries it.
+
+Amended the same day from the lead's reading of AWS: assemblejs.com is its own distribution today
+and moves this week onto the one ayers.repair site distribution as an alias with every product
+domain (D1265). Custom error responses are per distribution and cannot differ by Host, so the
+domain's 404 page is the shared `/404.html` of ayers.repair, reading the Host and showing the
+product's words and links, each domain mapped to its prefix by the router there; that work is
+Astra's, in ayers.repair, not this repository's. `site/404.html` here keeps its absolute paths:
+it is the page a visitor to `/assemblejs/404.html` sees, and the words Astra's page shows for this
+product. By the owner's order of 2026-10-11 the product domains answer 404 at the edge until he
+launches each, so assemblejs.com shows nothing until his word; the `next` prefix on the
+ayers.repair address stays this seat's proof surface.
+
+The ledger's rows the Phase 5 bites had already closed are checked off here, each with its
+commit: the depth cap (P5-1), the page's query across servers (P5-4), the content endpoint's
+signal (way A), one version (P5-2) and A-04 itself.
+
+Also in this pass, the ledger's duplicate-key row: `eslint .` does lint the config files, and
+`no-dupe-keys` is in the recommended set, but typescript-eslint's `eslint-recommended` turns it
+off for `.ts` files on the ground that the compiler reports a duplicate, and no tsconfig includes
+a config file, so a probe file with `test` declared twice linted clean (exit 0, 2026-10-11). The
+core rule is turned back on for `*.config.{ts,js,mjs}`; the same probe now fails the lint.
+
+## 2026-10-11: the house editorconfig
+
+The ledger's row: adopt the house `.editorconfig` with a byte-equality drift test.
+
+Settled: the root `.editorconfig` is platform/codestyle's file, byte for byte, as the kit's README
+asks of every first-party repository ("Copied byte-identical into every first-party repo", read
+2026-10-11). The kit's own workflow notes that this repository, being public, does not check
+platform out with a credential in CI, so the drift test here is a hash, not a `cmp` against a
+checkout: `check:editorconfig` holds the file to the canonical's sha256 at platform `v0.54.1`
+(the file last changed before `v0.21.0`; the site-kit pin `ayersPlatform` is `v0.20.4`, which
+predates it, so the pin cannot serve), and refuses a nested `.editorconfig` as magpie's drift
+test does. Re-syncing is copying the file and recording the new hash and tag. What changes for
+an editor: Markdown keeps its trailing spaces (a hard line break), Go would indent with tabs, and
+the indent width is stated per language rather than for every file; Prettier reads the same two
+values it read before, so no formatted file changes.
+
+## 2026-10-11: the eslint pin
+
+The ledger's row: one eslint version with the kit, or a stated reason.
+
+Settled: one version. eslint moves from 10.9.1 to 10.10.0, the kit's pin (platform/codestyle
+`package.json`, read 2026-10-11; the registry has 10.10.0 since 2026-10-02 and a 10.11.0 the kit
+has not taken). The plugins admit it by their peer ranges, read in `node_modules`:
+typescript-eslint 8.69.0 and eslint-plugin-import-x `^8.57.0 || ^9.0.0 || ^10.0.0`,
+eslint-plugin-unicorn `>=10.4`, `@eslint/js` `^10.0.0`. `pnpm lint` ran green at the new version
+before the commit; syncpack finds one version across the workspace.
+
+## 2026-10-11: an unread declaration leaves the route unknown
+
+The ledger's row on `pageRoute`, found 2026-10-10.
+
+Found: `declaredRoute` answered the directory's route for every declaration that was not read as
+an object, so `export default makePage()`, `export default { ...base }` and a file with no
+default export all read as "declares no route", where the first two may carry one and the third
+the build refuses (the registry imports the declaration's default and spreads it into the page,
+`generate-pages.ts`). Settled: a declaration the reader did not get as a literal is unknown, as a
+computed route already was; an object with a spread among its entries is unknown too, since the
+spread may carry the route; a literal that is not an object (`export default 5`) leaves the route
+implied, which is what spreading it into the page does at run time. `check` then holds nothing
+against such a page's route, the shape shows it computed, and `perf` says the route is not written
+as a literal. Two mutations, each alone, watched red.
+
+## 2026-10-11: the guides on a slot behind a package name
+
+The ledger's row: DESIGN 7 says a slot inside a component that comes from a package is a render's
+alone; the framework guides did not. Each of the six (React, Preact, Vue, Svelte, Solid, Lit) now
+says, in its paragraph on the slot, that `check` reads the slot in the view and in each component
+of the project the view imports by a relative path, and that a slot inside a component from a
+package is decided by nothing before a request. The wording is the design's; the sentence stands
+where a reader meets the slot, not in a section of its own.
+
+## 2026-10-11: the build reads inside the root
+
+The ledger's row, found 2026-10-10: four reads of the build opened files directly, held only by
+discovery's refusal of a link out before the build runs.
+
+Settled: every one goes through the root guard. The source hash (`sourceVersion`) and the files a
+stylesheet names (`carryReferences`) read bytes, so they open `readFileSync(insideRoot(root,
+file))`, the same guard `readInside` is built on, where a text read would hash a binary source as
+text; the assemblies' and the project's stylesheets (`writeStyles`, `writeProjectStyles`) read
+through `readInside`. A file whose path is inside the project but which is a link to a file
+outside it is refused unopened with `OutsideRootError`, one spec apiece, each written against the
+unguarded read first. Discovery's refusal stands before them; this closes the gap for a link
+written after discovery, or a path the build reaches that discovery did not list.
+
+## 2026-10-11: the contract as an agent reads it
+
+The ledger's row for the third fixed resource DESIGN 13.3 names.
+
+Settled: `assemblejs://contract` answers a structure, not prose: the contract version, the route
+prefix and the default view, the three endpoints with what each answers and refuses, the five
+composition headers with their shapes, the two response headers, the manifest's eight fields and
+the envelope, its element, the attributes always written and the ones written when they apply,
+the island's script type and attribute, the fallback template's attribute and the placement
+directive. Every name is core's own constant (`CONTRACT_VERSION`, `ASSEMBLY_ROUTE_PREFIX`,
+`DEFAULT_VIEW`, `COMPOSITION_HEADER`, `RESPONSE_HEADER`, `ENVELOPE_ELEMENT`,
+`ENVELOPE_ATTRIBUTE`, `ISLAND_SCRIPT_TYPE`, `ISLAND_ATTRIBUTE`, `FALLBACK_ATTRIBUTE`,
+`PLACEMENT_ELEMENT`), so a rename there renames here in the same build; the meanings are this
+surface's sentences, written for an agent that will implement the contract elsewhere, never a copy
+of DESIGN 2. The manifest's field names are the one list written by hand, and the spec holds it to
+the keys of a real server's manifest, as it holds the response headers to a real content answer,
+the envelope's element and attributes to its body, the island to its script, and the refusals to
+a malformed header and an unknown assembly. The instructions `new` writes name the resource, and
+the agents fixture expects it among the listed ones.
+
+The agent surface's tarball budget moves, from 21500 to 24000 bytes: the resource packed it to
+23228, measured by `check:pack`.
+
+## 2026-10-11: compose_page by name
+
+The ledger's row: `compose_page` took a template, so it could not know the policy a page declares.
+
+Settled: `compose_page` takes a page by its name. `composePage` finds the page as discovery does,
+reads its template and its declaration through the root guard, reads the policy as `check` reads
+it (`readPagePolicy`), turns it into the server's placements (`pagePlacements`: each field kept
+when written as the server's type, left out when computed or wrong) and plans it with core's own
+`pagePlan`, so the plan is the one the server would make. A placement from another server, by a
+url written or computed, is composed deferred and its url dropped: the surface reaches no network
+(DESIGN 13.2), and a deferred envelope is what the browser fills on a served page. A page the
+project has not, or a declaration that cannot be read, is a problem the agent acts on. The
+template path stays as `composeTemplate`, which `composePage` calls; the prompts, the
+instructions `new` writes and the agents fixture call the tool by the page's name.
+
+The agent surface's tarball budget moves, from 24000 to 25000 bytes: the page reader packed it
+to 24039, measured by `check:pack`.
+
+## 2026-10-11: a placement inside an open paragraph
+
+The ledger's row on placement context, found 2026-10-09 (DECISIONS 2026-10-09, S-02).
+
+Found: a directive inside an open `<p>` composes an envelope the browser then tears: the parser
+closes the paragraph at the first block the assembly holds (its `section`, its `div`), and the
+rest of the assembly's markup, its data island included, lands outside the envelope and outside
+the paragraph, so the island is not found and the assembly does not hydrate. Nothing said so.
+
+Settled: `findPlacements` refuses a directive that stands inside a paragraph the parser has not
+closed, and since every reader of the directive calls it (`check` on a page's template and on a
+view, the server at boot, the composer on a page and on a view's rendered markup) the one refusal
+reaches each. What closes a paragraph is read from the HTML parser's "in body" insertion mode
+(html.spec.whatwg.org, parsing, read 2026-10-11): `</p>`; the start tags whose rule opens "If the
+stack of open elements has a p element in button scope, then close a p element" (address,
+article, aside, blockquote, center, details, dialog, dir, div, dl, fieldset, figcaption, figure,
+footer, header, hgroup, main, menu, nav, ol, p, search, section, summary, ul, h1 to h6, pre,
+listing, plaintext, hr, xmp); and the end tags that generate implied end tags, those of the same
+elements and of li, dd, dt, td, th, tr, tbody, thead, tfoot, caption, form, table, button, body
+and html. An end tag of an element opened inside the paragraph leaves it open, as the parser
+does; a tag inside a comment or a raw-text element is no tag. The scan is of start and end tags
+before the directive, not a full tree, so it errs only toward passing: a paragraph closed by an
+end tag this list lacks reads as open to nothing, since only an open one is refused.
+
+The other elements the parser closes on its own (`li`, `dd`, `dt`, `option`, the table parts) are
+closed by their own siblings' start tags, not by a block inside them, so a placement inside them
+is not torn the same way and is not refused.
+
+The core tarball budget moves, from 75000 to 78000 bytes: the paragraph scan packed it to 75281,
+measured by `check:pack`.
+
+## 2026-10-11: registrations for the clients beyond the three
+
+The ledger's row from A-01: one registration per client, after its documentation is read.
+
+Read 2026-10-11, each client's own documentation:
+
+- Gemini CLI reads `.gemini/settings.json` in the project, servers under `mcpServers`, each with
+  `command`, `args` and optionally `cwd`, `env`, `timeout`, `trust`; no transport field. A
+  registration is written, the command and its argument the project's own server, started where
+  the CLI runs, which is the project.
+- opencode reads `opencode.json` (or `.jsonc`) from the project root, the directory it runs in;
+  a local server stands under `mcp` with `type: "local"` and one `command` array. A registration
+  is written in that form, the one place a command is an array, which the readers, the writer
+  and the agents fixture take.
+- Codex reads `~/.codex/config.toml` and, for a trusted project, `.codex/config.toml`: TOML, one
+  `[mcp_servers.<name>]` table. The command line's registration reader and writer are JSON and
+  stay so; the instructions give the one line, `codex mcp add assemblejs -- node <path>`.
+- Zed takes a server under `context_servers` in its settings; its documentation shows the user
+  settings file and does not say a project's `.zed/settings.json` holds the key, so none is
+  written, and the instructions say the entry of `.mcp.json` is what to paste.
+- JetBrains AI Assistant has no project file: servers are added in the IDE's settings, which
+  take the `mcpServers` JSON shape pasted or imported. The instructions say so.
+
+The McpRegistration type gains `mcp` among the keys a client lists servers under; the writer and
+the drift check were already generic over the key. The agents fixture starts each written
+registration as its client does: the two new ones from the project's root.
+
+## 2026-10-11: a placement inside an element's shadow root
+
+The ledger's row found 2026-10-09 on the fragment scanner: a `slot()` written in a Lit element's
+`render` places a child inside the element's own declarative shadow root. Reproduced at the
+markup, which is where it is decided: an envelope inside `<template shadowrootmode="open">` has
+its stylesheet linked in the page's head by `localAssets`, which tracks an assembly's shadow root
+and not an element's, and a sheet in the head does not reach into an element's root. The child
+would stand unstyled.
+
+Settled: the directive is refused where it is read, as the paragraph case is. `findPlacements`
+refuses a directive that stands inside a declarative shadow root not yet closed (one pass over
+the template's `<template>` tags, counting depth so only the roots among them count), so the
+composer, the server at boot and a view at render say the same thing, and `render_assembly`
+hands the agent the reason. Linking the sheet inside was the other way, and it is not taken: it
+would rewrite what another renderer wrote, and an element's root is the element's own; a child
+belongs in the view's template, outside the element, where the page styles it. `check` reads a
+Lit view's slots from its module and does not yet tell those in an element's `render` from those
+in the view's template; a view that places one is refused at the render the agent asks for, and
+by the build's render of it, not by `check` first. That reading is a row of its own.
+
+## 2026-10-11: check reads a slot in an element's render
+
+The row the entry above opened, closed the same day.
+
+Settled: the module reader (`scriptPlacements`) walks the tree knowing where each node stands,
+the class it is in by name and whether it is inside that class's `render` method, and a slot
+written there is reported in a new field of what a view places, `shadowed`, shown as
+`<Class>.render() places "<name>"`, and is no placement of the view's. `viewFindings` turns each
+into a finding, `a-placement-stands-outside-an-element`, with the composer's reason: the child
+would stand in the element's own shadow root, where the page's stylesheets do not reach. Any class
+counts, not only one that extends `LitElement` by that name: a Lit element may extend a base of
+the project's own, and a `render` on a class in a view is an element's in every case this reader
+meets. A slot in another method of the class is the view's as before, since only `render` writes
+the shadow root.
+
+## 2026-10-11: the reference's retired pages
+
+The ledger's row found 2026-10-10: nothing was deleted from the bucket, so a symbol's page the
+reference no longer generates stayed reachable, and whether the deploy's role could delete was
+not known here.
+
+The lead read the role from IAM on 2026-10-11: `gh-deploy-assemblejs-site` holds `s3:PutObject`,
+`s3:GetObject` and `s3:DeleteObject` on `assemblejs/*` of the site bucket, `s3:ListBucket` on the
+bucket, and the two invalidations. A delete is within the grant.
+
+Settled: never `--delete` across the product's prefix, since the `next` channel's prefix stands
+under it and a main deploy would erase the channel; the reference alone is mirrored, `aws s3 sync
+site/docs/api/ .../docs/api/ --delete --size-only`, after the three syncs that upload with their
+headers. The AWS CLI reference (s3 sync, read 2026-10-11): `--delete` removes what the destination
+has and the source has not, filters excepted; `--size-only` makes size the one criterion to copy.
+Every file under docs/api was uploaded moments before at the same size, so the mirror copies
+nothing and no object loses its content type or cache control; it deletes. The workflow runs on a
+push that touches `site/`, so the step is first exercised at the next such push, not by this one.
+
+## 2026-10-11: the reference runs once per package
+
+The ledger's row found 2026-10-10: typedoc's check that a public signature names no unexported
+type never fired here. Read in typedoc 0.28.20's `dist/index.js` (`validateExports` and its
+intentionally-exported helper): a referenced type whose package is not the project's passes, and
+one typedoc project over twelve packages made that every type. The remedy the row named is the
+one taken: typedoc's `packages` entry point strategy (typedoc.org, Options.Input and
+Options.Package_Options, read 2026-10-11), which converts each package as a project of its own
+and merges the results into one site, so a type's package is the project's and the check holds.
+
+Settled: the root `typedoc.json` names `packages/*` under that strategy and, in `packageOptions`,
+the conversion options each package takes (its own `tsconfig.json`, externals and internals
+excluded, no readme); each package carries a `typedoc.json` of its own naming its entry points,
+since the strategy copies nothing from the root and the packages' entry points differ. The
+rendering options stay at the root. `tsconfig.typedoc.json`, the one program over twelve
+references, is gone: each package is read through its own. `check-reference.mjs` reads the entry
+points from the packages' files and holds them to the packages' `exports` as before; the check
+that each entry's package was referenced by the removed tsconfig goes with it, and its self-test
+says so.
+
+Watched red before it was trusted: a probe run of the strategy found `VueBlock`, an interface the
+command line's `VueDescriptor` names in its public fields and no entry point exported, and
+`MountMode`, which the core's client entry exports and the probe, reading each package's
+`src/index.ts` alone, did not see; the real configuration reads every entry point and holds the
+first alone. `VueBlock` is exported now, from its own file, as the repository's one-declaration
+rule asks of it. What the site serves changes in one way: a package with several entry points is a
+node of its own, `@assemblejs/core`, with its three specifiers as modules under it, where one run
+over the twelve laid every specifier flat; a package with one entry point is one module, as before.
+Nothing in the site links a module page by its path, only `docs/api/index.html`, and the reference
+still reads by the specifier a user imports.
+
+## 2026-10-11: the kit at v0.54.3
+
+The ledger's row on a note's subsections, the last that waited on the kit.
+
+The fold was cut here on the lead's word (platform branch `asm/codestyle-note-fold`, `4a93154` on
+`6b989c6`, the kit's test watched red first) and tagged by the cto seat as `v0.54.3` (`69c72d4`,
+with a docs commit of its own). Verified at the source before the pin moved: the tag's `kit.css`
+holds the three rules, and every role the kit references at that tag, thirteen, is bound by this
+site's `skin.css`. `ayersPlatform` moves from `v0.20.4` to `v0.54.3`, thirty-four tags in one
+step, since the deploy stages the kit at the pin and nothing else in this repository reads it.
+
+`site/release-notes.html` takes the reference's shape, read from magpie's page: a status line and
+an introduction under the version, then h3 groups each with a list, where it had a definition
+table. Its words are brought to what the tree holds on this day, since the page is hand-kept for
+a user and the version is not yet published: the registrations name Gemini CLI and opencode, the
+agent surface renders every kind of view through the dev server and reads the contract, and
+`check`'s five rules on a view stand named. The page as text is regenerated with it.
+
+## 2026-10-11: the mark of a mounted assembly
+
+Found: the built-page proof (`browser/built.browser.ts`) failed three times today and passed on
+each rerun, on "Clicked 0" or "nothing yet" after a click. It waited for every island's script to
+be gone, which the runtime does when it starts, before any assembly's module has arrived, and
+then clicked a button whose handler React had not yet attached. The server's markup was doing its
+job; the proof was asking too early, and nothing on the page said when an assembly was live.
+
+Settled: the runtime writes one mark, `data-mounted`, on an envelope once its renderer has
+mounted the assembly, and removes it when it unmounts it (`MOUNTED_ATTRIBUTE` in core's
+vocabulary, beside the server's words and not among them: `renderEnvelope` never writes it, which
+a spec holds). A static assembly, declared `none`, is never marked. The proof waits for the mark
+on both assemblies before it clicks. A page, a test or a person has the same signal, which the
+design lacked: section 9 says it now. A retrying click in the proof would have hidden the race
+and said nothing to anyone else.
+
+The fix's own run then showed the same race in the styles proof, a click on a remote assembly's
+button before React had mounted it. Seventeen clicks across eight proofs each waited for something
+else, the islands read, the network idle or the markup's text, none of which is the mount; so one
+helper, `clickMounted` in `browser/mounted.ts`, now stands at every click: it reads the control's
+own envelope, through a shadow root where the assembly has one, waits for the mark, then clicks.
+The runtime proof's assertion that a static envelope lacks `data-hydrated`, a word nothing ever
+wrote, reads `data-mounted` now, the word the runtime does write.
+
+## 2026-10-11: one rule for a commit's header
+
+The ledger's row from the house style rulings: when the shared house check set lands, hold
+commitlint and the house's shell script to the same verdict on the same messages, so one rule
+does not become two.
+
+The set has landed: platform/codestyle carries `check-conventional.sh`, and a cross-test of its
+own, `cross-test-conventional.sh`, twelve messages through both. Read at `v0.54.4`: that cross-test
+needs a sibling checkout with commitlint installed and its self-test skips green without one, so
+where it runs alone it holds nothing. This repository has commitlint in its own CI, which makes
+it the one place the two can be run together on every push.
+
+Settled: `check:commit-rule`, in `pnpm check`. The house's script and the two files it sources
+(`gates_range.sh`, `codestyle_key.sh`) are byte-copies under `scripts/house/`, from platform's
+`v0.54.4` tag, held to their hashes as the root `.editorconfig` is; the kit's README says this
+repository vendors the kit's scripts rather than checking platform out. The gate runs 33 messages
+through `commitlint` (21.2.2, config-conventional, this repository's config) and through the
+script's `--message` mode, and holds each verdict to the one recorded.
+
+Measured, not assumed: the two agree on 25, the house's own twelve among them, and part ways on 8.
+Read against commitlint's own sources in `node_modules` (`@commitlint/is-ignored` `defaults.js`,
+`@commitlint/config-conventional` `index.js`):
+
+| message                                 | commitlint | house script | why                                                                                           |
+| --------------------------------------- | ---------- | ------------ | --------------------------------------------------------------------------------------------- |
+| `feat(): add the thing`                 | passes     | refuses      | an empty scope is no scope to commitlint                                                      |
+| `feat: add the thing ` (trailing space) | refuses    | passes       | `header-trim`                                                                                 |
+| `Merge branch 'main' into next`         | passes     | refuses      | commitlint ignores a merge; the script skips one in a range and judges it in a hook           |
+| `fixup! feat: add the thing`            | passes     | refuses      | commitlint ignores `fixup!`, `squash!`, `amend!`                                              |
+| `1.0.0`                                 | passes     | refuses      | commitlint ignores a message that is a version alone                                          |
+| `Revert fix: the thing`                 | passes     | refuses      | commitlint ignores everything that begins `Revert `; the script takes git's quoted form alone |
+| a body line over 100 characters         | refuses    | passes       | `body-max-line-length`; the script reads the header alone                                     |
+| a footer line over 100 characters       | refuses    | passes       | `footer-max-line-length`; the same                                                            |
+
+None is this repository's to settle: which side is right in each is the house's rule, and the
+script is platform's. They are recorded as differences and held as such, so one that closes at a
+re-sync, or turns around, or a new one that opens when either side is upgraded, is a red here.
+Sent to the lead with the table. Watched red on the real tree, each alone and restored: a verdict
+of the rule recorded wrong, a difference recorded that is none, and the house's script edited to
+take another type, which the hash refuses before any verdict is asked.
+
+Found beside it, and a row of its own: nothing in CI reads a commit's header at all, and the
+sign-off is read on a pull request alone.
+
+## 2026-10-11: CI reads every commit
+
+Found with the entry above: CONTRIBUTING asks a conventional header, a sign-off and no attribution
+trailer of every commit, and `scripts/check-trailers.sh` says of the sign-off that "nothing else
+enforces it, so it runs both locally and in CI". In CI it ran on a pull request alone, and every
+commit in this repository is pushed, so the job has been skipped on every run; and the header was
+read by the husky hook and by nothing else. A commit made with `--no-verify`, or on a machine
+without the hooks, reached `next` unread.
+
+Settled: the job is `commits`, on a push and on a pull request, two steps: `commitlint --from
+--to` with the repository's own config, the hook's judge and no second one, then the trailers
+script over the same range. A pull request is read for its own commits, as before. A push is read
+from a floor to the tip and not for the push's own range: `ci.yml` cancels the run in flight when
+a newer push arrives, and with a range per push that run's commits would never be read. The floor
+is the repository's first commit, `c565074`, named in the workflow: the 184 commits above it pass
+both steps today, read here, with 14 warnings from commitlint on a footer with no blank line
+before it, which are not errors. The cost is seconds.
+
+What a floor commits the branch to: one commit that fails either step turns every later run red,
+on a branch that is never rewritten. That is the intent, since the alternative is a rule a single
+`--no-verify` passes unseen; and the way out is named in the workflow, moving the floor above
+that commit with the reason recorded here, never loosening a step. A squash merge of a pull
+request with several authors is the case to know: GitHub writes a `Co-authored-by` trailer into
+the squash message, which the trailers step refuses, so the one who merges edits it out, as
+CONTRIBUTING's "no other attribution trailer, ever" already asks.
+
+Watched before it was trusted, the two steps run on a clone: green on the history as it stands;
+red, both, on one commit with no conventional header and no sign-off; red on the trailers alone
+for a signed commit with an attribution trailer. The workflow itself is proven by its first run.
+
+## 2026-10-11: what failed on the dev server
+
+The ledger's row from DESIGN 13.3: what is wrong on a running server, per placement, with the id
+that finds it in a log. It waited on how an agent is shown a running project, which the owner
+settled ("Dev server, tool runs nothing", D1252) and P5-5 built.
+
+Found in what P5-5 built (`dev-server-fetch.ts`, read 2026-10-11): an assembly that failed on the
+dev server answers its fallback envelope under a 500, marked `data-failed` with the id its failure
+is logged against (DESIGN 2.1), and the transport dropped the body and answered `status` with no
+id, so the composer minted one of its own that is in nobody's log. And an answer that stood with a
+child fallen back inside it said nothing at all: the composer holds no account of another server's
+children (`diagnostic.ts`, on `children`), so the agent was shown a page with no problems. The design's own sentence, that a
+placement that fell back looks identical in the markup and the account is what says it did, did
+not hold through the dev server.
+
+Settled: the transport reads the markup, which is where another server's failures are written.
+`failedEnvelopes` reads every envelope marked failed with its assembly and its id, by the element
+reader the command line already has. A failed answer is answered with the server's own id, so the
+tool's account and its fallback envelope carry the id the dev server's log has, and the problem
+says so. Each placement that fell back inside an answer that stands is said as a problem with its
+own id. The cause is not said: it is in the log, as it is for any server (12), and an id is what
+finds it. `fallbackProblems` takes what a transport said of placements no account here holds; the
+local transport says none, and nothing of its account changes.
+
+The two specs that carried one dev-server fixture, word for word, share it now from
+`test/fixtures/dev-server.ts`, with the two assemblies this needs. Five mutations, each alone,
+watched red.
+
+Corrected the same day: an envelope marked failed with no id was said to have its reason in the
+server's log, and it has none. Read in `compose/admitted.ts`, `settle-placement.ts` and
+`server/log-fallbacks.ts` ("a visitor not let in is no failure"), and held
+by the trust fixture (`inbound.spec.mjs`, the badge that "stands empty"): a placement the server
+will not show to the one asking is answered with `data-failed=""` and nothing is logged, since a
+refusal for who is asking is no failure. The tool says that now, in place of pointing at a log
+that holds nothing.
+
+## 2026-10-11: the tools ask the dev server as a composer asks
+
+Found while proving the entry above against the artifact: P5-5, as it landed this morning
+(`5a08454`), never worked against a real dev server. `render_assembly` sent `assembly-id:
+preview-<name>` and `compose_page` `preview-<n>`, both with `assembly-page: preview`. The content
+endpoint holds each to one uuid and answers a malformed value with a 400, never a coerced default
+(DESIGN 2.1; `read-composition-headers.ts`). Measured with a probe against a server made by
+`createServer`: both tools' ids answered 400, uuids answered the envelope. So with a dev server
+running, every assembly was refused and every placement on a page fell back, and the owner's
+answer, "Dev server, tool runs nothing", was recorded as built when it was not. The specs were
+green because the dev server in them was a hand-written stand-in that answers whatever it is sent,
+and no fixture ran the tools against a server of the framework.
+
+Settled:
+
+- **The tools send what a composer sends.** A uuid for the page and for every id, as the server's
+  own pages do. The stable `preview-` ids go; nothing held them, and a tool that composes is a
+  composer.
+- **A refusal says why.** A request the server refuses answers, as JSON, the id it logged the
+  refusal against and a line for each header that did not fit. The transport carries both, so an
+  agent reads "assembly-id is not a uuid" where it read "answered 400". This defect would have
+  been one line on its first day.
+- **The specs' dev server is real.** `test/fixtures/dev-server.ts` is a server of the framework,
+  listening, with an assembly whose service throws and one whose view places an assembly the
+  server has not; the ids the tools report for what failed are held to that server's own log.
+  The transport's own spec keeps a scripted server, to read what was asked of it, and sends ids
+  of the contract's shape.
+- **The agents fixture asks.** In the project as `npm create` wrote it, with its built server
+  running and recorded as `dev` records its own, `compose_page` and `render_assembly` are called
+  through the installed MCP server: every placement answered by the server, none rendered here.
+
+Watched red before the fix: the five dev-server specs against the real server with the ids as
+they were sent, each on "answered 400"; and the fixture's step, run once with the old page id,
+on the tools' own new words, "the dev server refused the request for "hello" (400): assembly-page
+is not a uuid". The mechanism that let it through is closed in two places,
+the real server in the specs and the step in the fixture; a stand-in no longer stands between the
+tools and the contract.
+
+Found beside it, a row: `render_assembly` answers `data: {}` through the dev server, though the
+island in the html it answered holds what the service returned.
+
+## 2026-10-11: the data a run returned
+
+The row found with the entry above, and with it the last of what DESIGN 13.3 named as wanted and
+not given: the shape of an assembly's data, "known to a run of it or to the project's types and
+to no reading of a file".
+
+`render_assembly` answers the html, the data and the account together (`RenderedAssembly`), and
+it answered `data: {}` on every path. Rendered here that is true, since a plain html view is
+rendered with no service. Through the dev server it was false: the server ran the service, and
+the island of the envelope it answered carries what the service returned.
+
+Settled: `islandData` reads the island of the envelope with the id the tool sent, found by the
+opening the server writes it with and ending at the first end of a script, which the island's
+encoding never holds (`encodeIslandJson` escapes `<`). One path for both transports: rendered
+here the island holds no data and the answer is empty as before; through the dev server it is one
+run's data. That is the run the design asked for, on the terms the owner set for a running project
+(D1252, "Dev server, tool runs nothing"): the dev server runs the service, the tool reads the
+answer. A reading of the project's types stays unbuilt and unasked for. The data endpoint was not
+used, since it would run the services a second time for what the first answer already holds.
+
+The agent surface's tarball budget moves, from 25000 to 27000 bytes: today's work on the dev
+server's path, the ids, the refusal's words, the failed envelopes and the island, packed it to
+25378, measured by `check:pack`.
+
+## 2026-10-11: the eleventh dossier's verification
+
+The ledger held one row of Phase 1 open since September: the eleventh dossier, the browser
+runtime's, verified, "its first verifier died mid-run and the second one's outcome was never
+recorded", and it called the dossiers outside this tree. Both were wrong. The dossiers are on
+this machine in `docs/dossiers/`, which the repository ignores, as the first entries of this file
+decided; and the second reader's record is among them, written the same night as the dossier.
+
+Its verdict: trustworthy with corrections. It confirms what a builder leans on hardest, and it
+finds four claims wrong and several imprecise, each with the reference's own lines beside it.
+The four, in this product's words: that the predecessor mounted a framework's components by a
+second path of its own, where there was one path and an adapter that looked its own root up and
+did nothing, silently, when the lookup missed; how many renderers it shipped; the form of the
+script that registered an assembly's browser half; and where the uniqueness of an id was held.
+
+Held against the public record, read whole for it on 2026-10-11: no sentence of DESIGN, of this
+file or of PLAN rests on any of the four as the dossier had them. The design that was built is
+the corrected finding: one mount path, and a renderer's browser half that is handed the element
+already resolved and returns a handle or throws (DESIGN 9; the comment on `hydrate` in the React
+renderer says so in the reader's own terms). The row is closed. The record itself stays where
+the dossiers stay.
+
+The acceptance table that the plan's B-24 names, every intent from the predecessor's tests
+mapped to a test here or struck with its reason, was marked outside this tree for the same
+mistaken reason and is workable here; it is the next entry's.
+
+## 2026-10-11: the acceptance table
+
+The plan's B-24, second half, carried by B-27a: every intent from the predecessor's tests either
+mapped to a test here or struck with its reason. The tests were read whole in September, and the
+dossier of that reading ends in its own acceptance list: fourteen behaviours a fresh
+implementation must reproduce, three things to redesign, and five questions it left open. Those
+twenty-two are the intents; the rest of that suite the dossier itself cut, as tests that assert
+nothing. Each is set out here in this product's words, with the test in this tree that holds it
+or the reason it is not carried. Every path was opened on 2026-10-11, not recalled. The dossier's
+own citations stay with the dossier.
+
+The fourteen behaviours:
+
+| #   | the intent                                                                                                                     | here                 | held by, or struck because                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | A view's renderer is chosen from what the view is, and an unknown one is refused                                               | mapped               | the file name says the framework, and an extension two frameworks share is refused without its infix: `packages/cli/test/discovery/renderer-for-view.test.ts`; a view whose renderer the project has not installed is refused by `check` and by the build (`a-view-needs-its-renderer`: `packages/cli/test/build/load-compilers.test.ts`, `packages/cli/test/check/check-project.test.ts`)                                                                                                                                       |
+| 2   | The steps that make a view's data run in a known order                                                                         | mapped, redesigned   | services run in declaration order, one after another where it says `after`, then the view's own data on top: `packages/core/test/service/run-services.test.ts`, `order-services.test.ts`, `packages/core/test/server/resolve-data.test.ts`. No page-wide or global step: a service belongs to a view                                                                                                                                                                                                                             |
+| 3   | One address scheme per assembly: content, data, manifest; and a health address                                                 | mapped               | DESIGN 2: `packages/core/test/server/register-assemblies.test.ts`, `create-server.test.ts`, and from the tarballs over HTTP `conformance/specs/contract/` (content, data, envelope, manifest, parameters)                                                                                                                                                                                                                                                                                                                        |
+| 4   | The content route's pipeline: static files first, a cache with a default lifetime, never in development, a header saying a hit | struck in part       | static files are served from a list made at boot: `packages/core/test/server/register-assets.test.ts`. The cache is a placement's, and only where its page declares a lifetime: `packages/core/test/compose/placement-cache.test.ts`, `content-cache.test.ts`, `cache-key.test.ts`. No default lifetime, no switch on the mode, no header: nothing is cached that nobody asked to be, and a rule keyed on a mode string is the predecessor's largest class of defect (DESIGN 4). A hit is said in the account, `source: "cache"` |
+| 5   | The manifest never carries what is the server's own                                                                            | mapped, inverted     | built by naming each field that goes in, where the predecessor removed three and shipped the rest: `packages/core/test/server/build-manifest.test.ts`                                                                                                                                                                                                                                                                                                                                                                            |
+| 6   | Only an allowed part of the server's context crosses to the browser                                                            | mapped               | six named fields and nothing else, headers and cookies included: `packages/core/test/envelope/project-island.test.ts`; the rule `nothing-crosses-but-json`                                                                                                                                                                                                                                                                                                                                                                       |
+| 7   | Events: an address, a payload, and a late subscriber can read what it missed                                                   | mapped, redesigned   | typed, page-scoped, owned by the assembly: `packages/core/test/client/events/`. The bounded queue of the last ten becomes the last message on a topic that declared it: `create-bus.test.ts` ("keeps only the last one, not a history nobody reads")                                                                                                                                                                                                                                                                             |
+| 8   | A child's rendered bytes become a string before its parent's template                                                          | struck               | there is no such step to need it: a parent's view places a child by the directive, and the composer replaces the directive in markup that is already a string (DESIGN 3.2)                                                                                                                                                                                                                                                                                                                                                       |
+| 9   | Each view is wired to its routes; the developer's route exists only in development                                             | mapped               | three endpoints per assembly, mounted by one function: `register-assemblies.test.ts`; the devtools routes "are not mounted at all in production": `packages/core/test/server/register-devtools.test.ts`                                                                                                                                                                                                                                                                                                                          |
+| 10  | A view's scripts and stylesheets are found by reading its rendered template                                                    | struck, replaced     | an assembly's files are the build's to declare, and a page links them from the envelopes it serves: `packages/core/test/server/local-assets.test.ts`, `page-assets.test.ts`, `hoist-assets.test.ts`. Nothing is scraped from markup                                                                                                                                                                                                                                                                                              |
+| 11  | Two assemblies or two views of one name are refused at load                                                                    | mapped               | "refuses a duplicate name, which would otherwise be a silent shadow": `packages/core/test/server/boot-problems.test.ts`; in a project a directory is an assembly, so its name is unique by the file system                                                                                                                                                                                                                                                                                                                       |
+| 12  | A container of named services: one of each, the later replaces, a missing one throws                                           | struck               | there is no container. A service is a function a view declares; a name declared twice is refused, and so is an `after` that names a service nobody declared (`packages/core/test/service/order-services.test.ts`), and two contributors that declare one field of the data are refused at boot (`boot-problems.test.ts`)                                                                                                                                                                                                         |
+| 13  | Access: who must sign in, and that a failed sign-in is refused                                                                 | mapped, redesigned   | `packages/core/test/access/`, and from the tarballs `conformance/specs/trust/` (54 specs). Not keyed on the mode: every control defaults closed, and an enabled one without its credential is a boot failure (DESIGN 4, 5)                                                                                                                                                                                                                                                                                                       |
+| 14  | The small contracts under the predecessor's utilities: validation, patterns, escaping, an error's mapping to a status          | mapped where carried | escaping: `packages/core/test/encode/`; the one pattern a name is held to: `packages/core/test/vocab/segment.test.ts`; a failure's body and its log line: `packages/core/test/failure/`. Each lives in the directory that owns its concept; there is no utilities directory to carry a pattern bank in (CLAUDE.md, rule 6)                                                                                                                                                                                                       |
+
+The three it said to redesign:
+
+| the intent                                                                                                                         | here   | held by                                                                                                                                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| The server and its controllers testable without being coupled to where their module lives                                          | mapped | `createServer(options)` is handed its config, its log and its assemblies, and is asked through `inject` with nothing listening: `packages/core/test/server/create-server.test.ts`                                        |
+| A fresh context for each request, in place of one shared and reset                                                                 | mapped | the composer is pure, template and transport in, markup and account out (DESIGN 3.2): `packages/core/test/compose/compose.test.ts`; a service is given its own request, "not another assembly's": `resolve-data.test.ts` |
+| Real coverage of nesting, of another server, of hydration in a browser, of a generated project that builds and serves, built first | mapped | `conformance/` from the packed tarballs over HTTP, five fixtures; `browser/` in a real browser, 42; the agents fixture in a project as the starter wrote it                                                              |
+
+The five questions it left open, as the design answered them:
+
+| the question                                                         | the answer                                                                                                                                                | where                                                                                                      |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Are lifecycle hooks the product's own surface?                       | No. The server hands out its own Fastify instance, and declares no hooks of its own to test                                                               | `App.fastify`, `packages/core/src/server/app.ts`                                                           |
+| Is the data endpoint a second pass through the content route?        | No. One function produces the data and both endpoints call it                                                                                             | DESIGN 2.2; `resolve-data.ts`                                                                              |
+| Keep the bounded replay queue, or subscribe before publish?          | Neither: the last message, on a topic that asks for it                                                                                                    | DESIGN 9; row 7                                                                                            |
+| Does anything rest on a weak hash?                                   | Nothing can: every hash in the packages is SHA-256, seven uses in six files, the build's file names and versions and the comparison of a basic credential | `packages/core/src/access/matches-basic.ts` and the command line's `build/` and `styles/`, read 2026-10-11 |
+| What is the suite's gate: behaviour, mutation, or a coverage number? | Behaviour, each probe watched failing by a mutation aimed at it; no coverage number is configured anywhere                                                | CLAUDE.md, "a probe is watched failing"; no threshold in any `vitest.config.ts`                            |
+
+Counted: of the fourteen behaviours, ten are mapped, four of them redesigned or inverted, one
+is struck in part, and three are struck, each with what stands where it stood. The three
+redesigns are mapped. The five questions are answered by the design as built. Nothing in the
+list is left neither mapped nor struck.
+
+B-27a's other two parts, the Scorecard run and the publish dry run with provenance, are Actions
+and the owner's first publish, and stay with him.
+
+## 2026-10-11: the sentences go back up
+
+On 2026-10-10 seven places said an agent renders the assembly it adds, and the agent surface
+rendered a plain html view and refused any other, so each was brought down to what held, with a
+row to bring them back when the surface could show a framework view. The owner's answer settled
+how (D1252), P5-5 built it, and the row was ticked this morning without the sentences going back,
+on a build that, as the entries above record, did not work until this evening.
+
+They go back now that the claim is proven from the tarballs against a built server, each in the
+form that holds, both halves said: any view through the project's running dev server, a plain
+html one with nothing running. The landing page's paragraph and its row in `site/LANDING.md`; the
+root README; the agent surface's README; the instructions `new` writes into `AGENTS.md`, which
+told an agent the tools show such a view nowhere; the brief for adding an assembly, whose fourth
+step told it the same; the start page. DESIGN 13.3 and 13.4 and the two tools' own descriptions
+were brought current with P5-5 and its correction.
+
+In the same pass, the lists of clients a new project is registered for, which named three in the
+root README, the agent surface's README, the tutorial and the start page, name the five the
+command line writes since this afternoon.
+
+Not done here, and a row: the hero line the owner asked for on 2026-10-09 is on no page. What
+backs it is built; where it stands on the front door is with the lead.
+
+## 2026-10-11: the hero line stands on the front door
+
+The owner's line of 2026-10-09 is the landing page's headline, on the lead's go of this evening,
+which needed no new word from him: he asked for the line, and the entry of that day settled that
+it is a claim with a row. "One page. Every framework.", the headline until now, is the line
+beneath it. Its row in `site/LANDING.md` stays, and the new line has a row of its own.
+
+- **The spelling is the tree's.** His own words had the term as one word. The product's own
+  definition and the core package's published description hyphenate it, so the headline does:
+  "The first micro-frontend framework for AI-enabled development", one spelling on every
+  surface a reader sets side by side.
+- **The markup.** The two lines are one heading group, `<hgroup>`, the heading and a paragraph
+  beside it, which is the element HTML has for this (MDN, the `hgroup` element, read 2026-10-11:
+  it "allows the grouping of a heading with any secondary content, such as subheadings, an
+  alternative title, or tagline", each "a `<p>` element within the `<hgroup>`"). The headline's
+  two hyphenated words are each kept on one line, because a phone's width broke the first at its
+  hyphen. One rule styles the line beneath, in the display face and the accent, both tokens. The
+  page was drawn in the sealed browser at 1280, 768, 390 and 320 pixels wide and read at each.
+- **The text files.** `scripts/site-page-text.mjs` takes the paragraph beneath a page's `<h1>`
+  as what the page is, and `llms.txt` prints the landing page's. Read as any other paragraph,
+  the line beneath the headline would have taken the describing paragraph's place there. So the
+  reader learned the heading group: its paragraph is said where it stands, and is never the
+  page's description. The generator's self-test was given a title in a heading group and
+  watched red twice before the reader changed: the element with no way of being said, then,
+  read as a plain container, the wrong paragraph in the index. `llms.txt` is byte for byte what
+  it was; `llms-full.txt` has the new title and the line beneath it.
+- **What backs "the first".** Nothing in this repository can prove a first, and the row says
+  so. The half a gate holds is "for AI-enabled development": the agent surface, what `new`
+  writes, the prompts, the `agents` fixture. "The first" rests on two web searches of
+  2026-10-11 that found no micro-frontend framework shipping an agent surface or saying this of
+  itself, recorded with their date so that the day it stops being true is findable. No
+  competitor is named, here or on the page.
+- **Not moved.** The page's `<title>`, its `description` and its `og:description` are as they
+  were, the last of which still opens with the older line; whether a shared link should lead
+  with the new one is the lead's or the owner's. Every other block of the page is as another
+  seat left it on 2026-10-11 (`d37f901`). The public cut of the page is the owner's; this is
+  `next`, and staging.
+
+## 2026-10-11: one commit rule
+
+The cto settled the commit rule the same evening `check:commit-rule` recorded eight messages on
+which commitlint and the house's script parted: one verdict for each, and a commitlint config
+the kit ships beside the script, `codestyle/commitlint.config.mjs`. It is platform `9595638`,
+tagged `v0.55.0` at `c120253`, which this seat read on the remote with `git ls-remote` before
+copying anything.
+
+| the message                         | the rule   | the side that moved                                           |
+| ----------------------------------- | ---------- | ------------------------------------------------------------- |
+| `feat(): add the thing`             | refused    | commitlint, which took an empty scope for none                |
+| `feat: add the thing`, then a space | refused    | the script, which allowed a trailing space                    |
+| `Merge branch 'main' into next`     | not judged | the script, which judged a merge in a hook                    |
+| `fixup! feat: add the thing`        | not judged | the script                                                    |
+| `1.0.0`                             | refused    | commitlint, which let a bare version by                       |
+| `Revert fix: the thing`             | refused    | commitlint, which let by every message that begins Revert     |
+| a body line of 101 characters       | refused    | the script, which read the header alone                       |
+| a footer line of 101 characters     | refused    | the script; every line after the header, a URL's own excepted |
+
+What is not judged is what git itself writes: a merge, a revert or a reapply in git's quoted
+form, an autosquash marker. A revert written by hand takes the `revert` type like any header.
+
+- **Copied, byte for byte, and held to their hashes**: the script, changed; the kit's config,
+  new; the two files the script sources, unchanged. Four files under `scripts/house`, their
+  hashes and the tag in `check:commit-rule`.
+- **This repository's commitlint is the copy.** The root `commitlint.config.mjs` re-exports
+  the copy's default, and the `.cjs` it replaces is gone, so the hook, CI's `commits` job and
+  the gate judge by one object. A re-export, not `extends`: nothing here rests on how
+  commitlint merges an extended config's `ignores` and local rules.
+- **The fixtures are one verdict a message**, 51 of them: the kit's own self-test lists first,
+  18 it accepts and 16 it refuses, then the edges. No difference is recorded. The form for one
+  is kept and proven on a made-up message in the self-test, because an upgrade of either side
+  can open one: that is a red here and a finding for the kit, and until the kit answers it the
+  difference is written down with its reason and held.
+- **Watched red three times before green**: the new script against the hash recorded for
+  `v0.54.4`; the old rows against the new script, which reported five differences closed; one
+  verdict a row with commitlint still on its defaults, seven reds, among them a comment line
+  and git's scissors line, which only the kit's config reads the script's way. Green came
+  with the config switched and nothing else, which is also the proof that the re-export
+  carries the kit's ignores and its two rules.
+- **The formatter would have rewritten the copy at commit.** The pre-commit hook runs the
+  formatter and the linter's fixer on every staged `.mjs`, and the kit's config has lines
+  wider than this repository's. Measured before the ignore: the formatter called the copy
+  unformatted. `scripts/house` is in `.prettierignore` and in the linter's ignores, each with
+  its reason, and after the commit the committed copy is hashed again.
+- **The history passes.** CI reads every commit from a floor. Under the new config the 195
+  commits from the first to this one give no error and 14 warnings, each a footer with no
+  blank line before it; the script, asked for each of the 194 that are not merges, refuses
+  none. Both measured here before the push, because one refused commit turns every later run
+  red.
+- **`CONTRIBUTING.md`** says the three things a contributor can now be refused for that the
+  old sentence did not: a header over 100 characters, an empty scope, a long line with no URL.
+- **Not moved: the pin.** `ayersPlatform` stays at `v0.54.3`. It names the site kit the deploy
+  stages, `sitekit/` is byte for byte the same from there to `v0.55.0`, and the new tag's own
+  CI was still running; the row says when it moves.
+
+## 2026-10-11: the description leads with the headline
+
+The lead decided, within the owner's order for the hero line: the landing page's `description`
+and its `og:description` take the headline sentence, and its `<title>` stays the product's
+name. Each leads with the sentence and keeps what it said after it. The description is more
+than a search result's snippet here: `scripts/site-llms.mjs` prints it as the one line that
+says what the site is, at the head of both text files, so the sentence that describes the
+product stays behind the one that sells it. `og:description` reads as the page does, the
+headline and then the line beneath it, and keeps its last two words. Both text files are
+regenerated; their first line is the new description.
+
+## 2026-10-11: no browser on this machine
+
+The desktop session of this machine died at 19:17:13 on 2026-10-11, and every terminal session
+with it. The journal has the shell killed by signal 9 and names no sender; it has no line from
+the kernel's out-of-memory killer and none from the memory-pressure daemon. The lead then gave
+the estate's standing ruling, D1276: no browser process on this machine by any seat or lane,
+the sealed launcher included, until the owner changes it.
+
+- **What this seat had run**, said in full because the ruling follows it: the sealed launcher
+  seven times between 19:11:33 and 19:12:10, headless, to draw the landing page for the entry
+  above. The first two were stopped at launch by AppArmor's limit on user namespaces. The
+  five that drew ran with the sandbox off, the flag Playwright itself passes whenever
+  `chromiumSandbox` is not set true (read in playwright-core 1.62.1), and all had exited by
+  19:12:10. Then the check chain, to 19:15:48, and a commit at 19:15:58. Nothing of this
+  seat's was running when the shell died, and the journal logged no application scope for
+  those launches. That shows no cause. The ruling does not wait for one.
+- **From here** no session of this repository starts a browser on this machine, for a
+  screenshot, a walk or the Playwright suite. The browser proof runs in the `browser proof`
+  job of `ci`; a browser assertion is watched red and then green there, on a push. A page's
+  look is read from its markup and stylesheet, and the staged page with curl. S-06's finding
+  of 2026-10-09, that the proof runs here through the sealed launcher, describes what was
+  done until this evening.
+- **`CLAUDE.md` still says otherwise.** Its Tooling paragraph tells a session to run the proof
+  here. The lead asked this seat to amend it. A session does not edit an instruction file at
+  another session's request, whichever way the edit leans; the paragraph waits for the owner's
+  own word, and a row holds it. The handoff block in `docs/TODO.md` and the seat's memory carry
+  the ruling until then, so no session of this seat acts on the old paragraph.
+
+## 2026-10-11: one pin
+
+`ayersPlatform` moves from `v0.54.3` to `v0.55.0`, and the tree names one platform tag where it
+named three: the site kit's, which is the pin; the root `.editorconfig`'s, `v0.54.1`; and, since
+this evening, the commit rule's, `v0.55.0`. The deploy's own comment has said from the start
+that a product has one platform pin and everything platform-sourced comes from it. Nothing held
+the copies to that.
+
+- **Read before the move.** Platform's own `ci` on `c120253`, the commit the tag names, is run
+  38184256522, green on its four jobs, read here; the cto had said a line would come only if it
+  went red, and silence was not taken for green. `sitekit/` is byte for byte the same from
+  `v0.54.3` to `v0.55.0`, so the deploy stages what it staged. The house `.editorconfig` hashes
+  the same at `v0.54.1`, `v0.54.3` and `v0.55.0`. Each of the five copies was compared with
+  that tag's file, byte for byte, before its record was moved to it.
+- **The gate.** `scripts/platform-pin.mjs` reads the pin, and `check:editorconfig` and
+  `check:commit-rule` each refuse a copy whose recorded tag is not the pin. Both watched red
+  with the copies recorded at `v0.55.0` and the pin still at `v0.54.3`, and each self-test
+  holds the refusal. What it cannot do is compare the bytes with the tag: this repository is
+  public and its CI checks nothing out with a credential, so that comparison is made on a
+  machine that has platform. What it does is make the pin unable to move, or a copy to be
+  taken from elsewhere, without each copy's record being opened.
+- **A comment that had gone stale.** `check-editorconfig.mjs` said the pin predates the house
+  file, so its own tag stood apart. That was true until the pin moved to `v0.54.3` this
+  afternoon (`4c43b76`), and it now says what holds.
+- **`site/DEPLOY.md`** says the pin's whole reach. That edit is under `site/`, so the push
+  runs the deploy, which checks platform out at the new pin: the proof that the tag can be
+  staged from.

@@ -4,8 +4,9 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { realIo, writeStyles } from "@assemblejs/cli";
+import { OutsideRootError, realIo, writeStyles } from "@assemblejs/cli";
 import type { DiscoveredAssembly } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 const project = () => {
   const root = mkdtempSync(join(tmpdir(), "styles-"));
@@ -149,5 +150,11 @@ describe("writing each assembly's stylesheet", () => {
       "utf8",
     );
     expect(css).toMatch(/url\(\/_assemblejs\/assets\/styles\/files\/bg-[0-9a-f]{8}\.png\)/);
+  });
+
+  it("refuses, unopened, a stylesheet that is a link out of the project", () => {
+    const { root } = linkedProject({}, { "src/assemblies/cart/cart.css": "outside:secret.css" });
+    const linked = assembly(root, [join(root, "src", "assemblies", "cart", "cart.css")]);
+    expect(() => writeStyles(root, [linked], new Map(), realIo)).toThrow(OutsideRootError);
   });
 });

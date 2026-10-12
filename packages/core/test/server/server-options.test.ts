@@ -61,6 +61,32 @@ describe("the depth a server composes to", () => {
   });
 });
 
+describe("the stylesheets a server links on every page", () => {
+  it("come before any assembly's, in the head of each page", async () => {
+    const hello = defineAssembly({
+      name: "hello",
+      views: { default: { renderer: "html", markup: () => "<p>hi</p>" } },
+    });
+    const server = await createServer({
+      config: { mode: "production", host: "127.0.0.1", port: 0, auth: undefined },
+      assemblies: [hello],
+      pages: [
+        {
+          route: "/",
+          template: '<html><head></head><body><assembly name="hello"></assembly></body></html>',
+        },
+      ],
+      styles: ["/_assemblejs/assets/styles/tokens-9f.css"],
+      log: () => undefined,
+    });
+    const page = (await server.inject({ method: "GET", url: "/" })).body;
+    await server.close();
+    expect(page).toContain(
+      '<link rel="stylesheet" href="/_assemblejs/assets/styles/tokens-9f.css"></head>',
+    );
+  });
+});
+
 describe("the limits a project set", () => {
   it("refuse to boot outside their bounds, each named", async () => {
     const config = { mode: "production" as const, host: "127.0.0.1", port: 0, auth: undefined };

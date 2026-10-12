@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 import { freePort, saidBy } from "./child-server.js";
 
 // THE DAY-ONE PROOF, FROM A REAL BUILD. The fixture tests hand the runtime markup written for
@@ -64,8 +65,7 @@ test("a built project's Svelte and React assemblies share a page and an event", 
 
   // Every island is read and removed once the runtime starts, the static assembly's included.
   await expect(page.locator("script[data-assembly]")).toHaveCount(0);
-
-  await page.locator("#bump").click();
+  await clickMounted(page.locator("#bump"));
   await expect(page.locator("#bump")).toContainText("Clicked 1");
   await expect(page.locator("#readout")).toHaveText("counter counted 1");
   expect(errors).toEqual([]);

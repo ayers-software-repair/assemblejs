@@ -4,11 +4,12 @@ import { describe, expect, it } from "vitest";
 import type { Io } from "@assemblejs/cli";
 
 describe("what a command does to the world outside itself", () => {
-  it("is four operations, passed in rather than reached for", () => {
+  it("is five operations, passed in rather than reached for", () => {
     const written: string[] = [];
     const io: Io = {
       write: (path) => written.push(path),
       exists: () => false,
+      remove: () => undefined,
       log: () => {},
       error: () => {},
     };

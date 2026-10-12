@@ -38,6 +38,15 @@ const remote = (asked: string[] = []): RemoteTransport => ({
 });
 
 describe("the browser files a composed page links", () => {
+  it("links the stylesheets the server names first, before any assembly's, each once", async () => {
+    const cart = assembly("cart");
+    const composed = { html: envelope("cart"), diagnostics: [placed("cart")] };
+    const tokens = ["/_assemblejs/assets/styles/tokens-1a2b.css"];
+    const linked = await pageAssets(composed, {}, byName(cart), remote(), tokens);
+    expect(linked.css).toEqual(["/_assemblejs/assets/styles/tokens-1a2b.css", "/cart.css"]);
+    expect(linked.js).toEqual(["/cart.js"]);
+  });
+
   it("links what each of this server's placed assemblies declares", async () => {
     const assets = await pageAssets(
       {

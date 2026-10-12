@@ -42,6 +42,20 @@ describe("what an agent is told about placements that fell back", () => {
     ]);
   });
 
+  it("adds what a transport said of placements no account here holds, each once", () => {
+    const said = [
+      '"price" fell back inside "holder" on the dev server: its log says why, against deadbeef',
+    ];
+    expect(
+      fallbackProblems(
+        [placed("holder"), fell("cart", "timeout")],
+        ["holder", "cart"],
+        [],
+        [...said, ...said],
+      ),
+    ).toEqual(['"cart" was answered by the fallback after timeout', ...said]);
+  });
+
   it("reads every depth, says where a child stands, and says each thing once", () => {
     const tree = [
       placed("shell", { children: [fell("loop", "cycle"), fell("loop", "cycle")] }),

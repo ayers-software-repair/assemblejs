@@ -159,7 +159,16 @@ an assembly's own view, places an assembly with `<assembly name="cart"></assembl
 a template directive: the server replaces it and it is never emitted, so it needs no hyphen and
 carries no meaning in the browser. It is written closed, as there or as
 `<assembly name="cart" />`: an opening tag alone is refused where it is read, and the page or
-the view that holds it fails whole. The two
+the view that holds it fails whole. So is a directive inside a paragraph the parser has not
+closed, after a `<p>` with no `</p>`, no start tag that closes a paragraph and no end tag of a
+block above it between: the browser closes the paragraph at the first block the placed assembly
+holds, and the rest of the assembly, its island included, leaves its envelope. The one reader of
+the directive refuses it, so `check`, the server at boot, the composer and a view at render all
+say the same. And so is a directive inside a declarative shadow root an element writes for itself,
+`<template shadowrootmode="...">` not yet closed, as a Lit element's render would place it: the
+page's stylesheets do not reach into an element's root, so the assembly would stand unstyled and
+its sheet be linked where it does nothing; it is placed in the view's template, outside the
+element. The two
 are separate because one word cannot be right in both positions. A placement is nested by
 definition and a served fragment is not, so a name that reads correctly in a template reads
 wrongly on a bare fetch, and the reverse. The author writes the directive and reads the
@@ -637,7 +646,10 @@ export type MountHandle = { unmount(): void };
   slot whose name or view changes in the browser writes a new directive there, which nothing
   composes: what a page places is decided on the server, and a child is not swapped by a render.
   No renderer reaches for a child or agrees with another about what one is, so plain HTML holds
-  React as React holds plain HTML. Markdown is prose and places nothing.
+  React as React holds plain HTML. Markdown is prose and places nothing. What `check` reads of a
+  view's source for its placements it reads for its elements too, each tag with its attributes
+  and whether the template computes it, for the rules of section 10 to hold; Markdown writes no
+  element of its own.
 - **A placement's name is written where the placement is.** What a view places is read from its
   source before any request: the build writes it beside the view, boot refuses a name with no
   assembly, a view the assembly lacks and a view that leads back to itself, and `check` says the
@@ -653,7 +665,9 @@ export type MountHandle = { unmount(): void };
   is written is a finding, and a build refuses that view as it refuses a template that does
   not compile: every render that reaches the directive would fail on it. A framework view is
   read for each `Slot` or `slot` of its renderer's that it writes, under whatever name or
-  namespace it imports them, in its own file and in each component of the project it imports.
+  namespace it imports them, in its own file and in each component of the project it imports;
+  one written inside a class's `render`, a Lit element's own, is a finding and no placement,
+  since the composer refuses a child inside an element's shadow root (section 2.4).
   A render alone knows the rest: a slot handed on under another name, a slot inside a
   component that comes from a package, a tag whose own name a template computes, a directive
   that reads only once a template has computed part of it, which leaves that whole view
@@ -722,6 +736,8 @@ src/
       hello-react.service.ts    optional: server data
   api/
     time.api.ts
+  tokens.css                    the roles every stylesheet reads, set in one place (10)
+  components.css                the elements HTML has, styled by the tokens (10)
 assemblejs.config.ts            policy only: remotes, access, the content policy, budgets, limits
 AGENTS.md                       what an agent that opens the project is told (13.7)
 .mcp.json                       the project's agent surface, registered (13.7)
@@ -838,7 +854,10 @@ each island, and mounts each assembly through its renderer's client half.
 Declared per assembly. A static view (html, or a template with no `.client.ts` beside it)
 ships no JavaScript at all, which is a mode and not an accident; a framework view declared
 `none` is left as the server sent it, and the page it is on still carries the runtime for the
-rest.
+rest. Once a renderer has mounted an assembly, the runtime marks its envelope `data-mounted`,
+and removes the mark when it unmounts it: the one word the browser writes on an envelope, so a
+page, a test or a person can tell a hydrated assembly from one still waiting for its module.
+The server never writes it (section 2.4 is the server's set).
 
 Events are typed, page-scoped and owned by the assembly:
 
@@ -886,6 +905,42 @@ Stated plainly rather than implied: `@keyframes`, `@font-face`, `@import` and `@
 by nature and are not scoped. A nested assembly sits inside its parent's envelope, so a parent's
 descendant selectors reach into it, and a page's own rules reach every assembly not in a shadow
 root. Nothing pretends otherwise.
+
+A project's tokens are one file, `src/tokens.css`: the colour roles, the distances, the type
+sizes and the corners every assembly's stylesheet reads, declared as custom properties at
+`:root`, which every assembly inherits, one in a shadow root included. The build carries the file
+whole and unscoped, named by its content, and every page links it before any assembly's sheet
+(`styles` on the server). A new project starts with the estate's roles, three scales and a dark
+scheme, each value a placeholder that passes its contrast, and changes the values in that one
+place (owner, DECISIONS 2026-10-11, "Plain HTML + tokens"). Each colour role states what must be
+true of whatever binds it, and `check` holds the file to it in both schemes
+(`tokens-hold-their-contrast`): an ink against each ground it is set on reads at 4.5:1 or more,
+and an accent against the surfaces at 3:1 or more, the numbers WCAG 2.2's own (1.4.3 and 1.4.11,
+level AA, by its definitions of relative luminance and contrast ratio). A role bound to anything
+the reader cannot judge, a variable or a named colour, is left alone, since a rule refuses only
+what it is certain of. Beside the tokens, `src/components.css` styles the components HTML already
+has, the button, the field with its label, the link, the list, the table, the notice and the
+dialog, each a class and the tokens, with its focus ring and its states, and no colour of its own;
+every page links it after the tokens, and a new project's one assembly uses it. `check` holds
+every view to the stylesheet (`a-view-has-no-inline-style`): a `style` attribute on an element,
+written or computed, in any kind of view, is refused, since it does nothing under the default
+policy and sets a value where it is used; and an `img` with no `alt` at all is refused
+(`an-image-has-an-alternative`, WCAG 2.2, 1.1.1, level A), an empty one saying the image is
+decoration, one the view computes present, one under a spread left to the render; and a control
+with no name is refused (`a-control-has-a-name`, WCAG 2.2, 3.3.2 and 4.1.2, level A): an `input`,
+a `select` or a `textarea` is named by a `label` for its id or one that may wrap it, by an
+`aria-label`, an `aria-labelledby` or a `title`, by a placeholder on a text field, or by the
+value of an input of type button, each a name by the HTML accessibility API mappings; a hidden,
+submit, reset or image input is named without the author, and a `button` is named by its content,
+which the reader does not see, so neither is judged. And an assembly's stylesheet reads its
+colours from the tokens and sets none of its own (`a-colour-is-a-token`): a hex colour, a colour
+function or a named colour of CSS Color Level 4 in any declaration, a custom property's included,
+is refused in a project that has `src/tokens.css`, since a colour is one decision made in one
+file; `transparent`, `currentcolor`, a string, a url and the name a `var()` reads are not colours
+set there. A component here
+is an element the browser makes usable, a modal `dialog` that makes the rest of the page inert
+among them; no custom element and no library per framework (owner, DECISIONS 2026-10-11, "Plain
+HTML + tokens"). The rules that hold a view to the tokens follow.
 
 A page links the stylesheet of every assembly in the markup it serves, at any depth, read from
 the envelopes themselves, so an answer that came from the cache is styled as one that was just
@@ -1001,37 +1056,55 @@ but the directory the assemblies are in, so nothing else in a project can take t
 A tool that writes an assembly tells the client to list again. An assembly the project has not is answered with the
 protocol's code for a resource that is not found.
 
-Two things an agent would want are not here, because no source gives them. The shape of an
+One thing an agent would want is not in a resource, because no source gives it. The shape of an
 assembly's data is what its service returns, known to a run of it or to the project's types and
-to no reading of a file; the resource names the service. And what is wrong right now on a
-running server, per placement, with the correlation id that finds it in a log, is a running
-project's to say. How an agent is shown a running project is not decided (13.4); what can be
-told without one is `check`'s.
+to no reading of a file; the resource names the service, and `render_assembly` answers what one
+run of it returned, from the island of the envelope the dev server answered, while that server
+runs. What is wrong right now on a running
+server, per placement, with the correlation id that finds it in a log, is a running project's
+to say, and the two tools that ask the project's dev server say it (13.4); what can be told
+without one is `check`'s.
 
 ### 13.4 What an agent does
 
 Every tool answers with the change it made and the state that resulted. None of them prints
 prose for a human to re-read.
 
-| tool              | what it does                                                                                                                              |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `create_project`  | Scaffolds a project that runs.                                                                                                            |
-| `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.                                                |
-| `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position.                                            |
-| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML and the account of each child.                    |
-| `compose_page`    | Composes a page NOW and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
-| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                              |
-| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                             |
+| tool              | what it does                                                                                                                                                                                  |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `create_project`  | Scaffolds a project that runs.                                                                                                                                                                |
+| `add_assembly`    | Writes an assembly for a named renderer, and returns the files and the tag that places it.                                                                                                    |
+| `place_assembly`  | Puts the placement into a page template, or into another assembly's view, at a named position.                                                                                                |
+| `render_assembly` | Renders one assembly NOW, what its view places composed inside it, and returns its HTML and the account of each child.                                                                        |
+| `compose_page`    | Composes a page, by name, NOW, under the policy its declaration writes, and returns the HTML with one diagnostic per placement, and beneath it one per assembly that placement's view placed. |
+| `check`           | Runs the gates and returns findings as structures, each with the file, the rule and the fix.                                                                                                  |
+| `explain`         | Why a rule exists, so an agent can decide rather than comply.                                                                                                                                 |
 
 `render_assembly` and `compose_page` are the two that matter most, and they are the reason this
 is not a wrapper. An agent that writes an assembly can immediately see what it renders and
 which placement fell back, without starting a server, opening a browser or asking the developer
 to look. It closes its own loop.
 
-For a plain html view, that is. Nothing of the project's is run here (13.6): a view in a
-framework or a template language is source its renderer compiles, and a service is the
-project's own code, so such a view is answered with the reason it was not rendered, and an
-assembly's data comes back empty. How an agent is shown those is not decided.
+Nothing of the project's is run here (13.6). While the project's own dev server runs, the two
+tools ask it instead, as a page asks another server: `dev` records the url its server listens
+on under the project's root (`.assemblejs/dev.json`) for as long as it runs, the tools ask that
+server's health before they believe the record, and then every assembly and every placement is
+fetched from its content endpoint with the composition headers, so what the agent is shown is
+what the project serves, framework and template views and services included (owner, DECISIONS
+2026-10-11, "Dev server, tool runs nothing"). Without one, a plain html view is rendered here
+with no service, so its data is empty, and a view in a framework or a template language, source
+its renderer compiles, is answered with the reason and the word to start the dev server.
+What failed on that server is in its log, and the tools say where to look: an assembly that
+failed there answers its fallback envelope marked with the id its failure is logged against
+(2.1), which the tool's own account and markup then carry, and each placement that fell back
+inside an answer that stands is named with its own id, read from the markup, since the
+composer's account holds nothing of what another server composed inside its answer. One marked
+with no id is said to have none: that is how the server answers a placement it will not show to
+the one asking (5.2), and it logs nothing for it.
+`compose_page` takes a page by its name and composes its own template under the policy its
+declaration writes, read as `check` reads it, so the agent sees the page it made and not a
+template it pasted; a placement from another server, by a url written or computed, is composed
+deferred, as the browser fills it on a served page, so the surface reaches no network (13.2).
 
 ### 13.5 What makes it expert rather than mechanical
 
@@ -1067,7 +1140,8 @@ The framework ships capability, not autonomy.
   follows a link out.
 - Nothing runs a shell command. `check` runs the gates in process and returns findings.
 - Nothing publishes, deploys, or touches a remote. Those stay in the command line, where a
-  person types them.
+  person types them. The one address the tools reach is the project's own dev server on this
+  machine, at the url `dev` recorded under the root, and only to be shown what it serves (13.4).
 - Mutating tools report every file they wrote, so the agent's caller can see the whole change.
 
 ### 13.7 What a new project carries
@@ -1075,11 +1149,11 @@ The framework ships capability, not autonomy.
 An agent meets a project before it meets the framework, so the project says what it is. Beside
 the project's own files, `new` writes what an agent needs in its first minute:
 
-| file                                                | what it is                                                                                                                                                                                                                                |
-| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AGENTS.md`                                         | What a page, an assembly, a placement, a service and an api are; how to ask the project and change it; every rule of `assemblejs://rules`, by its id. The command line's part stands between two comments, and the rest is the project's. |
-| `CLAUDE.md`                                         | One line, `@AGENTS.md`. Claude Code reads a `CLAUDE.md` in place of `AGENTS.md` wherever one exists in the project or above it, and the import is its documented way to share the one file.                                               |
-| `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json` | The project's own server, registered for each client that reads a registration from a project, in that client's form.                                                                                                                     |
+| file                                                                                          | what it is                                                                                                                                                                                                                                |
+| --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`                                                                                   | What a page, an assembly, a placement, a service and an api are; how to ask the project and change it; every rule of `assemblejs://rules`, by its id. The command line's part stands between two comments, and the rest is the project's. |
+| `CLAUDE.md`                                                                                   | One line, `@AGENTS.md`. Claude Code reads a `CLAUDE.md` in place of `AGENTS.md` wherever one exists in the project or above it, and the import is its documented way to share the one file.                                               |
+| `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `opencode.json` | The project's own server, registered for each client that reads a registration from a project, in that client's form; Codex, Zed and JetBrains read none from a project, and the instructions say how each takes it.                      |
 
 The server is a development dependency of the project, `@assemblejs/mcp` beside the command
 line, and each registration runs its entry point with node. No shell, no package runner and

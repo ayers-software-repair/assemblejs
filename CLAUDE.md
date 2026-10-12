@@ -86,7 +86,9 @@ Enforced, and every one of these is a script in `pnpm check` rather than a claim
 `check:modules` (dependency-cruiser: no cycles, no orphans, layer direction), `lint` (eslint,
 import order and kebab filenames), `check:unused` (knip: a file or export nothing reads),
 `check:versions` (syncpack: one version of a dependency across the workspace),
-`check:one-version` (the twelve packages name one version and sit in one changesets fixed group), `check:exports`,
+`check:one-version` (the twelve packages name one version and sit in one changesets fixed group),
+`check:editorconfig` (the root `.editorconfig` is the house file, byte for byte, at a named platform tag),
+`check:commit-rule` (commitlint and the house's shell script give the recorded verdict on the same messages), `check:exports`,
 `check:pack` and `check:publish` (publint and are-the-types-wrong on the real tarball),
 `check:reference` (the API reference generated whole, its warnings errors, and its entry points
 held to the packages' `exports`), `check:claude` (this paragraph against the chain).

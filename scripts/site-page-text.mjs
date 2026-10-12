@@ -100,7 +100,8 @@ export function pageText(html, file) {
     const main = window.document.querySelector("main");
     if (main === null) throw new Error(`${file} has no <main>`);
     const blocks = [];
-    const walk = (element) => {
+    const besideHeading = new Set();
+    const walk = (element, grouped = false) => {
       // What labels a group for someone who cannot see it labels it for a reader of text.
       const label = element.getAttribute("aria-label");
       if (label !== null && label !== "") blocks.push(`${label}:`);
@@ -122,6 +123,7 @@ export function pageText(html, file) {
         }
         if (listed.length > 0) blocks.push(listed.splice(0).join("\n"));
         if (CONTAINERS.has(tag)) walk(node);
+        else if (tag === "hgroup") walk(node, true);
         else if (tag === "ol" || tag === "ul") {
           let number = 0;
           for (const item of node.children) {
@@ -139,19 +141,24 @@ export function pageText(html, file) {
         else if (tag === "h2") blocks.push(`## ${line(node.childNodes, file)}`);
         else if (tag === "h3") blocks.push(`### ${line(node.childNodes, file)}`);
         else if (tag === "dt") blocks.push(`### ${line(node.childNodes, file)}`);
-        else if (tag === "p" || tag === "figcaption" || tag === "blockquote")
+        else if (tag === "p" || tag === "figcaption" || tag === "blockquote") {
+          if (grouped && tag === "p") besideHeading.add(blocks.length);
           blocks.push(line(node.childNodes, file));
-        else if (tag === "dd") blocks.push(...described(node, file));
+        } else if (tag === "dd") blocks.push(...described(node, file));
         else if (tag === "pre") blocks.push(fenced(node.textContent));
         else throw new Error(`${file}: <${tag}> has no way of being said here`);
       }
       if (listed.length > 0) blocks.push(listed.join("\n"));
     };
     walk(main);
-    const said = blocks.filter((block) => block !== "");
-    const title = said.find((block) => block.startsWith("# "))?.slice(2);
-    if (title === undefined) throw new Error(`${file} has no <h1>`);
-    const lede = said[said.findIndex((block) => block.startsWith("# ")) + 1];
+    const kept = blocks
+      .map((block, at) => ({ block, beside: besideHeading.has(at) }))
+      .filter(({ block }) => block !== "");
+    const said = kept.map(({ block }) => block);
+    const titled = said.findIndex((block) => block.startsWith("# "));
+    if (titled === -1) throw new Error(`${file} has no <h1>`);
+    const title = said[titled].slice(2);
+    const lede = kept.slice(titled + 1).find(({ beside }) => !beside)?.block;
     if (lede === undefined || /^(#|-|`)/.test(lede)) {
       throw new Error(`${file} has no paragraph beneath its <h1> to say what it is`);
     }

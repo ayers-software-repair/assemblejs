@@ -27,7 +27,10 @@ import { readBudgets } from "../perf/read-budgets.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import { OutsideRootError } from "../root/outside-root-error.js";
 import { readInside } from "../root/read-inside.js";
+import { colourProblems } from "../styles/colour-problems.js";
+import { tokenProblems } from "../styles/token-problems.js";
 import { declaredOrigins } from "./declared-origins.js";
+import { elementProblems } from "./element-problems.js";
 import { hasBrowserHalf } from "./has-browser-half.js";
 import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
@@ -81,6 +84,9 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     ...(await templateProblems(root, assemblies.assemblies)),
     ...views.problems,
     ...viewProblems(root, assemblies.assemblies, placeable),
+    ...tokenProblems(root),
+    ...colourProblems(root, assemblies.assemblies),
+    ...elementProblems(root, assemblies.assemblies),
     ...agentProblems(root),
   ];
 

@@ -52,7 +52,8 @@ so `/assemblejs/next` does not redirect and `/assemblejs/next/` does.
 `package.json`, checks `platform` out at exactly that tag, and stages the public CSS, four landing modules, download controls and icons into
 `site/kit/`. This private checkout occurs only in the deployment job, using its existing
 credential. Public builds and pull-request checks need no platform access. Locally, symlink it
-for preview:
+for preview. The same platform pin also governs `.editorconfig` and the commit rule in
+`scripts/house`; their drift checks remain part of the normal gate:
 
     ln -s ../../platform/sitekit site/kit
 
@@ -65,12 +66,12 @@ published dependency.
 
 ## The API reference is generated, never committed
 
-`site/docs/api/` is gitignored. `pnpm site:api` runs typedoc, configured by the root
-`typedoc.json`, over every entry point the twelve packages publish: each `src/index.ts`, and
-each subpath a package's `exports` names. It reads the sources through `tsconfig.typedoc.json`,
-whose `references` are the packages' own, so each package is read under its own compiler
-options. Each entry file names itself with a `@module` comment, so the reference reads by the
-specifier a user imports. `pnpm check:reference`, in `pnpm check`, holds the entry points to the
+`site/docs/api/` is gitignored. `pnpm site:api` runs typedoc once per package (the root
+`typedoc.json`'s `packages` strategy), each package's own `typedoc.json` naming the entry points
+it publishes: `src/index.ts`, and each subpath its `exports` names. Each package is read through
+its own `tsconfig.json`, and typedoc's check that a public signature names no unexported type
+holds within it, which one run over the twelve would have passed. Each entry file names itself
+with a `@module` comment, so the reference reads by the specifier a user imports. `pnpm check:reference`, in `pnpm check`, holds the entry points to the
 packages' `exports`, so a subpath published and not documented is refused, and the reverse; and
 it generates the whole reference with warnings as errors, so a link in a comment that leads
 nowhere fails CI and not the next deploy. `pnpm site:api` alone writes the same tree for a
@@ -90,8 +91,10 @@ a five-minute cache; fonts and images use seven days.
 
 The reference refreshes on every site deployment: a site push, a successful tagged package
 publication, or a manual dispatch. A package-only branch push does not republish it.
-Nothing is deleted from the bucket, so the page of a symbol that was
-removed stays reachable by its address until the prefix is cleared by hand.
+Only `docs/api/` is mirrored with deletion, after upload, so removed symbols do not retain stale
+reference pages. The containing product prefix and its nested candidate channel are never mirrored
+with deletion. The 404 page uses origin-relative URLs set from the selected upload prefix,
+so its styles and recovery links work even when the missing URL is deeply nested.
 
 ## What is checked before it ships
 

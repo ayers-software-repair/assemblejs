@@ -4,7 +4,8 @@ import { mkdirSync, mkdtempSync, renameSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { sourceVersion } from "@assemblejs/cli";
+import { OutsideRootError, sourceVersion } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 const project = (view: string): string => {
   const root = mkdtempSync(join(tmpdir(), "version-"));
@@ -29,5 +30,13 @@ describe("the version of a build's output", () => {
       join(moved, "src", "assemblies", "b", "b.html"),
     );
     expect(sourceVersion(moved)).not.toBe(sourceVersion(project("<p>a</p>")));
+  });
+
+  it("refuses, unopened, a source that is a link out of the project", () => {
+    const { root } = linkedProject(
+      { "package.json": "{}", "src/assemblies/a/a.html": "<p>a</p>" },
+      { "src/assemblies/a/a.css": "outside:secret.css" },
+    );
+    expect(() => sourceVersion(root)).toThrow(OutsideRootError);
   });
 });

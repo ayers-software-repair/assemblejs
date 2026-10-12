@@ -128,13 +128,16 @@ describe("what an agent can do", () => {
     expect(answer.next?.join()).toContain(`<assembly name="cart">`);
   });
 
-  it("composes the page that template makes, with the account of each placement", async () => {
+  it("composes the page by its name, with the account of each placement", async () => {
     assembly("header", "header.html", "<h1>Shop</h1>");
     assembly("cart", "cart.html", "<p>Two items</p>");
 
-    const answer = await call("compose_page", {
-      template: `<main><assembly name="header"/><assembly name="cart"/></main>`,
-    });
+    mkdirSync(join(dir, "src", "pages", "home"), { recursive: true });
+    writeFileSync(
+      join(dir, "src", "pages", "home", "home.html"),
+      `<main><assembly name="header"/><assembly name="cart"/></main>`,
+    );
+    const answer = await call("compose_page", { page: "home" });
     expect(answer.ok).toBe(true);
     const result = answer.result as { html: string; diagnostics: Array<{ name: string }> };
     expect(result.html).toContain("<h1>Shop</h1>");
@@ -200,7 +203,7 @@ describe("what an agent cannot do", () => {
     assembly("cart", "cart.html", "<p>x</p>");
     for (const [name, args] of [
       ["render_assembly", { name: "cart" }],
-      ["compose_page", { template: "<main></main>" }],
+      ["compose_page", { page: "nowhere" }],
       ["explain", { id: "directory-is-an-assembly" }],
     ] as const) {
       const answer = await call(name, args);

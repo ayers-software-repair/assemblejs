@@ -41,6 +41,13 @@ export const RULES: readonly Rule[] = [
     smell: "A Slot or a directive whose name comes from data, a prop or a variable.",
   },
   {
+    id: "a-placement-stands-outside-an-element",
+    rule: "A view places a child in its own template, never inside an element's render.",
+    because:
+      "A slot written in a Lit element's render puts the child inside that element's own shadow root, where the page's stylesheets do not reach: the child stands unstyled and its sheet is linked where it does nothing. The composer refuses the placement at render; check says so first.",
+    smell: "slot(...) inside the render() of a class in a Lit view.",
+  },
+  {
     id: "an-assembly-is-never-its-own-ancestor",
     rule: "No assembly is placed inside itself, directly or through the assemblies it places.",
     because:
@@ -195,6 +202,45 @@ export const RULES: readonly Rule[] = [
       "The stylesheet is served from the build, not from the assembly's directory, so a reference the build did not carry along points at nothing, and a stylesheet it cannot parse cannot be scoped.",
     smell:
       "A relative @import, a url() naming a file that is not there, or CSS the build reports it cannot parse.",
+  },
+  {
+    id: "tokens-hold-their-contrast",
+    rule: "A colour role in src/tokens.css holds its contrast in both schemes: text at 4.5:1 or more against its grounds, what identifies a control at 3:1 or more.",
+    because:
+      "The numbers are WCAG 2.2's (1.4.3 and 1.4.11, level AA), and a token is the one place a colour is set, so a binding that breaks them breaks every assembly that reads it.",
+    smell:
+      "A muted ink that fades into its panel, or an accent that cannot be told from the surface, in the dark scheme most of all.",
+  },
+  {
+    id: "a-view-has-no-inline-style",
+    rule: "A view writes no style attribute, in any kind of view: a style lives in the assembly's stylesheet.",
+    because:
+      "A style attribute does nothing under the default content security policy, and it is a value invented where it is used, where the tokens and the stylesheet are the one place a look is set.",
+    smell:
+      'style="..." in a template, style={{ ... }} in JSX, :style in Vue, a style attribute computed by the view.',
+  },
+  {
+    id: "an-image-has-an-alternative",
+    rule: "An img has an alt: what it shows, or empty when it is decoration.",
+    because:
+      'WCAG 2.2, 1.1.1, level A: non-text content has a text alternative that serves the equivalent purpose. An img with no alt at all is read aloud by its file name; alt="" says there is nothing to say.',
+    smell: "<img src=...> with no alt attribute, in any kind of view.",
+  },
+  {
+    id: "a-control-has-a-name",
+    rule: "An input, a select or a textarea has a name: a label for its id or one wrapping it, or an aria-label or a title where no label is shown.",
+    because:
+      "WCAG 2.2, level A: 3.3.2, labels or instructions are provided when content requires user input, and 4.1.2, the name of every user interface component can be programmatically determined. A control with no name is announced as its kind alone, and a placeholder that names a text field vanishes as it is typed into.",
+    smell:
+      "<input> with an id no label names, or no id at all; a select or a textarea beside its label but not tied to it; an input of type button with no value.",
+  },
+  {
+    id: "a-colour-is-a-token",
+    rule: "An assembly's stylesheet reads its colours from src/tokens.css and sets none of its own.",
+    because:
+      "A colour is one decision, made in one file: the tokens hold their contrast in both schemes, and a page composed from assemblies written apart looks like one page only when every one reads the same roles. A literal colour in an assembly is a decision made twice, unchecked.",
+    smell:
+      "A hex colour, rgb(), hsl(), oklch() or a named colour in an assembly's .css, a custom property of its own bound to one included, in a project that has src/tokens.css.",
   },
   {
     id: "agent-instructions-are-current",

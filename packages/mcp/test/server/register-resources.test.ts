@@ -45,11 +45,12 @@ afterEach(async () => {
 });
 
 describe("what an agent reads", () => {
-  it("lists the project, the rules, and each assembly as a resource of its own", async () => {
+  it("lists the project, the rules, the contract, and each assembly as a resource of its own", async () => {
     const { resources } = await client.listResources();
     expect(resources.map(({ uri, name }) => [uri, name])).toEqual([
       ["assemblejs://project", "project"],
       ["assemblejs://rules", "rules"],
+      ["assemblejs://contract", "contract"],
       ["assemblejs://assembly/card", "assembly/card"],
       ["assemblejs://assembly/cart", "assembly/cart"],
     ]);
@@ -134,6 +135,7 @@ describe("what an agent reads", () => {
       expect((await client.listResources()).resources.map((resource) => resource.uri)).toEqual([
         "assemblejs://project",
         "assemblejs://rules",
+        "assemblejs://contract",
         "assemblejs://assembly/card",
         "assemblejs://assembly/cart",
       ]);
@@ -162,6 +164,7 @@ describe("what an agent reads", () => {
       expect((await client.listResources()).resources.map((resource) => resource.uri)).toEqual([
         "assemblejs://project",
         "assemblejs://rules",
+        "assemblejs://contract",
       ]);
       expect(
         (

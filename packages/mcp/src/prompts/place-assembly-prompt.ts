@@ -29,7 +29,7 @@ export const PLACE_ASSEMBLY_PROMPT: AgentPrompt = {
     }
 3. Where in the body it stands is yours to say: "at" with "start" or "end", or "after" or "before" with the name of an assembly already placed there. The end, when you say nothing.
 4. Placed in a view written in a framework, the answer is the line to write and what it imports, because that view is its author's source. Write the line where the child belongs.
-5. See it. For a page, read src/pages/<page>/<page>.html and call compose_page with { "template": the file's text }. For an assembly, call render_assembly with { "name": the assembly's name }. Read the account of each placement and not only the markup: a placement that fell back looks the same in the markup as one that worked.
+5. See it. For a page, call compose_page with the page's name as "page". For an assembly, call render_assembly with { "name": the assembly's name }. Read the account of each placement and not only the markup: a placement that fell back looks the same in the markup as one that worked.
 6. Call check, and fix every finding before you call this done.
 `,
 };

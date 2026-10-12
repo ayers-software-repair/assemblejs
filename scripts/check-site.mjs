@@ -146,9 +146,11 @@ export function checkPages(siteRoot) {
       if (!path.endsWith(".html")) continue;
       const html = readFileSync(path, "utf8");
       for (const [, href] of html.matchAll(/href="([^"#:]+\.html)"/g)) {
-        const target = href.startsWith("../")
-          ? href.slice(3)
-          : join(dir, href).slice(siteRoot.length + 1);
+        const target = href.startsWith("/assemblejs/")
+          ? href.slice("/assemblejs/".length)
+          : href.startsWith("../")
+            ? href.slice(3)
+            : join(dir, href).slice(siteRoot.length + 1);
         if (!declared.has(target.replaceAll("\\", "/"))) {
           problems.push(`${path} links to "${href}", which pages.json does not declare`);
         }
@@ -203,6 +205,13 @@ if (isEntryPoint) {
       const walked = checkPages(root);
       if (walked.length > 0) {
         refuse("it must not walk the tree a generated page heads", walked);
+      }
+      writeFileSync(join(root, "index.html"), '<a href="/assemblejs/index.html">home</a>');
+      if (checkPages(root).length > 0)
+        refuse("it must resolve product-prefixed recovery links", checkPages(root));
+      writeFileSync(join(root, "index.html"), '<a href="/assemblejs/missing.html">missing</a>');
+      if (!checkPages(root).some((p) => p.includes('links to "/assemblejs/missing.html"'))) {
+        refuse("it must reject an undeclared product-prefixed link", checkPages(root));
       }
       writeFileSync(join(root, "index.html"), '<a href="elsewhere.html">nowhere</a>');
       const undeclared = checkPages(root);

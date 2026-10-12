@@ -3,6 +3,8 @@
 export { RENDERERS } from "./renderers.js";
 export { ownVersion } from "./own-version.js";
 export { pageDocument } from "./page-document.js";
+export { TOKENS } from "./tokens.js";
+export { COMPONENTS } from "./components.js";
 export { PROJECT_NAME } from "./project-name.js";
 export { projectFiles } from "./project-files.js";
 export { assemblyFiles } from "./assembly-files.js";

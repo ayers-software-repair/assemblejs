@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import type { Io } from "./io.js";
 
@@ -12,6 +12,7 @@ export const realIo: Io = {
     writeFileSync(path, contents);
   },
   exists: (path) => existsSync(path),
+  remove: (path) => rmSync(path, { force: true }),
   log: (line) => console.log(line),
   error: (line) => console.error(line),
 };

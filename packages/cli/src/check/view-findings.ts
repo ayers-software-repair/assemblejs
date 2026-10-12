@@ -84,6 +84,7 @@ export function viewFindings(
           ),
         ).placements,
         unnamed: all.flatMap((one) => one.unnamed),
+        shadowed: all.flatMap((one) => one.shadowed ?? []),
       };
     } catch (error) {
       // A file that is not there is the tree's to report; a directive that cannot be read is this.
@@ -96,6 +97,13 @@ export function viewFindings(
         unread.add(assembly.name);
       }
       continue;
+    }
+    for (const shown of read.shadowed ?? []) {
+      wrong(
+        "a-placement-stands-outside-an-element",
+        `places an assembly inside an element's own shadow root, where the page's stylesheets do not reach: ${shown}`,
+        "place it in the view's template, outside the element; an element's root is its own",
+      );
     }
     for (const shown of read.unnamed) {
       wrong(

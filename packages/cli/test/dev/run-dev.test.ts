@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { realIo, runDev } from "@assemblejs/cli";
+import { freePort, realIo, runDev } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 const root = mkdtempSync(join(example, ".dev-run-"));
@@ -34,7 +34,7 @@ describe("dev", () => {
       join(root, "src", "server.ts"),
       'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
     );
-    const port = String(20000 + Math.floor(Math.random() * 20000));
+    const port = String(await freePort());
     process.env["ASSEMBLEJS_PORT"] = port;
     const errors: string[] = [];
     const io = { ...realIo, log: () => undefined, error: (line: string) => errors.push(line) };
@@ -43,6 +43,10 @@ describe("dev", () => {
     const done = runDev(root, io, controller.signal);
     try {
       await until(async () => (await page()).includes("first"));
+      // While the server runs, the record says where, for the agent surface to ask it.
+      const record = join(root, ".assemblejs", "dev.json");
+      await until(async () => existsSync(record));
+      expect(JSON.parse(readFileSync(record, "utf8"))).toEqual({ url: `http://127.0.0.1:${port}` });
       writeFileSync(view, "<p>second</p>");
       await until(async () => (await page()).includes("second"));
 
@@ -56,6 +60,7 @@ describe("dev", () => {
     }
     expect(await done).toBe(0);
     await expect(page()).rejects.toThrow();
+    expect(existsSync(join(root, ".assemblejs", "dev.json"))).toBe(false);
     // Every server here was stopped by dev itself, on a restart or at the end.
     expect(errors.join()).not.toContain("the server stopped");
   });
@@ -79,7 +84,7 @@ describe("dev, when the project misbehaves", () => {
         join(quiet, "src", "server.ts"),
         'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nawait (await createServer(project)).listen();\n',
       );
-      const port = String(20000 + Math.floor(Math.random() * 20000));
+      const port = String(await freePort());
       process.env["ASSEMBLEJS_PORT"] = port;
       const controller = new AbortController();
       const page = async () => (await fetch(`http://127.0.0.1:${port}/`)).text();

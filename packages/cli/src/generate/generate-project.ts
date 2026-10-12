@@ -14,6 +14,8 @@ export function generateProject(options: {
   readonly client: boolean;
   /** Whether the project has an assemblejs.config.ts, whose remotes it declares. */
   readonly config: boolean;
+  /** The urls of the stylesheets every page links first, the project's tokens; none by default. */
+  readonly styles?: readonly string[];
 }): string {
   const assets = options.client
     ? `\n  assets: fileURLToPath(new URL("./client/", import.meta.url)),`
@@ -27,7 +29,11 @@ const project: ServerOptions = {${options.config ? "\n  ...config," : ""}
   assemblies,
   pages,
   apis,
-  version: ${JSON.stringify(options.version)},${assets}
+  version: ${JSON.stringify(options.version)},${assets}${
+    options.styles === undefined || options.styles.length === 0
+      ? ""
+      : `\n  styles: ${JSON.stringify(options.styles)},`
+  }
 };
 export default project;
 `;

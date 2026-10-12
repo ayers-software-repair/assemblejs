@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 import { bundleFixture } from "./build-fixture.mjs";
 
 // The rung's named proof: a React assembly hydrating BESIDE a plain HTML assembly on one page.
@@ -26,7 +27,7 @@ test("a React assembly hydrates beside a plain HTML assembly", async ({ page }) 
 
   // Server markup was there before any of it ran, and is now interactive.
   await expect(page.locator("#bump")).toContainText("Clicked");
-  await page.locator("#bump").click();
+  await clickMounted(page.locator("#bump"));
   await expect(page.locator("#bump")).toContainText("1");
 
   // Both islands are gone: the runtime read them and removed them, whether or not it mounted.

@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 import { freePort, saidBy } from "./child-server.js";
 import { createServer } from "../packages/core/dist/index.js";
 import type { App } from "../packages/core/dist/index.js";
@@ -80,7 +81,7 @@ test("a page hydrates assemblies another server rendered, with that server's own
   await expect(browser.locator("assembly-root[data-remote]")).toHaveCount(2);
   await expect(browser.locator('script[type="module"]')).toHaveCount(1);
 
-  await browser.locator("#bump").click();
+  await clickMounted(browser.locator("#bump"));
   await expect(browser.locator("#bump")).toContainText("Clicked 1");
   await expect(browser.locator("#readout")).toHaveText("counter counted 1");
   expect(errors).toEqual([]);

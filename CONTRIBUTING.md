@@ -47,7 +47,9 @@ commands CI runs, in the same order; a red `check` is not pushed.
 
 1. `pnpm changeset` for any change under `packages/*/src`. Docs and CI changes never need one.
 2. `pnpm check` green locally.
-3. Conventional commit messages (`feat:`, `fix:`, `docs:`, `chore:`), enforced on commit. No
+3. Conventional commit messages (`feat:`, `fix:`, `docs:`, `chore:`), enforced on commit. The
+   header is at most 100 characters and a scope is never empty; a line after the header runs
+   past 100 only when it holds a URL. `commitlint.config.mjs` is the whole rule. No
    attribution trailers of any kind other than `Signed-off-by`.
 4. Squash merge only; the pull request title becomes the commit message.
 

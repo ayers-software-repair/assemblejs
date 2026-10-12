@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 import type { ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
+import { clickMounted } from "./mounted.js";
 import { freePort, saidBy } from "./child-server.js";
 import { createServer } from "../packages/core/dist/index.js";
 import type { App } from "../packages/core/dist/index.js";
@@ -119,7 +120,7 @@ test("an assembly in its own shadow root is isolated both ways, and still hydrat
   await expect(panel).toHaveCSS("text-decoration-line", "none");
 
   // The React view hydrated inside the shadow root rather than beside it.
-  await page.locator("#panel-open").click();
+  await clickMounted(page.locator("#panel-open"));
   await expect(page.locator("#panel-open")).toHaveText("Opened 1");
   // Playwright's locators pierce shadow roots, so the light and shadow trees are read directly.
   expect(
@@ -161,7 +162,7 @@ test("an assembly in its own shadow root, placed from another server, is styled 
   // the browser's default colour.
   await expect(page.locator("#own")).toHaveCSS("color", "rgb(0, 0, 0)");
   expect(await page.locator('head link[rel="stylesheet"]').count()).toBe(0);
-  await page.locator("#panel-open").click();
+  await clickMounted(page.locator("#panel-open"));
   await expect(page.locator("#panel-open")).toHaveText("Opened 1");
   expect(errors).toEqual([]);
 });

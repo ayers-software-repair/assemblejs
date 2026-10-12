@@ -46,6 +46,15 @@ code, pre { font-family: var(--face-mono); }
   line-height: 1.05;
   margin: 0 0 1rem;
 }
+/* A hyphenated word in the headline stays on one line. */
+.hero h1 .unbroken { white-space: nowrap; }
+.hero p.strapline {
+  font-family: var(--face-display), var(--face-text);
+  font-size: clamp(1.4rem, 3.2vw, 2rem);
+  line-height: 1.2;
+  color: var(--accent);
+  margin: 0 0 1.5rem;
+}
 .hero p.lead { font-size: 1.2rem; color: var(--ink-muted); max-width: 42rem; margin: 0 0 2rem; }
 
 .cta a {

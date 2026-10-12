@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
+import { MOUNTED_ATTRIBUTE } from "../vocab/mounted-attribute.js";
 import { createBus } from "./events/create-bus.js";
 import { findEnvelopes } from "./find-envelopes.js";
 import type { MountedAssembly } from "./mounted-assembly.js";
@@ -91,6 +92,8 @@ export function start(options: StartOptions): Runtime {
             element,
             handle,
           });
+          // The one mark that says the assembly is live, for whatever waits on it.
+          element.setAttribute(MOUNTED_ATTRIBUTE, "");
         } catch (error) {
           console.error(`assemblejs: "${payload.name}" did not mount`, error);
         }
@@ -131,6 +134,7 @@ export function start(options: StartOptions): Runtime {
       for (const assembly of [...mounted.values()].reverse()) {
         try {
           assembly.handle.unmount();
+          assembly.element.removeAttribute(MOUNTED_ATTRIBUTE);
         } catch (error) {
           console.error(`assemblejs: "${assembly.name}" did not unmount`, error);
         }

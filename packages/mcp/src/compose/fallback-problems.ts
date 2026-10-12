@@ -7,12 +7,14 @@ import { noSuchAssembly } from "../render/no-such-assembly.js";
  * What an agent is told about every placement that was not answered by its own content, at any
  * depth: a name with no assembly behind it, with the ones that exist; what a render threw, the
  * reason a view needs a build among them, found by the id its failure was logged against; and
- * otherwise the rung that answered and why. Each thing once.
+ * otherwise the rung that answered and why. Each thing once. `inside` is what a transport said
+ * of placements no account here holds, the ones that fell back inside another server's answer.
  */
 export function fallbackProblems(
   diagnostics: readonly Diagnostic[],
   names: readonly string[],
   logged: readonly LogLine[],
+  inside: readonly string[] = [],
 ): readonly string[] {
   const thrown = new Map(logged.map((line) => [line.correlationId, line.message]));
   const problems = new Set<string>();
@@ -31,5 +33,6 @@ export function fallbackProblems(
     }
   };
   read(diagnostics, "");
+  for (const problem of inside) problems.add(problem);
   return [...problems];
 }

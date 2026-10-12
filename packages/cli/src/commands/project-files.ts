@@ -1,8 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { agentFiles } from "../agents/agent-files.js";
+import { MCP_REGISTRATIONS } from "../agents/mcp-registrations.js";
+import { COMPONENTS } from "./components.js";
 import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";
+import { TOKENS } from "./tokens.js";
 
 /**
  * The smallest project that runs. One assembly, one view, no framework the author did not ask
@@ -14,6 +17,8 @@ import { pageDocument } from "./page-document.js";
  */
 export function projectFiles(name: string): Readonly<Record<string, string>> {
   const range = `^${ownVersion(import.meta.url)}`;
+  // The README names each registration the project is written with, as the instructions do.
+  const registered = MCP_REGISTRATIONS.map((registration) => `\`${registration.path}\``);
   return {
     "package.json": `${JSON.stringify(
       {
@@ -43,7 +48,11 @@ console.log(\`listening \${url}\`);
 
     "src/pages/home/home.html": pageDocument(name, ["hello"]),
 
-    "src/assemblies/hello/hello.html": `<p>Hello from AssembleJS</p>\n`,
+    "src/assemblies/hello/hello.html": `<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>\n`,
+
+    "src/tokens.css": TOKENS,
+
+    "src/components.css": COMPONENTS,
 
     "README.md": `# ${name}
 
@@ -55,7 +64,7 @@ There is nothing to register: \`src/server.ts\` does not grow when you add eithe
 assembly on a page with \`<assembly name="hello"></assembly>\`.
 
 \`AGENTS.md\` tells a coding agent what this project is and the rules its code must satisfy.
-\`.mcp.json\`, \`.cursor/mcp.json\` and \`.vscode/mcp.json\` register the project's own MCP server
+${registered.slice(0, -1).join(", ")} and ${registered.at(-1) ?? ""} register the project's own MCP server
 for it, and \`npx assemblejs add agents\` brings all of them up to date after an upgrade. The
 server lists four prompts, which Claude Code and VS Code show as commands: add an assembly,
 place one, make a page, fix what \`check\` finds.

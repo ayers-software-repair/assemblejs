@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { renderAssembly, resolveRoot } from "@assemblejs/mcp";
 import type { ProjectRoot } from "@assemblejs/mcp";
+import { devServer } from "../fixtures/dev-server.js";
 
 let root: ProjectRoot;
 let dir = "";
@@ -23,6 +24,45 @@ beforeEach(() => {
 });
 afterEach(() => {
   rmSync(dir, { recursive: true, force: true });
+});
+
+const dev = devServer();
+
+describe("rendering through the project's dev server", () => {
+  it("asks the running server for a framework view, which only it renders", async () => {
+    assembly("counter", "counter.react.tsx", "export default () => null;");
+    dev.runningFor(dir);
+    const rendered = await renderAssembly(root, "counter");
+    expect(rendered.problems).toEqual([]);
+    expect(rendered.renderer).toBe("react");
+    expect(rendered.html).toContain("<button>served counter</button>");
+    // What the server's own run of the service returned, read from the island it answered.
+    expect(rendered.data).toEqual({ served: "counter" });
+  });
+
+  it("refuses one that failed there with the id its log holds the cause against, and says what fell back inside one that stands", async () => {
+    assembly("failing", "failing.react.tsx", "export default () => null;");
+    assembly("holder", "holder.react.tsx", "export default () => null;");
+    dev.runningFor(dir);
+    const [failed] = (await renderAssembly(root, "failing")).problems;
+    const [inside] = (await renderAssembly(root, "holder")).problems;
+    // Each id is the server's own, and the one its log holds the failure against.
+    const ids = [failed, inside].map((said) => / against (\S+)$/.exec(said ?? "")?.[1] ?? "none");
+    expect(failed).toBe(
+      `"failing" failed on the dev server, which answered 500: its log says why, against ${ids[0] ?? ""}`,
+    );
+    expect(inside).toBe(
+      `"price" fell back inside "holder" on the dev server: its log says why, against ${ids[1] ?? ""}`,
+    );
+    const logged = dev.logged().map((line) => line.correlationId);
+    expect(logged).toEqual(expect.arrayContaining(ids));
+  });
+
+  it("asks it for a plain html view too, so what is shown is what the project serves", async () => {
+    assembly("cart", "cart.html", "<p>on disk</p>");
+    dev.runningFor(dir);
+    expect((await renderAssembly(root, "cart")).html).toContain("served cart");
+  });
 });
 
 describe("rendering an assembly for an agent", () => {

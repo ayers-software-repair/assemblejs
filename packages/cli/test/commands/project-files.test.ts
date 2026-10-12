@@ -28,7 +28,7 @@ describe("the smallest project that runs", () => {
   // installed with the command line, and registered where each client looks for it.
   it("is written for the agents that will work in it", () => {
     const forAgents = agentFiles("my-app").files;
-    expect(Object.keys(forAgents)).toHaveLength(5);
+    expect(Object.keys(forAgents)).toHaveLength(7);
     for (const [path, contents] of Object.entries(forAgents)) {
       expect(files[path], path).toBe(contents);
     }
@@ -53,6 +53,15 @@ describe("the smallest project that runs", () => {
       dependencies: Record<string, string>;
     };
     expect(Object.keys(manifest.dependencies)).toEqual(["@assemblejs/core"]);
+  });
+
+  it("starts with the project's tokens, the one place its look is set, and the components styled by them", () => {
+    expect(files["src/tokens.css"]).toContain("--ink:");
+    expect(files["src/tokens.css"]).toContain("@media (prefers-color-scheme: dark)");
+    expect(files["src/components.css"]).toContain(".notice {");
+    // The starter's one assembly uses them: a notice, and a link styled as the button.
+    expect(files["src/assemblies/hello/hello.html"]).toContain('<section class="notice">');
+    expect(files["src/assemblies/hello/hello.html"]).toContain('<a class="button" href=');
   });
 
   it("ignores the generated module rather than committing it", () => {

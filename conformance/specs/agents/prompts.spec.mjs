@@ -131,13 +131,18 @@ test("an agent follows the prompt for a page to a page that composes, and the bu
     const placed = await call("place_assembly", { page: "about", name: only });
     assert.equal(placed.ok, true, JSON.stringify(placed.problems));
 
-    const composed = await call("compose_page", { template: agent.read(file) });
+    const composed = await call("compose_page", { page: "about" });
     assert.equal(composed.ok, true, JSON.stringify(composed.problems));
     assert.deepEqual(
       composed.result.diagnostics.map((diagnostic) => diagnostic.name),
       ["hello"],
     );
-    assert.deepEqual(named(composed.result.html), [["hello", "<p>Hello from AssembleJS</p>"]]);
+    assert.deepEqual(named(composed.result.html), [
+      [
+        "hello",
+        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+      ],
+    ]);
     assert.match(composed.result.html, /<title>about<\/title>/);
 
     assert.deepEqual(await call("check"), { ok: true, result: { findings: [] }, problems: [] });
@@ -152,7 +157,12 @@ test("an agent follows the prompt for a page to a page that composes, and the bu
     assert.ok(server.origin, server.output());
     const answer = await fetch(new URL("/about", server.origin));
     assert.equal(answer.status, 200);
-    assert.deepEqual(named(await answer.text()), [["hello", "<p>Hello from AssembleJS</p>"]]);
+    assert.deepEqual(named(await answer.text()), [
+      [
+        "hello",
+        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+      ],
+    ]);
   } finally {
     await server.stop();
   }

@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/ayers-software-repair/assemblejs.git"
   },
-  "ayersPlatform": "v0.20.4",
+  "ayersPlatform": "v0.55.0",
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
@@ -19,8 +19,10 @@
   "scripts": {
     "build": "pnpm -r --filter './packages/*' build",
     "changeset": "changeset",
-    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:site && pnpm check:claude && pnpm check:design && pnpm check:organization && pnpm check:duplication && pnpm check:mirror && pnpm check:versions && pnpm check:one-version && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm build && pnpm check:reference && pnpm test && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
+    "check": "pnpm check:identity && pnpm check:headers && pnpm check:emoji && pnpm check:editorconfig && pnpm check:commit-rule && pnpm check:site && pnpm check:claude && pnpm check:design && pnpm check:organization && pnpm check:duplication && pnpm check:mirror && pnpm check:versions && pnpm check:one-version && pnpm lint && pnpm check:modules && pnpm typecheck && pnpm build && pnpm check:reference && pnpm test && pnpm check:exports && pnpm check:pack && pnpm check:unused && pnpm check:publish",
     "check:emoji": "node scripts/check-emoji.mjs --self-test && node scripts/check-emoji.mjs",
+    "check:editorconfig": "node scripts/check-editorconfig.mjs --self-test && node scripts/check-editorconfig.mjs",
+    "check:commit-rule": "node scripts/check-commit-rule.mjs --self-test && node scripts/check-commit-rule.mjs",
     "check:exports": "node scripts/check-exports.mjs",
     "check:headers": "node scripts/check-headers.mjs",
     "check:identity": "bash scripts/identity-gate.sh --self-test && bash scripts/identity-gate.sh",
@@ -56,7 +58,7 @@
     "@playwright/test": "1.62.1",
     "dependency-cruiser": "18.2.0",
     "esbuild": "0.28.2",
-    "eslint": "10.9.1",
+    "eslint": "10.10.0",
     "eslint-import-resolver-typescript": "4.4.5",
     "eslint-plugin-import-x": "4.17.1",
     "eslint-plugin-unicorn": "74.0.0",

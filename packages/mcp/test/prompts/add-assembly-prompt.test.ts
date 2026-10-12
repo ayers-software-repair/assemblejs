@@ -40,9 +40,10 @@ describe("the brief for adding an assembly", () => {
     expect(brief).toContain("say that it is not placed yet and ask where it belongs");
   });
 
-  it("says what comes back for a view that is not plain html, which is not a rendering", () => {
+  it("says what comes back with the dev server running, and for a view that is not plain html with none", () => {
+    expect(brief).toContain("While the project's dev server runs, it comes back rendered");
     expect(brief).toContain("comes back with the reason it was not");
-    expect(brief).toContain("see the view from the running server");
+    expect(brief).toContain("have the dev server started (npx assemblejs dev)");
   });
 
   it("takes a name of the framework's own shape, and a renderer the command scaffolds", () => {

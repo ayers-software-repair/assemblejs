@@ -39,6 +39,31 @@ describe("finding placements in a template", () => {
     expect(() => findPlacements(`<assembly name="cart" defer/>`)).toThrow(/cannot read/);
   });
 
+  it("refuses a placement inside a paragraph the parser has not closed, and passes one after it", () => {
+    expect(() => findPlacements(`<p>Total: <assembly name="price"/></p>`)).toThrow(
+      /at 10 stands inside an open <p>/,
+    );
+    expect(() => findPlacements(`<P>one <p>two <assembly name="price"/>`)).toThrow(/open <p>/);
+    expect(findPlacements(`<p>Total:</p><assembly name="price"/>`)).toHaveLength(1);
+    expect(findPlacements(`<p>Total:<div><assembly name="price"/></div>`)).toHaveLength(1);
+    expect(findPlacements(`<section><p>a</section><assembly name="price"/>`)).toHaveLength(1);
+    expect(findPlacements(`<!-- <p> --><assembly name="price"/>`)).toHaveLength(1);
+  });
+
+  it("refuses a placement inside an element's own declarative shadow root, and passes one beside it", () => {
+    expect(() =>
+      findPlacements(
+        `<x-el><template shadowrootmode="open"><assembly name="cart"/></template></x-el>`,
+      ),
+    ).toThrow(/at 38 stands inside an element's own shadow root/);
+    expect(
+      findPlacements(
+        `<x-el><template shadowrootmode="open"></template></x-el><assembly name="cart"/>`,
+      ),
+    ).toHaveLength(1);
+    expect(findPlacements(`<template><assembly name="cart"/></template>`)).toHaveLength(1);
+  });
+
   it("refuses a directive that is neither self-closing nor immediately closed", () => {
     expect(() => findPlacements(`<assembly name="cart">text</assembly>`)).toThrow(
       /neither self-closing nor immediately closed/,

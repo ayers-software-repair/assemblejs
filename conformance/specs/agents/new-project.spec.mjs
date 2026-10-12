@@ -33,6 +33,9 @@ const CLIENTS = [
   // Cursor and VS Code fill their workspace folder into the arguments; no directory is promised.
   [".cursor/mcp.json", "mcpServers", tmpdir(), {}],
   [".vscode/mcp.json", "servers", tmpdir(), {}],
+  // Gemini CLI and opencode read the project's file and run in the project.
+  [".gemini/settings.json", "mcpServers", root, {}],
+  ["opencode.json", "mcp", root, {}],
 ];
 
 test("the starter writes the instructions and the file that brings them to Claude Code", () => {
@@ -106,16 +109,17 @@ test("an agent adds an assembly, places it and composes the page, through that s
     const rendered = await call("render_assembly", { name: "greeting" });
     assert.equal(rendered.ok, true, JSON.stringify(rendered.problems));
 
-    const composed = await call("compose_page", {
-      template: read(`src/pages/${page}/${page}.html`),
-    });
+    const composed = await call("compose_page", { page });
     assert.equal(composed.ok, true, JSON.stringify(composed.problems));
     assert.deepEqual(
       composed.result.diagnostics.map((diagnostic) => diagnostic.name),
       ["hello", "greeting"],
     );
     assert.deepEqual(named(composed.result.html), [
-      ["hello", "<p>Hello from AssembleJS</p>"],
+      [
+        "hello",
+        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+      ],
       ["greeting", "<p>greeting</p>"],
     ]);
 
@@ -136,6 +140,7 @@ test("the server tells the agent the project's whole shape, and one assembly of 
       "assemblejs://project",
       "assemblejs://assembly/<name>",
       "assemblejs://rules",
+      "assemblejs://contract",
     ]) {
       assert.ok(told.includes(`\`${uri}\``), `AGENTS.md names ${uri}`);
     }
@@ -172,6 +177,7 @@ test("the server tells the agent the project's whole shape, and one assembly of 
       [
         "assemblejs://project",
         "assemblejs://rules",
+        "assemblejs://contract",
         "assemblejs://assembly/greeting",
         "assemblejs://assembly/hello",
       ],
@@ -235,7 +241,10 @@ test("a link that leads out of the project is a finding, and is never read", asy
 test("the page the agent composed is the page the project's build serves", async () => {
   // The server the harness started was built from the project as the starter wrote it.
   assert.deepEqual(named(await (await fetch(new URL("/", originOf("written")))).text()), [
-    ["hello", "<p>Hello from AssembleJS</p>"],
+    [
+      "hello",
+      '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+    ],
   ]);
   const built = run("build");
   assert.equal(built.status, 0, built.stderr);
@@ -243,9 +252,39 @@ test("the page the agent composed is the page the project's build serves", async
   try {
     assert.ok(server.origin, server.output());
     assert.deepEqual(named(await (await fetch(new URL("/", server.origin))).text()), [
-      ["hello", "<p>Hello from AssembleJS</p>"],
+      [
+        "hello",
+        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
+      ],
       ["greeting", "<p>greeting</p>"],
     ]);
+
+    // With that server recorded as `dev` records its own, the agent is shown what it serves:
+    // each placement answered by the server over its content endpoint, none rendered here. The
+    // server holds every request to the contract, so this is the tools asking as a composer
+    // asks, and nothing a stand-in can prove.
+    mkdirSync(join(root, ".assemblejs"), { recursive: true });
+    writeFileSync(join(root, ".assemblejs", "dev.json"), JSON.stringify({ url: server.origin }));
+    const client = await startedFrom(...CLIENTS[0]);
+    try {
+      const call = calling(client);
+      const [page] = readdirSync(join(root, "src", "pages"));
+      const composed = await call("compose_page", { page });
+      assert.equal(composed.ok, true, JSON.stringify(composed.problems));
+      assert.deepEqual(
+        composed.result.diagnostics.map((diagnostic) => [diagnostic.name, diagnostic.source]),
+        [
+          ["hello", "remote"],
+          ["greeting", "remote"],
+        ],
+      );
+      const rendered = await call("render_assembly", { name: "greeting" });
+      assert.equal(rendered.ok, true, JSON.stringify(rendered.problems));
+      assert.deepEqual(named(rendered.result.html), [["greeting", "<p>greeting</p>"]]);
+    } finally {
+      await client.close();
+      rmSync(join(root, ".assemblejs", "dev.json"), { force: true });
+    }
   } finally {
     await server.stop();
   }

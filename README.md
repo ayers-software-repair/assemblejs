@@ -8,12 +8,14 @@ one, in the framework they already know, on the same page as everyone else.
 
 It also ships an MCP server, so an AI agent builds with the framework the way a developer does,
 with the framework's own knowledge behind it: it can read the project's shape, add an assembly,
-place it on a page, check its work against the framework's own rules, and render and compose
-what is plain html to see what it actually produced. The server
+place it on a page, check its work against the framework's own rules, and render an assembly or
+compose a page to see what it actually produced: any view while the project's dev server runs,
+plain html with nothing running. The server
 carries no model and no credential of its own; the intelligence is whichever agent you already
 use. Every new project is written with an `AGENTS.md` that says what it is and the rules its
-code must satisfy, and with that server installed and registered for Claude Code, Cursor and
-VS Code, so an agent that opens the project knows the framework before it writes.
+code must satisfy, and with that server installed and registered for Claude Code, Cursor,
+VS Code, Gemini CLI and opencode, so an agent that opens the project knows the framework before
+it writes.
 
 Status: under construction on the `next` branch. Nothing is published yet.
 

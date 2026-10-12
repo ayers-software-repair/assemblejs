@@ -16,13 +16,12 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { afterAll } from "vitest";
-import { buildProject, planAssembly, projectFiles, realIo } from "@assemblejs/cli";
+import { buildProject, freePort, planAssembly, projectFiles, realIo } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
-// The example's source in a directory of this file's own, nested in the example so it resolves
-// the workspace's packages as the example does. A build begins by removing what the last one
-// generated, so two files building the example itself, at once, remove each other's.
+// The example's source in a directory of this file's own, nested in the example so it resolves the
+// workspace's packages; two files building the example itself, at once, would remove each other's.
 const own = mkdtempSync(join(example, ".dev-build-"));
 cpSync(join(example, "src"), join(own, "src"), { recursive: true });
 writeFileSync(join(own, "package.json"), "{}");
@@ -34,21 +33,27 @@ const capture = () => {
   return { io, logs, errors };
 };
 
-/** Starts a built server under plain node and answers what it serves at a path. */
+// Starts a built server on a port the OS has free, not one drawn by chance beside every other
+// suite's server, and says what it printed should it exit before it listens.
 const serve = async (root: string, path: string): Promise<string> => {
-  const port = String(20000 + Math.floor(Math.random() * 20000));
   const child = spawn(process.execPath, ["dist/server.js"], {
     cwd: root,
-    env: { ...process.env, ASSEMBLEJS_PORT: port },
+    env: { ...process.env, ASSEMBLEJS_PORT: String(await freePort()) },
     stdio: ["ignore", "pipe", "pipe"],
   });
+  let printed = "";
+  const keep = (chunk: Buffer): void => void (printed += String(chunk));
   try {
     const origin = await new Promise<string>((resolve, reject) => {
       child.stdout.on("data", (chunk: Buffer) => {
+        keep(chunk);
         const found = /listening (http:\/\/\S+)/.exec(String(chunk));
         if (found?.[1] !== undefined) resolve(found[1]);
       });
-      child.on("exit", (code) => reject(new Error(`exited with ${String(code)}`)));
+      child.stderr.on("data", keep);
+      child.on("exit", (code) =>
+        reject(new Error(`exited with ${String(code)} before it listened:\n${printed}`)),
+      );
     });
     return await (await fetch(`${origin}${path}`)).text();
   } finally {
@@ -56,8 +61,7 @@ const serve = async (root: string, path: string): Promise<string> => {
   }
 };
 
-// Each of these bundles a real project and starts the server it built, which on a loaded machine
-// takes longer than a unit test's default allows.
+// Each bundles a real project and starts its server, longer than a unit test's default on a loaded machine.
 describe("building a project", { timeout: 60_000 }, () => {
   it("writes a server that plain node starts, composing the page from both frameworks", async () => {
     const { io, logs } = capture();
@@ -114,8 +118,7 @@ describe("building a project", { timeout: 60_000 }, () => {
   });
 });
 
-// Nested in the example, so a scaffolded project resolves the workspace's packages as an
-// installed one would.
+// Nested in the example, so a scaffolded project resolves the workspace's packages as installed.
 const scaffolded = mkdtempSync(join(example, ".dev-scaffold-"));
 afterAll(() => rmSync(scaffolded, { recursive: true, force: true }));
 

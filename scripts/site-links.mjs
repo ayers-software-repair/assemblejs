@@ -27,7 +27,10 @@ export function renderLinks(manifest, page) {
     const here = posix.dirname(page.file);
     return manifest.navigation
       .map((entry) => {
-        const href = posix.relative(here === "." ? "" : here, entry.url);
+        const href =
+          page.file === "404.html"
+            ? "/assemblejs/" + entry.url
+            : posix.relative(here === "." ? "" : here, entry.url);
         const section =
           page.file === "index.html" || page.file === "404.html"
             ? null

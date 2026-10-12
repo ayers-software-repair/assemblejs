@@ -14,6 +14,7 @@ import { generatePages } from "../generate/generate-pages.js";
 import { generateProject } from "../generate/generate-project.js";
 import { generateRegistry } from "../generate/generate-registry.js";
 import type { Io } from "../io/io.js";
+import { writeProjectStyles } from "../styles/write-project-styles.js";
 import { writeStyles } from "../styles/write-styles.js";
 import { buildProblems } from "./build-problems.js";
 import { bundleClient } from "./bundle-client.js";
@@ -73,6 +74,7 @@ export async function buildProject(root: string, io: Io): Promise<number> {
             componentCss.set(file, css),
           );
     const styles = writeStyles(root, found.assemblies, componentCss, io);
+    const projectStyles = writeProjectStyles(root, io);
     const packages = Object.fromEntries(
       Object.values(RENDERER_PACKAGES).map((known) => [known.name, known.package]),
     );
@@ -92,8 +94,9 @@ export async function buildProject(root: string, io: Io): Promise<number> {
       join(generated, "project.ts"),
       generateProject({
         version: sourceVersion(root),
-        client: script !== undefined || styles.size > 0,
+        client: script !== undefined || styles.size > 0 || projectStyles.length > 0,
         config: existsSync(join(root, CONFIG_FILE)),
+        ...(projectStyles.length === 0 ? {} : { styles: projectStyles }),
       }),
     );
     await build({

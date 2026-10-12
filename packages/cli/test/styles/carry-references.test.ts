@@ -4,7 +4,8 @@ import { mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { carryReferences, realIo } from "@assemblejs/cli";
+import { OutsideRootError, carryReferences, realIo } from "@assemblejs/cli";
+import { linkedProject } from "../fixtures/linked-project.js";
 
 describe("carrying the files a stylesheet names into the build", () => {
   it("copies each one, named by its content, and points the sheet at where it is served", () => {
@@ -63,5 +64,12 @@ describe("carrying the files a stylesheet names into the build", () => {
     expect(css).toMatch(
       /image-set\("a\.png" 1x, url\(\/_assemblejs\/assets\/styles\/files\/a-[0-9a-f]{8}\.png\) 2x\)/,
     );
+  });
+
+  it("refuses, unopened, a named file that is a link out of the project", () => {
+    const { root } = linkedProject({}, { "a.png": "outside:note.md" });
+    expect(() =>
+      carryReferences(".a { background: url(a.png) }", join(root, "cart.css"), root, root, realIo),
+    ).toThrow(OutsideRootError);
   });
 });

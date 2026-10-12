@@ -17,6 +17,7 @@ export const RULE_IDS = [
   "a-placement-names-an-assembly",
   "a-view-places-a-child-with-the-directive",
   "a-placement-is-named-where-it-is-written",
+  "a-placement-stands-outside-an-element",
   "an-assembly-is-never-its-own-ancestor",
   "lit-holds-lit-behind-a-shadow-root",
   "policy-names-a-placement",
@@ -26,5 +27,10 @@ export const RULE_IDS = [
   "one-project-per-root",
   "a-project-stays-inside-its-root",
   "an-assembly-owns-its-styles",
+  "tokens-hold-their-contrast",
+  "a-view-has-no-inline-style",
+  "an-image-has-an-alternative",
+  "a-control-has-a-name",
+  "a-colour-is-a-token",
   "agent-instructions-are-current",
 ] as const;

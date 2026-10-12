@@ -23,8 +23,11 @@ describe("checking a project", () => {
     "src/pages/home/home.html": '<body><assembly name="hello"></assembly></body>',
   };
 
-  it("finds nothing wrong with a project that is right", async () => {
+  it("finds nothing wrong with a project that is right, until a sheet sets a colour of its own", async () => {
     expect(await checkProject(project(right))).toEqual([]);
+    const sheet = { "src/assemblies/hello/hello.css": "p{color:red}", "src/tokens.css": ":root{}" };
+    const found = await checkProject(project({ ...right, ...sheet }));
+    expect(found.map((f) => f.rule)).toEqual(["a-colour-is-a-token"]);
   });
 
   it("reports each finding with the file relative to the project, the rule and the fix", async () => {
@@ -78,22 +81,20 @@ describe("checking a project", () => {
         "const base = process.env.SHOP;\nexport default { place: { cart: { url: `${base}/assembly/cart/` } } };",
     };
     expect(await checkProject(project(computed))).toEqual([]);
-    expect(await checkProject(project(page("https://other.example.com")))).toEqual([
-      expect.objectContaining({
-        path: "src/pages/home/home.page.ts",
-        rule: "a-placement-names-an-assembly",
-        fix: 'add { origin: "https://other.example.com" } to remotes in assemblejs.config.ts',
-      }),
+    const other = await checkProject(project(page("https://other.example.com")));
+    expect(other.map((f) => [f.path, f.rule, f.fix])).toEqual([
+      [
+        "src/pages/home/home.page.ts",
+        "a-placement-names-an-assembly",
+        'add { origin: "https://other.example.com" } to remotes in assemblejs.config.ts',
+      ],
     ]);
   });
 
   it("reports a file it cannot read, a page declaration or the config, as one finding", async () => {
     const root = project({ ...right, "src/pages/home/home.page.ts": "export default {" });
-    expect(await checkProject(root)).toEqual([
-      expect.objectContaining({
-        path: "src/pages/home/home.page.ts",
-        message: expect.stringMatching(/could not be read/),
-      }),
+    expect((await checkProject(root)).map((f) => [f.path, f.message])).toEqual([
+      ["src/pages/home/home.page.ts", expect.stringMatching(/could not be read/)],
     ]);
     const config = project({ ...right, "assemblejs.config.ts": "export default {" });
     expect((await checkProject(config)).map((f) => f.path)).toEqual(["assemblejs.config.ts"]);

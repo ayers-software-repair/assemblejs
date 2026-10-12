@@ -167,14 +167,14 @@ describe("a view that places a child", () => {
   });
 
   /** A view that writes what a visitor sent, in the way it is given. */
-  const noted = (write: (note: string) => string): AssemblyDefinition =>
+  const noted = (write: (note: string) => string, tag = "p"): AssemblyDefinition =>
     defineAssembly({
       name: "quoting",
       views: {
         default: {
           renderer: "html",
           data: ({ query }) => ({ note: query.get("note") ?? "" }),
-          markup: ({ data }) => `<p>${write(String(data["note"]))}</p>`,
+          markup: ({ data }) => `<${tag}>${write(String(data["note"]))}</${tag}>`,
         },
       },
     });
@@ -191,13 +191,14 @@ describe("a view that places a child", () => {
   // The composer reads what a view rendered: a directive a value wrote is one like any other.
   it("places a child for a directive that reached it as data and was written raw", async () => {
     const asked = given({ ...sent, fetch: server(hello) });
+    // Written raw inside a block, not a paragraph: a placement inside an open <p> is refused.
     const { html, diagnostics } = await renderLocal(
-      noted((note) => note),
+      noted((note) => note, "div"),
       "default",
       asked,
     );
     expect(diagnostics).toMatchObject([{ name: "hello", source: "local" }]);
-    expect(html).toContain('<p><assembly-root data-name="hello"');
+    expect(html).toContain('<div><assembly-root data-name="hello"');
     expect(html).not.toMatch(/<assembly[\s>]/);
   });
 
