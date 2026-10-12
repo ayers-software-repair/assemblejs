@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import { declaredView } from "../assembly/declared-view.js";
 import { compose } from "../compose/compose.js";
 import { identity } from "../compose/identity.js";
 import { renderEnvelope } from "../envelope/render-envelope.js";
@@ -30,7 +31,7 @@ export async function renderLocal(
   view: string,
   input: LocalRenderInput,
 ): Promise<LocalRendered> {
-  const declared = assembly.views[view];
+  const declared = declaredView(assembly, view);
   if (declared === undefined) {
     throw new Error(`assembly "${assembly.name}" has no view "${view}"`);
   }

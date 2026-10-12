@@ -12,11 +12,15 @@ THE AUDIT IS THE WORK IN HAND (owner, 2026-10-11 evening; DECISIONS 2026-10-11, 
 did not believe the framework was complete, and it was not. Read, in this order:
 `~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/README.md`, which holds his orders
 in his words, the state and the plan; `AUDIT-REPORT.md` beside it, the report he was sent;
-then Phase 6 below, a row for every finding. The order of work: the four blockers, each with a
-spec watched red first (the first is done and is the commit this block is pushed with: an
-encoded spelling of a guarded address); the dev loop and the build's resolver; the starter;
-the workflow's majors, each read at the source before it is believed; then the outline mode he
-asked for, in the framework; then the showcase projects, extremely complex, into `examples/`.
+then Phase 6 below, a row for every finding. The order of work, and where it stands: the four
+blockers, each with a spec watched red first, DONE; the dev loop and the build's resolver,
+DONE; the starter, done but for its `tsconfig.json` and its guide link, which is the owner's;
+the workflow's majors, each read at the source and reproduced before it is believed, IN HAND:
+the server's six rows are the commit this block is pushed with, and next are the trust rows
+(trust.4 to trust.6), the composer's (composer.2 to composer.4, with server.8), the
+renderers', the agent surface's, `check`'s rules, the verbs', the docs and the tests, then the
+minors; then the outline mode he asked for, in the framework; then the showcase projects,
+extremely complex, into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
 far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
 workflow was his order, and his Chrome is driven through the extension (the seat still starts
@@ -35,10 +39,24 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: access is decided
-of the path as the router reads it (DECISIONS 2026-10-11, "an address is its every spelling"),
-with the audit's ledger. Beneath it, each pushed 2026-10-11 with its `ci` run read green on
-every job: `45ea049` one platform pin, `ayersPlatform` at `v0.55.0`, with the root
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: what a server
+would fail at, it refuses before it listens (DECISIONS 2026-10-11, of that name), with the
+case of the command line's suite that read who ran it made to say so. `ci` ON `next` WAS RED
+TWICE OVER ON THE WAY HERE: at the emoji gate, `U+2197` on sixteen site pages another seat
+pushed in `aecf034` and fixed in `d82714c` (its pages are its own); and beneath that, hidden
+by it, this seat's own case, red under `pnpm test` from `ca60933` on (`ci` 38196690823 on
+`13f3edd`: verify red on that one case, commits, conformance and the browser proof green).
+The run of this push is the first to judge every audit bite at once, so it is read whole. The
+core's tarball is at 77,646 bytes of its 78,000: the next bite that adds to the core moves the
+budget with its measure. Beneath it, the audit's landings: `ca60933` the arguments and the
+starter (`ci` 38196089698: commits, conformance and the browser proof green, verify stopped
+at the emoji gate); `2cb3082`
+the dev loop (`ci` 38195380554, red on the command line's tarball budget, which `ca60933`
+moved, then cancelled by the other seat's push); `c83657a` a Pug view read with its
+attributes (`ci` 38194824450 green); `d152735` a kept answer knows what it holds, with
+`b7d3a28` a link's target walked beneath it (`ci` 38194420940 green); `4540b41` an address is
+its every spelling (`ci` 38193981509 green). Beneath those, each pushed 2026-10-11 with its
+`ci` run read green on every job: `45ea049` one platform pin, `ayersPlatform` at `v0.55.0`, with the root
 `.editorconfig` and the commit rule's copies recorded at that tag and both gates refusing any
 other (`ci` 38185734645, `deploy-site` 38185734677, the kit staged from the new tag); three
 pushed together (`ci` 38185411268, its `commits` job the first to judge by the house's config;
@@ -1315,30 +1333,55 @@ Trust and security:
 - [ ] localAssets/inertSpans is quadratic in the remote's markup and re-runs on every page view
       (workflow trust.7, minor). Claimed at `packages/core/src/server/local-assets.ts:47`. PREMISE
       UNVERIFIED
-- [ ] ASSEMBLEJS_HOST set to an empty string is accepted as the host and can bind every interface
+- [x] ASSEMBLEJS_HOST set to an empty string is accepted as the host and can bind every interface
       (workflow trust.8, minor). Claimed at `packages/core/src/config/read-config.ts:28`. PREMISE
-      UNVERIFIED
+      UNVERIFIED. The same defect as workflow server.3, REPRODUCED by the seat and DONE 2026-10-11
+      with it (DECISIONS 2026-10-11, "what a server would fail at, it refuses before it listens").
 
 The server:
 
-- [ ] A multi-line (or newline-bearing) contentSecurityPolicy or version boots, then every HTML
+- [x] A multi-line (or newline-bearing) contentSecurityPolicy or version boots, then every HTML
       answer is a 500 whose body leaks the exception message (workflow server.2, major). Claimed at
-      `packages/core/src/server/access-problems.ts:27`. PREMISE UNVERIFIED
-- [ ] ASSEMBLEJS_HOST set to an empty string is accepted and binds every interface; host is never
+      `packages/core/src/server/access-problems.ts:27`. PREMISE UNVERIFIED. READ at
+      `server/create-server.ts` AND REPRODUCED by the seat against the built package: the policy on
+      every html answer, the version on every content answer, and a character past the platform's
+      range as well as a line break. DONE 2026-10-11: `sentHeaderProblems` asks Node's own
+      `validateHeaderValue` of both before anything listens, a boot error naming the value
+      (DECISIONS 2026-10-11, "what a server would fail at, it refuses before it listens").
+- [x] ASSEMBLEJS_HOST set to an empty string is accepted and binds every interface; host is never
       validated (workflow server.3, major). Claimed at `packages/core/src/config/read-config.ts:28`.
-      PREMISE UNVERIFIED
-- [ ] Service ordering errors (duplicate name, unknown 'after', cycle) are not boot errors; the
+      PREMISE UNVERIFIED. READ at `config/read-config.ts:28` AND REPRODUCED by the seat with a real
+      `listen`: the address was `::`. DONE 2026-10-11: empty is unset and so loopback, as it is for
+      the mode, the port and the control; a value with a space in it is a `ConfigError` (DECISIONS
+      2026-10-11, "what a server would fail at, it refuses before it listens").
+- [x] Service ordering errors (duplicate name, unknown 'after', cycle) are not boot errors; the
       server boots and every request for that assembly 500s (workflow server.4, major). Claimed at
-      `packages/core/src/service/run-services.ts:26`. PREMISE UNVERIFIED
-- [ ] View lookup falls through Object.prototype: /assembly/<name>/constructor/ is a logged 500,
+      `packages/core/src/service/run-services.ts:26`. PREMISE UNVERIFIED. READ at
+      `service/order-services.ts` and `run-services.ts:26` AND REPRODUCED by the seat: each of the
+      three booted and answered 500. DONE 2026-10-11: `bootProblems` calls `orderServices` for each
+      view and reports its problems with the assembly and the view named (DECISIONS 2026-10-11,
+      "what a server would fail at, it refuses before it listens").
+- [x] View lookup falls through Object.prototype: /assembly/<name>/constructor/ is a logged 500,
       /toString/api/ a 200, `/__proto__/manifest/` a bogus 200 manifest (workflow server.5, major).
-      Claimed at `packages/core/src/server/register-assemblies.ts:65`. PREMISE UNVERIFIED
-- [ ] Router-level 400 (malformed percent escape) answers Fastify's own body: no correlation id,
+      Claimed at `packages/core/src/server/register-assemblies.ts:65`. PREMISE UNVERIFIED. READ at
+      the seven readers of `views[view]` AND REPRODUCED by the seat: a 500, a 200 of `{}` and a 200
+      manifest, as claimed. DONE 2026-10-11: `declaredView` is the one reading, the view an assembly
+      wrote as its own property; 404 at each endpoint, a spec in core and a step in the contract
+      fixture (DECISIONS 2026-10-11, "what a server would fail at, it refuses before it listens").
+- [x] Router-level 400 (malformed percent escape) answers Fastify's own body: no correlation id,
       echoes the path, no nosniff (workflow server.6, minor). Claimed at
-      `packages/core/src/server/register-failures.ts:37`. PREMISE UNVERIFIED
-- [ ] Route params handed to services have Object.prototype at the assembly endpoints when no
+      `packages/core/src/server/register-failures.ts:37`. PREMISE UNVERIFIED. READ at
+      `server/create-server.ts`, where the router is built, AND REPRODUCED by the seat. DONE
+      2026-10-11: `answerFailure` is handed to the router as its `frameworkErrors`, so the answer is
+      the failure body with an id and `nosniff`, the path nowhere in it; a spec in core and a step
+      in the contract fixture (DECISIONS 2026-10-11, "what a server would fail at, it refuses before
+      it listens").
+- [x] Route params handed to services have Object.prototype at the assembly endpoints when no
       assembly-params header is sent (workflow server.7, minor). Claimed at
-      `packages/core/src/server/read-composition-headers.ts:64`. PREMISE UNVERIFIED
+      `packages/core/src/server/read-composition-headers.ts:64`. PREMISE UNVERIFIED. READ at
+      `server/read-composition-headers.ts:64`. DONE 2026-10-11: the fallback has no prototype, as
+      the parameters it reads have and as DESIGN 8 says (DECISIONS 2026-10-11, "what a server would
+      fail at, it refuses before it listens").
 - [ ] A page placement with cache.ttl reuses one envelope id for every later request and for
       repeated placements on the same page (compose/, outside the assigned scope) (workflow
       server.8, minor). Claimed at `packages/core/src/compose/placement-cache.ts:24`. PREMISE
@@ -1355,9 +1398,11 @@ The composer:
 - [ ] findPlacements is quadratic and runs on every render, even when the markup has no directive
       (workflow composer.4, major). Claimed at `packages/core/src/compose/inert-spans.ts:37`.
       PREMISE UNVERIFIED
-- [ ] A view named like an Object.prototype key is treated as existing: 500 and 200 instead of 404
+- [x] A view named like an Object.prototype key is treated as existing: 500 and 200 instead of 404
       (workflow composer.5, minor). Claimed at `packages/core/src/server/register-assemblies.ts:65`.
-      PREMISE UNVERIFIED
+      PREMISE UNVERIFIED. The same defect as workflow server.5, REPRODUCED by the seat and DONE
+      2026-10-11 with it: `declaredView` (DECISIONS 2026-10-11, "what a server would fail at, it
+      refuses before it listens").
 - [ ] The open-paragraph check refuses valid pages: table, form, li, dd and dt start tags also close
       a paragraph (workflow composer.7, minor). Claimed at
       `packages/core/src/compose/open-paragraphs.ts:8`. PREMISE UNVERIFIED

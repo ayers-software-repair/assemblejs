@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import { declaredView } from "../assembly/declared-view.js";
 import { CONTRACT_VERSION } from "../contract/contract-version.js";
 import type { AssemblyManifest } from "./assembly-manifest.js";
 
@@ -17,7 +18,7 @@ export function buildManifest(
   view: string,
   version: string,
 ): AssemblyManifest {
-  const declared = definition.views[view];
+  const declared = declaredView(definition, view);
   if (declared === undefined) {
     throw new Error(`assembly "${definition.name}" has no view "${view}"`);
   }

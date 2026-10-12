@@ -40,7 +40,8 @@ export function viewPlacementProblems(
   const isFrom = (placed: { readonly name: string; readonly view: string }): boolean =>
     placed.name === from.name && placed.view === from.view;
 
-  for (const { name, view } of assemblies.get(from.name)?.placements?.[from.view] ?? []) {
+  const placed = assemblies.get(from.name)?.placements ?? {};
+  for (const { name, view } of Object.hasOwn(placed, from.view) ? (placed[from.view] ?? []) : []) {
     const assembly = assemblies.get(name);
     if (assembly === undefined) {
       found(name, "assembly", `places "${name}", and there is no such assembly`);

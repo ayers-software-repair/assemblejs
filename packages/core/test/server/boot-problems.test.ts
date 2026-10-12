@@ -56,6 +56,38 @@ describe("what is checked before anything listens", () => {
     expect(problems.join()).toMatch(/assembly "cart" view "default": data field "title"/);
   });
 
+  // The order is settled per request, so each of these booted and then failed every request.
+  it("refuses services that cannot be ordered, naming the assembly and the view", () => {
+    const service = (name: string, after?: readonly string[]) =>
+      defineService({ name, ...(after === undefined ? {} : { after }), run: () => ({}) });
+    const problems = (services: NonNullable<AssemblyView["services"]>) =>
+      bootProblems([{ name: "cart", views: { default: { ...view, services } } }]).join("\n");
+    expect(problems([service("a"), service("a")])).toContain(
+      'assembly "cart" view "default": service "a" is declared more than once',
+    );
+    expect(problems([service("a", ["zz"])])).toContain(
+      'assembly "cart" view "default": service "a" must follow "zz", which is not declared',
+    );
+    expect(problems([service("a", ["b"]), service("b", ["a"])])).toContain(
+      'assembly "cart" view "default": services depend on each other in a circle: a -> b -> a',
+    );
+    expect(problems([service("b", ["a"]), service("a")])).toBe("");
+  });
+
+  // "constructor" is a usable url segment, so a view may be named it; every object has one too.
+  it("reads a view named after what every object has as the view it is, beside ones that place", () => {
+    const shell = { ...view, placements: [{ name: "cart", view: "constructor" }] };
+    expect(
+      bootProblems([
+        { name: "shell", views: { default: shell, constructor: view } },
+        { name: "cart", views: { default: view, constructor: view } },
+      ]),
+    ).toEqual([]);
+    expect(bootProblems([{ name: "cart", views: { constructor: view } }]).join()).toMatch(
+      /no "default" view/,
+    );
+  });
+
   it("refuses what a view's source is known to place when nothing answers to it", () => {
     const placing = (placements: AssemblyView["placements"]): AssemblyView => ({
       ...view,

@@ -25,7 +25,7 @@ export function readConfig(environment: Environment): Config {
   const problems: string[] = [];
 
   const mode = readMode(environment, problems);
-  const host = environment["ASSEMBLEJS_HOST"] ?? "127.0.0.1";
+  const host = readHost(environment, problems);
   const port = readPort(environment, problems);
   const auth = readAuth(environment, problems);
 
@@ -43,6 +43,18 @@ function readMode(environment: Environment, problems: string[]): Mode {
     `ASSEMBLEJS_MODE is "${raw}", which is not one of ${MODES.join(" or ")}. Unset it for production.`,
   );
   return "production";
+}
+
+function readHost(environment: Environment, problems: string[]): string {
+  const raw = environment["ASSEMBLEJS_HOST"];
+  // Empty is unset, as it is for every setting here. Handed on, the listener reads an empty host
+  // as every interface, which is the opposite of the loopback an unset one means.
+  if (raw === undefined || raw === "") return "127.0.0.1";
+  if (/\s/.test(raw)) {
+    problems.push(`ASSEMBLEJS_HOST is "${raw}", which is not an address or a host name.`);
+    return "127.0.0.1";
+  }
+  return raw;
 }
 
 function readPort(environment: Environment, problems: string[]): number {

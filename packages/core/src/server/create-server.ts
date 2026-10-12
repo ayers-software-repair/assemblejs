@@ -14,6 +14,7 @@ import { createRemoteTransport } from "../remote/create-remote-transport.js";
 import { ASSET_ROUTE_PREFIX } from "../vocab/asset-route-prefix.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
 import { accessProblems } from "./access-problems.js";
+import { answerFailure } from "./answer-failure.js";
 import type { App } from "./app.js";
 import { assetProblems } from "./asset-problems.js";
 import { BootError } from "./boot-error.js";
@@ -33,6 +34,7 @@ import { registerDevtools } from "./register-devtools.js";
 import { registerFailures } from "./register-failures.js";
 import { registerPages } from "./register-pages.js";
 import { registerStreams } from "./register-streams.js";
+import { sentHeaderProblems } from "./sent-header-problems.js";
 import type { ServerOptions } from "./server-options.js";
 import { summarizeProject } from "./summarize-project.js";
 import { writeLogLine } from "./write-log-line.js";
@@ -63,6 +65,10 @@ export async function createServer(options: ServerOptions): Promise<App> {
       options.contentSecurityPolicy,
     ),
     ...limitProblems(options.limits),
+    ...sentHeaderProblems({
+      "the content security policy": options.contentSecurityPolicy,
+      "the version": options.version,
+    }),
     ...(options.devtools === undefined
       ? []
       : devtoolsProblems(options.devtools, config.mode === "development")),
@@ -90,7 +96,8 @@ export async function createServer(options: ServerOptions): Promise<App> {
   // One id per process, which the pages it renders carry and its reload stream tells, so a page
   // in development reloads when the server that rendered it has been replaced.
   const boot = development ? randomUUID() : undefined;
-  const app = Fastify({ logger: false });
+  // What the router refuses before any route or hook sees it is answered as every failure is.
+  const app = Fastify({ logger: false, frameworkErrors: answerFailure(log) });
   // Before any route is mounted, so it sees every one, whoever mounts it.
   const writes = devtoolsWrites(app);
 

@@ -76,4 +76,14 @@ describe("reading the composition headers", () => {
       expect(!refused.ok && refused.problems[0]?.header).toBe("assembly-params");
     }
   });
+
+  // What a service is handed holds the page's parameters and nothing an object brings with it.
+  it("hands on parameters that hold only what was sent, sent or not", () => {
+    for (const sent of [{}, { "assembly-params": "" }, { "assembly-params": "id=42" }]) {
+      const read = readCompositionHeaders(sent, 8);
+      const params = read.ok ? read.headers.params : undefined;
+      expect(params?.["constructor"], JSON.stringify(sent)).toBeUndefined();
+      expect(params?.["toString"], JSON.stringify(sent)).toBeUndefined();
+    }
+  });
 });

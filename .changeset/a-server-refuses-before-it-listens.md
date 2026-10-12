@@ -1,0 +1,5 @@
+---
+"@assemblejs/core": patch
+---
+
+What a server could only fail at, it refuses before it listens, and a name is read as its author wrote it. A view is one its assembly wrote: `/assembly/cart/constructor/` and every other name an object answers to is a 404 at each endpoint, where one was a logged 500, one an empty 200 and one a manifest for a view that is not there (`declaredView` is the one reading). A content security policy or a version that no response header can carry, one written over several lines most often, is a boot error; it started a server that answered every page with a 500. Services that cannot be ordered (a name twice, an `after` naming nothing, a circle) are a boot error naming the assembly and the view; the order was settled per request, so each of them failed every request instead. An empty `ASSEMBLEJS_HOST` is unset, and so loopback; handed on empty it listened on every interface, and one with a space in it is refused. A url that is not one is answered 400 with the failure body, where the router's own answer repeated the path it was sent. The route parameters a service is handed have no prototype whether or not a parent sent any.

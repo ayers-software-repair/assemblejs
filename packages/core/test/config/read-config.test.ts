@@ -28,6 +28,27 @@ describe("reading configuration from the environment", () => {
     });
   });
 
+  describe("the host", () => {
+    // Handed on empty, the listener reads it as every interface: the opposite of the default.
+    it("reads an empty value as unset, and so as loopback", () => {
+      expect(readConfig({ ASSEMBLEJS_HOST: "" }).host).toBe("127.0.0.1");
+    });
+
+    it("refuses a value with a space in it, which no address or host name has", () => {
+      for (const host of [" ", "0.0.0.0 ", "my host"]) {
+        expect(() => readConfig({ ASSEMBLEJS_HOST: host }), JSON.stringify(host)).toThrow(
+          /ASSEMBLEJS_HOST is ".*", which is not an address or a host name/,
+        );
+      }
+    });
+
+    it("takes an address or a host name as written", () => {
+      for (const host of ["0.0.0.0", "::", "::1", "localhost", "shop.internal"]) {
+        expect(readConfig({ ASSEMBLEJS_HOST: host }).host).toBe(host);
+      }
+    });
+  });
+
   describe("the mode", () => {
     it("is production unless development was asked for explicitly", () => {
       expect(readConfig({}).mode).toBe("production");

@@ -5489,3 +5489,70 @@ What a stranger meets first, each found by being one.
 - **Not in this entry, and rows:** a new project's `tsconfig.json` and the types a TypeScript
   view needs; what the starter's guide link names, which is the owner's; and the hint that
   `add assembly` could give when a renderer's packages are not installed.
+
+## 2026-10-11: what a server would fail at, it refuses before it listens
+
+The audit's six rows on the server, each read at the source and reproduced against the built
+package before it was believed (`createServer` and `inject`, and for the host a real `listen`).
+One rule under four of them: a server that is accepting connections is a server that is
+configured, which `bootProblems` already says of itself and which these did not meet.
+
+- **A view was read through the object.** Expected: a view is one the assembly declared. Found:
+  seven readers wrote `assembly.views[view]`, and a view's name is whatever a url or a
+  directive holds. Measured: `/assembly/card/constructor/` a 500 with a failed envelope
+  naming the view and a `TypeError` in the log, `/assembly/card/toString/api/` a 200 of `{}`,
+  `/assembly/card/__proto__/manifest/` a 200 manifest of a view that is not there. Every other
+  lookup by a caller's name in the server was already an own-property read (a page's plan, a
+  renderer, a module); the views were the ones missed. `declaredView` is the one reading now,
+  and the two walks of what a view places read a view's placements the same way, since
+  `constructor` is a usable segment and a view may be named it.
+- **A header value was checked when it was sent.** Expected: a policy that cannot be sent is a
+  boot error, as a blank one is. Found: `contentSecurityPolicy: "a;\n b"` booted and answered
+  every html request with a 500 whose body was the router's own, the platform's message in it
+  (`Invalid character in header content ["content-security-policy"]`); a `version` with a line
+  break or a character past the platform's range did the same to every content answer.
+  `sentHeaderProblems` asks the platform its own rule rather than writing one: Node's
+  `http.validateHeaderValue`, "the low-level validations on the provided value that are done
+  when `res.setHeader(name, value)` is called" (nodejs.org, the `http` page for v22, read
+  2026-10-11; added in v14.3.0). A policy written over several lines is refused, not folded:
+  a value that is present and unusable refuses here, and the message says to write it on one
+  line. Every other header the server sets is a constant or a name already held to a segment.
+- **The order of services was settled per request.** `orderServices` says of itself that every
+  way it can be wrong is a boot failure, and only `runServices` called it. Measured: a name
+  twice, an `after` naming nothing and a circle each booted, and each answered every request
+  for that view with a 500. Boot calls the same function for each view and reports its
+  problems with the assembly and the view named. No second validator.
+- **An empty host was every interface.** `ASSEMBLEJS_HOST=` was handed on as `""`, and the
+  server then listened on `::` (measured: `address()` answered `{"address":"::"}`). Fastify's
+  own default is `localhost`, "when no specific host is provided" (Fastify's
+  `docs/Reference/Server.md`, `listen`, read through context7 2026-10-11); an empty one is
+  not that, as the measure shows. Empty is
+  unset for the mode, the port and the control in this same function, so it is for the host:
+  loopback. A value with a space in it is present and unreadable, so it refuses; it failed
+  only at `listen` before, as a lookup error. What a host name is otherwise is the resolver's
+  to say, at `listen`, before anything is served. A `Config` handed to `createServer` whole is
+  its caller's own statement and is not read again.
+- **A url that is not one was answered by the router.** `/assembly/card/%zz/` was a 400 whose
+  body was the router's: the path repeated in it, no id, and no `nosniff`, since no hook runs
+  for a request the router refuses first. Fastify's `frameworkErrors` option is where that
+  answer is replaced ("Only `FST_ERR_BAD_URL` and `FST_ERR_ASYNC_CONSTRAINT` are implemented
+  at present", Fastify's `docs/Reference/Server.md`, read through context7 2026-10-11; the
+  signature read from the pinned 5.12.1's `fastify.d.ts`). `answerFailure` is the one answer to a failure now, what a route
+  threw and what the router refused alike, and it sets `nosniff` itself.
+- **Parameters had a prototype when none were sent.** DESIGN 8 says a service's `params` are
+  "an object with no prototype"; the fallback for an absent header was `{}`. It is one now.
+- **Proof.** Nineteen cases watched red, then green; the probes re-run against the rebuilt
+  package; two steps added to the contract fixture's content spec (a view named after what
+  every object has, and a url that is not one), each watched red against a build from before
+  the fix and green in the fixture's own run.
+- **A case of the command line's suite read who ran it.** `new` writes pnpm its settings when
+  pnpm ran it (the entry above), and the case that lists a new project's files did not say who
+  did: green run by hand, red under `pnpm test`, which is how `ci` runs it. `ci` did not reach
+  it while its verify jobs stopped at the emoji gate on sixteen site pages another seat had
+  pushed; that seat's fix landed (`d82714c`), and `ci` 38196690823 on `13f3edd` was red on this
+  one case with every other suite green. The case names npm now, and the settings' own spec
+  proves the wiring both ways.
+- **The core's tarball is at 77,646 bytes of 78,000** after this entry. Not moved here; the
+  next bite that adds to the core moves it with its measure.
+- **Left, and rows:** the cached placement's one envelope id (workflow server.8) is the
+  composer's row, composer.3, and is done with the composer's.

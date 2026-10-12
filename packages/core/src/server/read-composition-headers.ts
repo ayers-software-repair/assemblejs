@@ -61,7 +61,9 @@ export function readCompositionHeaders(
   }
 
   const rawParams = headers[COMPOSITION_HEADER.params];
-  let params: Readonly<Record<string, string>> = {};
+  // With no prototype, as the ones it reads are: a service is handed what was sent and nothing
+  // an object brings with it.
+  let params: Readonly<Record<string, string>> = Object.create(null) as Record<string, string>;
   if (rawParams !== undefined && rawParams !== "") {
     const read = readParams(rawParams);
     if (read.ok) params = read.params;

@@ -23,7 +23,7 @@ export interface ServerOptions {
   readonly authenticate?: Authenticate;
   /** Paths that need no credentials: exact, or a prefix when the entry ends in `/*`. */
   readonly publicRoutes?: readonly string[];
-  /** Replaces the default content security policy on every html answer. */
+  /** Replaces the default content security policy on every html answer. A header: one line. */
   readonly contentSecurityPolicy?: string;
   /** The other servers this one may compose from. None, unless declared. */
   readonly remotes?: readonly RemoteDefinition[];

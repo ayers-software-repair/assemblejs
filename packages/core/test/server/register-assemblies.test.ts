@@ -42,6 +42,11 @@ const shell = defineAssembly({
       renderer: "html",
       markup: () => '<section><assembly name="hello"></assembly></section>',
     },
+    // A view's name is whatever a directive wrote, and every object answers to this one.
+    odd: {
+      renderer: "html",
+      markup: () => '<assembly name="hello" view="constructor"></assembly>',
+    },
   },
 });
 
@@ -106,6 +111,20 @@ describe("the assembly contract, mounted", () => {
     }
   });
 
+  // A view is one the assembly wrote. Read through the object, each of these found something:
+  // a logged 500, an empty 200 and a manifest for a view that is not there.
+  it("answers 404 for a view named after what every object has, at each endpoint", async () => {
+    for (const view of ["constructor", "toString", "valueOf", "hasOwnProperty", "__proto__"]) {
+      for (const endpoint of ["", "api/", "manifest/"]) {
+        const url = `/assembly/hello/${view}/${endpoint}`;
+        const response = await get(url);
+        expect(response.statusCode, url).toBe(404);
+        expect(response.json(), url).toEqual({ error: { correlationId: expect.any(String) } });
+      }
+    }
+    expect(logged.filter((line) => line.message.includes("is not a function"))).toEqual([]);
+  });
+
   it("refuses composition headers it cannot read, above its cap, or holding a cycle", async () => {
     const refused = async (headers: Record<string, string>) =>
       (await get("/assembly/hello/", headers)).statusCode;
@@ -157,6 +176,16 @@ describe("an assembly whose view places a child, served", () => {
     // Nobody is let in for being asked about: a refusal is not a failure, and is not logged.
     expect(logged.filter((line) => line.message.includes('"hello" inside "shell"'))).toEqual([]);
     expect((await get("/assembly/shell/")).body).toContain("Hello, world");
+  });
+
+  it("answers a child placed by a view name every object has as a view that is not there", async () => {
+    const response = await get("/assembly/shell/odd/");
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toMatch(/<assembly-root data-name="hello"[^>]* data-failed="[^"]+">/);
+    expect(failure(response.body, "hello")).toBe(
+      'assembly "hello" inside "shell" was answered by the fallback after status',
+    );
+    expect(logged.filter((line) => line.message.includes("is not a function"))).toEqual([]);
   });
 
   it("refuses a child the arriving path already holds, inside a parent that still answers", async () => {

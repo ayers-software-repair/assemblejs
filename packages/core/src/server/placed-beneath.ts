@@ -20,7 +20,8 @@ export function placedBeneath<State>(
 ): void {
   const seen = new Set([identity(from.name, from.view)]);
   const descend = (name: string, view: string, above: State): void => {
-    for (const placement of assemblyOf(name)?.placements?.[view] ?? []) {
+    const placed = assemblyOf(name)?.placements ?? {};
+    for (const placement of Object.hasOwn(placed, view) ? (placed[view] ?? []) : []) {
       const child = assemblyOf(placement.name);
       if (child === undefined) continue;
       for (const childView of placement.view === undefined ? child.views : [placement.view]) {

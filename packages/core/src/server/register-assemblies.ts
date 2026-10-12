@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import { declaredView } from "../assembly/declared-view.js";
 import type { Fetch } from "../compose/fetch.js";
 import { identity } from "../compose/identity.js";
 import type { Limits } from "../compose/limits.js";
@@ -62,7 +63,7 @@ export function registerAssemblies(
   ): { assembly: AssemblyDefinition; view: string } | undefined => {
     const assembly = assemblies.get(request.params.name);
     const view = request.params.view ?? DEFAULT_VIEW;
-    if (assembly === undefined || assembly.views[view] === undefined) {
+    if (assembly === undefined || declaredView(assembly, view) === undefined) {
       void reply.code(404).send(renderFailure(newCorrelationId()));
       return undefined;
     }
@@ -151,7 +152,7 @@ export function registerAssemblies(
         id,
         name: resolved.assembly.name,
         view: resolved.view,
-        renderer: resolved.assembly.views[resolved.view]?.renderer ?? "",
+        renderer: declaredView(resolved.assembly, resolved.view)?.renderer ?? "",
         markup: "",
         data: {},
         failed: correlationId,
@@ -173,7 +174,7 @@ export function registerAssemblies(
     async (request, reply) => {
       const resolved = resolve(request, reply);
       if (resolved === undefined) return reply;
-      const declared = resolved.assembly.views[resolved.view];
+      const declared = declaredView(resolved.assembly, resolved.view);
       if (declared === undefined) return reply;
       const headers = composition(request, reply);
       if (headers === undefined) return reply;

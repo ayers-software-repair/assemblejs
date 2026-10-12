@@ -78,3 +78,26 @@ test("answers 404 for an assembly or a view that does not exist", async () => {
   assert.equal((await get("/assembly/nowhere/")).status, 404);
   assert.equal((await get("/assembly/cart/nowhere/")).status, 404);
 });
+
+// A view is one its assembly wrote. Every object answers to these names, and a server that
+// read a view through the object answered each of them with something.
+test("answers 404 for a view named after what every object has, at each endpoint", async () => {
+  for (const view of ["constructor", "toString", "valueOf", "__proto__"]) {
+    for (const endpoint of ["", "api/", "manifest/"]) {
+      const path = `/assembly/cart/${view}/${endpoint}`;
+      assert.equal((await get(path)).status, 404, path);
+    }
+  }
+});
+
+test("answers a url that is not one with 400 and the failure body, the url nowhere in it", async () => {
+  for (const path of ["/assembly/cart/%zz/", "/%"]) {
+    const response = await get(path);
+    assert.equal(response.status, 400, path);
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff", path);
+    const body = await response.text();
+    assert.deepEqual(Object.keys(JSON.parse(body)), ["error"], path);
+    assert.deepEqual(Object.keys(JSON.parse(body).error), ["correlationId"], path);
+    assert.ok(!body.includes("%"), path);
+  }
+});

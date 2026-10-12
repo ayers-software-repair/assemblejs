@@ -2,8 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import type { ApiDefinition } from "../api/api-definition.js";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import { declaredView } from "../assembly/declared-view.js";
 import type { PageDefinition } from "../page/page-definition.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
+import { orderServices } from "../service/order-services.js";
+import { ServiceOrderError } from "../service/service-order-error.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
 import { SEGMENT } from "../vocab/segment.js";
 import { apiProblems } from "./api-problems.js";
@@ -41,7 +44,7 @@ export function bootProblems(
     }
     seen.add(assembly.name);
 
-    if (assembly.views[DEFAULT_VIEW] === undefined) {
+    if (declaredView(assembly, DEFAULT_VIEW) === undefined) {
       problems.push(`assembly "${assembly.name}" has no "${DEFAULT_VIEW}" view`);
     }
     for (const [view, declared] of Object.entries(assembly.views)) {
@@ -52,6 +55,15 @@ export function bootProblems(
       }
       for (const problem of viewSchema(declared).problems) {
         problems.push(`assembly "${assembly.name}" view "${view}": ${problem}`);
+      }
+      // The order every request will run them in, settled here once to learn whether it can be.
+      try {
+        orderServices(declared.services ?? []);
+      } catch (error) {
+        if (!(error instanceof ServiceOrderError)) throw error;
+        for (const problem of error.problems) {
+          problems.push(`assembly "${assembly.name}" view "${view}": ${problem}`);
+        }
       }
       for (const placed of declared.placements ?? []) {
         for (const value of [placed.name, placed.view]) {

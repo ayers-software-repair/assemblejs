@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { randomUUID } from "node:crypto";
 import type { AssemblyDefinition } from "../assembly/assembly-definition.js";
+import { declaredView } from "../assembly/declared-view.js";
 import type { Fetch } from "../compose/fetch.js";
 import type { Limits } from "../compose/limits.js";
 import { describeFailure } from "../failure/describe-failure.js";
@@ -27,7 +28,7 @@ export function localFetch(
 ): Fetch {
   const fetch: Fetch = async (request) => {
     const assembly = assemblies.get(request.name);
-    if (assembly?.views[request.view] === undefined) {
+    if (assembly === undefined || declaredView(assembly, request.view) === undefined) {
       return {
         ok: false,
         reason: "status",

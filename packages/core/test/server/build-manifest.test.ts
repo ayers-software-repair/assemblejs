@@ -71,5 +71,6 @@ describe("building a manifest", () => {
 
   it("refuses a view the assembly does not have", () => {
     expect(() => buildManifest(cart, "nope", "v")).toThrow(/has no view "nope"/);
+    expect(() => buildManifest(cart, "__proto__", "v")).toThrow(/has no view "__proto__"/);
   });
 });
