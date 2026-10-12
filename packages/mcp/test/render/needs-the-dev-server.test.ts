@@ -9,5 +9,6 @@ describe("why a framework or template view is refused with no dev server running
     expect(said).toContain('"counter" is a react assembly');
     expect(said).toContain("only its renderer turns into markup");
     expect(said).toContain("npx assemblejs dev");
+    expect(needsTheDevServer("card", "ejs")).toContain('"card" is an ejs assembly');
   });
 });

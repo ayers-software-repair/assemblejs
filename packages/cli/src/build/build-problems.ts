@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import { aRenderer } from "../discovery/a-renderer.js";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import type { ProjectProblem } from "../discovery/project-problem.js";
 import { outsideProblems } from "../root/outside-problems.js";
@@ -58,7 +59,7 @@ export function buildProblems(
       problems.push({
         path: assembly.view,
         rule: "a-view-needs-its-renderer",
-        message: `"${assembly.name}" is a ${assembly.renderer} assembly, which this version cannot build yet`,
+        message: `"${assembly.name}" is ${aRenderer(assembly.renderer)} assembly, which this version cannot build yet`,
         fix: `write it for one of: html, ${Object.keys(RENDERER_PACKAGES).join(", ")}`,
       });
       continue;
@@ -67,7 +68,7 @@ export function buildProblems(
       problems.push({
         path: assembly.view,
         rule: "a-view-needs-its-renderer",
-        message: `"${assembly.name}" is a ${known.name} assembly and ${known.package} is not installed`,
+        message: `"${assembly.name}" is ${aRenderer(known.name)} assembly and ${known.package} is not installed`,
         fix: `install ${known.package}`,
       });
     }

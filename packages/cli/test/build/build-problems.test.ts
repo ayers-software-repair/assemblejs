@@ -66,6 +66,12 @@ describe("what would stop a build, found before the bundler runs", () => {
     expect(problems).not.toContainEqual(
       expect.objectContaining({ rule: "one-framework-per-assembly" }),
     );
+    // Said as it is read aloud: "a ejs assembly" was what a project missing its templates read.
+    expect(buildProblems(root, [assembly("ejs")])).toContainEqual(
+      expect.objectContaining({
+        message: '"a" is an ejs assembly and @assemblejs/renderer-templates is not installed',
+      }),
+    );
   });
 
   it("includes a stylesheet the build cannot carry into dist/ intact", () => {

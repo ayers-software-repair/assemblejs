@@ -24,7 +24,8 @@ import { readBudgets } from "./read-budgets.js";
  * production runs. A page that does not answer, answers an assembly with its fallback, is over a
  * budget, or has a route only running the project could tell, is a failure, and the command
  * exits 1; so is a budget it cannot read. A page whose route has a parameter has no one url to
- * weigh, so it is reported as not weighed rather than weighed at a value this command invented.
+ * weigh, so it is reported as not weighed rather than weighed at a value this command invented;
+ * and so is a page the project guards, which a visitor who has not signed in is not sent.
  * The server it started is stopped however the command ends, a signal included.
  */
 export async function runPerf(
@@ -92,6 +93,10 @@ export async function runPerf(
           continue;
         }
         const weight = await measurePage(origin, route, signal);
+        if (weight === undefined) {
+          io.log(`${route}: not weighed, as it is not shown to a visitor who has not signed in`);
+          continue;
+        }
         io.log(formatWeight(weight));
         for (const url of weight.elsewhere) io.log(`  not weighed, from another origin: ${url}`);
         if (weight.fellBack.length > 0) {

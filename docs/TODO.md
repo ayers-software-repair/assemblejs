@@ -31,9 +31,9 @@ deadline, a circle written and called done). EVERY MAJOR OF THE WORKFLOW IS NOW 
 THE OWNER'S (client.4). THE OUTLINE HE ASKED FOR IS DONE, in the framework: `outline: true` in a
 project's config, a switch on every page, a box round every assembly that says what it is,
 where it came from and when (DECISIONS 2026-10-12, "a page shows how it was put together").
-Next, in this order: the showcase projects, extremely complex, made with the command line as a
-user and the agent surface as an agent, each with its outline on, into `examples/`; then the
-minors and the tests' rows, read as the majors were, and the starter's `tsconfig.json`.
+THE SHOWCASE HE ASKED FOR IS DONE: `examples/market`, a shop of four servers (DECISIONS
+2026-10-12, "the market, a showcase of four servers"). Next: the minors and the tests' rows,
+read as the majors were, the rows the showcase added, and the starter's `tsconfig.json`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
 far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
 workflow was his order, and his Chrome is driven through the extension (the seat still starts
@@ -52,10 +52,11 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the market, a
-showcase of four servers, in `examples/market` (DECISIONS 2026-10-12, of that name), whose
-browser spec has its first run in this push's `browser proof`; read it before anything else.
-Beneath it `d7a8792`, an empty Lit view can be placed from another server (`ci` 38212157143,
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: perf does not fail
+a project for guarding a page (DECISIONS 2026-10-12, of that name). Beneath it `774b709`, the
+market, a showcase of four servers, in `examples/market` (`ci` 38213628041, all five jobs
+green, the showcase's eight cases among the 54 the `browser proof` passed, on their first
+run). Beneath it `d7a8792`, an empty Lit view can be placed from another server (`ci` 38212157143,
 all five jobs green), the showcase's second find. Beneath it `3c1b7fc`, the view lets go of an element it binds nothing to (`ci`
 38211659176, all five jobs green), the fix for the red of `caef196`, a Lit element waits for its view, the showcase's first find (`ci`
 38210828288: four jobs green, `browser proof` red on the frameworks example's Lit shell).
@@ -1830,8 +1831,9 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       remote's answer refused it. DONE 2026-10-12: `<?` is read as the comment the browser
       makes of it, where nothing in it could be a tag (DECISIONS 2026-10-12, "an empty Lit view
       can be placed from another server")
-- [ ] FOUND BY THE SHOWCASE: `check` says "is a ejs assembly" (`a-view-needs-its-renderer`); the
-      article does not follow the renderer's name.
+- [x] FOUND BY THE SHOWCASE: `check` says "is a ejs assembly" (`a-view-needs-its-renderer`); the
+      article does not follow the renderer's name. DONE 2026-10-12: `aRenderer` (DECISIONS
+      2026-10-12, "perf does not fail a project for guarding a page")
 - [x] The showcase projects: extremely complex, real-world, made with the command line as a
       user and the agent surface as an agent, each with its outline on, tested in the owner's
       Chrome, then into `examples/`. DONE 2026-10-12: `examples/market`, a shop of four servers
@@ -1839,10 +1841,10 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       `browser/market.browser.ts` in the browser proof.
 - [ ] The site does not name the showcase: the examples it lists want `examples/market` (the
       site seat's; the lead is told).
-- [ ] FOUND BY THE SHOWCASE: `perf` exits 1 on a project that guards a page. It asks every page
-      as a stranger, the staff's page answers 401, and that is counted a failure
-      (`packages/cli/src/perf/measure-page.ts:38`). A guarded page is not one a stranger can
-      weigh: say so, as a route with a parameter is said, and do not fail.
+- [x] FOUND BY THE SHOWCASE: `perf` exits 1 on a project that guards a page. It asks every page
+      as a stranger, the staff's page answers 401, and that is counted a failure. DONE
+      2026-10-12: a page that answers 401 or 403 is said not weighed, and the command goes on
+      (DECISIONS 2026-10-12, "perf does not fail a project for guarding a page")
 - [ ] FOUND BY THE SHOWCASE: `perf` weighs no page whose route has a parameter, and has no way
       to be given a value. In the showcase that is the product page, the shelf and the order:
       the heaviest pages are the ones no budget holds. A design: where a value comes from.

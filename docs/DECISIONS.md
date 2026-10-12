@@ -6217,3 +6217,27 @@ visitor sees composed on the shop's server from all of them.
 - **The lockfile.** `pnpm install` for the four also rewrote one line it had left stale: the
   command line's test runner is now resolved against the esbuild the command line itself
   depends on (0.28.2) and not the one tsup brings (0.27.7). Its suite is green on it.
+
+## 2026-10-12: perf does not fail a project for guarding a page
+
+Found by the showcase, whose shop guards its stock board: `perf` exited 1 on it.
+
+- **Expected:** `perf` weighs what each page sends a visitor and fails a page that does not
+  answer.
+- **Found:** it asks as a visitor who has not signed in, the board answers that visitor 401,
+  and a 401 was a page that did not answer (`measure-page.ts`: anything but a 200 threw). So
+  no project that guards a page could pass, whatever its pages weigh.
+- **Now:** a page that answers 401 or 403 has no weight for a stranger and is said so, as a
+  page whose route has a parameter is said:
+  `not weighed, as it is not shown to a visitor who has not signed in`. The command goes on
+  and its exit is the other pages'. A file an open page links that answers 401 is still a
+  failure: that is a page that does not work.
+- **Beside it:** `check` and the agent surface said "a ejs assembly" of a project missing its
+  templates package. A renderer's name is said with its article now, `aRenderer`: "an ejs",
+  "an html", "a react".
+- **Proof.** Both cases red before and green after; every cheap gate and both packages' suites
+  green; and on the showcase's shop, with the catalogue up, `perf` exits 0: five pages
+  weighed, three not for a parameter, one not for its guard. The command line's tarball is at
+  94,742 bytes of 98,000.
+- **Not done.** A page whose route has a parameter is still not weighed, which in the showcase
+  is the product page. Where a value would come from is a design, and has its row.

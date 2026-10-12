@@ -10,6 +10,7 @@ const files: Record<string, string> = {
   "/a.css?x=1&y=2": "p { color: red }",
   "/c.js": "export {};".repeat(100),
   "/missing": '<link rel="stylesheet" href="/gone.css">',
+  "/kept-from": '<link rel="stylesheet" href="/members.css">',
   "/d.js": "d".repeat(70),
   "/e.js": "e".repeat(30),
   "/scripts":
@@ -25,7 +26,9 @@ const server = createServer((request, response) => {
   asked.push(request.url ?? "");
   const body = files[request.url ?? ""];
   if (request.url === "/slow") return;
-  response.writeHead(body === undefined ? 404 : 200).end(body);
+  // What a server that guards an address answers a visitor who has not signed in.
+  const refused = { "/staff": 401, "/members": 403, "/members.css": 401 }[request.url ?? ""];
+  response.writeHead(refused ?? (body === undefined ? 404 : 200)).end(body);
 });
 let origin = "";
 beforeAll(async () => {
@@ -54,17 +57,26 @@ describe("measuring a page", () => {
     await expect(measurePage(origin, "/missing")).rejects.toThrow("/gone.css answered 404");
   });
 
+  // Measured as a visitor who has not signed in, a page that is not shown to one has no weight
+  // for one. Counted a failure, no project that guards a page could pass.
+  it("answers no weight for a page a visitor who has not signed in is refused", async () => {
+    expect(await measurePage(origin, "/staff")).toBeUndefined();
+    expect(await measurePage(origin, "/members")).toBeUndefined();
+    // A file an open page links is not the page: refused, it is a page that does not work.
+    await expect(measurePage(origin, "/kept-from")).rejects.toThrow("/members.css answered 401");
+  });
+
   it("reads tags an author wrote, names a file from another origin without fetching it, and the fallbacks", async () => {
     const weight = await measurePage(origin, "/authored");
-    expect(weight.styles).toEqual(bytes(files["/a.css?x=1&y=2"] ?? ""));
-    expect(weight.scripts).toEqual(bytes(files["/c.js"] ?? ""));
-    expect(weight.elsewhere).toEqual(["https://cdn.example/font.css"]);
-    expect(weight.fellBack).toEqual(["cart"]);
+    expect(weight?.styles).toEqual(bytes(files["/a.css?x=1&y=2"] ?? ""));
+    expect(weight?.scripts).toEqual(bytes(files["/c.js"] ?? ""));
+    expect(weight?.elsewhere).toEqual(["https://cdn.example/font.css"]);
+    expect(weight?.fellBack).toEqual(["cart"]);
   });
 
   it("weighs every script the browser runs or preloads, and none it does not run", async () => {
     const weight = await measurePage(origin, "/scripts");
-    expect(weight.scripts).toEqual({
+    expect(weight?.scripts).toEqual({
       bytes: [files["/c.js"], files["/d.js"], files["/e.js"]].join("").length,
       gzip: [files["/c.js"], files["/d.js"], files["/e.js"]]
         .map((file) => bytes(file ?? "").gzip)

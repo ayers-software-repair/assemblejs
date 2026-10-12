@@ -32,9 +32,11 @@ const pagesOnly = (): string => {
   return at;
 };
 
-/** A server that answers every request with one document. */
-const stub = async (html: string) => {
-  const server = createServer((_request, response) => response.writeHead(200).end(html));
+/** A server that answers every request with one document, but an address it guards. */
+const stub = async (html: string, guarded = "") => {
+  const server = createServer((request, response) =>
+    response.writeHead(request.url === guarded ? 401 : 200).end(html),
+  );
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   return { origin, close: () => new Promise<void>((resolve) => server.close(() => resolve())) };
@@ -90,6 +92,24 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     expect(code).toBe(0);
     expect(errors).toEqual([]);
     expect(logs).toContain("/items/:sku: not weighed, as a parameter needs a value");
+    expect(logs.some((entry) => entry.startsWith("/  document"))).toBe(true);
+  });
+
+  it("reports a page a stranger is refused as not weighed, and does not fail for it", async () => {
+    const { origin, close } = await stub("<p>page</p>", "/staff");
+    const at = pagesOnly();
+    realIo.write(join(at, "src", "pages", "staff", "staff.html"), "<p>staff</p>");
+    const { io, logs, errors } = capture();
+    const code = await runPerf(at, io, {
+      build: async () => 0,
+      start: () => ({ ready: Promise.resolve(origin), stop: async () => undefined }),
+    });
+    await close();
+    expect(code).toBe(0);
+    expect(errors).toEqual([]);
+    expect(logs).toContain(
+      "/staff: not weighed, as it is not shown to a visitor who has not signed in",
+    );
     expect(logs.some((entry) => entry.startsWith("/  document"))).toBe(true);
   });
 

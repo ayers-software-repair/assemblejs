@@ -23,22 +23,35 @@ const sum = (weights: readonly AssetWeight[]): AssetWeight => ({
  * another origin is named, never fetched: measuring touches no other server. Anything not
  * answered with 200 in time is a failure, never a weight of nothing; `signal` abandons a request
  * in flight.
+ *
+ * It asks as a visitor who has not signed in, so a page the server refuses such a visitor, with
+ * a 401 or a 403, has no weight for one and is answered as undefined: the project guards it,
+ * which is no failure of the page. A file an open page links is not let off the same way.
  */
 export async function measurePage(
   origin: string,
   route: string,
   signal?: AbortSignal,
-): Promise<PageWeight> {
+): Promise<PageWeight | undefined> {
   const own = new URL(origin).origin;
-  const get = async (url: URL): Promise<Uint8Array> => {
+  const ask = (url: URL): Promise<Response> => {
     const timeout = AbortSignal.timeout(TIMEOUT_MS);
-    const response = await fetch(url, {
+    return fetch(url, {
       signal: signal === undefined ? timeout : AbortSignal.any([timeout, signal]),
     });
+  };
+  const read = async (url: URL, response: Response): Promise<Uint8Array> => {
     if (response.status !== 200) throw new Error(`${url.pathname} answered ${response.status}`);
     return new Uint8Array(await response.arrayBuffer());
   };
-  const page = await get(new URL(route, own));
+  const get = async (url: URL): Promise<Uint8Array> => read(url, await ask(url));
+  const address = new URL(route, own);
+  const answer = await ask(address);
+  if (answer.status === 401 || answer.status === 403) {
+    await answer.body?.cancel();
+    return undefined;
+  }
+  const page = await read(address, answer);
   const tags = readTags(new TextDecoder().decode(page));
   const elsewhere: string[] = [];
   const linked = async (urls: readonly string[]): Promise<AssetWeight> => {
