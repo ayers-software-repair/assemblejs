@@ -25,9 +25,11 @@ gap in the public surface and is the owner's), an attribute's value read as mark
 line's (cli-verbs.1, .3, .4, .5, .8: a misnamed file ignored in silence, a README taken for a
 view, a link that leads nowhere, `add` writing outside a project), and the rules `check` names
 (check-rules.2 to check-rules.6: a spread not seen, a class component taken for an element, a
-comment that placed, a file that does not compile, an origin from the environment). Next: the
-agent surface's (mcp.1 to mcp.5, of which the circle between `check` and `add` is closed) and
-the tests', then the minors. Then the
+comment that placed, a file that does not compile, an origin from the environment), and the
+agent surface's (mcp.1 to mcp.5: an address believed whatever it named, a render with no
+deadline, a circle written and called done). EVERY MAJOR OF THE WORKFLOW IS NOW DONE, GONE OR
+THE OWNER'S (client.4). Next: the tests' rows and the minors, read as the majors were; the
+starter's `tsconfig.json`. Then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -48,15 +50,16 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: check reads what
-it misread, and names a file it cannot read (DECISIONS 2026-10-12, of that name), the five rows
-of the rules `check` names. Beneath it `4618293`, check says what it passed over, and add writes
-only into a project (`ci` 38202881918, all five jobs green); `f62a4ec`, the ids a component
-makes are its island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value
-is text (`ci` 38201174758, all five green); and `b8a6414`, the mark that says an assembly is
-live is written when it is (`ci` 38200554270, all five green, its `browser proof` the one that
-drew it). The tarball budgets: the core's 86000, moved from 82000 at a measured 82,328; the
-command line's 98000, moved from 94000 at a measured 94,039. Beneath it `8aa4c0c`, a kept answer is
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the agent surface
+asks only this machine's dev server, and only for so long (DECISIONS 2026-10-12, of that name),
+its five rows. Beneath it `d047674`, check reads what it misread, and names a file it cannot
+read (`ci` 38203784739); `4618293`, check says what it passed over, and add writes only into a
+project (`ci` 38202881918, all five jobs green); `f62a4ec`, the ids a component makes are its
+island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value is text (`ci`
+38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
+when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
+tarball budgets: the core's 86000, moved from 82000 at a measured 82,328; the command line's
+98000, moved from 94000 at a measured 94,039; the agent surface's is at 26,492 of 27,000. Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
 markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all five
@@ -1649,22 +1652,37 @@ The rules `check` names:
 
 The agent surface:
 
-- [ ] Dev-server record is trusted blindly: any url in .assemblejs/dev.json is fetched, loopback or
+- [x] Dev-server record is trusted blindly: any url in .assemblejs/dev.json is fetched, loopback or
       not (workflow mcp.1, major). Claimed at `packages/mcp/src/render/dev-server-url.ts:24`.
-      PREMISE UNVERIFIED
-- [ ] Health check believes any HTTP server that answers 200, so a stale dev.json shows another
+      PREMISE UNVERIFIED. READ at `render/dev-server-url.ts`, its case watched red: a record naming
+      `192.0.2.1` was asked. DONE 2026-10-12: an address is believed only where it is plain http on
+      a loopback name, and is otherwise not asked (DECISIONS 2026-10-12, "the agent surface asks
+      only this machine's dev server, and only for so long").
+- [x] Health check believes any HTTP server that answers 200, so a stale dev.json shows another
       app's HTML as the assembly (workflow mcp.2, major, disputed by one of its refuters). Claimed
-      at `packages/mcp/src/render/dev-server-url.ts:29`. PREMISE UNVERIFIED
-- [ ] render_assembly has no deadline: a dev server that accepts the request and never answers hangs
+      at `packages/mcp/src/render/dev-server-url.ts:29`. PREMISE UNVERIFIED. Watched red: a server
+      answering every path with a 200 was taken for the project's. DONE 2026-10-12: the health is
+      believed where it is the framework's own (DECISIONS 2026-10-12, "the agent surface asks only
+      this machine's dev server, and only for so long").
+- [x] render_assembly has no deadline: a dev server that accepts the request and never answers hangs
       the tool (workflow mcp.3, major). Claimed at `packages/mcp/src/render/render-assembly.ts:77`.
-      PREMISE UNVERIFIED
-- [ ] place_assembly writes an indirect cycle and answers ok:true; only the direct self-placement is
+      PREMISE UNVERIFIED. READ at `render/render-assembly.ts:77`, a signal nothing aborts; its case
+      ran to the suite's five seconds. DONE 2026-10-12: a render is waited for ten seconds, and then
+      says the server did not answer (DECISIONS 2026-10-12, "the agent surface asks only this
+      machine's dev server, and only for so long").
+- [x] place_assembly writes an indirect cycle and answers ok:true; only the direct self-placement is
       refused (workflow mcp.4, major). Claimed at `packages/mcp/src/author/place-in-view.ts:68`.
-      PREMISE UNVERIFIED
-- [ ] An assembly directory with two view files (or none) is 'no assembly' to every tool, 'already
+      PREMISE UNVERIFIED. Watched red. DONE 2026-10-12: `leadsTo` asks what every view is known to
+      place, and a child that already leads to the parent at any depth is refused before anything is
+      written (DECISIONS 2026-10-12, "the agent surface asks only this machine's dev server, and
+      only for so long").
+- [x] An assembly directory with two view files (or none) is 'no assembly' to every tool, 'already
       exists' to add_assembly, and 'add it' to check: an unresolvable loop (workflow mcp.5, major,
       disputed by one of its refuters). Claimed at `packages/mcp/src/author/add-assembly.ts:19`.
-      PREMISE UNVERIFIED
+      PREMISE UNVERIFIED. REPRODUCED by the seat for `check` (a README beside a view, 2026-10-12)
+      and watched red for `place_assembly`. DONE 2026-10-12: both say to mend the directory that is
+      there, where they said to add what `add` refuses as taken (DECISIONS 2026-10-12, "the agent
+      surface asks only this machine's dev server, and only for so long").
 - [ ] create_project refuses a root that holds only a README.md or .gitignore, and sends the agent
       to add_assembly (workflow mcp.6, minor). Claimed at
       `packages/mcp/src/author/create-project.ts:52`. PREMISE UNVERIFIED
@@ -1707,9 +1725,11 @@ Docs against code:
       rewrote the page in `c2beecb` ("Create your first application"), and no page of the site has
       that section or says to add the framework to a project that exists; nothing here to fix, and
       the page is that seat's.
-- [ ] Any other view-looking file in an assembly directory (README.md, cart.test.tsx) makes the
+- [x] Any other view-looking file in an assembly directory (README.md, cart.test.tsx) makes the
       assembly 'have more than one view file' (workflow docs.4, minor). Claimed at
-      `packages/cli/src/discovery/renderer-for-view.ts:24`. PREMISE UNVERIFIED
+      `packages/cli/src/discovery/renderer-for-view.ts:24`. PREMISE UNVERIFIED. The same defect as
+      workflow cli-verbs.4, REPRODUCED by the seat and DONE 2026-10-12 with it (DECISIONS
+      2026-10-12, "check says what it passed over, and add writes only into a project").
 - [ ] install.html says the new project installs 'the one renderer your first assembly uses'; it
       installs none (workflow docs.5, minor). Claimed at `site/install.html:33`. PREMISE UNVERIFIED
 - [ ] `add agents` calls a UTF-8 BOM 'a comment' and refuses the whole run; `check` then says 'no

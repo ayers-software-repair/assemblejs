@@ -14,6 +14,10 @@ import { projectAssemblies } from "./project-assemblies.js";
 import { RENDERABLE_WITHOUT_A_BUILD } from "./renderable-without-a-build.js";
 import type { RenderedAssembly } from "./rendered-assembly.js";
 
+// How long a render is waited for, in milliseconds: more than a page waits for a placement,
+// since a dev server may be rebuilding, and not for good.
+const RENDER_DEADLINE = 10_000;
+
 /**
  * Renders one assembly NOW, through the transport a server renders it with, and answers with
  * what it produced: its envelope, every assembly its view places composed inside it, and the
@@ -31,7 +35,11 @@ import type { RenderedAssembly } from "./rendered-assembly.js";
  * nothing, because it will believe it. A child that is one is shown as the server shows a child
  * that did not render, with that reason among the problems.
  */
-export async function renderAssembly(root: ProjectRoot, name: string): Promise<RenderedAssembly> {
+export async function renderAssembly(
+  root: ProjectRoot,
+  name: string,
+  deadline = RENDER_DEADLINE,
+): Promise<RenderedAssembly> {
   const assemblies = projectAssemblies(root);
   const names = [...assemblies.keys()];
   const renderer = assemblies.get(name)?.views["default"]?.renderer;
@@ -63,6 +71,9 @@ export async function renderAssembly(root: ProjectRoot, name: string): Promise<R
   // The ids a page's composer sends, which the content endpoint holds to their shape and
   // refuses a request without (DESIGN 2.1).
   const id = randomUUID();
+  // A server that takes the request and never answers it would hold the tool, and the agent
+  // that called it, for as long as it liked.
+  const waited = AbortSignal.timeout(deadline);
   const answer = await fetch({
     name,
     view: "default",
@@ -74,8 +85,13 @@ export async function renderAssembly(root: ProjectRoot, name: string): Promise<R
     query: new URLSearchParams(),
     params: {},
     headers: {},
-    signal: new AbortController().signal,
+    signal: waited,
   });
+  if (!answer.ok && waited.aborted) {
+    return refused(
+      `the dev server at ${dev ?? "this project"} did not answer within ${String(deadline)} ms: see its terminal, or stop it and run assemblejs dev again`,
+    );
+  }
   if (!answer.ok) {
     return refused(
       logged.map((line) => line.message).join("; ") || (answer.detail ?? answer.reason),

@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 export { createProject } from "./create-project.js";
+export { leadsTo } from "./leads-to.js";
 export { placeInView } from "./place-in-view.js";
 export { addAssembly } from "./add-assembly.js";
 export { placeOnPage } from "./place-on-page.js";

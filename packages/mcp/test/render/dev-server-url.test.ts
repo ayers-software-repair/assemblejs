@@ -60,4 +60,42 @@ describe("finding the project's dev server", () => {
     record(JSON.stringify({ port: 3000 }));
     expect(await devServerUrl(root)).toBeUndefined();
   });
+
+  // The record is a file under the project, and whatever wrote it, the address in it is asked
+  // for from the developer's machine. A dev server listens on this machine and nowhere else.
+  it("is nothing for a record that names any address but this machine's own", async () => {
+    for (const url of [
+      "http://192.0.2.1:3000",
+      "http://example.com",
+      "https://127.0.0.1.example.com:3000",
+      "file:///etc/hosts",
+      "not a url",
+    ]) {
+      record(JSON.stringify({ url }));
+      const started = performance.now();
+      expect(await devServerUrl(root), url).toBeUndefined();
+      // Not asked and timed out: not asked.
+      expect(performance.now() - started, url).toBeLessThan(500);
+    }
+  });
+
+  it("is the url for this machine by any of its own names", async () => {
+    const port = origin.split(":").at(-1) ?? "";
+    record(JSON.stringify({ url: `http://localhost:${port}` }));
+    expect(await devServerUrl(root)).toBe(`http://localhost:${port}`);
+  });
+
+  // An address another program took after a dev server died may answer 200 for any path at all.
+  it("is nothing for a server that answers its health with anything but the framework's own", async () => {
+    const other = createServer((_request, response) => {
+      response.writeHead(200, { "content-type": "text/html" });
+      response.end("<html><body>another app, which answers every path</body></html>");
+    });
+    await new Promise<void>((resolve) => other.listen(0, "127.0.0.1", resolve));
+    record(
+      JSON.stringify({ url: `http://127.0.0.1:${String((other.address() as AddressInfo).port)}` }),
+    );
+    expect(await devServerUrl(root)).toBeUndefined();
+    await new Promise<void>((resolve) => other.close(() => resolve()));
+  });
 });

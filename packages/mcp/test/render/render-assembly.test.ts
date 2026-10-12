@@ -1,6 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
@@ -62,6 +64,32 @@ describe("rendering through the project's dev server", () => {
     assembly("cart", "cart.html", "<p>on disk</p>");
     dev.runningFor(dir);
     expect((await renderAssembly(root, "cart")).html).toContain("served cart");
+  });
+});
+
+// A dev server that takes the request and never answers it held the tool, and the agent that
+// called it, for as long as it liked.
+describe("rendering through a dev server that does not answer", () => {
+  it("answers within its deadline, saying that the server did not", async () => {
+    const stalled = createServer((request, response) => {
+      if (request.url === "/_assemblejs/health") {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end('{"status":"ok","version":"v"}');
+      }
+      // Any other request is taken and never answered.
+    });
+    await new Promise<void>((resolve) => stalled.listen(0, "127.0.0.1", resolve));
+    const port = String((stalled.address() as AddressInfo).port);
+    assembly("counter", "counter.react.tsx", "export default () => null;");
+    mkdirSync(join(dir, ".assemblejs"), { recursive: true });
+    writeFileSync(join(dir, ".assemblejs", "dev.json"), `{"url":"http://127.0.0.1:${port}"}`);
+    const started = performance.now();
+    const rendered = await renderAssembly(root, "counter", 200);
+    expect(performance.now() - started).toBeLessThan(2000);
+    expect(rendered.html).toBe("");
+    expect(rendered.problems.join()).toMatch(/did not answer within 200 ms/);
+    stalled.closeAllConnections();
+    await new Promise<void>((resolve) => stalled.close(() => resolve()));
   });
 });
 

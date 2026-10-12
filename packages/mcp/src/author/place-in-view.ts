@@ -1,11 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readFileSync } from "node:fs";
-import { discoverAssemblies, placeAssembly, realIo } from "@assemblejs/cli";
+import { discoverAssemblies, placeAssembly, realIo, viewFindings } from "@assemblejs/cli";
 import type { PlacementPosition, ProjectProblem } from "@assemblejs/cli";
+import { isOccupied } from "../root/is-occupied.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";
+import { leadsTo } from "./leads-to.js";
 
 // The views that hold the directive as markup, which this tool can write it into.
 const HOLDS_THE_DIRECTIVE: readonly string[] = ["html", "ejs", "handlebars", "nunjucks"];
@@ -32,7 +34,8 @@ const byHand = (renderer: string, name: string): string => {
  * Places one assembly in another's view: a child in a parent. A view that holds the directive
  * as markup gets it written in, at a named position, as a page's template does. Any other view
  * is its author's source, so the answer is the one line to write and where it is imported from,
- * never an edit that guesses where in a component a child belongs.
+ * never an edit that guesses where in a component a child belongs. A child that already leads
+ * to the parent, at any depth, is refused before anything is written.
  */
 export function placeInView(
   root: ProjectRoot,
@@ -55,7 +58,11 @@ export function placeInView(
       path: "src/assemblies",
       rule: "a-placement-names-an-assembly",
       message: `there is no assembly "${missing}"`,
-      fix: `add it with add_assembly first, or use one that exists: ${names}`,
+      // A directory of that name that is not an assembly is taken, and add_assembly would
+      // refuse it: told to add it, an agent goes round between the two.
+      fix: isOccupied(withinRoot(root, "src", "assemblies", missing))
+        ? `src/assemblies/${missing} is there and is not an assembly yet: mend what is said of that directory`
+        : `add it with add_assembly first, or use one that exists: ${names}`,
     });
   }
   const file = `src/assemblies/${parent}/${
@@ -71,6 +78,17 @@ export function placeInView(
       rule: "an-assembly-is-never-its-own-ancestor",
       message: `"${name}" cannot be placed inside itself`,
       fix: `place another assembly in it: ${names}`,
+    });
+  }
+  // At any depth: a child that already leads to the parent would make the parent its own
+  // ancestor, which every render refuses and a tool should not write and call done.
+  const chain = leadsTo(viewFindings(root.path, assemblies).placements, name, parent);
+  if (chain !== undefined) {
+    return refused({
+      path: file,
+      rule: "an-assembly-is-never-its-own-ancestor",
+      message: `"${name}" already holds "${parent}" (${chain.join(", ")}), so it cannot be placed inside it`,
+      fix: `place another assembly in it, or take "${parent}" out of what "${name}" places`,
     });
   }
   if (!HOLDS_THE_DIRECTIVE.includes(renderer)) {

@@ -85,4 +85,46 @@ describe("placing one assembly in another's view through the agent surface", () 
       FILES["shell/shell.html"],
     );
   });
+
+  // Only an assembly placed in itself was refused. One placed in what it already holds, at any
+  // depth, was written and answered as done, and every render of either then refused it.
+  it("refuses an assembly inside one it already leads to, at any depth, and writes nothing", () => {
+    const dir = project({
+      ...FILES,
+      "nav/nav.html": '<nav><assembly name="menu"></assembly></nav>',
+      "menu/menu.html": "<ul></ul>",
+    });
+    // shell holds nav, and nav holds menu.
+    for (const [parent, child, chain] of [
+      ["nav", "shell", "shell, nav"],
+      ["menu", "shell", "shell, nav, menu"],
+      ["menu", "nav", "nav, menu"],
+    ] as const) {
+      const before = readFileSync(join(dir, `src/assemblies/${parent}/${parent}.html`), "utf8");
+      expect(placeInView(resolveRoot(dir), parent, child, { at: "end" }).problems[0]).toMatchObject(
+        {
+          rule: "an-assembly-is-never-its-own-ancestor",
+          message: `"${child}" already holds "${parent}" (${chain}), so it cannot be placed inside it`,
+        },
+      );
+      expect(readFileSync(join(dir, `src/assemblies/${parent}/${parent}.html`), "utf8")).toBe(
+        before,
+      );
+    }
+    // The other way round is no circle.
+    expect(placeInView(resolveRoot(dir), "cart", "menu", { at: "end" }).ok).toBe(true);
+  });
+
+  // Told to add an assembly whose directory is there, and add refusing the name as taken, an
+  // agent went round between the two.
+  it("says to mend a directory that is there and is not an assembly, not to add it", () => {
+    const dir = project({ ...FILES, "twin/twin.html": "<p>a</p>", "twin/twin.svelte": "<p>b</p>" });
+    expect(placeInView(resolveRoot(dir), "shell", "twin", { at: "end" }).problems[0]).toMatchObject(
+      {
+        rule: "a-placement-names-an-assembly",
+        message: 'there is no assembly "twin"',
+        fix: "src/assemblies/twin is there and is not an assembly yet: mend what is said of that directory",
+      },
+    );
+  });
 });

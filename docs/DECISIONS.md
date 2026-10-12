@@ -5884,3 +5884,34 @@ reproduced with the built command line in a new project.
   rule and what reports it.
 - **Proof.** Seventeen cases watched red, then green; one case that held the old answer for a
   module that does not compile, "none known", now holds the new one.
+
+## 2026-10-12: the agent surface asks only this machine's dev server, and only for so long
+
+The audit's five rows on the agent surface (mcp.1 to mcp.5), each read at the source and its
+case watched red.
+
+- **The dev record was believed whatever it named.** `dev` writes its address to
+  `.assemblejs/dev.json`, and the agent surface asked whatever address the file held for its
+  health and then for renders. The file is under the project, and a project is a thing a
+  person clones. Watched: a record naming `192.0.2.1` was asked, for the whole of its one
+  second. An address is believed only where it is plain http on a loopback name, by the
+  core's own `loopbackHost`, and is otherwise not asked at all.
+- **Any 200 was the project's health** (disputed by one of the workflow's refuters; watched
+  true). A program that took the port a dev server left, and answers every path, was taken
+  for the dev server, and its page shown to the agent as the assembly. The health is believed
+  where it is the framework's own, `{"status":"ok"}`.
+- **A render waited without end.** `render_assembly` handed the dev server a signal nothing
+  ever aborts; a server that took the request and did not answer held the tool, and the agent
+  that called it. Watched: the case ran to the suite's own five seconds. It waits ten seconds,
+  more than a page waits for a placement since a dev server may be rebuilding, and then says
+  the server did not answer and where to look.
+- **A circle was written and called done.** `place_assembly` refused an assembly placed in
+  itself and nothing deeper: with a shell that holds a nav that holds a menu, the shell was
+  written into the menu and the answer was `ok`. Every render then refuses both. `leadsTo`
+  asks what each view is known to place whether the child already leads to the parent, and a
+  child that does is refused before anything is written, with the way it leads there.
+- **The circle between `check` and `add`** (mcp.5; disputed, and true): closed for `check` in
+  the entry before last, and here for `place_assembly`, which told an agent to `add_assembly`
+  a name whose directory is there and broken, a name `add_assembly` refuses as taken.
+- **Proof.** Eight cases watched red, then green. The agent surface's tarball is at 26,492
+  bytes of its 27,000.
