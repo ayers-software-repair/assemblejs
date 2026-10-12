@@ -2,10 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // What every spec shares: the server under test, and reading its answers as the contract
 // describes them.
-import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { setTimeout as sleep } from "node:timers/promises";
-import { freePort } from "../harness/serve.mjs";
+import { freePort, spawned } from "../harness/serve.mjs";
 export const origin = process.env.CONFORMANCE_ORIGIN ?? "";
 if (origin === "") throw new Error("CONFORMANCE_ORIGIN names the server under test");
 
@@ -78,11 +77,7 @@ export const rootOf = (name) => {
  */
 export const started = async (root, env, attempts = 3) => {
   const port = String(await freePort());
-  const child = spawn(process.execPath, ["dist/server.js"], {
-    cwd: root,
-    env: { ...process.env, ...env, ASSEMBLEJS_PORT: port },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
+  const child = spawned(root, { ...process.env, ...env, ASSEMBLEJS_PORT: port });
   let output = "";
   child.stdout.on("data", (chunk) => (output += String(chunk)));
   child.stderr.on("data", (chunk) => (output += String(chunk)));

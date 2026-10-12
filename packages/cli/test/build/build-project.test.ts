@@ -1,6 +1,5 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { spawn } from "node:child_process";
 import {
   cpSync,
   existsSync,
@@ -16,7 +15,14 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { afterAll } from "vitest";
-import { buildProject, freePort, planAssembly, projectFiles, realIo } from "@assemblejs/cli";
+import {
+  buildProject,
+  freePort,
+  planAssembly,
+  projectFiles,
+  realIo,
+  startServer,
+} from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
@@ -34,30 +40,24 @@ const capture = () => {
 };
 
 // Starts a built server on a port the OS has free, not one drawn by chance beside every other
-// suite's server, and says what it printed should it exit before it listens.
+// suite's server, and says what it printed should it exit before it listens. Through the dev
+// loop's own starter, in production as a plain start is, so that a run of this suite killed
+// outright leaves no server behind it.
 const serve = async (root: string, path: string): Promise<string> => {
-  const child = spawn(process.execPath, ["dist/server.js"], {
-    cwd: root,
-    env: { ...process.env, ASSEMBLEJS_PORT: String(await freePort()) },
-    stdio: ["ignore", "pipe", "pipe"],
+  const printed: string[] = [];
+  const say = (line: string): void => void printed.push(line);
+  const server = startServer(root, { ...realIo, log: say, error: say }, 3000, {
+    ASSEMBLEJS_MODE: "production",
+    ASSEMBLEJS_PORT: String(await freePort()),
   });
-  let printed = "";
-  const keep = (chunk: Buffer): void => void (printed += String(chunk));
   try {
-    const origin = await new Promise<string>((resolve, reject) => {
-      child.stdout.on("data", (chunk: Buffer) => {
-        keep(chunk);
-        const found = /listening (http:\/\/\S+)/.exec(String(chunk));
-        if (found?.[1] !== undefined) resolve(found[1]);
-      });
-      child.stderr.on("data", keep);
-      child.on("exit", (code) =>
-        reject(new Error(`exited with ${String(code)} before it listened:\n${printed}`)),
-      );
-    });
+    const origin = await server.ready;
+    if (origin === undefined) {
+      throw new Error(`exited before it listened:\n${printed.join("\n")}`);
+    }
     return await (await fetch(`${origin}${path}`)).text();
   } finally {
-    child.kill();
+    await server.stop();
   }
 };
 

@@ -1,12 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { spawn } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { freePort, projectFiles, realIo, runDeploy } from "@assemblejs/cli";
+import { freePort, projectFiles, realIo, runDeploy, startServer } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
 
 // Nested in an example, so the deploy resolves the workspace's packages as one whose
@@ -17,25 +16,21 @@ afterAll(() => rmSync(root, { recursive: true, force: true }));
 
 const quiet: Io = { ...realIo, log: () => undefined, error: () => undefined };
 
-/** Starts the deployed server from inside deploy/, and answers what it serves at a path. */
+/**
+ * Starts the deployed server from inside deploy/, and answers what it serves at a path. Through
+ * the dev loop's own starter, in production, so a run killed outright leaves no server.
+ */
 const serveDeploy = async (path: string): Promise<string> => {
-  const port = String(await freePort());
-  const child = spawn(process.execPath, ["dist/server.js"], {
-    cwd: join(root, "deploy"),
-    env: { ...process.env, ASSEMBLEJS_PORT: port },
-    stdio: ["ignore", "pipe", "pipe"],
+  const server = startServer(join(root, "deploy"), quiet, 3000, {
+    ASSEMBLEJS_MODE: "production",
+    ASSEMBLEJS_PORT: String(await freePort()),
   });
   try {
-    const origin = await new Promise<string>((resolve, reject) => {
-      child.stdout.on("data", (chunk: Buffer) => {
-        const found = /listening (http:\/\/\S+)/.exec(String(chunk));
-        if (found?.[1] !== undefined) resolve(found[1]);
-      });
-      child.on("exit", (code) => reject(new Error(`exited with ${String(code)}`)));
-    });
+    const origin = await server.ready;
+    if (origin === undefined) throw new Error("exited before it listened");
     return await (await fetch(`${origin}${path}`)).text();
   } finally {
-    child.kill();
+    await server.stop();
   }
 };
 

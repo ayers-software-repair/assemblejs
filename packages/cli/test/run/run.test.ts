@@ -268,4 +268,11 @@ describe("ending dev from a terminal", () => {
     const { running } = await endDev(["SIGHUP"]);
     expect(running).toBe(false);
   }, 30000);
+
+  // Nothing in dev hears this one, so nothing in dev could stop the server: it was left
+  // listening on its port for as long as the machine stayed up.
+  it("takes the server with it when it is killed outright, which no handler hears", async () => {
+    const { running } = await endDev(["SIGKILL"]);
+    expect(running).toBe(false);
+  }, 30000);
 });

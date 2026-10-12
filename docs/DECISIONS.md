@@ -6675,3 +6675,54 @@ did not hold to its own claim. Watched: a page whose module imports four files w
   gzipped, within the 90,000 it declares, exit 0. Run alone the shop's home falls back, its
   shelves being another server's, and `perf` exits 1 for that, as it did before this bite.
   The command line's tarball is at 100,793 bytes of its 102,000.
+
+## 2026-10-12: a server does not outlive what started it
+
+The one row of the seat's own left at the end of the audit: three `node dist/server.js`, two
+from conformance runs and one from the command line's dev spec, found listening eleven hours
+after their runs. It had been measured and not reproduced. It is reproduced now, and mended.
+
+- **What does not leak, measured.** A run to its end: none, of each of the five fixtures. A
+  run stopped by SIGTERM with three servers up: none; the harness hears it and stops them.
+- **What does.** A run killed outright. The trust fixture, killed with SIGKILL while four of
+  its servers were up, left all four, each handed to the system as an orphan and still in the
+  run's own directory. And `dev` killed the same way left its server: the new case of the
+  command line's suite, red on the dev loop as it stood. A process killed outright runs no
+  line of its own, so nothing in what started a server can be what stops it.
+- **The server's process ends itself.** Node gives a child a channel to its parent on request,
+  and the child is told when that channel closes (nodejs.org, process, the `disconnect`
+  event, read 2026-10-12), which is when the parent is gone however it went. The handler for
+  it is loaded into the server's process before the server's own code, by `--import`, from a
+  `data:` address, so nothing is added to what a package publishes and nothing to a project.
+  A handler for that event would by itself keep the process alive (nodejs.org, child_process,
+  "IPC Channel": the channel is unreferenced until one is registered), so the channel is
+  unreferenced again once it is; a server that closes by itself still ends by itself.
+  Measured first in a scratch pair of scripts on Node 24.18.1, from a file and from a `data:`
+  address alike.
+- **Where.** The dev loop's starter, which `dev` and `perf` both use; and the conformance
+  harness and the helper a spec starts a server of its own with, which are one function now
+  (`spawned`) where they had been the same lines twice. With four items of `stdio` the type of
+  a child's two streams allows for none, so the starter reads them through an optional chain.
+- **Two places hold the line that loads the handler, and no more.** The harness imports
+  nothing from the packages: it is a stranger to them, working from the tarballs it packs,
+  which is what makes its verdict a stranger's. So it keeps the line itself, once, and the
+  starter keeps it once. The command line's own tests that started a built server by hand,
+  the build's and the deploy's, start it through the starter now, in production as a plain
+  start is.
+- **Not changed, and why.** The browser proof's specs start servers the same way; they run only
+  in CI, on a machine that is thrown away with the run, and no browser starts here (D1276).
+  `scripts/proof-create.mjs` proves that a built server runs under plain `node dist/server.js`
+  with nothing else on the line, and is left saying exactly that. The showcase's `start.mjs`
+  stops the four servers it starts on the two signals a person sends it, and is a script a
+  reader copies: it is left as plain as it is.
+- **What a server's process has under `dev` that it had not.** A channel it never uses:
+  `process.send` is defined there. Nothing in the framework reads it. A project's own server
+  under `node dist/server.js`, in production, has none and is as it was.
+- **Proof.** The trust fixture killed outright again, with five servers up: none left, where
+  four of four had been. Each fixture whose specs start a server of their own, trust,
+  rendering and agents, run to its end: every spec passes, and none left. The command line's
+  case red before and green after; its own gate, the cheap chain and its 827 cases; and the
+  build's and the deploy's suites again once their servers went through the starter. A run on
+  this machine is the gates the bite touches (D1277). The floor is Node 22 and this machine
+  runs 24: `ci`'s `verify (22)` job is where the new case runs on the floor. The command
+  line's tarball is at 101,026 bytes of its 102,000.
