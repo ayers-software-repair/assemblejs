@@ -6782,3 +6782,37 @@ things, with three owners.
   among them a list a React hook made, untyped where React has no types. A change to a
   renderer is walked in a browser before it is pushed; this one is not, as what the browser
   loads is the same file, byte for byte or by a comment, and `ci`'s browser proof reads it.
+
+## 2026-10-12: the advice on whose JSX a file is, tried on every example
+
+The entry above says of the 64 errors left in the ten examples that every one is of one kind.
+That was read off the compiler's codes and not tried, and the last claim that was only read,
+that one example measured spoke for ten, is the one a reader caught. It is tried now.
+
+- **Measured, four passes over the ten, every file put back after.** As before: 64. With
+  React's types where the compiler finds them (`@types/react` 19.2.18 and `@types/react-dom`
+  19.2.5, the workspace's own, named to the compiler by `paths` so that nothing was
+  installed): 35, of which 25 in six Preact and Solid views and 10 in the generated modules
+  that hand those views to their renderers. With the seat's advice as well, one line heading
+  each `.tsx` of a Preact or Solid assembly, `/** @jsxImportSource preact */` or `solid-js`,
+  11 files of the 20 that hold JSX, a helper with no framework in its name among them: none,
+  in any of the ten. The line was tried in two places, on a file's first line and beneath
+  its two lines of copyright, where the house would put it: none either way. And with the
+  lines and without React's types: 18, every one in the seven examples that hold a React
+  view, 17 of them that `react` or `react/jsx-runtime` has no declaration and the last what
+  follows from it; none in the Solid project, which no longer asks for React's. The first
+  pass giving 64 again says the measure is the one of the entry above; the second, red under
+  the same configuration without the lines, says the third is not green for nothing. The
+  script and what it printed are kept in the audit's evidence directory, `seat/whose-jsx/`.
+- **What it says.** No defect of the product is hidden in the 64: the renderers and the
+  generated modules take a view of each framework once the compiler is told whose JSX it is.
+  The line is TypeScript's own (the tsconfig reference, `jsxImportSource`, "you can use a
+  per-file pragma", read 2026-10-12), and a file that carries it must be a module, which every
+  view is.
+- **What it does not say.** That the line is the answer: that is the owner's, of three ways,
+  and the examples are not changed. It says what his yes would take here: 11 lines, React's
+  two packages of types in the seven examples that hold a React view, a configuration in each
+  of the ten, and then a gate can hold `examples/`.
+- **Not measured.** What an editor shows, which no command line can say; and a project
+  installed from the registry, where React's types are its own dependency and not the
+  workspace's.

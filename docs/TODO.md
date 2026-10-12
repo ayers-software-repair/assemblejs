@@ -43,8 +43,9 @@ contract nothing calls, Lit's one hydration hook, what a `perf` budget holds of 
 a value for a route's parameter, a dynamic route that cannot answer 404, the copyright line
 on generated modules, what a handler may return as JSON, `CLAUDE.md`, the first prerelease.
 His answer on whose JSX a file is also decides whether any gate can type-check `examples/`,
-which none does: 64 errors of that kind stand in the ten. FINDINGS 53 to 60 in the evidence
-directory are the state at the end. A SESSION THAT RESUMES HERE HAS NO BITE TO TAKE: it reads
+which none does: 64 errors of that kind stand in the ten, and the seat's advice, tried on
+all of them, leaves none. FINDINGS 53 to 61 in the evidence directory are the state at the
+end. A SESSION THAT RESUMES HERE HAS NO BITE TO TAKE: it reads
 `origin/next`'s last run, and anything a seat or the owner has added to this file since, and
 says so to the lead.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -1375,7 +1376,8 @@ a spec watched red first, or struck with its reason.
       modules type-check, 26 errors gone, and a fresh project with TypeScript and Node's types
       type-checks after its first build. THE OWNER'S TO SETTLE of the rest, each with what was
       measured: whose JSX a `.tsx` is when a project mixes frameworks (three ways, the seat's
-      advice the line in the file with `check` naming one that lacks it), and whether the
+      advice the line in the file with `check` naming one that lacks it, tried on the ten
+      examples in the row on them, below), and whether the
       starter writes a `tsconfig.json` and installs `typescript` and `@types/node` (4 packages,
       6.3 MB; and a project type-checks only after a build, `.assemblejs/` being generated and
       not committed, which is what a script for it must run first) (DECISIONS 2026-10-12, "the modules the build generates type-check")
@@ -1388,10 +1390,15 @@ a spec watched red first, or struck with its reason.
       `templates` or `market/reviews`; `market/shop` 13, `market/catalog` 4, `market/fulfilment`
       17, `frameworks` 15, `shadow` 9, `two-frameworks`, `realtime` and `styles` 2 each. Every
       one is of the kinds the row above leaves to the owner: no types for React's JSX, and a
-      Preact or Solid file read as React's. THE OWNER'S answer there decides whether a gate can
-      hold `examples/`, and so whether the showcase is clean before the first prerelease. A
-      configuration that type-checks a project names `.assemblejs/**/*.ts`, as naming
-      `.assemblejs` alone leaves the generated browser modules out
+      Preact or Solid file read as React's. TRIED 2026-10-12, not read off the compiler's
+      codes: with React's types where the compiler finds them, 35 are left; with the seat's
+      advice as well, one line heading each `.tsx` of a Preact or Solid assembly, 11 files,
+      none is left in any of the ten. Every file was put back: the examples are as they were
+      (DECISIONS 2026-10-12, "the advice on whose JSX a file is, tried on every example").
+      THE OWNER'S answer there decides whether a gate can hold `examples/`, and so whether the
+      showcase is clean before the first prerelease. A configuration that type-checks a
+      project names `.assemblejs/**/*.ts`, as naming `.assemblejs` alone leaves the generated
+      browser modules out
 - [ ] An api or a service that answers one of two shapes without declaring them is refused as
       JSON: TypeScript gives each shape the other's members as `undefined`, and `JsonValue` has
       none; an `interface` is refused too. Measured 2026-10-12, five cases. Nothing is wrong at
