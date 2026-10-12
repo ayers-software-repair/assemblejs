@@ -6241,3 +6241,33 @@ Found by the showcase, whose shop guards its stock board: `perf` exited 1 on it.
   94,742 bytes of 98,000.
 - **Not done.** A page whose route has a parameter is still not weighed, which in the showcase
   is the product page. Where a value would come from is a design, and has its row.
+
+## 2026-10-12: where a placement may stand, by the parser's own rules
+
+Three of the audit's minor rows on the composer and its tests (composer.7, composer.8,
+tests.3), each read at the source and reproduced before it was believed.
+
+- **A paragraph is closed at more than the reader knew** (composer.7, true). The reader of an
+  open paragraph held the start tags that close one, and had not the list item, the
+  description's term and part, the form or the table: a placement after `<p>text<li>` was
+  refused as inside a paragraph the parser had closed. Each is in now, on the conditions the
+  parser puts on two of them (html.spec.whatwg.org, parsing, "in body", read 2026-10-12): a
+  form begun inside another is ignored and closes nothing, and a table closes a paragraph only
+  in a document that is not in quirks mode, which is known of a template that opens with the
+  HTML doctype and of no other, so a fragment's table is still taken as closing nothing.
+- **A placement in a table outside its cells arrives empty** (composer.8, true, and wider than
+  the row). In the owner's Chrome: an envelope written directly in a `table`, a `thead`, a
+  `tbody`, a `tr` or a `colgroup` is moved out before the table, and its rows and its island
+  stay in the table; in a cell or a caption it stays whole. The directive's one reader refuses
+  it now, naming the part and saying where to place it. A `select` kept the envelope in this
+  Chrome and is refused all the same: the row's claim was true of the parser every browser had
+  until this year, and a page is not to depend on which one reads it.
+- **A kept answer's lifetime was held to nothing** (tests.3, true). `cache.ttl` is milliseconds
+  and said so nowhere; a deadline is refused at boot when it is not a positive, finite number,
+  and a ttl was not, so `"60s"` kept an answer for ever. It is said on the declaration and held
+  beside the deadline.
+- **Proof.** Each case red on the committed reader and green after; a new reader,
+  `strictParents`, with its own cases, one of them ten thousand rows in under a second. Every
+  cheap gate, every suite and all five conformance fixtures green, and `check` says no
+  problems of every example and of the showcase's four projects. The core's tarball is at
+  96,873 bytes of its 98,000.

@@ -106,6 +106,20 @@ describe("finding placements in a template", () => {
     expect(findPlacements(`<!-- <p> --><assembly name="price"/>`)).toHaveLength(1);
   });
 
+  // In a table outside its cells the parser moves the envelope out before the table and leaves
+  // its rows, and its island, behind: the assembly arrived as an empty element beside a table.
+  it("refuses a placement in a table outside its cells, or in a select, and passes one in a cell", () => {
+    const rows = '<assembly name="rows"></assembly>';
+    expect(() => findPlacements(`<table><tbody>${rows}</tbody></table>`)).toThrow(
+      /stands inside a <tbody> and outside its cells/,
+    );
+    expect(() => findPlacements(`<table>${rows}</table>`)).toThrow(/inside a <table> and outside/);
+    expect(() => findPlacements(`<table><tr>${rows}</tr></table>`)).toThrow(/inside a <tr> and/);
+    expect(() => findPlacements(`<select>${rows}</select>`)).toThrow(/stands inside a <select>/);
+    expect(findPlacements(`<table><tr><td>${rows}</td></tr></table>${rows}`)).toHaveLength(2);
+    expect(findPlacements(`<table><caption>${rows}</caption></table>`)).toHaveLength(1);
+  });
+
   it("refuses a placement inside an element's own declarative shadow root, and passes one beside it", () => {
     expect(() =>
       findPlacements(

@@ -52,8 +52,10 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: perf does not fail
-a project for guarding a page (DECISIONS 2026-10-12, of that name). Beneath it `774b709`, the
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: where a placement
+may stand, by the parser's own rules (DECISIONS 2026-10-12, of that name), three of the
+audit's minors. Beneath it `d95cd40`, perf does not fail a project for guarding a page (`ci`
+38214252176). Beneath it `774b709`, the
 market, a showcase of four servers, in `examples/market` (`ci` 38213628041, all five jobs
 green, the showcase's eight cases among the 54 the `browser proof` passed, on their first
 run). Beneath it `d7a8792`, an empty Lit view can be placed from another server (`ci` 38212157143,
@@ -81,7 +83,7 @@ project (`ci` 38202881918, all five jobs green); `f62a4ec`, the ids a component 
 island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value is text (`ci`
 38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
 when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
-tarball budgets: the core's 98000, moved from 86000 at a measured 94,991; the command line's
+tarball budgets: the core's 98000, moved from 86000 at a measured 94,991 and at 96,873 now; the command line's
 98000, moved from 94000 at a measured 94,039; the agent surface's is at 26,709 of 27,000.
 Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
@@ -1509,12 +1511,13 @@ The composer:
       PREMISE UNVERIFIED. The same defect as workflow server.5, REPRODUCED by the seat and DONE
       2026-10-11 with it: `declaredView` (DECISIONS 2026-10-11, "what a server would fail at, it
       refuses before it listens").
-- [ ] The open-paragraph check refuses valid pages: table, form, li, dd and dt start tags also close
-      a paragraph (workflow composer.7, minor). Claimed at
-      `packages/core/src/compose/open-paragraphs.ts:8`. PREMISE UNVERIFIED
-- [ ] A directive placed directly inside table, tbody, tr or select is accepted, but the browser
-      moves the envelope and drops its cells (workflow composer.8, minor). Claimed at
-      `packages/core/src/compose/find-placements.ts:41`. PREMISE UNVERIFIED
+- [x] The open-paragraph check refuses valid pages: table, form, li, dd and dt start tags also close
+      a paragraph (workflow composer.7, minor). READ AND TRUE. DONE 2026-10-12, each on the
+      parser's own condition (DECISIONS 2026-10-12, "where a placement may stand, by the
+      parser's own rules")
+- [x] A directive placed directly inside table, tbody, tr or select is accepted, but the browser
+      moves the envelope and drops its cells (workflow composer.8, minor). REPRODUCED in Chrome.
+      DONE 2026-10-12: refused where the directive is read, `strictParents` (the same entry)
 
 The browser runtime:
 
@@ -1780,9 +1783,9 @@ Tests that cannot fail:
       that reads one message, which is the commit hook, held it to the sign-off alone. DONE
       2026-10-12: the pattern is read in any case and names that line by what it says, and one
       message is held to both rules.
-- [ ] placement cache.ttl: unit undocumented (it is milliseconds), and unlike deadline it is never
-      validated at boot (workflow tests.3, minor). Claimed at
-      `packages/core/src/server/placement-problems.ts:71`. PREMISE UNVERIFIED
+- [x] placement cache.ttl: unit undocumented (it is milliseconds), and unlike deadline it is never
+      validated at boot (workflow tests.3, minor). READ AND TRUE. DONE 2026-10-12 (DECISIONS
+      2026-10-12, "where a placement may stand, by the parser's own rules")
 - [ ] Mirror gate exempts any source whose name merely ends in 'index' or 'bin', so such files need
       no test (workflow tests.4, minor). Claimed at `scripts/check-mirror.mjs:66`. PREMISE
       UNVERIFIED

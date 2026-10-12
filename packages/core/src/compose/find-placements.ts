@@ -6,6 +6,7 @@ import { inertSpans } from "./inert-spans.js";
 import { openParagraphs } from "./open-paragraphs.js";
 import type { Placement } from "./placement.js";
 import { shadowTemplates } from "./shadow-templates.js";
+import { strictParents } from "./strict-parents.js";
 
 // The directive has a shape this product defines, so it is matched exactly rather than parsed:
 // an opening tag with only the attributes named below, quoted, then either a self-closing slash
@@ -40,6 +41,7 @@ export function findPlacements(template: string): Placement[] {
         readonly isInert: (at: number) => boolean;
         readonly inParagraph: (at: number) => boolean;
         readonly inShadowRoot: (at: number) => boolean;
+        readonly strictParent: (at: number) => string | undefined;
       }
     | undefined;
 
@@ -53,9 +55,10 @@ export function findPlacements(template: string): Placement[] {
         isInert,
         inParagraph: openParagraphs(template, isInert),
         inShadowRoot: shadowTemplates(template, isInert),
+        strictParent: strictParents(template, isInert),
       };
     }
-    const { isInert, inParagraph, inShadowRoot } = where;
+    const { isInert, inParagraph, inShadowRoot, strictParent } = where;
     // A directive inside a comment or a raw-text element is not a placement. Dispatching one
     // fetches an assembly the author commented out or quoted, and splices its markup where a
     // "-->" or "</script>" inside it ends the enclosing text early and the rest becomes live.
@@ -75,6 +78,23 @@ export function findPlacements(template: string): Placement[] {
       throw new Error(
         `<${PLACEMENT_ELEMENT}> at ${start} stands inside an element's own shadow root, where the ` +
           `page's stylesheets do not reach; place it in the view's template, outside the element`,
+      );
+    }
+    // Directly inside a table and outside its cells, the parser moves the envelope out before
+    // the table and leaves what the assembly holds, its island with it, behind in the table.
+    // Inside a select, browsers do not agree on what is kept.
+    const parent = strictParent(start);
+    if (parent === "select") {
+      throw new Error(
+        `<${PLACEMENT_ELEMENT}> at ${start} stands inside a <select>, where browsers do not agree ` +
+          `on what they keep; place it around the select`,
+      );
+    }
+    if (parent !== undefined) {
+      throw new Error(
+        `<${PLACEMENT_ELEMENT}> at ${start} stands inside a <${parent}> and outside its cells, ` +
+          `where the browser moves it out of the table and leaves what it holds behind; place ` +
+          `it inside a <td> or a <th>, or around the table`,
       );
     }
     const closed = /<\/[a-z]+\s*>$/i.test(directive) || selfClosing === "/";

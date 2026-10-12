@@ -14,5 +14,6 @@ export interface AssemblyPlan {
   readonly required?: boolean;
   /** Not fetched during the page render; the browser fills it after load. */
   readonly defer?: boolean;
+  /** How long an answer is kept, in milliseconds. */
   readonly cache?: { readonly ttl: number };
 }

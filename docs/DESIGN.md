@@ -162,7 +162,11 @@ carries no meaning in the browser. It is written closed, as there or as
 the view that holds it fails whole. So is a directive inside a paragraph the parser has not
 closed, after a `<p>` with no `</p>`, no start tag that closes a paragraph and no end tag of a
 block above it between: the browser closes the paragraph at the first block the placed assembly
-holds, and the rest of the assembly, its island included, leaves its envelope. The one reader of
+holds, and the rest of the assembly, its island included, leaves its envelope. So is a directive
+in a table outside its cells (in a `table`, a `thead`, `tbody` or `tfoot`, a `tr` or a
+`colgroup`): the parser moves the envelope out before the table and leaves what the assembly
+holds behind in it; and so is one in a `select`, where browsers do not yet agree on what they
+keep. It is placed in a cell, or around the table or the select. The one reader of
 the directive refuses it, so `check`, the server at boot, the composer and a view at render all
 say the same. And so is a directive inside a declarative shadow root an element writes for itself,
 `<template shadowrootmode="...">` not yet closed, as a Lit element's render would place it: the
@@ -295,7 +299,7 @@ type AssemblyPlan = {
   fallback?: string;
   required?: boolean;
   defer?: boolean;
-  cache?: { ttl: number };
+  cache?: { ttl: number }; // milliseconds, positive and finite, held at boot as a deadline is
 };
 
 type ContentCache = {

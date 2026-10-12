@@ -27,6 +27,7 @@ export { tagEnd } from "./tag-end.js";
 export { withinSpans } from "./within-spans.js";
 export { findPlacements } from "./find-placements.js";
 export { openParagraphs } from "./open-paragraphs.js";
+export { strictParents } from "./strict-parents.js";
 export { shadowTemplates } from "./shadow-templates.js";
 export type { Admission } from "./admission.js";
 export type { Admit } from "./admit.js";

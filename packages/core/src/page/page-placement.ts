@@ -16,5 +16,9 @@ export interface PagePlacement {
   readonly required?: boolean;
   /** Not fetched during the page render; the browser fills it after load. */
   readonly defer?: boolean;
+  /**
+   * Keeps the answer and gives it to every page that asks within `ttl`, which is milliseconds,
+   * positive and finite: a minute is `60_000`.
+   */
   readonly cache?: { readonly ttl: number };
 }

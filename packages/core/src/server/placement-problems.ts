@@ -76,6 +76,14 @@ export function placementProblems(
     ) {
       wrong(`gives "${name}" a deadline that is not a positive, finite number`);
     }
+    // Milliseconds, as a deadline is. One that is not a number keeps nothing or keeps for ever,
+    // and a page that was to be fresh each minute is then stale until the server restarts.
+    if (
+      declared.cache !== undefined &&
+      !(Number.isFinite(declared.cache.ttl) && declared.cache.ttl > 0)
+    ) {
+      wrong(`keeps "${name}" for a ttl that is not a positive, finite number of milliseconds`);
+    }
   }
   return problems;
 }

@@ -99,6 +99,16 @@ describe("what is wrong with how a page places assemblies", () => {
     );
   });
 
+  // Held at boot as a deadline is: one that was not a number kept an answer for ever.
+  it("refuses a kept answer's lifetime that is not a positive, finite number", () => {
+    for (const ttl of [0, -1, Number.NaN, Number.POSITIVE_INFINITY, "60s" as unknown as number]) {
+      expect(messages(one("live"), { live: { cache: { ttl } } }).join(), String(ttl)).toMatch(
+        /keeps "live" for a ttl that is not a positive, finite number of milliseconds/,
+      );
+    }
+    expect(messages(one("live"), { live: { cache: { ttl: 60_000 } } })).toEqual([]);
+  });
+
   it("refuses a deadline that is not a positive, finite number", () => {
     for (const deadline of [0, -1, Number.POSITIVE_INFINITY, Number.NaN]) {
       expect(messages(one("hello"), { hello: { deadline } }).join()).toMatch(/positive, finite/);

@@ -23,6 +23,28 @@ describe("where a template stands inside a paragraph the parser has not closed",
     expect(inside("|<p>later")).toBe(false);
   });
 
+  // The parser closes a paragraph at these too, and a page that placed after one was refused.
+  it("is not after a list item, a description's part or a form begun inside the paragraph", () => {
+    expect(inside("<ul><li><p>one<li> |")).toBe(false);
+    expect(inside("<dl><dt><p>term<dd> |")).toBe(false);
+    expect(inside("<dl><dd><p>said<dt> |")).toBe(false);
+    expect(inside("<p>text<form> |")).toBe(false);
+  });
+
+  // A form begun inside a form is ignored by the parser, and closes nothing.
+  it("is still after a form the parser ignores, one begun inside another", () => {
+    expect(inside("<form><p>text<form> |")).toBe(true);
+    expect(inside("<form></form><p>text<form> |")).toBe(false);
+  });
+
+  // A table closes a paragraph only in a document that is not in quirks mode, which is known
+  // of a template that opens with the doctype and of no other.
+  it("is not after a table in a document that says it is HTML, and is where nothing says so", () => {
+    expect(inside("<!doctype html><p>text<table><tr><td> |")).toBe(false);
+    expect(inside("<!DOCTYPE HTML>\n<html><body><p>text<table> |")).toBe(false);
+    expect(inside("<p>text<table><tr><td> |")).toBe(true);
+  });
+
   it("reads no tag inside a comment or a raw-text element", () => {
     expect(inside("<!-- <p> --> |")).toBe(false);
     expect(inside("<script>'<p>'</script> |")).toBe(false);
