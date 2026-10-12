@@ -63,10 +63,15 @@ export function renderLinks(manifest, page) {
   return anchors.join(page.sep ?? " &middot; ");
 }
 
-/** The page's html with its region rewritten, keeping the whitespace that framed the old one. */
+/** Rewrite the shared navigation or a legacy links region, retaining the surrounding page. */
 export function rewrite(html, links) {
   const match = REGION.exec(html);
-  if (match === null) return undefined;
+  if (match === null) {
+    const navigation = /(<nav class="product-nav"[^>]*>)[\s\S]*?(<\/nav>)/.exec(html);
+    return navigation
+      ? html.replace(navigation[0], `${navigation[1]}${links}${navigation[2]}`)
+      : undefined;
+  }
   const inner = match[1];
   const lead = /^\s*/.exec(inner)[0];
   const trail = inner.trim() === "" ? "" : /\s*$/.exec(inner)[0];

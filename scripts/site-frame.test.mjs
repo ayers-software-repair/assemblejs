@@ -2,8 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { posix } from "node:path";
 import { test } from "node:test";
 import { Window } from "happy-dom";
+import { JSX } from "typedoc";
+import { load } from "./site-api-theme.mjs";
 import { pageText } from "./site-page-text.mjs";
 import { renderLinks, sharedLinksMatch } from "./site-links.mjs";
 
@@ -107,4 +110,28 @@ test("generated navigation accepts equivalent paths and refuses missing or incor
     false,
   );
   assert.equal(sharedLinksMatch("<nav></nav>", links, "docs/start.html"), false);
+});
+
+test("TypeDoc keeps the real product header and active navigation at every reference depth", () => {
+  const hooks = new Map();
+  load({ renderer: { hooks: { on: (name, hook) => hooks.set(name, hook) }, on() {} } });
+  const manifest = JSON.parse(readFileSync(new URL("../site/pages.json", import.meta.url), "utf8"));
+  for (const file of ["index.html", "classes/Assembly.html"]) {
+    const html = JSX.renderElement(
+      hooks.get("body.begin")({
+        page: { url: file },
+        relativeURL: (path) => posix.relative(posix.dirname(file), path),
+      }),
+    );
+    assert.match(html, /<header class="product-header">/);
+    assert.doesNotMatch(html, /undefined/);
+    assert.ok(
+      sharedLinksMatch(
+        html,
+        renderLinks(manifest, { file: `docs/api/${file}` }),
+        `docs/api/${file}`,
+      ),
+    );
+    assert.match(html, /href="#tsd-content"/);
+  }
 });
