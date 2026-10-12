@@ -2135,20 +2135,24 @@ rows are taken in this order; each is a bite with its own proof and its own push
       page (FINDINGS 35 to 37); what a `perf` budget holds of mounting, and a value for a
       route's parameter; the agent surface's 90 packages and whether its SDK is bundled;
       what the starter's guide link names; the first prerelease
-- [ ] THE OWNER'S, from the rulings: two package names to set up on npm before the first
-      prerelease, `@assemblejs/build` and `@assemblejs/check`; `CLAUDE.md`'s twelve packages
-      and its list of them, which the seat does not edit; and whose word raises or sets a
-      size limit, which he answered with the split and which stands for the next time
-- [ ] One script for the owner's npm step, promised him 2026-10-12 when he asked why the step
-      is his: the first publish of each of the fourteen names and the trust setting for
-      each, under one prompt for his second factor. What it rests on, read that day: npm
-      sets a trusted publisher on a package's own settings, the package "must already exist
-      on the npm registry", the setting needs write access and a second factor and takes no
-      token that passes it by, and a new setting must see its first publish within two days
-      (npm's pages on trusted publishers and on `npm trust`). None of the names is on npm:
-      `@assemblejs/core` and `@assemblejs/cli` answer 404. BEFORE IT IS WRITTEN: read the
-      release's own publish step and the row on the first publish, so that his hand and the
-      release do not both publish one version
+- [ ] R-13 The release publishes a name npm has never seen. RULED 2026-10-12, after the seat
+      had promised a script for him to run: "first prerelease should be the next ones only
+      and these are done by workflow not by a script I run", and of the first publish, "Yes:
+      one token, used once". The script is withdrawn; nothing the seat writes publishes by
+      his hand. To build: `release.yml` publishes with a token from the `release`
+      environment only a package that is not on the registry, and without one, as now,
+      every package that is; the `next` channel only until he says otherwise. What it rests
+      on, read that day: npm sets a trusted publisher on a package's own settings, the
+      package "must already exist on the npm registry", the setting wants write access and a
+      second factor and takes no token that passes it by, and a new setting must see its
+      first publish within two days (npm's pages on trusted publishers and on `npm trust`).
+      None of the names is on npm: `@assemblejs/core` and `@assemblejs/cli` answer 404, and
+      the repository holds no npm secret, only `RELEASES_PAT`
+- [ ] THE OWNER'S, for the first prerelease, each small and none a publish: (1) when he is
+      ready to go public, one npm token saved as one secret of the `release` environment,
+      by steps the seat writes out; (2) after that release, tokenless publishing switched on
+      for each of the fourteen names, which wants his second factor and publishes nothing,
+      done within two days of a release that follows it; (3) the secret deleted
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

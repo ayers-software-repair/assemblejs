@@ -7078,3 +7078,29 @@ first among its choices; the choice he took is quoted.
 - **Not asked.** Two servers on one page, what a `perf` budget holds, the agent surface's
   install weight, the starter's guide link, the first prerelease: each wants a measure the
   seat has not made or is his launch to call.
+
+## 2026-10-12: the release makes the first publish, not his hand
+
+The seat had told him the two new names were his to set up on npm, and, asked why, had
+promised one script for him to run that would publish each name once and set its trust. A
+reader's note said what that script was: the first prerelease, in public, by his hand.
+
+- **His ruling.** "first prerelease should be the next ones only and these are done by
+  workflow not by a script I run". The script is withdrawn. Nothing the seat writes
+  publishes by his hand, and the first prerelease goes to the `next` channel only.
+- **What stood in the way, from npm's own pages.** Publishing with no token is set on a
+  package's own settings, and the package "must already exist on the npm registry"; none of
+  ours does. So the release as written, which carries no token, cannot publish a name for
+  the first time.
+- **His choice of how: "Yes: one token, used once".** Asked first whether he must create the
+  packages himself ("o so i have to create it myself the first time?"), he was told no: one
+  token, which only the holder of the account can make, saved as one secret. The release
+  uses it for a name that is not on the registry and for nothing else.
+- **What is still his, said plainly.** After the first prerelease, tokenless publishing is
+  switched on for each name, which npm asks his second factor for and which publishes
+  nothing; a new setting must see a publish within two days; then the secret is deleted.
+  The seat's first answer to him had left the first of these sounding like a thing that
+  happens by itself.
+- **Supersedes** the ledger's older line that the first publish of each package is by his
+  hand, and `CLAUDE.md`'s that "the first npm bootstrap remains the owner's": what remains
+  his is a token and a setting, not a publish.
