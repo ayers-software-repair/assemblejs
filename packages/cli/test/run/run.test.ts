@@ -5,7 +5,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { projectFiles, realIo, run } from "@assemblejs/cli";
 import type { Io } from "@assemblejs/cli";
 
@@ -70,7 +70,9 @@ describe("the verbs that read a project", () => {
 });
 
 describe("new", () => {
+  afterEach(() => void vi.unstubAllEnvs());
   it("writes a project that runs", () => {
+    vi.stubEnv("npm_config_user_agent", "npm/11.0.0 node/v24.0.0");
     const { io, written } = fake();
     expect(run(["new", "my-app"], io)).toBe(0);
     expect([...written.keys()].sort()).toEqual([
@@ -122,7 +124,6 @@ describe("new", () => {
     expect(errors.join()).toContain("needs a directory");
   });
 
-  // Found 2026-10-11: an absolute directory was joined beneath where the command ran.
   it("writes into an absolute directory where it says, not beneath where it ran", () => {
     const { io, written, logs } = fake();
     const directory = join(tmpdir(), "target", "my-app");
@@ -134,7 +135,6 @@ describe("new", () => {
 });
 
 describe("the command line's own flags", () => {
-  // Found 2026-10-11: --version was an unknown command, and an unknown flag was kept in silence.
   it("says its version and stops, and refuses what it cannot read with the usage", () => {
     const manifest = fileURLToPath(new URL("../../package.json", import.meta.url));
     const own = JSON.parse(readFileSync(manifest, "utf8")) as { version: string };
