@@ -2058,7 +2058,17 @@ rows are taken in this order; each is a bite with its own proof and its own push
       `packages/cli/src`, the five pairs that import each other: `build` and `check` (1 and
       13), `check` and `shape` (1 and 14), `check` and `perf` (1 and 4), `agents` and
       `commands` (2 and 5), `root` and `discovery` (1 and 6). And a rule in the module gate
-      that holds the direction, `cli` to `check` to `build`
+      that holds the direction, `cli` to `check` to `build`. THE MAP, READ 2026-10-12: `build`
+      takes `io`, `root`, `discovery`, `styles`, `generate`, `build` and `dev`; `check` takes
+      `rules`, `check`, `shape`, `perf` and what the agent files say; `cli` takes `commands`,
+      `run`, `deploy` and the verb that writes the agent files. Under it two imports cross
+      a line the wrong way and no more: `build/build-project.ts` takes `viewFindings` from
+      `check`, and `check/check-project.ts` takes `agentProblems` from `agents`. THE MOVES,
+      each alone, each with its mirrored test: (a) what a view places, read from its source
+      (`view-findings` and the six files of `check` it reads), to an area of its own beneath
+      the build; (b) `commands/renderers.ts`, the list of renderers, to `discovery`; (c)
+      `agents/add-agents.ts`, the verb, to `commands`; (d) the rule, watched refusing an
+      import made the wrong way
 - [ ] R-3 `@assemblejs/build` and `@assemblejs/check` cut from `@assemblejs/cli`: `cli` keeps
       the verbs, `build` turns a project into a server, `check` reads a project and names
       problems; the agent surface and `create` take from the two what they took from the
