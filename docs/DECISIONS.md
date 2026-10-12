@@ -5269,3 +5269,66 @@ the copies to that.
 - **`site/DEPLOY.md`** says the pin's whole reach. That edit is under `site/`, so the push
   runs the deploy, which checks platform out at the new pin: the proof that the tag can be
   staged from.
+
+## 2026-10-11: the audit
+
+The owner, at this seat on the evening of 2026-10-11, after the seat told him the code was
+complete: "compelte all code items yoiu can. then ultracode audit. use it in scratch as much as
+you can to test it. find bugs. brutally review it. I have a hard time believing its complete".
+He was right, and the seat's sentence was wrong. Green CI was what it rested on, and CI proves
+what the fixtures do.
+
+- **What his words changed, for this work.** "Ultracode" is his order for a workflow of agents,
+  so the ruling of 2026-10-09 against sub tasks does not hold for it; the estate's rule that a
+  workflow runs Sonnet alone does, and every agent ran Sonnet. The overnight order's limits on
+  load, relayed by the lead, gave way to his own word. D1276 did not: the seat starts no
+  browser. He logged into his own Chrome ("ive logged into claude in chrome. use that to test")
+  and the seat drives that through the extension.
+- **Two sources.** The seat used the framework as a stranger does: the twelve tarballs packed
+  from `45ea049`, a project made by `npm create`, every renderer added, a shop of thirteen
+  assemblies on five pages written with the command line and the documentation, run under
+  `dev`, `build`, `perf` and `deploy`, driven in his Chrome and through the installed MCP
+  server. And a workflow of eleven read-only finders, one to an area, read the source and
+  probed the built packages, each finding then put to one or two refuters told to count doubt
+  as a refutation: 141 agents, 84 findings, 66 standing, 6 disputed, 12 refuted.
+- **What it found** is Phase 6 of `docs/TODO.md`, a row each. Four blockers, each reproduced by
+  the seat before it was a row: an encoded spelling of a guarded address passes the access
+  check; a cached placement shows a guarded child to a visitor the guard refuses; a link whose
+  target climbs out through another link is read as inside the root; `check` misreads every
+  Pug view. Using it found a build of seventeen seconds for any project with a Svelte view, a
+  dev loop that deletes the files of the server it has just started, and a starter whose first
+  page is unstyled and whose first link is dead.
+- **A workflow's finding is not a fact here until the seat has read it.** Each of its rows says
+  PREMISE UNVERIFIED until then. The evidence, every finding with its input and probe, is kept
+  outside this tree, in the estate's audit records, because the scratch directory is under
+  `/tmp`.
+- **His further orders of the same evening**, each a row: the scratch projects become showcase
+  projects under `examples/`, "production grade", "complex proejcts real world scenarious",
+  "extremely complex. not very simple", the first written with the command line as a user and
+  the second through the MCP server as an agent; and "a mode on each to enable the boxes around
+  them that tell you when and where things are so you can see how it works". Asked where that
+  mode lives, he chose the framework: one outline mode, off by default, that any project
+  switches on in development or in production.
+
+## 2026-10-11: an address is its every spelling
+
+The audit's first blocker. The access decision was handed the request's path as it was sent
+(`register-access.ts`), and the router decodes a path before it matches. So a rule a product
+writes about a path, `path.startsWith("/admin")` in its `authenticate`, was asked about
+`/%61dmin/users`, said yes, and the router served `/admin/users`. A guarded assembly's own
+address and its data and manifest endpoints fell the same way. Under basic credentials nothing
+fell, since every address is then refused alike; under a check or a public route written by
+path, everything did.
+
+- **The decision is made of the path as the router reads it.** `requestedPath` is the one
+  reading: the path without its query, each segment decoded once. Decoding once is what the
+  router does, so what an encoded percent sign leaves is not decoded again. An encoded slash
+  stays encoded, as the router keeps it inside a segment: decoding never joins two segments or
+  splits one, so a public route `/assembly/widget/*` is not matched by a path that hides its
+  slashes. A segment that does not decode has no address, and is a 400.
+- **The same reading serves a public route**, so `/api/%6Fpen` is the public `/api/open` it
+  spells, where before it was refused: the rule leans both ways and holds both ways.
+- **Proof.** A core spec with a check written by path, watched red on the code as it stood
+  (`/%61dmin/users: expected 200 to be 401`), and a step of the `trust` fixture, which asks the
+  built server every spelling of a guarded api over HTTP; its known-bad case is the tarball of
+  `45ea049`, which the seat had watched answer 200 over a raw socket. DESIGN 5.2 says it.

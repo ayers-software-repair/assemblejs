@@ -240,3 +240,51 @@ describe("a check that throws", () => {
     await broken.close();
   });
 });
+
+describe("an encoded spelling of a guarded address", () => {
+  // Found 2026-10-11: the check was handed the path as sent and the router decoded it, so
+  // /%61dmin/users was served where /admin/users was refused.
+  it("is decided as the address it spells, on an api, an assembly and its endpoints", async () => {
+    const seen: string[] = [];
+    const guarded = await createServer({
+      config: config(),
+      log: () => undefined,
+      assemblies: [
+        defineAssembly({
+          name: "secret",
+          views: { default: { renderer: "html", markup: () => "<p>members only</p>" } },
+        }),
+      ],
+      apis: [defineApi({ path: "/admin/users", handle: () => ({ users: ["ada"] }) })],
+      authenticate: ({ path, headers }) => {
+        seen.push(path);
+        if (headers["x-member"] === "yes") return true;
+        return !(path.startsWith("/admin") || path.startsWith("/assembly/secret"));
+      },
+    });
+    try {
+      for (const [encoded, spelled] of [
+        ["/%61dmin/users", "/admin/users"],
+        ["/admin/user%73", "/admin/users"],
+        ["/assembly/secre%74/", "/assembly/secret/"],
+        ["/%61ssembly/secret/default/api/", "/assembly/secret/default/api/"],
+        ["/assembly/%73ecret/default/manifest/", "/assembly/secret/default/manifest/"],
+      ] as const) {
+        seen.length = 0;
+        const refused = await guarded.inject({ method: "GET", url: encoded });
+        expect(refused.statusCode, encoded).toBe(401);
+        expect(refused.body).not.toContain("members only");
+        expect(refused.body).not.toContain("ada");
+        expect(seen).toEqual([spelled]);
+        const admitted = await guarded.inject({
+          method: "GET",
+          url: encoded,
+          headers: { "x-member": "yes" },
+        });
+        expect(admitted.statusCode, encoded).toBe(200);
+      }
+    } finally {
+      await guarded.close();
+    }
+  });
+});

@@ -529,7 +529,11 @@ credentials or an `authenticate(request)` callback, plus a list of public routes
 **one place before anything else**, so there is no second path that disagrees with the first.
 The framework ships no user store, no login page and no session.
 
-The decision is made of the address a request asked, and made again, for the same visitor, of
+The decision is made of the address a request asked, read as the router reads it: the path
+without its query, each segment decoded once, so an encoded spelling of an address is that
+address and a rule about a path holds for every way of writing it. An encoded slash stays
+encoded, as the router keeps it, and a path that does not decode is refused as a bad request.
+It is made again, for the same visitor, of
 the address of each of this server's assemblies that the page or the view places, however the
 directive placing it came to be there (section 7): a guarded assembly is guarded wherever it is
 shown, by the one rule that guards its own address. The server binds the question to the
