@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { AGENT_SERVER, MCP_REGISTRATIONS } from "@assemblejs/cli";
 
@@ -56,5 +57,11 @@ describe("where a project registers its agent surface", () => {
         args: [`\${workspaceFolder}/${AGENT_SERVER.path}`, "${workspaceFolder}"],
       });
     }
+  });
+
+  // The package's README named three of them after there were five.
+  it("is each named in the README of the package that writes them", () => {
+    const readme = readFileSync(new URL("../../README.md", import.meta.url), "utf8");
+    for (const { path } of MCP_REGISTRATIONS) expect(readme, path).toContain(`\`${path}\``);
   });
 });

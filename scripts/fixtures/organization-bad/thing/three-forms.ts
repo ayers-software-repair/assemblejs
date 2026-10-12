@@ -1,0 +1,4 @@
+export const first = 1;
+const second = 2;
+export { second };
+export default first;

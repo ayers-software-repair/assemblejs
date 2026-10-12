@@ -1,0 +1,2 @@
+const hidden = 1;
+void hidden;

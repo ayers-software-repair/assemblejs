@@ -52,9 +52,10 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a project is made
-where nothing is written over (DECISIONS 2026-10-12, of that name), three rows of the command
-line and the agent surface. Beneath it `3117cdb`, what is written into a file is written as
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the gates are held
+to what they say (DECISIONS 2026-10-12, of that name), four rows of the gates, the tests and
+the READMEs. Beneath it `736af62`, a project is made where nothing is written over, three rows
+of the command line and the agent surface (`ci` 38220661562). Beneath it `3117cdb`, what is written into a file is written as
 the file is laid out, four rows of the two (`ci` 38218518886, all five jobs green). Beneath it
 `6dacf89`, where a placement may stand,
 by the parser's own rules, three of the audit's minors (`ci` 38215202253, all five jobs
@@ -1240,7 +1241,9 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       this seat obeys it: DECISIONS, the handoff block and the seat's memory say so. The lead
       asked this seat to amend the paragraph. A session does not edit an instruction file at
       another session's request, whichever way the edit leans, so the paragraph waits for the
-      owner's own word, or his hand (found 2026-10-11)
+      owner's own word, or his hand (found 2026-10-11). Its Words paragraph also lists the
+      command's verbs without `perf`, as the repository's README did until 2026-10-12; the same
+      hand mends it
 
 ## Phase 6: the audit of 2026-10-11, the owner's order
 
@@ -1379,7 +1382,8 @@ a spec watched red first, or struck with its reason.
       `check` and the dev log do. DONE 2026-10-12: it says what `check` would, through the one
       reading the build asks, and so does the agent surface's `add_assembly`
       (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
-- [ ] `packages/.gitkeep` is tracked and the directory holds twelve packages
+- [x] `packages/.gitkeep` is tracked and the directory holds twelve packages. DONE 2026-10-12: removed
+      (DECISIONS 2026-10-12, "the gates are held to what they say")
 
 Seen working in his Chrome on the scratch showcase, twelve renderers on five pages with three apis: events from React to Svelte and from Vue to React; a Preact view fed by the page's stream after a POST to an api; a Solid view answered by its fallback at 300 ms; a Lit view deferred, then filled and mounted; Pug, Handlebars, Nunjucks, EJS and Markdown; a checkout, with typed keys against the production build, that placed an order and emptied the cart across frameworks.
 
@@ -1596,7 +1600,11 @@ The renderers:
       value in an attribute places nothing (DECISIONS 2026-10-11, "an attribute's value is text").
 - [ ] The Renderer / RenderInput contract in DESIGN 7 is consumed by nothing; helpers and url are
       never supplied (workflow renderers.6, minor). Claimed at
-      `packages/core/src/renderer/render-input.ts:13`. PREMISE UNVERIFIED
+      `packages/core/src/renderer/render-input.ts:13`. PREMISE UNVERIFIED. READ AND TRUE 2026-10-12: each
+      renderer package exports a `Renderer` and nothing calls one; the build wires a view to
+      `renderToMarkup`. THE OWNER'S TO SETTLE, as either mend rewrites DESIGN 7; the seat's advice
+      is to take the objects and their entry point out before the first release
+      (DECISIONS 2026-10-12, "the gates are held to what they say")
 
 The command line:
 
@@ -1794,8 +1802,10 @@ Docs against code:
       read is kept, with its reason (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
 - [ ] Tutorial step 7's api sample imports ./price-feed.js, which no step creates (workflow docs.7,
       minor). Claimed at `site/docs/tutorial.html:175`. PREMISE UNVERIFIED
-- [ ] Package READMEs lag the code: cli README lists 3 of the 5 MCP registrations, root README omits
-      `perf` (workflow docs.8, minor). Claimed at `packages/cli/README.md:19`. PREMISE UNVERIFIED
+- [x] Package READMEs lag the code: cli README lists 3 of the 5 MCP registrations, root README omits
+      `perf` (workflow docs.8, minor). Claimed at `packages/cli/README.md:19`. PREMISE UNVERIFIED. READ AND
+      TRUE of both. DONE 2026-10-12: both corrected, and each held by a case that was red on the
+      README as it stood (DECISIONS 2026-10-12, "the gates are held to what they say")
 
 Tests that cannot fail:
 
@@ -1816,21 +1826,30 @@ Tests that cannot fail:
 - [x] placement cache.ttl: unit undocumented (it is milliseconds), and unlike deadline it is never
       validated at boot (workflow tests.3, minor). READ AND TRUE. DONE 2026-10-12 (DECISIONS
       2026-10-12, "where a placement may stand, by the parser's own rules")
-- [ ] Mirror gate exempts any source whose name merely ends in 'index' or 'bin', so such files need
+- [x] Mirror gate exempts any source whose name merely ends in 'index' or 'bin', so such files need
       no test (workflow tests.4, minor). Claimed at `scripts/check-mirror.mjs:66`. PREMISE
-      UNVERIFIED
+      UNVERIFIED. READ AND WATCHED 2026-10-12: the core's
+      `account-index.ts` was passed over by it. DONE 2026-10-12: an entry is known by its whole
+      name, and the self-test is held to exactly its fixture's findings
+      (DECISIONS 2026-10-12, "the gates are held to what they say")
 - [x] Identity gate regex is case-sensitive, so each of its four names passes in any other case
       of its letters (workflow tests.5, minor). Claimed at `scripts/identity-gate.sh:20`. READ AND
       WATCHED 2026-10-12: with the four written in the other case of every letter as a fixture, the
       gate's self-test refused none of them. DONE 2026-10-12: the pattern is read in any case, the
       self-test holds it to that fixture, and the one line of the tree it then refused was this
       row, which spelled them.
-- [ ] Organization gate self-test checks that each rule number fires, not each branch, so inverting
+- [x] Organization gate self-test checks that each rule number fires, not each branch, so inverting
       several checks still passes (workflow tests.6, minor). Claimed at
-      `scripts/check-organization.mjs:211`. PREMISE UNVERIFIED
-- [ ] events-context tests for React and Preact assert nothing about the claim in their title
+      `scripts/check-organization.mjs:211`. PREMISE UNVERIFIED. READ AND WATCHED 2026-10-12: three of
+      four wrong versions of the gate passed it. DONE 2026-10-12: a fixture file for every branch,
+      thirteen findings held exactly, a well-made tree held to none, and fourteen wrong versions
+      each red; the well-made tree found a `.tsx` source refused for its extension, mended
+      (DECISIONS 2026-10-12, "the gates are held to what they say")
+- [x] events-context tests for React and Preact assert nothing about the claim in their title
       (workflow tests.7, minor). Claimed at
-      `packages/renderer-react/test/client/events-context.test.tsx:9`. PREMISE UNVERIFIED
+      `packages/renderer-react/test/client/events-context.test.tsx:9`. PREMISE UNVERIFIED. READ AND TRUE of
+      both. DONE 2026-10-12: each renders a probe outside an assembly and beneath two, and fails
+      with a default written into the context (DECISIONS 2026-10-12, "the gates are held to what they say")
 
 Refuted by their own skeptics and not rows: 12, listed with the reasons in the evidence directory's `workflow-findings-index.md`.
 

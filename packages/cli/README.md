@@ -16,9 +16,9 @@ generates the typed module the built server imports, and you never open it.
 
 A new project is written for the agents that will work in it: an `AGENTS.md` that says what the
 project is and the rules its code must satisfy, a `CLAUDE.md` that brings it to Claude Code, and
-`@assemblejs/mcp` installed and registered in `.mcp.json`, `.cursor/mcp.json` and
-`.vscode/mcp.json`. `check` holds them to what the installed version writes, and `add agents`
-rewrites only what is its own in each.
+`@assemblejs/mcp` installed and registered in `.mcp.json`, `.cursor/mcp.json`,
+`.vscode/mcp.json`, `.gemini/settings.json` and `opencode.json`. `check` holds them to what the
+installed version writes, and `add agents` rewrites only what is its own in each.
 
 See <https://ayers.repair/assemblejs/>.
 

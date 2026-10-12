@@ -5,8 +5,9 @@
 // because a rule about declarations has to count declarations. Rules 1, 2, 3, 4, 6 and 7.
 //
 // Point it at a directory to check that tree instead of packages/*/src: the self-test does
-// exactly that against scripts/fixtures/organization-bad/, which is how this gate is watched
-// refusing before it is trusted.
+// exactly that against scripts/fixtures/organization-bad/, held to every finding written in its
+// findings.txt, and against scripts/fixtures/organization-good/, held to none, which is how
+// this gate is watched refusing, and not refusing, before it is trusted.
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -105,7 +106,10 @@ export function checkTree(root) {
   for (const path of sourceFiles(root)) {
     const rel = relative(process.cwd(), path);
     const file = parse(path);
-    const name = basename(path, ".ts");
+    // By whichever extension it has: read with ".ts" alone, a well-made "cart-view.tsx" was
+    // named "cart-view.tsx" and refused as not kebab-case.
+    const extension = SOURCE.exec(path)?.[0] ?? ".ts";
+    const name = basename(path, extension);
     // A bin is an executable entry, not a module: it exports nothing because nothing imports
     // it. Same category as an index, which is why both skip the one-declaration rule.
     const isEntry = name === "index" || name === "bin";
@@ -159,7 +163,9 @@ export function checkTree(root) {
     } else {
       if (!KEBAB.test(name)) fail(rel, 1, `filename "${name}" is not kebab-case`);
       const want = expectedName(declared[0]);
-      if (name !== want) fail(rel, 1, `exports ${declared[0]}, so the file is "${want}.ts"`);
+      if (name !== want) {
+        fail(rel, 1, `exports ${declared[0]}, so the file is "${want}${extension}"`);
+      }
     }
 
     // Rule 4: a sibling imports the leaf, never an index.
@@ -194,25 +200,32 @@ export function checkTree(root) {
 const isEntryPoint = import.meta.url === pathToFileURL(process.argv[1] ?? "").href;
 if (isEntryPoint) {
   if (process.argv[2] === "--self-test") {
-    const fixture = "scripts/fixtures/organization-bad";
+    // Two trees: one that holds a file for every way a rule is broken, with the findings it
+    // holds written beside it, and one that is well made. The first is held to exactly its
+    // findings and the second to none, so a check that stops refusing and one that starts
+    // refusing what is right are both watched.
+    const bad = "scripts/fixtures/organization-bad";
+    const good = "scripts/fixtures/organization-good";
+    let held;
     try {
-      statSync(fixture);
+      held = readFileSync(join(bad, "findings.txt"), "utf8").split("\n").filter(Boolean);
+      statSync(good);
     } catch {
-      console.error(`organization gate self-test FAILED: ${fixture} is missing`);
+      console.error(`organization gate self-test FAILED: ${bad} or ${good} is missing`);
       process.exit(1);
     }
-    const found = checkTree(fixture);
-    const fired = new Set(found.map((p) => p.match(/\[rule (\d)\]/)?.[1]));
-    const expected = ["1", "2", "3", "4", "6", "7"];
-    const silent = expected.filter((r) => !fired.has(r));
-    if (silent.length) {
-      console.error(
-        `organization gate self-test FAILED: rule(s) ${silent.join(", ")} did not fire`,
-      );
-      for (const p of found) console.error(`  saw: ${p}`);
+    const found = checkTree(bad).map((problem) => problem.replace(`${bad}/`, ""));
+    const unseen = held.filter((problem) => !found.includes(problem));
+    const unasked = [...found.filter((problem) => !held.includes(problem)), ...checkTree(good)];
+    if (unseen.length > 0 || unasked.length > 0) {
+      console.error("organization gate self-test FAILED: the findings are not the fixtures' own");
+      for (const problem of unseen) console.error(`  not found: ${problem}`);
+      for (const problem of unasked) console.error(`  found, and not held: ${problem}`);
       process.exit(1);
     }
-    console.log(`organization gate self-test: red on rules ${expected.join(", ")}, as required`);
+    console.log(
+      `organization gate self-test: red on each of the ${held.length} findings its fixture holds, and on nothing well made`,
+    );
     process.exit(0);
   }
 

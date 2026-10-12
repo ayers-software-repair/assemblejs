@@ -1,0 +1,13 @@
+index.ts: [rule 3] re-exports the leaf "./thing/wrong-name.js"; the surface names child indexes only
+packages/core/own-surface.ts: [rule 4] imports its own package as "@assemblejs/core"; a module imports the leaf by relative path, never the package surface
+packages/core/own-surface.ts: [rule 4] imports its own package as "@assemblejs/core/client"; a module imports the leaf by relative path, never the package surface
+thing/Shouting.ts: [rule 1] filename "Shouting" is not kebab-case
+thing/Shouting.ts: [rule 1] exports Shouting, so the file is "shouting.ts"
+thing/exports-nothing.ts: [rule 1] exports nothing; a source file that is not an index declares exactly one thing
+thing/index.ts: [rule 2] an index declares nothing, and this declares DeclaredInAnIndex
+thing/leaf-import.ts: [rule 4] imports "./index.js"; inside a package a module imports the leaf, never an index
+thing/three-forms.ts: [rule 1] exports 3 things (first, second, default); one per file
+thing/too-long.ts: [rule 7] 323 lines, ceiling is 300
+thing/two-things.ts: [rule 1] exports 2 things (One, Two); one per file
+thing/wrong-name.ts: [rule 1] exports SomethingElse, so the file is "something-else.ts"
+utils/misc-helper.ts: [rule 6] lives in a "utils" directory; a file belongs to the concept that owns it

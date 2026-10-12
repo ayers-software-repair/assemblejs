@@ -6419,3 +6419,49 @@ error's text.
   command with a dot. `create_project` over stdio in a repository holding a README and a
   `.gitignore`. And `render_assembly` answering ok with the dev record still a link out of the
   root.
+
+## 2026-10-12: the gates are held to what they say
+
+Four of the audit's rows on the gates, the tests and the READMEs (tests.4, tests.6, tests.7,
+docs.8), a file that was left behind, and one row read and left to the owner. Each premise was
+watched before it was believed, and each mend was watched refusing a wrong version of what it
+guards.
+
+- **The mirror gate passed over any file whose name ended as an entry's does** (tests.4, true).
+  It exempted a source whose path ended in `index` or `bin`, so `account-index.ts`, a file of
+  the core's outline with a function in it, needed no test. It has one; the gate never asked.
+  An entry is known by its whole name now, as the organization gate knows one. The fixture
+  holds an index at two depths and a bin, which are passed over, beside `account-index` and
+  `trash-bin`, which are not, and the self-test is held to exactly the fixture's four findings
+  where it had asked for any one of each kind. Watched red on the gate as it stood.
+- **The organization gate's self-test asked only that each rule fired once** (tests.6, true).
+  Three of four wrong versions of the gate passed it: the kebab-case check inverted, the name
+  check inverted, the check on a module importing its own package removed. The fixture holds a
+  file for every way a rule is broken now, thirteen findings written beside it in
+  `findings.txt`, and a second tree is well made and held to none, so a check that stops
+  refusing and one that starts refusing what is right are both seen. Fourteen wrong versions,
+  made in a copy and thrown away, each went red. The well-made tree found a refusal of its
+  own: a source that ends in `.tsx` was named with its extension and refused as not
+  kebab-case. No package has one today; the name is read by whichever extension the file has.
+- **Two tests asserted that a value was defined** (tests.7, true). The events context of the
+  React and the Preact renderer was said to have no default, and to be each assembly's own,
+  by a test that held only that the context existed. Each renders a probe now: outside an
+  assembly it finds nothing, and beneath two assemblies each finds its own events and not the
+  other's. With a default written into the context, both cases of both suites fail.
+- **Two READMEs had fallen behind the code** (docs.8, true). The command line's named three of
+  the five registrations a project is written with, and the repository's left `perf` out of
+  the command's verbs. Each is held by a case now, watched red first: the command line's suite
+  reads its README for every registration, and the repository's README for every verb the
+  usage lists. `CLAUDE.md` leaves `perf` out of the same list; that file is the owner's, and
+  the row that already holds its Tooling paragraph says so.
+- **`packages/.gitkeep` is gone.** It kept a directory that holds twelve packages.
+- **Read, true, and the owner's: the renderer contract nobody calls** (renderers.6). DESIGN 7
+  says a renderer's server half is a `Renderer` whose `render` is handed a `RenderInput`, and
+  each renderer package exports one. Nothing calls any of them: the build wires a view to its
+  package's `renderToMarkup`, and the `helpers` and `url` a `RenderInput` names are supplied
+  by nothing. To take the objects and their entry point out is to rewrite DESIGN 7 and the
+  published surface of seven packages; to have the build call them is to change how every
+  view is wired. Neither is a mend. The seat's advice is to take them out before the first
+  release, as the design's own rule is that nothing ships that is not used.
+- **Proof.** Each case above red before its mend, as said. Every cheap gate green, and the
+  suites of the three packages whose tests changed.

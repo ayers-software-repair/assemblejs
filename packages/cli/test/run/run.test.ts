@@ -43,6 +43,24 @@ describe("the command line", () => {
   });
 });
 
+describe("the verbs the command has", () => {
+  // The repository's README listed six after there were seven.
+  it("are each named where the repository's README says what the command does", () => {
+    const { io, logs } = fake();
+    run(["help"], io);
+    const verbs = new Set(
+      logs
+        .join("\n")
+        .split("\n")
+        .flatMap((line) => /^ {2}([a-z]+) /.exec(line)?.[1] ?? []),
+    );
+    expect([...verbs]).toEqual(["new", "add", "dev", "build", "check", "perf", "deploy"]);
+    const readme = readFileSync(new URL("../../../../README.md", import.meta.url), "utf8");
+    const said = /^- Command: .*$/m.exec(readme)?.[0] ?? "";
+    for (const verb of verbs) expect(said, verb).toContain(`\`${verb}\``);
+  });
+});
+
 describe("the verbs that read a project", () => {
   it("dispatch check, perf and deploy, each named in the usage", async () => {
     const { io, logs } = fake();

@@ -8,10 +8,11 @@
 // index.ts files are re-export surfaces with nothing of their own to exercise, so they are
 // mirrored by the package's exports gate instead and are exempt here.
 //
-// --self-test runs it against scripts/fixtures/mirror-bad/, which is missing a test and carries
-// an orphan, so both halves are watched failing.
+// --self-test runs it against scripts/fixtures/mirror-bad/, which is missing three tests and
+// carries an orphan, and is held to exactly those findings, so both halves are watched failing
+// and an entry is watched being passed over.
 import { readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { basename, join, relative } from "node:path";
 import { pathToFileURL } from "node:url";
 
 // Same hole as the organization gate had: a source file the walker cannot see needs no test.
@@ -53,8 +54,9 @@ export function checkPair(srcRoot, testRoot) {
   for (const [key, path] of [...sources].sort()) {
     // An entry point is covered by the tests of what it wires together. `bin` is exempt for the
     // same reason `index` is, and it cannot hide logic: the organization gate's rule 2 refuses
-    // any declaration in either of them.
-    if (key.endsWith("index") || key.endsWith("bin")) continue;
+    // any declaration in either of them. By its whole name, as that gate knows one: a file whose
+    // name only ends in either word, `account-index` or `trash-bin`, declares something.
+    if (["index", "bin"].includes(basename(key))) continue;
     if (!tests.has(key)) problems.push(`${path} has no ${join(testRoot, key)}.test.ts`);
   }
   for (const [key, path] of [...tests].sort()) {
@@ -76,16 +78,29 @@ if (isEntryPoint) {
       process.exit(1);
     }
     const found = checkPair(join(fixture, "src"), join(fixture, "test"));
-    const missing = found.some((p) => p.includes("has no"));
-    const orphan = found.some((p) => p.includes("mirrors no source"));
-    if (!missing || !orphan) {
+    // Every finding the fixture holds and no other. It holds an index at two depths and a bin,
+    // which are passed over, beside two files whose names only end as theirs do, which are not.
+    const untested = (name) =>
+      `${fixture}/src/thing/${name}.ts has no ${fixture}/test/thing/${name}.test.ts`;
+    const expected = [
+      untested("account-index"),
+      untested("trash-bin"),
+      untested("untested"),
+      `${fixture}/test/thing/orphan.test.ts mirrors no source file`,
+    ];
+    const unseen = expected.filter((problem) => !found.includes(problem));
+    const unasked = found.filter((problem) => !expected.includes(problem));
+    if (unseen.length > 0 || unasked.length > 0) {
       console.error(
-        "mirror gate self-test FAILED: it must catch both a missing test and an orphan",
+        "mirror gate self-test FAILED: the fixture's findings are not the ones it holds",
       );
-      for (const p of found) console.error(`  saw: ${p}`);
+      for (const problem of unseen) console.error(`  not found: ${problem}`);
+      for (const problem of unasked) console.error(`  found, and not held: ${problem}`);
       process.exit(1);
     }
-    console.log("mirror gate self-test: red on a missing test and on an orphan, as required");
+    console.log(
+      "mirror gate self-test: red on each source with no test and on an orphan, and on no entry",
+    );
     process.exit(0);
   }
 

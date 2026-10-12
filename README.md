@@ -21,7 +21,7 @@ Status: under construction on the `next` branch. Nothing is published yet.
 
 - Packages: `@assemblejs/core`, `@assemblejs/cli`, `@assemblejs/create`, `@assemblejs/devtools`,
   `@assemblejs/mcp`, one `@assemblejs/renderer-*` package per framework.
-- Command: `assemblejs` (alias `asm`): `new`, `add`, `dev`, `build`, `check`, `deploy`.
+- Command: `assemblejs` (alias `asm`): `new`, `add`, `dev`, `build`, `check`, `perf`, `deploy`.
 - Docs: https://ayers.repair/assemblejs/docs/
 - The same pages for a model to read: https://ayers.repair/assemblejs/llms.txt
 - License: Apache-2.0. See LICENSE and NOTICE.
