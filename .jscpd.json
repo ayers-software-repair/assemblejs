@@ -11,6 +11,8 @@
     "**/*.snap",
     "**/fixtures/**",
     "**/docs/**",
+    "site/*.html",
+    "site/llms*.txt",
     "**/*-lock.yaml",
     "LICENSE",
     "**/.claude/**",
