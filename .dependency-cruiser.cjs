@@ -54,6 +54,17 @@ module.exports = {
       to: { path: "^packages/cli/src/(rules|check|shape|perf|agents|commands|run|deploy)/" },
     },
     {
+      name: "the-checks-do-not-read-the-verbs",
+      severity: "error",
+      comment:
+        "The middle layer of the command line's three: what reads a project and names " +
+        "problems, the agent files' text among it, takes nothing from the verbs that call " +
+        "it. It did once: the text of the agent files took the list of renderers from the " +
+        "commands, and the verb that writes those files lived beside the text.",
+      from: { path: "^packages/cli/src/(rules|check|shape|perf|agents)/" },
+      to: { path: "^packages/cli/src/(commands|run|deploy)/" },
+    },
+    {
       name: "no-bundler-at-runtime",
       severity: "error",
       comment:

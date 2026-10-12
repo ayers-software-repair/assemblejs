@@ -7025,3 +7025,22 @@ The first move of R-2, the untangling before the command line is split in three.
 - **Left of R-2.** The other crossing, `check` taking `agentProblems` from `agents`: the
   list of renderers goes down to `discovery`, the verb that writes the agent files goes to
   `commands`, and the rule takes its second half.
+
+## 2026-10-12: the checks do not read the verbs
+
+The rest of R-2. With it no area of the command line imports one that the map puts in a
+higher package, and the split is a matter of moving directories.
+
+- **The other crossing.** `check` holds the agent files current, by `agentProblems`, and the
+  `agents` area took two things from the verbs: the list of renderers, for the text it
+  writes, and the helper of the verb `add agents`, which lived beside the text. The list of
+  renderers is a fact about a project and goes down to `discovery`, beside the list of
+  template renderers. The verb goes to `commands`, where every other verb's work is. What
+  is left in `agents` is what the files say and whether a project's say it, which goes with
+  the checks.
+- **Held by the module gate.** A second rule refuses an import from the checks' areas, the
+  agent files' text among them, into the verbs'. Watched green on the tree, and red on a
+  line added to the agent text that reads one of the commands' files.
+- **Nothing a user sees.** The package exports every name it did, and its 827 cases pass
+  unchanged. The tarball is 101,290 bytes of its 102,000, the two moves having rearranged
+  what compresses beside what: 225 more, and no limit moved.

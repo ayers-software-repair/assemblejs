@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 import { SEGMENT } from "@assemblejs/core";
 import type { ProjectProblem } from "../discovery/project-problem.js";
+import { RENDERERS } from "../discovery/renderers.js";
 import { suggestName } from "../discovery/suggest-name.js";
 import { assemblyFiles } from "./assembly-files.js";
-import { RENDERERS } from "./renderers.js";
 
 /**
  * What adding an assembly would write, or why it cannot: the files and the tag that places it,

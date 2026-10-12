@@ -15,5 +15,4 @@ export { textIn } from "./text-in.js";
 export { installedManifest } from "./installed-manifest.js";
 export { agentFiles } from "./agent-files.js";
 export { cannotRegister } from "./cannot-register.js";
-export { addAgents } from "./add-agents.js";
 export { agentProblems } from "./agent-problems.js";

@@ -1,14 +1,14 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { basename, join } from "node:path";
-import { noProject } from "../commands/no-project.js";
+import { agentFiles } from "../agents/agent-files.js";
+import { AGENT_SERVER } from "../agents/agent-server.js";
+import { cannotRegister } from "../agents/cannot-register.js";
+import { manifestOf } from "../agents/manifest-of.js";
+import { textIn } from "../agents/text-in.js";
 import type { Io } from "../io/io.js";
 import { outsideProblems } from "../root/outside-problems.js";
-import { agentFiles } from "./agent-files.js";
-import { AGENT_SERVER } from "./agent-server.js";
-import { cannotRegister } from "./cannot-register.js";
-import { manifestOf } from "./manifest-of.js";
-import { textIn } from "./text-in.js";
+import { noProject } from "./no-project.js";
 
 /**
  * The `add agents` command: gives a project the agent instructions and registrations a new one

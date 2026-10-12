@@ -13,7 +13,7 @@ this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a
 (1) a Svelte view types what it is handed, found by Svelte's own checker, DONE;
 (2) the command line's package is split in three, `cli`, `build` and `check`, before the
 TypeScript setup is built, what would make one of the three depend on another the wrong way
-untangled first; (3) the build writes the TypeScript setup, so that no file of a user's
+untangled first, WHICH IS DONE (R-2), the cutting itself being R-3; (3) the build writes the TypeScript setup, so that no file of a user's
 needs a line saying whose JSX it is, and it lands in `build`; (4) a gate holds every example
 to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT: the two new
 packages' limits go to him with their measures. What follows is the state the audit left.
@@ -2051,7 +2051,7 @@ rows are taken in this order; each is a bite with its own proof and its own push
       says what is handed, the scaffold types its props, the eight views and fixtures type
       theirs, and Svelte's checker finds nothing in the examples
       (DECISIONS 2026-10-12, "a Svelte view types what it is handed")
-- [ ] R-2 What would make one of the three packages depend on another the wrong way,
+- [x] R-2 What would make one of the three packages depend on another the wrong way,
       untangled before anything moves. First the map of which area goes to which package;
       then each import that crosses a line of that map upward. Two areas that import each
       other and stay in one package are left alone. Counted 2026-10-12 from the imports in
@@ -2070,7 +2070,8 @@ rows are taken in this order; each is a bite with its own proof and its own push
       `agents/add-agents.ts`, the verb, to `commands`; (d) the rule, watched refusing an
       import made the wrong way. DONE 2026-10-12 of (a), and of (d) its first half, the
       build's areas held from the checks' and the verbs' (DECISIONS 2026-10-12, "the build
-      does not read the checks"). LEFT: (b), (c), and the rule's second half
+      does not read the checks"). DONE the same day of (b), (c) and the rule's second half
+      (DECISIONS 2026-10-12, "the checks do not read the verbs")
 - [ ] R-3 `@assemblejs/build` and `@assemblejs/check` cut from `@assemblejs/cli`: `cli` keeps
       the verbs, `build` turns a project into a server, `check` reads a project and names
       problems; the agent surface and `create` take from the two what they took from the
@@ -2094,6 +2095,16 @@ rows are taken in this order; each is a bite with its own proof and its own push
       prerelease, `@assemblejs/build` and `@assemblejs/check`; `CLAUDE.md`'s twelve packages
       and its list of them, which the seat does not edit; and whose word raises or sets a
       size limit, which he answered with the split and which stands for the next time
+- [ ] One script for the owner's npm step, promised him 2026-10-12 when he asked why the step
+      is his: the first publish of each of the fourteen names and the trust setting for
+      each, under one prompt for his second factor. What it rests on, read that day: npm
+      sets a trusted publisher on a package's own settings, the package "must already exist
+      on the npm registry", the setting needs write access and a second factor and takes no
+      token that passes it by, and a new setting must see its first publish within two days
+      (npm's pages on trusted publishers and on `npm trust`). None of the names is on npm:
+      `@assemblejs/core` and `@assemblejs/cli` answer 404. BEFORE IT IS WRITTEN: read the
+      release's own publish step and the row on the first publish, so that his hand and the
+      release do not both publish one version
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

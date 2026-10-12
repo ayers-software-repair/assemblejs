@@ -1,15 +1,15 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { resolve } from "node:path";
-import { addAgents } from "../agents/add-agents.js";
 import { buildProject } from "../build/build-project.js";
 import { runCheck } from "../check/run-check.js";
+import { addAgents } from "../commands/add-agents.js";
 import { addAssembly } from "../commands/add-assembly.js";
 import { newProject } from "../commands/new-project.js";
 import { ownVersion } from "../commands/own-version.js";
-import { RENDERERS } from "../commands/renderers.js";
 import { runDeploy } from "../deploy/run-deploy.js";
 import { runDev } from "../dev/run-dev.js";
+import { RENDERERS } from "../discovery/renderers.js";
 import type { Io } from "../io/io.js";
 import { runPerf } from "../perf/run-perf.js";
 import { readArguments } from "./read-arguments.js";
