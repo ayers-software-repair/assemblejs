@@ -1,9 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { basename, join, resolve } from "node:path";
+import { basename, isAbsolute, join, resolve } from "node:path";
 import { addAgents } from "../agents/add-agents.js";
 import { buildProject } from "../build/build-project.js";
 import { runCheck } from "../check/run-check.js";
+import { ownVersion } from "../commands/own-version.js";
 import { planAssembly } from "../commands/plan-assembly.js";
 import { projectFiles } from "../commands/project-files.js";
 import { PROJECT_NAME } from "../commands/project-name.js";
@@ -13,6 +14,7 @@ import { runDev } from "../dev/run-dev.js";
 import { suggestName } from "../discovery/suggest-name.js";
 import type { Io } from "../io/io.js";
 import { runPerf } from "../perf/run-perf.js";
+import { readArguments } from "./read-arguments.js";
 
 const USAGE = `assemblejs <command>
 
@@ -28,7 +30,9 @@ const USAGE = `assemblejs <command>
   deploy                       build, then write deploy/: dist and its dependencies
 
   --renderer   one of: ${RENDERERS.join(", ")}   (default html)
-  --cwd        where to work (default: here)`;
+  --cwd        where to work (default: here)
+  --version    say which version this is, and stop
+  --help       say this, and stop`;
 
 /**
  * The whole command line, as a function of its arguments and its io.
@@ -41,18 +45,19 @@ const USAGE = `assemblejs <command>
  * command that waits on the bundler returns it as a promise.
  */
 export function run(argv: readonly string[], io: Io): number | Promise<number> {
-  const flags = new Map<string, string>();
-  const positional: string[] = [];
-  for (let index = 0; index < argv.length; index += 1) {
-    const argument = argv[index] as string;
-    if (argument.startsWith("--")) {
-      flags.set(argument.slice(2), argv[index + 1] ?? "");
-      index += 1;
-    } else positional.push(argument);
+  const { flags, positional, problem } = readArguments(argv);
+  if (problem !== undefined) {
+    io.error(problem);
+    io.error(USAGE);
+    return 2;
   }
   const cwd = flags.get("cwd") ?? ".";
   const [command, ...rest] = positional;
 
+  if (flags.has("version")) {
+    io.log(ownVersion(import.meta.url));
+    return 0;
+  }
   if (command === undefined || command === "help" || flags.has("help")) {
     io.log(USAGE);
     return command === undefined ? 2 : 0;
@@ -82,16 +87,17 @@ function newProject(directory: string | undefined, cwd: string, io: Io): number 
     io.error(`"${name}" cannot name a package; lower case with hyphens: try ${suggestName(name)}`);
     return 2;
   }
-  const root = join(cwd, directory);
+  // An absolute directory is where it says; any other is beneath where the command works.
+  const root = isAbsolute(directory) ? directory : join(cwd, directory);
   if (io.exists(root)) {
     io.error(`${directory} already exists`);
     return 1;
   }
-  for (const [path, contents] of Object.entries(projectFiles(name))) {
+  const manager = (process.env["npm_config_user_agent"] ?? "npm").split("/")[0] ?? "npm";
+  for (const [path, contents] of Object.entries(projectFiles(name, manager))) {
     io.write(join(root, path), contents);
     io.log(`wrote ${join(directory, path)}`);
   }
-  const manager = (process.env["npm_config_user_agent"] ?? "npm").split("/")[0] ?? "npm";
   io.log(`\n  cd ${directory}\n  ${manager} install\n  ${manager} run dev`);
   return 0;
 }
@@ -102,11 +108,11 @@ function addAssembly(rest: readonly string[], renderer: string, cwd: string, io:
     io.error(`add what? try: assemblejs add assembly <name>, or assemblejs add agents`);
     return 2;
   }
-  const plan = planAssembly(
-    name ?? "",
-    renderer,
-    io.exists(join(cwd, "src", "assemblies", name ?? "")),
-  );
+  if (name === undefined || name === "") {
+    io.error("add assembly needs a name: assemblejs add assembly <name>");
+    return 2;
+  }
+  const plan = planAssembly(name, renderer, io.exists(join(cwd, "src", "assemblies", name)));
   if ("problem" in plan) {
     io.error(`${plan.problem.message}: ${plan.problem.fix}`);
     return plan.usage ? 2 : 1;

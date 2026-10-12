@@ -1254,10 +1254,13 @@ a spec watched red first, or struck with its reason.
       `.assemblejs/client/broken.ts:10 Unexpected token` with a svelte.dev address, for
       `src/assemblies/broken/broken.svelte` holding `<p>{</p>` (found 2026-10-11, in the dev log of
       the fixed loop)
-- [ ] A new project's first page is not styled as a page: `tokens.css` and `components.css` set
+- [x] A new project's first page is not styled as a page: `tokens.css` and `components.css` set
       roles and classes and nothing on `body`, so the page is white, black and Times New Roman, and
       in the dark scheme the tokens flip beneath it: a dark notice on a white page, and a link in
-      the light accent on white. No `color-scheme` is declared. Seen in Chrome
+      the light accent on white. No `color-scheme` is declared. Seen in Chrome. DONE 2026-10-11: the
+      tokens declare `color-scheme: light dark` and the components open with a `body` rule in the
+      tokens' ground, ink and type; specs watched red (DECISIONS 2026-10-11, "the starter and the
+      arguments")
 - [ ] A new project has no `tsconfig.json`: the compiler's defaults give "Cannot use JSX unless the
       '--jsx' flag is provided" on every `.tsx` view, no types for React (the documented install
       line names no `@types/react`) or for node, and the generated `.assemblejs/assemblies.ts`
@@ -1285,9 +1288,11 @@ a spec watched red first, or struck with its reason.
 - [ ] The repository's own harnesses leak servers: three `node dist/server.js`, two from conformance
       runs and one from the command line suite's dev spec, were still listening eleven to twelve
       hours after their runs, orphaned. Which path fails to stop them is not yet found
-- [ ] The command line cannot say its version: `--version`, `-v` and `version` are each an unknown
-      command
-- [ ] `add assembly` with no name answers: "" is not a usable assembly name, call it "assembly"
+- [x] The command line cannot say its version: `--version`, `-v` and `version` are each an unknown
+      command. DONE 2026-10-11: `--version` and `-v` print the version its package.json holds
+      (DECISIONS 2026-10-11, "the starter and the arguments")
+- [x] `add assembly` with no name answers: "" is not a usable assembly name, call it "assembly".
+      DONE 2026-10-11: it says a name is needed, with the command
 - [ ] `add assembly --renderer svelte` does not say the renderer's packages are not installed;
       `check` and the dev log do
 - [ ] `packages/.gitkeep` is tracked and the directory holds twelve packages
@@ -1411,12 +1416,16 @@ The command line:
 - [ ] `add assembly` writes through a symlinked src/assemblies out of the project, and crashes with
       a stack trace on a dangling link (workflow cli-verbs.5, major, disputed by one of its
       refuters). Claimed at `packages/cli/src/run/run.ts:115`. PREMISE UNVERIFIED
-- [ ] `--flag=value` is not parsed: `--cwd=dir` and `--renderer=react` are silently ignored and
+- [x] `--flag=value` is not parsed: `--cwd=dir` and `--renderer=react` are silently ignored and
       swallow the next argument (workflow cli-verbs.6, major). Claimed at
-      `packages/cli/src/run/run.ts:49`. PREMISE UNVERIFIED
-- [ ] `new` with an absolute path creates the project nested under the current directory and logs
+      `packages/cli/src/run/run.ts:49`. PREMISE UNVERIFIED. READ at `run/run.ts:45-52` AND
+      REPRODUCED by the seat in a red spec. DONE 2026-10-11: `readArguments` reads a flag written
+      apart or with an equals, takes a switch as itself, and refuses a flag nobody knows or one left
+      without its value (DECISIONS 2026-10-11, "the starter and the arguments")
+- [x] `new` with an absolute path creates the project nested under the current directory and logs
       the wrong location (workflow cli-verbs.7, major). Claimed at `packages/cli/src/run/run.ts:85`.
-      PREMISE UNVERIFIED
+      PREMISE UNVERIFIED. READ at `run/run.ts:85` AND REPRODUCED by the seat in a red spec. DONE
+      2026-10-11: an absolute directory is where it says
 - [ ] `add assembly` / `add agents` run in a mistyped --cwd or a non-project directory create
       directories and report success (workflow cli-verbs.8, minor). Claimed at
       `packages/cli/src/run/run.ts:99`. PREMISE UNVERIFIED
@@ -1469,12 +1478,17 @@ The agent surface:
 
 Packaging:
 
-- [ ] `new` with an absolute directory writes the project under the current directory, and reports
+- [x] `new` with an absolute directory writes the project under the current directory, and reports
       the absolute path as written (workflow packaging.1, major). Claimed at
-      `packages/cli/src/run/run.ts:96`. PREMISE UNVERIFIED
-- [ ] A freshly scaffolded project cannot `pnpm install` on pnpm 11: esbuild's postinstall is
+      `packages/cli/src/run/run.ts:96`. PREMISE UNVERIFIED. The same defect as workflow cli-verbs.7,
+      read and reproduced by the seat. DONE 2026-10-11 with it
+- [x] A freshly scaffolded project cannot `pnpm install` on pnpm 11: esbuild's postinstall is
       unapproved and the scaffold carries no allowBuilds (workflow packaging.2, major). Claimed at
-      `packages/cli/src/commands/project-files.ts:25`. PREMISE UNVERIFIED
+      `packages/cli/src/commands/project-files.ts:25`. PREMISE UNVERIFIED. REPRODUCED by the seat
+      with pnpm 11.4.0 on a project from the tarballs: `ERR_PNPM_IGNORED_BUILDS` for esbuild and
+      exit 1. DONE 2026-10-11: a project made by pnpm is written a `pnpm-workspace.yaml` that rules
+      esbuild's script out; with it the same install exits 0 and the installed command builds
+      (DECISIONS 2026-10-11, "the starter and the arguments")
 - [ ] site/install.html says `npm install` in a new project installs "the one renderer your first
       assembly uses", but the scaffold has none (workflow packaging.4, minor). Claimed at
       `site/install.html:32`. PREMISE UNVERIFIED
@@ -1484,9 +1498,10 @@ Packaging:
 
 Docs against code:
 
-- [ ] `assemblejs new <absolute path>` writes the project under the current directory, then tells
+- [x] `assemblejs new <absolute path>` writes the project under the current directory, then tells
       you to cd to the absolute path (workflow docs.1, major). Claimed at
-      `packages/cli/src/run/run.ts:87`. PREMISE UNVERIFIED
+      `packages/cli/src/run/run.ts:87`. PREMISE UNVERIFIED. The same defect as workflow cli-verbs.7,
+      read and reproduced by the seat. DONE 2026-10-11 with it
 - [ ] install.html 'Add it to a project you already have' leaves a project that cannot build or run,
       and never says what is missing (workflow docs.2, major). Claimed at `site/install.html:42`.
       PREMISE UNVERIFIED

@@ -33,4 +33,20 @@ describe("the components a new project starts with", () => {
     expect(/\b(rgb|hsl|oklch)\(/.test(COMPONENTS)).toBe(false);
     expect(COMPONENTS.match(/var\(--/g)?.length ?? 0).toBeGreaterThan(30);
   });
+
+  // Found 2026-10-11, in a browser: nothing styled the page itself. It was white, black and
+  // Times New Roman, and in the dark scheme a dark notice stood on it with a link in the light
+  // accent on white.
+  it("style the page itself from the tokens: its ground, its ink and its type", () => {
+    const body = /\nbody \{\n([^}]*)\}/.exec(COMPONENTS)?.[1] ?? "";
+    for (const declared of [
+      "background: var(--surface);",
+      "color: var(--ink);",
+      "font-family: var(--face-text);",
+      "font-size: var(--text-2);",
+      "margin: 0;",
+    ]) {
+      expect(body, declared).toContain(declared);
+    }
+  });
 });

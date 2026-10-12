@@ -27,4 +27,10 @@ describe("the tokens a new project starts with", () => {
     expect(TOKENS).toContain("@media (prefers-color-scheme: dark)");
     expect(TOKENS.trimStart().startsWith("/*")).toBe(true);
   });
+
+  // Found 2026-10-11, in a browser set to the dark scheme: the tokens flipped and the browser's
+  // own surface, its scrollbars and its form controls did not.
+  it("say the page is made for both schemes, so what the browser draws follows the tokens", () => {
+    expect(TOKENS).toContain(":root {\n  color-scheme: light dark;");
+  });
 });
