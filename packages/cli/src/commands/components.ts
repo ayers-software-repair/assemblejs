@@ -2,13 +2,26 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /**
- * The components a new project starts with: the elements HTML already has, each a class and the
- * tokens, with its focus ring and its states, in one stylesheet every page links after the
- * tokens (DESIGN 10). A value in it is a token or a plain length; no colour is written here.
+ * The components a new project starts with: the page itself, its ground, its ink and its type,
+ * and then the elements HTML already has, each a class and the tokens, with its focus ring and
+ * its states, in one stylesheet every page links after the tokens (DESIGN 10). A value in it is
+ * a token or a plain length; no colour is written here.
  */
 export const COMPONENTS = `/* The project's components: the elements HTML already has, each a class and the tokens, with
    its focus ring and its states. Every kind of view writes HTML, so every one of them can use
    these; what makes each usable is the browser's own. Values come from src/tokens.css alone. */
+
+/* The page itself, in the tokens' ground, ink and type, so what is written on it reads in both
+   schemes before any assembly is styled. */
+body {
+  margin: 0;
+  padding: var(--space-3);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--face-text);
+  font-size: var(--text-2);
+  line-height: 1.5;
+}
 
 .button,
 button {

@@ -5,6 +5,7 @@ import { MCP_REGISTRATIONS } from "../agents/mcp-registrations.js";
 import { COMPONENTS } from "./components.js";
 import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";
+import { PNPM_SETTINGS } from "./pnpm-settings.js";
 import { TOKENS } from "./tokens.js";
 
 /**
@@ -13,9 +14,10 @@ import { TOKENS } from "./tokens.js";
  * Its manifest depends on the version of the command line that wrote it, so a project made by a
  * prerelease installs from the channel that made it. It is written for the agents that will
  * work in it too: what the project is and its rules, and its agent surface installed and
- * registered.
+ * registered. One made by pnpm carries pnpm's ruling on the one install script among its
+ * dependencies, without which pnpm fails its first install.
  */
-export function projectFiles(name: string): Readonly<Record<string, string>> {
+export function projectFiles(name: string, manager = "npm"): Readonly<Record<string, string>> {
   const range = `^${ownVersion(import.meta.url)}`;
   // The README names each registration the project is written with, as the instructions do.
   const registered = MCP_REGISTRATIONS.map((registration) => `\`${registration.path}\``);
@@ -70,5 +72,6 @@ server lists four prompts, which Claude Code and VS Code show as commands: add a
 place one, make a page, fix what \`check\` finds.
 `,
     ...agentFiles(name).files,
+    ...(manager === "pnpm" ? { "pnpm-workspace.yaml": PNPM_SETTINGS } : {}),
   };
 }

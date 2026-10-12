@@ -6,6 +6,7 @@ export { pageDocument } from "./page-document.js";
 export { TOKENS } from "./tokens.js";
 export { COMPONENTS } from "./components.js";
 export { PROJECT_NAME } from "./project-name.js";
+export { PNPM_SETTINGS } from "./pnpm-settings.js";
 export { projectFiles } from "./project-files.js";
 export { assemblyFiles } from "./assembly-files.js";
 export { planAssembly } from "./plan-assembly.js";

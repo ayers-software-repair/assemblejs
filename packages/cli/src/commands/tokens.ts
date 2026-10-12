@@ -8,8 +8,11 @@
  */
 export const TOKENS = `/* The project's tokens: the roles every assembly's stylesheet reads, declared once at :root and
    inherited everywhere, a shadow root included. Change the values here and nowhere else; the
-   names stay. The values a new project starts with are placeholders that pass their contrast. */
+   names stay. The values a new project starts with are placeholders that pass their contrast.
+   Both schemes are declared, so what the browser draws itself, its canvas, its scrollbars and
+   its form controls, follows the scheme the tokens are in. */
 :root {
+  color-scheme: light dark;
   --surface: #fbfaf7;
   --surface-panel: #efece4;
   --border: #ddd7c9;

@@ -5451,3 +5451,41 @@ this tree and the scratch shop of thirteen assemblies installed from them. It bu
 5.4 s where it took 20. Under `dev`, eight saves 0.4 s apart and then a Svelte view that does
 not parse left the page and its script answering 200 at every probe, logged one "the last good
 build is still running", kept the record, and built once when the view was removed.
+
+## 2026-10-11: the starter and the arguments
+
+What a stranger meets first, each found by being one.
+
+- **The first page was not a page.** `tokens.css` set the roles and `components.css` the
+  classes, and nothing styled `body`: the page was white, black and Times New Roman, and in a
+  browser set to the dark scheme the tokens flipped beneath it, a dark notice on a white page
+  with its link in the light accent. The components open with the page itself now, its ground,
+  its ink and its type from the tokens, and the tokens declare `color-scheme: light dark`, so
+  what the browser draws, its canvas, scrollbars and form controls, follows them (MDN,
+  `color-scheme`, read 2026-10-11: "To opt the entire page into the user's color scheme
+  preferences, declare `color-scheme` on the `:root` element").
+- **The arguments were not read.** Every `--flag` took the next word for its value, whatever
+  the flag: `--cwd=shop` was a flag named `cwd=shop` that swallowed a word, a mistyped
+  `--render react` was kept in silence and the assembly written as plain html, and `--version`
+  was an unknown command. `readArguments` knows the two flags that take a value and the two
+  switches; a flag is read written apart or with an equals; a flag nobody knows, one left
+  without its value and a switch handed one are each refused with the usage, exit 2.
+  `--version` and `-v` print the version the package's own manifest holds.
+- **`new` with an absolute directory** joined it beneath where the command ran and then said to
+  `cd` to the absolute one, three findings of the workflow on one line. It is where it says.
+- **pnpm 11 failed a fresh project's first install.** pnpm refuses an install while a
+  dependency's install script has not been ruled on (pnpm.io/settings/build, read 2026-10-11:
+  `strictDepBuilds`, default true, "the installation will exit with a non-zero exit code if any
+  dependencies have unreviewed build scripts"; the ruling is `allowBuilds` in
+  `pnpm-workspace.yaml`, which replaced the older keys in v11). Seen here with pnpm 11.4.0:
+  `ERR_PNPM_IGNORED_BUILDS` for esbuild, exit 1, and every `pnpm exec` after it refused. A
+  project made by pnpm is written the ruling, `esbuild: false`: the build reaches the bundler's
+  binary without its script, so nothing runs that is not needed. With it the same install
+  exits 0 and the installed command builds. A project made by npm is not written pnpm's file.
+- **The command line's tarball budget moves from 88000 to 94000.** Measured at 90,598 bytes
+  after this entry and the one above: the dev loop's three modules, the argument reader, the
+  starter's page rule. `ci` 38195380554 went red on it at 89,168, on the commit above, with
+  every spec green; this is the fix forward.
+- **Not in this entry, and rows:** a new project's `tsconfig.json` and the types a TypeScript
+  view needs; what the starter's guide link names, which is the owner's; and the hint that
+  `add assembly` could give when a renderer's packages are not installed.

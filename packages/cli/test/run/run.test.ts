@@ -35,15 +35,11 @@ describe("the command line", () => {
     }
   });
 
-  it("prints usage and fails when given nothing", () => {
+  it("prints usage and fails when given nothing, and succeeds when asked for help", () => {
     const { io, logs } = fake();
     expect(run([], io)).toBe(2);
     expect(logs.join()).toContain("assemblejs <command>");
-  });
-
-  it("prints usage and succeeds when asked for help", () => {
-    const { io } = fake();
-    expect(run(["help"], io)).toBe(0);
+    expect(run(["help"], fake().io)).toBe(0);
   });
 });
 
@@ -125,6 +121,35 @@ describe("new", () => {
     expect(run(["new"], io)).toBe(2);
     expect(errors.join()).toContain("needs a directory");
   });
+
+  // Found 2026-10-11: an absolute directory was joined beneath where the command ran.
+  it("writes into an absolute directory where it says, not beneath where it ran", () => {
+    const { io, written, logs } = fake();
+    const directory = join(tmpdir(), "target", "my-app");
+    expect(run(["new", directory, "--cwd", join(tmpdir(), "ran-in")], io)).toBe(0);
+    expect(written.has(`${directory.replaceAll("\\", "/")}/package.json`)).toBe(true);
+    expect([...written.keys()].some((path) => path.includes("ran-in"))).toBe(false);
+    expect(logs.join("\n")).toContain(`cd ${directory}`);
+  });
+});
+
+describe("the command line's own flags", () => {
+  // Found 2026-10-11: --version was an unknown command, and an unknown flag was kept in silence.
+  it("says its version and stops, and refuses what it cannot read with the usage", () => {
+    const manifest = fileURLToPath(new URL("../../package.json", import.meta.url));
+    const own = JSON.parse(readFileSync(manifest, "utf8")) as { version: string };
+    for (const argv of [["--version"], ["-v"], ["--version", "build"]]) {
+      const { io, logs, written } = fake();
+      expect(run(argv, io)).toBe(0);
+      expect(logs).toEqual([own.version]);
+      expect(written.size).toBe(0);
+    }
+    const { io, written, errors } = fake();
+    expect(run(["add", "assembly", "cart", "--render", "react"], io)).toBe(2);
+    expect(written.size).toBe(0);
+    expect(errors[0]).toMatch(/no flag --render/);
+    expect(errors.join("\n")).toContain("--version");
+  });
 });
 
 describe("add agents", () => {
@@ -172,6 +197,13 @@ describe("add assembly", () => {
     const { io, written } = fake();
     run(["add", "assembly", "cart"], io);
     expect([...written.keys()]).toContain("src/assemblies/cart/cart.html");
+  });
+
+  it('needs a name, and says so in those words, where it said "" is not a usable one', () => {
+    const { io, written, errors } = fake();
+    expect(run(["add", "assembly"], io)).toBe(2);
+    expect(written.size).toBe(0);
+    expect(errors.join()).toContain("add assembly needs a name");
   });
 
   it("refuses a name that could never be an assembly", () => {
