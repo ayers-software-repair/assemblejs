@@ -15,8 +15,11 @@ this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a
 TypeScript setup is built, what would make one of the three depend on another the wrong way
 untangled first, WHICH IS DONE (R-2), the cutting itself being R-3; (3) the build writes the TypeScript setup, so that no file of a user's
 needs a line saying whose JSX it is, and it lands in `build`; (4) a gate holds every example
-to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT: the two new
-packages' limits go to him with their measures. What follows is the state the audit left.
+to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT ALONE: the two new
+packages' limits are set by his rule of the same day, the measure and a tenth more, and a
+later raise wants the lead's yes first. HE THEN ANSWERED NINE MORE, asked one at a time: R-6
+to R-12 of Phase 7 are rows of work the seat owns now, and the same phase lists what was not
+asked. What follows is the state the audit left.
 
 THE AUDIT WAS THE WORK BEFORE IT (owner, 2026-10-11 evening; DECISIONS 2026-10-11, "the audit"). He
 did not believe the framework was complete, and it was not. Read, in this order:
@@ -1277,6 +1280,8 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       owner's own word, or his hand (found 2026-10-11). Its Words paragraph also lists the
       command's verbs without `perf`, as the repository's README did until 2026-10-12; the same
       hand mends it
+      RULED 2026-10-12: the seat may correct three facts in it, the count of packages, where
+      the browser proof runs, and the verbs, each in the commit that makes it true
 
 ## Phase 6: the audit of 2026-10-11, the owner's order
 
@@ -1366,6 +1371,7 @@ a spec watched red first, or struck with its reason.
       the whole job (reads the config, builds, listens, says where, and on a refusal prints its
       sentences and exits 1) would bring the file back to the two lines DESIGN shows, and is a
       new public word. THE OWNER'S TO SETTLE; the seat's advice is the call in the core
+      RULED 2026-10-12: one start call in the core (Phase 7, R-9)
 - [x] A Svelte view that does not parse is reported at the generated module and not at the view:
       `.assemblejs/client/broken.ts:10 Unexpected token` with a svelte.dev address, for
       `src/assemblies/broken/broken.svelte` holding `<p>{</p>` (found 2026-10-11, in the dev log of
@@ -1395,6 +1401,7 @@ a spec watched red first, or struck with its reason.
       starter writes a `tsconfig.json` and installs `typescript` and `@types/node` (4 packages,
       6.3 MB; and a project type-checks only after a build, `.assemblejs/` being generated and
       not committed, which is what a script for it must run first) (DECISIONS 2026-10-12, "the modules the build generates type-check")
+      RULED 2026-10-12 of what a new project installs: ready by default (Phase 7, R-4)
 - [x] A view that types its data, `AssemblyProps<Offer>`, as the site's pages say to, is refused by
       its renderer's `renderToMarkup` and `hydrate` in the modules the build generates (found
       2026-10-12, type-checking the showcase). DONE the same day, in the React, Preact, Solid
@@ -1426,6 +1433,7 @@ a spec watched red first, or struck with its reason.
       from an api and from a service, plain and async, still refuses a `Date`, a function, a
       `bigint` and a bare `undefined`, and refuses an `interface` as today's does (DECISIONS
       2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
+      RULED 2026-10-12: the type takes it (Phase 7, R-6)
 - [ ] The size limits on the packages hold nothing while the seat that goes over one raises
       it. Said by a reader of the report 2026-10-12, true, and more than was said. Since
       2026-10-11 the limits in `scripts/size-budgets.json` were raised 20 times in 19 commits,
@@ -1444,10 +1452,13 @@ a spec watched red first, or struck with its reason.
       set once more, with the room he chooses, at the first prerelease. UNTIL HE RULES, THE
       SEAT RAISES NONE: a change that goes over waits on this row with its measure
       (DECISIONS 2026-10-12, "a limit raised by the seat that went over it")
+      RULED 2026-10-12 (Phase 7, the rule of limits): a new package, or one just split, takes its
+      measure and a tenth more; a later raise wants the lead's yes first, and is named to him
 - [ ] Every module the build generates into a project is headed with Ayers Electronics'
       copyright line, beside the line that says it is generated
       (`packages/cli/src/generate/generated-header.ts`). An identity string in a file made of the
       project's own directories: THE OWNER'S (found 2026-10-12)
+      RULED 2026-10-12: the line comes off generated files (Phase 7, R-7)
 - [ ] The starter's hello page links `https://www.assemblejs.com/next/docs/tutorial.html`
       (`commands/project-files.ts:51`), which answers 404 until the owner launches the domain, and
       says `/next/` whatever the channel; five conformance assertions pin the address. Each
@@ -1476,6 +1487,7 @@ a spec watched red first, or struck with its reason.
 - [ ] A dynamic route cannot answer 404: `/product/nope-99` is a 200, because a service returns data
       and nothing lets it or the page say not found. `/products/` with a trailing slash is a 404
       where `/products` is a 200. Neither is in DESIGN: the owner's to settle
+      RULED 2026-10-12: a service can say not found (Phase 7, R-12)
 - [x] The repository's own harnesses leak servers: three `node dist/server.js`, two from conformance
       runs and one from the command line suite's dev spec, were still listening eleven to twelve
       hours after their runs, orphaned. Which path fails to stop them is not yet found. READ AND MEASURED
@@ -1677,6 +1689,7 @@ The browser runtime:
       another. NOT A DEFECT TO FIX UNASKED: the way to opt in is a public surface. The seat's advice
       is `events.keep(topic)`; a key in the project's config is the other way. THE OWNER'S
       (DECISIONS 2026-10-11, "the mark that says an assembly is live is written when it is").
+      RULED 2026-10-12: `events.keep(topic)` (Phase 7, R-11)
 - [x] A valid-JSON island that is not an object (null) makes start() throw and aborts mounting of
       every later assembly (workflow client.5, minor). Claimed at
       `packages/core/src/client/start.ts:98`. PREMISE UNVERIFIED. READ at `client/read-island.ts`,
@@ -1721,6 +1734,7 @@ The renderers:
       `renderToMarkup`. THE OWNER'S TO SETTLE, as either mend rewrites DESIGN 7; the seat's advice
       is to take the objects and their entry point out before the first release
       (DECISIONS 2026-10-12, "the gates are held to what they say")
+      RULED 2026-10-12: it comes out (Phase 7, R-8)
 
 The command line:
 
@@ -2007,6 +2021,7 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       the most the design would move to before anything mounts; beside it, the entry and what
       it imports before it runs are 22,462 bytes, 9,317 gzipped
       (DECISIONS 2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
+      RULED 2026-10-12: each bundle brings its own (Phase 7, R-10)
 - [x] FOUND BY THE SHOWCASE: a Lit view that renders nothing fell back when placed from another
       server. Lit's server render writes `<?>` for an empty template, and the reader of a
       remote's answer refused it. DONE 2026-10-12: `<?` is read as the comment the browser
@@ -2079,7 +2094,10 @@ rows are taken in this order; each is a bite with its own proof and its own push
       release's list of packages, the reference, the READMEs, DESIGN. THE TWO NEW LIMITS ARE
       THE OWNER'S: the seat brings each package's measure and sets none
 - [ ] R-4 The build writes the TypeScript setup into `.assemblejs/`, and the starter a root
-      `tsconfig.json` that names it, so no file needs a line saying whose JSX it is. One
+      `tsconfig.json` that names it, so no file needs a line saying whose JSX it is. A NEW
+      PROJECT IS READY BY DEFAULT (owner, 2026-10-12): the starter also lists `typescript`
+      and Node's types as development dependencies, 4 packages and 6.3 MB, and `check` names
+      React's types when a project has a React view and lacks them. One
       project for each owner of JSX, whose a file is decided once, by the build's own
       definition; no project written with nothing in it; a `.tsx` outside every assembly
       written into the project of what imports it. Tried by hand first, 2026-10-12: ten
@@ -2091,6 +2109,32 @@ rows are taken in this order; each is a bite with its own proof and its own push
       the Vue views and Svelte's over the Svelte ones. React's types in the seven examples
       that hold a React view; the two checkers as development dependencies of this
       repository only
+- [ ] THE RULE OF LIMITS (owner, 2026-10-12, "Size plus 10%, avp approves raises"): a new
+      package, or one just split, has its limit set by the seat at its measured size and a
+      tenth more; any later raise wants the lead's yes before it lands, with the measure and
+      what the bytes bought, and is named in the report to the owner. To do with it: the
+      three limits after the split, set by this rule in R-3
+- [ ] R-6 What a handler returns may leave a member out: the type takes an api or a service
+      that answers one of two shapes. Tried as a type first (DECISIONS 2026-10-12, "the
+      seat's advice on a handler's return tried"). An `interface` is still refused: one
+      sentence for the guide, the site seat's
+- [ ] R-7 The copyright line comes off every file the build generates into a project; the
+      line that says a file is generated stays (`build/src/generate/generated-header.ts`)
+- [ ] R-8 The `Renderer` and `RenderInput` objects nothing calls come out of every renderer
+      package and the core, with their entry point, and DESIGN 7 says what the build does
+- [ ] R-9 One start call in the core: it reads the config, starts the server, says where it
+      listens, and on a refusal prints the plain sentences and exits 1. The starter's, the
+      examples' and the README's server files go back to the two lines DESIGN shows
+- [ ] R-10 Each bundle brings its own Lit: a page of Lit assemblies from two servers has
+      each server's elements updated by its own copy, whichever loads last. Measure which
+      pages then load Lit's runtime before anything mounts (3,936 bytes gzipped)
+- [ ] R-11 `events.keep(topic)`: an assembly says which topic keeps its last message
+- [ ] R-12 A service can say the thing does not exist, and the page answers 404 with the
+      project's not-found page; an address with a trailing slash answers as the one without
+- [ ] NOT ASKED 2026-10-12, each wanting a measure or being his launch: two servers on one
+      page (FINDINGS 35 to 37); what a `perf` budget holds of mounting, and a value for a
+      route's parameter; the agent surface's 90 packages and whether its SDK is bundled;
+      what the starter's guide link names; the first prerelease
 - [ ] THE OWNER'S, from the rulings: two package names to set up on npm before the first
       prerelease, `@assemblejs/build` and `@assemblejs/check`; `CLAUDE.md`'s twelve packages
       and its list of them, which the seat does not edit; and whose word raises or sets a

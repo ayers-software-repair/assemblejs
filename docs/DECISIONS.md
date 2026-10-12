@@ -7044,3 +7044,37 @@ higher package, and the split is a matter of moving directories.
 - **Nothing a user sees.** The package exports every name it did, and its 827 cases pass
   unchanged. The tarball is 101,290 bytes of its 102,000, the two moves having rearranged
   what compresses beside what: 225 more, and no limit moved.
+
+## 2026-10-12: the owner at the seat, ten more
+
+Told that the split could not be pushed without limits he had not given, he said "ask me
+any questions you have". Ten were put to him one at a time, each with the seat's advice
+first among its choices; the choice he took is quoted.
+
+- **The rule of limits: "Size plus 10%, avp approves raises".** A new package, or one just
+  split, has its limit set by the seat at its measured size and a tenth more. Any later
+  raise wants the lead's yes before it lands, with the measure and what the bytes bought,
+  and every raise is named in the report to him. This answers what the split had left
+  open, whose word raises a limit: never that of the seat that went over.
+- **A new project: "Yes, ready by default".** The starter writes the root `tsconfig.json`
+  and lists `typescript` and Node's types as development dependencies, 4 packages and 6.3 MB
+  on an install of 87 MB. A project with a React view and no types for React is told so by
+  `check`, as it is told of a renderer it has not installed.
+- **`CLAUDE.md`: "Yes, correct those three".** The count of packages, where the browser
+  proof runs, and the verbs. Each in the commit that makes it true, the lines shown him.
+- **What a handler returns: "Yes, accept it".** An object's member may be absent in what
+  an api or a service returns. An `interface` stays refused; the guide says to use `type`.
+- **Generated files: "Remove it from generated files".** The copyright line, that is. The
+  line that says a file is generated stays.
+- **The `Renderer` object: "Remove it".** From every renderer package and the core, before
+  the first release, DESIGN 7 rewritten to what the build does.
+- **A refused boot: "One start call in the core".** A new public name, which reads the
+  config, starts the server, says where, and on a refusal prints the sentences and exits.
+- **Lit on a page of two servers: "Yes, isolate them".** Each bundle brings its own, at
+  3,936 bytes gzipped loaded before anything mounts; which pages carry it is to be measured.
+- **Kept topics: "Yes, `events.keep(topic)`".** A new public name on the events object.
+- **Not found: "Yes, a service can say not found".** A new public name; and an address
+  with a trailing slash answers as the one without.
+- **Not asked.** Two servers on one page, what a `perf` budget holds, the agent surface's
+  install weight, the starter's guide link, the first prerelease: each wants a measure the
+  seat has not made or is his launch to call.
