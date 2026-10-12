@@ -23,6 +23,7 @@ Every link here is relative to this file. All of these pages are one file, [llms
 - [API reference](docs/api/index.html): Every published entry point of the twelve packages, generated from the sources when the site deploys.
 - [Downloads](downloads.html): AssembleJS is distributed through npm.
 - [Support](support.html): Get help with AssembleJS.
+- [Inspect a composed page](docs/outline.html): Find each assembly, the server that supplied it, and when it became interactive.
 
 ## Optional
 

@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/ayers-software-repair/assemblejs.git"
   },
-  "ayersPlatform": "v0.58.0",
+  "ayersPlatform": "v0.62.0",
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"

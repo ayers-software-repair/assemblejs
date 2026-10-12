@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { Window } from "happy-dom";
 import { pageText } from "./site-page-text.mjs";
-import { renderLinks } from "./site-links.mjs";
+import { renderLinks, sharedLinksMatch } from "./site-links.mjs";
 
 test("illustrated procedures retain instructions, ordered steps, captions and links as text", () => {
   const page = pageText(
@@ -86,4 +86,25 @@ test("product navigation resolves correctly for nested guides and marks the acti
     /href="support.html" aria-current="page"/,
   );
   assert.doesNotMatch(renderLinks(manifest, { file: "404.html" }), /aria-current/);
+});
+
+test("generated navigation accepts equivalent paths and refuses missing or incorrect links", () => {
+  const links = '<a href="index.html" aria-current="page">Documentation</a>';
+  assert.equal(
+    sharedLinksMatch(
+      '<nav class="product-nav"><a href="../docs/index.html" aria-current="page">Documentation</a></nav>',
+      links,
+      "docs/start.html",
+    ),
+    true,
+  );
+  assert.equal(
+    sharedLinksMatch(
+      '<nav class="product-nav"><a href="missing.html">Documentation</a></nav>',
+      links,
+      "docs/start.html",
+    ),
+    false,
+  );
+  assert.equal(sharedLinksMatch("<nav></nav>", links, "docs/start.html"), false);
 });

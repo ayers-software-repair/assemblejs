@@ -1947,8 +1947,8 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       Chrome, then into `examples/`. DONE 2026-10-12: `examples/market`, a shop of four servers
       (DECISIONS 2026-10-12, "the market, a showcase of four servers"), with
       `browser/market.browser.ts` in the browser proof.
-- [ ] The site does not name the showcase: the examples it lists want `examples/market` (the
-      site seat's; the lead is told).
+- [x] The site names `examples/market` in the outline guide and documentation index, with its
+      run commands and a screenshot capture brief (12 October 2026).
 - [x] FOUND BY THE SHOWCASE: `perf` exits 1 on a project that guards a page. It asks every page
       as a stranger, the staff's page answers 401, and that is counted a failure. DONE
       2026-10-12: a page that answers 401 or 403 is said not weighed, and the command goes on

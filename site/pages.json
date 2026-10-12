@@ -124,6 +124,12 @@
       "url": "support.html",
       "title": "Support",
       "in_nav": false
+    },
+    {
+      "file": "docs/outline.html",
+      "url": "docs/outline.html",
+      "title": "Inspect a composed page",
+      "in_nav": false
     }
   ],
   "external": [

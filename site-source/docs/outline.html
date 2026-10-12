@@ -1,0 +1,75 @@
+<!-- Copyright Ayers Electronics Inc. All rights reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<div class="manual-layout">
+  {{CHAPTERS}}
+  <article class="manual-article">
+    <p class="manual-location">
+      <a href="index.html">Documentation</a> <span aria-hidden="true">/</span> Inspect a page
+    </p>
+    <h1>See how a page is composed</h1>
+    <p class="manual-deck">
+      Find each assembly, the server that supplied it, and when it became interactive.
+    </p>
+    <section id="enable">
+      <h2>Enable the outline</h2>
+      <p>Add <code>outline: true</code> to your <code>assemblejs.config.ts</code>:</p>
+      <pre><code>import { defineConfig } from "@assemblejs/core";
+
+export default defineConfig({
+  outline: true,
+});</code></pre>
+      <p>
+        Start your application and press <b>Outline</b> in the corner of a page. Each assembly gets
+        a box showing its identity, origin and timing. Press it again to return to the page.
+      </p>
+      <div class="manual-result">
+        <strong>Check</strong>
+        <p>
+          The boxes follow the assemblies on the page, including assemblies supplied by other
+          servers.
+        </p>
+      </div>
+      <figure class="manual-capture">
+        <span class="manual-capture-id">A04 · Screenshot to capture</span>
+        <div>
+          <strong>The market product page with Outline enabled</strong>
+          <p>
+            Show the product, reviews and buy box, with readable assembly names, origins and timing.
+          </p>
+        </div>
+        <figcaption>
+          Capture the running four-server example at desktop width, with its outline expanded.
+        </figcaption>
+      </figure>
+    </section>
+    <section id="market">
+      <h2>Try a complete application</h2>
+      <p>
+        <a href="https://github.com/ayers-software-repair/assemblejs/tree/next/examples/market"
+          >Pour &amp; Grind</a
+        >
+        is a shop composed from four teams’ servers: shop, catalog, reviews and fulfilment. Its
+        views use React, Vue, Svelte, Preact, Solid, Lit and template renderers.
+      </p>
+      <p>From a checkout of the repository, run:</p>
+      <pre><code>pnpm install
+pnpm build
+pnpm --filter "@assemblejs/example-market-*" build
+node examples/market/start.mjs</code></pre>
+      <p>
+        Open <code>http://127.0.0.1:4700/</code>. Browse a shelf, open a product and switch on
+        Outline. The product page draws twelve assemblies from three servers.
+      </p>
+      <p>
+        Stop the example, then run
+        <code>node examples/market/start.mjs shop catalog fulfilment</code> to leave out reviews.
+        The product still loads and reports that reviews are unavailable. The example’s README
+        explains its routes and current framework boundaries.
+      </p>
+    </section>
+    <nav class="manual-pager" aria-label="Previous and next chapter">
+      <a href="tutorial.html"><small>Previous</small>Build a page</a
+      ><a href="api/index.html"><small>Next</small>API reference</a>
+    </nav>
+  </article>
+</div>

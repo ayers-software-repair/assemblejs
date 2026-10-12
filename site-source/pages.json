@@ -1,0 +1,189 @@
+{
+  "name": "AssembleJS",
+  "mark": "mark.svg",
+  "background": "weave",
+  "navigation": [
+    {
+      "file": "downloads.html",
+      "title": "Downloads"
+    },
+    {
+      "file": "docs/index.html",
+      "title": "Documentation"
+    },
+    {
+      "file": "support.html",
+      "title": "Support"
+    }
+  ],
+  "chapters": [
+    {
+      "file": "docs/index.html",
+      "title": "Contents"
+    },
+    {
+      "file": "install.html",
+      "title": "Installation"
+    },
+    {
+      "file": "start.html",
+      "title": "Assemblies"
+    },
+    {
+      "file": "docs/tutorial.html",
+      "title": "Build a page"
+    },
+    {
+      "file": "docs/react.html",
+      "title": "React"
+    },
+    {
+      "file": "docs/vue.html",
+      "title": "Vue"
+    },
+    {
+      "file": "docs/svelte.html",
+      "title": "Svelte"
+    },
+    {
+      "file": "docs/preact.html",
+      "title": "Preact"
+    },
+    {
+      "file": "docs/solid.html",
+      "title": "Solid"
+    },
+    {
+      "file": "docs/lit.html",
+      "title": "Lit"
+    },
+    {
+      "file": "docs/templates.html",
+      "title": "Templates"
+    },
+    {
+      "file": "docs/outline.html",
+      "title": "Inspect a page"
+    },
+    {
+      "file": "release-notes.html",
+      "title": "Release notes"
+    }
+  ],
+  "footer": "<a href=\"{{ROOT}}release-notes.html\">Release notes</a\n            ><a href=\"https://ayers.repair/legal/assemblejs/privacy.html\">Privacy</a\n            ><a href=\"https://ayers.repair/legal/assemblejs/terms.html\">Terms</a>",
+  "pages": [
+    {
+      "file": "index.html",
+      "title": "AssembleJS — Your frameworks. One application.",
+      "description": "The first micro-frontend framework for AI-enabled development. Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.",
+      "kind": "overview",
+      "section": ""
+    },
+    {
+      "file": "install.html",
+      "title": "Create your first application — AssembleJS",
+      "description": "Run an AssembleJS page, then add the frameworks you want to use.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "start.html",
+      "title": "Getting started — AssembleJS",
+      "description": "An assembly is a piece of a page written in one framework. A page places assemblies. That is the whole model, and the rest of this page is how you write one.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "release-notes.html",
+      "title": "Release notes — AssembleJS",
+      "description": "What is in each version of AssembleJS, newest first.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/index.html",
+      "title": "Documentation — AssembleJS",
+      "description": "Get started, learn a task, or find the answer to a problem.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/tutorial.html",
+      "title": "The tutorial — AssembleJS",
+      "description": "One project, from nothing to a deployed server, in the order you would actually do it. Each step is one command or one file, and every file here is taken from the repository's own examples, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/react.html",
+      "title": "For React developers — AssembleJS",
+      "description": "A React assembly is a component in a file whose name says it is React. The server renders it, the browser hydrates it, and the page it sits on can hold Svelte or Vue beside it. Everything on this page is from the repository's own examples, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/vue.html",
+      "title": "For Vue developers — AssembleJS",
+      "description": "A Vue assembly is a single-file component. The server renders it, the browser hydrates it, and the page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/svelte.html",
+      "title": "For Svelte developers — AssembleJS",
+      "description": "A Svelte assembly is a component, Svelte 5 and runes. The server renders it, the browser hydrates it, and the page it sits on can hold React or Vue beside it. Everything on this page is from the repository's own examples, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/preact.html",
+      "title": "For Preact developers — AssembleJS",
+      "description": "A Preact assembly is a component in a file whose name says it is Preact. The server renders it, the browser hydrates it, and the page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its conformance fixtures, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/solid.html",
+      "title": "For Solid developers — AssembleJS",
+      "description": "A Solid assembly is a component in a file whose name says it is Solid, compiled by Solid's own compiler. The server renders it, the browser hydrates it, and the page it sits on can hold React or Vue beside it. Everything on this page is from the repository's own examples, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/lit.html",
+      "title": "For Lit developers — AssembleJS",
+      "description": "A Lit assembly is a view, cart.lit.ts, a function from the assembly's props to a Lit template, and the elements it places are yours. The server renders it, each element into a declarative shadow root; the browser hydrates it, and the page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "docs/templates.html",
+      "title": "For template authors — AssembleJS",
+      "description": "A template assembly is one file in EJS, Handlebars, Nunjucks, Pug or Markdown, rendered on the server by its own engine and nothing else; it ships no JavaScript unless a file beside it asks for some. The page it sits on can hold React or Svelte beside it. Everything on this page is from the repository's own examples, its conformance fixtures, its design document or its tests.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    },
+    {
+      "file": "downloads.html",
+      "title": "Downloads — AssembleJS",
+      "description": "Install AssembleJS and its framework renderers from npm.",
+      "kind": "downloads",
+      "section": "downloads.html"
+    },
+    {
+      "file": "support.html",
+      "title": "Support — AssembleJS",
+      "description": "Installation, troubleshooting and support for AssembleJS.",
+      "kind": "support",
+      "section": "support.html"
+    },
+    {
+      "file": "docs/outline.html",
+      "title": "Inspect a composed page — AssembleJS",
+      "description": "Use the assembly outline and the four-server market example to inspect a composed application.",
+      "kind": "manual",
+      "section": "docs/index.html"
+    }
+  ],
+  "favicon": "favicon.svg"
+}

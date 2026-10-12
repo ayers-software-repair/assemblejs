@@ -134,6 +134,10 @@ The server lists four prompts, which Claude Code and VS Code show as commands an
 
 A slow or dead assembly renders its declared fallback, or the last good content, and the page still ships. One failing assembly is one failing assembly.
 
+## Inspect the composition
+
+Set `outline: true` in `assemblejs.config.ts` to add an Outline switch to your pages. It identifies each assembly, its server and its timing. [Inspect a complete example](docs/outline.html).
+
 # Release notes
 
 Source: [release-notes.html](release-notes.html)
@@ -221,6 +225,10 @@ The generated application running from the released CLI.
 - [Use HTML and templates — Plain HTML, EJS, Markdown, Nunjucks, Handlebars or Pug.](docs/templates.html)
 
 - [API reference — Generated from the published package entry points.](docs/api/index.html)
+
+## Explore a complete application
+
+- [Inspect the four-server market — See every assembly, its origin and its timing with Outline.](docs/outline.html)
 
 ## Fix a problem
 
@@ -1805,3 +1813,52 @@ Remove passwords, access tokens and private content from logs or screenshots bef
 - [Documentation — Follow the guide for the task you are working on.](docs/index.html)
 
 - [Get started — Reach your first working result.](start.html)
+
+# See how a page is composed
+
+Source: [docs/outline.html](docs/outline.html)
+
+Find each assembly, the server that supplied it, and when it became interactive.
+
+## Enable the outline
+
+Add `outline: true` to your `assemblejs.config.ts`:
+
+```
+import { defineConfig } from "@assemblejs/core";
+
+export default defineConfig({
+  outline: true,
+});
+```
+
+Start your application and press Outline in the corner of a page. Each assembly gets a box showing its identity, origin and timing. Press it again to return to the page.
+
+Check
+
+The boxes follow the assemblies on the page, including assemblies supplied by other servers.
+
+- A04 · Screenshot to capture
+
+The market product page with Outline enabled
+
+Show the product, reviews and buy box, with readable assembly names, origins and timing.
+
+Capture the running four-server example at desktop width, with its outline expanded.
+
+## Try a complete application
+
+[Pour & Grind](https://github.com/ayers-software-repair/assemblejs/tree/next/examples/market) is a shop composed from four teams’ servers: shop, catalog, reviews and fulfilment. Its views use React, Vue, Svelte, Preact, Solid, Lit and template renderers.
+
+From a checkout of the repository, run:
+
+```
+pnpm install
+pnpm build
+pnpm --filter "@assemblejs/example-market-*" build
+node examples/market/start.mjs
+```
+
+Open `http://127.0.0.1:4700/`. Browse a shelf, open a product and switch on Outline. The product page draws twelve assemblies from three servers.
+
+Stop the example, then run `node examples/market/start.mjs shop catalog fulfilment` to leave out reviews. The product still loads and reports that reviews are unavailable. The example’s README explains its routes and current framework boundaries.
