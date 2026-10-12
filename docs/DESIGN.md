@@ -646,7 +646,12 @@ export type RenderInput = {
 export interface ClientRenderer {
   mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext): MountHandle;
 }
-export type MountHandle = { unmount(): void };
+export type MountHandle = {
+  unmount(): void;
+  // When the half is live, where that is later than the handle, as for a module still on its
+  // way: settles when it has mounted, rejects where it never will. Absent: live on return.
+  readonly mounted?: Promise<void>;
+};
 ```
 
 - **A view places a child by writing the directive, and is never handed one.** The view renders
@@ -875,6 +880,9 @@ ships no JavaScript at all, which is a mode and not an accident; a framework vie
 rest. Once a renderer has mounted an assembly, the runtime marks its envelope `data-mounted`,
 and removes the mark when it unmounts it: the one word the browser writes on an envelope, so a
 page, a test or a person can tell a hydrated assembly from one still waiting for its module.
+A built project loads each assembly's module when the assembly is due, so the mark waits for
+what the handle says, and an assembly whose module never arrives or whose mount throws is
+never marked.
 The server never writes it (section 2.4 is the server's set).
 
 Events are typed, page-scoped and owned by the assembly:

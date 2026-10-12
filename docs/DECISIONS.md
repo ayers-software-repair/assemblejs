@@ -5695,3 +5695,42 @@ trust.6), each reproduced against the built package first.
   wide proof went red on it before the push. The shelf counts how often it is composed, and
   the step holds the member's second answer to the first's count and to an id of its own.
 - **The core's tarball is at 80,815 bytes of its 82,000** after this entry and the one above.
+
+## 2026-10-11: the mark that says an assembly is live is written when it is
+
+Four of the audit's rows on the browser runtime (client.1, client.5, client.6, client.7),
+each read at the source and its case watched red against the client entry as last built.
+
+- **`data-mounted` was written when the handle came back.** DESIGN 9 gives the mark one job:
+  to tell "a hydrated assembly from one still waiting for its module". Every built project
+  mounts through `lazyRenderer`, which returns its handle at once and mounts when the module
+  arrives, so the mark was on every assembly before its module had loaded, and stayed on one
+  whose module failed to load or whose mount threw. The browser proofs' wait for the mark,
+  written this week to end a race, waited for nothing. A handle may now say when its half is
+  live: `mounted`, a promise that settles when it has mounted and rejects where it never
+  will. `lazyRenderer` says it, passing on what the module's own handle says; the runtime
+  marks at once for a handle that says nothing, as before, and for one that does, when it
+  does, and only while the runtime still holds that assembly. No renderer of ours needed a
+  change: each one's own mount is done when it returns.
+- **A mount that threw part-way kept its subscriptions.** The events an assembly is handed
+  were released only when the page's assemblies were unmounted together, so what a component
+  subscribed before it threw stayed on the bus, called for every message. `mountIsland` holds
+  the mount and its events together and releases on a throw.
+- **An island of JSON that is not an object ended the page's mounting.** `null` parses, and
+  the runtime read its name outside the guard around the mount: a `TypeError`, and no
+  assembly after it on the page was considered. `readIsland` answers nothing for it, as for
+  one that does not parse.
+- **The bus.** A handler removed by another during a send was still called for that send,
+  from the copy the send walks; each is looked for again before it is called. An assembly that
+  subscribed after its release, as a late callback does, added a subscription nobody would
+  release; it adds nothing now. And a handler that threw stopped the send for every listener
+  after it and reached the sender: it is reported against its assembly and the rest are
+  called, the same rule the runtime has for a mount (found by the seat, standing in the file).
+- **Read and left for the owner: client.4.** DESIGN 9 says last-value replay is opt-in per
+  topic, and in a built project nothing opts a topic in but the page's stream: the generated
+  client entry passes no `replay`, and an assembly's events have no `keep`. So `last` answers
+  nothing for a topic one assembly sends another, which is the race the rule is for. The seat's
+  advice is `events.keep(topic)` on what an assembly is handed, the sender saying its topic is
+  a state; a key in the project's config is the other way. Either is a public surface, so it
+  is his.
+- **The core's tarball is at 81,734 bytes of its 82,000** after this entry.

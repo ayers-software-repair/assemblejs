@@ -28,6 +28,8 @@ export { connectStream } from "./connect-stream.js";
 export { openPageStream } from "./open-page-stream.js";
 export type { ClientRenderer } from "./client-renderer.js";
 export { lazyRenderer } from "./lazy-renderer.js";
+export { markMounted } from "./mark-mounted.js";
+export { mountIsland } from "./mount-island.js";
 export type { MountContext } from "./mount-context.js";
 export type { MountHandle } from "./mount-handle.js";
 export * from "./events/index.js";

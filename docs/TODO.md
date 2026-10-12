@@ -19,10 +19,11 @@ the workflow's majors, each read at the source and reproduced before it is belie
 the server's rows are done, and so are the readers of markup (composer.2, composer.4, trust.4,
 trust.5, trust.7, and three the seat found there), a kept answer's one envelope id
 (composer.3, client.2, server.8) and what one remote answer makes the server fetch and keep
-(trust.6). Next, already read at the source: the mounted mark, written before a lazy module
-mounts (client.1), with the runtime's minors; then the renderers' (an id of its own for each
-island's `useId`, and Solid's unescaped `<`), the verbs', `check`'s rules, the agent
-surface's and the tests', then the minors. docs.2 names a page of the site seat's and is routed, not edited; then the
+(trust.6), and the browser runtime's (client.1, client.5, client.6, client.7; client.4 is a
+gap in the public surface and is the owner's). Next, already read with the frameworks' own
+documentation: the renderers' (an id of its own for each island's `useId`, which React, Vue
+and Svelte take as a prefix and Preact has no way to be given, and Solid's unescaped `<`);
+then the verbs', `check`'s rules, the agent surface's and the tests', then the minors. Then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -43,13 +44,16 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a kept answer is
-its placement's own, and what a remote names is bounded (DECISIONS 2026-10-11, of that name).
-Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: the mark that
+says an assembly is live is written when it is (DECISIONS 2026-10-11, of that name), the
+browser runtime's rows; its proof here is the suites, and the `browser proof` job of its
+`ci` run is the one that draws it. Beneath it `8aa4c0c`, a kept answer is its placement's
+own, and what a remote names is bounded (`ci` 38199938079, all five jobs green). Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
 markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all
 five jobs green); and `da3c17d` (`ci` 38197595850, all five green), the first green verify
 since the audit began and the one that judged every bite before it at once. The core's
-tarball is at 80,815 bytes of 82,000. It had been red
+tarball is at 81,734 bytes of 82,000: the next bite that adds to the core moves the budget
+with its measure. It had been red
 three ways on the way: another seat's emoji gate (`aecf034`, fixed by it in `d82714c`; its
 pages are its own), and two of this seat's own that the gate had hidden, a case of the command
 line's suite that read who ran it (`5ea3db0`) and a character written into a core spec where
@@ -1479,9 +1483,13 @@ The composer:
 
 The browser runtime:
 
-- [ ] data-mounted is written before the assembly's module has loaded, and stays on after a missing
+- [x] data-mounted is written before the assembly's module has loaded, and stays on after a missing
       module or a throwing mount (workflow client.1, major). Claimed at
-      `packages/core/src/client/start.ts:96`. PREMISE UNVERIFIED
+      `packages/core/src/client/start.ts:96`. PREMISE UNVERIFIED. READ at `client/lazy-renderer.ts`
+      and `client/start.ts:96`, its cases watched red against the client entry as last built. DONE
+      2026-10-11: a `MountHandle` may say when its half is live (`mounted`), `lazyRenderer` says it,
+      and the runtime marks then and only then (`markMounted`) (DECISIONS 2026-10-11, "the mark that
+      says an assembly is live is written when it is").
 - [x] A cached placement repeats one data-id on a page, and the runtime silently never hydrates the
       second envelope (workflow client.2, major). Claimed at
       `packages/core/src/compose/placement-cache.ts:58`. PREMISE UNVERIFIED. The same defect as
@@ -1489,15 +1497,30 @@ The browser runtime:
       "a kept answer is its placement's own, and what a remote names is bounded").
 - [ ] Last-value replay cannot be opted into for assembly-sent topics in a built project (workflow
       client.4, major, disputed by one of its refuters). Claimed at
-      `packages/cli/src/generate/generate-client-entry.ts:38`. PREMISE UNVERIFIED
-- [ ] A valid-JSON island that is not an object (null) makes start() throw and aborts mounting of
+      `packages/cli/src/generate/generate-client-entry.ts:38`. PREMISE UNVERIFIED. READ by the seat
+      2026-10-11 AND TRUE as a gap: DESIGN 9 says replay is opt-in per topic, and in a built project
+      only the page's stream opts one in (the generated client entry passes no `replay`; an
+      assembly's events have no `keep`), so `last` answers nothing for a topic one assembly sends
+      another. NOT A DEFECT TO FIX UNASKED: the way to opt in is a public surface. The seat's advice
+      is `events.keep(topic)`; a key in the project's config is the other way. THE OWNER'S
+      (DECISIONS 2026-10-11, "the mark that says an assembly is live is written when it is").
+- [x] A valid-JSON island that is not an object (null) makes start() throw and aborts mounting of
       every later assembly (workflow client.5, minor). Claimed at
-      `packages/core/src/client/start.ts:98`. PREMISE UNVERIFIED
-- [ ] A listener removed during a send is still called, and a subscription made after release is
+      `packages/core/src/client/start.ts:98`. PREMISE UNVERIFIED. READ at `client/read-island.ts`,
+      its case watched red. DONE 2026-10-11: `readIsland` answers nothing for JSON that is not an
+      object (DECISIONS 2026-10-11, "the mark that says an assembly is live is written when it is").
+- [x] A listener removed during a send is still called, and a subscription made after release is
       never released (workflow client.6, minor). Claimed at
-      `packages/core/src/client/events/create-bus.ts:68`. PREMISE UNVERIFIED
-- [ ] An assembly whose mount throws part-way keeps live event subscriptions (workflow client.7,
-      minor). Claimed at `packages/core/src/client/start.ts:81`. PREMISE UNVERIFIED
+      `packages/core/src/client/events/create-bus.ts:68`. PREMISE UNVERIFIED. READ at
+      `client/events/create-bus.ts`, its cases watched red. DONE 2026-10-11: a handler is looked for
+      again before it is called, an assembly that subscribes after its release adds nothing, and a
+      handler that throws is reported against its assembly while the rest are called (DECISIONS
+      2026-10-11, "the mark that says an assembly is live is written when it is").
+- [x] An assembly whose mount throws part-way keeps live event subscriptions (workflow client.7,
+      minor). Claimed at `packages/core/src/client/start.ts:81`. PREMISE UNVERIFIED. READ at
+      `client/start.ts:81`, its case watched red. DONE 2026-10-11: `mountIsland` holds the mount and
+      its events together and releases on a throw (DECISIONS 2026-10-11, "the mark that says an
+      assembly is live is written when it is").
 
 The renderers:
 
@@ -1616,9 +1639,12 @@ Docs against code:
       you to cd to the absolute path (workflow docs.1, major). Claimed at
       `packages/cli/src/run/run.ts:87`. PREMISE UNVERIFIED. The same defect as workflow cli-verbs.7,
       read and reproduced by the seat. DONE 2026-10-11 with it
-- [ ] install.html 'Add it to a project you already have' leaves a project that cannot build or run,
+- [x] install.html 'Add it to a project you already have' leaves a project that cannot build or run,
       and never says what is missing (workflow docs.2, major). Claimed at `site/install.html:42`.
-      PREMISE UNVERIFIED
+      PREMISE UNVERIFIED. READ at `site/install.html` 2026-10-11: THE PREMISE IS GONE. The site seat
+      rewrote the page in `c2beecb` ("Create your first application"), and no page of the site has
+      that section or says to add the framework to a project that exists; nothing here to fix, and
+      the page is that seat's.
 - [ ] Any other view-looking file in an assembly directory (README.md, cart.test.tsx) makes the
       assembly 'have more than one view file' (workflow docs.4, minor). Claimed at
       `packages/cli/src/discovery/renderer-for-view.ts:24`. PREMISE UNVERIFIED

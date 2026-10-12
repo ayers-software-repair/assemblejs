@@ -74,6 +74,35 @@ describe("loading each assembly's module when it mounts", () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining('"constructor"'));
   });
 
+  // The handle is back at once and the mount happens later, so the handle says when.
+  it("says when the assembly is live: once its module has arrived and mounted", async () => {
+    const { calls, half } = recording();
+    const renderer = lazyRenderer({ counter: async () => ({ default: half }) });
+    const handle = renderer.mount(document.createElement("div"), {}, context("counter"));
+    expect(calls).toEqual([]);
+    expect(handle.mounted).toBeInstanceOf(Promise);
+    await handle.mounted;
+    expect(calls).toEqual(["mount counter {}"]);
+  });
+
+  it("says it will not be live where the module fails, its mount throws, or there is none", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const throwing: ClientRenderer = {
+      mount: () => {
+        throw new Error("the component threw");
+      },
+    };
+    const renderer = lazyRenderer({
+      broken: () => Promise.reject(new Error("404")),
+      throwing: async () => ({ default: throwing }),
+    });
+    for (const name of ["broken", "throwing", "absent"]) {
+      const handle = renderer.mount(document.createElement("div"), {}, context(name));
+      await expect(handle.mounted, name).rejects.toBeDefined();
+    }
+  });
+
   it("reports a module that fails to load against the assembly, and does not throw", async () => {
     const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
     const renderer = lazyRenderer({ broken: () => Promise.reject(new Error("404")) });

@@ -10,7 +10,8 @@ import type { MountHandle } from "./mount-handle.js";
  * This is what makes an island a native module: the page loads the runtime, and an assembly's
  * code arrives only when that assembly is due to mount, so a page that places it below the fold
  * with `visible` pays for it only on scroll. The handle is returned at once and the mount
- * happens when the module arrives; an unmount before then means it never happens at all.
+ * happens when the module arrives; an unmount before then means it never happens at all. The
+ * handle says when the assembly is live, and that it will not be where it never mounts.
  *
  * An assembly with no module in this build gets a handle that does nothing, and a warning, the
  * same as the runtime gives an assembly whose renderer is missing: a static assembly never gets
@@ -25,26 +26,30 @@ export function lazyRenderer(
     mount(element, data, context) {
       const load = Object.hasOwn(modules, context.name) ? modules[context.name] : undefined;
       if (load === undefined) {
-        console.warn(
-          `assemblejs: no module in this build for "${context.name}", so it was left as the markup the server sent`,
-        );
-        return { unmount: () => undefined };
+        const message = `no module in this build for "${context.name}", so it was left as the markup the server sent`;
+        console.warn(`assemblejs: ${message}`);
+        const never = Promise.reject<void>(new Error(message));
+        // Said above. Whoever waits on the handle is told too, and nobody has to.
+        never.catch(() => undefined);
+        return { unmount: () => undefined, mounted: never };
       }
 
       let inner: MountHandle | undefined;
       let gone = false;
-      load()
-        .then((module) => {
-          if (!gone) inner = module.default.mount(element, data, context);
-        })
-        .catch((error: unknown) => {
-          console.error(`assemblejs: "${context.name}" did not mount`, error);
-        });
+      const mounted = load().then((module) => {
+        if (gone) throw new Error(`"${context.name}" was unmounted before its module arrived`);
+        inner = module.default.mount(element, data, context);
+        return inner.mounted;
+      });
+      mounted.catch((error: unknown) => {
+        if (!gone) console.error(`assemblejs: "${context.name}" did not mount`, error);
+      });
       return {
         unmount: () => {
           gone = true;
           inner?.unmount();
         },
+        mounted,
       };
     },
   };

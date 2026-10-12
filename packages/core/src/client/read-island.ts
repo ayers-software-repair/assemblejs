@@ -22,7 +22,10 @@ export function readIsland(envelope: Element): IslandPayload | undefined {
   const text = script.textContent ?? "";
   script.remove();
   try {
-    return JSON.parse(text) as IslandPayload;
+    const payload: unknown = JSON.parse(text);
+    // JSON that is not an object is no payload, however well it parses.
+    if (typeof payload !== "object" || payload === null || Array.isArray(payload)) return undefined;
+    return payload as IslandPayload;
   } catch {
     // A malformed island is this assembly's problem and nobody else's: the page keeps its
     // server-rendered markup and every other assembly still mounts.

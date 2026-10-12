@@ -51,6 +51,7 @@ export function createBus(replay: readonly string[] = []): Bus {
     forAssembly(sender: EventSender) {
       // Held per assembly, so release removes exactly what this assembly added and nothing else.
       const mine = new Set<Subscription>();
+      let released = false;
 
       const events: Events = {
         send<P>(topic: string, payload: P, to: EventScope = "all"): EventMessage<P> {
@@ -63,17 +64,30 @@ export function createBus(replay: readonly string[] = []): Bus {
             byAddress.set(JSON.stringify(to), message as EventMessage<unknown>);
             kept.set(topic, byAddress);
           }
-          // A copy, so a handler that subscribes or unsubscribes while being called cannot
-          // change the set being walked underneath it.
+          // A copy, so a handler that subscribes while being called is not called for the message
+          // being delivered; and each is looked for again before it is called, so one another
+          // handler removed during this send is not called at all.
           for (const subscription of [...subscriptions]) {
             if (subscription.topic !== topic) continue;
             if (!reaches(to, subscription.owner)) continue;
-            (subscription.handler as EventHandler<P>)(message);
+            if (!subscriptions.has(subscription)) continue;
+            try {
+              (subscription.handler as EventHandler<P>)(message);
+            } catch (error) {
+              // One assembly's handler is its own: the sender and every other listener go on.
+              console.error(
+                `assemblejs: a handler of "${subscription.owner.name}" for "${topic}" threw`,
+                error,
+              );
+            }
           }
           return message;
         },
 
         on<P>(topic: string, handler: EventHandler<P>): () => void {
+          // Released, an assembly holds nothing: what it subscribes afterwards nobody would
+          // ever release.
+          if (released) return () => undefined;
           const subscription: Subscription = {
             topic,
             handler: handler as EventHandler<never>,
@@ -99,6 +113,7 @@ export function createBus(replay: readonly string[] = []): Bus {
       return {
         events,
         release: () => {
+          released = true;
           for (const subscription of mine) subscriptions.delete(subscription);
           mine.clear();
         },

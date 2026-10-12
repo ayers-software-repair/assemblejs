@@ -4,6 +4,8 @@ import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { MOUNTED_ATTRIBUTE } from "../vocab/mounted-attribute.js";
 import { createBus } from "./events/create-bus.js";
 import { findEnvelopes } from "./find-envelopes.js";
+import { markMounted } from "./mark-mounted.js";
+import { mountIsland } from "./mount-island.js";
 import type { MountedAssembly } from "./mounted-assembly.js";
 import { openPageStream } from "./open-page-stream.js";
 import { readIsland } from "./read-island.js";
@@ -75,28 +77,12 @@ export function start(options: StartOptions): Runtime {
 
     cancels.push(
       scheduleMount(element, mode, () => {
-        try {
-          const sender = { id: payload.id, name: payload.name, view: payload.view };
-          const held = bus.forAssembly(sender);
-          releases.push(held.release);
-          // An assembly that opted into Shadow DOM is mounted inside its shadow root, which the
-          // browser built from the declarative template the server sent.
-          const handle = renderer.mount(element.shadowRoot ?? element, payload.data, {
-            ...sender,
-            events: held.events,
-          });
-          mounted.set(id, {
-            id,
-            name: payload.name,
-            view: payload.view,
-            element,
-            handle,
-          });
-          // The one mark that says the assembly is live, for whatever waits on it.
-          element.setAttribute(MOUNTED_ATTRIBUTE, "");
-        } catch (error) {
-          console.error(`assemblejs: "${payload.name}" did not mount`, error);
-        }
+        const island = mountIsland(renderer, element, payload, bus);
+        if (island === undefined) return;
+        const { handle } = island;
+        releases.push(island.release);
+        mounted.set(id, { id, name: payload.name, view: payload.view, element, handle });
+        markMounted(element, handle, () => mounted.get(id)?.handle === handle);
       }),
     );
   };

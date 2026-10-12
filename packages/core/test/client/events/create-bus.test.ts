@@ -147,6 +147,51 @@ describe("unsubscribing", () => {
 });
 
 describe("a handler that changes the subscriptions while it runs", () => {
+  it("does not call a handler another handler removed during the same send", () => {
+    const bus = createBus();
+    const { events } = bus.forAssembly({ id: "a-1", name: "a", view: "default" });
+    const called: string[] = [];
+    let offSecond = (): void => undefined;
+    events.on("t", () => {
+      called.push("first");
+      offSecond();
+    });
+    offSecond = events.on("t", () => called.push("second"));
+    events.send("t", null);
+    expect(called).toEqual(["first"]);
+  });
+
+  it("adds nothing for an assembly that subscribes after it was released", () => {
+    const bus = createBus();
+    const held = bus.forAssembly({ id: "a-1", name: "a", view: "default" });
+    held.release();
+    const called: string[] = [];
+    const off = held.events.on("t", () => called.push("late"));
+    expect(bus.size).toBe(0);
+    bus.forAssembly({ id: "b-1", name: "b", view: "default" }).events.send("t", null);
+    expect(called).toEqual([]);
+    expect(() => off()).not.toThrow();
+  });
+
+  it("delivers to every other handler when one throws, and says which assembly's did", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+    const bus = createBus();
+    const broken = bus.forAssembly({ id: "a-1", name: "broken", view: "default" });
+    const sound = bus.forAssembly({ id: "b-1", name: "sound", view: "default" });
+    const called: string[] = [];
+    broken.events.on("t", () => {
+      throw new Error("a handler threw");
+    });
+    sound.events.on("t", () => called.push("sound"));
+    expect(() => sound.events.send("t", null)).not.toThrow();
+    expect(called).toEqual(["sound"]);
+    expect(error).toHaveBeenCalledWith(
+      'assemblejs: a handler of "broken" for "t" threw',
+      expect.any(Error),
+    );
+    error.mockRestore();
+  });
+
   it("does not disturb the delivery it is part of", () => {
     const bus = createBus();
     const { events } = bus.forAssembly(cart);

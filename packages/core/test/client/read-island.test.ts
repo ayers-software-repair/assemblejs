@@ -51,6 +51,16 @@ describe("reading an envelope's island", () => {
     expect(envelope.querySelector("script")).toBeNull();
   });
 
+  // JSON that is not an object is no payload: read as one, the runtime threw on its first field,
+  // and every assembly after it on the page went unmounted.
+  it("returns nothing for an island that holds JSON which is not an object", () => {
+    for (const json of ["null", "[]", '"cart"', "3", "true"]) {
+      const envelope = withIsland("a7f3", json);
+      expect(readIsland(envelope), json).toBeUndefined();
+      expect(envelope.querySelector("script"), json).toBeNull();
+    }
+  });
+
   it("reads only its own island, not a nested assembly's", () => {
     const outer = withIsland("outer", `{"id":"outer","data":{"which":"outer"}}`);
     const inner = withIsland("inner", `{"id":"inner","data":{"which":"inner"}}`);
