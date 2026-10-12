@@ -13,6 +13,7 @@ export { learnedManifests } from "./learned-manifests.js";
 export type { ScannedAttribute } from "./scanned-attribute.js";
 export type { ScannedTag } from "./scanned-tag.js";
 export { readStartTag } from "./read-start-tag.js";
+export { OpenElements } from "./open-elements.js";
 export { startTagRefusal } from "./start-tag-refusal.js";
 export { scanFragment } from "./scan-fragment.js";
 export { markRemote } from "./mark-remote.js";

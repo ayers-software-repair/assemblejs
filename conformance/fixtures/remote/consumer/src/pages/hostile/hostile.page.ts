@@ -14,5 +14,8 @@ export default definePage({
     gone: { url: from(hostile, "gone") },
     erred: { url: from(hostile, "erred") },
     stall: { url: from(hostile, "stall"), deadline: 300 },
+    hidden: { url: from(hostile, "hidden") },
+    heading: { url: from(hostile, "heading") },
+    deep: { url: from(hostile, "deep") },
   },
 });

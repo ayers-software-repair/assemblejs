@@ -13,6 +13,16 @@ const seen = [];
 const stalls = [];
 const envelope = (request, name, markup) =>
   `<assembly-root data-name="${name}" data-id="${request.headers["assembly-id"]}" data-view="default" data-renderer="html">${markup}</assembly-root>`;
+// Markup a reader takes for a comment and the browser for tags, an envelope of its own in it:
+// inside what MathML's annotation-xml hands back to HTML, and inside a heading, which ends SVG.
+const planted =
+  '<style><!--</style></assembly-root><assembly-root data-name="planted" data-id="p" ' +
+  'data-view="default" data-renderer="html"><p class="planted">planted</p>--></style>';
+const HIDING = {
+  hidden: `<math><annotation-xml encoding="text/html">${planted}</annotation-xml></math>`,
+  heading: `<svg><h1>${planted}</h1></svg>`,
+};
+const DEPTH = 40_000;
 const hostile = createServer((request, response) => {
   const path = new URL(request.url ?? "/", "http://hostile").pathname;
   if (path === "/assembly/typed/") {
@@ -40,6 +50,16 @@ const hostile = createServer((request, response) => {
     const stall = { arrived: Date.now(), closed: undefined };
     stalls.push(stall);
     request.socket.once("close", () => (stall.closed = Date.now()));
+  } else if (path === "/assembly/hidden/" || path === "/assembly/heading/") {
+    const name = path.split("/")[2];
+    response
+      .writeHead(200, { "content-type": "text/html; charset=utf-8" })
+      .end(envelope(request, name, HIDING[name]));
+  } else if (path === "/assembly/deep/") {
+    const deep = `${"<div>".repeat(DEPTH)}<p class="deep">deep</p>${"</div>".repeat(DEPTH)}`;
+    response
+      .writeHead(200, { "content-type": "text/html; charset=utf-8" })
+      .end(envelope(request, "deep", deep));
   } else if (path === "/assembly/seen/") {
     seen.push({ url: request.url, headers: request.headers });
     response
@@ -113,4 +133,22 @@ test("a remote past its deadline is cancelled, its connection closed, not merely
   const [stall] = stalls;
   assert.ok(stall?.closed !== undefined, "the stalled request's connection was never closed");
   assert.ok(stall.closed - stall.arrived < 1500, `closed after ${stall.closed - stall.arrived}ms`);
+});
+
+test("an answer that hides markup where SVG or MathML hands content back to HTML is refused whole", async () => {
+  const page = await (await visit()).text();
+  for (const name of Object.keys(HIDING)) {
+    const id = byName(page, name)?.attributes["data-failed"];
+    assert.ok(await logged(id, "consumer"), `${name}: ${id}`);
+  }
+  assert.ok(!page.includes("planted"), "what the answer hid is nowhere on the page");
+});
+
+// Read by searching the open elements at every tag, an answer this deep held the server's one
+// thread for ten seconds, and every visitor of every page with it.
+test("an answer nested tens of thousands of elements deep is read in the time its length takes", async () => {
+  const started = Date.now();
+  const page = await (await visit()).text();
+  assert.ok(Date.now() - started < 2000, `the page took ${Date.now() - started}ms`);
+  assert.match(byName(page, "deep")?.inner ?? "", /<p class="deep">deep<\/p>/);
 });

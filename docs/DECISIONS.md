@@ -5556,3 +5556,70 @@ configured, which `bootProblems` already says of itself and which these did not 
   next bite that adds to the core moves it with its measure.
 - **Left, and rows:** the cached placement's one envelope id (workflow server.8) is the
   composer's row, composer.3, and is done with the composer's.
+
+## 2026-10-11: markup is read as the browser reads it, in the time its length takes
+
+The audit's five rows on the readers of markup (composer.2, composer.4, trust.4, trust.5,
+trust.7), each reproduced against the built package first, and two more the seat found while
+standing in the scanner. What the browser does is read from the parser's specification
+(html.spec.whatwg.org, the parsing page, fetched and read 2026-10-11), never recalled.
+
+- **A name ended at a hyphen.** `inertSpans` opened a raw-text stretch at
+  `<(script|style|textarea|title)\b`, and a word boundary stands between `title` and `-`.
+  Measured: after `<title-bar>`, `<style-guide>`, `<script-runner>` or `<textarea-autosize>`,
+  `findPlacements` answered no placement at all, in silence, because no `</title>` ever closed
+  what the custom element was taken to open. A tag's name ends at a tab, a line feed, a form
+  feed, a carriage return, a space, a slash or `>`, which is where the tokenizer ends it; an
+  end tag is read the same way and may hold anything after its name. `liveClosingTags` had a
+  second copy of the pattern with the same fault and no textarea or title; it asks
+  `inertSpans` now, so there is one reader.
+- **Reading was quadratic, and ran on every render.** Measured before: a megabyte of sixteen
+  thousand scripts took `findPlacements` 1.1 s with no directive in it, and twice the size
+  took four times as long: a slice and a new pattern for each raw-text element, a search of
+  every stretch for every tag, and `inertSpans` run three times over. After: the patterns are
+  compiled once and read in place, a stretch is found by halving (`withinSpans`), the three
+  readers share one reading, and none of them runs until a directive is met. After, measured
+  on the rebuilt package: that megabyte with no directive in 0.1 ms, sixteen thousand
+  placements among as many scripts in 28 ms where they took 2 s, and time doubling with size
+  up to four megabytes. `localAssets` over sixteen thousand envelopes: 8 ms, from 604.
+- **A remote's answer could hold one thread.** `scanFragment` copied the names of the open
+  elements at every start tag and searched them up to four times. Measured before: an envelope
+  holding forty thousand nested `<div>` took 10.4 s, with the limit on an answer's bytes
+  letting through five times that depth, and nothing else answered while it ran: no deadline
+  ends a loop that never yields. `OpenElements` keeps what a start tag asks as elements open
+  and close: the parent, a count by name, and whether a paragraph is open in button scope,
+  so each question costs the same at any depth. After: sixty-four thousand deep in 32 ms.
+- **Where SVG and MathML hand content back to HTML was read by name alone.** The
+  specification names them by kind: "A MathML annotation-xml element whose start tag token had
+  an attribute with the name encoding whose value was an ASCII case-insensitive match for
+  text/html" or for application/xhtml+xml, "An SVG foreignObject element", "An SVG desc
+  element", "An SVG title element", and MathML's mi, mo, mn, ms and mtext for text. The
+  scanner had the eight names in one set, for either kind, and no annotation-xml. So
+  `<math><annotation-xml encoding="text/html"><style><!--</style>` was a comment to the
+  scanner and raw text ended by that `</style>` to the browser: what followed, written as an
+  end tag for the envelope and a new envelope, was live on the page, unseen and unstamped
+  (measured: accepted, its tags `assembly-root, math`). And `<svg><mtext><style>` or
+  `<math><title><style>` was raw text to the scanner and elements to the browser. Each open
+  element now carries its kind; the hand-back is asked of the kind; and `annotation-xml` in
+  MathML is refused, because whether it hands back turns on an attribute's decoded value and
+  nothing here decodes one. The same name in SVG or HTML is an element like any other.
+- **A heading inside SVG or MathML was let through (found by the seat).** The parser's list of
+  start tags that end such content holds `h1` to `h6`; the scanner's check of that list sat
+  behind a test for letters only, so the six with a digit passed. `<svg><h1><style><!--</style>`
+  hid markup exactly as above (measured: accepted, tags `assembly-root, svg`). The test is
+  gone; the list is asked.
+- **An element named `constructor` threw (found by the seat).** The table of containers was an
+  object asked by the tag's name. It is a map.
+- **The search for an open paragraph stops by kind too.** The button scope's elements are
+  named for one kind each in the specification, `select` now among HTML's; the scanner had
+  them by name alone. `OpenElements` holds them by kind.
+- **Left, and a row:** a script is ended at its first end tag. The tokenizer does not end one
+  there when a `<script` stands inside a `<!--` inside it. Read short, a directive the browser
+  takes for that script's text is read as live and dispatched into it; nothing is dropped in
+  silence, and a remote's answer holding a comment in a script is already refused.
+- **The core's tarball budget moves from 78000 to 82000.** Measured at 78,829 bytes after this
+  entry: the span lookup, the record of open elements, the kinds. It stood at 77,646 before.
+- **Proof.** Each case watched red first: the unit cases against the source, and the two steps
+  added to the remote fixture's hostile page (an answer that hides markup, and one tens of
+  thousands of elements deep) against that page served by a build of the core from before
+  the fix. The samples whose refusal changed were each run against that build too.

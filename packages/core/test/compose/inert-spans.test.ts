@@ -41,4 +41,35 @@ describe("where markup is text the parser never reads as tags", () => {
     expect(inertAt("<!-- TAG")).toBe(true);
     expect(inertAt("<textarea>TAG")).toBe(true);
   });
+
+  // A tag's name ends at a space, a slash or the tag's end, never at a hyphen. Read as ending at
+  // one, each of these opened a stretch no end tag closed, and everything after it was text.
+  it("reads an element whose name goes on past a raw-text element's as an ordinary element", () => {
+    for (const element of ["title-bar", "style-guide", "script-runner", "textarea-autosize"]) {
+      expect(inertAt(`<${element}>TAG</${element}>`), element).toBe(false);
+      expect(inertAt(`<${element} mode="x"></${element}><p>TAG</p>`), element).toBe(false);
+    }
+    expect(inertAt("<title\n>TAG</title>")).toBe(true);
+    expect(inertAt("<script/>TAG</script>")).toBe(true);
+  });
+
+  it("ends a raw-text element at its end tag, whatever that tag holds after its name", () => {
+    expect(inertAt("<script>a</script foo>TAG")).toBe(false);
+    expect(inertAt("<style>a</style\n>TAG")).toBe(false);
+    expect(inertAt("<textarea>a</TEXTAREA/>TAG")).toBe(false);
+    // An end tag whose name only starts like the element's is the element's text.
+    expect(inertAt("<title>a</title-bar>TAG</title>")).toBe(true);
+  });
+
+  // Measured before: sixteen thousand scripts took a second, and twice as many four times that.
+  it("reads a template of sixty thousand raw-text elements in the time its length takes", () => {
+    const html = `${"<script>1</script><style>a{}</style>".repeat(30_000)}TAG`;
+    const started = performance.now();
+    const inert = inertSpans(html);
+    let hidden = 0;
+    for (let at = 0; at < html.length; at += 7) if (inert(at)) hidden += 1;
+    expect(inert(html.indexOf("TAG"))).toBe(false);
+    expect(hidden).toBeGreaterThan(100_000);
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
 });

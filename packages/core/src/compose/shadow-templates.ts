@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { inertSpans } from "./inert-spans.js";
+import { withinSpans } from "./within-spans.js";
 
 // A declarative shadow root opens with a template that names its mode; any template closes with
 // the same end tag, so the depth is counted and only the roots among them count.
@@ -13,10 +14,12 @@ const SHADOW_ROOT = /\sshadowrootmode\s*=/i;
  * a root, and an element's root is the element's own, so an assembly placed there would stand
  * unstyled and its sheet would be linked where it does nothing; a placement there is refused
  * where the directive is read. One pass over the template. A template inside a comment or a
- * raw-text element is no template.
+ * raw-text element is no template, by the reading of them it is handed or its own.
  */
-export function shadowTemplates(template: string): (at: number) => boolean {
-  const inert = inertSpans(template);
+export function shadowTemplates(
+  template: string,
+  inert: (at: number) => boolean = inertSpans(template),
+): (at: number) => boolean {
   const spans: Array<readonly [number, number]> = [];
   // The templates open, innermost last: whether each is a shadow root.
   const open: boolean[] = [];
@@ -38,5 +41,5 @@ export function shadowTemplates(template: string): (at: number) => boolean {
     open.push(root);
   }
   if (rootedAt !== undefined) spans.push([rootedAt, template.length + 1]);
-  return (at) => spans.some(([from, to]) => at >= from && at < to);
+  return withinSpans(spans);
 }

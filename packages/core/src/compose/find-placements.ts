@@ -33,14 +33,29 @@ const ALLOWED = new Set(["name", "view"]);
  */
 export function findPlacements(template: string): Placement[] {
   const found: Placement[] = [];
-  const isInert = inertSpans(template);
-  const inParagraph = openParagraphs(template);
-  const inShadowRoot = shadowTemplates(template);
+  // Where a directive is not a placement, or may not stand. Read when the first directive is
+  // met and once for all of them, so a view that places nothing is not read for it at all.
+  let where:
+    | {
+        readonly isInert: (at: number) => boolean;
+        readonly inParagraph: (at: number) => boolean;
+        readonly inShadowRoot: (at: number) => boolean;
+      }
+    | undefined;
 
   DIRECTIVE.lastIndex = 0;
   for (const match of template.matchAll(DIRECTIVE)) {
     const [directive, rawAttributes = "", selfClosing] = match;
     const start = match.index;
+    if (where === undefined) {
+      const isInert = inertSpans(template);
+      where = {
+        isInert,
+        inParagraph: openParagraphs(template, isInert),
+        inShadowRoot: shadowTemplates(template, isInert),
+      };
+    }
+    const { isInert, inParagraph, inShadowRoot } = where;
     // A directive inside a comment or a raw-text element is not a placement. Dispatching one
     // fetches an assembly the author commented out or quoted, and splices its markup where a
     // "-->" or "</script>" inside it ends the enclosing text early and the rest becomes live.

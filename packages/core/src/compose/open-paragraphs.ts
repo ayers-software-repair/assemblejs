@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { inertSpans } from "./inert-spans.js";
+import { withinSpans } from "./within-spans.js";
 
 // The start tags that close an open p element, from the HTML parser's "in body" insertion mode
 // (html.spec.whatwg.org, parsing, read 2026-10-11: each rule opens "If the stack of open
@@ -71,11 +72,14 @@ const TAG = /<(\/?)([a-zA-Z][a-zA-Z0-9-]*)/g;
  * browser closes such a paragraph at the first block the placed assembly holds, and the rest of
  * the assembly, its island included, leaves its envelope; so a placement there is refused where
  * the directive is read. One pass over the template, so a page of ten thousand placements is
- * answered as fast as one. Tags inside a comment or a raw-text element are not tags. An end tag
- * of an element opened inside the paragraph leaves it open, as the parser does.
+ * answered as fast as one. Tags inside a comment or a raw-text element are not tags, by the
+ * reading of them it is handed or its own. An end tag of an element opened inside the paragraph
+ * leaves it open, as the parser does.
  */
-export function openParagraphs(template: string): (at: number) => boolean {
-  const inert = inertSpans(template);
+export function openParagraphs(
+  template: string,
+  inert: (at: number) => boolean = inertSpans(template),
+): (at: number) => boolean {
   const spans: Array<readonly [number, number]> = [];
   let openedAt: number | undefined;
   TAG.lastIndex = 0;
@@ -91,5 +95,5 @@ export function openParagraphs(template: string): (at: number) => boolean {
     if (slash !== "/" && tag === "p") openedAt = match.index + 1;
   }
   if (openedAt !== undefined) spans.push([openedAt, template.length + 1]);
-  return (at) => spans.some(([from, to]) => at >= from && at < to);
+  return withinSpans(spans);
 }

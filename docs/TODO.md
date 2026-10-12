@@ -16,11 +16,13 @@ then Phase 6 below, a row for every finding. The order of work, and where it sta
 blockers, each with a spec watched red first, DONE; the dev loop and the build's resolver,
 DONE; the starter, done but for its `tsconfig.json` and its guide link, which is the owner's;
 the workflow's majors, each read at the source and reproduced before it is believed, IN HAND:
-the server's six rows are the commit this block is pushed with, and next are the trust rows
-(trust.4 to trust.6), the composer's (composer.2 to composer.4, with server.8), the
-renderers', the agent surface's, `check`'s rules, the verbs', the docs and the tests, then the
-minors; then the outline mode he asked for, in the framework; then the showcase projects,
-extremely complex, into `examples/`.
+the server's rows are done, and the readers of markup are the commit this block is pushed
+with (composer.2, composer.4, trust.4, trust.5, trust.7, and two the seat found in the remote
+scanner). Next: what one remote answer makes the server fetch and keep (trust.6), with a
+cached answer's one envelope id (composer.3, server.8); then the renderers', the agent
+surface's, `check`'s rules, the verbs', the docs and the tests, then the minors; then the
+outline mode he asked for, in the framework; then the showcase projects, extremely complex,
+into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
 far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
 workflow was his order, and his Chrome is driven through the extension (the seat still starts
@@ -39,16 +41,19 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: what a server
-would fail at, it refuses before it listens (DECISIONS 2026-10-11, of that name), with the
-case of the command line's suite that read who ran it made to say so. `ci` ON `next` WAS RED
-TWICE OVER ON THE WAY HERE: at the emoji gate, `U+2197` on sixteen site pages another seat
-pushed in `aecf034` and fixed in `d82714c` (its pages are its own); and beneath that, hidden
-by it, this seat's own case, red under `pnpm test` from `ca60933` on (`ci` 38196690823 on
-`13f3edd`: verify red on that one case, commits, conformance and the browser proof green).
-The run of this push is the first to judge every audit bite at once, so it is read whole. The
-core's tarball is at 77,646 bytes of its 78,000: the next bite that adds to the core moves the
-budget with its measure. Beneath it, the audit's landings: `ca60933` the arguments and the
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: markup is read as
+the browser reads it, in the time its length takes (DECISIONS 2026-10-11, of that name). `next`
+WAS GREEN BENEATH IT at `da3c17d` (`ci` 38197595850, all five jobs), the first green verify
+since the audit began and the one that judged every bite before this at once. It had been red
+three ways on the way: another seat's emoji gate (`aecf034`, fixed by it in `d82714c`; its
+pages are its own), and two of this seat's own that the gate had hidden, a case of the command
+line's suite that read who ran it (`5ea3db0`) and a character written into a core spec where
+its escape belonged (`da3c17d`). A BITE'S PROOF HERE IS THE WHOLE CHEAP CHAIN OF `pnpm check`,
+in its order, then the touched packages' suites run as `pnpm --filter`, then the fixture the
+bite touches; a hand-picked subset is how those two reached `next`. The core's tarball budget
+is 82000, moved from 78000 at a measured 78,829. Beneath it: `f87058e` what a server would
+fail at, it refuses before it listens (the server's six rows; `ci` 38197154945 red at the
+emoji gate on that one character, green in `da3c17d`'s run). Beneath it, the audit's landings: `ca60933` the arguments and the
 starter (`ci` 38196089698: commits, conformance and the browser proof green, verify stopped
 at the emoji gate); `2cb3082`
 the dev loop (`ci` 38195380554, red on the command line's tarball budget, which `ca60933`
@@ -1321,22 +1326,51 @@ Seen working in his Chrome on the scratch showcase, twelve renderers on five pag
 
 Trust and security:
 
-- [ ] scanFragment misses MathML annotation-xml as an HTML integration point, so a remote's answer
+- [x] scanFragment misses MathML annotation-xml as an HTML integration point, so a remote's answer
       can leave its envelope (dangling markup) and smuggle unstamped envelopes (workflow trust.4,
-      major). Claimed at `packages/core/src/remote/scan-fragment.ts:20`. PREMISE UNVERIFIED
-- [ ] One hostile remote answer freezes the whole server: scanFragment is super-quadratic in nesting
+      major). Claimed at `packages/core/src/remote/scan-fragment.ts:20`. PREMISE UNVERIFIED. READ at
+      `remote/scan-fragment.ts` AND REPRODUCED by the seat: accepted, its tags
+      `assembly-root, math`, the planted envelope unseen. DONE 2026-10-11: each open element carries
+      its kind, content is handed back by SVG's three in SVG and MathML's five in MathML, and
+      `annotation-xml` in MathML is refused; a step in the remote fixture, watched red against the
+      old build (DECISIONS 2026-10-11, "markup is read as the browser reads it, in the time its
+      length takes").
+- [x] One hostile remote answer freezes the whole server: scanFragment is super-quadratic in nesting
       depth and synchronous (workflow trust.5, major). Claimed at
-      `packages/core/src/remote/scan-fragment.ts:99`. PREMISE UNVERIFIED
+      `packages/core/src/remote/scan-fragment.ts:99`. PREMISE UNVERIFIED. MEASURED by the seat:
+      forty thousand nested elements, 10.4 s of the one thread; the same page in the fixture took 13
+      s. DONE 2026-10-11: `OpenElements` keeps what a start tag asks as elements open and close;
+      sixty-four thousand deep in 32 ms; a step in the remote fixture, watched red against the old
+      build (DECISIONS 2026-10-11, "markup is read as the browser reads it, in the time its length
+      takes").
 - [ ] One remote answer triggers unbounded concurrent manifest fetches, with no private-address
       check and unbounded map growth (workflow trust.6, major, disputed by one of its refuters).
       Claimed at `packages/core/src/remote/learned-manifests.ts:84`. PREMISE UNVERIFIED
-- [ ] localAssets/inertSpans is quadratic in the remote's markup and re-runs on every page view
+- [x] localAssets/inertSpans is quadratic in the remote's markup and re-runs on every page view
       (workflow trust.7, minor). Claimed at `packages/core/src/server/local-assets.ts:47`. PREMISE
-      UNVERIFIED
+      UNVERIFIED. MEASURED by the seat: sixteen thousand envelopes, 604 ms. DONE 2026-10-11 with
+      composer.4, the same reader: 8 ms (DECISIONS 2026-10-11, "markup is read as the browser reads
+      it, in the time its length takes").
 - [x] ASSEMBLEJS_HOST set to an empty string is accepted as the host and can bind every interface
       (workflow trust.8, minor). Claimed at `packages/core/src/config/read-config.ts:28`. PREMISE
       UNVERIFIED. The same defect as workflow server.3, REPRODUCED by the seat and DONE 2026-10-11
       with it (DECISIONS 2026-10-11, "what a server would fail at, it refuses before it listens").
+- [x] A heading inside SVG or MathML in a remote's answer hides markup from the scanner, an
+      envelope of its own in it (the seat, 2026-10-11, standing in `remote/scan-fragment.ts`; not
+      among the workflow's). The list of start tags that end such content was asked only of names
+      made of letters, so `h1` to `h6` passed: `<svg><h1><style><!--</style>` then an end tag
+      for the envelope and a new envelope was accepted, its tags `assembly-root, svg`. REPRODUCED
+      AND DONE 2026-10-11: the list is asked of every name; a step in the remote fixture
+      (DECISIONS 2026-10-11, "markup is read as the browser reads it, in the time its length takes").
+- [x] An element named `constructor` in a remote's answer throws inside the scanner (the seat,
+      2026-10-11, `remote/start-tag-refusal.ts`): the table of containers was an object asked by
+      the tag's name. REPRODUCED AND DONE 2026-10-11: it is a map (the same entry).
+- [ ] A script is ended at its first end tag by `inertSpans`; the tokenizer does not end one there
+      when a `<script` stands inside a `<!--` inside it (the seat, 2026-10-11). Read short, what
+      the browser still reads as that script's text is read as live markup: a directive written
+      there is found and dispatched, and the assembly's markup is put inside the script, which is
+      the case the inert reading exists to prevent. No placement is dropped by it. A remote's
+      answer with a comment in a script is refused already.
 
 The server:
 
@@ -1389,15 +1423,24 @@ The server:
 
 The composer:
 
-- [ ] A custom element named `title-*`, `style-*`, `script-*` or `textarea-*` silently disables every later
-      <assembly> directive (workflow composer.2, major). Claimed at
-      `packages/core/src/compose/inert-spans.ts:6`. PREMISE UNVERIFIED
+- [x] A custom element named `title-*`, `style-*`, `script-*` or `textarea-*` silently disables
+      every later <assembly> directive (workflow composer.2, major). Claimed at
+      `packages/core/src/compose/inert-spans.ts:6`. PREMISE UNVERIFIED. READ at
+      `compose/inert-spans.ts:6` AND REPRODUCED by the seat: after `<title-bar>`, `<style-guide>`,
+      `<script-runner>` or `<textarea-autosize>`, `findPlacements` answered none. DONE 2026-10-11: a
+      tag's name ends where the tokenizer ends it, an end tag may hold anything after its name, and
+      `liveClosingTags`, which had a second copy of the pattern, asks the one reader (DECISIONS
+      2026-10-11, "markup is read as the browser reads it, in the time its length takes").
 - [ ] A cache hit re-serves the first render's envelope id, so one page can carry duplicate ids and
       the browser skips mounting the later copies (workflow composer.3, major). Claimed at
       `packages/core/src/compose/settle-placement.ts:86`. PREMISE UNVERIFIED
-- [ ] findPlacements is quadratic and runs on every render, even when the markup has no directive
+- [x] findPlacements is quadratic and runs on every render, even when the markup has no directive
       (workflow composer.4, major). Claimed at `packages/core/src/compose/inert-spans.ts:37`.
-      PREMISE UNVERIFIED
+      PREMISE UNVERIFIED. READ AND MEASURED by the seat: a megabyte of sixteen thousand scripts, 1.1
+      s with no directive in it and 2 s with as many placements. DONE 2026-10-11: patterns compiled
+      once and read in place, a stretch found by halving (`withinSpans`), one reading shared by the
+      three readers, none of it before a directive is met; 0.1 ms and 28 ms (DECISIONS 2026-10-11,
+      "markup is read as the browser reads it, in the time its length takes").
 - [x] A view named like an Object.prototype key is treated as existing: 500 and 200 instead of 404
       (workflow composer.5, minor). Claimed at `packages/core/src/server/register-assemblies.ts:65`.
       PREMISE UNVERIFIED. The same defect as workflow server.5, REPRODUCED by the seat and DONE
@@ -1565,10 +1608,12 @@ Docs against code:
 
 Tests that cannot fail:
 
-- [ ] A custom element named `title-*`, `style-*`, `script-*` or `textarea-*` silently disables every
-      placement after it (server renders a raw <assembly> tag, and check says 'no problems')
+- [x] A custom element named `title-*`, `style-*`, `script-*` or `textarea-*` silently disables
+      every placement after it (server renders a raw <assembly> tag, and check says 'no problems')
       (workflow tests.1, major). Claimed at `packages/core/src/compose/inert-spans.ts:3`. PREMISE
-      UNVERIFIED
+      UNVERIFIED. The same defect as workflow composer.2, REPRODUCED by the seat and DONE 2026-10-11
+      with it (DECISIONS 2026-10-11, "markup is read as the browser reads it, in the time its length
+      takes").
 - [ ] Attribution-trailer gate misses the default Claude Code trailer and any lower-case
       co-authored-by (workflow tests.2, minor). Claimed at `scripts/check-trailers.sh:17`. PREMISE
       UNVERIFIED

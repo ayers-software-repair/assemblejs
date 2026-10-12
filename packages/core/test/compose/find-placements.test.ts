@@ -21,6 +21,32 @@ describe("finding placements in a template", () => {
     expect(findPlacements("<main><p>hello</p></main>")).toEqual([]);
   });
 
+  // Each of these elements was read as the raw-text element its name begins with, never closed,
+  // and every placement after it was passed over in silence.
+  it("finds a placement after an element whose name begins like a raw-text element's", () => {
+    for (const element of ["title-bar", "style-guide", "script-runner", "textarea-autosize"]) {
+      const template = `<${element}>x</${element}><assembly name="cart"></assembly>`;
+      expect(
+        findPlacements(template).map((placement) => placement.name),
+        element,
+      ).toEqual(["cart"]);
+    }
+  });
+
+  it("reads a long template with no placement in it without reading it for anything else", () => {
+    const template = "<script>1</script><p>x</p>".repeat(60_000);
+    const started = performance.now();
+    expect(findPlacements(template)).toEqual([]);
+    expect(performance.now() - started).toBeLessThan(250);
+  });
+
+  it("finds ten thousand placements among as many scripts and paragraphs in the time its length takes", () => {
+    const template = '<p>x</p><script>1</script><div><assembly name="cart"/></div>'.repeat(10_000);
+    const started = performance.now();
+    expect(findPlacements(template)).toHaveLength(10_000);
+    expect(performance.now() - started).toBeLessThan(1000);
+  });
+
   // Each of the following is a template the composer must refuse rather than half-understand.
   // A directive that is silently dropped is found by a visitor; one that is refused is found
   // by whoever wrote it.

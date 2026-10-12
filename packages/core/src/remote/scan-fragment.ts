@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { ENVELOPE_ELEMENT } from "../vocab/envelope-element.js";
+import { OpenElements } from "./open-elements.js";
 import { readStartTag } from "./read-start-tag.js";
 import type { ScannedTag } from "./scanned-tag.js";
 import { startTagRefusal } from "./start-tag-refusal.js";
@@ -15,12 +16,24 @@ const RAW_TEXT = new Set(["script", "style", "textarea", "title"]);
 const REFUSED = new Set(
   "html head body frameset frame plaintext xmp iframe noembed noframes noscript image".split(" "),
 );
-const FOREIGN = new Set(["svg", "math"]);
-// Inside SVG or MathML these hand content back to HTML.
-const INTEGRATION = new Set(["foreignobject", "desc", "title", "mi", "mo", "mn", "ms", "mtext"]);
-// MathML's text integration points, inside which these two stay MathML rather than HTML.
-const MATH_TEXT = new Set(["mi", "mo", "mn", "ms", "mtext"]);
+// Where SVG and MathML hand content back to HTML: an element of that name in that one of the
+// two, and in the other an element like any other (html.spec.whatwg.org, parsing, "HTML
+// integration point" and "MathML text integration point", read 2026-10-11). MathML's sixth,
+// annotation-xml, is one or is not by the decoded value of an attribute, so it is refused
+// where it would be MathML rather than read.
+const INTEGRATION = {
+  svg: new Set(["foreignobject", "desc", "title"]),
+  math: new Set(["mi", "mo", "mn", "ms", "mtext"]),
+} as const;
+// Directly inside one of MathML's, these two stay MathML rather than HTML.
 const STAY_MATH = new Set(["mglyph", "malignmark"]);
+// An end tag, read from where it stands.
+const END_TAG = /<\/([a-zA-Z][^\t\n\f\r />]*)[\t\n\f\r ]*>/y;
+// Where the text of each raw-text element ends: at the start of its own end tag.
+const rawEnd = (name: string): RegExp => new RegExp(`</${name}[\\t\\n\\f\\r />]`, "gi");
+const RAW_END: ReadonlyMap<string, RegExp> = new Map(
+  [...RAW_TEXT].map((name) => [name, rawEnd(name)]),
+);
 
 /**
  * Reads a remote's answer as the browser will, and answers every HTML start tag in it, in order,
@@ -35,26 +48,28 @@ const STAY_MATH = new Set(["mglyph", "malignmark"]);
  */
 export function scanFragment(html: string): readonly ScannedTag[] | string {
   const tags: ScannedTag[] = [];
-  const open: Array<{ readonly name: string; readonly foreign: boolean }> = [];
+  const open = new OpenElements();
   let closed = false;
   let i = 0;
   while (i < html.length) {
     const next = html.indexOf("<", i);
     const text = html.slice(i, next === -1 ? html.length : next);
-    if (open.length === 0 && text.trim() !== "") return "content outside the envelope";
+    if (open.depth === 0 && text.trim() !== "") return "content outside the envelope";
     if (next === -1) break;
     i = next;
-    const top = open.at(-1);
-    const foreign = top !== undefined && top.foreign && !INTEGRATION.has(top.name);
-    // Whether a start tag here would still be MathML: anything in foreign content, and mglyph or
-    // malignmark directly in a text integration point, whose content the browser then reads as
+    const top = open.innermost;
+    // Which of SVG and MathML a start tag here would be, when it would not be HTML: its
+    // parent's, anywhere in either that does not hand content back; and MathML for mglyph or
+    // malignmark directly in one of MathML's that does, whose content the browser then reads as
     // markup, never as the raw text the same tag would hold in HTML.
-    const staysForeign = (name: string): boolean =>
-      foreign ||
-      (top !== undefined && top.foreign && MATH_TEXT.has(top.name) && STAY_MATH.has(name));
+    const outsideHtml = (name: string): "svg" | "math" | undefined => {
+      if (top === undefined || top.kind === "html") return undefined;
+      if (!INTEGRATION[top.kind].has(top.name)) return top.kind;
+      return top.kind === "math" && STAY_MATH.has(name) ? "math" : undefined;
+    };
 
     if (html.startsWith("<!--", i)) {
-      if (open.length === 0) return "content outside the envelope";
+      if (open.depth === 0) return "content outside the envelope";
       if (html.startsWith("<!-->", i) || html.startsWith("<!--->", i)) return "an empty comment";
       const end = html.indexOf("-->", i + 4);
       if (end === -1) return "an unclosed comment";
@@ -63,18 +78,19 @@ export function scanFragment(html: string): readonly ScannedTag[] | string {
       continue;
     }
     if (html.startsWith("</", i)) {
-      const found = /^<\/([a-zA-Z][^\t\n\f\r />]*)[\t\n\f\r ]*>/.exec(html.slice(i));
+      END_TAG.lastIndex = i;
+      const found = END_TAG.exec(html);
       if (found === null) return "an end tag the browser reads differently";
       const name = (found[1] ?? "").toLowerCase();
       if (top?.name !== name) return `an end tag </${name}> with no open <${name}> to close`;
-      open.pop();
+      open.close();
       i += found[0].length;
-      if (open.length === 0) closed = true;
+      if (open.depth === 0) closed = true;
       continue;
     }
     if (!/^<[a-zA-Z]/.test(html.slice(i, i + 2))) {
       if (html.startsWith("<!", i) || html.startsWith("<?", i)) return "markup the browser ignores";
-      if (open.length === 0) return "content outside the envelope";
+      if (open.depth === 0) return "content outside the envelope";
       i += 1;
       continue;
     }
@@ -82,39 +98,41 @@ export function scanFragment(html: string): readonly ScannedTag[] | string {
     const tag = readStartTag(html, i);
     if (typeof tag === "string") return tag;
     i = tag.end;
-    if (open.length === 0 && (closed || tag.name !== ENVELOPE_ELEMENT)) {
+    if (open.depth === 0 && (closed || tag.name !== ENVELOPE_ELEMENT)) {
       return closed ? "more than one envelope" : "an answer that does not start with an envelope";
     }
     if (REFUSED.has(tag.name)) return `a <${tag.name}> element`;
-    if (staysForeign(tag.name)) {
-      if (/^[a-z]+$/.test(tag.name) && BREAKOUT.has(tag.name)) {
-        return `a <${tag.name}> inside SVG or MathML`;
-      }
+    const kind = outsideHtml(tag.name);
+    if (kind !== undefined) {
+      if (BREAKOUT.has(tag.name)) return `a <${tag.name}> inside SVG or MathML`;
       if (tag.name === ENVELOPE_ELEMENT) return "an envelope inside SVG or MathML";
-      if (!tag.selfClosing) open.push({ name: tag.name, foreign: true });
+      if (kind === "math" && tag.name === "annotation-xml") {
+        return "an <annotation-xml> inside MathML";
+      }
+      if (!tag.selfClosing) open.open(tag.name, kind);
       continue;
     }
-    const refusal = startTagRefusal(
-      tag.name,
-      open.map((element) => element.name),
-    );
+    const refusal = startTagRefusal(tag.name, open);
     if (refusal !== undefined) return refusal;
     tags.push(tag);
     if (VOID.has(tag.name)) continue;
-    if (RAW_TEXT.has(tag.name)) {
-      const end = new RegExp(`</${tag.name}[\\t\\n\\f\\r />]`, "i").exec(html.slice(i));
+    const rawTextEnd = RAW_END.get(tag.name);
+    if (rawTextEnd !== undefined) {
+      rawTextEnd.lastIndex = i;
+      const end = rawTextEnd.exec(html);
       if (end === null) return `an unclosed <${tag.name}>`;
-      const body = html.slice(i, i + end.index);
+      const body = html.slice(i, end.index);
       if (tag.name === "script" && body.includes("<!--")) return "a comment inside a script";
-      i += end.index;
-      open.push({ name: tag.name, foreign: false });
+      i = end.index;
+      open.open(tag.name, "html");
       continue;
     }
+    const root = tag.name === "svg" ? "svg" : tag.name === "math" ? "math" : undefined;
     // A self-closed <svg/> or <math/> is closed at once; any other HTML element is not.
-    if (FOREIGN.has(tag.name) && tag.selfClosing) continue;
-    open.push({ name: tag.name, foreign: FOREIGN.has(tag.name) });
+    if (root !== undefined && tag.selfClosing) continue;
+    open.open(tag.name, root ?? "html");
   }
-  if (open.length > 0) return `an unclosed <${open.at(-1)?.name ?? ""}>`;
+  if (open.depth > 0) return `an unclosed <${open.innermost?.name ?? ""}>`;
   if (!closed) return "no envelope";
   return tags;
 }
