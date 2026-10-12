@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { basket, price } from "../../browser/basket.js";
   import type { Held } from "../../browser/basket.js";
+  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
 
   type Priced = {
     sku: string;
@@ -11,7 +12,7 @@
     cents: number;
     left: number;
   };
-  let { events } = $props();
+  let { events }: AssemblyProps = $props();
 
   // The basket is read from the browser once the page is live, and priced by the server every
   // time it changes: the browser says what it holds, the server says what that costs.

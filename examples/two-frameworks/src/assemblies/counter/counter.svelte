@@ -1,5 +1,7 @@
 <script lang="ts">
-  let { data, events } = $props();
+  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+
+  let { data, events }: AssemblyProps<{ label: string }> = $props();
   let count = $state(0);
 </script>
 

@@ -5,10 +5,20 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-12, at the end of the audit the
-owner ordered).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-12, after the owner's rulings at
+the seat).**
 
-THE AUDIT IS THE WORK IN HAND (owner, 2026-10-11 evening; DECISIONS 2026-10-11, "the audit"). He
+THE OWNER RULED THREE THINGS AT THE SEAT ON 2026-10-12, AND THE WORK IN HAND IS FOUR BITES, in
+this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a row for each):
+(1) a Svelte view types what it is handed, found by Svelte's own checker, DONE;
+(2) the command line's package is split in three, `cli`, `build` and `check`, before the
+TypeScript setup is built, what would make one of the three depend on another the wrong way
+untangled first; (3) the build writes the TypeScript setup, so that no file of a user's
+needs a line saying whose JSX it is, and it lands in `build`; (4) a gate holds every example
+to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT: the two new
+packages' limits go to him with their measures. What follows is the state the audit left.
+
+THE AUDIT WAS THE WORK BEFORE IT (owner, 2026-10-11 evening; DECISIONS 2026-10-11, "the audit"). He
 did not believe the framework was complete, and it was not. Read, in this order:
 `~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/README.md`, which holds his orders
 in his words, the state and the plan; `AUDIT-REPORT.md` beside it, the report he was sent;
@@ -37,19 +47,17 @@ DONE TOO, read as the majors were, and so are the rows the showcase added and th
 half of the starter's type-checking. NOTHING OF THE SEAT'S OWN IS LEFT: its last row, the
 harnesses' leaked servers, was reproduced and mended on 2026-10-12. Every open row is the
 owner's, the site seat's, or wants a person at a window, and each of the owner's says what was
-measured and what the seat advises: two servers on one page (FINDINGS 35 to 37), whose JSX a
-file is and the starter's `tsconfig.json`, the stack a refused boot prints, the `Renderer`
+measured and what the seat advises: two servers on one page (FINDINGS 35 to 37), what a new
+project installs to type-check, the stack a refused boot prints, the `Renderer`
 contract nothing calls, Lit's one hydration hook, what a `perf` budget holds of mounting and
 a value for a route's parameter, a dynamic route that cannot answer 404, the copyright line
 on generated modules, what a handler may return as JSON, whose word raises a package's size
 limit (the seat raised three of them 20 times in two days and raises none until he rules),
 `CLAUDE.md`, the first prerelease.
-His answer on whose JSX a file is also decides whether any gate can type-check `examples/`,
-which none does: 64 errors of that kind stand in the ten, and the seat's advice, tried on
-all of them, leaves none. FINDINGS 53 to 63 in the evidence directory are the state at the
-end. A SESSION THAT RESUMES HERE HAS NO BITE TO TAKE: it reads
-`origin/next`'s last run, and anything a seat or the owner has added to this file since, and
-says so to the lead.
+Whose JSX a file is he has ruled (Phase 7), and with it that a gate holds `examples/`, which
+none does yet. FINDINGS 53 to 64 in the evidence directory are the state at the
+end. A SESSION THAT RESUMES HERE TAKES THE FIRST OPEN ROW OF PHASE 7, after reading
+`origin/next`'s last run and anything a seat or the owner has added to this file since.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
 far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
 workflow was his order, and his Chrome is driven through the extension (the seat still starts
@@ -1376,7 +1384,11 @@ a spec watched red first, or struck with its reason.
       itself does not type-check. MEASURED 2026-10-12, 39 errors on the frameworks example
       under a strict configuration, of three causes. DONE of the build's two: the generated
       modules type-check, 26 errors gone, and a fresh project with TypeScript and Node's types
-      type-checks after its first build. THE OWNER'S TO SETTLE of the rest, each with what was
+      type-checks after its first build. RULED 2026-10-12 of whose JSX a file is: the build
+      writes the TypeScript setup and no file carries a line (Phase 7, R-4); the seat's
+      advice of a line in each file is withdrawn. What a new project installs to type-check
+      is still his. As it stood before the ruling: THE OWNER'S TO SETTLE of the rest, each
+      with what was
       measured: whose JSX a `.tsx` is when a project mixes frameworks (three ways, the seat's
       advice the line in the file with `check` naming one that lacks it, tried on the ten
       examples in the row on them, below), and whether the
@@ -1397,6 +1409,9 @@ a spec watched red first, or struck with its reason.
       advice as well, one line heading each `.tsx` of a Preact or Solid assembly, 11 files,
       none is left in any of the ten. Every file was put back: the examples are as they were
       (DECISIONS 2026-10-12, "the advice on whose JSX a file is, tried on every example").
+      THAT COUNT IS OF `.ts` AND `.tsx` ONLY: the twelve Vue and Svelte views were read by no
+      pass. RULED 2026-10-12: no line in a file, the build writes the setup, and the gate
+      runs Vue's and Svelte's checkers too (Phase 7, R-4 and R-5). As it stood before:
       THE OWNER'S answer there decides whether a gate can hold `examples/`, and so whether the
       showcase is clean before the first prerelease. A configuration that type-checks a
       project names `.assemblejs/**/*.ts`, as naming `.assemblejs` alone leaves the generated
@@ -2016,6 +2031,57 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       the heaviest pages are the ones no budget holds. A design: where a value comes from. THE
       OWNER'S, and one question with the row on what `perf` weighs, above, which says both
       halves that are left.
+
+## Phase 7: the owner's rulings of 2026-10-12, at the seat
+
+His words and what each rests on are in DECISIONS 2026-10-12, "the owner at the seat". The
+rows are taken in this order; each is a bite with its own proof and its own push.
+
+- [x] R-1 A Svelte view types what it is handed. Svelte's own checker, run over the six
+      Svelte views of the examples, found two errors, both a callback's parameter left `any`
+      because the view's props are. Counted 2026-10-12: of the six, four take props and none
+      types them (`basket`, `board`, `counter`, `svelte-counter`), and so do two of the
+      rendering fixture's views and two of the renderer's own test fixtures. The renderer
+      hands a view `data` and `events`
+      (`renderer-svelte/src/server/render-to-markup.ts`, `client/hydrate.ts`) and its
+      published `AssemblyProps` declares `data` alone, so a view that types its props by it
+      cannot read `events`; the scaffold writes `let { data } = $props()` untyped
+      (`cli/src/commands/assembly-files.ts`); and the site's Svelte page and tutorial teach
+      the untyped line (the site seat's, told through the lead). DONE 2026-10-12: the type
+      says what is handed, the scaffold types its props, the eight views and fixtures type
+      theirs, and Svelte's checker finds nothing in the examples
+      (DECISIONS 2026-10-12, "a Svelte view types what it is handed")
+- [ ] R-2 What would make one of the three packages depend on another the wrong way,
+      untangled before anything moves. First the map of which area goes to which package;
+      then each import that crosses a line of that map upward. Two areas that import each
+      other and stay in one package are left alone. Counted 2026-10-12 from the imports in
+      `packages/cli/src`, the five pairs that import each other: `build` and `check` (1 and
+      13), `check` and `shape` (1 and 14), `check` and `perf` (1 and 4), `agents` and
+      `commands` (2 and 5), `root` and `discovery` (1 and 6). And a rule in the module gate
+      that holds the direction, `cli` to `check` to `build`
+- [ ] R-3 `@assemblejs/build` and `@assemblejs/check` cut from `@assemblejs/cli`: `cli` keeps
+      the verbs, `build` turns a project into a server, `check` reads a project and names
+      problems; the agent surface and `create` take from the two what they took from the
+      command line. With it: the one-version gate and the changesets group at fourteen, the
+      release's list of packages, the reference, the READMEs, DESIGN. THE TWO NEW LIMITS ARE
+      THE OWNER'S: the seat brings each package's measure and sets none
+- [ ] R-4 The build writes the TypeScript setup into `.assemblejs/`, and the starter a root
+      `tsconfig.json` that names it, so no file needs a line saying whose JSX it is. One
+      project for each owner of JSX, whose a file is decided once, by the build's own
+      definition; no project written with nothing in it; a `.tsx` outside every assembly
+      written into the project of what imports it. Tried by hand first, 2026-10-12: ten
+      examples, no error under `tsc -b`, with no line in any file. ITS FIRST EXPERIMENT, not
+      tried: in an editor two generated modules that take a Solid view show an error. A
+      browser module takes one view and can go in its owner's project; the registry imports
+      every owner's views and can go in none, so how it is written must change
+- [ ] R-5 A gate holds every example: TypeScript by the written setup, Vue's checker over
+      the Vue views and Svelte's over the Svelte ones. React's types in the seven examples
+      that hold a React view; the two checkers as development dependencies of this
+      repository only
+- [ ] THE OWNER'S, from the rulings: two package names to set up on npm before the first
+      prerelease, `@assemblejs/build` and `@assemblejs/check`; `CLAUDE.md`'s twelve packages
+      and its list of them, which the seat does not edit; and whose word raises or sets a
+      size limit, which he answered with the split and which stands for the next time
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

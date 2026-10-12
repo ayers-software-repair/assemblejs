@@ -20,6 +20,10 @@ describe("what a new assembly is made of", () => {
     const svelte = Object.values(assemblyFiles("cart-item", "svelte") ?? {})[0] ?? "";
     expect(svelte).toContain("$props()");
     expect(svelte).not.toContain("export default function");
+    // Its props are typed by the renderer's own type, as every other view the scaffold writes:
+    // untyped, a new view read its data and its events as `any`.
+    expect(svelte).toContain('import type { AssemblyProps } from "@assemblejs/renderer-svelte";');
+    expect(svelte).toContain("let { data }: AssemblyProps = $props();");
     const react = Object.values(assemblyFiles("cart-item", "react") ?? {})[0] ?? "";
     // A React component's name starts with a capital, or React treats it as an html tag.
     expect(react).toContain("export default function CartItem(");

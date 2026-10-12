@@ -1,5 +1,7 @@
 <script lang="ts">
-  let { data } = $props();
+  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+
+  let { data }: AssemblyProps<{ note: string }> = $props();
 </script>
 
 <section data-parent="raw-svelte"><p class="quoted">{data.note}</p><div class="raw">{@html data.note}</div></section>
