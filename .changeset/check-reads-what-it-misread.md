@@ -1,0 +1,5 @@
+---
+"@assemblejs/cli": patch
+---
+
+`check` reads what it misread, and names a file it cannot read at all. An element with a spread beside a computed attribute (`<img {...rest} src={src} />`, in JSX, Vue and Svelte) is left to the render like any element with a spread, where it was held to an `alt` or a name its spread may carry. A `Slot` in a React or Preact class component's `render` is a placement of the view's, where it was reported as standing in a Lit element's shadow root. A `Slot` or a `slot()` an author commented out in a Vue template or Svelte markup places nothing. An api file, or a view written as a module with the components it is split into, that does not compile is a finding of a new rule, `a-source-file-compiles`, with what the compiler said and the line; `check` had said no problems of a project the build then stopped on. And a placement from another server is not refused as undeclared where the config's remotes could not all be read, an origin taken from the environment being as common as one written (`declaredOrigins` answers `{ origins, whole }`).

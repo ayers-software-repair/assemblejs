@@ -30,7 +30,7 @@ describe("the elements a Vue component's template writes", () => {
       },
       { tag: "input", attributes: [["type", "text"]], computed: false },
       { tag: "p", attributes: [], computed: false },
-      { tag: "button", attributes: [], computed: true },
+      { tag: "button", attributes: [[COMPUTED_MARKER, true]], computed: true },
     ]);
   });
 

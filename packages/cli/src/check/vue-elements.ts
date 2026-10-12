@@ -12,8 +12,9 @@ const INTERPOLATION = /\{\{[\s\S]*?\}\}/g;
  * part as markup with every `{{ }}` standing as the marker, each tag with its attributes. An
  * attribute bound with `:name` or `v-bind:name` is the attribute `name`, its value the marker,
  * and the element computed; a directive (`v-if`, `v-for`, `@click`, `v-on:`) writes no attribute
- * the browser reads and is left out; `v-bind` of a whole object makes the element computed, since
- * what it holds is only a render's to know. A component with no template writes no element.
+ * the browser reads and is left out; `v-bind` of a whole object is an attribute nobody can name,
+ * the marker as its name, and makes the element computed, since what it holds is only a render's
+ * to know. A component with no template writes no element.
  */
 export function vueElements(source: string): readonly ViewElement[] {
   const template = TEMPLATE.exec(source)?.[1];
@@ -27,6 +28,7 @@ export function vueElements(source: string): readonly ViewElement[] {
         attributes.set(bound, COMPUTED_MARKER);
         computed = true;
       } else if (name === "v-bind") {
+        attributes.set(COMPUTED_MARKER, true);
         computed = true;
       } else if (!/^(?:v-|@|#)/.test(name)) {
         attributes.set(name, value);

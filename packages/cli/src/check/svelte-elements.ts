@@ -13,8 +13,8 @@ const EXPRESSION = /\{[^{}]*\}/g;
  * outside its script and style, with every `{ }` expression standing as the marker, from the
  * inside out where they nest, so a block (`{#if}`, `{:else}`, `{/if}`) is text between tags
  * and an attribute written `alt={value}` is the attribute with the marker for its value, which
- * makes the element computed. A spread `{...rest}` stands as the marker too, and the element it
- * is on is computed, since what it holds is only a render's to know.
+ * makes the element computed. A spread `{...rest}` stands as the marker too, an attribute named
+ * by it, and the element it is on is computed, since what it holds is only a render's to know.
  */
 export function svelteElements(source: string): readonly ViewElement[] {
   let markup = source.replace(SCRIPT_OR_STYLE, "");
@@ -28,7 +28,7 @@ export function svelteElements(source: string): readonly ViewElement[] {
     let computed = element.computed;
     for (const [name, value] of element.attributes) {
       if (name === COMPUTED_MARKER) computed = true;
-      else attributes.set(name, value);
+      attributes.set(name, value);
     }
     return { ...element, attributes, computed };
   });

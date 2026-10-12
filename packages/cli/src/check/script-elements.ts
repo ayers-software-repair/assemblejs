@@ -75,6 +75,8 @@ export function scriptElements(source: string, loader: "ts" | "tsx"): readonly V
       if (second?.type === "ObjectExpression") {
         for (const one of second.properties) {
           if (one.type === "SpreadElement") {
+            // An attribute nobody can name: the marker as its name says a spread stands here.
+            attributes.set(COMPUTED_MARKER, true);
             computed = true;
             continue;
           }

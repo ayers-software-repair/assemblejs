@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadPug, readViewPlacements } from "@assemblejs/cli";
+import { loadPug, readViewPlacements, uncompiled } from "@assemblejs/cli";
 
 const pug = loadPug(fileURLToPath(new URL("../../../../examples/templates/", import.meta.url)));
 
@@ -66,9 +66,15 @@ describe("what a view's source says it places, each kind of view by what it is",
     ).toEqual([{ name: "cart", view: "default" }]);
   });
 
-  it("answers none known for a module it cannot compile, and leaves it to the build to say why", () => {
-    expect(readViewPlacements("shell.react.tsx", "react", "export default <").placements).toBe(
-      undefined,
-    );
+  // Answered as none known, a module that does not compile was the build's to refuse, and
+  // check said no problems of it.
+  it("throws what the compiler said of a module that does not compile, for its caller to report", () => {
+    let thrown: unknown;
+    try {
+      readViewPlacements("shell.react.tsx", "react", "export default <");
+    } catch (error) {
+      thrown = error;
+    }
+    expect(uncompiled(thrown)?.[0]?.line).toBe(1);
   });
 });

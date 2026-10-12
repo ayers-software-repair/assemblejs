@@ -38,4 +38,13 @@ describe("the slots a Svelte component's markup places", () => {
     expect(sveltePlacements(whole).placements).toEqual([{ name: "cart", view: "default" }]);
     expect(sveltePlacements('<div>{@html slot("cart")}</div>').placements).toEqual([]);
   });
+
+  it("are none of those written in a comment", () => {
+    const read = sveltePlacements(
+      component(
+        '<!-- {@html slot("ghost")} -->{@html slot("cart")}<!--\n{@html slot("gone")}\n-->',
+      ),
+    );
+    expect(read.placements).toEqual([{ name: "cart", view: "default" }]);
+  });
 });

@@ -3,6 +3,7 @@
 import { DEFAULT_VIEW } from "@assemblejs/core";
 import { collectPlacements } from "./collect-placements.js";
 import { importedAs } from "./imported-as.js";
+import { MARKUP_COMMENT } from "./markup-comment.js";
 import type { ViewPlacements } from "./view-placements.js";
 
 const TEMPLATE = /<template\b[^>]*>([\s\S]*)<\/template\s*>/i;
@@ -28,7 +29,8 @@ const writtenAs = (local: string): readonly string[] => {
  * bound, or missing, is reported.
  */
 export function vuePlacements(source: string): ViewPlacements {
-  const template = TEMPLATE.exec(source)?.[1] ?? "";
+  // A comment places nothing: a Slot an author commented out is not one the view holds.
+  const template = (TEMPLATE.exec(source)?.[1] ?? "").replace(MARKUP_COMMENT, "");
   const found: { name: string | undefined; view: string | undefined; shown: string }[] = [];
   for (const local of importedAs(source, "Slot")) {
     // A name under a namespace holds a dot, which is the one character of it a pattern reads.

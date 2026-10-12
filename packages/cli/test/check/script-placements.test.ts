@@ -75,6 +75,17 @@ describe("the slots a view written as a module places", () => {
     expect(read.shadowed).toEqual(['ShopCard.render() places "price"']);
   });
 
+  // A class with a render is a Lit element where its slot is Lit's. A React or a Preact class
+  // component has no shadow root, and its Slot is a placement of the view's like any other.
+  it("reads a Slot in a class component's render as a placement of the view's", () => {
+    for (const renderer of ["react", "preact"]) {
+      const view = `import { Component } from "${renderer}";\nimport { Slot } from "@assemblejs/renderer-${renderer}/client";\nexport default class Shell extends Component { render() { return <section><Slot name="cart" /></section>; } }`;
+      const read = scriptPlacements(view, "tsx");
+      expect(read.placements, renderer).toEqual([{ name: "cart", view: "default" }]);
+      expect(read.shadowed, renderer).toBeUndefined();
+    }
+  });
+
   it("throws for a module that cannot be compiled", () => {
     expect(() => scriptPlacements("export default <", "tsx")).toThrow();
   });

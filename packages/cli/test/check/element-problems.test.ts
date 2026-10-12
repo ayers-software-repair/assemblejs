@@ -38,6 +38,19 @@ describe("a view has no inline style", () => {
     expect(found[0]?.fix).toContain(".css file in the assembly's directory");
   });
 
+  // A spread may carry the alt or the name, whatever else on the element is computed. With a
+  // computed attribute beside it the spread was not seen, and each of these was a finding.
+  it("leaves to the render an element with a spread on it, beside whatever else it computes", () => {
+    const found = problems({
+      "src/assemblies/hero/hero.react.tsx":
+        "export default (p: { readonly src: string; readonly rest: object }) => <><img {...p.rest} src={p.src} /><input {...p.rest} value={p.src} /></>;",
+      "src/assemblies/logo/logo.svelte": "<img {...rest} src={src} /><input {...rest} value={v} />",
+      "src/assemblies/mark/mark.vue":
+        '<template><img v-bind="rest" :src="src" /><input v-bind="rest" :value="v" /></template>',
+    });
+    expect(found.map((one) => [one.rule, one.message])).toEqual([]);
+  });
+
   it("refuses an img with no alt at all, in any kind of view, and passes an empty, a computed, or a spread one", () => {
     const found = problems({
       "src/assemblies/photo/photo.html": '<img src="a.png"><img src="b.png" alt="">',

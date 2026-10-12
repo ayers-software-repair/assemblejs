@@ -7,6 +7,7 @@ import { collectPlacements } from "./collect-placements.js";
 import { scriptPlacements } from "./script-placements.js";
 import { sveltePlacements } from "./svelte-placements.js";
 import { templatePlacements } from "./template-placements.js";
+import { uncompiled } from "./uncompiled.js";
 import type { ViewPlacements } from "./view-placements.js";
 import { vuePlacements } from "./vue-placements.js";
 
@@ -19,8 +20,9 @@ const UNREAD: ViewPlacements = { placements: undefined, unnamed: [] };
  * it writes.
  *
  * Throws for a plain html view or a template whose directive cannot be read, as its render
- * would. A view that cannot be read for its placements at all answers none known, and the
- * render reads it.
+ * would, and for a view written as a module that does not compile, with what the compiler said.
+ * A view that cannot be read for its placements for any other reason answers none known, and
+ * the render reads it.
  */
 export function readViewPlacements(
   file: string,
@@ -40,7 +42,9 @@ export function readViewPlacements(
   if (!/\.[jt]sx?$/.test(file)) return UNREAD;
   try {
     return scriptPlacements(source, file.endsWith("x") ? "tsx" : "ts");
-  } catch {
+  } catch (error) {
+    // A module that does not compile is its caller's to report; any other is the render's.
+    if (uncompiled(error) !== undefined) throw error;
     return UNREAD;
   }
 }

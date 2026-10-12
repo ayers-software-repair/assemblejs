@@ -3,6 +3,7 @@
 import { DEFAULT_VIEW } from "@assemblejs/core";
 import { collectPlacements } from "./collect-placements.js";
 import { importedAs } from "./imported-as.js";
+import { MARKUP_COMMENT } from "./markup-comment.js";
 import type { ViewPlacements } from "./view-placements.js";
 
 const SCRIPT_OR_STYLE = /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi;
@@ -15,7 +16,8 @@ const STRING = /^(["'`])([^"'`$]*)\1$/;
  * placement; a name that is computed is reported.
  */
 export function sveltePlacements(source: string): ViewPlacements {
-  const markup = source.replace(SCRIPT_OR_STYLE, "");
+  // A comment places nothing: a slot an author commented out is not one the view holds.
+  const markup = source.replace(SCRIPT_OR_STYLE, "").replace(MARKUP_COMMENT, "");
   const found: { name: string | undefined; view: string | undefined; shown: string }[] = [];
   for (const local of importedAs(source, "slot")) {
     // A name under a namespace holds a dot, which is the one character of it a pattern reads.

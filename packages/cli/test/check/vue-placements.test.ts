@@ -48,4 +48,15 @@ describe("the slots a Vue component's template places", () => {
     const whole = `<script setup lang="ts">\nimport * as c from "@assemblejs/renderer-vue/client";\n</script>\n<template><c.Slot name="cart" /><c-Slot name="price" /></template>`;
     expect(vuePlacements(whole).placements).toEqual([{ name: "cart", view: "default" }]);
   });
+
+  // A Slot an author commented out was counted as placed, and a page was then told of an
+  // assembly it does not hold.
+  it("are none of those written in a comment", () => {
+    const read = vuePlacements(
+      component(
+        '<!-- <Slot name="ghost" /> --><Slot name="cart" /><!--\n<Slot name="gone" />\n-->',
+      ),
+    );
+    expect(read.placements).toEqual([{ name: "cart", view: "default" }]);
+  });
 });

@@ -23,9 +23,11 @@ trust.5, trust.7, and three the seat found there), a kept answer's one envelope 
 gap in the public surface and is the owner's), an attribute's value read as markup
 (renderers.2), an id of its own for each island's `useId` (renderers.1), and the command
 line's (cli-verbs.1, .3, .4, .5, .8: a misnamed file ignored in silence, a README taken for a
-view, a link that leads nowhere, `add` writing outside a project). Next: `check`'s rules
-(check-rules.2, .3, .5, .6), the agent surface's (mcp.1 to mcp.5, of which the circle between
-`check` and `add` is closed) and the tests', then the minors. Then the
+view, a link that leads nowhere, `add` writing outside a project), and the rules `check` names
+(check-rules.2 to check-rules.6: a spread not seen, a class component taken for an element, a
+comment that placed, a file that does not compile, an origin from the environment). Next: the
+agent surface's (mcp.1 to mcp.5, of which the circle between `check` and `add` is closed) and
+the tests', then the minors. Then the
 outline mode he asked for, in the framework; then the showcase projects, extremely complex,
 into `examples/`.
 A scratch showcase, its source saved in that evidence directory, was the stranger test and is
@@ -46,14 +48,15 @@ this machine and a low load while the owner was away. He came back to the seat t
 and his own orders for the audit govern while he works it. Without him at the seat it stands
 again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
 
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: check says what it
-passed over, and add writes only into a project (DECISIONS 2026-10-12, of that name), the
-command line's five rows. Beneath it `f62a4ec`, the ids a component makes are its island's own
-(`ci` 38201904230, all five jobs green); `2e7bb15`, an attribute's value is text (`ci`
-38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
-when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
-core's tarball budget is 86000, moved from 82000 at a measured 82,328; the command line's is at
-92,628 of 94,000. Beneath it `8aa4c0c`, a kept answer is
+STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: check reads what
+it misread, and names a file it cannot read (DECISIONS 2026-10-12, of that name), the five rows
+of the rules `check` names. Beneath it `4618293`, check says what it passed over, and add writes
+only into a project (`ci` 38202881918, all five jobs green); `f62a4ec`, the ids a component
+makes are its island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value
+is text (`ci` 38201174758, all five green); and `b8a6414`, the mark that says an assembly is
+live is written when it is (`ci` 38200554270, all five green, its `browser proof` the one that
+drew it). The tarball budgets: the core's 86000, moved from 82000 at a measured 82,328; the
+command line's 98000, moved from 94000 at a measured 94,039. Beneath it `8aa4c0c`, a kept answer is
 its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
 Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
 markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all five
@@ -1606,21 +1609,43 @@ The command line:
 
 The rules `check` names:
 
-- [ ] A spread plus one dynamic attribute is no longer treated as a spread, so JSX, Vue and Svelte
+- [x] A spread plus one dynamic attribute is no longer treated as a spread, so JSX, Vue and Svelte
       views get false alt and name findings (workflow check-rules.2, major). Claimed at
-      `packages/cli/src/check/spread-element.ts:13`. PREMISE UNVERIFIED
-- [ ] A React or Preact class component's render() is reported as a Lit element's shadow root
+      `packages/cli/src/check/spread-element.ts:13`. PREMISE UNVERIFIED. REPRODUCED by the seat with
+      the built command line: `<img {...rest} src={src} />` an image with no alt, the input beside
+      it a control with no name. DONE 2026-10-12: each reader says a spread outright, an attribute
+      named by the marker, in JSX, Vue and Svelte (DECISIONS 2026-10-12, "check reads what it
+      misread, and names a file it cannot read").
+- [x] A React or Preact class component's render() is reported as a Lit element's shadow root
       (workflow check-rules.3, major). Claimed at `packages/cli/src/check/script-placements.ts:46`.
-      PREMISE UNVERIFIED
-- [ ] A commented-out Slot in a Vue or Svelte view counts as a live placement (workflow
+      PREMISE UNVERIFIED. REPRODUCED by the seat. DONE 2026-10-12: a slot in a class's `render`
+      stands in a shadow root where the slot is the Lit renderer's, and is a placement of the view's
+      otherwise (DECISIONS 2026-10-12, "check reads what it misread, and names a file it cannot
+      read").
+- [x] A commented-out Slot in a Vue or Svelte view counts as a live placement (workflow
       check-rules.4, major). Claimed at `packages/cli/src/check/vue-placements.ts:37`. PREMISE
-      UNVERIFIED
-- [ ] check exits 0 with 'no problems' on an api file or a framework view that does not parse
+      UNVERIFIED. REPRODUCED by the seat for Vue with the built command line, and READ for Svelte,
+      whose markup was searched the same way. DONE 2026-10-12: comments are taken out before either
+      is read for what it places (DECISIONS 2026-10-12, "check reads what it misread, and names a
+      file it cannot read").
+- [x] check exits 0 with 'no problems' on an api file or a framework view that does not parse
       (workflow check-rules.5, major). Claimed at `packages/cli/src/check/check-project.ts:139`.
-      PREMISE UNVERIFIED
-- [ ] Remotes declared through a variable, constant or env value make check refuse a placement from
+      PREMISE UNVERIFIED. REPRODUCED by the seat: an api, a React view and a Vue view that do not
+      parse, and nothing said of any. DONE 2026-10-12 for an api and for a view written as a module
+      with its components: a new rule, `a-source-file-compiles`, with what the compiler said and the
+      line (DECISIONS 2026-10-12, "check reads what it misread, and names a file it cannot read"). A
+      Vue or a Svelte view is the row beneath.
+- [x] Remotes declared through a variable, constant or env value make check refuse a placement from
       a declared remote (workflow check-rules.6, major). Claimed at
-      `packages/cli/src/check/declared-origins.ts:15`. PREMISE UNVERIFIED
+      `packages/cli/src/check/declared-origins.ts:15`. PREMISE UNVERIFIED. READ at
+      `check/declared-origins.ts`; the remote fixture's own config declares its origins so. DONE
+      2026-10-12: `declaredOrigins` says whether it read every remote, and a placement's origin is
+      not judged where it did not (DECISIONS 2026-10-12, "check reads what it misread, and names a
+      file it cannot read").
+- [ ] A Vue or a Svelte view that does not parse is passed over by `check`, which has neither
+      compiler: the build refuses it and `check` says nothing (the seat, 2026-10-12, left from
+      workflow check-rules.5, minor). To settle: whether `check` asks the project's own compiler,
+      as it asks the project's own Pug.
 
 The agent surface:
 

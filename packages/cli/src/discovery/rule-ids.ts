@@ -33,4 +33,5 @@ export const RULE_IDS = [
   "a-control-has-a-name",
   "a-colour-is-a-token",
   "agent-instructions-are-current",
+  "a-source-file-compiles",
 ] as const;

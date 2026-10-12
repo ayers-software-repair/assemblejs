@@ -250,4 +250,12 @@ export const RULES: readonly Rule[] = [
     smell:
       "The marked part of AGENTS.md edited by hand or left as an earlier version wrote it, a registration with no @assemblejs/mcp among the project's dependencies, a CLAUDE.md without the line @AGENTS.md, or @assemblejs/cli updated and @assemblejs/mcp left behind.",
   },
+  {
+    id: "a-source-file-compiles",
+    rule: "Every api file, and every view written as a module with the components it is split into, compiles as the language its name says.",
+    because:
+      "check reads a project's sources without building it. A file it cannot compile is one whose routes, placements and elements it cannot see, so every other rule is silent about that file, and the build stops on it.",
+    smell:
+      "An api with a parenthesis left open, a view with a tag closed by another's name: check says no problems, and build fails.",
+  },
 ];

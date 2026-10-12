@@ -17,6 +17,8 @@ import type { ViewPlacements } from "./view-placements.js";
 
 type Argument = Expression | SpreadElement | undefined;
 
+const LIT_CLIENT = /(^|\/)renderer-lit\/client$/;
+
 // Where a node stands: the class it is in, by name, and whether it is inside that class's render.
 interface Within {
   readonly element: string | undefined;
@@ -82,9 +84,10 @@ const property = (
  * client as. A view written in place is read; one the module computes is left out of the
  * placement; a name it computes is reported.
  *
- * A slot written inside a class's `render`, a Lit element's own, places a child inside that
- * element's shadow root, which the composer refuses: it is reported as such and is no placement
- * of the view's.
+ * A slot of the Lit renderer's written inside a class's `render`, a Lit element's own, places a
+ * child inside that element's shadow root, which the composer refuses: it is reported as such
+ * and is no placement of the view's. A class component of React's or Preact's has no root of its
+ * own, and a `Slot` in its `render` is a placement like any other.
  *
  * Throws for a module that cannot be compiled or parsed. A slot handed on under another name,
  * assigned or passed, is not seen here, and is left to the render.
@@ -95,10 +98,14 @@ export function scriptPlacements(source: string, loader: "ts" | "tsx"): ViewPlac
   const components = new Set<string>();
   const functions = new Set<string>();
   const namespaces = new Set<string>();
+  // What the module imports of the Lit renderer's client, under whatever name: the one renderer
+  // whose view is an element with a shadow root of its own.
+  const lit = new Set<string>();
   for (const statement of program.body) {
     if (statement.type !== "ImportDeclaration") continue;
     if (!isRendererClient(String(statement.source.value))) continue;
     for (const specifier of statement.specifiers) {
+      if (LIT_CLIENT.test(String(statement.source.value))) lit.add(specifier.local.name);
       if (specifier.type === "ImportNamespaceSpecifier") namespaces.add(specifier.local.name);
       if (specifier.type !== "ImportSpecifier") continue;
       const imported =
@@ -135,7 +142,8 @@ export function scriptPlacements(source: string, loader: "ts" | "tsx"): ViewPlac
     const [first, second] = node.arguments;
     const called = named(node.callee, "slot");
     const component = named(first, "Slot");
-    if (within.inRender && (called ?? component) !== undefined) {
+    const local = (called ?? component)?.split(".")[0];
+    if (within.inRender && local !== undefined && lit.has(local)) {
       const shown = written(
         called === undefined ? property(second as ObjectExpression, "name").value : first,
       );

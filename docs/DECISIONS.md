@@ -5847,3 +5847,40 @@ with the built command line in a project it had just made.
 - **Proof.** Thirty cases watched red, then green; the five reproductions run again with the
   rebuilt command line, each answered in a line. The command line's tarball is at 92,628 bytes
   of its 94,000.
+
+## 2026-10-12: check reads what it misread, and names a file it cannot read
+
+Five of the audit's rows on the rules `check` names (check-rules.2 to check-rules.6), each
+reproduced with the built command line in a new project.
+
+- **A spread beside a computed attribute was not seen.** An element was known to carry a
+  spread by inference: computed, with no attribute of its own computed. An image written
+  `<img {...rest} src={src} />` has both, so it was read as one with no alt, and an input
+  beside it as a control with no name; the same in Vue (`v-bind="rest" :src`) and Svelte.
+  Each reader now says a spread outright, an attribute named by the marker, and the inference
+  stays for a reader that cannot tell (props handed on whole).
+- **A class component's `render` was a Lit element's.** Any class with a `render` holding a
+  slot was reported as placing inside its own shadow root. A React or Preact class component
+  has none. The rule holds where the slot is the Lit renderer's, which is the one renderer
+  whose view is an element.
+- **A comment placed an assembly.** A Vue template and Svelte markup were searched for slots
+  as text, comments included, so a `Slot` an author had commented out was a placement, and a
+  page was told of an assembly it does not hold. Comments are taken out first. A slot written
+  in an attribute's value is still read; nothing reads a Vue template as its compiler does.
+- **A file that does not compile was passed over.** An api whose source threw was skipped
+  with a note that its own rules would report it, and no rule did; a view written as a module
+  was "unread", its placements the render's to know. Measured: an api, a React view and a Vue
+  view that do not parse, and `check` said nothing of any. A new rule, `a-source-file-compiles`,
+  names an api and a module view (and each component it imports) with what the compiler said
+  first and its line. A Vue or a Svelte view is not compiled by `check`, which has neither
+  compiler, and stays the build's to refuse: a row says so.
+- **An origin from the environment made its remote undeclared.** The remote fixture's own
+  config reads its producer's origin from the environment, as a real one would. `check` read
+  the literal origins and refused a placement from any other as "not a declared remote".
+  `declaredOrigins` now also says whether it read them all; where it did not, a placement's
+  origin is not judged, and boot holds it as before.
+- **The command line's tarball budget moves from 94000 to 98000.** Measured at 94,039 bytes
+  after this entry and the one above: the dead-link guard, the near-miss findings, the new
+  rule and what reports it.
+- **Proof.** Seventeen cases watched red, then green; one case that held the old answer for a
+  module that does not compile, "none known", now holds the new one.

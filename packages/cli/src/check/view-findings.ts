@@ -12,6 +12,8 @@ import { leadsOut } from "../root/leads-out.js";
 import { readInside } from "../root/read-inside.js";
 import { collectPlacements } from "./collect-placements.js";
 import { readViewPlacements } from "./read-view-placements.js";
+import { uncompiled } from "./uncompiled.js";
+import { unreadableSource } from "./unreadable-source.js";
 import { viewModules } from "./view-modules.js";
 import type { ViewPlacements } from "./view-placements.js";
 
@@ -66,14 +68,22 @@ export function viewFindings(
     }
     let read: ViewPlacements;
     try {
-      const [own, ...parts] = found.modules.map((module) =>
-        readViewPlacements(
-          module,
-          assembly.renderer,
-          readInside(root, module),
-          pugFor(assembly.renderer),
-        ),
-      );
+      const [own, ...parts] = found.modules.map((module): ViewPlacements => {
+        try {
+          return readViewPlacements(
+            module,
+            assembly.renderer,
+            readInside(root, module),
+            pugFor(assembly.renderer),
+          );
+        } catch (error) {
+          // A module that does not compile is a finding against it, and what it places unknown.
+          if (uncompiled(error) === undefined) throw error;
+          problems.push(unreadableSource(module, error));
+          unread.add(assembly.name);
+          return { placements: undefined, unnamed: [] };
+        }
+      });
       // A view that cannot be read places nothing known, and its render reads it.
       if (own?.placements === undefined) continue;
       const all = [own, ...parts];

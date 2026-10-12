@@ -37,6 +37,7 @@ import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
 import { readPagePolicy } from "./read-page-policy.js";
+import { unreadableSource } from "./unreadable-source.js";
 import { viewFindings } from "./view-findings.js";
 import { viewProblems } from "./view-problems.js";
 
@@ -56,6 +57,9 @@ const STREAM_FIX =
  * engine. In process, no shell, so the command line and the agent surface report the same
  * findings the same way.
  */
+// What a project with no config declares: no remote, and that is all of them.
+const NO_REMOTES = { origins: new Set<string>(), whole: true } as const;
+
 export async function checkProject(root: string): Promise<readonly ProjectProblem[]> {
   const assemblies = discoverAssemblies(root);
   const pages = discoverPages(root);
@@ -114,11 +118,11 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   const config = existsSync(configFile)
     ? readOr(
         configFile,
-        (source) => ({ origins: declaredOrigins(source), budgets: readBudgets(source).problems }),
-        { origins: new Set<string>(), budgets: [] },
+        (source) => ({ remotes: declaredOrigins(source), budgets: readBudgets(source).problems }),
+        { remotes: NO_REMOTES, budgets: [] },
       )
-    : { origins: new Set<string>(), budgets: [] };
-  const origins = config.origins;
+    : { remotes: NO_REMOTES, budgets: [] };
+  const { origins } = config.remotes;
   for (const problem of config.budgets) {
     problems.push({
       path: configFile,
@@ -136,8 +140,9 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     let api;
     try {
       api = readApi(root, file);
-    } catch {
-      api = undefined;
+    } catch (error) {
+      // One that leads out of the project is not opened, and is a finding where it is named.
+      if (!(error instanceof OutsideRootError)) problems.push(unreadableSource(file, error));
     }
     if (api === undefined) continue;
     // Core reports in declaration order, so what follows the earlier apis' problems is this one's.
@@ -225,6 +230,8 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
       const url = policy.remote.get(placement.name);
       if (url === undefined) continue;
       for (const problem of remotePlacementProblems(label, template, placement, url, origins)) {
+        // An origin that is not among the ones read is undeclared only where all were read.
+        if (problem.about === "origin" && !config.remotes.whole) continue;
         problems.push({
           path: problem.about === "form" ? page.template : at,
           rule: "a-placement-names-an-assembly",

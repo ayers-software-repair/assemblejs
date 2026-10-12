@@ -29,7 +29,14 @@ describe("the elements a Svelte component's markup writes", () => {
         ],
         computed: true,
       },
-      { tag: "input", attributes: [["type", "text"]], computed: true },
+      {
+        tag: "input",
+        attributes: [
+          ["type", "text"],
+          [COMPUTED_MARKER, true],
+        ],
+        computed: true,
+      },
       { tag: "p", attributes: [], computed: false },
     ]);
   });

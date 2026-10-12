@@ -44,7 +44,22 @@ describe("the elements a module view writes", () => {
 
   it("reads a spread of props as an element it cannot be certain of", () => {
     const source = "export default (rest: object) => <button {...rest}>go</button>;";
-    expect(shown(source)).toEqual([{ tag: "button", attributes: [], computed: true }]);
+    expect(shown(source)).toEqual([
+      { tag: "button", attributes: [[COMPUTED_MARKER, true]], computed: true },
+    ]);
+    // Beside an attribute that is computed too, it is still said.
+    const both =
+      "export default (p: { rest: object; src: string }) => <img {...p.rest} src={p.src} />;";
+    expect(shown(both)).toEqual([
+      {
+        tag: "img",
+        attributes: [
+          [COMPUTED_MARKER, true],
+          ["src", COMPUTED_MARKER],
+        ],
+        computed: true,
+      },
+    ]);
   });
 
   it("reads a Lit template's fixed parts as markup, its expressions marked", () => {
