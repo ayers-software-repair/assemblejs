@@ -2141,12 +2141,16 @@ rows are taken in this order; each is a bite with its own proof and its own push
 - [ ] R-14 One bus for a page, which a remote server's runtime joins only where the page's
       project says so for that server, as `forward` and `trusted` are said (FINDINGS 35;
       owner, 2026-10-12, "Yes, opt in per remote server")
-- [ ] R-15 An api answers a browser's call from any page, with nothing to configure and
-      nobody to redeploy; a server can switch it off. His own correction of the seat's first
-      advice, that each server name its callers: "that doesnt make sense shouldnt you jsut be
-      able to add it? otherwise the other team ahs to redeploy their server..." It gives
-      nothing away while an api cannot see who asks; an api that reads the visitor (R-16) is
-      not opened this way (FINDINGS 36)
+- [ ] R-15 A remote assembly reaches its own server through the page's server, which passes
+      the call on: nothing for the other team to do, nothing crossing origins in the browser
+      (FINDINGS 36). How it came to this, 2026-10-12, in three steps. The seat advised that
+      each server name its callers, and he refused it: "that doesnt make sense shouldnt you
+      jsut be able to add it? otherwise the other team ahs to redeploy their server..." The
+      seat then advised every api open to any page, said it gave nothing away, and he took
+      it. A reader's note said what that missed: it gives nothing away only on the public
+      internet; a server on a private network, or a dev server, could be read by any site
+      a person inside visits, through their browser. Asked again he chose "The page's server
+      relays the call". Cost, to be measured as it is built: a hop on every such call
 - [ ] R-16 An api learns who is asking and a page does not: an api reads the request's
       cookies and headers and may answer with a status, a cookie or a redirect; a service
       and a page stay a function of the address, kept and placed from another server as now

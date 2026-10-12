@@ -7139,3 +7139,23 @@ launch. He answered "no ask me the ones not asked." They were asked, one at a ti
   docs of the channel a project was made from, on an address that answers the day that
   channel first publishes. The first prerelease is cut when Phase 7 is done and green: the
   seat says so, he adds the token and cuts the tag.
+
+## 2026-10-12: a remote assembly's calls are relayed, and why "open by default" was withdrawn
+
+- **What was ruled an hour before.** That an api answers a browser's call from any page,
+  the seat having said it gave nothing away, "because the same answer is already public to
+  anyone who asks the server directly".
+- **What that missed, said by a reader's note.** It is true of a server on the public
+  internet and of no other. A server reachable only inside an office or a home, or a dev
+  server on a developer's own machine, is not public to an outside site; but a page that
+  site serves, opened in a browser inside, is inside, and with every api open it reads the
+  answers. The seat's sentence was wrong for every deployment that is not public, and a
+  framework for teams' servers is deployed on private networks as a matter of course.
+- **His ruling, asked again with that said: "The page's server relays the call".** A remote
+  assembly's browser half asks the page's own server, which passes the call to the server
+  the assembly came from. The other team does nothing and redeploys for no one, which was
+  his point from the start; nothing crosses origins in the browser, so there is no list of
+  callers to keep and no default to get wrong, on a private network or in `dev`.
+- **Its cost, not yet measured.** A hop on each such call, and the relay itself in the
+  framework: what it passes on, what it refuses, and its deadline are R-15's design.
+- **Supersedes** the bullet of the entry above that says "Open by default".
