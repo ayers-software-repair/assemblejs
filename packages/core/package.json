@@ -39,6 +39,11 @@
       "browser": "./dist/client/index.js",
       "default": "./dist/client/index.js"
     },
+    "./outline": {
+      "types": "./dist/outline/index.d.ts",
+      "browser": "./dist/outline/index.js",
+      "default": "./dist/outline/index.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

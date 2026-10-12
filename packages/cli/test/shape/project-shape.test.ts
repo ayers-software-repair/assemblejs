@@ -16,6 +16,7 @@ describe("a project's whole shape", () => {
         authenticate: false,
         budgets: {},
         limits: {},
+        outline: false,
       },
       renderers: [],
       problems: [],

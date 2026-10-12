@@ -20,6 +20,7 @@ const NOTHING = {
   authenticate: false,
   budgets: {},
   limits: {},
+  outline: false,
 };
 
 describe("what a project's config declares, read from its source", () => {
@@ -39,6 +40,13 @@ describe("what a project's config declares, read from its source", () => {
       budgets: { document: 14000 },
       limits: {},
     });
+  });
+
+  it("says whether every page carries its outline, as the config writes it", () => {
+    expect(settings("export default { outline: true };").outline).toBe(true);
+    expect(settings('export default { outline: process.env.OUTLINE === "1" };').outline).toBe(
+      COMPUTED,
+    );
   });
 
   it("says that it declares an access check of its own, and never shows the check", () => {
@@ -69,6 +77,7 @@ describe("what a project's config declares, read from its source", () => {
       authenticate: COMPUTED,
       budgets: COMPUTED,
       limits: COMPUTED,
+      outline: COMPUTED,
     });
   });
 
@@ -81,6 +90,7 @@ describe("what a project's config declares, read from its source", () => {
       authenticate: mark,
       budgets: mark,
       limits: mark,
+      outline: mark,
     });
     expect(settings("export default configFor(process.env);")).toEqual(all(COMPUTED));
     expect(settings("export default { budgets: ")).toEqual(all(UNREAD));
@@ -94,7 +104,7 @@ describe("what a project's config declares, read from its source", () => {
       expect(
         Object.values(shape).filter((value) => value === UNREAD),
         target,
-      ).toHaveLength(6);
+      ).toHaveLength(7);
     }
   });
 });

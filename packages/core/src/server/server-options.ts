@@ -40,6 +40,13 @@ export interface ServerOptions {
   readonly limits?: LimitsConfig;
   /** Where failures are logged, against the id the visitor was told. Standard error if absent. */
   readonly log?: (line: LogLine) => void;
+  /**
+   * Whether every page carries its outline: a switch a visitor turns on to see a box around
+   * each assembly that says what it is, where it came from and when (DESIGN 9). Off unless
+   * this is `true`, in development and in production alike, and a server with it off sends
+   * the pages it always sent.
+   */
+  readonly outline?: boolean;
   /** Read-only devtools, mounted under their prefix in development and ignored in production. */
   readonly devtools?: Devtools;
 }

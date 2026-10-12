@@ -16,10 +16,14 @@ import { parseContentUrl } from "../remote/parse-content-url.js";
 import type { RemoteDefinition } from "../remote/remote-definition.js";
 import type { RemoteTransport } from "../remote/remote-transport.js";
 import { DEV_RELOAD_SCRIPT } from "../vocab/dev-reload-script.js";
+import { OUTLINE_ROUTE } from "../vocab/outline-route.js";
 import type { AdmitVisitor } from "./admit-visitor.js";
+import { beforeBodyEnd } from "./before-body-end.js";
 import { hoistAssets } from "./hoist-assets.js";
 import { linkStream } from "./link-stream.js";
 import { logFallbacks } from "./log-fallbacks.js";
+import { outlineIsland } from "./outline-island.js";
+import { pageAccount } from "./page-account.js";
 import { pageAssets } from "./page-assets.js";
 import { pageFetch } from "./page-fetch.js";
 import { pagePlan } from "./page-plan.js";
@@ -36,6 +40,10 @@ import { queryOf } from "./query-of.js";
  * page fails from a child, and it answers 503 with an id, never the cause. Every placement that
  * did not answer is logged against its correlation id, whichever rung of the ladder covered for
  * it.
+ *
+ * A page that shows its outline links the script that draws it and carries the account of how
+ * this request composed it, written after composition and outside everything it placed, so no
+ * answer that is kept ever holds a word of it.
  */
 export function registerPages(
   app: FastifyInstance,
@@ -58,6 +66,8 @@ export function registerPages(
     readonly reload?: string;
     /** Whether the visitor asking may be shown each assembly the page places. Everyone, if absent. */
     readonly admit?: AdmitVisitor;
+    /** Whether every page carries its outline. Only `true` turns it on. */
+    readonly outline?: boolean;
   },
 ): void {
   const { assemblies, log } = options;
@@ -84,6 +94,7 @@ export function registerPages(
       );
       // Aborted when the asker leaves, so nothing further is composed for nobody.
       const { signal } = request;
+      const began = performance.now();
       let composed;
       try {
         composed = await compose({
@@ -108,6 +119,8 @@ export function registerPages(
         return reply.code(503).send(renderFailure(correlationId));
       }
 
+      // How long composing took, and not the linking after it, which may ask another server.
+      const ms = performance.now() - began;
       logFallbacks(composed.diagnostics, `on page "${page.route}"`, log);
       const placed = await pageAssets(composed, plan, assemblies, options.remote, options.styles);
       // In development the page also carries the script that reloads it after a restart.
@@ -115,10 +128,19 @@ export function registerPages(
         options.reload === undefined
           ? []
           : [`${DEV_RELOAD_SCRIPT}?boot=${encodeURIComponent(options.reload)}`];
-      const assets = { css: placed.css, js: [...reload, ...placed.js] };
+      // A page that shows its outline also carries the script that draws it, before any
+      // assembly's, so it sees each one mount, and the account of this composition.
+      const outline = options.outline === true ? [OUTLINE_ROUTE.script] : [];
+      const assets = { css: placed.css, js: [...reload, ...outline, ...placed.js] };
+      const account =
+        options.outline === true
+          ? outlineIsland(
+              pageAccount({ route: page.route, ms }, composed.diagnostics, plan, assemblies),
+            )
+          : "";
       return reply
         .header("content-type", "text/html; charset=utf-8")
-        .send(linkStream(hoistAssets(composed.html, assets), page.stream));
+        .send(linkStream(beforeBodyEnd(hoistAssets(composed.html, assets), account), page.stream));
     });
   }
 }

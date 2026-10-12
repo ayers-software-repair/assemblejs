@@ -580,6 +580,14 @@ That is the whole set. Not the request. Not headers. Not cookies. **Never** the 
 of child assemblies, which are already in the DOM. Growing the server's internal context can
 never leak a new field, because nothing is spread and nothing is copied wholesale.
 
+A page that shows its outline (section 9) carries one more block, the account of how it was
+composed, and it is built the same way, by naming what goes in:
+
+    { route, ms, placements: [{ id, name, view, source, ms, browser, refused, children }] }
+
+Not why a placement fell back, not the id its failure was logged against, and never what it
+threw: those are the log's (section 12), and the page is sent to whoever asked for it.
+
 ### 5.4 Encoding
 
 One encoder per position, and the position decides which:
@@ -761,7 +769,7 @@ src/
     time.api.ts
   tokens.css                    the roles every stylesheet reads, set in one place (10)
   components.css                the elements HTML has, styled by the tokens (10)
-assemblejs.config.ts            policy only: remotes, access, the content policy, budgets, limits
+assemblejs.config.ts            policy only: remotes, access, the content policy, budgets, limits, the outline
 AGENTS.md                       what an agent that opens the project is told (13.7)
 .mcp.json                       the project's agent surface, registered (13.7)
 ```
@@ -824,7 +832,8 @@ weighs the production build and holds every page to them; nothing on the server 
 And so are the bounds on composition, `limits: { depth, placements }` (3.4): how deep it goes
 and how many placements one request composes, where the defaults of 8 and 256 do not fit.
 The server reads them at boot and refuses a value outside its bounds; `check` shows them as it
-shows every setting.
+shows every setting. And so is whether the project's pages carry their outline, `outline: true`
+(section 9): off unless it is exactly that, in development and in production alike.
 
 A service returns; it does not mutate:
 
@@ -910,6 +919,41 @@ const off = events.on("cart:add", handler); // released when the page unmounts i
 Two assemblies from different frameworks exchange events with no adapter, because the bus
 belongs to the page and not to any framework's tree. That is what makes the mixed-framework page
 real.
+
+**The outline.** A project that sets `outline: true` shows how its pages are put together. Every
+page then carries a switch at the corner of the window, and a visitor who turns it on sees a box
+around each assembly on the page, drawn in the colour of what answered it and named in words:
+this server, another server, an answer that was kept, a fallback, or the browser after the page
+loaded. Each box opens to say where the assembly came from and when: how long the server
+waited for it, when a deferred one arrived, whether it mounts, and when it came alive. It is
+off unless the project turns it on and, on a page that carries it, until a visitor does; their
+choice is kept in their own browser and reaches no server.
+
+- **It moves nothing.** The outline is drawn over the page, in one element the browser adds
+  after the body (`assemblejs-outline`) with a root of its own. No envelope gains an attribute,
+  a style or a child, so a page with its outline on is laid out as the page without it, and
+  the envelope's set (section 2.4) is unchanged. A box is measured, not asked of the envelope,
+  which the browser lays out as a run of text.
+- **It is told by the server, per request.** The server writes one data block on the page after
+  composing it, the account of that composition (section 5.3), outside everything the page
+  placed. Nothing of it is written into an answer, so nothing that is kept holds a word of it,
+  and a block found inside an envelope is an assembly's word and is passed over. An assembly
+  with no row of its own, one that arrived inside a kept answer or another server's, is told by
+  what holds it.
+- **It asks nothing of the runtime.** It reads the marks the server and the runtime already
+  write (`data-mount`, `data-mounted`, `data-defer`, `data-failed`, `data-remote`) and watches
+  the page for when they change. A page of static views has an outline and no runtime.
+- **It holds under the default policy.** The script, the module it starts and the stylesheet are
+  served from the server's own origin under `/_assemblejs/outline`, outside the devtools, and
+  only by a server told to show its outline: on any other, each is a 404. They are public as the
+  built browser files are, since a public page of a guarded server must load them, and they hold
+  nothing of the project. Every box is moved by setting a style property, never by writing a
+  style attribute.
+- **A server with it off is the server it was.** It links nothing, writes nothing and serves
+  nothing for an outline; its pages are the same bytes.
+
+The module is published as `@assemblejs/core/outline`, so a page made some other way can draw
+its own.
 
 ---
 

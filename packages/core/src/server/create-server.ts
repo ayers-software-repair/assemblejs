@@ -13,6 +13,7 @@ import type { LogLine } from "../failure/log-line.js";
 import { createRemoteTransport } from "../remote/create-remote-transport.js";
 import { ASSET_ROUTE_PREFIX } from "../vocab/asset-route-prefix.js";
 import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
+import { OUTLINE_ROUTE } from "../vocab/outline-route.js";
 import { accessProblems } from "./access-problems.js";
 import { answerFailure } from "./answer-failure.js";
 import type { App } from "./app.js";
@@ -32,6 +33,7 @@ import { registerAssets } from "./register-assets.js";
 import { registerDevReload } from "./register-dev-reload.js";
 import { registerDevtools } from "./register-devtools.js";
 import { registerFailures } from "./register-failures.js";
+import { registerOutline } from "./register-outline.js";
 import { registerPages } from "./register-pages.js";
 import { registerStreams } from "./register-streams.js";
 import { sentHeaderProblems } from "./sent-header-problems.js";
@@ -87,6 +89,8 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const byName = new Map(options.assemblies.map((assembly) => [assembly.name, assembly]));
 
   const development = config.mode === "development";
+  // Off unless it is true, whatever else a config that was not typed might hold there.
+  const outline = options.outline === true;
   // In development, every failure is also kept for devtools to show, a bounded number of them.
   const failures = recentFailures();
   const log = (line: LogLine): void => {
@@ -112,6 +116,9 @@ export async function createServer(options: ServerOptions): Promise<App> {
     publicRoutes: [
       `${FRAMEWORK_ROUTE_PREFIX}/health`,
       `${ASSET_ROUTE_PREFIX}/*`,
+      // What draws an outline is the framework's own and holds nothing of the project: a
+      // public page that shows its outline must be able to load it.
+      ...(outline ? Object.values(OUTLINE_ROUTE) : []),
       ...(options.publicRoutes ?? []),
     ],
   };
@@ -150,9 +157,11 @@ export async function createServer(options: ServerOptions): Promise<App> {
     ...(options.styles === undefined ? {} : { styles: options.styles }),
     log,
     admit,
+    outline,
     ...(boot === undefined ? {} : { reload: boot }),
   });
   if (boot !== undefined) registerDevReload(app, log, boot);
+  if (outline) registerOutline(app);
   if (development && options.devtools !== undefined) {
     registerDevtools(app, options.devtools, {
       project: summarizeProject({

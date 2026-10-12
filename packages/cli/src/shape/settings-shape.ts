@@ -22,4 +22,6 @@ export interface SettingsShape {
   readonly budgets: Written;
   /** How deep composition goes and how many placements one request composes, where it sets them. */
   readonly limits: Written;
+  /** Whether every page carries its outline; false where it does not say. */
+  readonly outline: Written;
 }

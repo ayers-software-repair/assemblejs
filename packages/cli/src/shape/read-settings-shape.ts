@@ -26,6 +26,7 @@ export function readSettingsShape(root: string): SettingsShape {
     authenticate: false,
     budgets: {},
     limits: {},
+    outline: false,
   };
   const file = join(root, CONFIG_FILE);
   // A config that leads out of the project is one the project has, and is not opened.
@@ -38,6 +39,7 @@ export function readSettingsShape(root: string): SettingsShape {
     authenticate: mark,
     budgets: mark,
     limits: mark,
+    outline: mark,
   });
   let declared;
   try {
@@ -54,5 +56,6 @@ export function readSettingsShape(root: string): SettingsShape {
     authenticate: "authenticate" in declared ? true : UNWRITTEN in declared ? COMPUTED : false,
     budgets: fieldAsWritten(declared, "budgets", nothing.budgets),
     limits: fieldAsWritten(declared, "limits", nothing.limits),
+    outline: fieldAsWritten(declared, "outline", nothing.outline),
   };
 }

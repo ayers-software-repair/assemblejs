@@ -5955,3 +5955,65 @@ Two ways of running `dev` that worked before it then did not, each watched red.
   author can write the address.
 - **Proof.** Both cases red before, green after; every cheap gate of `pnpm check` and both
   packages' suites green here. The agent surface's tarball is at 26,709 bytes of its 27,000.
+
+## 2026-10-12: a page shows how it was put together
+
+The owner's order, typed at the seat on 2026-10-11 as he asked for the showcase projects: "with
+a mode on each to enable the boxes around them that tell you when and where things are so you
+can see how it works". Asked where the mode lives, he chose the framework: off by default, and
+any project switches it on, in development or in production. This is that mode, the outline
+(DESIGN 9, 5.3, 8).
+
+- **The switch is two, and neither is the address.** A project turns it on with `outline: true`
+  in its config, a decision about the project like its budgets; a visitor then turns it on for
+  themselves with a control on the page, kept in their browser's own storage. The query was
+  not used: it is part of what a kept answer is kept under, and it is sent to services and, where
+  declared, to other servers, so a word in it that only draws boxes would have changed what is
+  fetched and kept.
+- **Drawn over the page, never on it.** Expected: an `outline` on each envelope. Found: nothing
+  sets an envelope's `display`, so a browser lays it out as a run of text, and around a block it
+  has no box worth the name; making it a block would move things. So the outline is one element
+  after the body with a root of its own, and each box is measured from the envelope's own boxes
+  and the element at the top of what it holds (MDN, `Element.getClientRects` and
+  `Range.getClientRects`, read 2026-10-12). No envelope gains an attribute, so DESIGN 2.4's set
+  stands, a kept answer is untouched by construction, and no sheet is linked inside an
+  assembly's shadow root.
+- **The account is named field by field.** The server writes one data block after composing a
+  page: for each placement its id, name, view, which rung answered, the milliseconds, whether
+  it mounts, and how many a request refused. The composer's own account also holds what a
+  failure threw, the id it was logged against and why it fell back; none of the three is
+  copied, since the page goes to whoever asked for it and DESIGN 3.3 tells a visitor an id and
+  never a cause. A block inside an envelope is an assembly's word and is passed over.
+- **Served by the framework, only where it is on.** The script, the module and the stylesheet
+  are under `/_assemblejs/outline`, outside the devtools, which production never mounts, and
+  public as the built browser files are, since a public page of a guarded server must load
+  them. A server with it off mounts none of the three. Under the default policy a stylesheet
+  from the server's own origin is allowed and so is setting a style property; a `style`
+  attribute is not, and none is written (MDN, `Content-Security-Policy: style-src`, read
+  2026-10-12).
+- **A published entry point, `@assemblejs/core/outline`.** The alternative was the script as one
+  string in the server, as the reload script is; that is two lines, and this is fifteen
+  modules. As an entry point it is typed, linted, tested one file to one test as every source
+  is, and listed in the reference; the server serves the package's own build of it, found by
+  the package's name so it is one file from the build and from beside the source.
+- **Proof.** A page's bytes were captured from the build before the change, ids aside; with
+  the option absent and with it `false` the new build sends the same bytes, and a spec holds
+  the two to each other. The account's two probes were each watched red on an account that
+  carried what a failure threw and the id it was logged against. In the owner's Chrome, on two
+  scratch servers on this machine under the default policy: ten assemblies boxed, this server's,
+  another's with what it composed inside, a kept answer, a fallback, a deferred one filled 448
+  ms after the page began and one in a shadow root; each of five frames measured equal to its
+  assembly's own box to the pixel; and all forty elements of the page stood where they stood
+  with the outline off. `browser/outline.browser.ts` holds the same in the browser proof, which
+  has not run yet and runs in CI; its claim that nothing moves was watched going red in Chrome
+  on an envelope given a box and a pixel of padding.
+- **The core's tarball budget moves from 86000 to 98000.** Measured at 94,991 bytes after this
+  change, from 82,328. The module that draws the outline and its declarations are some 8,500 of
+  that as packed, and the stylesheet, the account and the routes the rest. The module is served
+  as it is built, so it reads in a browser's own tools as it reads here, and each of the three
+  files is tagged by its content: a browser asks every time and is told when what it holds is
+  still the file.
+- **Not done, and why.** A box for an assembly inside an open modal dialog is drawn beneath the
+  dialog, which the browser keeps above everything. Another server's account of what it
+  composed is in its own log, so those boxes say what holds them. How long the server took to
+  fill a deferred placement is not on the page; the box says when it arrived.

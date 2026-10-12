@@ -5,7 +5,7 @@ import { defineConfig } from "tsup";
 // No sourcemaps: the pack gate refuses a tarball carrying them, and a published map without
 // its sources is a file nobody can use.
 export default defineConfig({
-  entry: ["src/index.ts", "src/renderer/index.ts", "src/client/index.ts"],
+  entry: ["src/index.ts", "src/renderer/index.ts", "src/client/index.ts", "src/outline/index.ts"],
   format: ["esm"],
   target: "node22",
   // tsup's declaration pass sets baseUrl itself, which TypeScript 6 deprecates; the option

@@ -12,8 +12,9 @@ describe("what a project's config declares", () => {
       authenticate: false,
       budgets: {},
       limits: {},
+      outline: false,
     };
     expect(settings.file).toBeUndefined();
-    expect(Object.keys(settings)).toHaveLength(6);
+    expect(Object.keys(settings)).toHaveLength(7);
   });
 });

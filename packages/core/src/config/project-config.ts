@@ -23,4 +23,10 @@ export interface ProjectConfig {
   readonly budgets?: PageBudgets;
   /** How deep composition goes and how many placements one request composes (DESIGN 3.4). */
   readonly limits?: LimitsConfig;
+  /**
+   * Whether every page carries its outline, the switch that shows a visitor how the page was
+   * put together (DESIGN 9). A decision about the project: whoever can open a page can turn
+   * it on there, so it is on only where that is wanted.
+   */
+  readonly outline?: boolean;
 }

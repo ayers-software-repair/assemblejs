@@ -11,11 +11,19 @@ const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 export default defineConfig({
   test: {
     globalSetup: ["../../scripts/build-when-stale.mjs", "../../scripts/test-temp-root.mjs"],
+    // A page drawn in a test has no server to ask for a stylesheet it links, so the sheet is
+    // taken as arrived, as it does on a page a server sent.
+    environmentOptions: {
+      happyDOM: {
+        settings: { disableCSSFileLoading: true, handleDisabledFileLoadingAsSuccess: true },
+      },
+    },
   },
   resolve: {
     alias: {
       "@assemblejs/core/renderer": src("./src/renderer/index.ts"),
       "@assemblejs/core/client": src("./src/client/index.ts"),
+      "@assemblejs/core/outline": src("./src/outline/index.ts"),
       "@assemblejs/core": src("./src/index.ts"),
     },
   },
