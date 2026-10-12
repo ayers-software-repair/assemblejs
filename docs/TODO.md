@@ -1195,10 +1195,13 @@ a spec watched red first, or struck with its reason.
       visitor after a member is served the guarded markup; with none, not. Reproduced by the seat
       over a real socket. `compose/settle-placement.ts:79-86` asks admission of the outer placement
       alone before the cache is read, against DESIGN 5.2
-- [ ] A link whose target climbs out through another link is read as inside the root (workflow
+- [x] A link whose target climbs out through another link is read as inside the root (workflow
       trust.2). `esc -> sub/../note.txt` with `sub` a link out: `readInside` returns the outside
       file and `leadsOut` says false. Reproduced by the seat with the installed command line.
-      `packages/cli/src/root/follow-links.ts:31` resolves the target lexically
+      `packages/cli/src/root/follow-links.ts:31` resolves the target lexically. DONE 2026-10-11:
+      the follower walks a link's target a step at a time from where the link stands, so a link
+      along it is followed before the step back after it; two specs, each watched red, hold the
+      follower and the guard (DECISIONS 2026-10-11, "a link's target is walked")
 - [ ] `check` misreads every Pug view (workflow check-rules.1): an `img` with an alt and an `input`
       with an aria-label are each given the finding, and an inline style is given none. Reproduced
       by the seat on the showcase. `packages/cli/src/check/pug-markup.ts:63` writes attributes for

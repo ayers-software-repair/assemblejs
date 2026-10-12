@@ -5332,3 +5332,21 @@ path, everything did.
   (`/%61dmin/users: expected 200 to be 401`), and a step of the `trust` fixture, which asks the
   built server every spelling of a guarded api over HTTP; its known-bad case is the tarball of
   `45ea049`, which the seat had watched answer 200 over a raw socket. DESIGN 5.2 says it.
+
+## 2026-10-11: a link's target is walked
+
+The audit's third blocker. `followLinks` followed every link along a path, and resolved a
+link's own target as text: `resolve(current, readlinkSync(next))`. Text resolution removes a
+step back together with the step before it, without asking whether that step was a link. So
+`esc -> out/../note.txt`, with `out` a link to a directory outside the project, read as
+`note.txt` beside the link, inside the root; the system opens `out` first, lands outside, steps
+back there, and opens a file the guard never saw. `readInside` returned it, and `leadsOut` said
+the path stayed in.
+
+The follower now reads a path as the system does, a step at a time, and a link's target is more
+steps taken from where the link stands, or from the root when the target names one. A step back
+is taken from where the walk really is. Nothing else about it moved: a link to nothing is
+followed, the part of a path not yet written is carried over, and a chain past forty links is a
+loop. Two specs hold it, each watched red on the old follower: the follower's own, on a link
+whose target climbs out and back, and the guard's, where `leadsOut` must say so
+(`src/climbs.ts: expected false to be true`).

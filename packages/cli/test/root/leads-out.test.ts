@@ -15,6 +15,8 @@ describe("whether a path leaves the project", () => {
       "src/in.ts": "shared/real.ts",
       "src/chain.ts": "out.ts",
       "src/gone.ts": "outside:no-such-file.ts",
+      // Read as text this is `src/secret.page.ts`, inside; opened, it is the file outside.
+      "src/climbs.ts": "outdir/../secret.page.ts",
     },
   );
 
@@ -31,6 +33,7 @@ describe("whether a path leaves the project", () => {
       "src/outdir/landing.html",
       "src/chain.ts",
       "src/gone.ts",
+      "src/climbs.ts",
     ]) {
       expect(leadsOut(root, join(root, path)), path).toBe(true);
     }
