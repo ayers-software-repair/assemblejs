@@ -5383,3 +5383,20 @@ the composer sees are the ones a remote declared it wants, not the visitor's own
   watched red (`expected '<body>...' not to contain 'BALANCE-9912'`); a step of the `trust`
   fixture, a kept page asked as a guest, a member and a guest again over HTTP; the seat's own
   run of the old tarball, which showed the guest the member's content.
+
+## 2026-10-11: a Pug view is read with its attributes
+
+The audit's fourth blocker. `check` reads a Pug view through the markup made from the tree the
+project's own Pug parses, and that markup was first written for one reader, the reader of
+placements: it kept a directive's attributes and wrote every other tag as its bare name. The
+three element rules, which came later and "hold in any kind of view", read the same markup. So
+in a Pug view an `img` with an alt was reported as having none, an `input` with an `aria-label`
+as having no name, and a `style` attribute was never seen: two false findings on correct views,
+of the kind that gets a rule turned off, and one rule silently not applied.
+
+Every tag is written with the attributes it was given now. A written value is escaped as Pug's
+render escapes it, which also keeps true what the old markup got by omission: markup inside an
+attribute's value, a directive included, is not markup. What the template computes stands as
+the marker, as in every other template language, in a value or, for attributes handed over as
+an object, as a bare attribute, which the rules already read as a spread. Specs of the markup
+and of the elements read from it through the installed Pug, watched red (`Received: "<img></img>"`).

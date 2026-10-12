@@ -1205,10 +1205,12 @@ a spec watched red first, or struck with its reason.
       the follower walks a link's target a step at a time from where the link stands, so a link
       along it is followed before the step back after it; two specs, each watched red, hold the
       follower and the guard (DECISIONS 2026-10-11, "a link's target is walked")
-- [ ] `check` misreads every Pug view (workflow check-rules.1): an `img` with an alt and an `input`
+- [x] `check` misreads every Pug view (workflow check-rules.1): an `img` with an alt and an `input`
       with an aria-label are each given the finding, and an inline style is given none. Reproduced
       by the seat on the showcase. `packages/cli/src/check/pug-markup.ts:63` writes attributes for
-      the placement element alone
+      the placement element alone. DONE 2026-10-11: every tag is written with its attributes, a
+      written value escaped as a render escapes it; specs of the markup and of the elements read
+      from it, watched red (DECISIONS 2026-10-11, "a Pug view is read with its attributes")
 
 ### Found by the seat, using it
 
