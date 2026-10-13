@@ -47,7 +47,12 @@ test("the starter writes the instructions and the file that brings them to Claud
 
 test("the project installs the server it registers, beside the command line", () => {
   const manifest = JSON.parse(read("package.json"));
-  assert.deepEqual(Object.keys(manifest.devDependencies), ["@assemblejs/cli", "@assemblejs/mcp"]);
+  assert.deepEqual(Object.keys(manifest.devDependencies), [
+    "@assemblejs/cli",
+    "@assemblejs/mcp",
+    "@types/node",
+    "typescript",
+  ]);
   assert.deepEqual(Object.keys(manifest.dependencies), ["@assemblejs/core"]);
 });
 

@@ -5,6 +5,8 @@ export { identifierFor } from "./identifier-for.js";
 export { importPath } from "./import-path.js";
 export { importOf } from "./import-of.js";
 export { generateRegistry } from "./generate-registry.js";
+export { generateRegistries } from "./generate-registries.js";
+export { generateTypescriptSetup } from "./generate-typescript-setup.js";
 export { generatePages } from "./generate-pages.js";
 export { generateApis } from "./generate-apis.js";
 export { generateProject } from "./generate-project.js";

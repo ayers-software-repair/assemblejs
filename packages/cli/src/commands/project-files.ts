@@ -3,6 +3,7 @@
 import { agentFiles } from "@assemblejs/check";
 import { MCP_REGISTRATIONS } from "@assemblejs/check";
 import { COMPONENTS } from "./components.js";
+import { ownPin } from "./own-pin.js";
 import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";
 import { PNPM_SETTINGS } from "./pnpm-settings.js";
@@ -14,11 +15,15 @@ import { TOKENS } from "./tokens.js";
  * Its manifest depends on the version of the command line that wrote it, so a project made by a
  * prerelease installs from the channel that made it. It is written for the agents that will
  * work in it too: what the project is and its rules, and its agent surface installed and
- * registered. One made by pnpm carries pnpm's ruling on the one install script among its
+ * registered. It is ready to type-check by default: TypeScript and Node's types are installed,
+ * at the versions this release was proven with, and the root `tsconfig.json` names the setup
+ * the build writes into `.assemblejs/`, so no file of the project's carries a line about its
+ * framework. One made by pnpm carries pnpm's ruling on the one install script among its
  * dependencies, without which pnpm fails its first install.
  */
 export function projectFiles(name: string, manager = "npm"): Readonly<Record<string, string>> {
   const range = `^${ownVersion(import.meta.url)}`;
+  const tool = (pin: string): string => `^${ownPin(import.meta.url, pin)}`;
   // The README names each registration the project is written with, as the instructions do.
   const registered = MCP_REGISTRATIONS.map((registration) => `\`${registration.path}\``);
   return {
@@ -28,13 +33,25 @@ export function projectFiles(name: string, manager = "npm"): Readonly<Record<str
         private: true,
         type: "module",
         engines: { node: ">=22" },
-        scripts: { dev: "assemblejs dev", build: "assemblejs build", start: "node dist/server.js" },
+        scripts: {
+          dev: "assemblejs dev",
+          build: "assemblejs build",
+          start: "node dist/server.js",
+          typecheck: "assemblejs build && tsc -b",
+        },
         dependencies: { "@assemblejs/core": range },
-        devDependencies: { "@assemblejs/cli": range, "@assemblejs/mcp": range },
+        devDependencies: {
+          "@assemblejs/cli": range,
+          "@assemblejs/mcp": range,
+          "@types/node": tool("@types/node"),
+          typescript: tool("typescript"),
+        },
       },
       null,
       2,
     )}\n`,
+
+    "tsconfig.json": `${JSON.stringify({ files: [], references: [{ path: "./.assemblejs" }] }, null, 2)}\n`,
 
     ".gitignore": ["node_modules/", "dist/", ".assemblejs/", "deploy/", ""].join("\n"),
 
@@ -64,6 +81,9 @@ console.log(\`listening \${url}\`);
 A directory under \`src/assemblies\` is an assembly and a directory under \`src/pages\` is a page.
 There is nothing to register: \`src/server.ts\` does not grow when you add either. Place an
 assembly on a page with \`<assembly name="hello"></assembly>\`.
+
+\`npm run typecheck\` builds and type-checks the project. The build writes the TypeScript setup
+into \`.assemblejs/\`, one project for each framework's JSX, so no file names its framework.
 
 \`AGENTS.md\` tells a coding agent what this project is and the rules its code must satisfy.
 ${registered.slice(0, -1).join(", ")} and ${registered.at(-1) ?? ""} register the project's own MCP server

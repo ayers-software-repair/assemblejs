@@ -11,6 +11,12 @@ import { projectFiles } from "@assemblejs/cli";
 import { capture } from "../../../build/test/fixtures/capture.js";
 import { serve } from "../../../build/test/fixtures/serve.js";
 
+const pinned = (
+  JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {
+    devDependencies: Record<string, string>;
+  }
+).devDependencies;
+
 describe("the smallest project that runs", () => {
   const files = projectFiles("my-app");
 
@@ -28,7 +34,26 @@ describe("the smallest project that runs", () => {
     expect(manifest.devDependencies).toEqual({
       "@assemblejs/cli": `^${own}`,
       "@assemblejs/mcp": `^${own}`,
+      "@types/node": `^${pinned["@types/node"]}`,
+      typescript: `^${pinned["typescript"]}`,
     });
+  });
+
+  // Ready by default (owner, 2026-10-12): the tools to type-check are installed with it, at the
+  // versions this release was proven with, and the root tsconfig names the setup the build writes.
+  it("is ready to type-check as written, with no file naming its framework", () => {
+    const manifest = JSON.parse(files["package.json"] ?? "{}") as {
+      scripts: Record<string, string>;
+    };
+    expect(manifest.scripts["typecheck"]).toBe("assemblejs build && tsc -b");
+    expect(JSON.parse(files["tsconfig.json"] ?? "{}")).toEqual({
+      files: [],
+      references: [{ path: "./.assemblejs" }],
+    });
+    for (const [path, contents] of Object.entries(files)) {
+      expect(contents, path).not.toContain("@jsxImportSource");
+    }
+    expect(files["README.md"]).toContain("`npm run typecheck`");
   });
 
   // An agent that opens the project is told what it is, and has its agent surface to ask:

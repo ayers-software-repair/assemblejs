@@ -4,7 +4,7 @@
 /** One assembly found on disk, and the files it is made of. */
 export interface DiscoveredAssembly {
   readonly name: string;
-  /** Directory, relative to the project root, with forward slashes. */
+  /** Its directory, under the project root as the root was given, with forward slashes. */
   readonly directory: string;
   /** The view file, relative to the project root. */
   readonly view: string;

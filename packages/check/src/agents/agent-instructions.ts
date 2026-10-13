@@ -8,8 +8,9 @@ import { MCP_REGISTRATIONS } from "./mcp-registrations.js";
 
 const registered = MCP_REGISTRATIONS.map((registration) => `\`${registration.path}\``);
 // A rule's sentence names markup and paths with a part in angle brackets, which a Markdown
-// reader takes for a tag and drops from what it shows. Each is written as code.
-const BRACKETED = /(?:[\w./-]*<[^<>\n]+>)+[\w./-]*/g;
+// reader takes for a tag and drops from what it shows, and packages by a scoped name, whose
+// @ a client would show as a mention. Each is written as code.
+const BRACKETED = /(?:[\w./-]*<[^<>\n]+>)+[\w./-]*|@[\w-]+\/[\w.-]+/g;
 
 /**
  * What an agent that opens a project is told before it writes anything: what the project is in
@@ -73,7 +74,9 @@ one framework or in none, and each hydrated in the browser by its own framework.
   ${RENDERERS.join(", ")}.
 - An assembly written in a framework needs that framework's renderer installed. \`check\` names
   the package when it is missing.
-- Run \`check\` before you call anything done. It builds nothing.
+- Run \`check\` before you call anything done. It builds nothing. The build writes the project's
+  TypeScript setup into \`.assemblejs/\`, one project for each framework's JSX, so no file names
+  its framework: \`tsc -b\` after a build type-checks every file as its own framework's.
 - \`npx assemblejs dev\` builds, serves and rebuilds on every change. \`npx assemblejs build\`
   writes \`dist/server.js\`, which is what production runs, under plain node.
 - This part of the file is written by \`npx assemblejs add agents\` and held current by \`check\`.

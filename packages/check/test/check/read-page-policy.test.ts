@@ -116,7 +116,12 @@ describe("reading placement policy as boot does", () => {
           ...files,
         }),
       )
-    ).filter((finding) => finding.rule !== "a-view-needs-its-renderer");
+    )
+      // A project standing in a temporary directory has installed no renderer and no types.
+      .filter(
+        (finding) =>
+          !["a-view-needs-its-renderer", "a-react-view-needs-its-types"].includes(finding.rule),
+      );
   const said = async (template: string, declaration?: string, files?: Record<string, string>) =>
     (await page(template, declaration, files)).map((finding) => finding.message).join();
 

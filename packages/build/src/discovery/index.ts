@@ -5,6 +5,8 @@ export type { RuleId } from "./rule-id.js";
 export type { ProjectProblem } from "./project-problem.js";
 export { suggestName } from "./suggest-name.js";
 export { isDirectory } from "./is-directory.js";
+export { jsxOwner } from "./jsx-owner.js";
+export { hasSharedSources } from "./has-shared-sources.js";
 export { fromRoot } from "./from-root.js";
 export { CONFIG_FILE } from "./config-file.js";
 export { TOKENS_FILE } from "./tokens-file.js";

@@ -5,32 +5,43 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-12, 10:15 EDT, at the stop the
-owner ordered).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-13, 11:00 EDT, at the second hold
+the owner ordered).**
 
-HELD BY THE OWNER'S ORDER, relayed by the lead 2026-10-13 05:30 EDT, his words: "if you reset
-I want you to HOLD until i notify you in the moring. all lanes except the astra codex lanbe".
-The seat holds until the lead wakes it. Nothing is in hand; the tree is clean; nothing is
-pushed since `4777f6f`, the split's second cut, whose `ci` run 38261256726 was read to its
-end at 05:15 and is green in all five jobs. This block's commit is local, rebased onto the
-site seat's `5f77744`, and goes up with R-4. AT THE WAKE: take R-4. Its design, read from the
-source on 2026-10-13 before the hold and not yet written: a generator in `build/generate`
-that writes `.assemblejs/tsconfig.json` (a solution of references), `tsconfig.app.json` (the
-server file, the generated modules, the config) and one `tsconfig.<owner>.json` per owner of
-JSX with typed files (react, preact with `jsxImportSource: "preact"`, solid with
-`"solid-js"`), each composite and emitting declarations to `.assemblejs/types/`; the
-registry split by owner, `assemblies.<owner>.ts` in the owner's project with the typed
-render calls and `assemblies.ts` spreading them, so the editor's view of the registry is
-clean, which was the first experiment; each `client/<name>.ts` in its owner's project;
-`BUILD_WRITES` grown by those files; the starter writing a root `tsconfig.json` of one
-reference to `./.assemblejs`, `typescript` and `@types/node` as development dependencies
-(the conformance spec `agents/new-project` pins the two it has now, line 50, and the
-command line's test of the starter pins them too) and a `typecheck` script; and `check`
-naming `@types/react` and `@types/react-dom` when a project has a React view and lacks them,
-by a new rule in `RULE_IDS` and `RULES`, emitted by the checks and never by the build, which
-builds without them. Proof: the scaffold built and `tsc -b` exit 0; the editor experiment
-(`AUDIT` evidence `seat/written-configs/editor.mjs`) on the shop; the ten examples under
-`tsc -b` with only React's missing types left, which R-5 installs.
+HELD BY THE OWNER'S ORDER, relayed by the lead 2026-10-13: the morning's lift was for Magpie
+only, and AssembleJS stays held until Magpie is complete. The seat holds until the lead wakes
+it. Nothing is pushed since `4777f6f`, the split's second cut, whose `ci` run 38261256726 was
+read to its end at 05:15 and is green in all five jobs. Two commits are local on top of the
+site seat's `5f77744`: the earlier resume block, and R-4 AS IT STANDS, written in the hour the
+lift lasted and committed at the hold so nothing lives in a session. R-4 IS WRITTEN AND NOT
+PROVED: every package type-checks and builds (`build`, `check`, `cli`), and the suites the
+bite touches were run once (the result is in the commit's own message); no gate chain, no
+full suite, no push. AT THE WAKE: finish R-4's proof, then push the three commits as one
+bite. What R-4 is, in the source now: `build/src/generate/generate-typescript-setup.ts`
+writes `.assemblejs/tsconfig.json` (a solution), `tsconfig.app.json` (the server file, the
+generated modules, the config, and every assembly with no JSX), `tsconfig.shared.json` (the
+sources outside the assemblies, only when there are any, read from disk by
+`discovery/has-shared-sources.ts`) and one `tsconfig.<owner>.json` per owner of JSX
+(`discovery/jsx-owner.ts`: react, preact with `jsxImportSource: "preact"`, solid with
+`jsx: "preserve"` and `"solid-js"`, each by its own documentation), each composite,
+`isolatedModules`, emitting declarations only into `.assemblejs/types/`; the registry split
+by owner in `generate/generate-registries.ts`, `assemblies.<owner>.ts` in the owner's
+project with the typed render calls and `assemblies.ts` spreading them; each `client/<name>.ts`
+named in its owner's project; `BUILD_WRITES` grown by those files; the starter writing a root
+`tsconfig.json` of one reference to `./.assemblejs`, `typescript` and `@types/node` at the
+command line's own pins (`cli/src/commands/own-pin.ts`, read from its package.json, never a
+number typed twice) and a `typecheck` script of `assemblejs build && tsc -b`; the conformance
+spec `agents/new-project` and the command line's starter test pin the four development
+dependencies; `check` names `@types/react` and `@types/react-dom` when a project has a React
+view and lacks them, by `a-react-view-needs-its-types` in `RULE_IDS` and `RULES`
+(`check/src/check/types-problems.ts`), emitted by the checks and never by the build. THE
+PROOF STILL OWED: a starter project built and `tsc -b` exit 0 (as a test in
+`cli/test/commands/project-files.test.ts`, nested under `packages/cli` so Node's types and
+the core resolve); the editor experiment (`AUDIT` evidence `seat/written-configs/editor.mjs`)
+on the shop with the setup the build now writes, in place of the trial's; the ten examples
+built and each `.assemblejs` under `tsc -b`, with only React's missing types left, which R-5
+installs; then the cheap chain (`$S/gate.sh build check cli`), the conformance `agents`
+specs, a changeset for build, check and cli, DECISIONS, and R-4 ticked in the same commit.
 
 THE OWNER RULED THREE THINGS AT THE SEAT ON 2026-10-12, AND THE WORK IN HAND IS FOUR BITES, in
 this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a row for each):

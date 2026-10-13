@@ -136,6 +136,13 @@ export const RULES: readonly Rule[] = [
       "A framework view in a project that does not depend on that framework's renderer package.",
   },
   {
+    id: "a-react-view-needs-its-types",
+    rule: "A project with a React view installs @types/react and @types/react-dom as development dependencies.",
+    because:
+      "React ships no types of its own. Without them the TypeScript setup the build writes checks every React view against nothing, so an editor and tsc -b show errors in files that are right. The build itself needs no types and builds without them, so only check says so.",
+    smell: "A .react.tsx view in a project whose package.json names react and no @types/react.",
+  },
+  {
     id: "a-placement-names-an-assembly",
     rule: 'Every <assembly name="..."></assembly> in a page template names an assembly that exists.',
     because:

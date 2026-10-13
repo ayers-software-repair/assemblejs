@@ -13,6 +13,7 @@ export const RULE_IDS = [
   "a-directory-is-a-page",
   "an-api-file-is-an-api",
   "a-view-needs-its-renderer",
+  "a-react-view-needs-its-types",
   "a-template-view-compiles",
   "a-placement-names-an-assembly",
   "a-view-places-a-child-with-the-directive",

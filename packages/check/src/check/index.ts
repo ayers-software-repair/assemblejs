@@ -25,6 +25,7 @@ export { spreadElement } from "./spread-element.js";
 export { unnamedControls } from "./unnamed-controls.js";
 export { elementProblems } from "./element-problems.js";
 export { viewProblems } from "./view-problems.js";
+export { typesProblems } from "./types-problems.js";
 export type { PagePolicy } from "./page-policy.js";
 export { readPagePolicy } from "./read-page-policy.js";
 export { declaredOrigins } from "./declared-origins.js";

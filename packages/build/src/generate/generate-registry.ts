@@ -47,6 +47,9 @@ const ${SAID} = (view: ViewModule): ViewModule => view;
  * the one scoped to its envelope. An assembly with a browser half links the build's client
  * entry; one without is declared `none`, so it ships no JavaScript at all. What a view's source
  * is known to place is written beside it, for boot to hold and to link ahead of a deferral.
+ *
+ * One module of the registry: the whole of it for a project with no JSX, or one owner's part,
+ * exported under that owner's name, or the part of no owner's, which spreads the owners' in.
  */
 export function generateRegistry(
   assemblies: readonly DiscoveredAssembly[],
@@ -61,6 +64,10 @@ export function generateRegistry(
     readonly packages: Readonly<Record<string, string>>;
     /** What each assembly's view is known to place, by name, for those whose source says. */
     readonly placements?: ReadonlyMap<string, readonly ViewPlacement[]>;
+    /** The name the list is exported under; `assemblies`, the server's, unless told otherwise. */
+    readonly exported?: string;
+    /** The owners of JSX whose own modules, `assemblies.<owner>.ts`, this list spreads in. */
+    readonly spread?: readonly string[];
   },
 ): string {
   const imports: string[] = [];
@@ -116,12 +123,18 @@ export function generateRegistry(
     rendererImports.push(`import { renderTemplate as ${TEMPLATE_RENDER} } from "${templates}";`);
   }
 
+  const spread = options.spread ?? [];
+  const spreadImports = spread.map(
+    (owner) => `import { assemblies_${owner} } from "./assemblies.${owner}.js";`,
+  );
+  const spreadEntries = spread.map((owner) => `  ...assemblies_${owner},`);
+
   return `${GENERATED_HEADER}
 import type { AssemblyDefinition } from "@assemblejs/core";
-${[...rendererImports, ...imports].join("\n")}
+${[...rendererImports, ...spreadImports, ...imports].join("\n")}
 ${entries.some((entry) => entry.includes(`${SAID}(`)) ? SAYS : ""}
-export const assemblies: readonly AssemblyDefinition[] = [
-${entries.join("\n")}
+export const ${options.exported ?? "assemblies"}: readonly AssemblyDefinition[] = [
+${[...entries, ...spreadEntries].join("\n")}
 ];
 `;
 }

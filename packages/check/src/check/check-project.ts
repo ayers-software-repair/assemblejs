@@ -40,6 +40,7 @@ import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
 import { readPagePolicy } from "./read-page-policy.js";
+import { typesProblems } from "./types-problems.js";
 import { viewProblems } from "./view-problems.js";
 
 const NO_POLICY: PagePolicy = { place: {}, remote: new Map(), stream: undefined };
@@ -51,7 +52,7 @@ const STREAM_FIX =
 /**
  * Everything wrong with a project that can be known without building it, each as a structure
  * with the file, the rule and the fix: the tree (assemblies, pages, apis), the renderers it
- * needs, what every view places and every page's placements and policy against the assemblies
+ * needs and the types a React view is checked against, what every view places and every page's placements and policy against the assemblies
  * that exist, by the rules boot refuses them by, or, for a placement its page declares from another server, against the
  * remotes `assemblejs.config.ts` declares, the stream a page names, the budgets that config
  * declares as `perf` reads them, and every template view compiled with the project's own
@@ -87,6 +88,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     ...pages.problems,
     ...apis.problems,
     ...buildProblems(root, assemblies.assemblies),
+    ...typesProblems(root, assemblies.assemblies),
     ...(await templateProblems(root, assemblies.assemblies)),
     ...(await componentProblems(root, assemblies.assemblies)),
     ...views.problems,

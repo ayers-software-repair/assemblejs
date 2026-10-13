@@ -67,6 +67,7 @@ describe("new", () => {
       "my-app/src/pages/home/home.html",
       "my-app/src/server.ts",
       "my-app/src/tokens.css",
+      "my-app/tsconfig.json",
     ]);
     expect(logs.at(-1)).toBe("\n  cd my-app\n  npm install\n  npm run dev");
   });

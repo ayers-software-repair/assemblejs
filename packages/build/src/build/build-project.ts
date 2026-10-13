@@ -7,11 +7,14 @@ import { CONFIG_FILE } from "../discovery/config-file.js";
 import { discoverApis } from "../discovery/discover-apis.js";
 import { discoverAssemblies } from "../discovery/discover-assemblies.js";
 import { discoverPages } from "../discovery/discover-pages.js";
+import { hasSharedSources } from "../discovery/has-shared-sources.js";
 import { isStaticView } from "../discovery/is-static-view.js";
+import { jsxOwner } from "../discovery/jsx-owner.js";
 import { generateApis } from "../generate/generate-apis.js";
 import { generatePages } from "../generate/generate-pages.js";
 import { generateProject } from "../generate/generate-project.js";
-import { generateRegistry } from "../generate/generate-registry.js";
+import { generateRegistries } from "../generate/generate-registries.js";
+import { generateTypescriptSetup } from "../generate/generate-typescript-setup.js";
 import type { Io } from "../io/io.js";
 import { viewFindings } from "../placements/view-findings.js";
 import { writeProjectStyles } from "../styles/write-project-styles.js";
@@ -35,7 +38,9 @@ import { unreadPlacements } from "./unread-placements.js";
  * Everything that can refuse refuses before the bundler runs. The browser bundle is built first,
  * because its entry's hashed name is what the server's registry links. The server bundle keeps
  * every package external, so the running server imports its framework and renderers from the
- * project's own dependencies and nothing of the build comes with it.
+ * project's own dependencies and nothing of the build comes with it. The TypeScript setup is
+ * written with the generated modules, so a project type-checks, in an editor and under
+ * `tsc -b`, from its first build on, with no line in any file saying whose JSX it is.
  *
  * A build is made whole beside `dist` and replaces it only once it has succeeded: a build that
  * fails leaves the last one as it was, and a server running from `dist` loses nothing while the
@@ -100,16 +105,28 @@ export async function buildProject(
     const packages = Object.fromEntries(
       Object.values(RENDERER_PACKAGES).map((known) => [known.name, known.package]),
     );
-    io.write(
-      join(generated, "assemblies.ts"),
-      generateRegistry(found.assemblies, {
-        from: generated,
-        script,
-        styles,
-        packages,
-        placements: views.placements,
-      }),
-    );
+    const registries = generateRegistries(found.assemblies, {
+      from: generated,
+      script,
+      styles,
+      packages,
+      placements: views.placements,
+    });
+    for (const [file, module] of Object.entries(registries)) {
+      io.write(join(generated, file), module);
+    }
+    const config = existsSync(join(root, CONFIG_FILE));
+    const owners = found.assemblies.flatMap((assembly) => jsxOwner(assembly.renderer) ?? []);
+    const setup = generateTypescriptSetup({
+      assemblies: found.assemblies,
+      from: generated,
+      browser: browser.map((assembly) => assembly.name),
+      shared: hasSharedSources(root, [...new Set(owners)]),
+      config,
+    });
+    for (const [file, contents] of Object.entries(setup)) {
+      io.write(join(generated, file), contents);
+    }
     io.write(join(generated, "pages.ts"), generatePages(pages.pages, generated));
     io.write(join(generated, "apis.ts"), generateApis(apis.apis, generated));
     io.write(
@@ -117,7 +134,7 @@ export async function buildProject(
       generateProject({
         version: sourceVersion(root),
         client: script !== undefined || styles.size > 0 || projectStyles.length > 0,
-        config: existsSync(join(root, CONFIG_FILE)),
+        config,
         ...(projectStyles.length === 0 ? {} : { styles: projectStyles }),
       }),
     );
