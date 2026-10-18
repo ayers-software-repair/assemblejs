@@ -21,6 +21,13 @@ export default defineConfig({
   // What each page may send before anything mounts, gzipped. `assemblejs perf` weighs every
   // page it can ask as a stranger and holds it to these.
   budgets: { document: 14000, styles: 12000, scripts: 90000 },
+  // Where `perf` weighs the three pages whose route has a parameter. The shop keeps no order
+  // until someone buys, so the order is weighed as the page shows an id it has none for.
+  addresses: {
+    "/p/:sku": "/p/kb-guji-250",
+    "/c/:category": "/c/beans",
+    "/orders/:id": "/orders/00000000-0000-4000-8000-000000000000",
+  },
   // Every page shows its outline: the switch at the corner draws a box around each assembly
   // that says what it is, where it came from and when.
   outline: true,

@@ -7737,3 +7737,36 @@ a lane in two passes and read at the source.
 - **Proof.** The agent surface's 209 cases, publint and attw, exports, unused, versions,
   one-version, identity, emoji, modules, and `conformance agents` 19 of 19 over the packed
   server, exit 0.
+
+## 2026-10-18: R-17 landed
+
+`perf` in two parts and a total, and an address for a page with a parameter, his "Everything,
+shown in two parts" and "In the project's config, beside the budgets", built by a lane and
+read at the source.
+
+- **Expected.** An assembly's module found through the server's asset listing.
+- **Found.** The build writes no mapping from an assembly to its module; the built entry
+  itself holds it, `lazyRenderer({ name: () => import("./chunks/name-HASH.js") })`, so `perf`
+  reads the entry with acorn (`perf/lazy-modules.ts`, bare or quoted keys) and weighs, for
+  each envelope the browser mounts that is the page's own, that module and its static import
+  closure, each file once across the page and never one part one already loaded. The line:
+  `document`, `styles`, `scripts`, then `on mount N assemblies <w>`, then `total <w>`;
+  `PageBudgets` gains `mount` and `total`, each held when given. `addresses` beside the budgets
+  (`core/src/config/page-addresses.ts`): one example address per page whose route has a
+  parameter, keyed by the route; `perf` weighs the page there and names both; `check` asks for
+  it (`a-page-with-a-parameter-names-an-address`, at the config, or at the page when there is
+  no config), and refuses a mismatched, a stray, a non-string, a backslashed or an off-origin
+  address. The frameworks example's home: 22.9 kB of script before mount and 373 kB as six
+  assemblies mount, 143 kB gzipped in all, which is the number the row was for. DESIGN 4 and
+  the `perf` description, the tutorial's perf entry and sample config, and one line of the agent
+  instructions say it. The shop, the catalogue, the reviews, fulfilment and the shadow example
+  carry addresses.
+- **Watched red first.** Thirty-two failures across twelve files on the unchanged source,
+  among them `/items/:sku answered 404` (the route asked for, not the address) and the format
+  line received with three parts; two guards watched red by removal.
+- **Measure.** `check` packs to 44,926 of 45,000, 74 left: the lane cut doc comments to one
+  line and kept the rule's text short to stay under; the core +181 of types.
+- **Proof.** The checks' 333, the core's 1,062, the command line's 142, the build's 417, the
+  agent surface's 209, every cheap gate, design, exports, reference, unused, duplication,
+  examples, site, exit 0. `perf` exit 0 on frameworks and shadow by the command line's own
+  bin; the shop needs its three sibling servers up, which the seat runs before the push.

@@ -35,12 +35,18 @@ const pagesOnly = (): string => {
 
 /** A server that answers every request with one document, but an address it guards. */
 const stub = async (html: string, guarded = "") => {
-  const server = createServer((request, response) =>
-    response.writeHead(request.url === guarded ? 401 : 200).end(html),
-  );
+  const asked: string[] = [];
+  const server = createServer((request, response) => {
+    asked.push(request.url ?? "");
+    response.writeHead(request.url === guarded ? 401 : 200).end(html);
+  });
   await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
   const origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-  return { origin, close: () => new Promise<void>((resolve) => server.close(() => resolve())) };
+  return {
+    origin,
+    asked,
+    close: () => new Promise<void>((resolve) => server.close(() => resolve())),
+  };
 };
 
 const capture = () => {
@@ -48,6 +54,17 @@ const capture = () => {
   const errors: string[] = [];
   const io: Io = { ...realIo, log: (line) => logs.push(line), error: (line) => errors.push(line) };
   return { io, logs, errors };
+};
+
+/** One run of the verb over a project, its build stood in for, and how many servers it started. */
+const runOnce = async (at: string, origin: string) => {
+  const { io, errors } = capture();
+  let started = 0;
+  const code = await runPerf(at, io, {
+    build: async () => 0,
+    start: () => ((started += 1), { ready: Promise.resolve(origin), stop: async () => undefined }),
+  });
+  return { code, errors, started };
 };
 
 describe("the perf verb", { timeout: 60_000 }, () => {
@@ -68,9 +85,59 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     await close();
     expect(code).toBe(0);
     expect(errors).toEqual([]);
-    expect(logs).toContain("/items/:sku: not weighed, as a parameter needs a value");
+    expect(logs).toContain(
+      '/items/:sku: not weighed, as a parameter needs a value; add "/items/:sku" to addresses in assemblejs.config.ts',
+    );
     expect(logs).toContain("not-found: not weighed, as it has no address of its own");
     expect(logs.some((entry) => entry.startsWith("/  document"))).toBe(true);
+  });
+
+  it("weighs a page whose route has a parameter at the address the config gives it, and names both", async () => {
+    const { origin, asked, close } = await stub("<p>page</p>");
+    const at = pagesOnly();
+    realIo.write(join(at, "src", "pages", "item", "item.html"), "<p>item</p>");
+    realIo.write(
+      join(at, "src", "pages", "item", "item.page.ts"),
+      'export default { route: "/items/:sku" };\n',
+    );
+    realIo.write(
+      join(at, "assemblejs.config.ts"),
+      'export default { addresses: { "/items/:sku": "/items/kettle-1" } };\n',
+    );
+    const { io, logs, errors } = capture();
+    const code = await runPerf(at, io, {
+      build: async () => 0,
+      start: () => ({ ready: Promise.resolve(origin), stop: async () => undefined }),
+    });
+    await close();
+    expect(code).toBe(0);
+    expect(errors).toEqual([]);
+    expect(asked).toContain("/items/kettle-1");
+    expect(asked).not.toContain("/items/:sku");
+    expect(logs.some((entry) => entry.startsWith("/items/:sku (/items/kettle-1)  document"))).toBe(
+      true,
+    );
+    expect(logs.some((entry) => entry.includes("not weighed, as a parameter"))).toBe(false);
+  });
+
+  it("holds the total to its budget, and refuses an address it cannot read before building", async () => {
+    const { origin, close } = await stub(`<p>${"page ".repeat(40)}</p>`);
+    const at = pagesOnly();
+    const config = join(at, "assemblejs.config.ts");
+    const run = () => runOnce(at, origin);
+    realIo.write(config, "export default { budgets: { total: 10 } };\n");
+    const over = await run();
+    expect(over.code).toBe(1);
+    expect(over.errors.join()).toMatch(
+      /page "home": total is \d+ B gzipped, over its budget of 10 B/,
+    );
+    realIo.write(config, 'export default { addresses: { "/items/:sku": 5 } };\n');
+    const unread = await run();
+    expect(unread).toMatchObject({ code: 1, started: 0 });
+    expect(unread.errors.join()).toMatch(
+      /assemblejs.config.ts: the address for "\/items\/:sku" is not/,
+    );
+    await close();
   });
 
   it("reports a page a stranger is refused as not weighed, and does not fail for it", async () => {
@@ -95,18 +162,7 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     const { origin, close } = await stub(`<p>${"page ".repeat(40)}</p>`);
     const at = pagesOnly();
     const config = join(at, "assemblejs.config.ts");
-    const run = async () => {
-      const { io, errors } = capture();
-      let started = 0;
-      const code = await runPerf(at, io, {
-        build: async () => 0,
-        start: () => (
-          (started += 1),
-          { ready: Promise.resolve(origin), stop: async () => undefined }
-        ),
-      });
-      return { code, errors, started };
-    };
+    const run = () => runOnce(at, origin);
     realIo.write(config, "export default { budgets: { document: 10 } };\n");
     const over = await run();
     expect(over.code).toBe(1);

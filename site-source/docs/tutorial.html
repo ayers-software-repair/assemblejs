@@ -221,12 +221,17 @@ export default defineApi({
         <dt><code>npx assemblejs perf</code></dt>
         <dd>
           Builds, starts the built server in production, and reports what each page sends a visitor
-          before anything mounts. Budgets in <code>assemblejs.config.ts</code> are gzipped bytes by
-          part, and a page over one fails the command.
+          in two parts, before anything mounts and as its assemblies mount, with a total. Budgets in
+          <code>assemblejs.config.ts</code> are gzipped bytes by part (<code>document</code>,
+          <code>styles</code>, <code>scripts</code>, <code>mount</code> and <code>total</code>), and
+          a page over one fails the command. A page whose route has a parameter is weighed at the
+          example address <code>addresses</code> gives for its route, beside the budgets, and
+          <code>check</code> asks for one for each such page.
           <pre><code>import { defineConfig } from "@assemblejs/core";
 
 export default defineConfig({
-  budgets: { document: 20000, styles: 10000, scripts: 60000 },
+  budgets: { document: 20000, styles: 10000, scripts: 60000, total: 150000 },
+  addresses: { "/product/:sku": "/product/kettle-1" },
 });</code></pre>
           <code>src/tokens.css</code> holds the project's tokens, the colour roles, distances, type
           sizes and corners every assembly's stylesheet reads; every page links it first, and the

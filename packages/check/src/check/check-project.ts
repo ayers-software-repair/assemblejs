@@ -32,12 +32,16 @@ import {
   streamProblems,
 } from "@assemblejs/core";
 import { agentProblems } from "../agents/agent-problems.js";
+import { readAddresses } from "../perf/read-addresses.js";
 import { readBudgets } from "../perf/read-budgets.js";
+import { addressProblems } from "./address-problems.js";
+import { budgetProblems } from "./budget-problems.js";
 import { declaredOrigins } from "./declared-origins.js";
 import { elementProblems } from "./element-problems.js";
 import { hasBrowserHalf } from "./has-browser-half.js";
 import { missingAssemblyFix } from "./missing-assembly-fix.js";
 import { notFoundRouteProblems } from "./not-found-route-problems.js";
+import { originOf } from "./origin-of.js";
 import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
@@ -117,26 +121,27 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
       return otherwise;
     }
   };
-  // The config, read once: the remotes it declares, and the budgets `perf` would hold each page
-  // to, refused here as `perf` refuses them, before a build.
+  // The config, read once: the remotes it declares, and the budgets and addresses `perf` would
+  // hold each page to and weigh it at, refused here as `perf` refuses them, before a build.
   const configFile = join(root, CONFIG_FILE);
   problems.push(...outsideProblems(root, [configFile]));
+  const none = { remotes: NO_REMOTES, budgets: [], addresses: readAddresses("") };
   const config = existsSync(configFile)
     ? readOr(
         configFile,
-        (source) => ({ remotes: declaredOrigins(source), budgets: readBudgets(source).problems }),
-        { remotes: NO_REMOTES, budgets: [] },
+        (source) => ({
+          remotes: declaredOrigins(source),
+          budgets: readBudgets(source).problems,
+          addresses: readAddresses(source),
+        }),
+        // A config that could not be read is a finding already: no address is known missing.
+        { ...none, addresses: { ...none.addresses, whole: false } },
       )
-    : { remotes: NO_REMOTES, budgets: [] };
+    : none;
   const { origins } = config.remotes;
-  for (const problem of config.budgets) {
-    problems.push({
-      path: configFile,
-      rule: "a-budget-is-whole-bytes",
-      message: problem,
-      fix: "write budgets as { document, styles, scripts }, each a whole number of gzipped bytes above zero",
-    });
-  }
+  problems.push(...budgetProblems(configFile, config.budgets));
+  // Every page's route and where it is declared, for the addresses its parameters need.
+  const pageRoutes: Array<{ name: string; route: string | undefined; at: string }> = [];
   // Each api's route, held to the rules boot holds it to by the same function, and each GET one
   // kept by what the router matches, so a page at the same route is refused as boot refuses it.
   // An api file that cannot be read is reported by its own rules.
@@ -183,6 +188,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     }
     problems.push(...notFoundRouteProblems(root, page));
     const at = page.declaration ?? page.template;
+    if (routed) pageRoutes.push({ name: page.name, route, at });
     for (const problem of route === undefined ? [] : pageRouteProblems(route)) {
       problems.push({
         path: at,
@@ -283,17 +289,10 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
       problems.push({ path: at, rule: "a-page-opens-one-stream", message, fix: STREAM_FIX });
     }
   }
+  const configured = existsSync(configFile) ? configFile : undefined;
+  problems.push(...addressProblems(pageRoutes, config.addresses, configured));
   return problems.map((problem) => ({
     ...problem,
     path: fromRoot(root, problem.path),
   }));
-}
-
-function originOf(url: string | undefined): string | undefined {
-  if (url === undefined) return undefined;
-  try {
-    return new URL(url).origin;
-  } catch {
-    return undefined;
-  }
 }

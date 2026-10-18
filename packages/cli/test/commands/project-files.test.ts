@@ -220,7 +220,7 @@ describe("what the checks make of a new project", { timeout: 60_000 }, () => {
       expect(logs.some((entry) => entry.startsWith("/store  document"))).toBe(true);
       expect(line).toMatch(
         // The styles weigh the tokens every page links and the assembly's own sheet.
-        /^\/ {2}document \d+ B \(\d+ B gzip\) {2}styles (?:[1-9]\d* B|\d+(?:\.\d+)? kB) \((?:\d+ B|\d+(?:\.\d+)? kB) gzip\) {2}scripts 0 B \(0 B gzip\)$/,
+        /^\/ {2}document \d+ B \(\d+ B gzip\) {2}styles (?:[1-9]\d* B|\d+(?:\.\d+)? kB) \((?:\d+ B|\d+(?:\.\d+)? kB) gzip\) {2}scripts 0 B \(0 B gzip\) {2}on mount 0 assemblies 0 B \(0 B gzip\) {2}total (?:\d+ B|\d+(?:\.\d+)? kB) \((?:\d+ B|\d+(?:\.\d+)? kB) gzip\)$/,
       );
     } finally {
       rmSync(root, { recursive: true, force: true });

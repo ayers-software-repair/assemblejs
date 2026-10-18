@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@assemblejs/core";
 import type { AssetWeight } from "./asset-weight.js";
+import { lazyModules } from "./lazy-modules.js";
+import { mountsInTheBrowser } from "./mounts-in-the-browser.js";
 import type { PageWeight } from "./page-weight.js";
 import { readTags } from "./read-tags.js";
 import { staticImports } from "./static-imports.js";
@@ -11,6 +13,8 @@ import { weigh } from "./weigh.js";
 const TIMEOUT_MS = 30_000;
 // The script types a browser runs: none at all, a JavaScript type, or a module.
 const RUNS = /^$|^module$|^(text|application)\/(x-)?(javascript|ecmascript)$/i;
+// The specifiers a browser resolves against the module; any other is one it refuses.
+const RESOLVES = /^(\.{0,2}\/|[a-z][a-z0-9+.-]*:)/i;
 
 const sum = (weights: readonly AssetWeight[]): AssetWeight => ({
   bytes: weights.reduce((total, weight) => total + weight.bytes, 0),
@@ -22,11 +26,11 @@ const sum = (weights: readonly AssetWeight[]): AssetWeight => ({
  * script the page links from its own origin, each once, and weighs what came back: a script the
  * browser runs, classic or module, and one it is told to load ahead as a module. And for what
  * each module among them imports before it runs, and what those import, each once: a browser
- * loads all of it before anything mounts, and a build that splits its code puts most of a
- * page's script there. What a module asks for later, with `import()`, is loaded when something
- * mounts, and is not weighed. A file from another origin is named, never fetched: measuring
- * touches no other server. Anything not answered with 200 in time is a failure, never a weight
- * of nothing; `signal` abandons a request in flight.
+ * loads all of it before anything mounts. Then, apart, the module of each assembly the browser
+ * mounts on the page, with what it imports, each file once across the page. A file from
+ * another origin is named, never fetched: measuring touches no other server. Anything not
+ * answered with 200 in time is a failure, never a weight of nothing; `signal` abandons a request
+ * in flight. A route with a parameter is weighed at `address`.
  *
  * It asks as a visitor who has not signed in, so a page the server refuses such a visitor, with
  * a 401 or a 403, has no weight for one and is answered as undefined: the project guards it,
@@ -36,6 +40,7 @@ export async function measurePage(
   origin: string,
   route: string,
   signal?: AbortSignal,
+  address?: string,
 ): Promise<PageWeight | undefined> {
   const own = new URL(origin).origin;
   const ask = (url: URL): Promise<Response> => {
@@ -49,13 +54,14 @@ export async function measurePage(
     return new Uint8Array(await response.arrayBuffer());
   };
   const get = async (url: URL): Promise<Uint8Array> => read(url, await ask(url));
-  const address = new URL(route, own);
-  const answer = await ask(address);
+  const target = new URL(address ?? route, own);
+  if (target.origin !== own) throw new Error(`${address ?? route} leads to another origin`);
+  const answer = await ask(target);
   if (answer.status === 401 || answer.status === 403) {
     await answer.body?.cancel();
     return undefined;
   }
-  const page = await read(address, answer);
+  const page = await read(target, answer);
   const tags = readTags(new TextDecoder().decode(page));
   const elsewhere: string[] = [];
   const linked = async (urls: readonly string[]): Promise<AssetWeight> => {
@@ -95,32 +101,65 @@ export async function measurePage(
       ),
     ...linkedAs("modulepreload").map((href) => [new URL(href, own), true] as const),
   ];
-  // Every script loaded before anything mounts, each once: the ones the page links, and what
-  // each module among them imports before it runs, and what those import, to the end.
+  // Scripts, and what each module among them imports before it runs, and what those import, to
+  // the end, each file once across the page. Answers the weight of the files it loaded first.
   const weighed = new Map<string, AssetWeight>();
   const followed = new Set<string>();
-  while (scripts.length > 0) {
-    const [url, module] = scripts.shift() ?? [address, false];
-    if (url.origin !== own) {
-      elsewhere.push(url.href);
-      continue;
+  // The module the entry loads for each assembly, from the maps in the modules it reads.
+  const lazy = new Map<string, URL>();
+  const load = async (queue: Array<readonly [url: URL, module: boolean]>): Promise<AssetWeight> => {
+    const fresh = new Map<string, AssetWeight>();
+    while (queue.length > 0) {
+      const [url, module] = queue.shift() ?? [target, false];
+      if (url.origin !== own) {
+        elsewhere.push(url.href);
+        continue;
+      }
+      if (weighed.has(url.href) && (!module || followed.has(url.href))) continue;
+      const body = await get(url);
+      const weight = weigh(body);
+      if (!weighed.has(url.href)) fresh.set(url.href, weight);
+      weighed.set(url.href, weight);
+      if (!module) continue;
+      followed.add(url.href);
+      const source = new TextDecoder().decode(body);
+      for (const [name, specifier] of lazyModules(source)) {
+        if (RESOLVES.test(specifier)) lazy.set(name, new URL(specifier, url));
+      }
+      for (const specifier of staticImports(source)) {
+        if (RESOLVES.test(specifier)) queue.push([new URL(specifier, url), true]);
+      }
     }
-    if (weighed.has(url.href) && (!module || followed.has(url.href))) continue;
-    const body = await get(url);
-    weighed.set(url.href, weigh(body));
-    if (!module) continue;
-    followed.add(url.href);
-    for (const specifier of staticImports(new TextDecoder().decode(body))) {
-      // A browser resolves only these against the module; any other is one it refuses.
-      if (!/^(\.{0,2}\/|[a-z][a-z0-9+.-]*:)/i.test(specifier)) continue;
-      scripts.push([new URL(specifier, url), true]);
+    return sum([...fresh.values()]);
+  };
+  const before = await load(scripts);
+  // The assemblies the browser mounts on this page: this server's, each once, and not one whose
+  // mode keeps it from mounting. What is deferred, and what a module asks for later still, is
+  // not known from the page and is not weighed.
+  const mounted = new Map<string, URL>();
+  for (const { tag, attributes } of tags) {
+    const name = attributes[ENVELOPE_ATTRIBUTE.name] ?? "";
+    const module = lazy.get(name);
+    if (
+      tag === ENVELOPE_ELEMENT &&
+      module !== undefined &&
+      !(ENVELOPE_ATTRIBUTE.remote in attributes) &&
+      mountsInTheBrowser(attributes)
+    ) {
+      mounted.set(name, module);
     }
   }
+  const mount = await load([...mounted.values()].map((url) => [url, true] as const));
+  const markup = weigh(page);
   return {
     route,
-    document: weigh(page),
+    ...(address === undefined ? {} : { address }),
+    document: markup,
     styles,
-    scripts: sum([...weighed.values()]),
+    scripts: before,
+    mount,
+    assemblies: mounted.size,
+    total: sum([markup, styles, before, mount]),
     elsewhere: [...new Set(elsewhere)],
     fellBack: tags
       .filter(

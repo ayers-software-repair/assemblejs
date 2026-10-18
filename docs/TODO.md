@@ -1121,7 +1121,7 @@ a spec watched red first, or struck with its reason.
       link names
       RULED 2026-10-12, by "I take your recommendations" (Phase 7, R-19)
       DONE 2026-10-18 (Phase 7, R-19)
-- [ ] `perf` weighs the scripts a document links and nothing they import
+- [x] `perf` weighs the scripts a document links and nothing they import
       (`perf/measure-page.ts:62-77`): 576 B for a page whose one script statically imports two
       runtime chunks, 20.7 kB, before anything mounts, and whose React assembly then fetches 218 kB.
       A page with a route parameter is "not weighed", so the most complex page is outside every
@@ -1132,6 +1132,7 @@ a spec watched red first, or struck with its reason.
       so such a page can be weighed
       RULED 2026-10-12: everything, shown in two parts, and example addresses in the config
       (Phase 7, R-17)
+      DONE 2026-10-18 (Phase 7, R-17)
 - [x] The agent's `place_assembly` damages the template's layout: with `after` it writes the tag at
       column 0 beneath a neighbour indented eight; with no position it writes it between `</body>`'s
       indentation and `</body>`. A second call for the same assembly on the same page places it
@@ -1705,7 +1706,7 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       as a stranger, the staff's page answers 401, and that is counted a failure. DONE
       2026-10-12: a page that answers 401 or 403 is said not weighed, and the command goes on
       (DECISIONS 2026-10-12, "perf does not fail a project for guarding a page")
-- [ ] FOUND BY THE SHOWCASE: `perf` weighs no page whose route has a parameter, and has no way
+- [x] FOUND BY THE SHOWCASE: `perf` weighs no page whose route has a parameter, and has no way
       to be given a value. In the showcase that is the product page, the shelf and the order:
       the heaviest pages are the ones no budget holds. A design: where a value comes from. THE
       OWNER'S, and one question with the row on what `perf` weighs, above, which says both
@@ -1716,6 +1717,8 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
 
 His words and what each rests on are in DECISIONS 2026-10-12, "the owner at the seat". The
 rows are taken in this order; each is a bite with its own proof and its own push.
+
+      DONE 2026-10-18 (Phase 7, R-17)
 
 - [x] R-1 A Svelte view types what it is handed. Svelte's own checker, run over the six
       Svelte views of the examples, found two errors, both a callback's parameter left `any`
@@ -1863,11 +1866,15 @@ rows are taken in this order; each is a bite with its own proof and its own push
       context, `reply({ status, headers, cookies, body })` and `reply.redirect(location)`, a
       service and a page unchanged; the shop's staff door sets its cookie from the api
       (DECISIONS 2026-10-18, "R-16 landed")
-- [ ] R-17 `perf` weighs what a page loads before anything mounts and what its assemblies
+- [x] R-17 `perf` weighs what a page loads before anything mounts and what its assemblies
       fetch as they mount, shows both, and holds the total to the budget; and the config
       lists one example address for each page whose address has a parameter, weighed by
       `perf` and asked for by `check` (owner, 2026-10-12, "Everything, shown in two parts"
       and "In the project's config, beside the budgets")
+      DONE 2026-10-18, by a lane: two parts and a total on every line, `mount` and `total`
+      budgets, `addresses` beside the budgets, asked for by `check`
+      (`a-page-with-a-parameter-names-an-address`) and weighed by `perf` (DECISIONS 2026-10-18,
+      "R-17 landed")
 - [ ] R-14b and R-15b, THE BROWSER PROOF of the two: a two-server browser spec with an assembly
       of the page's own, one from a remote declared `events: true` and one from a remote not
       declared, where a send from the page is heard by the admitted remote's assembly and not

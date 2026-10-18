@@ -862,9 +862,13 @@ export default defineConfig({
 });
 ```
 
-So are the page budgets: what each page may send a visitor before anything mounts, in gzipped
-bytes by part (`document`, `styles`, `scripts`), declared as `budgets` in the same file. `perf`
-weighs the production build and holds every page to them; nothing on the server reads them.
+So are the page budgets: what each page may send a visitor, in gzipped bytes by part, declared
+as `budgets` in the same file. Before anything mounts: the `document`, the `styles` and the
+`scripts`. Then `mount`, what the assemblies the browser mounts on the page fetch as they mount,
+and `total`, all of it. `perf` weighs the production build and holds every page to them; nothing
+on the server reads them. So are the addresses `perf` weighs a page with a parameter at,
+`addresses`, beside the budgets: one example address for each such page, keyed by its route
+(`"/product/:sku": "/product/kettle-1"`); `check` asks for the entry.
 And so are the bounds on composition, `limits: { depth, placements }` (3.4): how deep it goes
 and how many placements one request composes, where the defaults of 8 and 256 do not fit.
 The server reads them at boot and refuses a value outside its bounds; `check` shows them as it
@@ -1097,8 +1101,9 @@ for and for each one that server composed inside its answer.
   change; `assemblejs build` emits the server and the client assets; neither leaves a trace in
   the running server. `assemblejs check` reports every problem found without building, each with
   its file, rule and fix. `assemblejs perf` builds, starts the build in production and weighs
-  what each page, at the route it is mounted at, sends a visitor from its own origin before
-  anything mounts; a page that falls back fails it. `assemblejs deploy` builds and writes
+  what each page, at the route it is mounted at (a page with a parameter, at the address
+  `addresses` gives for its route), sends a visitor from its own origin in two parts, before
+  anything mounts and as its assemblies mount, and in all; a page that falls back fails it. `assemblejs deploy` builds and writes
   `deploy/`, the build and a package.json of the project's dependencies alone, refused when the
   server imports a package those would not install, and never over a `deploy/` it did not write.
   None of them publishes or touches a remote.

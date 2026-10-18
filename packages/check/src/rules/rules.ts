@@ -182,11 +182,19 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: "a-budget-is-whole-bytes",
-    rule: "A page budget in assemblejs.config.ts is an object of the parts a page sends, document, styles and scripts, each a whole number of gzipped bytes above zero, written as a literal.",
+    rule: "A page budget in assemblejs.config.ts is an object of the parts a page sends, document, styles, scripts, mount and total, each a whole number of gzipped bytes above zero, written as a literal.",
     because:
       "perf holds every page to the budgets the config declares and reads them from the source without running it, so a budget that is computed, names a part nothing sends, or is not a whole number of bytes is one no page can be held to. perf refuses it before anything is built; check says so first.",
     smell:
       "budgets: { html: 50000 }, a budget of zero or 12.5, or budgets built from an environment variable.",
+  },
+  {
+    id: "a-page-with-a-parameter-names-an-address",
+    rule: "Every page whose route has a parameter has an entry in addresses in assemblejs.config.ts, keyed by that route, whose value is a path on this server the route answers, and every entry is for such a route.",
+    because:
+      "perf weighs a page at an address, and a route with a parameter is none until it has a value, which perf will not invent. Without an entry the page is one no budget holds, and in a shop those are the product, the shelf and the order. An address its route does not answer fails perf with a 404; an entry for a route no page has is read by nothing.",
+    smell:
+      'A page at /p/:sku with no "/p/:sku" in addresses, or an address of /product/kettle for it.',
   },
   {
     id: "the-server-file-never-grows",

@@ -25,6 +25,7 @@ export const RULE_IDS = [
   "policy-names-a-placement",
   "a-page-opens-one-stream",
   "a-budget-is-whole-bytes",
+  "a-page-with-a-parameter-names-an-address",
   "the-server-file-never-grows",
   "one-project-per-root",
   "a-project-stays-inside-its-root",

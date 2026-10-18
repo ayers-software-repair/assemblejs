@@ -89,6 +89,8 @@ one framework or in none, and each hydrated in the browser by its own framework.
   its framework: \`tsc -b\` after a build type-checks every file as its own framework's.
 - \`npx assemblejs dev\` builds, serves and rebuilds on every change. \`npx assemblejs build\`
   writes \`dist/server.js\`, which is what production runs, under plain node.
+- \`npx assemblejs perf\` weighs what each page sends before anything mounts and as its
+  assemblies mount, held to \`budgets\`; a page with a parameter is weighed at its entry in \`addresses\`.
 - This part of the file is written by \`npx assemblejs add agents\` and held current by \`check\`.
   Put this project's own instructions outside it.
 

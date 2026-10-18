@@ -131,6 +131,13 @@ describe("checking a project", () => {
         "src/pages/home/home.page.ts": `export default { ${home} };`,
         "src/pages/start/start.html": '<body><assembly name="hello"></assembly></body>',
         "src/pages/start/start.page.ts": `export default { route: "${start}" };`,
+        // A route with a parameter is given the address it is weighed at.
+        ...(home === ""
+          ? {}
+          : {
+              "assemblejs.config.ts":
+                'export default { addresses: { "/items/:a": "/items/1", "/items/:b": "/items/1" } };',
+            }),
       });
     for (const [home, start] of [
       ["", "/"],

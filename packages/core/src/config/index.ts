@@ -8,6 +8,7 @@ export { ConfigError } from "./config-error.js";
 export { readConfig } from "./read-config.js";
 export { describeConfig } from "./describe-config.js";
 export type { PageBudgets } from "./page-budgets.js";
+export type { PageAddresses } from "./page-addresses.js";
 export type { ProjectConfig } from "./project-config.js";
 export type { LimitsConfig } from "./limits-config.js";
 export { defineConfig } from "./define-config.js";

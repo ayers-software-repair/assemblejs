@@ -11,24 +11,24 @@ import { discoverPages } from "@assemblejs/build";
 import { freePort } from "@assemblejs/build";
 import { NOT_FOUND_PAGE } from "@assemblejs/build";
 import { routeParameters } from "@assemblejs/core";
-import type { PageBudgets } from "@assemblejs/core";
+import type { PageAddresses, PageBudgets } from "@assemblejs/core";
 import { pageRoute } from "../check/page-route.js";
 import { formatWeight } from "./format-weight.js";
 import { measurePage } from "./measure-page.js";
 import { overBudget } from "./over-budget.js";
+import { readAddresses } from "./read-addresses.js";
 import { readBudgets } from "./read-budgets.js";
 
 /**
  * The `perf` verb: builds the project, starts the built server in production on a free port,
- * and reports what each page sends a visitor before anything mounts, one line per page, at the
- * route the built server mounts it at, and holds each to the budgets `assemblejs.config.ts`
- * declares, gzipped, by part. What it measures is what production serves, from the server
- * production runs. A page that does not answer, answers an assembly with its fallback, is over a
- * budget, or has a route only running the project could tell, is a failure, and the command
- * exits 1; so is a budget it cannot read. A page whose route has a parameter has no one url to
- * weigh, so it is reported as not weighed rather than weighed at a value this command invented;
- * and so is a page the project guards, which a visitor who has not signed in is not sent.
- * The server it started is stopped however the command ends, a signal included.
+ * and reports what each page sends a visitor before anything mounts and as its assemblies
+ * mount, one line per page, at the route the built server mounts it at, and holds each to the
+ * budgets `assemblejs.config.ts` declares, gzipped, by part. A page that does not answer,
+ * answers an assembly with its fallback, is over a budget, or has a route only running the
+ * project could tell, is a failure, and the command exits 1; so is a budget or an address it
+ * cannot read. A page whose route has a parameter is weighed at its address in `addresses`,
+ * and is reported as not weighed without one; so is a page the project guards. The server it
+ * started is stopped however the command ends, a signal included.
  */
 export async function runPerf(
   root: string,
@@ -41,15 +41,22 @@ export async function runPerf(
 ): Promise<number> {
   const { build = buildProject, signal } = options;
   const start = options.start ?? ((at, quiet, env) => startServer(at, quiet, 3000, env));
-  // The budgets first: one that cannot be read is known before anything is built or started.
+  // The budgets and addresses first: one that cannot be read is known before anything is built
+  // or started.
   const configFile = join(root, CONFIG_FILE);
   let budgets: PageBudgets = {};
+  let addresses: PageAddresses = {};
   if (existsSync(configFile)) {
     try {
-      const read = readBudgets(readFileSync(configFile, "utf8"));
-      for (const problem of read.problems) io.error(`assemblejs.config.ts: ${problem}`);
-      if (read.problems.length > 0) return 1;
+      const source = readFileSync(configFile, "utf8");
+      const read = readBudgets(source);
+      const declared = readAddresses(source);
+      for (const problem of [...read.problems, ...declared.problems]) {
+        io.error(`assemblejs.config.ts: ${problem}`);
+      }
+      if (read.problems.length + declared.problems.length > 0) return 1;
       budgets = read.budgets;
+      addresses = declared.addresses;
     } catch (error) {
       io.error(
         `assemblejs.config.ts could not be read: ${error instanceof Error ? error.message : String(error)}`,
@@ -94,11 +101,16 @@ export async function runPerf(
           throw new Error(
             "its route is not written as a literal, so only running the project could tell it",
           );
-        if (routeParameters(route).length > 0) {
-          io.log(`${route}: not weighed, as a parameter needs a value`);
+        const parameterised = routeParameters(route).length > 0;
+        const address =
+          parameterised && Object.hasOwn(addresses, route) ? addresses[route] : undefined;
+        if (parameterised && address === undefined) {
+          io.log(
+            `${route}: not weighed, as a parameter needs a value; add "${route}" to addresses in ${CONFIG_FILE}`,
+          );
           continue;
         }
-        const weight = await measurePage(origin, route, signal);
+        const weight = await measurePage(origin, route, signal, address);
         if (weight === undefined) {
           io.log(`${route}: not weighed, as it is not shown to a visitor who has not signed in`);
           continue;

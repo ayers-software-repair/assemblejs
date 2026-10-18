@@ -6,8 +6,13 @@ import { readBudgets } from "@assemblejs/check";
 describe("the page budgets a config declares", () => {
   it("reads each part's bytes as written, and none from a config that declares none", () => {
     expect(
-      readBudgets("export default defineConfig({ budgets: { document: 20000, scripts: 60000 } });"),
-    ).toEqual({ budgets: { document: 20000, scripts: 60000 }, problems: [] });
+      readBudgets(
+        "export default defineConfig({ budgets: { document: 20000, scripts: 60000, mount: 90000, total: 200000 } });",
+      ),
+    ).toEqual({
+      budgets: { document: 20000, scripts: 60000, mount: 90000, total: 200000 },
+      problems: [],
+    });
     expect(readBudgets("export default defineConfig({ remotes: [] });")).toEqual({
       budgets: {},
       problems: [],
@@ -20,7 +25,7 @@ describe("the page budgets a config declares", () => {
     );
     expect(budgets).toEqual({});
     expect(problems).toEqual([
-      'budgets names "fonts", which is not a part a page sends: document, styles, scripts',
+      'budgets names "fonts", which is not a part a page sends: document, styles, scripts, mount, total',
       "the budget for styles is not a whole number of bytes above zero; write it as a whole number of bytes above zero",
       "the budget for scripts is not a whole number of bytes above zero; write it as a whole number of bytes above zero",
       "the budget for document is not written as a number; write it as a whole number of bytes above zero",

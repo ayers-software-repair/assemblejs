@@ -405,13 +405,14 @@ Every problem found without building: a tag naming an assembly that does not exi
 
 ### `npx assemblejs perf`
 
-Builds, starts the built server in production, and reports what each page sends a visitor before anything mounts. Budgets in `assemblejs.config.ts` are gzipped bytes by part, and a page over one fails the command.
+Builds, starts the built server in production, and reports what each page sends a visitor in two parts, before anything mounts and as its assemblies mount, with a total. Budgets in `assemblejs.config.ts` are gzipped bytes by part (`document`, `styles`, `scripts`, `mount` and `total`), and a page over one fails the command. A page whose route has a parameter is weighed at the example address `addresses` gives for its route, beside the budgets, and `check` asks for one for each such page.
 
 ```
 import { defineConfig } from "@assemblejs/core";
 
 export default defineConfig({
-  budgets: { document: 20000, styles: 10000, scripts: 60000 },
+  budgets: { document: 20000, styles: 10000, scripts: 60000, total: 150000 },
+  addresses: { "/product/:sku": "/product/kettle-1" },
 });
 ```
 

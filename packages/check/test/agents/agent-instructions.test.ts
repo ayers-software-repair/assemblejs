@@ -99,6 +99,12 @@ describe("what an agent that opens a project is told", () => {
     );
   });
 
+  it("says what perf weighs, in two parts, and where a page with a parameter gets its address", () => {
+    expect(visible).toContain(
+      "`npx assemblejs perf` weighs what each page sends before anything mounts and as its\n  assemblies mount, held to `budgets`; a page with a parameter is weighed at its entry in `addresses`.",
+    );
+  });
+
   // One list: a rule or a renderer added to the framework is in every project's instructions.
   it("carries every rule the agent surface explains, and every renderer the command scaffolds", () => {
     const unmarked = visible.replaceAll("`", "");

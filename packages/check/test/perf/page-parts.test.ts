@@ -6,7 +6,7 @@ import { PAGE_PARTS } from "@assemblejs/check";
 
 describe("the parts of what a page sends", () => {
   it("are the parts a budget can name, no more and no fewer", () => {
-    const every: Required<PageBudgets> = { document: 1, styles: 1, scripts: 1 };
+    const every: Required<PageBudgets> = { document: 1, styles: 1, scripts: 1, mount: 1, total: 1 };
     expect([...PAGE_PARTS].sort()).toEqual(Object.keys(every).sort());
   });
 });
