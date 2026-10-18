@@ -11,7 +11,9 @@ export interface StartOptions {
   /**
    * The origin this runtime's script was served from. It mounts the envelopes from that origin:
    * those with no `data-remote` when it is the page's own, those whose `data-remote` names it
-   * when it is a remote's. Absent, it mounts only the page's own.
+   * when it is a remote's. Absent, it mounts only the page's own. It is on the page's one bus
+   * when it is the page's own, or a remote the page's head admits; any other remote's runtime
+   * is on a bus of its own.
    */
   readonly origin?: string;
   /** Topics that keep their last message for an assembly that hydrates after it was sent. */

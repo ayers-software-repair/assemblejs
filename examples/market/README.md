@@ -64,7 +64,8 @@ three servers.
 Three things a shop like this would want, and that the framework does not do yet. The showcase
 is built inside them and says so on its own About page.
 
-- Two servers' assemblies on one page share no event bus. Where two teams must agree, the
+- Two servers' assemblies on one page share an event bus only where the shop's config says so
+  for that server (`events: true`, which it does for the catalogue). Where two teams must agree, the
   address carries it, which is how the grind reaches the buy box.
 - An assembly placed from another server cannot call its own server from the browser, so the
   reviews here are read, not written.

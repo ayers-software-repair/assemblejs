@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ENVELOPE_ATTRIBUTE } from "../vocab/envelope-attribute.js";
 import { MOUNTED_ATTRIBUTE } from "../vocab/mounted-attribute.js";
-import { createBus } from "./events/create-bus.js";
 import { findEnvelopes } from "./find-envelopes.js";
 import { markMounted } from "./mark-mounted.js";
 import { mountIsland } from "./mount-island.js";
 import type { MountedAssembly } from "./mounted-assembly.js";
 import { openPageStream } from "./open-page-stream.js";
+import { pageBus } from "./page-bus.js";
 import { readIsland } from "./read-island.js";
 import { readMountMode } from "./read-mount-mode.js";
 import type { Runtime } from "./runtime.js";
@@ -32,7 +32,7 @@ export function start(options: StartOptions): Runtime {
   const mounted = new Map<string, MountedAssembly>();
   const cancels: Array<() => void> = [];
   const releases: Array<() => void> = [];
-  const bus = createBus(options.replay);
+  const bus = pageBus(options.origin, options.replay);
 
   const deferring = new Set<string>();
 

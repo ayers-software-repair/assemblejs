@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { start } from "@assemblejs/core/client";
+import { PAGE_BUS_KEY, start } from "@assemblejs/core/client";
 import type { ClientRenderer } from "@assemblejs/core/client";
 
 const envelope = (
@@ -43,6 +43,8 @@ const recorder = () => {
 
 beforeEach(() => {
   document.body.innerHTML = "";
+  // Each test is a page of its own, with its one bus.
+  delete (globalThis as Record<symbol, unknown>)[PAGE_BUS_KEY];
 });
 
 describe("starting the runtime", () => {

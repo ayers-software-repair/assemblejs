@@ -18,4 +18,9 @@ export interface RemoteDefinition {
    * given the route parameters and the declared headers, and nothing the visitor typed.
    */
   readonly trusted?: boolean;
+  /**
+   * Whether this remote's browser runtime joins the page's one event bus (DESIGN 3.6). Off unless
+   * declared, as `forward` and `trusted` are: a remote not named is on a bus of its own.
+   */
+  readonly events?: boolean;
 }

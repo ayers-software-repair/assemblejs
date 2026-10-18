@@ -20,6 +20,14 @@ describe("what is checked about remotes before anything listens", () => {
     ]);
   });
 
+  it("refuses events written as anything but a boolean, as it does trusted", () => {
+    const origin = "https://checkout.example.com";
+    expect(remoteProblems([{ origin, events: true }])).toEqual([]);
+    expect(remoteProblems([{ origin, events: "yes" as never }])).toEqual([
+      `remote "${origin}" has events: yes; it is true or left out`,
+    ]);
+  });
+
   it("refuses anything that is not exactly an origin, so the allowlist compares like with like", () => {
     for (const origin of [
       "https://checkout.example.com/",

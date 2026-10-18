@@ -221,7 +221,7 @@ describe("a page placing an assembly from another server", () => {
       config,
       log: () => undefined,
       assemblies: [],
-      remotes: [{ origin: producerOrigin }],
+      remotes: [{ origin: producerOrigin, events: true }],
       pages: [
         {
           route: "/",
@@ -260,6 +260,13 @@ describe("a page placing an assembly from another server", () => {
     const gone = await consumer.inject({ method: "GET", url: "/gone" });
     expect(gone.statusCode).toBe(200);
     expect(gone.body).toContain("<p>no cart</p>");
+  });
+
+  it("names the remotes that join its bus in its head, on every page", async () => {
+    const meta = `<meta name="assemblejs-events" content="${producerOrigin}">`;
+    expect((await consumer.inject({ method: "GET", url: "/" })).body).toContain(meta);
+    expect((await consumer.inject({ method: "GET", url: "/gone" })).body).toContain(meta);
+    expect((await app.inject({ method: "GET", url: "/" })).body).not.toContain("assemblejs-events");
   });
 
   it("refuses to boot a page placing from an origin nobody declared", async () => {

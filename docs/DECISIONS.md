@@ -7485,3 +7485,28 @@ ls -l` shows as the protected token overridden by env. pnpm's own variable is v1
   trusted publisher configuration must complete its first successful publish within 2
   days"); then the secret and the token deleted. One precondition he confirms: that the
   `@assemblejs` scope is his on npm.
+
+## 2026-10-18: R-14 landed
+
+One bus for a page, his "Yes, opt in per remote server", the seat's red tests first (eight,
+on `pageBus` and `linkEvents`), a lane to make them green without touching an assertion.
+
+- **Expected.** A remote joins the page's bus only when the project declares it, as `forward`
+  and `trusted` are declared; the page tells the browser which; whichever bundle runs first
+  makes the one bus and the rest find it.
+- **Found and built.** `RemoteDefinition.events`, refused at boot unless a boolean. Every
+  page names the admitted origins in one head meta, `assemblejs-events`, written by
+  `linkEvents` beside `linkStream` from the remotes `register-pages` already held. In the
+  browser, `pageBus(origin, replay)`: the page's own runtime (no origin, or the page's) and an
+  admitted remote's share the bus kept on `globalThis` under `Symbol.for("assemblejs.page-bus")`,
+  made by whichever asks first, each runtime's replay topics kept on it; a remote not named
+  gets a bus of its own, kept nowhere. `start()` changed in one call. The rule for "the page's
+  own runtime" that `open-page-stream.ts` held inline is one helper now, `isOwnRuntime`. Two
+  defects in the seat's red tests, mended without touching an assertion: no happy-dom pragma,
+  and a sender without its `view`. DESIGN 3.6, 5.1 and 9 say it; the showcase declares the
+  catalogue `events: true` and no longer says a page cannot share a bus across servers, though
+  no assembly sends across servers yet. No browser spec: the one two-server fixture has no
+  assembly of the page's own; a fixture of page, admitted and unadmitted is a row for the
+  browser proof.
+- **Measure.** The core packs to 98,719 bytes, 719 over its 98,000, which the lead was asked
+  to raise with the measure before this landed.

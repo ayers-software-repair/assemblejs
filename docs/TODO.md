@@ -1822,9 +1822,12 @@ rows are taken in this order; each is a bite with its own proof and its own push
       `keep`; only what is sent after the call is kept (DECISIONS 2026-10-18, "R-11 landed")
 - [ ] R-12 A service can say the thing does not exist, and the page answers 404 with the
       project's not-found page; an address with a trailing slash answers as the one without
-- [ ] R-14 One bus for a page, which a remote server's runtime joins only where the page's
+- [x] R-14 One bus for a page, which a remote server's runtime joins only where the page's
       project says so for that server, as `forward` and `trusted` are said (FINDINGS 35;
       owner, 2026-10-12, "Yes, opt in per remote server")
+      DONE 2026-10-18, by a lane on the seat's red tests: `events: true` per remote, the page
+      naming the admitted origins in its head, one bus on the page every admitted bundle finds
+      (DECISIONS 2026-10-18, "R-14 landed")
 - [ ] R-15 A remote assembly reaches its own server through the page's server, which passes
       the call on: nothing for the other team to do, nothing crossing origins in the browser
       (FINDINGS 36). How it came to this, 2026-10-12, in three steps. The seat advised that

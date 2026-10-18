@@ -20,6 +20,7 @@ import { OUTLINE_ROUTE } from "../vocab/outline-route.js";
 import type { AdmitVisitor } from "./admit-visitor.js";
 import { beforeBodyEnd } from "./before-body-end.js";
 import { hoistAssets } from "./hoist-assets.js";
+import { linkEvents } from "./link-events.js";
 import { linkStream } from "./link-stream.js";
 import { logFallbacks } from "./log-fallbacks.js";
 import { outlineIsland } from "./outline-island.js";
@@ -71,6 +72,10 @@ export function registerPages(
   },
 ): void {
   const { assemblies, log } = options;
+  // Every page names them, since any page may place one of these remotes.
+  const joining = options.remotes
+    .filter((remote) => remote.events === true)
+    .map((remote) => remote.origin);
   for (const page of options.pages) {
     const plan = pagePlan(page);
     const fetch = pageFetch(plan, options.local, options.remote);
@@ -140,7 +145,12 @@ export function registerPages(
           : "";
       return reply
         .header("content-type", "text/html; charset=utf-8")
-        .send(linkStream(beforeBodyEnd(hoistAssets(composed.html, assets), account), page.stream));
+        .send(
+          linkEvents(
+            linkStream(beforeBodyEnd(hoistAssets(composed.html, assets), account), page.stream),
+            joining,
+          ),
+        );
     });
   }
 }

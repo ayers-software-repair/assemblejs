@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { connectStream } from "./connect-stream.js";
 import type { Bus } from "./events/bus.js";
+import { isOwnRuntime } from "./is-own-runtime.js";
 import { readStreamUrl } from "./read-stream-url.js";
 import type { StartOptions } from "./start-options.js";
 import type { StreamSource } from "./stream-source.js";
@@ -16,9 +17,7 @@ export function openPageStream(
   bus: Bus,
   open?: (url: string) => StreamSource,
 ): (() => void) | undefined {
-  const own =
-    options.origin === undefined ||
-    (typeof location !== "undefined" && options.origin === location.origin);
-  const url = options.stream ?? (own ? readStreamUrl(document) : undefined);
+  const url =
+    options.stream ?? (isOwnRuntime(options.origin) ? readStreamUrl(document) : undefined);
   return url === undefined ? undefined : connectStream(url, bus, open);
 }

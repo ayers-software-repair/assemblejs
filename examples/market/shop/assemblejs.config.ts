@@ -8,7 +8,9 @@ export default defineConfig({
   // The three other teams' servers this one places assemblies from, and nothing else.
   remotes: [
     // The catalogue reads what a visitor searched for, so it is trusted with the page's query.
-    { origin: CATALOG, trusted: true },
+    // Its browser runtime also joins the page's bus, so the shop's assemblies and the
+    // catalogue's can hear one another.
+    { origin: CATALOG, trusted: true, events: true },
     { origin: REVIEWS },
     { origin: FULFILMENT },
   ],

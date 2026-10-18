@@ -24,7 +24,8 @@ export type Missing = { found: false; sku: string };
 // The page's route names the product (`/p/:sku`). One that is not in the catalogue is answered
 // as data like any other: the view says so, since a service cannot answer "not found". The
 // grind a visitor chose is in the page's query, which is where the shop's buy box reads it too:
-// two teams' assemblies on one page share no bus, and they do share the address.
+// two teams' assemblies on one page share a bus only where the page's project says so, and
+// they always share the address.
 export default defineService({
   name: "product",
   run: ({ params, query }): Found | Missing => {

@@ -59,6 +59,7 @@ export { liveClosingTags } from "./live-closing-tags.js";
 export { headEnd } from "./head-end.js";
 export { hoistAssets } from "./hoist-assets.js";
 export { linkStream } from "./link-stream.js";
+export { linkEvents } from "./link-events.js";
 export type { LocalRenderInput } from "./local-render-input.js";
 export type { LocalRendered } from "./local-rendered.js";
 export { renderLocal } from "./render-local.js";

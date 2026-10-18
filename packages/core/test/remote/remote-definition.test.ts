@@ -10,5 +10,8 @@ describe("a declared remote", () => {
     expect(remote.trusted).toBeUndefined();
     const trusted: RemoteDefinition = { origin: "https://shop.example", trusted: true };
     expect(trusted.trusted).toBe(true);
+    expect(remote.events).toBeUndefined();
+    const joining: RemoteDefinition = { origin: "https://shop.example", events: true };
+    expect(joining.events).toBe(true);
   });
 });

@@ -480,8 +480,10 @@ line break in the payload. It arrives on the bus from the sender `{ id: "server"
 placement can have, and each topic the stream sends keeps its last message per address: the
 stream opens while assemblies are still loading, so one that mounts later reads what it missed
 with `events.last`, and only what it would have been delivered.
-The page's own runtime opens the stream its head names; a remote's runtime never does, and an
-assembly placed from another server is on that server's bus, which the stream does not reach.
+The page's own runtime opens the stream its head names; a remote's runtime never does. An
+assembly placed from another server is on that server's own bus, which the stream does not reach,
+unless the project declares that server `events: true` (5.1): then its runtime joins the page's
+one bus, and the stream reaches its assemblies too.
 A stream answers GET and not HEAD, writes a comment while quiet, drops a connection whose queue,
 once past what the socket takes at once, does not drain within thirty seconds (what it holds
 meanwhile is what the stream sent in that time), and is closed before the server stops. Over HTTP/1.1
@@ -534,6 +536,11 @@ The composer treats a remote assembly as a third party, because it is one.
   a visitor typed into the address, reaches only a remote declared `trusted: true`, on the
   content url it is asked at; every remote is given the page's route parameters, as a local
   assembly is (2.1), since a page's route is the author's and not the visitor's.
+- **A remote's browser runtime joins the page's event bus only where declared.** `events: true`,
+  per remote, as `forward` and `trusted` are. Every page names the declared remotes in its head
+  (`assemblejs-events`), and the runtime of a remote so named uses the page's one bus; a remote not
+  named stays on a bus of its own, so its script neither hears nor sends the page's events unless
+  the project said it may.
 - The response is capped, default 2 MiB, and must be `text/html`. Anything else is a failure.
 - Remote response headers are discarded. Nothing a remote sets reaches the visitor.
 
@@ -920,7 +927,9 @@ events.keep("cart:add"); // later sends on this topic are kept for `last`
 
 Two assemblies from different frameworks exchange events with no adapter, because the bus
 belongs to the page and not to any framework's tree. That is what makes the mixed-framework page
-real.
+real. The bus is the page's: its own runtime and the runtime of each remote server the project
+declares `events: true` (5.1) share it, kept on `globalThis` so every bundle on the page finds the
+same one; a remote not declared has a bus of its own.
 
 **The outline.** A project that sets `outline: true` shows how its pages are put together. Every
 page then carries a switch at the corner of the window, and a visitor who turns it on sees a box
