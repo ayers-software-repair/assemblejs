@@ -1,7 +1,0 @@
----
-"@assemblejs/build": patch
-"@assemblejs/check": patch
-"@assemblejs/cli": patch
----
-
-The build writes the project's TypeScript setup into `.assemblejs/`, so no file of a project's needs a line saying whose JSX it is. One project for each owner of JSX the assemblies have (React's, Preact's with `jsxImportSource: "preact"`, Solid's with `jsx: "preserve"` and `"solid-js"`), decided by the build's own definition of whose a file is: an assembly's directory is its renderer's, and a `.tsx` outside every assembly that names a framework is that framework's. The sources outside the assemblies are a project every other reads, the server file, the generated modules and the config are the application's, and `.assemblejs/tsconfig.json` is the solution. The registry is written as one module per owner, `assemblies.<owner>.ts`, which `assemblies.ts` spreads in, so the render calls on a view are checked against the view's own framework and an editor shows no error in a module no hand wrote. A new project is ready to type-check by default: `typescript` and `@types/node` are development dependencies, at the versions the command line was proven with, its root `tsconfig.json` names the written setup, and `npm run typecheck` builds and runs `tsc -b`. `check` names `@types/react` and `@types/react-dom` when a project has a React view and has not installed them (`a-react-view-needs-its-types`); the build needs no types and builds without them.

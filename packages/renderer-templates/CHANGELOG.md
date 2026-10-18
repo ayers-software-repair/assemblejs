@@ -21,4 +21,5 @@
 - Updated dependencies
   - @assemblejs/core@1.0.0-next.0
 - Each published entry point names its own specifier in a `@module` comment, which is the name the API reference lists it under. Nothing any of them exports changes.
+- The `Renderer` and `RenderInput` types and the core's `/renderer` entry point, which nothing called, are removed. A renderer package exports its render function and its browser mount.
 

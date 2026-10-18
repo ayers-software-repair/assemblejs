@@ -21,4 +21,6 @@
 - Updated dependencies
   - @assemblejs/core@1.0.0-next.0
 - Each published entry point names its own specifier in a `@module` comment, which is the name the API reference lists it under. Nothing any of them exports changes.
+- A view that says what its data holds is taken by its renderer. `AssemblyProps` takes the shape of a view's data as a type argument, and a view written `({ data }: AssemblyProps<Offer>)` was refused by `renderToMarkup` and by `hydrate`, which took only a view of any JSON object: a project that type-checked was failed in the modules the build generates, for every view that typed its data. Both functions take a view of any shape of data now, in the React, Preact, Solid and Lit renderers, and Lit's `LitView` takes the shape too. Nothing changes when the code runs.
+- The `Renderer` and `RenderInput` types and the core's `/renderer` entry point, which nothing called, are removed. A renderer package exports its render function and its browser mount.
 
