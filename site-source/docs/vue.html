@@ -138,7 +138,8 @@ const bump = (): void =&gt; {
         <dd>
           A page can name one stream, and every topic the stream sends keeps its last message. An
           assembly that mounts after the stream opened reads what it missed with <code>last</code>,
-          then subscribes.
+          then subscribes. A topic the stream does not send is kept once an
+          assembly calls <code>events.keep(topic)</code>.
         </dd>
       </div>
     </dl>

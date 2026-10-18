@@ -157,7 +157,8 @@ export default function PreactCounter() {
         <dd>
           A page can name one stream, and every topic the stream sends keeps its last message,
           because the stream opens while assemblies are still loading. An assembly that mounts late
-          reads what it missed with <code>last</code>, then subscribes.
+          reads what it missed with <code>last</code>, then subscribes. A topic the stream does not send is kept once an
+          assembly calls <code>events.keep(topic)</code>.
         </dd>
       </div>
     </dl>

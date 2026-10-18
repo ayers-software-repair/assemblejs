@@ -7417,3 +7417,27 @@ One start call in the core, his ruling of the 12th, built by a lane and read at 
 - **Left, and named to the lead.** `CLAUDE.md` line 11 says "server (the runtime,
   `createServer()`)"; `serve` is now the way a project runs. An instruction file is the owner's
   to amend; the seat asks for the one-word change in its report.
+
+## 2026-10-18: a site page is written from its source, never by hand
+
+The wave's push, `2d5458d`, failed its site deploy (run 39132307958) at "Verify the static
+pages against the shared frame": `docs/tutorial.html differs from its source`. Two lanes had
+put their one sentence each into `site/docs/*.html` by hand, and `check:site`, which runs
+here, does not read that difference; only the deploy does, with the platform kit checked out
+at the pin.
+
+- **What a site page is.** `site/<page>.html` is generated: `site-source/<page>.html` is the
+  content, `site-source/pages.json` and `site/pages.json` the declarations, and
+  `platform/sitekit/build-pages.mjs site` at the pin (`ayersPlatform` in the root
+  package.json, v0.63.1 today) renders each into the shared frame and formats it. The first
+  line of every generated page says so. An edit to `site/` by hand is undone by the next
+  write and refused by the deploy.
+- **Mended.** The seven sentences moved into their sources (`site-source/docs/tutorial.html`
+  and the six renderer pages), the pages written by the kit at v0.63.1 from a worktree of
+  platform, "16 pages match their sources", `llms-full.txt` regenerated and unchanged by it,
+  `check:site` green. Every lane brief from here says: a site change is made in `site-source/`
+  and the page written by `build-pages.mjs` at the pin; a lane that cannot reach the kit leaves
+  the source edit and names it, and the seat writes the page.
+- **Not built, and why.** A local gate that runs the kit would need platform checked out at
+  the pin on every machine and in `verify`; the deploy already holds the line, and a red
+  there costs one push. The seat runs the kit before any push that touches `site-source/`.

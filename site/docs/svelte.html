@@ -227,9 +227,8 @@ export default defineService({
                 <dd>
                   A page can name one stream, and every topic the stream sends keeps its last
                   message. An assembly that mounts after the stream opened reads what it missed with
-                  <code>last</code>, then subscribes.
-                  A topic the stream does not send is kept once an assembly calls
-                  <code>events.keep(topic)</code>.
+                  <code>last</code>, then subscribes. A topic the stream does not send is kept once
+                  an assembly calls <code>events.keep(topic)</code>.
                   <pre><code>&lt;script lang="ts"&gt;
   import { onMount } from "svelte";
 

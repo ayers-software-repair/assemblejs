@@ -192,7 +192,8 @@ export default (props: AssemblyProps) =&gt; html`&lt;lit-counter .events=${props
         <dd>
           A page can name one stream, and every topic the stream sends keeps its last message,
           because the stream opens while assemblies are still loading. An element that is handed the
-          events late reads what it missed with <code>last</code>, then subscribes.
+          events late reads what it missed with <code>last</code>, then subscribes. A topic the stream does not send is kept once an
+          assembly calls <code>events.keep(topic)</code>.
         </dd>
       </div>
     </dl>

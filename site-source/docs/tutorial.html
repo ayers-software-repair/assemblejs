@@ -135,7 +135,9 @@ export default function Readout() {
         <dd>
           An api is a route. <code>GET</code> unless <code>method</code> says otherwise; the handler
           is given the request's <code>query</code>, its route <code>params</code> and its parsed
-          <code>body</code>, and what it returns is the JSON reply.
+          <code>body</code>, and what it returns is the JSON reply. A handler's answer, and a service's, is
+          written as an object type or a union of them, not an <code>interface</code>, because an
+          interface does not say its members are JSON.
           <pre><code>import { defineApi } from "@assemblejs/core";
 
 export default defineApi({ path: "/api/time", handle: () =&gt; ({ now: new Date().toISOString() }) });</code></pre>
