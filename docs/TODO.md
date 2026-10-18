@@ -1567,9 +1567,9 @@ Packaging:
       exit 1. DONE 2026-10-11: a project made by pnpm is written a `pnpm-workspace.yaml` that rules
       esbuild's script out; with it the same install exits 0 and the installed command builds
       (DECISIONS 2026-10-11, "the starter and the arguments")
-- [ ] site/install.html says `npm install` in a new project installs "the one renderer your first
+- [x] site/install.html says `npm install` in a new project installs "the one renderer your first
       assembly uses", but the scaffold has none (workflow packaging.4, minor). Claimed at
-      `site/install.html:32`. PREMISE UNVERIFIED
+      `site/install.html:32`. PREMISE GONE 2026-10-18: no such sentence in site-source or site; step 03 installs the renderer by hand; `new` writes core, cli, mcp, @types/node and typescript (project-files.ts:43-48)
 - [x] `new .` (create in the current directory) is refused with a message that suggests the name
       "assembly" (workflow packaging.5, minor). Claimed at
       `packages/cli/src/discovery/suggest-name.ts:14`. PREMISE UNVERIFIED. REPRODUCED by the seat with the
@@ -1594,16 +1594,16 @@ Docs against code:
       `packages/cli/src/discovery/renderer-for-view.ts:24`. PREMISE UNVERIFIED. The same defect as
       workflow cli-verbs.4, REPRODUCED by the seat and DONE 2026-10-12 with it (DECISIONS
       2026-10-12, "check says what it passed over, and add writes only into a project").
-- [ ] install.html says the new project installs 'the one renderer your first assembly uses'; it
-      installs none (workflow docs.5, minor). Claimed at `site/install.html:33`. PREMISE UNVERIFIED
+- [x] install.html says the new project installs 'the one renderer your first assembly uses'; it
+      installs none (workflow docs.5, minor). Claimed at `site/install.html:33`. PREMISE GONE 2026-10-18, the same read as packaging.4
 - [x] `add agents` calls a UTF-8 BOM 'a comment' and refuses the whole run; `check` then says 'no
       problems' for the file it could not read (workflow docs.6, minor). Claimed at
       `packages/cli/src/agents/add-agents.ts:23`. PREMISE UNVERIFIED. READ and watched red by the
       seat. DONE 2026-10-12: a registration is read through the mark by `add agents` and `check`
       alike, and written back behind it. That `check` is silent of a registration it cannot
       read is kept, with its reason (DECISIONS 2026-10-12, "what is written into a file is written as the file is laid out")
-- [ ] Tutorial step 7's api sample imports ./price-feed.js, which no step creates (workflow docs.7,
-      minor). Claimed at `site/docs/tutorial.html:175`. PREMISE UNVERIFIED
+- [x] Tutorial step 7's api sample imports ./price-feed.js, which no step creates (workflow docs.7,
+      minor). Claimed at `site/docs/tutorial.html:175`. TRUE, DONE 2026-10-18 (c4145d5, page 5a8873a): step 7 creates src/api/price-feed.ts, the realtime example's module, before prices.api.ts
 - [x] Package READMEs lag the code: cli README lists 3 of the 5 MCP registrations, root README omits
       `perf` (workflow docs.8, minor). Claimed at `packages/cli/README.md:19`. PREMISE UNVERIFIED. READ AND
       TRUE of both. DONE 2026-10-12: both corrected, and each held by a case that was red on the
