@@ -10,17 +10,17 @@ until 14:01 EDT).**
 
 HELD BY THE OWNER'S WORD, relayed by avp: "hold fermi and assemlejs until after 2pm ... 2:01pm
 is session reset". No new lane; what was in hand is merged and committed; nothing is pushed
-until avp wakes the seat at 14:01 EDT. AT THE WAKE, in this order: (1) avp's answer on the
-checks' limit (asked: 45,000 to 46,000, measured 45,110 on the merged tip, R-17's +2,584 and
-R-19's +184); set `scripts/size-budgets.json` to his number, record it in DECISIONS under the
-R-17 entry with the measure, commit; (2) push the local commits as one bite (`git push origin
-next`, no run in flight), find the `ci` run by the full sha, watch it to its end with a
-Monitor: its `browser proof` job runs `browser/bus-and-relay.browser.ts` for the first time
-anywhere, and a red there is the next fix, forward; (3) report wave 3 to avp in the line form;
-(4) R-20.
+until the wake at 14:01 EDT. THIS SEAT CLOSES AT THE WAKE: the owner is closing it, and the
+lead's own seat takes AssembleJS over with lanes; this block is written for that reader. AT
+THE WAKE, in this order: (1) push the six local commits as one bite (`git push origin next`,
+no run in flight; the owner's "i approve allpushes"), find the `ci` run by the full sha, watch
+it to its end with a Monitor: its `browser proof` job runs `browser/bus-and-relay.browser.ts`
+for the first time anywhere, and a red there is the next fix, forward; the deploy-site run
+checks the generated site pages against `site-source/`; (2) report wave 3 to avp in the line
+form; (3) R-20.
 
-STATE. `origin/next` is `101a3a2` (R-19), its `ci` 39139090865 green. Local `next` is
-`227568c`, five commits ahead: `9e7e8da` R-18 (the protocol SDK bundled with its notices,
+STATE. `origin/next` is `101a3a2` (R-19), its `ci` 39139090865 green. Local `next` is six
+commits ahead (the last two the resume block and the checks' limit): `9e7e8da` R-18 (the protocol SDK bundled with its notices,
 zod a dependency, 2 packages not 91), `d84d624` the agent surface's limit 139,500 by avp's
 D1577, `071cf70` R-17 (`perf` in two parts and a total, `addresses` beside the budgets, the
 rule `a-page-with-a-parameter-names-an-address`), `227568c` R-14b/R-15b (the browser proof of
@@ -30,8 +30,11 @@ pack gate: builds, fourteen typechecks, every cheap gate, lint, modules, referen
 unused, publint on fourteen, the suites (core 1,084, build 426, check 335, cli 137, mcp 209),
 the examples gate, five conformance fixtures (trust 56, rendering 99, remote 27, agents 19,
 contract green), the shop's `perf` with the catalogue, reviews and fulfilment up (exit 0, the
-product page 96 kB gzipped in all). The pack gate: `@assemblejs/check` 45,110 of 45,000, the
-ask above; core 104,537 of 105,000; mcp 126,777 of 139,500.
+product page 96 kB gzipped in all). The pack gate went red on `@assemblejs/check` at 45,110 of
+45,000 and is green since its limit is 46,000 by avp's D1580 (the sixth commit); the three
+limits raised today, each on avp's yes with the measure, each recorded: core 98,000 to
+105,000 (D1570, 104,537 packed), mcp 30,000 to 139,500 (D1577, 126,777), check 45,000 to
+46,000 (D1580, 45,110). Every raise is named in the report to the owner.
 
 HOW THE WORK IS DONE: D1561 (the lead drives this seat to completion), D1562 (lanes
 implement, the seat reviews at source; Sonnet by default, Opus only where the defects would

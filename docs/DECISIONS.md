@@ -7764,8 +7764,11 @@ read at the source.
 - **Watched red first.** Thirty-two failures across twelve files on the unchanged source,
   among them `/items/:sku answered 404` (the route asked for, not the address) and the format
   line received with three parts; two guards watched red by removal.
-- **Measure.** `check` packs to 44,926 of 45,000, 74 left: the lane cut doc comments to one
-  line and kept the rule's text short to stay under; the core +181 of types.
+- **Measure.** `check` packed to 44,926 of 45,000 on the lane's base and to 45,110 on the
+  merged tip, with R-19's one sentence in the agent instructions (+184) beside R-17's +2,584;
+  the lane had cut its doc comments to one line to fit. The limit is 46,000 by the lead's yes
+  with the measure (AUDIT D1580, 2026-10-18), named in the report to the owner; the core +181
+  of types.
 - **Proof.** The checks' 333, the core's 1,062, the command line's 142, the build's 417, the
   agent surface's 209, every cheap gate, design, exports, reference, unused, duplication,
   examples, site, exit 0. `perf` exit 0 on frameworks and shadow by the command line's own
