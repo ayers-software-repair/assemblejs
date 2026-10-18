@@ -5,462 +5,64 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-13, 11:00 EDT, at the second hold
-the owner ordered).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-18, at the push of Phase 7's first
+wave).**
 
-HELD BY THE OWNER'S ORDER, relayed by the lead 2026-10-13: the morning's lift was for Magpie
-only, and AssembleJS stays held until Magpie is complete. The seat holds until the lead wakes
-it. Nothing is pushed since `4777f6f`, the split's second cut, whose `ci` run 38261256726 was
-read to its end at 05:15 and is green in all five jobs. Two commits are local on top of the
-site seat's `5f77744`: the earlier resume block, and R-4 AS IT STANDS, written in the hour the
-lift lasted and committed at the hold so nothing lives in a session. R-4 IS WRITTEN AND NOT
-PROVED: every package type-checks and builds (`build`, `check`, `cli`), and the suites the
-bite touches were run once (the result is in the commit's own message); no gate chain, no
-full suite, no push. AT THE WAKE: finish R-4's proof, then push the three commits as one
-bite. What R-4 is, in the source now: `build/src/generate/generate-typescript-setup.ts`
-writes `.assemblejs/tsconfig.json` (a solution), `tsconfig.app.json` (the server file, the
-generated modules, the config, and every assembly with no JSX), `tsconfig.shared.json` (the
-sources outside the assemblies, only when there are any, read from disk by
-`discovery/has-shared-sources.ts`) and one `tsconfig.<owner>.json` per owner of JSX
-(`discovery/jsx-owner.ts`: react, preact with `jsxImportSource: "preact"`, solid with
-`jsx: "preserve"` and `"solid-js"`, each by its own documentation), each composite,
-`isolatedModules`, emitting declarations only into `.assemblejs/types/`; the registry split
-by owner in `generate/generate-registries.ts`, `assemblies.<owner>.ts` in the owner's
-project with the typed render calls and `assemblies.ts` spreading them; each `client/<name>.ts`
-named in its owner's project; `BUILD_WRITES` grown by those files; the starter writing a root
-`tsconfig.json` of one reference to `./.assemblejs`, `typescript` and `@types/node` at the
-command line's own pins (`cli/src/commands/own-pin.ts`, read from its package.json, never a
-number typed twice) and a `typecheck` script of `assemblejs build && tsc -b`; the conformance
-spec `agents/new-project` and the command line's starter test pin the four development
-dependencies; `check` names `@types/react` and `@types/react-dom` when a project has a React
-view and lacks them, by `a-react-view-needs-its-types` in `RULE_IDS` and `RULES`
-(`check/src/check/types-problems.ts`), emitted by the checks and never by the build. THE
-PROOF STILL OWED: a starter project built and `tsc -b` exit 0 (as a test in
-`cli/test/commands/project-files.test.ts`, nested under `packages/cli` so Node's types and
-the core resolve); the editor experiment (`AUDIT` evidence `seat/written-configs/editor.mjs`)
-on the shop with the setup the build now writes, in place of the trial's; the ten examples
-built and each `.assemblejs` under `tsc -b`, with only React's missing types left, which R-5
-installs; then the cheap chain (`$S/gate.sh build check cli`), the conformance `agents`
-specs, a changeset for build, check and cli, DECISIONS, and R-4 ticked in the same commit.
+THE HOLD IS LIFTED (owner, 2026-10-18, D1425: "Assemblejs may continue thorughn project
+completion"; AUDIT/DECISIONS.md:5928) and the seat works to project completion through the
+lead, avp, who is reached by message in the line form (STATE / DONE / FAIL / CAVEAT / ASK /
+NEXT), one report per wave's merge. HOW THE WORK IS DONE NOW, three rulings of the same morning,
+each recorded in DECISIONS 2026-10-18: (1) D1426, lanes implement and the seat reviews: one row
+per `builder` lane in a worktree of its own, Sonnet by default and Opus only where the row's
+defects would be semantics (named at dispatch), the brief carrying the row's text, its files
+and its proof; the seat reads every hand-back at the source, cherry-picks it onto `next` with
+the row ticked, the DECISIONS entry and the changeset in one commit, runs the gates on the
+merged tip, pushes, reads the run. A lane never edits this file, DECISIONS, CLAUDE.md or the
+lockfile by hand, never starts a browser or `node dist/server.js`; the seat runs the
+conformance fixtures and the example starts a hand-back names. (2) D1431, at most three lanes
+at once, two by default, counted before every dispatch. (3) The owner at the seat: "i approve
+allpushes": a push of `next` waits for nothing but a green gate and no run in flight; a
+release, a publish, a tag and a DNS change still wait for him. A lane's worktree is cut from
+`main`: every brief opens with `git reset --hard next`. A workspace install made before the
+command line is built leaves no `assemblejs` bin link in the examples: a gate or a lane runs
+`node packages/cli/dist/bin.js`, never a link.
 
-THE OWNER RULED THREE THINGS AT THE SEAT ON 2026-10-12, AND THE WORK IN HAND IS FOUR BITES, in
-this order (DECISIONS 2026-10-12, "the owner at the seat"; Phase 7 below holds a row for each):
-(1) a Svelte view types what it is handed, found by Svelte's own checker, DONE;
-(2) the command line's package is split in three, `cli`, `build` and `check`, before the
-TypeScript setup is built, what would make one of the three depend on another the wrong way
-untangled first, ALL OF WHICH IS DONE (R-2, R-3; fourteen packages, the limits 56,700,
-45,000 and 22,200); (3) the build writes the TypeScript setup, so that no file of a user's
-needs a line saying whose JSX it is, and it lands in `build`; (4) a gate holds every example
-to TypeScript, to Vue's checker and to Svelte's. THE SEAT RAISES NO SIZE LIMIT ALONE: the two new
-packages' limits are set by his rule of the same day, the measure and a tenth more, and a
-later raise wants the lead's yes first. HE THEN ANSWERED EVERY QUESTION THE SEAT HAD, asked
-one at a time, and took its recommendation on the last three: R-6 to R-20 of Phase 7 are
-rows of work the seat owns now. NOTHING IS LEFT FOR HIM TO DECIDE but the day of the first
-prerelease, which is his token and his tag. What follows is the state the audit left.
+WHERE THE WORK STANDS. Phase 7 (below) is the list. LANDED AND PUSHED TODAY, each by a lane
+and read at the source, each with its proof in DECISIONS 2026-10-18: R-4 proved (the starter
+under `tsc -b` as a test, the editor on the shop, the eleven examples), R-5 (`check:examples`,
+its own `ci` job `examples`, React's types in seven examples, each built example with the
+starter's root `tsconfig.json`), R-6 (`ReturnedValue`, `ReturnedObject`, absent members
+dropped where services merge), R-7 (the copyright line off generated files), R-8 (the
+`Renderer` contract out, 433 lines), R-9 (`serve(project)`, the server files two lines),
+R-11 (`events.keep(topic)`). IN HAND, two lanes: R-10 (Lit's hydration isolated per bundle,
+Opus) and R-12 (a service says `NotFound`, the project's `not-found` page, the trailing slash;
+Opus, dispatched before the Sonnet-by-default word). NEXT, in order, two at a time: R-13 (the
+release publishes with the token only names npm has never seen), R-14 to R-17 (the seat writes
+the red tests first, they are judgement rows), R-18 (the MCP SDK bundled; its limit rises:
+measured and sent to avp before any raise), R-19, R-20; then the rows outside Phase 7 that are
+the seat's: 1032 (VS Code's two registrations, a read and a decision), 1258 and 1263 (after the
+first publish), 1278 (fold the changesets, at R-20), 1943 and 1970 (install.html's renderer
+sentence), 1978 (the tutorial's price-feed import), 2042 (the outline page, taken from the site
+seat by avp's word). THE OWNER'S, confirmed with avp on 2026-10-18 and waited on by nothing:
+TODO:523 the admin clicks; 1134 the joint session; 1169 and 1177 the first prerelease's token
+and tag and the stable publish; 2228 his three for the first publish; 2456 the landing at
+`/assemblejs/`; and in the AUDIT backlog AJ.11 his mark and palette, AJ.16 the DNS flip. Named
+Corrected under his ruling of the 12th on CLAUDE.md's facts: line 11 names `serve()`.
 
-THE AUDIT WAS THE WORK BEFORE IT (owner, 2026-10-11 evening; DECISIONS 2026-10-11, "the audit"). He
-did not believe the framework was complete, and it was not. Read, in this order:
-`~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/README.md`, which holds his orders
-in his words, the state and the plan; `AUDIT-REPORT.md` beside it, the report he was sent;
-then Phase 6 below, a row for every finding. The order of work, and where it stands: the four
-blockers, each with a spec watched red first, DONE; the dev loop and the build's resolver,
-DONE; the starter, done but for its `tsconfig.json` and its guide link, which is the owner's;
-the workflow's majors, each read at the source and reproduced before it is believed, IN HAND:
-the server's rows are done, and so are the readers of markup (composer.2, composer.4, trust.4,
-trust.5, trust.7, and three the seat found there), a kept answer's one envelope id
-(composer.3, client.2, server.8) and what one remote answer makes the server fetch and keep
-(trust.6), and the browser runtime's (client.1, client.5, client.6, client.7; client.4 is a
-gap in the public surface and is the owner's), an attribute's value read as markup
-(renderers.2), an id of its own for each island's `useId` (renderers.1), and the command
-line's (cli-verbs.1, .3, .4, .5, .8: a misnamed file ignored in silence, a README taken for a
-view, a link that leads nowhere, `add` writing outside a project), and the rules `check` names
-(check-rules.2 to check-rules.6: a spread not seen, a class component taken for an element, a
-comment that placed, a file that does not compile, an origin from the environment), and the
-agent surface's (mcp.1 to mcp.5: an address believed whatever it named, a render with no
-deadline, a circle written and called done). EVERY MAJOR OF THE WORKFLOW IS NOW DONE, GONE OR
-THE OWNER'S (client.4). THE OUTLINE HE ASKED FOR IS DONE, in the framework: `outline: true` in a
-project's config, a switch on every page, a box round every assembly that says what it is,
-where it came from and when (DECISIONS 2026-10-12, "a page shows how it was put together").
-THE SHOWCASE HE ASKED FOR IS DONE: `examples/market`, a shop of four servers (DECISIONS
-2026-10-12, "the market, a showcase of four servers"). THE MINORS AND THE TESTS' ROWS ARE
-DONE TOO, read as the majors were, and so are the rows the showcase added and the build's
-half of the starter's type-checking. NOTHING OF THE SEAT'S OWN IS LEFT: its last row, the
-harnesses' leaked servers, was reproduced and mended on 2026-10-12. Every open row is the
-owner's, the site seat's, or wants a person at a window, and each of the owner's says what was
-measured and what the seat advises: two servers on one page (FINDINGS 35 to 37), what a new
-project installs to type-check, the stack a refused boot prints, the `Renderer`
-contract nothing calls, Lit's one hydration hook, what a `perf` budget holds of mounting and
-a value for a route's parameter, a dynamic route that cannot answer 404, the copyright line
-on generated modules, what a handler may return as JSON, whose word raises a package's size
-limit (the seat raised three of them 20 times in two days and raises none until he rules),
-`CLAUDE.md`, the first prerelease.
-Whose JSX a file is he has ruled (Phase 7), and with it that a gate holds `examples/`, which
-none does yet. FINDINGS 53 to 64 in the evidence directory are the state at the
-end. A SESSION THAT RESUMES HERE TAKES THE FIRST OPEN ROW OF PHASE 7, after reading
-`origin/next`'s last run and anything a seat or the owner has added to this file since.
-A scratch showcase, its source saved in that evidence directory, was the stranger test and is
-far too simple to be one. He is at the seat and his own word governs its load: a Sonnet-only
-workflow was his order, and his Chrome is driven through the extension (the seat still starts
-no browser of its own). Each landing: its spec files run here, then the push, then `ci` read
-job by job, and a report of it names any limit or gate the change moved.
+MEASURES A LATER CLAIM RESTS ON. The core packs to about 97.6 kB of its 98,000 limit after
+R-6 and R-9; R-12 adds to it and will want a raise, which goes to avp with the measure first
+(the rule of limits, 2026-10-12). `check:examples` takes 28 to 38 seconds warm on this machine.
+The ci run of each push is found by its full sha and watched to its end by a Monitor; a push
+never goes while a run is in flight (the concurrency group cancels it).
 
-NO BROWSER STARTS ON THIS MACHINE (D1276, 2026-10-11, the estate's standing ruling as the lead
-gave it): not for a screenshot, not for a walk, not for the Playwright suite, the sealed
-launcher included, until the owner changes it. The browser proof and every draw of a page run
-in CI: the `browser proof` job of `ci`, and `deploy-site` with the staged page read by curl.
-`CLAUDE.md`'s Tooling paragraph still says the proof runs here; it is wrong until the owner
-changes it, and a row says so (DECISIONS 2026-10-11, "no browser on this machine").
-
-THE OVERNIGHT ORDER OF 2026-10-11 (D1277, as the lead gave it) asked for no whole-suite gate on
-this machine and a low load while the owner was away. He came back to the seat that evening
-and his own orders for the audit govern while he works it. Without him at the seat it stands
-again: a bite's proof here is the gates it touches, then the push, and `ci` read job by job.
-
-STATE AT THIS LANDING. `origin/next` is the commit this block is pushed with: a view that
-says what its data holds is taken by its renderer (DECISIONS 2026-10-12, of that name), found
-by type-checking every example, which nothing had. Beneath it `679dd3d`, a server does not
-outlive what started it (`ci` 38231282591, all five jobs green). Beneath it `e27a28d`, a record alone (`ci` 38228957953, all five jobs green). Beneath it `8e33838`, perf weighs
-what a module imports before it runs (DECISIONS 2026-10-12, of that name; `ci` 38228319770,
-all five jobs green). Beneath it `8954577`, the agent surface shows a page as a visitor is
-shown it (`ci` 38227454113, all five jobs green). Beneath it `ebc95a9`, check compiles the views a build would (`ci` 38225918826). Beneath it `97e7a9d`,
-the modules the build generates type-check (`ci` 38225198057, all five jobs green). Beneath
-it `0776296`, a view
-its compiler refuses is reported at the view (`ci` 38222121545, all five jobs green). Beneath
-it `ebdaa27`, the gates are held to what they say, four rows of the gates, the tests and the
-READMEs (`ci` 38221521004). Beneath it `736af62`, a project is made where nothing is written over, three rows
-of the command line and the agent surface (`ci` 38220661562). Beneath it `3117cdb`, what is written into a file is written as
-the file is laid out, four rows of the two (`ci` 38218518886, all five jobs green). Beneath it
-`6dacf89`, where a placement may stand,
-by the parser's own rules, three of the audit's minors (`ci` 38215202253, all five jobs
-green). Beneath it `d95cd40`, perf does not fail a project for guarding a page (`ci`
-38214252176). Beneath it `774b709`, the
-market, a showcase of four servers, in `examples/market` (`ci` 38213628041, all five jobs
-green, the showcase's eight cases among the 54 the `browser proof` passed, on their first
-run). Beneath it `d7a8792`, an empty Lit view can be placed from another server (`ci` 38212157143,
-all five jobs green), the showcase's second find. Beneath it `3c1b7fc`, the view lets go of an element it binds nothing to (`ci`
-38211659176, all five jobs green), the fix for the red of `caef196`, a Lit element waits for its view, the showcase's first find (`ci`
-38210828288: four jobs green, `browser proof` red on the frameworks example's Lit shell).
-Beneath it `0a50a97`, this record alone (`ci` 38209360682, all five jobs green), and
-`a4583cf`, what an envelope holds is measured as the envelope is,
-and the proof keeps its files (DECISIONS 2026-10-12, of that name; `ci` 38208877783, all five
-jobs green, the outline's four cases among the 46 the `browser proof` passed). Beneath it
-`88101ed`, an outline's box is the assembly's, not the line it stands in (`ci` 38208234440: four
-jobs green, `browser proof` red on the proof's own files), and `6da4971`, a page shows how it
-was put together, the outline (`ci` 38207626887: four jobs green, `browser proof` red on one of
-the outline's four cases). THE SHOWCASE IS LANDED: `examples/market`, a shop of four servers
-(the shop, the catalogue, reviews and fulfilment). What making it found of the framework is in
-the evidence directory's FINDINGS 35 to 43: two defects fixed, and three calls that are the
-owner's
-(two servers on one page share no bus; a remote assembly cannot call its own server; nothing
-of who is asking reaches a service or an api). Beneath it `bab70a1`, a dev server on every interface is still the project's own (`ci` 38204821744, all
-five jobs green), a follow-up to `b203cb5`. Beneath it `8be3bce`, two gates of the identity law read any case (`ci`
-38204158830, all five jobs green), and `b203cb5`, the agent surface asks only this machine's
-dev server, and only for so long, its five rows. Beneath it `d047674`, check reads what it misread, and names a file it cannot
-read (`ci` 38203784739); `4618293`, check says what it passed over, and add writes only into a
-project (`ci` 38202881918, all five jobs green); `f62a4ec`, the ids a component makes are its
-island's own (`ci` 38201904230, all five green); `2e7bb15`, an attribute's value is text (`ci`
-38201174758, all five green); and `b8a6414`, the mark that says an assembly is live is written
-when it is (`ci` 38200554270, all five green, its `browser proof` the one that drew it). The
-tarball budgets: the core's 98000, moved from 86000 at a measured 94,991 and at 97,075 now; the command line's
-102000, moved from 98000 at a measured 98,472; the agent surface's 30000, moved from 28500 at a measured 28,356.
-Beneath it `8aa4c0c`, a kept answer is
-its placement's own, and what a remote names is bounded (`ci` 38199938079, all five jobs green).
-Beneath it `6ac6ad4`, a script ends where the tokenizer ends it (`ci` 38199132377); `7a0abd6`,
-markup is read as the browser reads it, in the time its length takes (`ci` 38198739275, all five
-jobs green); and `da3c17d` (`ci` 38197595850, all five green), the first green verify since the
-audit began and the one that judged every bite before it at once. It had been red
-three ways on the way: another seat's emoji gate (`aecf034`, fixed by it in `d82714c`; its
-pages are its own), and two of this seat's own that the gate had hidden, a case of the command
-line's suite that read who ran it (`5ea3db0`) and a character written into a core spec where
-its escape belonged (`da3c17d`). A BITE'S PROOF HERE IS THE WHOLE CHEAP CHAIN OF `pnpm check`,
-in its order, then the touched packages' suites run as `pnpm --filter`, then the fixture the
-bite touches; a hand-picked subset is how those two reached `next`. The core's tarball budget
-is 82000, moved from 78000 at a measured 78,829. Beneath it: `f87058e` what a server would
-fail at, it refuses before it listens (the server's six rows; `ci` 38197154945 red at the
-emoji gate on that one character, green in `da3c17d`'s run). Beneath it, the audit's landings: `ca60933` the arguments and the
-starter (`ci` 38196089698: commits, conformance and the browser proof green, verify stopped
-at the emoji gate); `2cb3082`
-the dev loop (`ci` 38195380554, red on the command line's tarball budget, which `ca60933`
-moved, then cancelled by the other seat's push); `c83657a` a Pug view read with its
-attributes (`ci` 38194824450 green); `d152735` a kept answer knows what it holds, with
-`b7d3a28` a link's target walked beneath it (`ci` 38194420940 green); `4540b41` an address is
-its every spelling (`ci` 38193981509 green). Beneath those, each pushed 2026-10-11 with its
-`ci` run read green on every job: `45ea049` one platform pin, `ayersPlatform` at `v0.55.0`, with the root
-`.editorconfig` and the commit rule's copies recorded at that tag and both gates refusing any
-other (`ci` 38185734645, `deploy-site` 38185734677, the kit staged from the new tag); three
-pushed together (`ci` 38185411268, its `commits` job the first to judge by the house's config;
-`deploy-site` 38185411263; staging read, the page and both text files byte for byte the
-tip's), `4dd6773` the ruling that no browser starts here recorded, `f010496` the landing
-page's description and its `og:description` lead with the headline sentence, on the lead's
-decision, and `e2ec451` the commit rule is one rule, commitlint under the house's config and
-the house's script copied from platform `v0.55.0` and held to one verdict on 51 messages
-(DECISIONS 2026-10-11, "one commit rule"); `5830efc` the owner's line is the landing page's headline, "The first micro-frontend framework
-for AI-enabled development", with "One page. Every framework." the line beneath it in one
-heading group and a row of its own in `site/LANDING.md`; the site's text reader knows a
-heading group (`ci` 38184326973, `deploy-site` 38184326974, and staging read: the page, its
-stylesheet and both text files byte for byte the commit's); `12da0f0` the seven places brought down on 2026-10-10 to "a plain html view" say
-both halves again, any view through the project's running dev server and a plain html one with
-nothing running, and the lists of registered clients name five (`ci` 38183217546, `deploy-site`
-38183217542, and staging read: the four files it changed as the commit has them); `818d5b4` the acceptance
-table, every intent of the predecessor's tests mapped or struck (`ci` 38182790063); `bb43e08`
-the eleventh dossier's row closed, with `58b0c21` the trust fixture's badge client and
-`891ee54` the words for a failed placement that has no id beneath it (`ci` 38182329355);
-`2dce47c` `render_assembly` answers the data a run of the service returned (`ci` 38181956123);
-`138b0b8`
-THE CORRECTION, the agent surface asks the dev server as a composer asks, with uuids (P5-5 as
-it landed in `5a08454` was refused by every real server with a 400; the specs' dev server is a
-real one now and the agents fixture asks through it; `ci` 38181480326), pushed with `48ea9bb`,
-what failed on the dev server by the id its log has; `84efc3f` CI reads every commit's header and trailers on a
-push, from a floor (`ci` 38180444145 green, its `commits` job read step by step); `d798c2f`
-`check:commit-rule`, commitlint and the house's shell script held to one rule (`ci` 38180106968);
-`39f4687` the ledger; `79ce361` every browser proof's click waits for the
-assembly's mount through one helper (`ci` 38176113856 green). Beneath it `f526f0f`, the
-runtime's `data-mounted` mark (`ci` 38174834774 red on the styles proof's own race, which `79ce361`
-fixes; the mark itself proven here, the browser suite 42 of 42 through the sealed launcher), and
-`4c43b76` (the platform pin
-at `v0.54.3`, which carries the kit fold cut here, and the release notes in the reference's shape;
-`deploy-site` 38173844555 green with the kit staged at the new pin, `ci` 38173844564 green on a
-rerun of the proof that flaked, the flake this landing fixes). Beneath those, each
-pushed on 2026-10-11 with its runs read green: `e9257ae` the ledger (`ci` 38173125816); `a8e9be1`
-the API reference once per package (`ci` 38172436005, `deploy-site` 38172435999, the retire step
-run); `2dd4a59`
-the deploy retires the reference's pages (`ci` 38172087831); `e922fce` `check` reads a slot in an
-element's render, with `90bc782` a placement inside an element's shadow root refused beneath it
-(`ci` 38171625851); `5d69f9a` registrations for Gemini CLI and opencode (`ci` 38171109261);
-`f88e3c8` a placement inside an open paragraph is refused where the directive is read (`ci`
-38170356584); `af6cccf` `compose_page` takes a page by its name (`ci` 38169659857); `723a75d` the contract as an agent reads it, `assemblejs://contract`, with `e13f936`
-the build's reads through the root guard beneath it (`ci` 38169177951); `8ef8644` the six
-framework guides on a slot behind a package name (`ci` 38168099712), with `4367272` a page
-declaration `check` could not read leaves its route unknown beneath it. Beneath them
-`cb58aa6`, pushed with four commits beneath one `ci` run, 38167396655, green (a rerun on this
-branch cancels the run in flight, by the concurrency group in `ci.yml`): `cb58aa6` eslint 10.10.0
-with the kit; `7faefef` the house
-`.editorconfig` and `check:editorconfig`; `62df28e` the 404 page's absolute paths, five stale
-rows checked off, the duplicate-key lint for config files; `970a004` P5-6g's fourth rule,
-`a-colour-is-a-token`, which completes A-04 (its own run cancelled by that group when `97ddcd6`'s
-job was rerun). Beneath those, each with its `ci` run read green: `97ddcd6` the third rule,
-`a-control-has-a-name` (`ci` 38166348087, green on a rerun of a flaked browser job); `fa42b64`
-the second rule,
-`an-image-has-an-alternative` (`ci` 38165587092); `cb84e1d` the first rule,
-`a-view-has-no-inline-style` (`ci` 38165230731); `886724e` P5-6f the element reader for Vue and
-Svelte (`ci` 38164708480); `09a6c11` P5-6e the element reader for modules and Lit (`ci`
-38164340137); `1d0b0cb` P5-6d the element reader for
-templates (`ci` 38149854085); `2a4709e` the port flake fixed (`ci` 38149271043); `49b76df` P5-6c
-the components; `d07c194` P5-6b the tokens' contrast; `753fc4b` P5-6a the tokens; `5a08454` P5-5
-the dev server renders for the agent; `387dae6` P5-4 trusted remotes; `1f8f218` P5-2 one version
-and P5-3 the notes folded; `03b4c2b` P5-1 the limits in the config file; `b759756` the
-envelope's words; `9381f4a` findings 6, 10, 11; `a5c4444` row 8; `05297aa` and `49ec079` way A.
-NEXT: read the open rows afresh before believing none can be worked: on 2026-10-11 that was
-said and five could. As read that night, what remains waits on the owner (branch rulesets, the
-first publish and its notes, B-27a and B-27b, the joint session, the agent surface's install
-size; his four questions are with the lead; the public cut of the landing page; his word for
-`CLAUDE.md`'s Tooling paragraph under D1276), on
-the promotion of `next` (the llms.txt address in AGENTS.md, P5-8's landing page), on Astra
-(the shared 404), or on a machine with VS Code (one read). A STANDING
-GATE since `84efc3f`: one commit on `next` with no conventional header or no sign-off turns
-every later run red until the floor in `ci.yml` is moved with a recorded reason. P5-8's other half is Astra's; (assemblejs.com's main page with the release alignment, and its 404 page). Session-threshold
-crons are set in this seat (18:15 and 23:15 on 11 Oct; 04:15, 09:15, 14:15, 19:15 on 12 Oct;
-00:15, 05:15, 10:15 on 13 Oct), each re-reading this block. The paragraph below is the state
-before the day's work.
-
-STATE. Branch `next`. `origin/next` is the commit this block is pushed with: P5-1, the
-composition limits in the project's config file, the first of the owner's answers of this
-morning (Phase 5). Beneath it, pushed on 2026-10-11 with runs read to their end, green:
-`b759756`, 09:28 EDT, the envelope's words spelled once; `9381f4a`, 09:13 EDT, the second
-reading's last three findings (its browser proof green on one rerun); `a5c4444`, 09:07 EDT, row
-8 (`ci` 38141909308, `release` 38141909302); `05297aa`, 08:43
-EDT, the revert of five files `49ec079` had carried that were another seat's (`ci` 38140381103,
-`release` 38140381111, `deploy-site` 38140381107, staging read); `49ec079`, 08:39 EDT, row 4a,
-the owner's ruling that a guarded assembly is guarded wherever it is placed (`release`
-38140108115 and `deploy-site` 38140108096 green; its `ci` 38140108094 red on the swept
-index.html alone, green again at 05297aa). Beneath those, each pushed on 2026-10-10 with its
-runs read to their end, green, and each time the one its `ci` run was created at: `7fca321`,
-08:16 EDT, row 4c, what a refused placement costs (`ci` 38051354538, `release` 38051354335);
-`a9e507c`,
-07:57 EDT, the second reading's seventh finding, the design's listings held to the source by a
-gate (`ci` 38050215470, `release` 38050215535); `40ad18e`, 07:46 EDT, row 4b, a limit on how
-many placements one request composes (`ci` 38049623776, `release` 38049623646); `3ba71b6`,
-07:23 EDT, the second reading's third and fifth findings, every static view read for what it
-places (`ci` 38048248411, `release` 38048248498); `a8c882f`, 06:38 EDT, the fault of row 4a
-named KNOWN FAULT in the spec that holds it, with the memo for the owner (`ci` 38045580352,
-`release` 38045580288); `16d8b92`, 06:18 EDT, the second reading's fourth finding, what a value
-written raw places (`ci` 38044427017, `release` 38044427065, `deploy-site` 38044427043, and
-staging read: the two guides and both text files as the branch has them); `05fae8a`, 05:47 EDT,
-the second reading's first two findings (`ci` 38042647592, `release` 38042647595, `deploy-site`
-38042647601, and staging read: the seven guides and both text files as the branch has them);
-`03a90fa`, 05:34 EDT, nothing outside a project's root is read (`ci` 38041855065, `release`
-38041854943); `8fe15a6`, 04:48 EDT, the project's whole shape and each assembly as resources
-(`ci` 38039133712, `release` 38039133595); `6a27a0c`, 04:06 EDT, the release notes (`ci`
-38036708423, `release` 38036708409, `deploy-site` 38036708372: the deploy ran the release-notes
-gate before it published, staging serves `/assemblejs/next/release-notes.html` as the branch
-has it, and the page was drawn in the sealed browser at a desk's width and a phone's). Beneath
-those: the API reference, `f1d217b`; A-04's memo, `8edfac6`; A-02, `af6d423`; two small rows,
-`20547ae`; A-03, `9ed39ef`; one copy of the code in three packages, `0c43610`; and A-01,
-`a7d3edc`.
-Every package reads `1.0.0-next.0`; twenty-seven changesets are pending. The owner's overnight
-order (estate D1216): work the bites to code completion and get the landing page onto
-staging; no questions until morning. The landing page is on staging: `/assemblejs/next/` on
-the staging domain answers 200 (DECISIONS 2026-10-09, staging), and a `site/**` push on `next`
-deploys there. `/assemblejs/` deploys from `main`, which has no `site/` yet: the owner's
-morning list. His rulings in this seat stand: no subagents, the seat does the work itself;
-every bite since is self-verified by mutation (DECISIONS 2026-10-09, S-02).
-
-THE ORDER OF WORK, set by the lead on 2026-10-10 at 04:53 and 04:57 EDT:
-
-1. DONE, `03a90fa`: every file a reader opens is held to the root, after links are followed,
-   in the agent surface and in `check`, by one definition both use.
-2. THE SECOND READING OF THE DESIGN, nine findings, at
-   `~/source/AUDIT/evidence/2026-10-10-assemblejs-second-reading/findings.txt`; the rows are
-   in Phase 2 below, each fixed or open. Its 1, 2 and 9 are done (`05fae8a`). Its 4 is done,
-   pushed with this block: the design says what a value a view writes raw can place, and a
-   spec holds it in core, in the rendering fixture and in the trust fixture, where a visitor
-   with no credentials was shown an assembly whose own address refuses them. Row 4a, beside
-   it, was that fault, the owner's to settle: he ruled on 2026-10-10 "protected protected
-   everywhere" (estate D1242), way A of the memo `docs/studies/placement-and-access.md`, and
-   it is done, pushed with this block: the access decision is made again at each placement
-   for the visitor asking, the KNOWN FAULT spec is the spec of the rule, and the trust
-   fixture's open page stands a guarded badge empty for a visitor without credentials
-   (DECISIONS 2026-10-11). Way B is not ruled and not built. Its 3 and 5 are done
-   (`3ba71b6`): `check` and a build read a Pug view
-   through the project's own Pug, a template's directive that does not read as it is written
-   is a finding and refuses a build, and a loop is said to be refused at boot only where each
-   hop's view is written. Its 4b is done (`40ad18e`): one request composes no more than 256
-   placements at every depth together, the ones past that refused before dispatch with the
-   reason `too-many`, the number from a measure and no setting for it. Its 7 is done
-   (`a9e507c`): the design's listings are the source's, and `check:design` holds them to it.
-   Its 4c is done (`7fca321`): every placement a request refuses past its limit shares one
-   id, one diagnostic and one log line, and an assembly's own address refuses an answer past
-   the limit on bytes. Its 8 is done, pushed with this block: what stops when the asker
-   leaves, a placement whose settling threw, and five sentences in the design. Its 6, 10 and
-   11 are done, pushed with this block: the slot's element said, the producer asked at depth
-   7, Lit's markers read in its source and held by a spec. The second reading is closed. Row
-   8 held
-   two things to fix in code (the content endpoint and a page hand their render no signal,
-   so nothing stops when the asker leaves; a placement whose settling throws renders as
-   nothing where the design says an empty envelope); then 6, 10 and 11.
-3. THE ENVELOPE'S WORDS, done, pushed with this block: the parked branch brought onto `next`
-   and finished (the row under Phase 3, DECISIONS 2026-10-11, "the envelope's words").
-4. `assemblejs://contract` from those constants, with a spec that holds it to what a real
-   server sends; then `compose_page` by a page's name (two rows in Phase 3 below).
-
-Then registrations for the clients beyond the three, and the rows under "AFTER IT" below.
-No row waits on the owner: he answered every held question on 2026-10-11 (DECISIONS
-2026-10-11, "the owner's seven answers"), and each answer is a row to build, in Phase 4 below:
-built-in components as plain html and tokens (A-04); one version for the twelve packages; the
-waiting change notes folded before the first publish; one view per assembly, as it is; a page's
-data across servers only to a remote named trusted; the nesting depth in the project's config
-file; an agent's preview of a framework view through the project's dev server. A-01, A-03 and
-A-02 are done, the API reference and the release notes are done, and the subassembly rung,
-S-01 to S-09.
-
-HOW A BITE IS PROVED. Pushes: only `next`, one per landed bite, each run read to its end; a
-push that touches `site/**` also fires `deploy-site`, and its run and the staging page are
-read too. Each mutation is run alone, by a harness that puts the file back from its own bytes
-and compares the hash of every changed file before and after; a run with no failed spec is
-invalid, not red. The browser proof runs in CI alone since D1276 (the paragraph at the top of
-this block): a browser assertion is watched red and then green on a push, in the `browser
-proof` job, and a page's look is read from its markup, its stylesheet and the staged page.
-Until 2026-10-11 it ran here through the estate's sealed launcher (DECISIONS 2026-10-09,
-S-06); that is how it was done and is not to be done.
-
-AFTER IT, in any order: the house-style rows (the section of that name below; the estate's
-record has them ready, pristine-keeping work having been allowed through the hold); and the
-open rows of Phase 3, each of which says what found it. Done and no longer waiting here: the
-eleventh dossier and the acceptance table, B-27a's first half (2026-10-11), the API reference
-(2026-10-10), the three truth fixes and CI's breadth (2026-10-05), the two inherited guide
-claims (`67bd8bc`, `e920464`).
-
-DEBTS AND CORRECTIONS. The guides for Preact, Solid, Lit and the template languages
-(`2a884a6`) came from an agent worktree; a separate reader then verified all 39 code blocks
-verbatim and every claim, and `e983859` applied its two wording fixes. That commit's body lists
-three more fixes (the Markdown scaffold, "eight kinds", the templates page's missing section)
-that were already right in the committed tree; the reader had reviewed an earlier draft. The
-record here is the correction. Two claims the reader found inherited by all six guides are
-the two rows under the site section. The first changeset is written and consumed (2026-10-09,
-owner's ruling, DECISIONS "the first changeset"): every package reads `1.0.0-next.0`, and a
-change under `packages/*/src` from here on carries a changeset.
-
-OWNER-ONLY: the trusted publisher per package on npmjs.com, the `release` environment's
-reviewer, branch rulesets, the setting that lets Actions open the version pull request, the
-first publish of each package by his hand; B-27a carries the second halves of B-24, B-25 and
-B-26. Done by his hand: the Actions allowlist (every workflow has run since 2026-10-05),
-`RELEASES_PAT` (2026-09-11), the OIDC role `gh-deploy-assemblejs-site` (2026-10-07).
-
-HOW THIS LANE WORKED, so the next one is not slower: implement; tests; watch each claim red by
-a mutation and restore by the inverse edit; conformance where it applies, and the browser
-proof in CI alone (D1276); the structural gates; `pnpm check` in the background, its end told
-by the task's own notice or a Monitor and never by a watch loop (owner, 2026-10-11); a run
-found by the full commit id, since `gh run list -c` with a short one finds nothing and says
-nothing; a second reader with no stake, its findings fixed; DECISIONS and the TODO
-box in the same commit; `git commit -s -F <draft>`; `git push -u origin next`. Agent
-worktrees under `.claude/worktrees/` are ignored by lint since 2026-10-09; a dead lane's
-worktree is still removed when found. Every suite builds a stale package before it reads it
-(`scripts/build-when-stale.mjs`), so a test never runs against yesterday's dist.
-
-**1. THE REWRITE.** A from-scratch rewrite of a private production v1 (server-composed
-micro-frontends: pages composed from assemblies, each in its own framework, hydrated as islands),
-published as `@assemblejs/*`. `docs/DESIGN.md` is the contract, `docs/PLAN.md` the frozen rung
-ladder, `docs/DECISIONS.md` every ruling with its reason. B-01 through B-12 are DONE, B-09 and
-B-09c included. The browser suite
-(`pnpm test:browser`) is outside `pnpm check` and, since D1276, runs in CI alone.
-
-**B-09 IS DONE (2026-10-03).** Its record, kept for the next lane: Found on resuming, and logged in `docs/DECISIONS.md`: the server
-served the assembly endpoints but no PAGES - nothing turned a template into a composed document
-or linked a browser runtime - and B-09's proof (create, build, `node dist/server.js`) needs both.
-So B-09 lands in four commits: pages in core (done), then `build` (done: esbuild owned by the
-CLI, the server bundle keeps packages external so it runs with no bundler), then `dev` (done), then
-`@assemblejs/create` and the tarball proof (done, `pnpm proof:create`).
-
-**THE EXACT NEXT STEP:** the subassembly rung (the `NEXT:` row below; owner's ruling in
-DECISIONS 2026-10-05 "rulings"). Every row through B-26 that needs no owner is done; the second
-halves of B-24, B-25 and B-26 are folded into B-27a, the owner's. The owner answered every open
-question on 2026-10-05; the rulings entry in DECISIONS lists them and what each lands with.
-
-**ORDER AND DEPENDENCIES of the open rows:** B-22..B-24a conformance (done) -> B-25a budgets
-(done) -> B-26a release dry run (done) -> the subassembly rung -> B-27a/B-27b (the owner's). The
-five house-style rows and the release-notes rows can land any time. The site's guides are
-written.
-Owner-blocked: branch rulesets, the bird mark (he has it), the palette, the old npm package
-deprecation, the first publish by his hand. Done by his hand: `RELEASES_PAT`, the OIDC role,
-the Actions allowlist (`ci`, the browser proof, conformance and the Scorecard all run).
-Answered 2026-10-09: one changeset now; the packages read `1.0.0-next.0` (DECISIONS "the
-first changeset").
-
-**THE CLIENT DOSSIER ROW (Phase 1) cannot be resolved from here.** The dossiers and the reference
-clones live outside this tree by design and a cloud session has neither; its outcome was never
-recorded. It stays open for the owner.
-
-**2. THE HOUSE-STYLE KIT (private `platform` repo, `codestyle/`).** v0.23.0 is tagged and pushed;
-nothing unpushed there. PENDING: the ruling document's section 16 (in the business-site repo,
-`docs/CODESTYLE-HOOKS-RULING.md`) still describes v0.22.0 - sync it to v0.23.0 (`_platform` is a
-worktree at the pin with a hook guard; browser/test eslint globals; dependabot skip). Consumer
-migration: `platform-pin.sh --sync`, re-copy `lefthook.yml` and `codestyle.yml` byte-identical, add
-`identity_scan_exclude=` and `gates_since=` to `.codestyle`, `platform_ref=` ONLY where there is no
-go.mod. THIS REPO IS PUBLIC: it never fetches private platform in CI - it VENDORS the scripts (a
-fork PR has no secrets); target v0.23.0+, add both keys, and the byte-equality drift test runs only
-on trusted events (push to next/main), never on fork PRs.
-
-**3. THE REFERENCES.** Two read-only clones live OUTSIDE this repo (`chmod a-w`, `origin` removed):
-the production v1 and its later rewrite. Never written, never copied from; every read is recorded in
-the gitignored `docs/dossiers/`, which never enters this tree. The legacy names are banned by the
-identity gate and are deliberately not spelled out anywhere in prose.
-
-**4. TRAPS.** pnpm 11 `allowBuilds` replaced `onlyBuiltDependencies` (old key silently inert; a
-clean clone could not install). Path mapping lives in `tsconfig.base.json` so no gate ever resolves
-through a stale `dist/`. Revert a red-test probe by inverse edit, never `git checkout` (one probe
-reached HEAD once). Three tests were once green for a reason they did not claim - mutate to prove
-red, always. Svelte 5 hydration cannot run in a DOM shim (reads `Node.prototype` getters): Chromium
-only, the test file says why. syncpack is deliberately `--dependency-types prod,dev`. The
-`client-stays-browser-only` cruiser rule is ANSWERED by moving the file, never loosened. A waiter
-using `pgrep -f` matches its own command line - use a captured PID, or anchor the pattern with `$`.
-A pid file read the moment it exists can be empty, and a pid of 0 probes the whole process group:
-wait for a pid that parses. The cli suite reaches the project's template engines through
-`examples/templates`, which resolves to `packages/renderer-templates/dist`: build that package
-before running the cli suite alone (`pnpm check` builds before it tests). `identity()` joins with a
-separator that cannot collide (`a/b`+`c` vs `a`+`b/c`). The `<assembly>` directive matches
-case-insensitively. The commit-msg hook runs commitlint + DCO; CI greps attribution trailers because
-fork PRs run default settings. The house emoji gate refuses a document that QUOTES an emoji -
-describe it in words. Run every test in a background shell; they block for minutes.
+WHAT CAME BEFORE. The owner's rulings of 2026-10-12 at the seat, one per Phase 7 row, are in
+DECISIONS 2026-10-12 ("the owner at the seat", "the ones not asked", "a remote assembly's
+calls are relayed"); the split of the command line into `build`, `check` and `cli` is R-2 and
+R-3, done; the audit of 2026-10-11 is Phase 6, every row of the seat's own done, the rest
+folded into Phase 7 or the owner's; its evidence is
+`~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/`. A SESSION THAT RESUMES HERE
+reads `origin/next`'s last run, counts the lanes (`git worktree list`), and takes the first
+open row of Phase 7 that no lane holds.
 
 ## Phase 0: the record
 
@@ -1311,7 +913,7 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       `.editorconfig` and the commit rule's copies each compared with that tag's file and
       recorded at it, with both gates refusing a recorded tag that is not the pin (DECISIONS
       2026-10-11, "one pin")
-- [ ] `CLAUDE.md`'s Tooling paragraph tells a session to run the browser proof on this machine
+- [x] `CLAUDE.md`'s Tooling paragraph tells a session to run the browser proof on this machine
       through the sealed launcher. D1276 (2026-10-11) forbids any browser process here, and
       this seat obeys it: DECISIONS, the handoff block and the seat's memory say so. The lead
       asked this seat to amend the paragraph. A session does not edit an instruction file at
@@ -1334,6 +936,11 @@ PREMISE UNVERIFIED until the seat has read it at the source and reproduced it; t
 a spec watched red first, or struck with its reason.
 
 ### Reproduced by the seat: the blockers
+
+      DONE 2026-10-12 for the three facts (the paragraph says the browser proof is the `browser
+      proof` job of `ci`, the verbs name `perf`, the packages are fourteen); the fourth fact,
+      `serve()` beside `createServer()` on line 11, corrected 2026-10-18 under the same ruling,
+      in the wave that made it true
 
 - [x] An encoded spelling of a guarded address passed the access check (workflow server.1 and
       trust.3). `/%61dmin/users` answered 200 where `/admin/users` answered 401, and
@@ -1477,7 +1084,7 @@ a spec watched red first, or struck with its reason.
       2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
       RULED 2026-10-12: the type takes it (Phase 7, R-6)
       DONE 2026-10-18 (Phase 7, R-6)
-- [ ] The size limits on the packages hold nothing while the seat that goes over one raises
+- [x] The size limits on the packages hold nothing while the seat that goes over one raises
       it. Said by a reader of the report 2026-10-12, true, and more than was said. Since
       2026-10-11 the limits in `scripts/size-budgets.json` were raised 20 times in 19 commits,
       each by the change that went over and each with its measure recorded, as the gate's own
@@ -1497,6 +1104,8 @@ a spec watched red first, or struck with its reason.
       (DECISIONS 2026-10-12, "a limit raised by the seat that went over it")
       RULED 2026-10-12 (Phase 7, the rule of limits): a new package, or one just split, takes its
       measure and a tenth more; a later raise wants the lead's yes first, and is named to him
+      DONE 2026-10-12 by the rule of limits (above, Phase 7): the measure and a tenth more for a
+      new package, avp's yes before any later raise, every raise named to the owner
 - [x] Every module the build generates into a project is headed with Ayers Electronics'
       copyright line, beside the line that says it is generated
       (`packages/cli/src/generate/generated-header.ts`). An identity string in a file made of the

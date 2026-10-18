@@ -8,7 +8,8 @@ Do not reduce it to "just SSR"; the composition model is the product.
 ## Words (fixed; the README defines them, code and docs use them exactly)
 
 page, assembly (subassembly when nested; a URL means it lives on another server), service (the
-server-side data step), api (raw-data endpoint), server (the runtime, `createServer()`), events
+server-side data step), api (raw-data endpoint), server (the runtime; `serve()` starts
+one, `createServer()` builds one for a program that wants the `App`), events
 (the browser wiring), `assemblejs.config.ts`, template, manifest (the server-to-server handshake
 only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, perf, deploy.
 
