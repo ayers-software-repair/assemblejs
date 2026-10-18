@@ -7243,10 +7243,10 @@ R-3's second cut, and with it the split the owner ordered is made: `@assemblejs/
 ## 2026-10-18: the hold lifted, lanes, and the copyright line off generated files
 
 The lead woke the seat on the morning of 2026-10-18 with the owner's ruling of the day
-(AUDIT/DECISIONS.md D1425, verbatim): "Assemblejs may continue thorughn project completion".
+(AUDIT/DECISIONS.md D1561, verbatim): "Assemblejs may continue thorughn project completion".
 Two more rulings reached the seat the same hour and govern how the rest of Phase 7 is worked.
 
-- **Lanes implement, the seat reviews (D1426, owner, verbatim).** "everyone should go back
+- **Lanes implement, the seat reviews (D1562, owner, verbatim).** "everyone should go back
   to the lane usage way with lesser models for lanes to implement and they review completely
   and ensure things are on track. rather than just waste fable usage on impl". It supersedes
   his word of 2026-10-09 in this seat, "dont use sub tasks do it yourself", for
@@ -7664,7 +7664,7 @@ them green without touching an assertion, and two decisions of the seat's at the
 ## 2026-10-18: the core's limit raised, 98,000 to 105,000
 
 By the rule of limits (2026-10-12, "Size plus 10%, avp approves raises"): the seat asked the
-lead with the measure before anything landed, and avp said yes to 105,000 (2026-10-18:
+lead with the measure before anything landed, and avp said yes to 105,000 (AUDIT D1570, 2026-10-18:
 "Measured 104,356 with R-12, R-14, R-15 and R-16 merged, 6.5 percent over 98,000, inside the
 owner's 10 percent rule; each row carries his ruling of the 12th"). The raise is named in the
 report to the owner.

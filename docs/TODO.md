@@ -8,18 +8,18 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 **RESUME HERE (rewritten at every landing; this one 2026-10-18, at the push of Phase 7's first
 wave).**
 
-THE HOLD IS LIFTED (owner, 2026-10-18, D1425: "Assemblejs may continue thorughn project
+THE HOLD IS LIFTED (owner, 2026-10-18, D1561: "Assemblejs may continue thorughn project
 completion"; AUDIT/DECISIONS.md:5928) and the seat works to project completion through the
 lead, avp, who is reached by message in the line form (STATE / DONE / FAIL / CAVEAT / ASK /
 NEXT), one report per wave's merge. HOW THE WORK IS DONE NOW, three rulings of the same morning,
-each recorded in DECISIONS 2026-10-18: (1) D1426, lanes implement and the seat reviews: one row
+each recorded in DECISIONS 2026-10-18: (1) D1562, lanes implement and the seat reviews: one row
 per `builder` lane in a worktree of its own, Sonnet by default and Opus only where the row's
 defects would be semantics (named at dispatch), the brief carrying the row's text, its files
 and its proof; the seat reads every hand-back at the source, cherry-picks it onto `next` with
 the row ticked, the DECISIONS entry and the changeset in one commit, runs the gates on the
 merged tip, pushes, reads the run. A lane never edits this file, DECISIONS, CLAUDE.md or the
 lockfile by hand, never starts a browser or `node dist/server.js`; the seat runs the
-conformance fixtures and the example starts a hand-back names. (2) D1431, at most three lanes
+conformance fixtures and the example starts a hand-back names. (2) D1567, at most three lanes
 at once, two by default, counted before every dispatch. (3) The owner at the seat: "i approve
 allpushes": a push of `next` waits for nothing but a green gate and no run in flight; a
 release, a publish, a tag and a DNS change still wait for him. A lane's worktree is cut from
