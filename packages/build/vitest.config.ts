@@ -10,6 +10,9 @@ const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 export default defineConfig({
   test: {
     globalSetup: ["../../scripts/build-when-stale.mjs", "../../scripts/test-temp-root.mjs"],
+    // The bundling tests build real browser bundles; a cold esbuild on a loaded machine outruns
+    // vitest's five-second default, which read as five timeouts with nothing wrong.
+    testTimeout: 20_000,
   },
   resolve: {
     alias: {
