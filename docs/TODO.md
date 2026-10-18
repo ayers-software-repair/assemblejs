@@ -51,8 +51,8 @@ or a lane runs `node packages/cli/dist/bin.js`. A pass that rebuilds `dist` whil
 reads it gives a false red (seen twice today on the stop hook): rerun the one file alone.
 
 WHAT IS LEFT, 15 open rows: R-20 (the seat says Phase 7 is done and its last run green; the
-owner adds the token and cuts the tag; before it, 1278 fold the waiting changesets into the
-first entry and 1263 the release-notes sentence in the version commit); then the small rows
+owner adds the token and cuts the tag; the fold of the waiting changesets into the first
+entry, which came before it, is done); then the small rows
 the seat's: 1032 (VS Code's two registrations, a read and a decision), 1258 (after the first
 publish), 1943 and 1970 (install.html's renderer sentence, in site-source), 1978 (the
 tutorial's price-feed import, in site-source), 2042 (the outline page, in site-source). THE
@@ -885,13 +885,20 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       the versions stay apart, the manifest asks for the versions the packages were built
       beside, and the notes say which package a version is of. Nothing is published, so no
       cut can meet it first (DECISIONS 2026-10-10, "release notes")
-- [ ] BEFORE THE FIRST PUBLISH, by the owner's word (the estate's morning list): fold the
+- [x] BEFORE THE FIRST PUBLISH, by the owner's word (the estate's morning list): fold the
       changesets waiting into the first entry. The first publish ships the tree as it stands
       that day as `1.0.0-next.0`, and the version pull request after it would cut
       `1.0.0-next.1` for changes `1.0.0-next.0` already holds. Measured in a clone: manifests
       to `0.0.0`, the changelogs removed, the first changeset back from `.changeset/pre/`,
       `pnpm changeset version`; every package reads `1.0.0-next.0` again with one entry
-      holding every change, and none waits (DECISIONS 2026-10-10, "release notes")
+      holding every change, and none waits (DECISIONS 2026-10-10, "release notes").
+      DONE 2026-10-19 by `scripts/fold-changesets.mjs`, not by that recipe: the recipe removes the
+      changelogs, which dropped the 29 notes folded on 2026-10-11 (core lost 18 of 19 items in a
+      trial) and put a commit hash on every note. The script had failed on `@assemblejs/check`,
+      which has no changelog; it now makes one and writes every changelog before it removes a
+      changeset, with a planted fault in its self-test. Run for real: 75 changesets folded, 119
+      notes added, no line of any changelog removed, every package `1.0.0-next.0`, `.changeset/`
+      holds `config.json`, `pre.json` and `pre/` (owner D1611; `bfe4ac1`, `6b81934`)
 - [x] The built-page proof clicked before the page had hydrated and failed three times today on
       "Clicked 0" and "nothing yet", green on every rerun: it waited for the islands to be read,
       which the runtime does before any module arrives, not for the mount. FIXED 2026-10-11: the
