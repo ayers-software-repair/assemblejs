@@ -7294,3 +7294,23 @@ lifted, and the generator needed no change.
   R-5 gives each built example that file. And a workspace install made before the command
   line is built leaves no `assemblejs` bin link in the examples, which a second offline install
   does not mend; a gate runs the command line by its built `bin.js`, never by a link.
+
+## 2026-10-18: R-8 and R-5 landed
+
+Two lanes of the first wave, each read at the source by the seat before it was merged.
+
+- **R-8, the `Renderer` contract out (his "Remove it").** Expected: objects nothing called.
+  Found so, at the source: the generated registry imports `renderToMarkup` from each
+  framework renderer's package (`generate-registry.ts:120`) and `renderTemplate` from the
+  templates package (`:123`), never a `<x>Renderer` object; the only readers of the objects
+  were their own tests. Out: `core/src/renderer/` whole (the two types and their index), the
+  core's `./renderer` export, its tsup and typedoc entries, the path alias in
+  `tsconfig.base.json` and eight vitest configs, and one `<x>-renderer.ts` with its test in
+  each of the seven renderer packages; 41 files, 433 lines fewer. `LocalRenderInput` stays, as
+  `render-local.ts` reads it. DESIGN 7 now says what the build does: a renderer is found by
+  the package it ships in, and nothing asks it for a name or a list of extensions. The
+  reference gate went red on the stale typedoc entry and green with it gone. The core packs to
+  96,631 bytes of 98,000. Every gate, the types and builds of fourteen packages, and the
+  suites of the core, the build and the seven renderers, exit 0 in the lane's worktree; the
+  `rendering` conformance fixture is run by the seat on the merged tip, since a lane starts
+  no server.

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 /** @module @assemblejs/core */
 // The package's public surface. It re-exports the directory indexes beneath it and nothing
-// else: no leaf file, no declaration of its own. `renderer` and `client` are absent on purpose;
+// else: no leaf file, no declaration of its own. `client` and `outline` are absent on purpose;
 // each is its own published entry point, and a thing published twice is a thing that can drift.
 
 export * from "./contract/index.js";

@@ -637,23 +637,15 @@ One canonical form per concept, with an explicit encode and decode at each bound
 
 ## 7. Rendering
 
-A renderer is two functions in two entry points, and it never wraps a framework.
+A renderer is two functions in two entry points, and it never wraps a framework. Its server half
+is `renderToMarkup`, which turns a view and the placement's data into the markup the server
+sends; the templates package has `renderTemplate` in its place, which is also handed the engine.
+There is no object that describes a renderer to the server. The build writes the registry: it
+imports each view, imports `renderToMarkup` from the package of the renderer the view's file
+names (`renderTemplate` for a template view), and wires the one to the other, so a renderer is
+found by the package it ships in and nothing asks it for a name or a list of extensions.
 
 ```ts
-// @assemblejs/renderer-x            server
-export interface Renderer {
-  readonly name: string;
-  readonly extensions: readonly string[];
-  render(input: RenderInput): string | Promise<string>;
-}
-
-export type RenderInput = {
-  readonly template: unknown; // whatever the extension loaded
-  readonly data: Readonly<JsonObject>;
-  readonly helpers: Readonly<Record<string, unknown>>;
-  readonly url: URL;
-};
-
 // @assemblejs/renderer-x/client     browser
 export interface ClientRenderer {
   mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext): MountHandle;

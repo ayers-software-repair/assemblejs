@@ -12,7 +12,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@assemblejs/renderer-templates": src("./src/index.ts"),
-      "@assemblejs/core/renderer": src("../core/src/renderer/index.ts"),
       "@assemblejs/core": src("../core/src/index.ts"),
     },
   },

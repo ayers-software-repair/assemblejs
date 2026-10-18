@@ -1771,7 +1771,7 @@ The renderers:
       single-quoted value was placed. DONE 2026-10-11: what a tag holds between its name and its end
       is inert to every reader (`inertSpans`, by `tagEnd`), and Solid's own suite proves a visitor's
       value in an attribute places nothing (DECISIONS 2026-10-11, "an attribute's value is text").
-- [ ] The Renderer / RenderInput contract in DESIGN 7 is consumed by nothing; helpers and url are
+- [x] The Renderer / RenderInput contract in DESIGN 7 is consumed by nothing; helpers and url are
       never supplied (workflow renderers.6, minor). Claimed at
       `packages/core/src/renderer/render-input.ts:13`. PREMISE UNVERIFIED. READ AND TRUE 2026-10-12: each
       renderer package exports a `Renderer` and nothing calls one; the build wires a view to
@@ -1781,6 +1781,8 @@ The renderers:
       RULED 2026-10-12: it comes out (Phase 7, R-8)
 
 The command line:
+
+      RULED 2026-10-12 "Remove it"; DONE 2026-10-18 (Phase 7, R-8)
 
 - [x] Misnamed service, client, page declaration and api files are silently ignored; check says "no
       problems" (workflow cli-verbs.1, major). Claimed at
@@ -2180,8 +2182,11 @@ rows are taken in this order; each is a bite with its own proof and its own push
       line that says a file is generated stays (`build/src/generate/generated-header.ts`).
       DONE 2026-10-18, by a lane: one constant held the line, no gate reads generated output
       (DECISIONS 2026-10-18, "the hold lifted, lanes, and the copyright line off generated files")
-- [ ] R-8 The `Renderer` and `RenderInput` objects nothing calls come out of every renderer
+- [x] R-8 The `Renderer` and `RenderInput` objects nothing calls come out of every renderer
       package and the core, with their entry point, and DESIGN 7 says what the build does
+      DONE 2026-10-18, by a lane: the registry imports `renderToMarkup` (`renderTemplate` for a
+      template view) and never an object; 433 lines out, the core's `/renderer` entry with them
+      (DECISIONS 2026-10-18, "R-8 and R-5 landed")
 - [ ] R-9 One start call in the core: it reads the config, starts the server, says where it
       listens, and on a refusal prints the plain sentences and exits 1. The starter's, the
       examples' and the README's server files go back to the two lines DESIGN shows

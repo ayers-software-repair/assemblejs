@@ -15,7 +15,6 @@ export default defineConfig({
       "@assemblejs/renderer-preact/client": src("./src/client/index.ts"),
       "@assemblejs/renderer-preact": src("./src/index.ts"),
       "@assemblejs/core/client": src("../core/src/client/index.ts"),
-      "@assemblejs/core/renderer": src("../core/src/renderer/index.ts"),
       "@assemblejs/core": src("../core/src/index.ts"),
     },
   },

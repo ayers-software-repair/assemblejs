@@ -30,10 +30,6 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./renderer": {
-      "types": "./dist/renderer/index.d.ts",
-      "default": "./dist/renderer/index.js"
-    },
     "./client": {
       "types": "./dist/client/index.d.ts",
       "browser": "./dist/client/index.js",

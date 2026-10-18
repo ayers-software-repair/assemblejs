@@ -21,7 +21,6 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@assemblejs/core/renderer": src("./src/renderer/index.ts"),
       "@assemblejs/core/client": src("./src/client/index.ts"),
       "@assemblejs/core/outline": src("./src/outline/index.ts"),
       "@assemblejs/core": src("./src/index.ts"),
