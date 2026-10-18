@@ -645,7 +645,8 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       whether one name in both is shown twice, and the working directory a `.mcp.json` server
       starts in, the pages do not say. The read in VS Code itself remains: it wants a person at
       its window, on this machine or any, and no seat starts a desktop app; it is the lead's to
-      route
+      route. ROUTED 2026-10-18 to the owner's walk: at his VS Code, open the example project and
+      read the MCP server list once; if the server shows twice, the lead removes `.vscode/mcp.json`.
 - [x] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
       after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
       (DECISIONS 2026-10-10, A-01). DONE 2026-10-11 for the two that read a registration from
