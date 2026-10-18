@@ -8,14 +8,15 @@ import type { Limits } from "../compose/limits.js";
 import { describeFailure } from "../failure/describe-failure.js";
 import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
+import { NotFound } from "../service/not-found.js";
 import { renderLocal } from "./render-local.js";
 
 /**
  * The composer's transport for assemblies declared in this process.
  *
- * It never throws: a render that throws is logged against a correlation id and answered as a
- * failure, so the composer's ladder decides what the visitor sees and the exception's message
- * stays in the log.
+ * A render that throws is logged against a correlation id and answered as a failure, so the
+ * composer's ladder decides what the visitor sees and the exception's message stays in the log.
+ * A `NotFound` is no failure: it goes on.
  *
  * It hands itself to every render as the way that render's own children are reached, so a child
  * a view places is fetched exactly as a page's placement is, under the server's one cap: the
@@ -60,6 +61,7 @@ export function localFetch(
         ...(rendered.diagnostics.length === 0 ? {} : { nested: rendered.diagnostics }),
       };
     } catch (error) {
+      if (error instanceof NotFound) throw error;
       const correlationId = newCorrelationId();
       log(describeFailure(correlationId, error));
       return {

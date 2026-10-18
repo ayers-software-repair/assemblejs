@@ -28,6 +28,11 @@ describe("what an agent that opens a project is told", () => {
     expect(visible).toContain("`src/server.ts` never");
   });
 
+  it("says how a service says not found, and what the not-found page is", () => {
+    expect(visible).toContain("throws\n  `new NotFound()`, from `@assemblejs/core`");
+    expect(visible).toContain("A page named `not-found` has no route");
+  });
+
   it("names the agent surface, where it is registered, and how to start it where it is not", () => {
     expect(visible).toContain(`Its MCP server, \`${AGENT_SERVER.name}\`, is registered in`);
     for (const registration of MCP_REGISTRATIONS) {

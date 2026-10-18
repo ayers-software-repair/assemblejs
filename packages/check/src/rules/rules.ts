@@ -121,6 +121,13 @@ export const RULES: readonly Rule[] = [
     smell: "A page template with no directory of its own, or a list of routes in authored code.",
   },
   {
+    id: "the-not-found-page-has-no-route",
+    rule: "The page src/pages/not-found has no route: it answers, under a 404, wherever nothing else does.",
+    because:
+      "It is shown at every address no route claims and wherever a service says not found. A route of its own would be an address that answers nothing, and a not-found page a visitor could reach with a 200.",
+    smell: "A route in not-found.page.ts, or a page that renders its own not-found message.",
+  },
+  {
     id: "an-api-file-is-an-api",
     rule: "A file src/api/<name>.api.ts default-exports one api, and the name says it is one.",
     because:

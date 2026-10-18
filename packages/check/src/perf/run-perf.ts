@@ -9,6 +9,7 @@ import { startServer } from "@assemblejs/build";
 import { CONFIG_FILE } from "@assemblejs/build";
 import { discoverPages } from "@assemblejs/build";
 import { freePort } from "@assemblejs/build";
+import { NOT_FOUND_PAGE } from "@assemblejs/build";
 import { routeParameters } from "@assemblejs/core";
 import type { PageBudgets } from "@assemblejs/core";
 import { pageRoute } from "../check/page-route.js";
@@ -83,6 +84,10 @@ export async function runPerf(
     let failed = 0;
     for (const page of pages) {
       if (interrupted()) return 130;
+      if (page.name === NOT_FOUND_PAGE) {
+        io.log(`${page.name}: not weighed, as it has no address of its own`);
+        continue;
+      }
       try {
         const route = pageRoute(root, page);
         if (route === undefined)

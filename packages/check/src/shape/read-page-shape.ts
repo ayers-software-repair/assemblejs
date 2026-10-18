@@ -3,6 +3,7 @@
 import { isAbsolute, join } from "node:path";
 import type { DiscoveredPage } from "@assemblejs/build";
 import { fromRoot } from "@assemblejs/build";
+import { NOT_FOUND_PAGE } from "@assemblejs/build";
 import { readInside } from "@assemblejs/build";
 import { findPlacements } from "@assemblejs/core";
 import { declaredRoute } from "../check/declared-route.js";
@@ -10,6 +11,7 @@ import { readDefaultExport } from "../check/read-default-export.js";
 import { COMPUTED } from "./computed.js";
 import { fieldAsWritten } from "./field-as-written.js";
 import { fieldsOf } from "./fields-of.js";
+import { NO_ROUTE } from "./no-route.js";
 import type { PageShape } from "./page-shape.js";
 import { UNREAD } from "./unread.js";
 
@@ -33,8 +35,11 @@ export function readPageShape(root: string, page: DiscoveredPage): PageShape {
   }
   const name = page.name;
   const template = fromRoot(root, file(page.template));
+  // The not-found page has no route, whatever its declaration writes.
+  const routed = page.name !== NOT_FOUND_PAGE;
   if (page.declaration === undefined) {
-    return { name, route: page.route, template, places, policy: {}, stream: null };
+    const route = routed ? page.route : NO_ROUTE;
+    return { name, route, template, places, policy: {}, stream: null };
   }
   const declaration = fromRoot(root, file(page.declaration));
   try {
@@ -43,7 +48,7 @@ export function readPageShape(root: string, page: DiscoveredPage): PageShape {
     const declared = fieldsOf(read);
     return {
       name,
-      route: declaredRoute(read, page.route) ?? COMPUTED,
+      route: routed ? (declaredRoute(read, page.route) ?? COMPUTED) : NO_ROUTE,
       template,
       declaration,
       places,

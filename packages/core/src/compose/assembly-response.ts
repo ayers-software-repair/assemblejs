@@ -3,7 +3,7 @@
 import type { Diagnostic } from "./diagnostic.js";
 import type { FailureReason } from "./failure-reason.js";
 
-/** What reaching an assembly produced. A result, always; never a thrown error. */
+/** What reaching an assembly produced. */
 export type AssemblyResponse =
   | {
       readonly ok: true;

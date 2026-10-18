@@ -28,7 +28,7 @@ export async function quote(lines: readonly Asked[]): Promise<Quote> {
   const priced = await Promise.all(
     lines.map(async (line) => {
       const product = await listed(line.sku);
-      if (product === undefined) {
+      if (product === undefined || product === null) {
         problems.push(`${line.sku} is not something we sell`);
         return undefined;
       }

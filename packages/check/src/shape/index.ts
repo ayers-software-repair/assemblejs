@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 export { COMPUTED } from "./computed.js";
 export { UNREAD } from "./unread.js";
+export { NO_ROUTE } from "./no-route.js";
 export type { Written } from "./written.js";
 export { asWritten } from "./as-written.js";
 export { fieldsOf } from "./fields-of.js";

@@ -10,7 +10,11 @@ const app = Fastify({ logger: false });
 const failure = { error: { correlationId: expect.any(String) } };
 
 beforeAll(async () => {
-  registerFailures(app, (line) => logged.push(line));
+  registerFailures(
+    app,
+    (line) => logged.push(line),
+    async (_request, reply) => reply.code(404).send("<p>the not-found page</p>"),
+  );
   app.get("/throws", () => {
     throw new Error("connection to postgres://user:hunter2@db refused");
   });
@@ -57,17 +61,17 @@ describe("what the server answers when it will not serve", () => {
     expect(logged.some((line) => line.correlationId === correlationId)).toBe(true);
   });
 
-  it("answers an unknown route with the failure body, not the router's description", async () => {
+  it("answers an unknown route as it is told to, not with the router's description", async () => {
     const response = await app.inject({ method: "GET", url: "/no/such/route" });
     expect(response.statusCode).toBe(404);
-    expect(response.json()).toEqual(failure);
+    expect(response.body).toBe("<p>the not-found page</p>");
   });
 
   it("cannot let a route starting with a parameter answer under a reserved prefix", async () => {
     for (const url of ["/assembly", "/assembly/", "/_assemblejs", "/_assemblejs/nope"]) {
       const response = await app.inject({ method: "GET", url });
       expect(response.statusCode).toBe(404);
-      expect(response.body).not.toContain("shadowed");
+      expect(response.json()).toEqual(failure);
     }
     expect((await app.inject({ method: "GET", url: "/elsewhere" })).json()).toEqual({
       shadowed: true,

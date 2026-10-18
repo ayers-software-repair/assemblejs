@@ -59,6 +59,7 @@ describe("the perf verb", { timeout: 60_000 }, () => {
       join(at, "src", "pages", "item", "item.page.ts"),
       'export default { route: "/items/:sku" };\n',
     );
+    realIo.write(join(at, "src", "pages", "not-found", "not-found.html"), "<p>gone</p>");
     const { io, logs, errors } = capture();
     const code = await runPerf(at, io, {
       build: async () => 0,
@@ -68,6 +69,7 @@ describe("the perf verb", { timeout: 60_000 }, () => {
     expect(code).toBe(0);
     expect(errors).toEqual([]);
     expect(logs).toContain("/items/:sku: not weighed, as a parameter needs a value");
+    expect(logs).toContain("not-found: not weighed, as it has no address of its own");
     expect(logs.some((entry) => entry.startsWith("/  document"))).toBe(true);
   });
 

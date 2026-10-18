@@ -17,8 +17,8 @@ import { viewPlacementProblems } from "./view-placement-problems.js";
 import { viewSchema } from "./view-schema.js";
 
 /**
- * Everything wrong with a set of assemblies, apis, pages and remotes, found before anything
- * listens.
+ * Everything wrong with a set of assemblies, apis, pages and remotes, and the not-found page,
+ * found before anything listens.
  *
  * Every check that can refuse runs here, so a process that is accepting connections is a
  * process that is configured. A server that throws after `listen` has already told a load
@@ -29,6 +29,7 @@ export function bootProblems(
   apis: readonly ApiDefinition[] = [],
   pages: readonly PageDefinition[] = [],
   remotes: readonly RemoteDefinition[] = [],
+  notFound?: Omit<PageDefinition, "route">,
 ): readonly string[] {
   const problems: string[] = [];
   const seen = new Set<string>();
@@ -95,6 +96,6 @@ export function bootProblems(
     ...problems,
     ...apiProblems(apis),
     ...remoteProblems(remotes),
-    ...pageProblems(pages, assemblies, apis, remotes),
+    ...pageProblems(pages, assemblies, apis, remotes, notFound),
   ];
 }

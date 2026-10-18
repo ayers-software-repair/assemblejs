@@ -31,6 +31,7 @@ export function pageProblems(
   assemblies: readonly AssemblyDefinition[],
   apis: readonly ApiDefinition[],
   remotes: readonly RemoteDefinition[] = [],
+  notFound?: Omit<PageDefinition, "route">,
 ): readonly string[] {
   const problems: string[] = [];
   const placeable = new Map<string, PlacedAssembly>(
@@ -43,13 +44,21 @@ export function pageProblems(
   const streams = streamPaths(apis);
   const origins = new Set(remotes.map((remote) => remote.origin));
 
-  for (const page of pages) {
-    const at = `page "${page.route}"`;
-    problems.push(...pageRouteProblems(page.route));
-    const key = routeKey("GET", page.route);
-    if (seen.has(key)) problems.push(`${at} is declared more than once`);
-    if (taken.has(key)) problems.push(`${at} is also declared as an api`);
-    seen.add(key);
+  // The not-found page is held to every rule but a route's, since it has none.
+  const checked = [
+    ...pages.map((page) => ({ at: `page "${page.route}"`, page, route: page.route })),
+    ...(notFound === undefined
+      ? []
+      : [{ at: "the not-found page", page: notFound, route: undefined }]),
+  ];
+  for (const { at, page, route } of checked) {
+    if (route !== undefined) {
+      problems.push(...pageRouteProblems(route));
+      const key = routeKey("GET", route);
+      if (seen.has(key)) problems.push(`${at} is declared more than once`);
+      if (taken.has(key)) problems.push(`${at} is also declared as an api`);
+      seen.add(key);
+    }
 
     let placements;
     try {

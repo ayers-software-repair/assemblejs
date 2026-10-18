@@ -8,6 +8,7 @@ import { CONFIG_FILE } from "@assemblejs/build";
 import { discoverApis } from "@assemblejs/build";
 import { discoverAssemblies } from "@assemblejs/build";
 import { discoverPages } from "@assemblejs/build";
+import { NOT_FOUND_PAGE } from "@assemblejs/build";
 import { fromRoot } from "@assemblejs/build";
 import { componentProblems } from "@assemblejs/build";
 import { buildProblems } from "@assemblejs/build";
@@ -36,6 +37,7 @@ import { declaredOrigins } from "./declared-origins.js";
 import { elementProblems } from "./element-problems.js";
 import { hasBrowserHalf } from "./has-browser-half.js";
 import { missingAssemblyFix } from "./missing-assembly-fix.js";
+import { notFoundRouteProblems } from "./not-found-route-problems.js";
 import type { PagePolicy } from "./page-policy.js";
 import { pageRoute } from "./page-route.js";
 import { readApi } from "./read-api.js";
@@ -170,13 +172,16 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
       page.declaration === undefined
         ? NO_POLICY
         : readOr(page.declaration, readPagePolicy, NO_POLICY);
-    // Every rule the server refuses a route by at boot, from the same function.
-    let route: string | undefined = page.route;
+    // Every rule the server refuses a route by at boot, from the same function. The not-found
+    // page has no route, so none of its is held to them; one it declares is its own problem.
+    const routed = page.name !== NOT_FOUND_PAGE;
+    let route: string | undefined = routed ? page.route : undefined;
     try {
-      route = pageRoute(root, page);
+      if (routed) route = pageRoute(root, page);
     } catch {
       // A declaration that cannot be read is reported once, by the reading of its placements.
     }
+    problems.push(...notFoundRouteProblems(root, page));
     const at = page.declaration ?? page.template;
     for (const problem of route === undefined ? [] : pageRouteProblems(route)) {
       problems.push({

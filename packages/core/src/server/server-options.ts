@@ -19,6 +19,11 @@ export interface ServerOptions {
   readonly apis?: readonly ApiDefinition[];
   /** Routes that render a template which places assemblies. */
   readonly pages?: readonly PageDefinition[];
+  /**
+   * The page a visitor is shown, under a 404, at an address no route claims and wherever a
+   * service says not found. It has no route of its own. Without it, those answer the failure body.
+   */
+  readonly notFound?: Omit<PageDefinition, "route">;
   /** The product's own access check. Not with basic credentials: one place decides. */
   readonly authenticate?: Authenticate;
   /** Paths that need no credentials: exact, or a prefix when the entry ends in `/*`. */

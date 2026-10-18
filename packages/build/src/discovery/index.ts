@@ -21,6 +21,7 @@ export { unreadDeclarations } from "./unread-declarations.js";
 export { discoverAssemblies } from "./discover-assemblies.js";
 export type { DiscoveredPage } from "./discovered-page.js";
 export { discoverPages } from "./discover-pages.js";
+export { NOT_FOUND_PAGE } from "./not-found-page.js";
 export { discoverApis } from "./discover-apis.js";
 export { aRenderer } from "./a-renderer.js";
 export { RENDERERS } from "./renderers.js";

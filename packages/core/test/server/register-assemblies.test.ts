@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { defineAssembly, localFetch, registerAssemblies } from "@assemblejs/core";
+import { NotFound, defineAssembly, localFetch, registerAssemblies } from "@assemblejs/core";
 import type { LogLine } from "@assemblejs/core";
 import { askedAndLeft, grand, slowkid } from "../fixtures/slow-child.js";
 
@@ -50,6 +50,24 @@ const shell = defineAssembly({
   },
 });
 
+// Says not found, and a parent that places it.
+const gone = defineAssembly({
+  name: "gone",
+  views: {
+    default: {
+      renderer: "html",
+      data: () => {
+        throw new NotFound("no such thing");
+      },
+      markup: () => "",
+    },
+  },
+});
+const holder = defineAssembly({
+  name: "holder",
+  views: { default: { renderer: "html", markup: () => '<assembly name="gone"></assembly>' } },
+});
+
 const logged: LogLine[] = [];
 const app = Fastify({ logger: false });
 const get = (url: string, headers: Record<string, string> = {}) =>
@@ -68,6 +86,8 @@ beforeAll(async () => {
     ["shell", shell],
     ["grand", grand],
     ["slowkid", slowkid],
+    ["gone", gone],
+    ["holder", holder],
   ]);
   const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
   const log = (line: LogLine): void => void logged.push(line);
@@ -206,6 +226,19 @@ describe("an assembly whose view places a child, served", () => {
     // One level short of it, the child is one deeper and still inside the cap.
     const below = await get("/assembly/shell/", { "assembly-depth": "2" });
     expect(below.body).toContain("<p>Hello, world</p>");
+  });
+});
+
+describe("an assembly that says not found", () => {
+  it("answers 404 with the failure body at its content and its data, unlogged", async () => {
+    logged.length = 0;
+    for (const url of ["/assembly/gone/", "/assembly/gone/default/api/", "/assembly/holder/"]) {
+      const response = await get(url);
+      expect(response.statusCode, url).toBe(404);
+      expect(response.json(), url).toEqual({ error: { correlationId: expect.any(String) } });
+      expect(response.body, url).not.toContain("no such thing");
+    }
+    expect(logged).toEqual([]);
   });
 });
 

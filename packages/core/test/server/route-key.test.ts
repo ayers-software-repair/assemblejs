@@ -12,4 +12,9 @@ describe("what the router matches", () => {
     expect(routeKey("GET", "/items/:id")).not.toBe(routeKey("POST", "/items/:id"));
     expect(routeKey("GET", "/items/:id")).not.toBe(routeKey("GET", "/things/:id"));
   });
+
+  it("treats paths that differ only in a trailing slash as one route, as the router does", () => {
+    expect(routeKey("GET", "/items/")).toBe(routeKey("GET", "/items"));
+    expect(routeKey("GET", "/items/:id/")).toBe(routeKey("GET", "/items/:key"));
+  });
 });

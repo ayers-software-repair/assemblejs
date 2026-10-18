@@ -8,7 +8,8 @@ export interface PageShape {
   readonly name: string;
   /**
    * Where it answers: the route its directory implies, or the one its declaration writes.
-   * COMPUTED where the declaration computes it, UNREAD where that file cannot be read.
+   * COMPUTED where the declaration computes it, UNREAD where that file cannot be read, and
+   * NO_ROUTE for the not-found page, which has none.
    */
   readonly route: string;
   readonly template: string;

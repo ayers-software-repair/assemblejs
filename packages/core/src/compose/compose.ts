@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { NotFound } from "../service/not-found.js";
 import type { AssemblyPlan } from "./assembly-plan.js";
 import type { ComposeOptions } from "./compose-options.js";
 import type { ComposeResult } from "./compose-result.js";
@@ -74,6 +75,14 @@ export async function compose(options: ComposeOptions): Promise<ComposeResult> {
     ),
   );
 
+  // A service that said not found, at any depth, said it of the page: thrown on, before a
+  // required placement's failure.
+  const notFound = settled.find(
+    (outcome) => outcome.status === "rejected" && outcome.reason instanceof NotFound,
+  );
+  if (notFound !== undefined && notFound.status === "rejected") {
+    throw notFound.reason as NotFound;
+  }
   const required = settled.find(
     (outcome) => outcome.status === "rejected" && outcome.reason instanceof RequiredFailure,
   );

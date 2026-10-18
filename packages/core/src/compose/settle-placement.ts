@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { renderEnvelope } from "../envelope/render-envelope.js";
+import { NotFound } from "../service/not-found.js";
 import { FALLBACK_ATTRIBUTE } from "../vocab/fallback-attribute.js";
 import { admitted } from "./admitted.js";
 import type { AssemblyRequest } from "./assembly-request.js";
@@ -17,7 +18,7 @@ import type { SettledPlacement } from "./settled-placement.js";
 
 /**
  * One placement's whole outcome. It never throws except for a placement declared required,
- * because a placement that throws is a page that dies from a child.
+ * because a placement that throws is a page that dies from a child, and for a `NotFound`.
  *
  * A placement that declared a cache lifetime is answered from a fresh entry first. Otherwise what
  * was fetched, or on any failure the ladder `fallBack` climbs; every failure has an id even when
@@ -141,13 +142,14 @@ export async function settlePlacement(input: SettleInput): Promise<SettledPlacem
  * source, not about what a caller actually hands over. A transport can throw before it returns,
  * return something that is not a Promise at all, or resolve to nothing. Each of those defeated
  * an earlier version here: the page died on a placement that was never declared required, which
- * is the exact failure isolation exists to prevent.
+ * is the exact failure isolation exists to prevent. A `NotFound` is no failure: it goes on.
  */
 async function call(fetch: Fetch, request: AssemblyRequest): Promise<AssemblyResponse> {
   let answered: unknown;
   try {
     answered = await fetch(request);
   } catch (error) {
+    if (error instanceof NotFound) throw error;
     return {
       ok: false,
       reason: "transport",

@@ -6,5 +6,6 @@ export type { ServiceDefinition } from "./service-definition.js";
 export { mergeSchemas } from "./merge-schemas.js";
 export { defineService } from "./define-service.js";
 export { ServiceOrderError } from "./service-order-error.js";
+export { NotFound } from "./not-found.js";
 export { orderServices } from "./order-services.js";
 export { runServices } from "./run-services.js";

@@ -10,6 +10,7 @@ import { discoverPages } from "../discovery/discover-pages.js";
 import { hasSharedSources } from "../discovery/has-shared-sources.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import { jsxOwner } from "../discovery/jsx-owner.js";
+import { NOT_FOUND_PAGE } from "../discovery/not-found-page.js";
 import { generateApis } from "../generate/generate-apis.js";
 import { generatePages } from "../generate/generate-pages.js";
 import { generateProject } from "../generate/generate-project.js";
@@ -136,6 +137,7 @@ export async function buildProject(
         client: script !== undefined || styles.size > 0 || projectStyles.length > 0,
         config,
         ...(projectStyles.length === 0 ? {} : { styles: projectStyles }),
+        notFound: pages.pages.some((page) => page.name === NOT_FOUND_PAGE),
       }),
     );
     await build({

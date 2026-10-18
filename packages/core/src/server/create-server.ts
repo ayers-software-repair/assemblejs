@@ -16,6 +16,7 @@ import { FRAMEWORK_ROUTE_PREFIX } from "../vocab/framework-route-prefix.js";
 import { OUTLINE_ROUTE } from "../vocab/outline-route.js";
 import { accessProblems } from "./access-problems.js";
 import { answerFailure } from "./answer-failure.js";
+import { answerNotFound } from "./answer-not-found.js";
 import type { App } from "./app.js";
 import { assetProblems } from "./asset-problems.js";
 import { BootError } from "./boot-error.js";
@@ -26,6 +27,7 @@ import { devtoolsWrites } from "./devtools-writes.js";
 import { limitProblems } from "./limit-problems.js";
 import { listAssets } from "./list-assets.js";
 import { localFetch } from "./local-fetch.js";
+import type { PageServing } from "./page-serving.js";
 import { recentFailures } from "./recent-failures.js";
 import { registerApis } from "./register-apis.js";
 import { registerAssemblies } from "./register-assemblies.js";
@@ -58,7 +60,7 @@ export async function createServer(options: ServerOptions): Promise<App> {
   const files =
     options.assets === undefined ? new Map<string, string>() : listAssets(options.assets);
   const problems = [
-    ...bootProblems(options.assemblies, apis, pages, remotes),
+    ...bootProblems(options.assemblies, apis, pages, remotes, options.notFound),
     ...assetProblems(options.assemblies, files),
     ...accessProblems(
       config.auth,
@@ -101,15 +103,18 @@ export async function createServer(options: ServerOptions): Promise<App> {
   // in development reloads when the server that rendered it has been replaced.
   const boot = development ? randomUUID() : undefined;
   // What the router refuses before any route or hook sees it is answered as every failure is.
-  const app = Fastify({ logger: false, frameworkErrors: answerFailure(log) });
+  // One route answers a path with its trailing slash and without it.
+  const app = Fastify({
+    logger: false,
+    routerOptions: { ignoreTrailingSlash: true },
+    frameworkErrors: answerFailure(log),
+  });
   // Before any route is mounted, so it sees every one, whoever mounts it.
   const writes = devtoolsWrites(app);
 
-  registerFailures(app, log);
-  // Before every route: the one decision, and the policy every html answer carries. Health is
-  // always public, because a load balancer that cannot read it takes the server out of service;
-  // so are the built browser files, which a page on another origin loads to hydrate this
-  // server's assemblies, and which hold nothing a visitor's browser is not sent anyway.
+  // Health is always public, because a load balancer that cannot read it takes the server out
+  // of service; so are the built browser files, which a page on another origin loads to hydrate
+  // this server's assemblies, and which hold nothing a visitor's browser is not sent anyway.
   const policy: AccessPolicy = {
     basic: config.auth,
     authenticate: options.authenticate,
@@ -122,27 +127,14 @@ export async function createServer(options: ServerOptions): Promise<App> {
       ...(options.publicRoutes ?? []),
     ],
   };
-  registerAccess(
-    app,
-    policy,
-    options.contentSecurityPolicy ?? contentSecurityPolicy(remotes.map((remote) => remote.origin)),
-    log,
-  );
   // The same policy, asked again of each assembly a page or a view places, for the visitor
   // asking: an assembly is guarded wherever it is shown, by the rule that guards its address.
   const admit = (sent: Readonly<Record<string, string | undefined>>) => admitFor(policy, sent, log);
-
-  app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));
-
   // One transport for this server's own assemblies: a page's placements, a view's children and
   // the content endpoint's all reach an assembly through it.
   const local = localFetch(byName, log, limits);
-  registerAssemblies(app, { assemblies: byName, version, limits, local, log, admit });
-  registerApis(app, apis);
-  registerStreams(app, apis, log);
-  registerAssets(app, files);
-  registerPages(app, {
-    pages,
+  // What every page is composed with, the not-found page's included.
+  const serving: PageServing = {
     assemblies: byName,
     local,
     limits,
@@ -159,7 +151,25 @@ export async function createServer(options: ServerOptions): Promise<App> {
     admit,
     outline,
     ...(boot === undefined ? {} : { reload: boot }),
-  });
+  };
+  const notFound = answerNotFound(options.notFound, serving);
+
+  registerFailures(app, log, notFound);
+  // Before every route: the one decision, and the policy every html answer carries.
+  registerAccess(
+    app,
+    policy,
+    options.contentSecurityPolicy ?? contentSecurityPolicy(remotes.map((remote) => remote.origin)),
+    log,
+  );
+
+  app.get(`${FRAMEWORK_ROUTE_PREFIX}/health`, async () => ({ status: "ok", version }));
+
+  registerAssemblies(app, { assemblies: byName, version, limits, local, log, admit });
+  registerApis(app, apis);
+  registerStreams(app, apis, log);
+  registerAssets(app, files);
+  registerPages(app, { ...serving, pages, notFound });
   if (boot !== undefined) registerDevReload(app, log, boot);
   if (outline) registerOutline(app);
   if (development && options.devtools !== undefined) {

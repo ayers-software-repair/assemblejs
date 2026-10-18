@@ -11,8 +11,10 @@ import { requestedPath } from "./requested-path.js";
 
 /**
  * Installs the one decision as the first thing every request meets, and the default policy every
- * html answer carries. The decision is made of the path as the router reads it, decoded, so an
- * encoded spelling of a guarded address is that address; a path that does not decode is a 400.
+ * html answer carries. The decision is made of the path as the router reads it, decoded and
+ * spelled with the trailing slash of the route that answers it, so an encoded spelling of a
+ * guarded address, or one with its slash added or taken away, is that address; a path that does
+ * not decode is a 400.
  * A refused request is a 401 with the failure body, and, under basic
  * credentials, the challenge a browser answers with a prompt. A check that threw is logged
  * against the id that body carries (DESIGN 12); a refusal nothing threw for is not a failure and
@@ -29,7 +31,8 @@ export function registerAccess(
     // and the log line carry.
     let correlationId: string | undefined;
     const idOf = (): string => (correlationId ??= newCorrelationId());
-    const path = requestedPath(request.url);
+    // Routed before this hook runs, so the path is read as the route that answers it spells it.
+    const path = requestedPath(request.url, request.routeOptions.url);
     if (path === undefined) return reply.code(400).send(renderFailure(idOf()));
     const allowed = await decideAccess(
       {

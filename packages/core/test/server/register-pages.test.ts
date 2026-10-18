@@ -99,6 +99,7 @@ beforeAll(async () => {
     log: (line) => logged.push(line),
     admit: (sent) =>
       sent["x-guest"] === undefined ? undefined : (name) => ({ admitted: name !== "hello" }),
+    notFound: async (_request, reply) => reply.code(404).send("<p>not here</p>"),
   });
   await app.ready();
 });

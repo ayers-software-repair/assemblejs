@@ -11,6 +11,7 @@ export const RULE_IDS = [
   "one-framework-per-assembly",
   "the-file-name-says-the-framework",
   "a-directory-is-a-page",
+  "the-not-found-page-has-no-route",
   "an-api-file-is-an-api",
   "a-view-needs-its-renderer",
   "a-react-view-needs-its-types",

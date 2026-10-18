@@ -3,6 +3,7 @@
 import type { JsonObject } from "../json/json-object.js";
 import type { ReturnedObject } from "../json/returned-object.js";
 import { withoutAbsentMembers } from "../json/without-absent-members.js";
+import { NotFound } from "./not-found.js";
 import { orderServices } from "./order-services.js";
 import type { ServiceContext } from "./service-context.js";
 import type { ServiceDefinition } from "./service-definition.js";
@@ -19,6 +20,8 @@ import type { ServiceDefinition } from "./service-definition.js";
  * what runs last has seen the most. `inspect` sees each service's own return before it is
  * merged, which is the one point where who returned a field is still known. A member a service
  * left out, or returned as `undefined`, is not a field it returned.
+ *
+ * A `NotFound` goes on naming the service that threw it, for the line the page logs.
  */
 export async function runServices<D extends ReturnedObject>(
   services: readonly ServiceDefinition<D>[],
@@ -27,7 +30,14 @@ export async function runServices<D extends ReturnedObject>(
 ): Promise<JsonObject> {
   let data: JsonObject = {};
   for (const service of orderServices(services)) {
-    const returned = withoutAbsentMembers(await service.run(context));
+    let returned: JsonObject;
+    try {
+      returned = withoutAbsentMembers(await service.run(context));
+    } catch (error) {
+      if (!(error instanceof NotFound)) throw error;
+      const said = error.message === "" ? "" : `: ${error.message}`;
+      throw new NotFound(`service "${service.name}" said not found${said}`);
+    }
     inspect?.(service, returned);
     data = { ...data, ...returned };
   }

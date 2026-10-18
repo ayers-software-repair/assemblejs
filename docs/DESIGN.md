@@ -250,7 +250,8 @@ this one function**, with the same deadline, the same headers and the same resul
 moving an assembly to another server changes a URL and nothing else. A local assembly is not a
 faster special case with a shortcut; making it one is how the two paths drift.
 
-**A fetch never rejects and never throws.** It returns a result. Nothing in the composition path
+**A fetch never rejects and never throws**, but with the `NotFound` a service of this server's
+threw, which is no failure (12). It returns a result. Nothing in the composition path
 puts an `async` function inside a promise executor, where a rejection becomes an unhandled one
 that no `catch` can see.
 
@@ -369,7 +370,8 @@ them finishes or times out, never later, and never fails because one of them did
   wherever the kept one was written. However many placements one kept answer serves, no two
   envelopes on a page share an id, which the browser mounts once.
 - A placement declared `required: true` turns its own failure into the page's failure, with a
-  `503` and the diagnostic. This is opt-in and it is the only way a page dies from a child.
+  `503` and the diagnostic. This is opt-in and it is the only way a page dies from a child. A
+  child that says not found is no failure: the page answers 404 instead (12).
 - Placements resolve concurrently under `allSettled` semantics, and the output order is the
   template's order regardless of which finished first.
 
@@ -555,6 +557,9 @@ The decision is made of the address a request asked, read as the router reads it
 without its query, each segment decoded once, so an encoded spelling of an address is that
 address and a rule about a path holds for every way of writing it. An encoded slash stays
 encoded, as the router keeps it, and a path that does not decode is refused as a bad request.
+A trailing slash is not an address of its own: one route answers a path with it and without it,
+and the decision reads the path as that route spells it, so `/admin/` is decided as `/admin`
+and `/assembly/cart` as `/assembly/cart/`. A path no route answers is read as it was asked.
 It is made again, for the same visitor, of
 the address of each of this server's assemblies that the page or the view places, however the
 directive placing it came to be there (section 7): a guarded assembly is guarded wherever it is
@@ -762,6 +767,8 @@ src/
     home/
       home.html                 the page template
       home.page.ts              route and any placement policy
+    not-found/
+      not-found.html            optional: what a 404 shows, at no route of its own (12)
   assemblies/
     hello-react/
       hello-react.react.tsx     the view; extension and infix pick the renderer
@@ -858,6 +865,11 @@ makes the data shape the function's return type. Services run in declaration ord
 `after: ["greeting"]`. There is no priority number. Services run **before** the view renders,
 and what the view places is composed after it. A child is given the params and the query its
 parent was given.
+
+A service that finds nothing to show says so, `throw new NotFound()`, and the page answers 404
+with the project's not-found page (12). That page is the directory `pages/not-found/`, composed
+like any page but with no route of its own: it answers wherever a service says not found and at
+every address no route claims.
 
 An api is a route:
 
@@ -1082,6 +1094,16 @@ for and for each one that server composed inside its answer.
   A message from an exception never reaches a response body.
 - The correlation id appears on the diagnostic, in the log line, and in the fallback envelope,
   so one failing assembly on one page can be found in a log without guessing.
+- A service says the thing its page is for does not exist with `throw new NotFound()`, which is
+  no failure. Wherever one of this server's own placements says it, at any depth, the page
+  answers 404 with the project's not-found page, composed with no route parameters and no
+  query, or with the failure body where the project has none, and one line names the route and
+  the service. Every address no route claims is answered the same way, but under the reserved
+  prefixes, which keep the failure body: a browser fetching a missing asset is not a visitor
+  reading a page. The not-found page cannot say not found itself; its own service saying so is
+  answered with the failure body. An assembly's own address whose service says it answers 404
+  with the failure body, at its content and its data alike, and a page on another server that
+  placed it falls back, as it does for any failure (3.3).
 
 ---
 

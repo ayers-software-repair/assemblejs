@@ -1,10 +1,56 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineService, runServices } from "@assemblejs/core";
+import { NotFound, defineService, runServices } from "@assemblejs/core";
 import type { ServiceDefinition } from "@assemblejs/core";
 
 const context = { query: new URLSearchParams("name=ada"), params: {} };
+
+describe("a service that says not found", () => {
+  it("ends the run, its not-found naming the service, and runs nothing after it", async () => {
+    const ran: string[] = [];
+    const run = runServices(
+      [
+        defineService({
+          name: "product",
+          run: () => {
+            throw new NotFound('no product "nope-99"');
+          },
+        }),
+        defineService({
+          name: "price",
+          after: ["product"],
+          run: () => {
+            ran.push("price");
+            return {};
+          },
+        }),
+      ] as never,
+      context,
+    );
+    await expect(run).rejects.toThrow(
+      new NotFound('service "product" said not found: no product "nope-99"'),
+    );
+    await expect(run).rejects.toBeInstanceOf(NotFound);
+    expect(ran).toEqual([]);
+  });
+
+  it("leaves any other throw as it was thrown", async () => {
+    const broke = new Error("the database is down");
+    const run = runServices(
+      [
+        defineService({
+          name: "product",
+          run: () => {
+            throw broke;
+          },
+        }),
+      ],
+      context,
+    );
+    await expect(run).rejects.toBe(broke);
+  });
+});
 
 describe("running an assembly's services", () => {
   it("merges what each returned", async () => {

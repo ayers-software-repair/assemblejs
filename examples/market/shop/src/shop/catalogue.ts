@@ -23,8 +23,9 @@ const ask = async <T>(path: string): Promise<T | undefined> => {
   }
 };
 
-export const listed = async (sku: string): Promise<Listed | undefined> =>
-  (await ask<Listed | null>(`/api/products/${encodeURIComponent(sku)}`)) ?? undefined;
+/** A product by its sku: null where the catalogue holds none, undefined where it cannot be asked. */
+export const listed = async (sku: string): Promise<Listed | null | undefined> =>
+  ask<Listed | null>(`/api/products/${encodeURIComponent(sku)}`);
 
 export const search = async (words: string): Promise<Listed[]> =>
   (await ask<Listed[]>(`/api/products?q=${encodeURIComponent(words)}`)) ?? [];

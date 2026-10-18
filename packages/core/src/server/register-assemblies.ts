@@ -12,6 +12,7 @@ import { describeFailure } from "../failure/describe-failure.js";
 import type { LogLine } from "../failure/log-line.js";
 import { newCorrelationId } from "../failure/new-correlation-id.js";
 import { renderFailure } from "../failure/render-failure.js";
+import { NotFound } from "../service/not-found.js";
 import { ASSEMBLY_ROUTE_PREFIX } from "../vocab/assembly-route-prefix.js";
 import { COMPOSITION_HEADER } from "../vocab/composition-header.js";
 import { DEFAULT_VIEW } from "../vocab/default-view.js";
@@ -35,8 +36,8 @@ interface Params {
  *
  * The composition headers are checked on arrival whoever sent them, because there is no
  * privileged variant of a route. An assembly or a view this server does not have is a 404 with
- * an id, and a render that throws, or one whose answer is past the limit on bytes, is the
- * assembly's fallback under a 500, its cause in the log.
+ * an id, and so is one whose service says not found; a render that throws, or one whose answer
+ * is past the limit on bytes, is the assembly's fallback under a 500, its cause in the log.
  * The content it answers holds every child the assembly's view placed, composed here, each
  * one the visitor asking may be shown.
  */
@@ -143,6 +144,8 @@ export function registerAssemblies(
       }
       html = rendered.html;
     } catch (error) {
+      // A service that said not found is answered as a view this server does not have is.
+      if (error instanceof NotFound) return reply.code(404).send(renderFailure(newCorrelationId()));
       // The assembly's fallback, marked with the id its failure is logged against: a 500, so a
       // composing server applies its own policy and caches nothing, with an envelope a bare
       // fetch can read.
@@ -178,9 +181,15 @@ export function registerAssemblies(
       if (declared === undefined) return reply;
       const headers = composition(request, reply);
       if (headers === undefined) return reply;
-      return reply.send(
-        await resolveData(declared, { query: queryOf(request.url), params: headers.params }),
-      );
+      try {
+        return reply.send(
+          await resolveData(declared, { query: queryOf(request.url), params: headers.params }),
+        );
+      } catch (error) {
+        // The same answer the content endpoint gives, since both resolve the same data.
+        if (!(error instanceof NotFound)) throw error;
+        return reply.code(404).send(renderFailure(newCorrelationId()));
+      }
     },
   );
 

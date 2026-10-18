@@ -8,6 +8,6 @@ import type { AssemblyResponse } from "./assembly-response.js";
  * fetched over HTTP, and both come through here, so moving an assembly to another server changes
  * a URL and nothing else.
  *
- * It never rejects and never throws. It returns a result.
+ * It returns a result, and rejects only with the `NotFound` a local service threw.
  */
 export type Fetch = (request: AssemblyRequest) => Promise<AssemblyResponse>;

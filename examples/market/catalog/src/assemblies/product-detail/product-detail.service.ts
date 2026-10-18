@@ -22,7 +22,8 @@ export type Found = {
 export type Missing = { found: false; sku: string };
 
 // The page's route names the product (`/p/:sku`). One that is not in the catalogue is answered
-// as data like any other: the view says so, since a service cannot answer "not found". The
+// as data like any other, and the view says so: the shop places this assembly from another
+// server, where a not-found would be a failure and fail the page it is required on. The
 // grind a visitor chose is in the page's query, which is where the shop's buy box reads it too:
 // two teams' assemblies on one page share a bus only where the page's project says so, and
 // they always share the address.

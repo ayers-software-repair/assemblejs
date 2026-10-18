@@ -33,6 +33,7 @@ one framework or in none, and each hydrated in the browser by its own framework.
 - A **page** is a directory under \`src/pages\`. \`home/home.html\` is the whole document served at
   \`/\`, and \`about/about.html\` the one at \`/about\`. A \`home.page.ts\` beside the template declares
   what the template cannot: another route, the policy for a placement, the page's stream.
+  A page named \`not-found\` has no route: it answers, under a 404, wherever nothing else does.
 - An **assembly** is a directory under \`src/assemblies\`, and its view is the file named after
   it: \`cart/cart.html\`, or \`cart.react.tsx\`, \`cart.vue\`, \`cart.svelte\` and the like, where the
   file's name says what renders it. Nothing registers an assembly, and \`src/server.ts\` never
@@ -44,7 +45,8 @@ one framework or in none, and each hydrated in the browser by its own framework.
 - A **service**, \`cart/cart.service.ts\`, runs on the server before the view renders and returns
   the view's data. A view writes that data escaped, as every renderer does by default. Written
   with a raw form it is markup, and an \`<assembly>\` in it is placed like one the view wrote,
-  so nothing a visitor sent is written raw.
+  so nothing a visitor sent is written raw. A service whose thing does not exist throws
+  \`new NotFound()\`, from \`@assemblejs/core\`, and its page answers 404 with the not-found page.
 - An **api** is a file \`src/api/<name>.api.ts\`: a route that answers data, as JSON or as a
   stream.
 

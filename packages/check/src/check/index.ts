@@ -32,4 +32,5 @@ export { declaredOrigins } from "./declared-origins.js";
 export { runCheck } from "./run-check.js";
 export { declaredRoute } from "./declared-route.js";
 export { pageRoute } from "./page-route.js";
+export { notFoundRouteProblems } from "./not-found-route-problems.js";
 export { readApi } from "./read-api.js";

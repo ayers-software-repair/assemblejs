@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { discoverPages, realIo } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD, readPageShape } from "@assemblejs/check";
+import { COMPUTED, NO_ROUTE, UNREAD, readPageShape } from "@assemblejs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const TEMPLATE =
@@ -104,5 +104,14 @@ describe("one page, read from its sources", () => {
     expect(shop?.places).toHaveLength(2);
     expect(out).toMatchObject({ route: "/out", places: UNREAD, policy: {} });
     expect(JSON.stringify([out, shop])).not.toMatch(/SECRET|secret-/);
+  });
+
+  it("marks the not-found page as having no route, whatever its declaration writes", () => {
+    expect(page({ "not-found/not-found.html": TEMPLATE }).route).toBe(NO_ROUTE);
+    const declared = page({
+      "not-found/not-found.html": TEMPLATE,
+      "not-found/not-found.page.ts": 'export default { route: "/oops" };',
+    });
+    expect(declared.route).toBe(NO_ROUTE);
   });
 });

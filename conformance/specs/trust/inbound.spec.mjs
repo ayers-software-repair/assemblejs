@@ -99,7 +99,8 @@ test("the built browser files are served to any origin, as a page elsewhere load
 
 test("a declared public route needs none: the exact one exactly, the prefix for all under it", async () => {
   assert.equal((await at("/api/open")).status, 200);
-  assert.equal((await at("/api/open/")).status, 401, "exact means exact");
+  assert.equal((await at("/api/open/")).status, 200, "a trailing slash is the address without it");
+  assert.equal((await at("/api/open/more")).status, 401, "exact means exact");
   const notice = await at("/public/notice");
   assert.equal(notice.status, 200);
   const page = await notice.text();

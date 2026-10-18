@@ -34,4 +34,13 @@ describe("generating the one module the server file imports", () => {
     expect(source).toContain("...config,");
     expect(generateProject({ version: "1", client: false, config: false })).not.toContain("config");
   });
+
+  it("carries the not-found page when the project has one, and names nothing when it has none", () => {
+    const source = generateProject({ version: "1", client: false, config: false, notFound: true });
+    expect(source).toContain('import { notFound, pages } from "./pages.js";');
+    expect(source).toContain("pages,\n  notFound,\n  apis,");
+    expect(generateProject({ version: "1", client: false, config: false })).not.toContain(
+      "notFound",
+    );
+  });
 });

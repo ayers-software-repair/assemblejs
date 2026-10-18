@@ -1140,10 +1140,11 @@ a spec watched red first, or struck with its reason.
       that has a parameter as a visitor does. DONE 2026-10-12: both take `params` and `query`, a
       page's are held to the route it declares, and one left out is said
       (DECISIONS 2026-10-12, "the agent surface shows a page as a visitor is shown it")
-- [ ] A dynamic route cannot answer 404: `/product/nope-99` is a 200, because a service returns data
+- [x] A dynamic route cannot answer 404: `/product/nope-99` is a 200, because a service returns data
       and nothing lets it or the page say not found. `/products/` with a trailing slash is a 404
       where `/products` is a 200. Neither is in DESIGN: the owner's to settle
       RULED 2026-10-12: a service can say not found (Phase 7, R-12)
+      DONE 2026-10-18 (Phase 7, R-12)
 - [x] The repository's own harnesses leak servers: three `node dist/server.js`, two from conformance
       runs and one from the command line suite's dev spec, were still listening eleven to twelve
       hours after their runs, orphaned. Which path fails to stop them is not yet found. READ AND MEASURED
@@ -1820,8 +1821,12 @@ rows are taken in this order; each is a bite with its own proof and its own push
 - [x] R-11 `events.keep(topic)`: an assembly says which topic keeps its last message
       DONE 2026-10-18, by a lane: one member on the per-assembly object, backed by the bus's own
       `keep`; only what is sent after the call is kept (DECISIONS 2026-10-18, "R-11 landed")
-- [ ] R-12 A service can say the thing does not exist, and the page answers 404 with the
+- [x] R-12 A service can say the thing does not exist, and the page answers 404 with the
       project's not-found page; an address with a trailing slash answers as the one without
+      DONE 2026-10-18, by a lane: `throw new NotFound()` in a service, the page answers 404 with
+      the project's `not-found` page (a page directory with no route of its own) or the failure
+      body; `ignoreTrailingSlash` on the router and the admission rule reading an address as its
+      route spells it (DECISIONS 2026-10-18, "R-12 landed")
 - [x] R-14 One bus for a page, which a remote server's runtime joins only where the page's
       project says so for that server, as `forward` and `trusted` are said (FINDINGS 35;
       owner, 2026-10-12, "Yes, opt in per remote server")

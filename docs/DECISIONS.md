@@ -7510,3 +7510,44 @@ on `pageBus` and `linkEvents`), a lane to make them green without touching an as
   browser proof.
 - **Measure.** The core packs to 98,719 bytes, 719 over its 98,000, which the lead was asked
   to raise with the measure before this landed.
+
+## 2026-10-18: R-12 landed
+
+A service says not found, his "Yes, a service can say not found" and the trailing slash, built
+by a lane on Opus (the shape was the seat's; the deviations below are the lane's, each read and
+taken) and merged by hand over R-6 and R-14.
+
+- **Expected.** `NotFound` thrown by a service passes the runner untouched; the page route
+  catches it and answers 404 with the project's `not-found` page; discovery gives that page no
+  route; the admission rule drops a trailing slash.
+- **Found, and how it is built.** The composer turned every throw into a fallback, so
+  `NotFound` is now the one throw it passes on, through `localFetch`, the placement's call and
+  `compose`, before a required placement's failure, so a not-found answers 404 and not 503, at
+  any depth. The runner re-wraps it to name the service, for the one log line the page writes
+  (`page "/product/:sku" answered not found: service "product" said not found: ...`). The page
+  handler moved into `server/page-answer.ts`, what pages are composed with into
+  `server/page-serving.ts`, and `server/answer-not-found.ts` composes the not-found page under a
+  404 with no params and no query, for a GET or HEAD; anything else, a project with no such
+  page, and a not-found page that says not found itself, answer the failure body; the reserved
+  prefixes keep theirs. An assembly's own routes, content and data, answer 404 with the failure
+  body. Discovery still gives the page the implied route `/not-found`, since `route` has ten
+  readers; "no route" is applied where it is read: the generated module leaves it out of
+  `pages` and exports it as `notFound`, `check` names a `not-found` page that declares a route
+  (`the-not-found-page-has-no-route`), `perf` skips it ("not weighed, as it has no address of
+  its own"), the shape marks it `(no route)`. The trailing slash: Fastify's
+  `routerOptions.ignoreTrailingSlash` (the top-level form is deprecated for fastify 6), and
+  `routeKey` treats `/a` and `/a/` as one route so boot refuses the pair; the admission rule
+  reads the asked address as the route that answers it spells it (`/admin/` is `/admin`,
+  `/assembly/cart` is `/assembly/cart/`), not by dropping the slash, which would have split the
+  decision from the one `admitFor` makes with the assembly routes' own spelling; a path no
+  route answers is read as asked. One conformance spec changed with the ruling: `/api/open/`
+  answers as `/api/open` (200), and `/api/open/more` is still refused. The showcase's shop has
+  a not-found page and its buy-box service says not found for a sku the catalogue has none of.
+- **Watched red first.** `expected 200 to be 404` on `/product/nope-99`, before the feature.
+- **Left, named.** A local placement that says not found 404s the page; the same assembly on
+  a remote server answers a 404 the composer treats as a failure (DESIGN 3.3), so the page is
+  200 with the fallback: an asymmetry for the owner's ear, not mended unasked. `publicRoutes`
+  spelled with a slash for a page declared without one no longer matches. The mcp's shape
+  description does not yet name `(no route)`.
+- **Measure.** The core packs over its limit with R-14 and this together; the measure is in
+  the ask to the lead and the raise he grants is recorded with it.
