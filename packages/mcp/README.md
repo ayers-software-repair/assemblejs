@@ -29,6 +29,9 @@ Any other client starts it over stdio with
 
 from the project's root, or with the root as its one argument from anywhere else.
 
+The protocol SDK is bundled into this package, so the agent surface installs as one package
+beside zod; the bundled code and its licences are named in `THIRD_PARTY_NOTICES.md`.
+
 See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

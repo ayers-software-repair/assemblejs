@@ -7709,3 +7709,30 @@ read at the source, with one deviation of the lane's the seat took.
   agent surface's 209, every cheap gate, exports, reference, unused, one-version, pack (build
   55,610 of 56,700, check 42,459 of 45,000, cli 20,208 of 22,200), and `conformance agents`
   19 of 19, exit 0.
+
+## 2026-10-18: R-18 landed
+
+The protocol SDK bundled into the agent surface, his "I take your recommendations", built by
+a lane in two passes and read at the source.
+
+- **Expected.** The SDK and zod bundled, one package to a new project.
+- **Found.** The SDK brings six dependencies of its own into the bundle (ajv, ajv-formats,
+  fast-deep-equal, json-schema-traverse, fast-uri, zod-to-json-schema), each noticed; its HTTP
+  transports, express and hono are not in it (the source imports `server/mcp.js`,
+  `server/stdio.js` and `types.js` only; a grep of the output finds none). Zod bundled cost 126
+  KB of tarball for one package fewer, so the seat kept zod a dependency: the agent surface
+  installs as two packages, mcp and zod, where it was 91 (`npm install` of the packed
+  tarballs: "added 64 packages" against 153; node_modules 37 MB against 55). The SDK is a
+  development dependency, bundled by tsup's `noExternal`, and an optional peer, because the
+  public types name its `McpServer` in the five `register*` exports for a program that runs
+  its own server; that path, a user's SDK against the bundled copy, has no test and is named
+  here. `THIRD_PARTY_NOTICES.md` ships in the tarball, each licence text once with every
+  copyright line above it (jscpd flagged the MIT text repeated). The `agents` conformance
+  spec resolves its client from the workspace now, since the project's mcp no longer carries
+  the SDK.
+- **Measure.** The tarball is 126,784 bytes (28,399 before; 124,640 with the SDK and no
+  notices; 252,905 with zod bundled too). The limit, 30,000, is raised on the lead's yes with
+  this measure, recorded under it.
+- **Proof.** The agent surface's 209 cases, publint and attw, exports, unused, versions,
+  one-version, identity, emoji, modules, and `conformance agents` 19 of 19 over the packed
+  server, exit 0.

@@ -594,7 +594,7 @@ importers:
         version: 6.0.3
       vitest:
         specifier: 4.1.11
-        version: 4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0))
+        version: 4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))
 
   packages/create:
     dependencies:
@@ -662,9 +662,6 @@ importers:
       '@assemblejs/core':
         specifier: workspace:*
         version: link:../core
-      '@modelcontextprotocol/sdk':
-        specifier: 1.30.0
-        version: 1.30.0(zod@4.5.4)
       zod:
         specifier: 4.5.4
         version: 4.5.4
@@ -672,6 +669,9 @@ importers:
       '@arethetypeswrong/cli':
         specifier: 0.18.5
         version: 0.18.5
+      '@modelcontextprotocol/sdk':
+        specifier: 1.30.0
+        version: 1.30.0(zod@4.5.4)
       '@types/node':
         specifier: 26.4.1
         version: 26.4.1
@@ -6255,14 +6255,6 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.1
 
-  '@vitest/mocker@4.1.11(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0))':
-    dependencies:
-      '@vitest/spy': 4.1.11
-      estree-walker: 3.0.3
-      magic-string: 0.30.21
-    optionalDependencies:
-      vite: 8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0)
-
   '@vitest/mocker@4.1.11(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
       '@vitest/spy': 4.1.11
@@ -8611,20 +8603,6 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0):
-    dependencies:
-      lightningcss: 1.33.0
-      picomatch: 4.0.7
-      postcss: 8.5.28
-      rolldown: 1.2.6
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 26.4.1
-      esbuild: 0.27.7
-      fsevents: 2.3.3
-      jiti: 2.7.0
-      yaml: 2.9.0
-
   vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0):
     dependencies:
       lightningcss: 1.33.0
@@ -8642,34 +8620,6 @@ snapshots:
   vitefu@1.1.3(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)):
     optionalDependencies:
       vite: 8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)
-
-  vitest@4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0)):
-    dependencies:
-      '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0))
-      '@vitest/pretty-format': 4.1.11
-      '@vitest/runner': 4.1.11
-      '@vitest/snapshot': 4.1.11
-      '@vitest/spy': 4.1.11
-      '@vitest/utils': 4.1.11
-      es-module-lexer: 2.3.2
-      expect-type: 1.4.0
-      magic-string: 0.30.21
-      obug: 2.1.4
-      pathe: 2.0.3
-      picomatch: 4.0.7
-      std-env: 4.2.0
-      tinybench: 2.9.0
-      tinyexec: 1.3.0
-      tinyglobby: 0.2.17
-      tinyrainbow: 3.1.1
-      vite: 8.2.2(@types/node@26.4.1)(esbuild@0.27.7)(jiti@2.7.0)(yaml@2.9.0)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 26.4.1
-      happy-dom: 20.13.0
-    transitivePeerDependencies:
-      - msw
 
   vitest@4.1.11(@types/node@26.4.1)(happy-dom@20.13.0)(vite@8.2.2(@types/node@26.4.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)):
     dependencies:

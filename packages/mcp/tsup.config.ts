@@ -13,4 +13,8 @@ export default defineConfig({
   // point imports what both hold.
   splitting: true,
   treeshake: true,
+  // The protocol SDK is a build-time input: a project that installs this package gets it
+  // inside it, with its notices in THIRD_PARTY_NOTICES.md, and not its dependency tree. zod
+  // stays a dependency, one package with none of its own.
+  noExternal: ["@modelcontextprotocol/sdk"],
 });

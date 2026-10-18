@@ -16,8 +16,11 @@ export const agentIn = (root) => {
   // The name AGENTS.md tells an agent to look for, which is the name each registration uses.
   const [, name] = /Its MCP server, `([a-z-]+)`, is registered in/.exec(told) ?? [];
   const installed = createRequire(join(root, "node_modules", "@assemblejs", "mcp", "package.json"));
-  const { Client } = installed("@modelcontextprotocol/sdk/client/index.js");
-  const { StdioClientTransport } = installed("@modelcontextprotocol/sdk/client/stdio.js");
+  // The client is the agent host's, not the project's: the server bundles its own protocol SDK,
+  // so the host's copy is the workspace's, at the version the server is built against.
+  const host = createRequire(new URL("../../packages/mcp/package.json", import.meta.url));
+  const { Client } = host("@modelcontextprotocol/sdk/client/index.js");
+  const { StdioClientTransport } = host("@modelcontextprotocol/sdk/client/stdio.js");
 
   /**
    * Starts the server a registration file names, the way the client that reads that file starts
