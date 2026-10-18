@@ -1,7 +1,28 @@
 name: release
 
 # An owner-approved release tag publishes npm and then the site at that same commit.
-# npm trusted publishing remains bound to this file and the release environment.
+# npm trusted publishing remains bound to this file and the release environment. Only the
+# `next` channel publishes until the owner opens stable.
+#
+# A name npm has never seen cannot have a trusted publisher yet, so its first version goes out
+# with the NPM_TOKEN secret of the release environment (scripts/first-publish.mjs); every name
+# already on the registry is published tokenless by `changeset publish`, which skips a version
+# the registry has. With every name on the registry the token is never read.
+#
+# The first publish, the owner's three steps:
+#   1. When ready to go public, save one npm token as the secret NPM_TOKEN of the release
+#      environment. Create it under npm Access Tokens as a granular token: permission "Read and
+#      write (publish and stage)" on the @assemblejs scope (a name that does not exist yet
+#      cannot be picked one by one), "Bypass two-factor authentication" checked because this
+#      run has no one to give a code, and the shortest expiry that covers the release.
+#   2. After that release, give each of the fourteen names a trusted publisher, with the
+#      second factor npm asks for; it publishes nothing. For each name in
+#      `node scripts/first-publish.mjs`:
+#        npm trust github <name> --file release.yml --repo ayers-software-repair/assemblejs \
+#          --env release --allow-publish
+#      or the same fields on the package's Settings page on npmjs.com. Do it within two days
+#      of a release that follows: a new trusted publisher must complete a first publish by then.
+#   3. Delete the NPM_TOKEN secret and the token on npmjs.com.
 
 on:
   push:
@@ -38,6 +59,14 @@ jobs:
       - name: Check the tag and package versions
         id: channel
         run: node scripts/check-release-channel.mjs
+      - name: Hold stable publication
+        env:
+          NPM_TAG: ${{ steps.channel.outputs.npm-tag }}
+        run: |
+          if [ "$NPM_TAG" = "latest" ]; then
+            echo "::error::stable publication is not yet open: the owner's word opens it (DECISIONS 2026-10-12)"
+            exit 1
+          fi
       - name: Require the channel's source and successful CI
         env:
           CHANNEL: ${{ steps.channel.outputs.branch }}
@@ -58,6 +87,11 @@ jobs:
         run: node scripts/check-pack.mjs
       - name: Set up npm trusted publishing
         run: npm install -g npm@^11.5.1 && npm --version
+      - name: Publish the names npm has never seen, with the one token
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TAG: ${{ steps.channel.outputs.npm-tag }}
+        run: node scripts/first-publish.mjs --self-test && node scripts/first-publish.mjs --publish "$NPM_TAG"
       - name: Publish the tagged version
         env:
           NPM_CONFIG_PROVENANCE: "true"

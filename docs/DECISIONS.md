@@ -7441,3 +7441,47 @@ at the pin.
 - **Not built, and why.** A local gate that runs the kit would need platform checked out at
   the pin on every machine and in `verify`; the deploy already holds the line, and a red
   there costs one push. The seat runs the kit before any push that touches `site-source/`.
+
+## 2026-10-18: R-13 landed
+
+The first publish by workflow, his "by workflow not by a script I run" and "one token, used
+once", built by a lane and read at the source.
+
+- **Expected.** `npm publish` from each unseen package's directory with `NODE_AUTH_TOKEN`.
+- **Found, two things the brief had wrong.** Every package depends on its siblings as
+  `workspace:*`, which `npm publish` ships as written, so the script packs with pnpm, which
+  writes the real versions, and publishes the tarball (`pnpm pack --json`, then `npm publish
+<tarball> --access public --provenance --tag <tag>`); checked on the command line's package,
+  whose packed manifest names build, check and core at `1.0.0-next.0`. And the workflow's
+  setup-node names no registry, so `NODE_AUTH_TOKEN` alone writes nothing; the token reaches
+  npm as `npm_config_//registry.npmjs.org/:_authToken` in the child's environment (npm's
+  documentation: any `npm_config_` variable is a configuration parameter), which `npm config
+ls -l` shows as the protected token overridden by env. pnpm's own variable is v11.6 and the
+  repository pins 11.4.0.
+- **What is unseen.** `npm view <name> name --json` answers a missing name with exit 1 and
+  `{"error":{"code":"E404",...}}`, a seen one with exit 0 and the name; the script calls
+  unseen only the E404, and any other answer, a refused connection or a 500 or no JSON, is a
+  red, never "unseen", since guessing unseen on a dropped connection would publish over a name
+  that exists. changesets does the same (`getPublishPlan`, E404 is not published) and skips a
+  version the registry has, so the token's publishes are not repeated by `changeset publish`.
+- **The workflow.** A step holds stable publication: an npm tag of `latest` fails with "stable
+  publication is not yet open: the owner's word opens it"; then, after the pack check and the
+  npm upgrade, the script's self-test and `--publish <tag>` with the `NPM_TOKEN` secret of the
+  `release` environment, always run (no `secrets` in an `if:`, the script decides); then
+  `changeset publish` as before. With every name on the registry the token is never read.
+- **Proof.** The self-test watched red three ways (the no-token check disabled, every error
+  counted unseen, seen names published too); the live read of the registry, fourteen `unseen`;
+  `--publish next` with no token, the sentence naming all fourteen and the secret; a registry
+  at a closed port, "ECONNREFUSED", red. Not run, by design: a publish with a token. Not
+  verified, named in the header: whether a first publish under `--tag next` also sets
+  `latest`, and provenance on a tarball rather than a directory; the first real run shows both.
+- **His three steps**, written in `release.yml`'s header with the npm pages they rest on: a
+  granular token, "Read and write (publish and stage)" on the `@assemblejs` scope (a name that
+  does not exist cannot be picked one by one), "Bypass two-factor authentication" checked
+  since the run has no one to give a code, the shortest expiry that covers the release, saved
+  as `NPM_TOKEN` of the `release` environment; after that release, `npm trust github <name>
+--file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish`
+  for each of the fourteen, within two days of a release that follows ("a newly created
+  trusted publisher configuration must complete its first successful publish within 2
+  days"); then the secret and the token deleted. One precondition he confirms: that the
+  `@assemblejs` scope is his on npm.

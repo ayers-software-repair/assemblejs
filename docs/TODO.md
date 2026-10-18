@@ -1855,7 +1855,7 @@ rows are taken in this order; each is a bite with its own proof and its own push
       seat says so, the owner adds the token and cuts the tag
       (R-18 to R-20 by his "I take your recommendations", 2026-10-12, the seat's
       recommendation on each being what the row says)
-- [ ] R-13 The release publishes a name npm has never seen. RULED 2026-10-12, after the seat
+- [x] R-13 The release publishes a name npm has never seen. RULED 2026-10-12, after the seat
       had promised a script for him to run: "first prerelease should be the next ones only
       and these are done by workflow not by a script I run", and of the first publish, "Yes:
       one token, used once". The script is withdrawn; nothing the seat writes publishes by
@@ -1868,6 +1868,11 @@ rows are taken in this order; each is a bite with its own proof and its own push
       first publish within two days (npm's pages on trusted publishers and on `npm trust`).
       None of the names is on npm: `@assemblejs/core` and `@assemblejs/cli` answer 404, and
       the repository holds no npm secret, only `RELEASES_PAT`
+      DONE 2026-10-18, by a lane: `scripts/first-publish.mjs` asks the registry about each of the
+      fourteen names (a 404 is unseen, any other failure a red) and publishes the unseen ones
+      with the one token, packed by pnpm so `workspace:*` is written as versions; `release.yml`
+      runs it before `changeset publish` and holds stable publication until his word; his three
+      steps are written in the workflow's header (DECISIONS 2026-10-18, "R-13 landed")
 - [ ] THE OWNER'S, for the first prerelease, each small and none a publish: (1) when he is
       ready to go public, one npm token saved as one secret of the `release` environment,
       by steps the seat writes out; (2) after that release, tokenless publishing switched on
