@@ -27,31 +27,31 @@ release, a publish, a tag and a DNS change still wait for him. A lane's worktree
 command line is built leaves no `assemblejs` bin link in the examples: a gate or a lane runs
 `node packages/cli/dist/bin.js`, never a link.
 
-WHERE THE WORK STANDS. Phase 7 (below) is the list. LANDED AND PUSHED TODAY, each by a lane
-and read at the source, each with its proof in DECISIONS 2026-10-18: R-4 proved (the starter
-under `tsc -b` as a test, the editor on the shop, the eleven examples), R-5 (`check:examples`,
-its own `ci` job `examples`, React's types in seven examples, each built example with the
-starter's root `tsconfig.json`), R-6 (`ReturnedValue`, `ReturnedObject`, absent members
-dropped where services merge), R-7 (the copyright line off generated files), R-8 (the
-`Renderer` contract out, 433 lines), R-9 (`serve(project)`, the server files two lines),
-R-11 (`events.keep(topic)`). IN HAND, two lanes: R-10 (Lit's hydration isolated per bundle,
-Opus) and R-12 (a service says `NotFound`, the project's `not-found` page, the trailing slash;
-Opus, dispatched before the Sonnet-by-default word). NEXT, in order, two at a time: R-13 (the
-release publishes with the token only names npm has never seen), R-14 to R-17 (the seat writes
-the red tests first, they are judgement rows), R-18 (the MCP SDK bundled; its limit rises:
-measured and sent to avp before any raise), R-19, R-20; then the rows outside Phase 7 that are
-the seat's: 1032 (VS Code's two registrations, a read and a decision), 1258 and 1263 (after the
-first publish), 1278 (fold the changesets, at R-20), 1943 and 1970 (install.html's renderer
-sentence), 1978 (the tutorial's price-feed import), 2042 (the outline page, taken from the site
-seat by avp's word). THE OWNER'S, confirmed with avp on 2026-10-18 and waited on by nothing:
-TODO:523 the admin clicks; 1134 the joint session; 1169 and 1177 the first prerelease's token
-and tag and the stable publish; 2228 his three for the first publish; 2456 the landing at
-`/assemblejs/`; and in the AUDIT backlog AJ.11 his mark and palette, AJ.16 the DNS flip. Named
-Corrected under his ruling of the 12th on CLAUDE.md's facts: line 11 names `serve()`.
+WHERE THE WORK STANDS. Phase 7 (below) is the list. LANDED AND PUSHED, each by a lane and read
+at the source, each with its proof in DECISIONS 2026-10-18: wave 1, R-4 proved, R-5, R-6, R-7,
+R-8, R-9, R-11; wave 2, R-13 (the first publish by workflow), R-10 (Lit isolated by an esbuild
+plugin on Lit's element base), R-14 (one bus a declared remote joins), R-12 (`NotFound`, the
+`not-found` page, the trailing slash), R-16 (an api learns who is asking, `reply()`), R-15 (the
+page's server relays a remote's api calls, `api(path)`, `connect-src 'self'`). The core's limit
+was raised once for the four of wave 2, 98,000 to 105,000, by avp's yes with the measure
+(DECISIONS 2026-10-18, "the core's limit raised"). IN HAND, one lane: R-17 (`perf` in two
+parts and a total, `addresses` beside the budgets). NEXT, in order: R-18 (the MCP SDK bundled;
+its limit rises: measured and sent to avp before any raise), R-19, R-20; then the rows outside
+Phase 7 that are the seat's: 1032 (VS Code's two registrations, a read and a decision), 1258
+and 1263 (after the first publish), 1278 (fold the changesets, at R-20), 1943 and 1970
+(install.html's renderer sentence), 1978 (the tutorial's price-feed import), 2042 (the outline
+page, taken from the site seat by avp's word). A ROW FOR THE BROWSER PROOF, found by the
+lanes: a two-server fixture with an assembly of the page's own, one from an admitted remote
+and one from a remote not admitted, for R-14, and a remote assembly calling its own api
+through the relay, for R-15; neither exists yet. THE OWNER'S, confirmed with avp on
+2026-10-18 and waited on by nothing: TODO:523 the admin clicks; 1134 the joint session; 1169
+and 1177 the first prerelease's token and tag and the stable publish; 2228 his three for the
+first publish, written out in `release.yml`'s header; 2456 the landing at `/assemblejs/`; and
+in the AUDIT backlog AJ.11 his mark and palette, AJ.16 the DNS flip. Corrected under his
+ruling of the 12th on CLAUDE.md's facts: line 11 names `serve()`.
 
-MEASURES A LATER CLAIM RESTS ON. The core packs to about 97.6 kB of its 98,000 limit after
-R-6 and R-9; R-12 adds to it and will want a raise, which goes to avp with the measure first
-(the rule of limits, 2026-10-12). `check:examples` takes 28 to 38 seconds warm on this machine.
+MEASURES A LATER CLAIM RESTS ON. The core packs to 104,356 bytes of its 105,000 limit after
+wave 2; R-18 raises the agent surface's and asks first (the rule of limits, 2026-10-12). `check:examples` takes 28 to 38 seconds warm on this machine.
 The ci run of each push is found by its full sha and watched to its end by a Monitor; a push
 never goes while a run is in flight (the concurrency group cancels it).
 

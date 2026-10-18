@@ -2,7 +2,7 @@
   "@assemblejs/build": 56700,
   "@assemblejs/check": 45000,
   "@assemblejs/cli": 22200,
-  "@assemblejs/core": 98000,
+  "@assemblejs/core": 105000,
   "@assemblejs/create": 7000,
   "@assemblejs/devtools": 8500,
   "@assemblejs/mcp": 30000,

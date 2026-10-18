@@ -7660,3 +7660,21 @@ them green without touching an assertion, and two decisions of the seat's at the
   an api not under `/api` is not relayed, and `apiProblems` does not require the prefix.
 - **Measure.** The core packs to 102,241 on the lane's tree before R-16; the raise for the four
   rows is with the lead.
+
+## 2026-10-18: the core's limit raised, 98,000 to 105,000
+
+By the rule of limits (2026-10-12, "Size plus 10%, avp approves raises"): the seat asked the
+lead with the measure before anything landed, and avp said yes to 105,000 (2026-10-18:
+"Measured 104,356 with R-12, R-14, R-15 and R-16 merged, 6.5 percent over 98,000, inside the
+owner's 10 percent rule; each row carries his ruling of the 12th"). The raise is named in the
+report to the owner.
+
+- **What each row cost**, measured as the gate measures, the tarball of `@assemblejs/core`,
+  each on top of the last: 97,798 at `2d5458d` after wave 1; R-14 to 98,719 (+921, one bus a
+  declared remote joins); R-12 to 100,301 (+1,582, `NotFound`, the not-found page, the trailing
+  slash); R-16 to 102,426 (+2,125, headers and cookies on an api, `reply`, the cookie reader
+  and writer); R-15 to 104,356 (+1,930, the relay route, `api(path)`, the capped reader shared).
+  644 bytes left under the new limit.
+- **Proof on the merged tree before the push.** The core's 1,084 cases, the checks' 305, the
+  types and builds of the two, and the four conformance fixtures, trust 56, rendering 99,
+  remote 27, agents 19, every one exit 0.
