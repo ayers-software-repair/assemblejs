@@ -4,7 +4,7 @@
     ".": {
       "entry": [
         "scripts/*.mjs",
-        "scripts/site/capture-outline.mjs",
+        "scripts/site/*.mjs",
         "browser/*.browser.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",

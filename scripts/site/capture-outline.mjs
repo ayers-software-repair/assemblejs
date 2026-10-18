@@ -9,74 +9,62 @@
 //
 // Build first: pnpm build, then `node packages/cli/dist/bin.js build --cwd examples/market/<team>`
 // for catalog, reviews, fulfilment and shop.
-import { spawn, execFileSync } from "node:child_process";
-import { mkdirSync } from "node:fs";
-import { createServer } from "node:net";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, rmSync } from "node:fs";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "@playwright/test";
+import { serve } from "../../conformance/harness/serve.mjs";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
 const out = `${root}site/docs/img/outline.png`;
 const sealed = process.argv[2];
-const children = [];
+const servers = [];
 
-const fail = (reason) => {
+const fail = async (reason) => {
   console.error(`capture-outline: ${reason}`);
-  for (const child of children) child.kill();
+  await stopAll();
   process.exit(1);
 };
 
-const freePort = () =>
-  new Promise((resolve, reject) => {
-    const probe = createServer();
-    probe.once("error", reject);
-    probe.listen(0, "127.0.0.1", () => {
-      const { port } = probe.address();
-      probe.close(() => resolve(String(port)));
-    });
-  });
+/** Starts one team's built server through the conformance harness and answers its origin. */
+const start = async (team, environment = {}) =>
+  (await serve(`${root}examples/market/${team}/`, environment, (server) => servers.push(server)))
+    .origin;
 
-/** Starts one team's built server and answers its origin once it says it is listening. */
-const serve = async (team, environment = {}) => {
-  const child = spawn(process.execPath, ["dist/server.js"], {
-    cwd: `${root}examples/market/${team}/`,
-    env: { ...process.env, ...environment, ASSEMBLEJS_PORT: await freePort() },
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-  children.push(child);
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error(`${team} did not listen in 20 s`)), 20_000);
-    child.stdout.on("data", (chunk) => {
-      const found = /listening (http:\/\/\S+)/.exec(String(chunk));
-      if (found) {
-        clearTimeout(timer);
-        resolve(found[1]);
-      }
-    });
-    child.on("exit", (code) => reject(new Error(`${team} exited with ${String(code)}; is it built?`)));
-  });
+/** Stops every server this run started and removes the logs the harness kept beside them. */
+const stopAll = async () => {
+  for (const server of servers) await server.stop();
+  for (const server of servers) rmSync(server.log, { force: true });
 };
 
-if (!sealed) fail("usage: capture-outline.mjs <path to sealed-chrome.sh>");
+if (!sealed) await fail("usage: capture-outline.mjs <path to sealed-chrome.sh>");
 
 try {
   // The launcher names the sealed browser's binary; the empty environment below is its seal.
   const executablePath = execFileSync(sealed, ["--which"], { encoding: "utf8" }).trim();
   const teams = {
-    CATALOG_ORIGIN: await serve("catalog"),
-    REVIEWS_ORIGIN: await serve("reviews"),
-    FULFILMENT_ORIGIN: await serve("fulfilment"),
+    CATALOG_ORIGIN: await start("catalog"),
+    REVIEWS_ORIGIN: await start("reviews"),
+    FULFILMENT_ORIGIN: await start("fulfilment"),
   };
-  const shop = await serve("shop", { ...teams, STAFF_KEY: "capture-run-only" });
+  const shop = await start("shop", { ...teams, STAFF_KEY: "capture-run-only" });
   const browser = await chromium.launch({
     executablePath,
     headless: true,
     args: ["--ozone-platform=headless"],
-    env: { PATH: process.env.PATH, HOME: process.env.HOME, LANG: "C.UTF-8", TMPDIR: process.env.TMPDIR ?? "/tmp" },
+    env: {
+      PATH: process.env.PATH,
+      HOME: process.env.HOME,
+      LANG: "C.UTF-8",
+      TMPDIR: process.env.TMPDIR ?? "/tmp",
+    },
   });
   try {
-    const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, deviceScaleFactor: 2 });
+    const page = await browser.newPage({
+      viewport: { width: 1280, height: 800 },
+      deviceScaleFactor: 2,
+    });
     await page.goto(`${shop}/p/kb-guji-250`);
     await page.locator("assembly-root").first().waitFor();
     // The outline is one assemblejs-outline element with a root of its own; its switch is
@@ -91,6 +79,6 @@ try {
     await browser.close();
   }
 } catch (error) {
-  fail(String(error.message ?? error).split("\n")[0]);
+  await fail(String(error.message ?? error).split("\n")[0]);
 }
-for (const child of children) child.kill();
+await stopAll();
