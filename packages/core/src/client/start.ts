@@ -10,6 +10,7 @@ import { openPageStream } from "./open-page-stream.js";
 import { pageBus } from "./page-bus.js";
 import { readIsland } from "./read-island.js";
 import { readMountMode } from "./read-mount-mode.js";
+import { runtimeOrigin } from "./runtime-origin.js";
 import type { Runtime } from "./runtime.js";
 import { scheduleFill } from "./schedule-fill.js";
 import { scheduleMount } from "./schedule-mount.js";
@@ -29,6 +30,7 @@ import type { StartOptions } from "./start-options.js";
  * been better off with no runtime at all.
  */
 export function start(options: StartOptions): Runtime {
+  runtimeOrigin.current = options.origin;
   const mounted = new Map<string, MountedAssembly>();
   const cancels: Array<() => void> = [];
   const releases: Array<() => void> = [];

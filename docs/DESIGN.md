@@ -545,6 +545,23 @@ The composer treats a remote assembly as a third party, because it is one.
   the project said it may.
 - The response is capped, default 2 MiB, and must be `text/html`. Anything else is a failure.
 - Remote response headers are discarded. Nothing a remote sets reaches the visitor.
+- **The page's server relays a remote assembly's api calls.** A browser cannot read an api of
+  another origin, and the framework does not ask the other team to name its callers or to open
+  its apis to any page. The browser half of a remote's assembly asks the page's server at
+  `/_assemblejs/remote/<origin, percent-encoded>/api/...`, and that server makes the call. Only an
+  origin in `remotes` is relayed, and only a path under `/api`, resolved as the remote will read
+  it, so `/api/../assembly/...` is a 404; anything else is the 404 every unknown path is. The
+  method, the path and the query go on, and a JSON or text body as the router read it, with its
+  content type. Of the visitor's request only the headers the remote's `forward` names are sent,
+  never `cookie`, `authorization` or `host` unless declared, as for a placement. Redirects are
+  not followed: the status passes and `location` does not. The answer is capped as a
+  placement's is (2 MiB) and given the placement's default deadline; what comes back is its
+  status, `content-type` and body, and no other header. An api's answer is data and never a
+  document on the page's origin: every relayed answer carries `x-content-type-options: nosniff`,
+  and one whose type is `text/html` or `application/xhtml+xml`, with any parameters, is answered
+  as `text/plain; charset=utf-8` with the body as it came. A remote that is unreachable, slow or
+  over the cap is a 502 with the failure body, logged against its id (12). The relay is under
+  the reserved prefix, so the one decision of 5.2 is made of its address like any other.
 
 ### 5.2 Inbound
 
@@ -582,7 +599,8 @@ carries only the headers its declaration forwards (5.1).
 
 A default content-security policy and a same-origin CORS policy ship on by default; allowlisted
 remote origins are added to the policy automatically, because they are the only extra origins
-the page is designed to load from. Nothing inline runs or applies under it: no inline script, no
+the page is designed to load from. The page connects only to its own server (`connect-src
+'self'`): a remote's browser half reaches its own server through the relay (5.1). Nothing inline runs or applies under it: no inline script, no
 `<style>` block and no `style` attribute, a framework's server-rendered `style` included. Styles
 belong in an assembly's stylesheet (section 10); a project that needs more replaces the policy.
 
@@ -949,6 +967,12 @@ events.keep("cart:add"); // later sends on this topic are kept for `last`
 - Every event carries the sending assembly's id, stamped by the runtime, not supplied by the
   sender.
 - The public surface is this typed object. Raw event dispatch is never the API.
+
+An assembly reaches its own server's apis by `api(path)`, from `@assemblejs/core/client`:
+`fetch(api("/api/stock"))`. It is the path on the page's own server, and the relay under it
+(5.1) for an assembly placed from another server, whose api the browser could not otherwise read.
+It takes a path under `/api` and throws for any other; the origin is the one the assembly's
+runtime was started for, held per bundle.
 
 Two assemblies from different frameworks exchange events with no adapter, because the bus
 belongs to the page and not to any framework's tree. That is what makes the mixed-framework page

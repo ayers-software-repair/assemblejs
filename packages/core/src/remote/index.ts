@@ -6,6 +6,7 @@ export type { ContentUrl } from "./content-url.js";
 export { parseContentUrl } from "./parse-content-url.js";
 export { isPrivateAddress } from "./is-private-address.js";
 export { readCapped } from "./read-capped.js";
+export { readCappedBytes } from "./read-capped-bytes.js";
 export { mediaType } from "./media-type.js";
 export { readManifest } from "./read-manifest.js";
 export { contentRequestUrl } from "./content-request-url.js";

@@ -33,6 +33,11 @@ describe("what an agent that opens a project is told", () => {
     expect(visible).toContain("A page named `not-found` has no route");
   });
 
+  it("says how an assembly's browser half reaches its own server's apis", () => {
+    expect(visible).toContain('`fetch(api("/api/..."))`');
+    expect(visible).toContain("`@assemblejs/core/client`");
+  });
+
   it("names the agent surface, where it is registered, and how to start it where it is not", () => {
     expect(visible).toContain(`Its MCP server, \`${AGENT_SERVER.name}\`, is registered in`);
     for (const registration of MCP_REGISTRATIONS) {

@@ -27,3 +27,5 @@ export { DEVTOOLS_ROUTE_PREFIX } from "./devtools-route-prefix.js";
 export { OUTLINE_ROUTE } from "./outline-route.js";
 export { OUTLINE_ELEMENT } from "./outline-element.js";
 export { OUTLINE_ATTRIBUTE } from "./outline-attribute.js";
+export { RELAY_ROUTE_PREFIX } from "./relay-route-prefix.js";
+export { API_PATH } from "./api-path.js";

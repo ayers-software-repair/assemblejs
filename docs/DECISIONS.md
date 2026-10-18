@@ -7621,3 +7621,42 @@ status = 303)` so a form that posted lands on a page. The route sends a reply as
   green; every cheap gate, modules, exports, reference, design, site, unused, the examples
   gate, exit 0. The core packs to 100,780 of 98,000 on the lane's base, with the lead on the
   raise.
+
+## 2026-10-18: R-15 landed
+
+The page's server relays a remote assembly's api calls, his "The page's server relays the
+call", the seat's red tests first (the browser address and the relay route), a lane to make
+them green without touching an assertion, and two decisions of the seat's at the hand-back.
+
+- **Built.** `ALL /_assemblejs/remote/:origin/*` (`server/register-relay.ts`): the decoded
+  origin must be a declared remote's exactly and the path an api's (`API_PATH`, resolved as the
+  remote will read it, so `/api/../assembly/...`, `%2e%2e`, a backslash and `//host/api/x` are
+  the 404 every unknown path is, and nothing is called); the same method, path and query, a
+  body the router read sent again with its content type for a method that carries one, only the
+  headers the remote's `forward` names and never the visitor's cookie or credential; redirects
+  not followed (a 3xx passes, `location` does not), the composer's deadline and cap; back come
+  the status, the content type and the body and no other header. A remote unreachable, slow or
+  over the cap is a 502 with the failure body, logged. The visitor meets the one decision of
+  5.2 at this address like any other; the relay adds no check and opens nothing. In the
+  browser, `api(path)` from `@assemblejs/core/client`: the path on the page's own server, the
+  relay under it for an assembly placed from another, the origin held per bundle by `start()`;
+  a path not under `/api` throws. The shared path rule is the vocab regex `API_PATH`, since
+  the client layer may import only vocab. The cap reader is one, `readCappedBytes`, which
+  `readCapped` now wraps.
+- **The seat's two decisions at the hand-back.** An api's answer is data and never a document
+  on the page's origin: every relayed answer carries `x-content-type-options: nosniff`, and
+  one typed `text/html` or `application/xhtml+xml` is answered as `text/plain` with the body as
+  it came (watched red by emptying the type set). And `connect-src` is `'self'`: a remote's
+  browser half reaches its own server through the relay, so the page connects to its own
+  origin only; the unit assertion and the `trust` conformance spec at `boundary.spec.mjs:73`
+  now say so, the seat to run the fixture.
+- **Found.** Node's fetch returns the real 3xx under `redirect: "manual"` (undici's own note:
+  an opaque redirect "doesn't make sense server side"). Nothing in the showcase calls a remote's
+  api from a browser half today, so no example changed; the relay waits for the first such
+  assembly. The hop costs about 0.1 ms in process (200 calls, three rounds, noise as large as
+  the signal); the real cost is the second network leg, which `inject` cannot measure.
+- **Left, named.** The relay does not refuse a declared host that resolves into a private
+  range (the composer's transport does; a declared origin is the project's word either way);
+  an api not under `/api` is not relayed, and `apiProblems` does not require the prefix.
+- **Measure.** The core packs to 102,241 on the lane's tree before R-16; the raise for the four
+  rows is with the lead.

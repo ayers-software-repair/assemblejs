@@ -37,6 +37,7 @@ import { registerDevtools } from "./register-devtools.js";
 import { registerFailures } from "./register-failures.js";
 import { registerOutline } from "./register-outline.js";
 import { registerPages } from "./register-pages.js";
+import { registerRelay } from "./register-relay.js";
 import { registerStreams } from "./register-streams.js";
 import { sentHeaderProblems } from "./sent-header-problems.js";
 import type { ServerOptions } from "./server-options.js";
@@ -169,6 +170,8 @@ export async function createServer(options: ServerOptions): Promise<App> {
   registerApis(app, apis);
   registerStreams(app, apis, log);
   registerAssets(app, files);
+  // A remote assembly's browser half reaches its own server's apis through this one.
+  registerRelay(app, remotes, undefined, { log, maxBytes: limits.maxBytes });
   registerPages(app, { ...serving, pages, notFound });
   if (boot !== undefined) registerDevReload(app, log, boot);
   if (outline) registerOutline(app);

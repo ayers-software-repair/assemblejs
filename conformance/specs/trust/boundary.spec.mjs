@@ -70,7 +70,7 @@ test("the default policy is on every html answer, naming this origin and the dec
     assert.deepEqual(directives["default-src"], ["'self'"], policy);
     assert.deepEqual(directives["script-src"], ["'self'", guarded], policy);
     assert.deepEqual(directives["style-src"], ["'self'", guarded], policy);
-    assert.deepEqual(directives["connect-src"], ["'self'", guarded], policy);
+    assert.deepEqual(directives["connect-src"], ["'self'"], policy);
   }
 });
 

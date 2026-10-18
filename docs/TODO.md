@@ -1838,7 +1838,7 @@ rows are taken in this order; each is a bite with its own proof and its own push
       DONE 2026-10-18, by a lane on the seat's red tests: `events: true` per remote, the page
       naming the admitted origins in its head, one bus on the page every admitted bundle finds
       (DECISIONS 2026-10-18, "R-14 landed")
-- [ ] R-15 A remote assembly reaches its own server through the page's server, which passes
+- [x] R-15 A remote assembly reaches its own server through the page's server, which passes
       the call on: nothing for the other team to do, nothing crossing origins in the browser
       (FINDINGS 36). How it came to this, 2026-10-12, in three steps. The seat advised that
       each server name its callers, and he refused it: "that doesnt make sense shouldnt you
@@ -1848,6 +1848,10 @@ rows are taken in this order; each is a bite with its own proof and its own push
       internet; a server on a private network, or a dev server, could be read by any site
       a person inside visits, through their browser. Asked again he chose "The page's server
       relays the call". Cost, to be measured as it is built: a hop on every such call
+      DONE 2026-10-18, by a lane on the seat's red tests: `/_assemblejs/remote/<origin>/api/...`
+      relayed to a declared origin only, apis only, the declared headers only, status, type and
+      body back as data; `api(path)` in the browser; `connect-src 'self'`. Cost measured in
+      process, about 0.1 ms a call (DECISIONS 2026-10-18, "R-15 landed")
 - [x] R-16 An api learns who is asking and a page does not: an api reads the request's
       cookies and headers and may answer with a status, a cookie or a redirect; a service
       and a page stay a function of the address, kept and placed from another server as now

@@ -21,6 +21,7 @@ export type { MountedAssembly } from "./mounted-assembly.js";
 export type { Runtime } from "./runtime.js";
 export type { StartOptions } from "./start-options.js";
 export { start } from "./start.js";
+export { api } from "./api.js";
 export type { StreamSource } from "./stream-source.js";
 export { readStreamMessage } from "./read-stream-message.js";
 export { readStreamUrl } from "./read-stream-url.js";

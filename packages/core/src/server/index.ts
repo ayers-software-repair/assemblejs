@@ -18,6 +18,8 @@ export { OUTLINE_SOURCE } from "./outline-source.js";
 export { OUTLINE_STYLES } from "./outline-styles.js";
 export { outlineModuleSource } from "./outline-module-source.js";
 export { registerOutline } from "./register-outline.js";
+export { registerRelay } from "./register-relay.js";
+export { relayedUrl } from "./relayed-url.js";
 export { pageAccount } from "./page-account.js";
 export { outlineIsland } from "./outline-island.js";
 export { beforeBodyEnd } from "./before-body-end.js";

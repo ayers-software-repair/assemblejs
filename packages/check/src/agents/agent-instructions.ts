@@ -50,6 +50,9 @@ one framework or in none, and each hydrated in the browser by its own framework.
 - An **api** is a file \`src/api/<name>.api.ts\`: a route that answers data, as JSON or as a
   stream. Only an api is given the request's headers and cookies, and \`reply(...)\` lets it answer a
   status, a cookie or a redirect; a service and a page are a function of the address.
+  An assembly's browser half calls its own server's apis as \`fetch(api("/api/..."))\`,
+  with \`api\` from \`@assemblejs/core/client\`, so the call also works when a page on another
+  server placed the assembly.
 
 ## How to work in it
 
