@@ -280,6 +280,20 @@ export default definePage({ route: "/item/:sku", place: { tag: { defer: true } }
             <h2>7. Push live data to every page</h2>
             <dl>
               <div class="item">
+                <dt><code>src/api/price-feed.ts</code></dt>
+                <dd>
+                  The state the stream shares: the latest price, and the <code>send</code> of every
+                  open connection. It is a plain module beside the api, not an api itself, because
+                  only files named <code>*.api.ts</code> are routes.
+                  <pre><code>import type { JsonValue, StreamContext } from "@assemblejs/core";
+
+export const priceFeed = {
+  latest: { price: 0 } as JsonValue,
+  listening: new Set&lt;StreamContext["send"]&gt;(),
+};</code></pre>
+                </dd>
+              </div>
+              <div class="item">
                 <dt><code>src/api/prices.api.ts</code></dt>
                 <dd>
                   An api with <code>stream</code> in place of <code>handle</code> holds its response
