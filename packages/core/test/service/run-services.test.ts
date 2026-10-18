@@ -107,4 +107,25 @@ describe("running an assembly's services", () => {
     );
     expect(seen).toEqual(["a:x", "b:y"]);
   });
+
+  it("takes a service of two shapes and drops the members it left out", async () => {
+    const seen: string[] = [];
+    const service = (coin: boolean) =>
+      defineService({
+        name: "lookup",
+        run: () =>
+          coin
+            ? { found: false, sku: "x", product: undefined }
+            : { found: true, product: { name: "n", note: undefined } },
+      });
+    const inspect = (_service: unknown, returned: object) =>
+      seen.push(Object.keys(returned).join());
+    const missing = await runServices([service(true)], context, inspect);
+    const found = await runServices([service(false)], context, inspect);
+    expect(missing).toEqual({ found: false, sku: "x" });
+    expect(Object.hasOwn(missing, "product")).toBe(false);
+    expect(found).toEqual({ found: true, product: { name: "n" } });
+    expect(Object.keys(found["product"] as object)).toEqual(["name"]);
+    expect(seen).toEqual(["found,sku", "found,product"]);
+  });
 });

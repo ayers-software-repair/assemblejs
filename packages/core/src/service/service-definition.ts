@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonObject } from "../json/json-object.js";
+import type { ReturnedObject } from "../json/returned-object.js";
 import type { DataSchema } from "./data-schema.js";
 import type { ServiceContext } from "./service-context.js";
 
@@ -16,7 +16,7 @@ import type { ServiceContext } from "./service-context.js";
  * number is a claim about every other service in the system made by someone who can only see
  * one of them.
  */
-export interface ServiceDefinition<D extends JsonObject = JsonObject> {
+export interface ServiceDefinition<D extends ReturnedObject = ReturnedObject> {
   readonly name: string;
   readonly after?: readonly string[];
   /** The fields this service returns. Two contributors claiming one field is a boot error. */

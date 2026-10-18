@@ -1,6 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import type { JsonObject } from "../json/json-object.js";
+import type { ReturnedObject } from "../json/returned-object.js";
+import { withoutAbsentMembers } from "../json/without-absent-members.js";
 import { orderServices } from "./order-services.js";
 import type { ServiceContext } from "./service-context.js";
 import type { ServiceDefinition } from "./service-definition.js";
@@ -15,16 +17,17 @@ import type { ServiceDefinition } from "./service-definition.js";
  *
  * A later service's key wins over an earlier one's, which is the same rule as the order itself:
  * what runs last has seen the most. `inspect` sees each service's own return before it is
- * merged, which is the one point where who returned a field is still known.
+ * merged, which is the one point where who returned a field is still known. A member a service
+ * left out, or returned as `undefined`, is not a field it returned.
  */
-export async function runServices<D extends JsonObject>(
+export async function runServices<D extends ReturnedObject>(
   services: readonly ServiceDefinition<D>[],
   context: ServiceContext,
   inspect?: (service: ServiceDefinition<D>, returned: JsonObject) => void,
 ): Promise<JsonObject> {
   let data: JsonObject = {};
   for (const service of orderServices(services)) {
-    const returned = await service.run(context);
+    const returned = withoutAbsentMembers(await service.run(context));
     inspect?.(service, returned);
     data = { ...data, ...returned };
   }

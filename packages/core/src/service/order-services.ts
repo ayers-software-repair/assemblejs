@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonObject } from "../json/json-object.js";
+import type { ReturnedObject } from "../json/returned-object.js";
 import type { ServiceDefinition } from "./service-definition.js";
 import { ServiceOrderError } from "./service-order-error.js";
 
@@ -11,7 +11,7 @@ import { ServiceOrderError } from "./service-order-error.js";
  * duplicate name, an `after` naming a service that does not exist, and a cycle. A set of
  * services whose order depends on which request arrives first is a set nobody can reason about.
  */
-export function orderServices<D extends JsonObject>(
+export function orderServices<D extends ReturnedObject>(
   services: readonly ServiceDefinition<D>[],
 ): readonly ServiceDefinition<D>[] {
   const problems: string[] = [];

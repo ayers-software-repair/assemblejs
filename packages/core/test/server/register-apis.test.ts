@@ -25,6 +25,12 @@ beforeAll(async () => {
     }),
     defineApi({ path: "/api/word", handle: () => "ok" }),
     defineApi({ path: "/api/nothing", handle: () => null }),
+    // Two shapes, neither declared: each leaves out the other's members.
+    defineApi({
+      path: "/api/either",
+      handle: ({ query }) =>
+        query.get("ok") === "1" ? { ok: true, id: "1" } : { ok: false, problems: [] },
+    }),
     // A plain-JavaScript handler can return nothing whatever the type says.
     defineApi({ path: "/api/void", handle: (() => undefined) as unknown as () => null }),
   ]);
@@ -73,5 +79,12 @@ describe("an api, mounted", () => {
     expect(nothing.body).toBe("null");
     const absent = await app.inject({ method: "GET", url: "/api/void" });
     expect(absent.body).toBe("null");
+  });
+
+  it("answers whichever of two shapes the handler chose, without the other's members", async () => {
+    const found = await app.inject({ method: "GET", url: "/api/either?ok=1" });
+    expect(found.body).toBe('{"ok":true,"id":"1"}');
+    const refused = await app.inject({ method: "GET", url: "/api/either" });
+    expect(refused.body).toBe('{"ok":false,"problems":[]}');
   });
 });

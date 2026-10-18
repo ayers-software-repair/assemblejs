@@ -59,6 +59,19 @@ describe("the one function both endpoints call", () => {
     expect(data["seen"]).toBe("ada");
   });
 
+  it("counts a field a service returned as undefined as not returned", async () => {
+    const declared = view({
+      services: [
+        defineService({
+          name: "greeting",
+          schema: { properties: { greeting: { type: "string" } }, required: ["greeting"] },
+          run: () => ({ greeting: undefined }),
+        }),
+      ] as never,
+    });
+    await expect(resolveData(declared, context)).rejects.toThrow(/"greeting" is required/);
+  });
+
   it("refuses data missing a field its composed schema requires", async () => {
     const declared = view({
       services: [

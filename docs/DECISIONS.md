@@ -7338,3 +7338,32 @@ Two lanes of the first wave, each read at the source by the seat before it was m
   `tsconfig.json`, as the R-4 proof found an editor needs it. Five examples hold a Svelte view,
   not the four the row said. Not verified: that the 64 errors of the 12th were React's types
   alone; the ten are clean, and the lane could not hide the types to reproduce the count.
+
+## 2026-10-18: R-6 landed
+
+The handler's return, his "Yes, accept it", built by a lane and read at the source.
+
+- **Expected.** The probe's type on `handle` and `run`, the two serialising boundaries widened
+  to take it, nothing else.
+- **Found.** The merged service data reaches a renderer on the server with no JSON round trip
+  (`resolveData` to `renderLocal`), so widening the boundary would have widened `data` for
+  every view author. Instead `runServices` drops absent members where it merges
+  (`json/without-absent-members.ts`, every depth, `Object.fromEntries` so a key named
+  `__proto__` stays a member), and everything downstream keeps `JsonObject`; a required field a
+  service returns as `undefined` now counts as not returned, pinned. `register-apis.ts` needed
+  nothing: `JSON.stringify` drops the member. And under the core's own
+  `exactOptionalPropertyTypes` the old types already took the two-shape cases, which the entry
+  of the 12th had seen; they go red only in a project without the flag, so the type tests pin
+  them with a member declared `string | undefined`, flag or no flag, and the five refusals with
+  `@ts-expect-error` each (a Date, a function, a bigint, a bare undefined, an interface), for an
+  api and for a service. Watched red by reverting the five source files: four spots under the
+  repository's flags, ten with the flag off. The interface refusal rests on TypeScript's own
+  note that an object literal type, not an interface, gets the implicit index signature.
+- **The guide sentence**, `site/docs/tutorial.html` and DESIGN 8: a handler's answer is written
+  as an object type or a union of them, not an `interface`, because an interface does not say
+  its members are JSON. `site/llms-full.txt` regenerated with it.
+- **Measure.** The core packs to 97,597 bytes of 98,000: 403 left. The next row that adds to
+  the core (R-12, in hand) will want a raise, which goes to the lead with the measure first.
+- **Proof** in the lane's worktree: the core's 992 cases, the build's 412, the checks' 298,
+  every cheap gate, exports, reference, design, site, pack, unused, exit 0; the `rendering`
+  conformance fixture is the seat's, on the merged tip.

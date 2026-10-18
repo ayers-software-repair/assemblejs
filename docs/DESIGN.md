@@ -863,7 +863,11 @@ export default defineApi({
 
 One method per definition, `GET` unless `method` says otherwise. The handler is given the
 request's `query`, its route `params` and its parsed `body`, and whatever it returns is the JSON
-reply. A path is literal segments and whole-segment `:parameters`. One that is declared twice for
+reply. What a handler or a service returns is a `ReturnedValue` (a `ReturnedObject` for a service):
+JSON whose objects may leave a member out, so a handler that answers one of two shapes is accepted
+as written, and the absent member is dropped from the reply and from the data a view is given. A
+`Date`, a function and a `bigint` are refused. It is written as an object type or a union of them,
+not an `interface`, because an interface does not say its members are JSON. A path is literal segments and whole-segment `:parameters`. One that is declared twice for
 one method, does not start with `/`, uses a wildcard or any other pattern, or lands under
 `/assembly/` or `/_assemblejs/` is a boot error.
 

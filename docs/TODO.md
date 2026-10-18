@@ -1464,7 +1464,7 @@ a spec watched red first, or struck with its reason.
       project names `.assemblejs/**/*.ts`, as naming `.assemblejs` alone leaves the generated
       browser modules out
       RULED 2026-10-12 "Yes, both checkers"; DONE 2026-10-18 (Phase 7, R-5)
-- [ ] An api or a service that answers one of two shapes without declaring them is refused as
+- [x] An api or a service that answers one of two shapes without declaring them is refused as
       JSON: TypeScript gives each shape the other's members as `undefined`, and `JsonValue` has
       none; an `interface` is refused too. Measured 2026-10-12, five cases. Nothing is wrong at
       run time. THE OWNER'S TO SETTLE, as it is what the contract's own JSON types mean; the
@@ -1475,6 +1475,7 @@ a spec watched red first, or struck with its reason.
       `bigint` and a bare `undefined`, and refuses an `interface` as today's does (DECISIONS
       2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
       RULED 2026-10-12: the type takes it (Phase 7, R-6)
+      DONE 2026-10-18 (Phase 7, R-6)
 - [ ] The size limits on the packages hold nothing while the seat that goes over one raises
       it. Said by a reader of the report 2026-10-12, true, and more than was said. Since
       2026-10-11 the limits in `scripts/size-budgets.json` were raised 20 times in 19 commits,
@@ -2179,10 +2180,13 @@ rows are taken in this order; each is a bite with its own proof and its own push
       tenth more; any later raise wants the lead's yes before it lands, with the measure and
       what the bytes bought, and is named in the report to the owner. DONE of what it asked
       at once: the three limits after the split, set by it in R-3. The rule itself stands
-- [ ] R-6 What a handler returns may leave a member out: the type takes an api or a service
+- [x] R-6 What a handler returns may leave a member out: the type takes an api or a service
       that answers one of two shapes. Tried as a type first (DECISIONS 2026-10-12, "the
       seat's advice on a handler's return tried"). An `interface` is still refused: one
       sentence for the guide, the site seat's
+      DONE 2026-10-18, by a lane: `ReturnedValue` and `ReturnedObject` on `handle` and `run`
+      only, the absent members dropped where services are merged; the guide sentence written
+      (DECISIONS 2026-10-18, "R-6 landed")
 - [x] R-7 The copyright line comes off every file the build generates into a project; the
       line that says a file is generated stays (`build/src/generate/generated-header.ts`).
       DONE 2026-10-18, by a lane: one constant held the line, no gate reads generated output
