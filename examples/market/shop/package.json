@@ -27,6 +27,8 @@
     "vue": "3.5.43"
   },
   "devDependencies": {
-    "@assemblejs/cli": "workspace:*"
+    "@assemblejs/cli": "workspace:*",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5"
   }
 }

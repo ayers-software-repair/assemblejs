@@ -1446,7 +1446,7 @@ a spec watched red first, or struck with its reason.
       its renderer's `renderToMarkup` and `hydrate` in the modules the build generates (found
       2026-10-12, type-checking the showcase). DONE the same day, in the React, Preact, Solid
       and Lit renderers (DECISIONS 2026-10-12, "a view that says what its data holds is taken by its renderer")
-- [ ] No example is type-checked by any gate, the showcase among them. Measured 2026-10-12 under
+- [x] No example is type-checked by any gate, the showcase among them. Measured 2026-10-12 under
       a strict configuration, generated browser modules included: 64 errors in the ten, none in
       `templates` or `market/reviews`; `market/shop` 13, `market/catalog` 4, `market/fulfilment`
       17, `frameworks` 15, `shadow` 9, `two-frameworks`, `realtime` and `styles` 2 each. Every
@@ -1463,6 +1463,7 @@ a spec watched red first, or struck with its reason.
       showcase is clean before the first prerelease. A configuration that type-checks a
       project names `.assemblejs/**/*.ts`, as naming `.assemblejs` alone leaves the generated
       browser modules out
+      RULED 2026-10-12 "Yes, both checkers"; DONE 2026-10-18 (Phase 7, R-5)
 - [ ] An api or a service that answers one of two shapes without declaring them is refused as
       JSON: TypeScript gives each shape the other's members as `undefined`, and `JsonValue` has
       none; an `interface` is refused too. Measured 2026-10-12, five cases. Nothing is wrong at
@@ -2165,10 +2166,14 @@ rows are taken in this order; each is a bite with its own proof and its own push
       first experiment answered: the registry is one module per owner. Found: an example with
       no root `tsconfig.json` is an inferred project in an editor; R-5 gives each the starter's
       (DECISIONS 2026-10-18, "R-4 proved")
-- [ ] R-5 A gate holds every example: TypeScript by the written setup, Vue's checker over
+- [x] R-5 A gate holds every example: TypeScript by the written setup, Vue's checker over
       the Vue views and Svelte's over the Svelte ones. React's types in the seven examples
       that hold a React view; the two checkers as development dependencies of this
       repository only
+      DONE 2026-10-18, by a lane: `check:examples`, its own `ci` job, the generator unchanged;
+      eleven examples clean in 28 seconds, the self-test red on a React, a Vue and a Svelte
+      view; five examples hold Svelte views, not four; each built example carries the starter's
+      root `tsconfig.json` (DECISIONS 2026-10-18, "R-8 and R-5 landed")
 - [x] THE RULE OF LIMITS (owner, 2026-10-12, "Size plus 10%, avp approves raises"): a new
       package, or one just split, has its limit set by the seat at its measured size and a
       tenth more; any later raise wants the lead's yes before it lands, with the measure and

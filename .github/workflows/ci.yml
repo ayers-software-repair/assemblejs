@@ -109,6 +109,30 @@ jobs:
       # and minutes; here it runs on every push and pull request.
       - run: pnpm conformance
 
+  # Every example is held to the TypeScript setup its build writes: tsc over the solution,
+  # vue-tsc over the Vue views and svelte-check over the Svelte ones. Kept out of `pnpm check`
+  # because it builds eleven projects, and `verify` runs that chain on two Node versions.
+  examples:
+    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+    name: examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # The examples build with the command line's own output, which a fresh checkout lacks.
+      - run: pnpm build
+      - run: pnpm check:examples
+
   # Every commit carries a conventional header and a sign-off, and no attribution trailer
   # (CONTRIBUTING). The hooks hold that on a machine that has them; this job holds it for a
   # commit that reached the branch without them, pushed or in a pull request.

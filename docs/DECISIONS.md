@@ -7314,3 +7314,27 @@ Two lanes of the first wave, each read at the source by the seat before it was m
   suites of the core, the build and the seven renderers, exit 0 in the lane's worktree; the
   `rendering` conformance fixture is run by the seat on the merged tip, since a lane starts
   no server.
+- **R-5, a gate over every example (his "Yes, both checkers").** Expected: the written
+  setup's `include` patterns would not reach a `.vue` or a `.svelte` file, so the generator
+  would change, and the ten examples would show the 64 strict errors measured on the 12th.
+  Found: the generated `assemblies.ts` imports every view, so `vue-tsc -p
+.assemblejs/tsconfig.app.json --noEmit` and `svelte-check --workspace . --tsconfig
+.assemblejs/tsconfig.app.json` reach each Vue and Svelte view through the import graph (they
+  have no JSX owner, so they are the application project's), and the generator did not change;
+  with `@types/react` 19.2.18 and `@types/react-dom` 19.2.5 (the renderer's own pins) in the
+  seven examples with a React view, all eleven are clean, `tsc -b` from each built example's
+  root, in 28 seconds warm. Read for it, since neither tool documents project references:
+  vue-tsc's README, "a wrapper around tsc", and svelte-check's, `--tsconfig` relative to the
+  workspace and "only files matched by the files/include/exclude pattern of the config file
+  are diagnosed"; each was then watched red on a planted `const wrong: number = 'text'`,
+  vue-tsc with TS2322 at the `.vue` line, svelte-check with its own ERROR line. The gate is
+  `scripts/check-examples.mjs` with `check:examples`, its `--self-test` a copy of the
+  frameworks example broken in a React, a Vue and a Svelte view and held to a red from exactly
+  those three checkers; it runs the command line by its built `bin.js`, never a bin link, and
+  is its own `ci` job beside `conformance`, not in the `check` chain `verify` runs twice. The
+  two checkers are development dependencies of the repository only, `vue-tsc` 3.3.13 and
+  `svelte-check` 4.7.7, named to knip beside `@types/react-dom` in the two examples that
+  import nothing of react-dom. Each of the ten built examples now carries the starter's root
+  `tsconfig.json`, as the R-4 proof found an editor needs it. Five examples hold a Svelte view,
+  not the four the row said. Not verified: that the 64 errors of the 12th were React's types
+  alone; the ten are clean, and the lane could not hide the types to reproduce the count.

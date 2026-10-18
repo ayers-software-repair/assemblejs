@@ -23,6 +23,7 @@
     "check:emoji": "node scripts/check-emoji.mjs --self-test && node scripts/check-emoji.mjs",
     "check:editorconfig": "node scripts/check-editorconfig.mjs --self-test && node scripts/check-editorconfig.mjs",
     "check:commit-rule": "node scripts/check-commit-rule.mjs --self-test && node scripts/check-commit-rule.mjs",
+    "check:examples": "node scripts/check-examples.mjs --self-test && node scripts/check-examples.mjs",
     "check:exports": "node scripts/check-exports.mjs",
     "check:headers": "node scripts/check-headers.mjs",
     "check:identity": "bash scripts/identity-gate.sh --self-test && bash scripts/identity-gate.sh",
@@ -74,10 +75,12 @@
     "react-dom": "19.2.8",
     "sort-package-json": "4.0.0",
     "svelte": "5.57.0",
+    "svelte-check": "4.7.7",
     "syncpack": "15.3.3",
     "typedoc": "0.28.20",
     "typescript": "6.0.3",
     "typescript-eslint": "8.69.0",
-    "vitest": "4.1.11"
+    "vitest": "4.1.11",
+    "vue-tsc": "3.3.13"
   }
 }

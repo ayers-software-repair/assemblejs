@@ -10,7 +10,14 @@
         "browser/build-examples.mjs"
       ],
       "project": ["scripts/**/*.mjs", "browser/**/*.{ts,tsx,mjs}"],
-      "ignoreDependencies": ["@arethetypeswrong/cli", "publint", "sort-package-json", "react-dom"]
+      "ignoreDependencies": [
+        "@arethetypeswrong/cli",
+        "publint",
+        "sort-package-json",
+        "react-dom",
+        "svelte-check",
+        "vue-tsc"
+      ]
     },
     "packages/*": {
       "entry": ["test/**/*.test.{ts,tsx}"],
@@ -24,7 +31,7 @@
     "examples/styles": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": ["@assemblejs/renderer-react"]
+      "ignoreDependencies": ["@assemblejs/renderer-react", "@types/react-dom"]
     },
     "examples/frameworks": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/pages/*/*.page.ts"],
@@ -34,7 +41,7 @@
     "examples/shadow": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/pages/*/*.page.ts"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
-      "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte", "vue"]
+      "ignoreDependencies": ["@assemblejs/renderer-.*", "@types/react-dom", "svelte", "vue"]
     },
     "examples/templates": {
       "entry": ["src/server.ts", "src/assemblies/*/*.ts"],
