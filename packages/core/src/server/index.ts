@@ -79,3 +79,5 @@ export { pageAssets } from "./page-assets.js";
 export { registerPages } from "./register-pages.js";
 export type { AdmitVisitor } from "./admit-visitor.js";
 export { createServer } from "./create-server.js";
+export type { ServeOptions } from "./serve-options.js";
+export { serve } from "./serve.js";

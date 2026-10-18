@@ -1066,6 +1066,9 @@ for and for each one that server composed inside its answer.
 
 - A process-level `unhandledRejection` and `uncaughtException` handler logs and exits, rather
   than leaving a process running in a state nothing accounted for.
+- A server that refuses to boot says why in plain sentences, one for each problem, and the
+  process exits 1: a bad setting in the environment, a project the server will not build, an
+  address it cannot listen on. `serve` does this; a bug is still a stack.
 - Every failure gets a **correlation id**. The visitor sees the id; the log holds the exception.
   A message from an exception never reaches a response body.
 - The correlation id appears on the diagnostic, in the log line, and in the fallback envelope,
@@ -1391,11 +1394,10 @@ the built server still has a static import graph and production never scans a di
 `server.ts` never grows. Its whole job is to hand the server what the build found:
 
 ```ts
-import { createServer } from "@assemblejs/core";
+import { serve } from "@assemblejs/core";
 import project from "../.assemblejs/project.js";
 
-const app = await createServer(project);
-await app.listen();
+await serve(project);
 ```
 
 `.assemblejs/project.ts` is the generated module: the assemblies, pages and apis the build

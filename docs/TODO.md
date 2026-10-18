@@ -1399,7 +1399,7 @@ a spec watched red first, or struck with its reason.
       stack. DONE 2026-10-11 for `dev`: a build during which a source changed is left unused and the
       build after it is of the sources as they are, so no server is started from a build made of two
       moments. The uncaught stack a refused boot prints is its own row below
-- [ ] A server that refuses to boot prints an uncaught stack: the starter's `src/server.ts` awaits
+- [x] A server that refuses to boot prints an uncaught stack: the starter's `src/server.ts` awaits
       `createServer` at the top level, so a BootError, a refusal with a plain sentence for each
       problem, reaches the terminal as a Node stack trace with the sentences inside it (found
       2026-10-11, in the dev log). READ 2026-10-12, and not mended: three errors reach the
@@ -1411,6 +1411,7 @@ a spec watched red first, or struck with its reason.
       sentences and exits 1) would bring the file back to the two lines DESIGN shows, and is a
       new public word. THE OWNER'S TO SETTLE; the seat's advice is the call in the core
       RULED 2026-10-12: one start call in the core (Phase 7, R-9)
+      DONE 2026-10-18 (Phase 7, R-9)
 - [x] A Svelte view that does not parse is reported at the generated module and not at the view:
       `.assemblejs/client/broken.ts:10 Unexpected token` with a svelte.dev address, for
       `src/assemblies/broken/broken.svelte` holding `<p>{</p>` (found 2026-10-11, in the dev log of
@@ -2197,9 +2198,13 @@ rows are taken in this order; each is a bite with its own proof and its own push
       DONE 2026-10-18, by a lane: the registry imports `renderToMarkup` (`renderTemplate` for a
       template view) and never an object; 433 lines out, the core's `/renderer` entry with them
       (DECISIONS 2026-10-18, "R-8 and R-5 landed")
-- [ ] R-9 One start call in the core: it reads the config, starts the server, says where it
+- [x] R-9 One start call in the core: it reads the config, starts the server, says where it
       listens, and on a refusal prints the plain sentences and exits 1. The starter's, the
       examples' and the README's server files go back to the two lines DESIGN shows
+      DONE 2026-10-18, by a lane: `serve(project)` in the core, named so because `start` is the
+      browser runtime's word; the starter, ten examples and the html example are the import and
+      one call, two-frameworks adding its devtools; the three refusals print their sentences and
+      exit 1, each watched red (DECISIONS 2026-10-18, "R-9 landed")
 - [ ] R-10 Each bundle brings its own Lit: a page of Lit assemblies from two servers has
       each server's elements updated by its own copy, whichever loads last. Measure which
       pages then load Lit's runtime before anything mounts (3,936 bytes gzipped)

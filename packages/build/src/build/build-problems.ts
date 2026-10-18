@@ -29,7 +29,7 @@ export function buildProblems(
       path: join(root, "src", "server.ts"),
       rule: "the-server-file-never-grows",
       message: "there is no src/server.ts to build",
-      fix: "add the server file `assemblejs new` writes, which hands createServer the generated project",
+      fix: "add the server file `assemblejs new` writes, which hands serve the generated project",
     });
   }
   // The framework a project lacks is one thing to install, said once however many views need it.

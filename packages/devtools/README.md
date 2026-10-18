@@ -4,7 +4,7 @@ Read-only devtools for an AssembleJS server in development.
 
     import { devtools } from "@assemblejs/devtools";
 
-    const app = await createServer({ ...project, config, devtools: devtools() });
+    await serve({ ...project, devtools: devtools() });
 
 Open `/_assemblejs/devtools/` on the running server: the assemblies, pages, apis and remotes it
 was built from, and the failures it logged most recently with their correlation ids. The same

@@ -78,6 +78,8 @@ describe("the smallest project that runs", () => {
     expect(server).toContain('from "../.assemblejs/project.js"');
     expect(server).not.toContain("src/assemblies/");
     expect(server.split("\n").filter((line) => line.startsWith("import"))).toHaveLength(2);
+    expect(server).toContain("await serve(project);");
+    expect(server).not.toContain("createServer");
   });
 
   it("ships one page placing one assembly, and no framework the author did not ask for", () => {

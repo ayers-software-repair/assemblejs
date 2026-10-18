@@ -7384,3 +7384,36 @@ The handler's return, his "Yes, accept it", built by a lane and read at the sour
   instructions describes events, so nothing was added there. The core packs to 96,713 of
   98,000 before R-6's bytes. Proof: the core's 971 cases, the six JSX and Svelte renderers'
   types, every cheap gate, exports, reference, design, site, pack, unused, exit 0.
+
+## 2026-10-18: R-9 landed
+
+One start call in the core, his ruling of the 12th, built by a lane and read at the source.
+
+- **The name is `serve`, not `start`.** `start` is already the browser runtime's call on
+  `@assemblejs/core/client`, and one product does not use one word for two things.
+  `serve(project)` (`core/src/server/serve.ts`) reads the config from the environment, builds
+  the server, listens, writes the config lines and `listening <url>` to stdout as the server
+  files did; a `ConfigError` or `BootError` is written to stderr as its sentences, one to a
+  line, a failed listen as one sentence naming the address (`EADDRINUSE`: "something is already
+  listening there."), and the process ends with exit code 1 by `process.exitCode`, never
+  `process.exit`, so what was written is flushed (Node's process documentation: `exit()`
+  forces the process out "even if there are still asynchronous operations pending ...
+  including I/O operations to `process.stdout`"). Anything else is rethrown and is a stack. Its
+  parameter is `ServeOptions`, the server's options without the config.
+- **Found in the ten.** Nine server files passed nothing beyond the project and the config
+  and are now the import and `await serve(project);`. `two-frameworks` passed its devtools,
+  and is `await serve({ ...project, devtools: devtools() });`. The html example, a hand-written
+  file with no generated project, is `await serve({ assemblies, apis, version })`. The starter
+  is the two lines. The rule `the-server-file-never-grows` reads only that the file exists
+  inside the root; its sentence now says `serve`. DESIGN 8 shows the two lines; DESIGN 12 says
+  a refused boot is sentences and exit 1, a bug a stack. The dev loop's reader of `listening`
+  is unchanged.
+- **Proof.** Five cases run `serve` in a child process against the built core: a good start
+  (the four config lines and `listening`, exit 0), a boot refusal, two config problems at once,
+  a port in use held by a `net` server, and a bug that stays a stack; the first two refusals
+  watched red by a mutant that never matched, the third by one that rethrew. The core's 977
+  cases, the checks' 298, the command line's 142, the build's 412, every cheap gate, exit 0.
+  The core packs to 97,629 of 98,000 before R-6 and R-11 joined it on `next`.
+- **Left, and named to the lead.** `CLAUDE.md` line 11 says "server (the runtime,
+  `createServer()`)"; `serve` is now the way a project runs. An instruction file is the owner's
+  to amend; the seat asks for the one-word change in its report.

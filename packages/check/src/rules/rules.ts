@@ -183,7 +183,7 @@ export const RULES: readonly Rule[] = [
   },
   {
     id: "the-server-file-never-grows",
-    rule: "src/server.ts hands createServer the generated project and does nothing else.",
+    rule: "src/server.ts hands serve the generated project and does nothing else.",
     because:
       "Everything the server serves is found on disk by the build. A server file that registers things is a second registry, and the first thing two people adding assemblies both edit.",
     smell: "An import of an assembly, a page or an api in src/server.ts.",
