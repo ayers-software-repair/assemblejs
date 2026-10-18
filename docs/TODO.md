@@ -1669,7 +1669,7 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       (`ci` 38208877783).
 - [x] The site has no page for the outline: the configuration reference and a guide page want
       it (the site seat's; the lead is told). DONE before this read: site-source/docs/outline.html (b321538), in pages.json, linked from start.html:100-106 and docs/index.html:94; no configuration reference page exists to link from. LEFT, a row of its own below.
-- [ ] The outline page holds a screenshot placeholder, "A04 · Screenshot to capture" (site-source/docs/outline.html): the seat captures the real outline overlay in the sealed browser against a built example and replaces it (found 2026-10-18).
+- [x] The outline page holds a screenshot placeholder, "A04 · Screenshot to capture" (site-source/docs/outline.html): the seat captures the real outline overlay in the sealed browser against a built example and replaces it (found 2026-10-18). DONE 2026-10-18: scripts/site/capture-outline.mjs starts the built market example, opens /p/kb-guji-250 with the outline on and writes site/docs/img/outline.png (1280 by 800 at scale 2, 12 assemblies framed and the Outline bar); the page shows it in a figure.
 - [x] FOUND BY THE SHOWCASE: a Lit element whose template is made from a property the view sets
       hydrated before the view set it, threw `shorter than expected iterable` and was drawn
       twice. DONE 2026-10-12: the server marks each element a Lit view holds `defer-hydration`,

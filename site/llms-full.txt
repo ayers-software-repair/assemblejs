@@ -1852,13 +1852,7 @@ Check
 
 The boxes follow the assemblies on the page, including assemblies supplied by other servers.
 
-- A04 · Screenshot to capture
-
-The market product page with Outline enabled
-
-Show the product, reviews and buy box, with readable assembly names, origins and timing.
-
-Capture the running four-server example at desktop width, with its outline expanded.
+The market product page with its outline expanded: assemblies from the catalog and reviews servers drawn inside the shop's page.
 
 ## Try a complete application
 
