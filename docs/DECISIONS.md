@@ -7731,8 +7731,9 @@ a lane in two passes and read at the source.
   spec resolves its client from the workspace now, since the project's mcp no longer carries
   the SDK.
 - **Measure.** The tarball is 126,784 bytes (28,399 before; 124,640 with the SDK and no
-  notices; 252,905 with zod bundled too). The limit, 30,000, is raised on the lead's yes with
-  this measure, recorded under it.
+  notices; 252,905 with zod bundled too). The limit, 30,000, is 139,500 by the lead's yes with
+  this measure (AUDIT D1577, 2026-10-18: "measured 126,784, the rule's tenth"), named in the
+  report to the owner.
 - **Proof.** The agent surface's 209 cases, publint and attw, exports, unused, versions,
   one-version, identity, emoji, modules, and `conformance agents` 19 of 19 over the packed
   server, exit 0.
