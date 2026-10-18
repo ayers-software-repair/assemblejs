@@ -6,8 +6,19 @@
 // a bump for each; the note goes under "### Minor Changes" or "### Patch Changes" of the
 // version the package has now, which is the version the publish ships. It is run by hand
 // before the first publish, as often as notes have gathered, and it needs nothing installed.
+// A package with no changelog is given one, and nothing is removed until every changelog is written.
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -59,26 +70,35 @@ export function fold(changelog, version, bump, note) {
     const block = `\n${heading}\n\n${item}`;
     folded = `${section.slice(0, at).trimEnd()}\n${block}${at === section.length ? "" : `\n${section.slice(at)}`}`;
   }
-  return `${changelog.slice(0, from)}${folded.replace(/\n{3,}/g, "\n\n")}${next < 0 ? "" : changelog.slice(next)}`;
+  return `${changelog.slice(0, from)}${folded.replace(/\n{3,}/g, "\n\n").replace(/^\n+/, "\n")}${next < 0 ? "" : changelog.slice(next)}`;
 }
 
-/** Folds every changeset in `dir` into the packages under `packages`, returns what it did. */
-export function foldAll(dir, packages, read, write, remove) {
-  const done = [];
-  for (const file of readdirSync(dir)
+/**
+ * Folds every changeset in `dir` into the packages under `packages` and returns the files it
+ * folded. A package with no changelog is given one that opens with the version it has now.
+ * Every changelog is written before any changeset is removed, so a failure part way leaves
+ * every changeset in place.
+ */
+export function foldAll(dir, packages, io) {
+  const files = readdirSync(dir)
     .filter((f) => f.endsWith(".md") && f !== "README.md")
-    .sort()) {
-    const { bumps, note } = readChangeset(read(join(dir, file)));
+    .sort();
+  const changelogs = new Map();
+  for (const file of files) {
+    const { bumps, note } = readChangeset(io.read(join(dir, file)));
     for (const { name, bump } of bumps) {
       const folder = name.replace(/^@assemblejs\//, "");
-      const manifest = JSON.parse(read(join(packages, folder, "package.json")));
-      const changelogPath = join(packages, folder, "CHANGELOG.md");
-      write(changelogPath, fold(read(changelogPath), manifest.version, bump, note));
+      const manifest = JSON.parse(io.read(join(packages, folder, "package.json")));
+      const path = join(packages, folder, "CHANGELOG.md");
+      const current =
+        changelogs.get(path) ??
+        (io.exists(path) ? io.read(path) : `# ${name}\n\n## ${manifest.version}\n`);
+      changelogs.set(path, fold(current, manifest.version, bump, note));
     }
-    remove(join(dir, file));
-    done.push(file);
   }
-  return done;
+  for (const [path, text] of changelogs) io.write(path, text);
+  for (const file of files) io.remove(join(dir, file));
+  return files;
 }
 
 if (process.argv[2] === "--self-test") {
@@ -115,18 +135,63 @@ if (process.argv[2] === "--self-test") {
     },
   );
   assert.throws(() => readChangeset("no front matter"), /front matter/);
+  // A package with pending changesets and no changelog gets one, and a refusal part way
+  // removes nothing.
+  const root = mkdtempSync(join(tmpdir(), "fold-"));
+  const io = {
+    read: (file) => readFileSync(file, "utf8"),
+    exists: (file) => existsSync(file),
+    write: (file, text) => writeFileSync(file, text),
+    remove: (file) => unlinkSync(file),
+  };
+  try {
+    mkdirSync(join(root, ".changeset"));
+    for (const name of ["core", "check"]) {
+      mkdirSync(join(root, "packages", name), { recursive: true });
+      writeFileSync(
+        join(root, "packages", name, "package.json"),
+        `{"name":"@assemblejs/${name}","version":"1.0.0-next.0"}`,
+      );
+    }
+    writeFileSync(join(root, "packages", "core", "CHANGELOG.md"), log);
+    writeFileSync(
+      join(root, ".changeset", "a.md"),
+      '---\n"@assemblejs/core": minor\n"@assemblejs/check": patch\n---\n\nThe note.\n',
+    );
+    writeFileSync(
+      join(root, ".changeset", "b.md"),
+      '---\n"@assemblejs/check": minor\n---\n\nAnother.\n',
+    );
+    assert.deepEqual(foldAll(join(root, ".changeset"), join(root, "packages"), io), [
+      "a.md",
+      "b.md",
+    ]);
+    assert.equal(
+      readFileSync(join(root, "packages", "check", "CHANGELOG.md"), "utf8"),
+      "# @assemblejs/check\n\n## 1.0.0-next.0\n\n### Minor Changes\n\n- Another.\n\n### Patch Changes\n\n- The note.\n",
+    );
+    assert.deepEqual(readdirSync(join(root, ".changeset")), []);
+    writeFileSync(join(root, ".changeset", "c.md"), '---\n"@assemblejs/core": patch\n---\n\nC.\n');
+    writeFileSync(join(root, ".changeset", "d.md"), "no front matter");
+    assert.throws(
+      () => foldAll(join(root, ".changeset"), join(root, "packages"), io),
+      /front matter/,
+    );
+    assert.deepEqual(readdirSync(join(root, ".changeset")), ["c.md", "d.md"]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
   console.log(
-    "fold self-test: a note lands under its version and bump, in order, and a missing version refuses, as required",
+    "fold self-test: a note lands under its version and bump, in order, a missing version refuses, a package with no changelog is given one, and a refusal removes nothing, as required",
   );
 } else if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const root = process.cwd();
-  const done = foldAll(
-    join(root, ".changeset"),
-    join(root, "packages"),
-    (file) => readFileSync(file, "utf8"),
-    (file, text) => writeFileSync(file, text),
-    (file) => unlinkSync(file),
-  );
+  const done = foldAll(join(root, ".changeset"), join(root, "packages"), {
+    read: (file) => readFileSync(file, "utf8"),
+    exists: (file) => existsSync(file),
+    write: (file, text) => writeFileSync(file, text),
+    remove: (file) => unlinkSync(file),
+  });
   console.log(`folded ${String(done.length)} changeset(s): ${done.join(", ")}`);
   if (!existsSync(join(root, ".changeset", "config.json")))
     throw new Error(".changeset/config.json is gone");
