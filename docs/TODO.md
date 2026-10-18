@@ -1865,6 +1865,13 @@ rows are taken in this order; each is a bite with its own proof and its own push
       lists one example address for each page whose address has a parameter, weighed by
       `perf` and asked for by `check` (owner, 2026-10-12, "Everything, shown in two parts"
       and "In the project's config, beside the budgets")
+- [ ] R-14b and R-15b, THE BROWSER PROOF of the two: a two-server browser spec with an assembly
+      of the page's own, one from a remote declared `events: true` and one from a remote not
+      declared, where a send from the page is heard by the admitted remote's assembly and not
+      by the other; and a remote assembly whose browser half calls its own api through
+      `api(path)` and shows the answer. Found by the lanes of R-14 and R-15 (2026-10-18): no
+      fixture holds page-own, admitted and unadmitted together, and nothing in the showcase
+      calls a remote's api yet. Written here, run only by CI's `browser proof`; before R-20
 - [ ] R-18 The protocol SDK bundled into `@assemblejs/mcp` with its notices, so the agent
       surface is one package to a new project and not 90; what it uses of the SDK and no
       more. Its limit will rise: measured first, and the lead's yes before it lands
