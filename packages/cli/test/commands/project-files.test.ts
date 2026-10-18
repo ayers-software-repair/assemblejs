@@ -1,6 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -123,6 +125,9 @@ describe("building a project with styles and no browser script", { timeout: 60_0
   });
 });
 
+// Nested in this package, so the project resolves @assemblejs/core and @types/node as installed.
+const cliRoot = fileURLToPath(new URL("../../", import.meta.url));
+
 describe("what the checks make of a new project", { timeout: 60_000 }, () => {
   // B-20's proof, its first half: a generated project passes check.
   it("passes check as it is written, and check says so", async () => {
@@ -135,6 +140,21 @@ describe("what the checks make of a new project", { timeout: 60_000 }, () => {
       expect(await runCheck(root, io)).toBe(0);
       expect(errors).toEqual([]);
       expect(logs).toEqual(["no problems"]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  // R-4's proof: TypeScript's own compiler, on the root the starter names, finds nothing to say.
+  it("type-checks clean with tsc -b once built, with no setup of its own", async () => {
+    const root = mkdtempSync(join(cliRoot, ".dev-types-"));
+    try {
+      for (const [path, contents] of Object.entries(projectFiles("typed"))) {
+        realIo.write(join(root, path), contents);
+      }
+      expect(await buildProject(root, capture().io)).toBe(0);
+      const tsc = createRequire(import.meta.url).resolve("typescript/bin/tsc");
+      expect(execFileSync(process.execPath, [tsc, "-b"], { cwd: root, encoding: "utf8" })).toBe("");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

@@ -1423,7 +1423,7 @@ a spec watched red first, or struck with its reason.
       tokens declare `color-scheme: light dark` and the components open with a `body` rule in the
       tokens' ground, ink and type; specs watched red (DECISIONS 2026-10-11, "the starter and the
       arguments")
-- [ ] A new project has no `tsconfig.json`: the compiler's defaults give "Cannot use JSX unless the
+- [x] A new project has no `tsconfig.json`: the compiler's defaults give "Cannot use JSX unless the
       '--jsx' flag is provided" on every `.tsx` view, no types for React (the documented install
       line names no `@types/react`) or for node, and the generated `.assemblejs/assemblies.ts`
       itself does not type-check. MEASURED 2026-10-12, 39 errors on the frameworks example
@@ -1441,6 +1441,7 @@ a spec watched red first, or struck with its reason.
       6.3 MB; and a project type-checks only after a build, `.assemblejs/` being generated and
       not committed, which is what a script for it must run first) (DECISIONS 2026-10-12, "the modules the build generates type-check")
       RULED 2026-10-12 of what a new project installs: ready by default (Phase 7, R-4)
+      RULED 2026-10-12 "The build writes it"; DONE 2026-10-18 (Phase 7, R-4)
 - [x] A view that types its data, `AssemblyProps<Offer>`, as the site's pages say to, is refused by
       its renderer's `renderToMarkup` and `hydrate` in the modules the build generates (found
       2026-10-12, type-checking the showcase). DONE the same day, in the React, Preact, Solid
@@ -2142,7 +2143,7 @@ rows are taken in this order; each is a bite with its own proof and its own push
       THE SAME DAY OF THE SECOND: `@assemblejs/check` is a package, the command line is its
       verbs, and the three limits are 56,700, 45,000 and 22,200 (DECISIONS 2026-10-12, "the
       checks are a package of their own, and the command line is its verbs")
-- [ ] R-4 The build writes the TypeScript setup into `.assemblejs/`, and the starter a root
+- [x] R-4 The build writes the TypeScript setup into `.assemblejs/`, and the starter a root
       `tsconfig.json` that names it, so no file needs a line saying whose JSX it is. A NEW
       PROJECT IS READY BY DEFAULT (owner, 2026-10-12): the starter also lists `typescript`
       and Node's types as development dependencies, 4 packages and 6.3 MB, and `check` names
@@ -2154,6 +2155,14 @@ rows are taken in this order; each is a bite with its own proof and its own push
       tried: in an editor two generated modules that take a Solid view show an error. A
       browser module takes one view and can go in its owner's project; the registry imports
       every owner's views and can go in none, so how it is written must change
+      DONE 2026-10-18, PROVED BY A LANE: the starter built and under `tsc -b` exit 0 as a test,
+      watched red on a bad file; the editor puts each file of the shop in its owner's project
+      with 0 errors, React's wanting only its types; eleven examples built, the four with no
+      React view at 0 errors, the seven with one at TS7016 only until `@types/react` is present
+      and then at 0, Preact and Solid views among them; conformance `agents` 19 of 19. Its
+      first experiment answered: the registry is one module per owner. Found: an example with
+      no root `tsconfig.json` is an inferred project in an editor; R-5 gives each the starter's
+      (DECISIONS 2026-10-18, "R-4 proved")
 - [ ] R-5 A gate holds every example: TypeScript by the written setup, Vue's checker over
       the Vue views and Svelte's over the Svelte ones. React's types in the seven examples
       that hold a React view; the two checkers as development dependencies of this

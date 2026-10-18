@@ -7269,3 +7269,28 @@ Two more rulings reached the seat the same hour and govern how the rest of Phase
   the banner opens with the generated notice and holds no copyright or SPDX line. Proof, in
   the lane's worktree: the build's 412 cases, the checks' 298, the command line's 141, the
   header gate, the identity gate and lint, each exit 0.
+
+## 2026-10-18: R-4 proved
+
+R-4 was committed at the hold written and not proved. A lane proved it on the morning the hold
+lifted, and the generator needed no change.
+
+- **Expected.** A project the starter writes, built and put under `tsc -b`, has nothing said
+  of it; an editor puts each file in the project of its JSX's owner; every example with no
+  React view is clean and the seven with one want only React's types.
+- **Found.** All of it, as a test in the command line's suite (`project-files.test.ts`,
+  `tsc -b` on the root the starter names, exit 0 and no output; watched red on a file
+  `export const n: number = "a"`); by TypeScript's own language server on the shop, each
+  Preact and Solid view in `tsconfig.preact.json` and `tsconfig.solid.json` at 0 errors, the
+  React view in `tsconfig.react.json` at TS7016 for `react` and `react/jsx-runtime`, the
+  server file and the registry in `tsconfig.app.json`, the api in `tsconfig.shared.json`, each
+  at 0; the ten built examples (the html one has no server file to build) at exit 0 for
+  templates, fulfilment and reviews and at TS7016 only for the seven with a React view, and at
+  0 for all seven with `@types/react` and `@types/react-dom` linked in, which is what R-5
+  installs; `conformance agents` 19 of 19, the starter installed from the packed tarball. No
+  `.tsx` stands outside an assembly in any example, so that path is proved by unit tests only.
+- **Found beside it, two things.** An example with no root `tsconfig.json` is an inferred
+  project in an editor (36 errors on a Preact view); the starter's root file closes it, and
+  R-5 gives each built example that file. And a workspace install made before the command
+  line is built leaves no `assemblejs` bin link in the examples, which a second offline install
+  does not mend; a gate runs the command line by its built `bin.js`, never by a link.
