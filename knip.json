@@ -51,6 +51,7 @@
     "examples/realtime": {
       "entry": [
         "src/server.ts",
+        "assemblejs.config.ts",
         "src/assemblies/*/*.{ts,tsx,svelte}",
         "src/api/*.api.ts",
         "src/pages/*/*.page.ts"

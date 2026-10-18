@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "A server push over server-sent events, reaching a React assembly and a Svelte assembly on one page through the page's bus.",
+  "description": "A server push over server-sent events, reaching a React assembly and a Svelte assembly on one page through the page's bus; and a /bus page whose bus and relay reach assemblies of other servers.",
   "scripts": {
     "build": "assemblejs build",
     "dev": "assemblejs dev",

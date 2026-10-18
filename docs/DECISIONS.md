@@ -7770,3 +7770,36 @@ read at the source.
   agent surface's 209, every cheap gate, design, exports, reference, unused, duplication,
   examples, site, exit 0. `perf` exit 0 on frameworks and shadow by the command line's own
   bin; the shop needs its three sibling servers up, which the seat runs before the push.
+
+## 2026-10-18: R-14b and R-15b written
+
+The browser proof of the shared bus and the relay, a lane's, read at the source; it has never
+run, since no browser runs here (D1276), and CI's `browser proof` is where it first does.
+
+- **Expected.** A fixture project under `browser/fixtures/` with a page-own sender, an admitted
+  and an unadmitted remote hearer and a remote caller across two producer servers.
+- **Found.** The fixtures there are single-file bundles, not projects; a new workspace package
+  would move the lockfile, which CI installs frozen; `two-frameworks` is pinned by about ten
+  unit suites' counts; and a consumer built inline with `createServer` has no browser bundle
+  for a page-own assembly. So the realtime example holds a `/bus` page now, and the spec starts
+  three servers from that one build, each told the two origins: the site serves `/bus` and
+  declares `{ origin: A, events: true, forward: ["accept-language"] }` and `{ origin: B }`; the
+  page places `hearer` from A and from B and `caller` from A, and its own `sender` is a plain
+  html assembly with a browser half whose send is a button press, so the page's runtime cannot
+  beat the remote scripts. A sender from the admitted remote would have passed without R-14,
+  on that remote's own bus; hence the page's own.
+- **What each assertion fails on without the feature.** The head meta names `admitted` only
+  (absent without R-14); both hearers are ready before the send; the admitted hearer shows
+  `data-heard="page"` and `data-by="sender"` (silent without R-14, on a bus of its own); the
+  other hearer shows neither after half a second; the caller on the admitted origin shows
+  `data-answer="relayed"` and the remote's host (without R-15, `api()` is the bare path and
+  the site answers with its own host, since the three servers are one build); `data-lang="fr"`
+  from `page.setExtraHTTPHeaders` ("Sets extra HTTP headers to be sent with every request the
+  page initiates", Playwright's `Page.setExtraHTTPHeaders`), and the relay's own request seen
+  with it; a direct relay call to the admitted origin answers 200 with the language, to the
+  other origin 200 without it (not forwarded), to an undeclared origin 404.
+- **Cheap gates.** The realtime example builds, `check` says no problems, the examples gate
+  is green with it, eslint on the spec and the example, an ad hoc strict `tsc` on the spec,
+  organization, mirror, headers, identity, emoji, knip, exit 0. What CI may still show:
+  whether Chromium lets `setExtraHTTPHeaders` set `accept-language` on a `fetch`; the
+  assertion then names the browser's header, not the relay.

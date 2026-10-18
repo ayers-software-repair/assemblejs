@@ -1875,13 +1875,18 @@ rows are taken in this order; each is a bite with its own proof and its own push
       budgets, `addresses` beside the budgets, asked for by `check`
       (`a-page-with-a-parameter-names-an-address`) and weighed by `perf` (DECISIONS 2026-10-18,
       "R-17 landed")
-- [ ] R-14b and R-15b, THE BROWSER PROOF of the two: a two-server browser spec with an assembly
+- [x] R-14b and R-15b, THE BROWSER PROOF of the two: a two-server browser spec with an assembly
       of the page's own, one from a remote declared `events: true` and one from a remote not
       declared, where a send from the page is heard by the admitted remote's assembly and not
       by the other; and a remote assembly whose browser half calls its own api through
       `api(path)` and shows the answer. Found by the lanes of R-14 and R-15 (2026-10-18): no
       fixture holds page-own, admitted and unadmitted together, and nothing in the showcase
       calls a remote's api yet. Written here, run only by CI's `browser proof`; before R-20
+      WRITTEN 2026-10-18, by a lane: `browser/bus-and-relay.browser.ts`, three servers from the
+      realtime example's one build, its new `/bus` page; seven assertions, each named for what
+      it fails on without the feature. NEVER YET RUN: no browser here; CI's `browser proof` runs
+      it on the push, and a red there is the next fix (DECISIONS 2026-10-18, "R-14b and R-15b
+      written")
 - [x] R-18 The protocol SDK bundled into `@assemblejs/mcp` with its notices, so the agent
       surface is one package to a new project and not 90; what it uses of the SDK and no
       more. Its limit will rise: measured first, and the lead's yes before it lands
