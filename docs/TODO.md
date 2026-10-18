@@ -1726,7 +1726,7 @@ The browser runtime:
       `packages/core/src/compose/placement-cache.ts:58`. PREMISE UNVERIFIED. The same defect as
       workflow composer.3, REPRODUCED by the seat and DONE 2026-10-11 with it (DECISIONS 2026-10-11,
       "a kept answer is its placement's own, and what a remote names is bounded").
-- [ ] Last-value replay cannot be opted into for assembly-sent topics in a built project (workflow
+- [x] Last-value replay cannot be opted into for assembly-sent topics in a built project (workflow
       client.4, major, disputed by one of its refuters). Claimed at
       `packages/cli/src/generate/generate-client-entry.ts:38`. PREMISE UNVERIFIED. READ by the seat
       2026-10-11 AND TRUE as a gap: DESIGN 9 says replay is opt-in per topic, and in a built project
@@ -1736,6 +1736,7 @@ The browser runtime:
       is `events.keep(topic)`; a key in the project's config is the other way. THE OWNER'S
       (DECISIONS 2026-10-11, "the mark that says an assembly is live is written when it is").
       RULED 2026-10-12: `events.keep(topic)` (Phase 7, R-11)
+      DONE 2026-10-18 (Phase 7, R-11)
 - [x] A valid-JSON island that is not an object (null) makes start() throw and aborts mounting of
       every later assembly (workflow client.5, minor). Claimed at
       `packages/core/src/client/start.ts:98`. PREMISE UNVERIFIED. READ at `client/read-island.ts`,
@@ -2202,7 +2203,9 @@ rows are taken in this order; each is a bite with its own proof and its own push
 - [ ] R-10 Each bundle brings its own Lit: a page of Lit assemblies from two servers has
       each server's elements updated by its own copy, whichever loads last. Measure which
       pages then load Lit's runtime before anything mounts (3,936 bytes gzipped)
-- [ ] R-11 `events.keep(topic)`: an assembly says which topic keeps its last message
+- [x] R-11 `events.keep(topic)`: an assembly says which topic keeps its last message
+      DONE 2026-10-18, by a lane: one member on the per-assembly object, backed by the bus's own
+      `keep`; only what is sent after the call is kept (DECISIONS 2026-10-18, "R-11 landed")
 - [ ] R-12 A service can say the thing does not exist, and the page answers 404 with the
       project's not-found page; an address with a trailing slash answers as the one without
 - [ ] R-14 One bus for a page, which a remote server's runtime joins only where the page's

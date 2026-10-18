@@ -18,6 +18,12 @@ describe("the events an assembly holds while rendering on the server", () => {
     expect(serverEvents().last("counted")).toBeUndefined();
   });
 
+  it("keeps nothing", () => {
+    const events = serverEvents();
+    events.keep("counted");
+    expect(events.last("counted")).toBeUndefined();
+  });
+
   it("drops a message sent while rendering, which hydration sends again", () => {
     const message = serverEvents().send("ready", { at: 1 });
     expect(message.topic).toBe("ready");

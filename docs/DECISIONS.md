@@ -7367,3 +7367,20 @@ The handler's return, his "Yes, accept it", built by a lane and read at the sour
 - **Proof** in the lane's worktree: the core's 992 cases, the build's 412, the checks' 298,
   every cheap gate, exports, reference, design, site, pack, unused, exit 0; the `rendering`
   conformance fixture is the seat's, on the merged tip.
+
+## 2026-10-18: R-11 landed
+
+`events.keep(topic)`, his "Yes", built by a lane and read at the source.
+
+- **Expected.** A new member on the per-assembly `Events` object, backed by a `keep` the bus
+  would need.
+- **Found.** The bus had `keep` already (`client/events/bus.ts`, `create-bus.ts`): the change is
+  one member on the object `useEvents()` hands out, which adds the topic to the bus's set, and a
+  `keep` that keeps nothing on the server's events, which implements the same interface. No
+  renderer's hook changed: each returns the core object whole. A message sent before `keep` is
+  not kept, as the bus already did for its own `keep`, pinned now for `events.keep` too: send,
+  keep, `last` is undefined; send again, `last` is that one. DESIGN 9 and the six renderer
+  pages on the site carry the sentence; `llms-full.txt` regenerated. Nothing in the agent
+  instructions describes events, so nothing was added there. The core packs to 96,713 of
+  98,000 before R-6's bytes. Proof: the core's 971 cases, the six JSX and Svelte renderers'
+  types, every cheap gate, exports, reference, design, site, pack, unused, exit 0.

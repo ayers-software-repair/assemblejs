@@ -101,6 +101,10 @@ export function createBus(replay: readonly string[] = []): Bus {
           };
         },
 
+        keep(topic: string) {
+          keeps.add(topic);
+        },
+
         last<P>(topic: string): EventMessage<P> | undefined {
           let latest: EventMessage<unknown> | undefined;
           for (const message of kept.get(topic)?.values() ?? []) {

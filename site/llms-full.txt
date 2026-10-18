@@ -527,7 +527,7 @@ export default function Readout() {
 
 ### `events.last(topic)`
 
-A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes.
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes. A topic the stream does not send is kept once an assembly calls `events.keep(topic)`.
 
 ```
 useEffect(() => {
@@ -695,7 +695,7 @@ const bump = (): void => {
 
 ### `events.last(topic)`
 
-A page can name one stream, and every topic the stream sends keeps its last message. An assembly that mounts after the stream opened reads what it missed with `last`, then subscribes.
+A page can name one stream, and every topic the stream sends keeps its last message. An assembly that mounts after the stream opened reads what it missed with `last`, then subscribes. A topic the stream does not send is kept once an assembly calls `events.keep(topic)`.
 
 ## When it runs in the browser
 
@@ -848,7 +848,7 @@ The prop is scoped to this assembly: `send` stamps the sender and `on` returns i
 
 ### `events.last(topic)`
 
-A page can name one stream, and every topic the stream sends keeps its last message. An assembly that mounts after the stream opened reads what it missed with `last`, then subscribes.
+A page can name one stream, and every topic the stream sends keeps its last message. An assembly that mounts after the stream opened reads what it missed with `last`, then subscribes. A topic the stream does not send is kept once an assembly calls `events.keep(topic)`.
 
 ```
 <script lang="ts">
@@ -1033,7 +1033,7 @@ The component renders inside the same events context it hydrates inside, holding
 
 ### `events.last(topic)`
 
-A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes.
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes. A topic the stream does not send is kept once an assembly calls `events.keep(topic)`.
 
 ## When it runs in the browser
 
@@ -1221,7 +1221,7 @@ The component renders inside the same events context it hydrates inside, holding
 
 ### `events.last(topic)`
 
-A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes.
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An assembly that mounts late reads what it missed with `last`, then subscribes. A topic the stream does not send is kept once an assembly calls `events.keep(topic)`.
 
 ## When it runs in the browser
 
@@ -1427,7 +1427,7 @@ The view renders with the server's events, as it hydrates with the page's: a sub
 
 ### `events.last(topic)`
 
-A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An element that is handed the events late reads what it missed with `last`, then subscribes.
+A page can name one stream, and every topic the stream sends keeps its last message, because the stream opens while assemblies are still loading. An element that is handed the events late reads what it missed with `last`, then subscribes. A topic the stream does not send is kept once an assembly calls `events.keep(topic)`.
 
 ## When it runs in the browser
 

@@ -20,4 +20,10 @@ export interface Events {
    * one: declared to by the page, or sent by the page's stream.
    */
   last<P>(topic: string): EventMessage<P> | undefined;
+  /**
+   * This topic keeps its last message on the page's bus from now on, so an assembly that mounts
+   * later reads it with `last`. One message is kept per topic and address, and only what is sent
+   * after this call. A topic the page's stream sends is kept already.
+   */
+  keep(topic: string): void;
 }

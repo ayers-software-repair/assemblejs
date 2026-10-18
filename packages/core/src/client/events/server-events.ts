@@ -9,7 +9,7 @@ import type { Events } from "./events.js";
  *
  * Nothing can be heard: a subscription is accepted and never called, because the code that
  * subscribes (an effect) does not run during a server render anyway. Nothing has been sent, so
- * `last` is always undefined. A message sent here reaches no one and is dropped, not refused:
+ * `last` is always undefined and `keep` has nothing to keep. A message sent here reaches no one and is dropped, not refused:
  * code that sends while a component initialises (a Svelte component's top-level script) runs
  * again when the component hydrates, and that is the send the page receives.
  */
@@ -24,5 +24,6 @@ export function serverEvents(): Events {
     }),
     on: () => () => undefined,
     last: () => undefined,
+    keep: () => undefined,
   };
 }

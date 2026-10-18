@@ -900,6 +900,7 @@ Events are typed, page-scoped and owned by the assembly:
 const events = useEvents(); // scoped to this assembly
 events.send("cart:add", { sku }); // sender identity stamped by the runtime
 const off = events.on("cart:add", handler); // released when the page unmounts its assemblies
+events.keep("cart:add"); // later sends on this topic are kept for `last`
 ```
 
 - Subscriptions are held per assembly by the runtime, which releases **exactly the references
@@ -911,7 +912,8 @@ const off = events.on("cart:add", handler); // released when the page unmounts i
   missed. There is no unbounded history that nobody reads, and no buffer that is filled and
   never replayed. Every topic the page's stream sends opts in, because the stream opens while
   assemblies are still loading. What is kept is one message per topic and address, and `last`
-  answers an assembly only a message it would have been delivered.
+  answers an assembly only a message it would have been delivered. An assembly opts a topic in
+  with `keep`, and only what is sent after that is kept.
 - Every event carries the sending assembly's id, stamped by the runtime, not supplied by the
   sender.
 - The public surface is this typed object. Raw event dispatch is never the API.
