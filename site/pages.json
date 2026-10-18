@@ -158,5 +158,12 @@
       "title": "Support",
       "section": "support"
     }
-  ]
+  ],
+  "social": {
+    "image": "social.png",
+    "alt": "AssembleJS composition mark",
+    "type": "image/png",
+    "width": 512,
+    "height": 512
+  }
 }

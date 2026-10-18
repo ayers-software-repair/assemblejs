@@ -180,12 +180,26 @@ jobs:
         run: sed -i 's|="/assemblejs/|="/${{ steps.prefix.outputs.path }}/|g' site/404.html
 
       - name: Build canonical metadata and sitemap
-        run: node _platform/sitekit/build-metadata.mjs site "${{ steps.prefix.outputs.canonical }}"
+        env:
+          SITE_CANONICAL: ${{ steps.prefix.outputs.canonical }}
+          SITE_PREFIX: ${{ steps.prefix.outputs.path }}
+        run: |
+          flags=()
+          if [ "$SITE_PREFIX" = "assemblejs/next" ]; then flags+=(--noindex); fi
+          node _platform/sitekit/build-metadata.mjs site "$SITE_CANONICAL" "${flags[@]}"
 
       - uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: arn:aws:iam::993011736775:role/gh-deploy-assemblejs-site
           aws-region: us-east-1
+
+      # Crawlers read robots.txt at the domain root, including while next is the only channel.
+      # The stable sitemap is deliberately kept at its final address until the stable release.
+      - name: Publish root search discovery (5 min cache)
+        run: |
+          aws s3 cp site/robots.txt "s3://$BUCKET/assemblejs/robots.txt" \
+            --content-type "text/plain; charset=utf-8" \
+            --cache-control "public, max-age=300" --only-show-errors
 
       - name: Sync pages, sitemap and browser code (5 min cache)
         run: |

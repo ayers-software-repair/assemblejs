@@ -40,7 +40,12 @@ The first publication still requires the owner's npm package/bootstrap and trust
 setup. A site deployment alone does not establish that npm publication is configured or complete.
 
 Relative navigation works at both prefixes. Deployment generates canonical and Open Graph
-addresses and `sitemap.xml` for `https://assemblejs.com/` or `https://assemblejs.com/next/`.
+addresses and `sitemap.xml` for `https://assemblejs.com/`. Candidate pages at
+`https://assemblejs.com/next/` carry `noindex, follow` and are excluded from the sitemap.
+The shared metadata build emits `robots.txt`, published at the domain root by either channel,
+pointing to the final stable sitemap. That sitemap is supplied by the stable deployment.
+Social previews use `site/social.png`, the existing composition mark rasterized at 512 by 512
+with `rsvg-convert -w 512 -h 512 site/mark.svg -o site/social.png`; update it with the source mark.
 The same files also serve the company subpaths. Domain activation remains a launch operation;
 a prepared site does not itself enable the domain. **Every link into the next channel
 carries its trailing slash**: the CloudFront prefix router redirects a bare FIRST segment only,

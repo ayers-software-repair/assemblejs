@@ -13,3 +13,7 @@ coverage/
 docs/dossiers/
 .claude/worktrees/
 test-results/
+
+# Generated public search discovery.
+/site/sitemap.xml
+/site/robots.txt
