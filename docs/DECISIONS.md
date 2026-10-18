@@ -7551,3 +7551,42 @@ taken) and merged by hand over R-6 and R-14.
   description does not yet name `(no route)`.
 - **Measure.** The core packs over its limit with R-14 and this together; the measure is in
   the ask to the lead and the raise he grants is recorded with it.
+
+## 2026-10-18: R-10 landed
+
+Each bundle brings its own Lit, his "Yes, isolate them", built by a lane on Opus in two passes,
+the seat refusing the first's limit.
+
+- **The defect, in Lit's own code.** `lit-element` reads `globalThis.litElementHydrateSupport`
+  once, at load (`lit-element.js:200`); `@lit-labs/ssr-client`'s support sets that global to a
+  closure over its own bundle's `lit-html` (`lit-element-hydrate-support.js:6-10`) and patches
+  `update` to call it. Every server's entry set the hook; every bundle's element base, arriving
+  later with its first Lit assembly, read whichever was set last, and was patched with another
+  bundle's `lit-html`.
+- **The first pass, and why it was refused.** Setting the hook and then importing `lit` from
+  the support module, in one evaluation: ordered, measured on every example, but only while
+  the hook and the element base share a chunk; esbuild runs a shared chunk first across a
+  split (its documented "known ordering issue with `import` statements across code splitting
+  chunks", issue 399, open), so a project whose non-Lit module imports `lit` had its base read
+  the hook unset and lose hydration altogether, which worked before. And it moved Lit's
+  runtime into what every page loads before anything mounts, 2,644 bytes gzipped more.
+- **Built.** `build/src/build/lit-hook-plugin.ts`: an esbuild `onLoad` on Lit's element base
+  (`lit-element/lit-element.js`, development or not), added to the browser build when any
+  assembly is Lit's, that puts two lines first in the base's own body: an import of
+  `@assemblejs/renderer-lit/hydration-hook` resolved from the project (not `resolveDir` on the
+  module, which would have moved the base's own imports out from under pnpm's strict layout)
+  and `globalThis.litElementHydrateSupport = hydrationHook`, so the value read is this
+  bundle's however chunks split and whenever the base loads; a Lit whose base no longer reads
+  the hook that way is refused by file, not built without it. The renderer's support module is
+  the hook by name (a bare import is dropped: the package's `sideEffects` names only `dist`)
+  and no longer imports `lit`; the runtime stays with the first Lit assembly, and the page's
+  script grows by 32 bytes (frameworks: 22,462 to 22,494; the shop the same).
+- **Proof.** A build test that bundles a fixture with a Lit assembly and a React view that
+  imports `lit`, walks every output file's static imports from every start, and holds every
+  read of the hook to come straight after the bundle's set: red with the plugin left out
+  ("expected undefined to be 'set by the bundle'"), green with it; a second case that a base
+  without the read string is refused. The renderer's 34 cases, the build's 417, every cheap
+  gate, reference, exports, unused, publint on both packages, the examples gate, exit 0. The
+  browser spec on the market's product page, each server's elements hydrated by its own copy
+  (`_$litPart$` prototypes equal to its own view's envelope's and distinct across the three
+  servers), first runs in CI. renderer-lit packs to 9,090 of 9,200; build 54,839 of 56,700.

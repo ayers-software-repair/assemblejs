@@ -205,8 +205,10 @@ export default (props: AssemblyProps) =&gt; html`&lt;lit-counter .events=${props
           The build imports <code>@assemblejs/renderer-lit/hydration-support</code> first in the
           page's one script, before the runtime and before any assembly's own module, because Lit's
           support for hydrating elements a server rendered must be installed before Lit's element
-          base loads. Nothing to do: the renderer's client entry imports it first as well, for a
-          page assembled some other way.
+          base loads. The build also has Lit's element base set its own server's support just
+          before it reads it, so on a page with Lit assemblies from several servers each server's
+          elements hydrate with that server's own copy of Lit. Nothing to do: the renderer's client
+          entry imports the support first as well, for a page assembled some other way.
         </dd>
       </div>
       <div class="item">

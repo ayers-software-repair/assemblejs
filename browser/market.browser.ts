@@ -104,6 +104,39 @@ test("a product page is twelve assemblies from three servers, each hydrated by i
   // The one the browser asks for after the page has loaded, and no fallback anywhere.
   await expect(envelope(page, "recently-viewed")).not.toHaveAttribute("data-defer");
   await expect(page.locator("assembly-root[data-failed]")).toHaveCount(0);
+  // Each server's Lit hydrates that server's elements: Lit leaves its part on what it hydrated,
+  // an instance of its own copy's class, so an element's shadow root and its view's envelope
+  // hold parts of one copy, and the three servers' copies are three.
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const copies: unknown[] = [];
+        const copyOf = (node: Node | null | undefined): number => {
+          const part = (node as { _$litPart$?: object } | null | undefined)?._$litPart$;
+          if (part === undefined) return -1;
+          const copy = Object.getPrototypeOf(part) as unknown;
+          if (!copies.includes(copy)) copies.push(copy);
+          return copies.indexOf(copy);
+        };
+        return [
+          ["basket-count", "basket-count"],
+          ["roast-meter", "roast-meter"],
+          ["rating", "star-rating"],
+        ].map(([name, tag]) => {
+          const envelope = document.querySelector(`assembly-root[data-name="${name ?? ""}"]`);
+          const view = envelope?.shadowRoot ?? envelope;
+          return {
+            view: copyOf(view),
+            element: copyOf(view?.querySelector(tag ?? "")?.shadowRoot),
+          };
+        });
+      }),
+    )
+    .toEqual([
+      { view: 0, element: 0 },
+      { view: 1, element: 1 },
+      { view: 2, element: 2 },
+    ]);
   expect(problems).toEqual([]);
 });
 

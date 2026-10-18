@@ -3,8 +3,14 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  // The hydration support is an entry of its own, so a build can load it before anything else.
-  entry: ["src/index.ts", "src/client/index.ts", "src/client/hydration-support.ts"],
+  // The hydration support is an entry of its own, so a build can load it before anything else,
+  // and so is its hook, which a build has Lit's element base import.
+  entry: [
+    "src/index.ts",
+    "src/client/index.ts",
+    "src/client/hydration-support.ts",
+    "src/client/hydration-hook.ts",
+  ],
   format: ["esm"],
   target: "node22",
   dts: { compilerOptions: { ignoreDeprecations: "6.0" } },

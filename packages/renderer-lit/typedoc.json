@@ -1,4 +1,9 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["src/index.ts", "src/client/index.ts", "src/client/hydration-support.ts"]
+  "entryPoints": [
+    "src/index.ts",
+    "src/client/index.ts",
+    "src/client/hydration-support.ts",
+    "src/client/hydration-hook.ts"
+  ]
 }

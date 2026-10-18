@@ -738,6 +738,14 @@ export type MountHandle = {
   template written with Lit's own `html`, and a plain value, with `lit-part` comments, and
   leaves them off only a template written with the server-only `html` of `@lit-labs/ssr`,
   which never hydrates and so is never in danger; `check` refuses that one too, by name.
+- **Each server's Lit elements hydrate with that server's own Lit.** Lit's support for
+  hydration is one hook on the page, which its element base reads once, as it loads, so on a
+  page with Lit assemblies from several servers every server's elements would be adapted by
+  whichever server set the hook last. So the build has each server's copy of the element base
+  set that server's hook as the first thing its own code does, in the same module that reads
+  it, with nothing between: the value read is that server's however the bundler splits its
+  chunks and whichever server set the hook last. A version of Lit whose element base no longer
+  reads the hook that way fails the build, by file.
 - **No try/catch inside a renderer.** A failed render throws, the composer catches it, and the
   placement falls back. A renderer that returns its own error `<div>` produces markup that
   passes every check downstream.

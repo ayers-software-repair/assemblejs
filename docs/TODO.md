@@ -1664,7 +1664,7 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       twice. DONE 2026-10-12: the server marks each element a Lit view holds `defer-hydration`,
       Lit's own mark, and it hydrates when its view does (DECISIONS 2026-10-12, "a Lit element
       waits for its view")
-- [ ] FOUND BY THE SHOWCASE, not fixed: Lit's hydration support is one hook on the page, and on
+- [x] FOUND BY THE SHOWCASE, not fixed: Lit's hydration support is one hook on the page, and on
       a page with Lit assemblies from two servers the last bundle to load owns it, so the other
       server's elements are updated by a copy of Lit that is not theirs
       (`packages/renderer-lit/src/client/hydration-support.ts`; the stack in DECISIONS
@@ -1682,6 +1682,7 @@ Refuted by their own skeptics and not rows: 12, listed with the reasons in the e
       it imports before it runs are 22,462 bytes, 9,317 gzipped
       (DECISIONS 2026-10-12, "the seat's advice on a handler's return tried, and on Lit's isolation weighed")
       RULED 2026-10-12: each bundle brings its own (Phase 7, R-10)
+      RULED 2026-10-12 "Yes, isolate them"; DONE 2026-10-18 (Phase 7, R-10)
 - [x] FOUND BY THE SHOWCASE: a Lit view that renders nothing fell back when placed from another
       server. Lit's server render writes `<?>` for an empty template, and the reader of a
       remote's answer refused it. DONE 2026-10-12: `<?` is read as the comment the browser
@@ -1815,9 +1816,13 @@ rows are taken in this order; each is a bite with its own proof and its own push
       browser runtime's word; the starter, ten examples and the html example are the import and
       one call, two-frameworks adding its devtools; the three refusals print their sentences and
       exit 1, each watched red (DECISIONS 2026-10-18, "R-9 landed")
-- [ ] R-10 Each bundle brings its own Lit: a page of Lit assemblies from two servers has
+- [x] R-10 Each bundle brings its own Lit: a page of Lit assemblies from two servers has
       each server's elements updated by its own copy, whichever loads last. Measure which
       pages then load Lit's runtime before anything mounts (3,936 bytes gzipped)
+      DONE 2026-10-18, by a lane on Opus: the build has each bundle's Lit element base set its own
+      hook as the first statement of its own body, before the one read, however chunks split;
+      the page's script grows by 32 bytes and Lit's runtime stays with the first Lit assembly
+      (DECISIONS 2026-10-18, "R-10 landed")
 - [x] R-11 `events.keep(topic)`: an assembly says which topic keeps its last message
       DONE 2026-10-18, by a lane: one member on the per-assembly object, backed by the bus's own
       `keep`; only what is sent after the call is kept (DECISIONS 2026-10-18, "R-11 landed")

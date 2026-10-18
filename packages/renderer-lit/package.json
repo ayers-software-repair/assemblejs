@@ -43,6 +43,11 @@
       "browser": "./dist/client/hydration-support.js",
       "default": "./dist/client/hydration-support.js"
     },
+    "./hydration-hook": {
+      "types": "./dist/client/hydration-hook.d.ts",
+      "browser": "./dist/client/hydration-hook.js",
+      "default": "./dist/client/hydration-hook.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

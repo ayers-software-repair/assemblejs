@@ -8,6 +8,7 @@ import { generateClientEntry } from "../generate/generate-client-entry.js";
 import { generateClientModule } from "../generate/generate-client-module.js";
 import type { Io } from "../io/io.js";
 import type { Compilers } from "./compilers.js";
+import { litHookPlugin } from "./lit-hook-plugin.js";
 import { RENDERER_PACKAGES } from "./renderer-packages.js";
 import { sharedOptions } from "./shared-options.js";
 
@@ -42,14 +43,17 @@ export async function bundleClient(
   io.write(join(generated, "client.ts"), generateClientEntry(assemblies, setups));
 
   const outdir = join(output, "client");
+  const shared = sharedOptions({
+    root,
+    side: "client",
+    assemblies,
+    compilers,
+    ...(onCss === undefined ? {} : { onCss }),
+  });
+  const lit = assemblies.some((assembly) => assembly.renderer === "lit");
   const result = await build({
-    ...sharedOptions({
-      root,
-      side: "client",
-      assemblies,
-      compilers,
-      ...(onCss === undefined ? {} : { onCss }),
-    }),
+    ...shared,
+    plugins: [...(shared.plugins ?? []), ...(lit ? [litHookPlugin(root)] : [])],
     entryPoints: [join(generated, "client.ts")],
     platform: "browser",
     format: "esm",
