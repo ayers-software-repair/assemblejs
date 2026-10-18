@@ -6,6 +6,6 @@ An assembly is a piece of a page written in one UI framework: whole, addressable
 on its own. A page is a route that places assemblies. Some of them live in this project and some
 live on other servers, and the composer treats both identically.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

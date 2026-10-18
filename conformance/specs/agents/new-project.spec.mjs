@@ -23,7 +23,7 @@ import { agentIn, calling, named, resourceOf } from "../agent.mjs";
 import { originOf, rootOf, started } from "../http.mjs";
 
 const root = rootOf("written");
-const { read, told, name, installed, startedFrom, run } = agentIn(root);
+const { read, told, name, installed, startedFrom, run, hello: helloAssembly, docs } = agentIn(root);
 
 // How each client starts a server, by its own documentation and, for the directory Claude Code
 // starts one in, by what was observed (DECISIONS 2026-10-10).
@@ -43,6 +43,10 @@ test("the starter writes the instructions and the file that brings them to Claud
   assert.match(told, /\n<!-- \/assemblejs:instructions -->\n$/);
   assert.equal(name, "assemblejs");
   assert.equal(read("CLAUDE.md"), "@AGENTS.md\n");
+  assert.ok(
+    told.includes(`at ${docs()}llms.txt, and its full text at ${docs()}llms-full.txt.`),
+    "AGENTS.md names the documentation a model can read, for the channel that wrote it",
+  );
 });
 
 test("the project installs the server it registers, beside the command line", () => {
@@ -121,10 +125,7 @@ test("an agent adds an assembly, places it and composes the page, through that s
       ["hello", "greeting"],
     );
     assert.deepEqual(named(composed.result.html), [
-      [
-        "hello",
-        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
-      ],
+      ["hello", helloAssembly()],
       ["greeting", "<p>greeting</p>"],
     ]);
 
@@ -246,10 +247,7 @@ test("a link that leads out of the project is a finding, and is never read", asy
 test("the page the agent composed is the page the project's build serves", async () => {
   // The server the harness started was built from the project as the starter wrote it.
   assert.deepEqual(named(await (await fetch(new URL("/", originOf("written")))).text()), [
-    [
-      "hello",
-      '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
-    ],
+    ["hello", helloAssembly()],
   ]);
   const built = run("build");
   assert.equal(built.status, 0, built.stderr);
@@ -257,10 +255,7 @@ test("the page the agent composed is the page the project's build serves", async
   try {
     assert.ok(server.origin, server.output());
     assert.deepEqual(named(await (await fetch(new URL("/", server.origin))).text()), [
-      [
-        "hello",
-        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
-      ],
+      ["hello", helloAssembly()],
       ["greeting", "<p>greeting</p>"],
     ]);
 

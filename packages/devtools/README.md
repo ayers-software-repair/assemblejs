@@ -14,6 +14,6 @@ The server mounts devtools only in development; in production it mounts nothing 
 project can hand them over unconditionally. Nothing under the devtools prefix accepts a write: a
 server with a route there that answers anything but GET or HEAD refuses to boot.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

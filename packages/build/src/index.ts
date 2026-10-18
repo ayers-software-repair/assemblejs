@@ -3,6 +3,7 @@
 /** @module @assemblejs/build */
 export * from "./io/index.js";
 export * from "./root/index.js";
+export * from "./package/index.js";
 export * from "./discovery/index.js";
 export * from "./styles/index.js";
 export * from "./generate/index.js";

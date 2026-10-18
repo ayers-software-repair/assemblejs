@@ -7678,3 +7678,34 @@ report to the owner.
 - **Proof on the merged tree before the push.** The core's 1,084 cases, the checks' 305, the
   types and builds of the two, and the four conformance fixtures, trust 56, rendering 99,
   remote 27, agents 19, every one exit 0.
+
+## 2026-10-18: R-19 landed
+
+The address a new project is sent to, his "I take your recommendations", built by a lane and
+read at the source, with one deviation of the lane's the seat took.
+
+- **One place.** `build/src/package/docs-address.ts`: `PRODUCT = "https://assemblejs.com/"`
+  is the one string; `docsAddress(version)` answers `PRODUCT + "next/"` when the version has a
+  prerelease part (semver 2.0.0, item 9: a hyphen after the patch) and the product's own
+  address otherwise. The deploy's canonicals (`deploy-site.yml:115-116`) are those two; the
+  domain answers the day the owner flips its DNS, which is before any channel's first publish
+  (AJ.16, his). No `www`.
+- **Where it reaches.** The starter's hello page links `<address>docs/tutorial.html` from the
+  command line's own version; the agent instructions open with "The documentation a model can
+  read is at <address>llms.txt, and its full text at llms-full.txt", from the checks' own
+  version; every package's and the root's `homepage`, and the READMEs that named the staging
+  host (`ayers.repair/assemblejs/`), say `https://assemblejs.com/`. Five conformance literals
+  now use the rule for the version under test.
+- **The deviation, taken.** The entry of 2026-10 that put `ownVersion` in the command line's
+  `commands/` is superseded: the "instructions are current" finding runs inside `check`, which
+  cannot import the command line, and threading the address in would have changed
+  `checkProject`'s public signature and about ninety call sites. So `ownManifest`, `ownVersion`
+  and `docsAddress` live in `@assemblejs/build`, which `cli`, `check` and `mcp` share, and each
+  reads its own version; the three cannot disagree, since the fixed group holds one version.
+  The two are no longer exports of `@assemblejs/cli`; nothing used them from there.
+- **Proof.** Watched red by a `docsAddress` that answered the product's address for every
+  version: the build's, the command line's and the checks' cases red, and four of the agents'
+  conformance specs; restored, the build's 426, the command line's 137, the checks' 306, the
+  agent surface's 209, every cheap gate, exports, reference, unused, one-version, pack (build
+  55,610 of 56,700, check 42,459 of 45,000, cli 20,208 of 22,200), and `conformance agents`
+  19 of 19, exit 0.

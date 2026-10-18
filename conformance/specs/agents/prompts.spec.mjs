@@ -137,12 +137,7 @@ test("an agent follows the prompt for a page to a page that composes, and the bu
       composed.result.diagnostics.map((diagnostic) => diagnostic.name),
       ["hello"],
     );
-    assert.deepEqual(named(composed.result.html), [
-      [
-        "hello",
-        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
-      ],
-    ]);
+    assert.deepEqual(named(composed.result.html), [["hello", agent.hello()]]);
     assert.match(composed.result.html, /<title>about<\/title>/);
 
     assert.deepEqual(await call("check"), { ok: true, result: { findings: [] }, problems: [] });
@@ -157,12 +152,7 @@ test("an agent follows the prompt for a page to a page that composes, and the bu
     assert.ok(server.origin, server.output());
     const answer = await fetch(new URL("/about", server.origin));
     assert.equal(answer.status, 200);
-    assert.deepEqual(named(await answer.text()), [
-      [
-        "hello",
-        '<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>',
-      ],
-    ]);
+    assert.deepEqual(named(await answer.text()), [["hello", agent.hello()]]);
   } finally {
     await server.stop();
   }

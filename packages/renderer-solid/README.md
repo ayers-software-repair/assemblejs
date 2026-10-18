@@ -11,6 +11,6 @@ own Babel preset, for the server and for hydration, by the compiler this package
 Solid is a peer dependency, so installing this does not install a framework you were not going
 to use.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

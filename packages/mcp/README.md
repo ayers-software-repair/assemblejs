@@ -29,6 +29,6 @@ Any other client starts it over stdio with
 
 from the project's root, or with the root as its one argument from anywhere else.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

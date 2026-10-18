@@ -12,6 +12,6 @@ You do not install this yourself: `@assemblejs/cli` brings it, and its verbs are
     assemblejs build
     assemblejs dev
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

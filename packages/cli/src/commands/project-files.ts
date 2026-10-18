@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { docsAddress, ownVersion } from "@assemblejs/build";
 import { agentFiles } from "@assemblejs/check";
 import { MCP_REGISTRATIONS } from "@assemblejs/check";
 import { COMPONENTS } from "./components.js";
 import { ownPin } from "./own-pin.js";
-import { ownVersion } from "./own-version.js";
 import { pageDocument } from "./page-document.js";
 import { PNPM_SETTINGS } from "./pnpm-settings.js";
 import { TOKENS } from "./tokens.js";
@@ -22,7 +22,8 @@ import { TOKENS } from "./tokens.js";
  * dependencies, without which pnpm fails its first install.
  */
 export function projectFiles(name: string, manager = "npm"): Readonly<Record<string, string>> {
-  const range = `^${ownVersion(import.meta.url)}`;
+  const version = ownVersion(import.meta.url);
+  const range = `^${version}`;
   const tool = (pin: string): string => `^${ownPin(import.meta.url, pin)}`;
   // The README names each registration the project is written with, as the instructions do.
   const registered = MCP_REGISTRATIONS.map((registration) => `\`${registration.path}\``);
@@ -63,7 +64,7 @@ await serve(project);
 
     "src/pages/home/home.html": pageDocument(name, ["hello"]),
 
-    "src/assemblies/hello/hello.html": `<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="https://www.assemblejs.com/next/docs/tutorial.html">Read the guide</a></section>\n`,
+    "src/assemblies/hello/hello.html": `<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="${docsAddress(version)}docs/tutorial.html">Read the guide</a></section>\n`,
 
     "src/tokens.css": TOKENS,
 

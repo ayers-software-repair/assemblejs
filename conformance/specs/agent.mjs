@@ -50,7 +50,17 @@ export const agentIn = (root) => {
   /** The command line the project installed, run in the project. */
   const run = (...args) =>
     spawnSync("npx", ["assemblejs", ...args], { cwd: root, encoding: "utf8" });
-  return { read, told, name, installed, startedFrom, started, run };
+  /**
+   * The hello assembly the starter wrote: its guide link is the docs of the channel the command
+   * line that wrote it was published on, `/next/` for a prerelease, written here on its own.
+   */
+  const docs = () =>
+    installed("@assemblejs/cli/package.json").version.includes("-")
+      ? "https://assemblejs.com/next/"
+      : "https://assemblejs.com/";
+  const hello = () =>
+    `<section class="notice"><p>Hello from AssembleJS</p><a class="button" href="${docs()}docs/tutorial.html">Read the guide</a></section>`;
+  return { read, told, name, installed, startedFrom, started, run, docs, hello };
 };
 
 /** A resource's answer, read as the structure it is. */

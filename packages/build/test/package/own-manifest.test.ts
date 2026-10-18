@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { ownManifest } from "@assemblejs/cli";
+import { ownManifest } from "@assemblejs/build";
 
 const made: string[] = [];
 afterAll(() => {

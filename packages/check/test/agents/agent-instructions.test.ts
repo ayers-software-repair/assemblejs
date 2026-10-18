@@ -1,5 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { RENDERERS } from "@assemblejs/build";
 import { describe, expect, it } from "vitest";
 import {
@@ -18,6 +20,20 @@ describe("what an agent that opens a project is told", () => {
   it("stands between the two comments check finds it by", () => {
     expect(told.startsWith(INSTRUCTION_MARKERS.begin)).toBe(true);
     expect(told.endsWith(INSTRUCTION_MARKERS.end)).toBe(true);
+  });
+
+  it("opens with where a model reads the documentation of the channel that wrote it", () => {
+    const { version } = JSON.parse(
+      readFileSync(fileURLToPath(new URL("../../package.json", import.meta.url)), "utf8"),
+    ) as { version: string };
+    const docs = version.includes("-") ? "https://assemblejs.com/next/" : "https://assemblejs.com/";
+    expect(
+      visible
+        .trimStart()
+        .startsWith(
+          `The documentation a model can read is at ${docs}llms.txt, and its full text at ${docs}llms-full.txt.`,
+        ),
+    ).toBe(true);
   });
 
   it("says what a page, an assembly, a placement, a service and an api are", () => {

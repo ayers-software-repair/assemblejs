@@ -719,12 +719,13 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       two addresses. Self-verified: 16 mutations of the generator against its own self-test,
       and the gate watched red on three known-bad sites (owner, 2026-10-09, PLAN 4.1;
       DECISIONS 2026-10-10, A-02)
-- [ ] The instructions `new` writes do not name the documentation a model can read. Add the
+- [x] The instructions `new` writes do not name the documentation a model can read. Add the
       address of `llms.txt` to them once it is settled which the project's version should be
       sent to, the channel's `/assemblejs/next/` or the product's `/assemblejs/`, and that
       address answers (found 2026-10-10 writing A-02; the product's address deploys from
       `main`, which has no site yet)
       RULED 2026-10-12, by "I take your recommendations" (Phase 7, R-19)
+      DONE 2026-10-18 (Phase 7, R-19)
 - [x] A-04 built-in components and best practices: the design memo and the owner's answer
       first, then the starter design system, the accessible components and the `check` rules,
       each rule watched red (owner, 2026-10-09, PLAN 4.1). BUILT in P5-6a to P5-6g, the last
@@ -1112,12 +1113,13 @@ a spec watched red first, or struck with its reason.
       project's own directories: THE OWNER'S (found 2026-10-12)
       RULED 2026-10-12 "Remove it from generated files"; DONE 2026-10-18 (Phase 7, R-7)
       RULED 2026-10-12: the line comes off generated files (Phase 7, R-7)
-- [ ] The starter's hello page links `https://www.assemblejs.com/next/docs/tutorial.html`
+- [x] The starter's hello page links `https://www.assemblejs.com/next/docs/tutorial.html`
       (`commands/project-files.ts:51`), which answers 404 until the owner launches the domain, and
       says `/next/` whatever the channel; five conformance assertions pin the address. Each
       package's `homepage` is on a host that does not resolve today. The owner's to settle: what the
       link names
       RULED 2026-10-12, by "I take your recommendations" (Phase 7, R-19)
+      DONE 2026-10-18 (Phase 7, R-19)
 - [ ] `perf` weighs the scripts a document links and nothing they import
       (`perf/measure-page.ts:62-77`): 576 B for a page whose one script statically imports two
       runtime chunks, 20.7 kB, before anything mounts, and whose React assembly then fetches 218 kB.
@@ -1875,10 +1877,14 @@ rows are taken in this order; each is a bite with its own proof and its own push
 - [ ] R-18 The protocol SDK bundled into `@assemblejs/mcp` with its notices, so the agent
       surface is one package to a new project and not 90; what it uses of the SDK and no
       more. Its limit will rise: measured first, and the lead's yes before it lands
-- [ ] R-19 The address a new project is sent to: the starter's guide link and the agent
+- [x] R-19 The address a new project is sent to: the starter's guide link and the agent
       instructions' `llms.txt` name the docs of the channel the project was made from,
       `/next/` for a prerelease and the product's own for a stable, on an address that
       answers the day that channel first publishes
+      DONE 2026-10-18, by a lane: one constant, `https://assemblejs.com/`, in `build`'s
+      `docsAddress(version)`, `/next/` for a prerelease version; the hello link, the
+      instructions' `llms.txt` line, every `homepage` and README (DECISIONS 2026-10-18, "R-19
+      landed")
 - [ ] R-20 The first prerelease is cut when Phase 7 is done and its last run is green: the
       seat says so, the owner adds the token and cuts the tag
       (R-18 to R-20 by his "I take your recommendations", 2026-10-12, the seat's

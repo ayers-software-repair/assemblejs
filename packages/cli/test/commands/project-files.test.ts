@@ -100,6 +100,41 @@ describe("the smallest project that runs", () => {
     expect(files["src/assemblies/hello/hello.html"]).toContain('<a class="button" href=');
   });
 
+  it("sends the author to the guide of the channel that made the project", () => {
+    const { version } = JSON.parse(
+      readFileSync(fileURLToPath(new URL("../../package.json", import.meta.url)), "utf8"),
+    ) as { version: string };
+    const channel = version.includes("-")
+      ? "https://assemblejs.com/next/"
+      : "https://assemblejs.com/";
+    expect(files["src/assemblies/hello/hello.html"]).toContain(
+      `href="${channel}docs/tutorial.html">Read the guide</a>`,
+    );
+  });
+
+  // The build flattens src/<dir>/ into dist/; the version and channel the starter is written with
+  // are read from the package beside it in either layout.
+  it("is written with the package's own version and channel from the built command line", () => {
+    const dist = fileURLToPath(new URL("../../dist/index.js", import.meta.url));
+    const script = `import { projectFiles } from ${JSON.stringify(dist)};
+const files = projectFiles("probe");
+const manifest = JSON.parse(files["package.json"]);
+console.log(JSON.stringify({ cli: manifest.devDependencies["@assemblejs/cli"], hello: files["src/assemblies/hello/hello.html"] }));`;
+    const out = execFileSync(process.execPath, ["--input-type=module", "-e", script], {
+      encoding: "utf8",
+    });
+    const { cli, hello } = JSON.parse(out) as { cli: string; hello: string };
+    const version = cli.slice(1);
+    const own = JSON.parse(
+      readFileSync(fileURLToPath(new URL("../../package.json", import.meta.url)), "utf8"),
+    ) as { version: string };
+    expect(version).toBe(own.version);
+    const channel = version.includes("-")
+      ? "https://assemblejs.com/next/"
+      : "https://assemblejs.com/";
+    expect(hello).toContain(`href="${channel}docs/tutorial.html"`);
+  });
+
   it("ignores the generated module rather than committing it", () => {
     expect(files[".gitignore"]).toContain(".assemblejs/");
   });

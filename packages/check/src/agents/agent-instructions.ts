@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { RENDERERS } from "@assemblejs/build";
+import { RENDERERS, docsAddress, ownVersion } from "@assemblejs/build";
 import { RULES } from "../rules/rules.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { INSTRUCTION_MARKERS } from "./instruction-markers.js";
@@ -17,13 +17,17 @@ const BRACKETED = /(?:[\w./-]*<[^<>\n]+>)+[\w./-]*|@[\w-]+\/[\w.-]+/g;
  * the framework's own words, how to ask it and change it, and every rule its code must satisfy,
  * each from the one list the agent surface explains.
  *
- * Written between the two comments `check` finds it by, and the same for every project, so it
+ * It opens with where the documentation is for the channel this version was published on. It is
+ * written between the two comments `check` finds it by, and the same for every project, so it
  * is current or it is not. Every `@` in it stands in a code span, since Claude Code reads one
  * written anywhere else in an instruction file as a file to import, and so does every `<`,
  * since the file is Markdown to the people who read it.
  */
 export function agentInstructions(): string {
+  const docs = docsAddress(ownVersion(import.meta.url));
   return `${INSTRUCTION_MARKERS.begin}
+
+The documentation a model can read is at ${docs}llms.txt, and its full text at ${docs}llms-full.txt.
 
 ## What this project is
 

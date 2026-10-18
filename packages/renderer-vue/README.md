@@ -10,6 +10,6 @@ the server and the browser, its `<style scoped>` scoped as Vue scopes it.
 Vue is a peer dependency, so installing this does not install a framework you were not going
 to use.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

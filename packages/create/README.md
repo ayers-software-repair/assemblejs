@@ -13,6 +13,6 @@ For an AI agent that opens the project it writes an `AGENTS.md`, which says what
 and the rules its code must satisfy, and registers the project's own MCP server.
 Add a second framework with `npx assemblejs add assembly cart --renderer svelte`.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

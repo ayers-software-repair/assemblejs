@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { resolve } from "node:path";
 import { buildProject } from "@assemblejs/build";
+import { ownVersion } from "@assemblejs/build";
 import { runDev } from "@assemblejs/build";
 import { RENDERERS } from "@assemblejs/build";
 import type { Io } from "@assemblejs/build";
@@ -10,7 +11,6 @@ import { runPerf } from "@assemblejs/check";
 import { addAgents } from "../commands/add-agents.js";
 import { addAssembly } from "../commands/add-assembly.js";
 import { newProject } from "../commands/new-project.js";
-import { ownVersion } from "../commands/own-version.js";
 import { runDeploy } from "../deploy/run-deploy.js";
 import { readArguments } from "./read-arguments.js";
 

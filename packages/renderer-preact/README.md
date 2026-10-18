@@ -11,6 +11,6 @@ tell you what a page is made of.
 Preact is a peer dependency, so installing this does not install a framework you were not going
 to use.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

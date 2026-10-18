@@ -33,6 +33,6 @@ never loads the other four, and each template compiles once. An error names the 
 Pug's escaping leaves `'` as it is: write an attribute with Pug's own syntax, `a(title=data.name)`,
 rather than inside a single-quoted attribute in raw HTML.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

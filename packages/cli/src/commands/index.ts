@@ -1,7 +1,5 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-export { ownManifest } from "./own-manifest.js";
-export { ownVersion } from "./own-version.js";
 export { ownPin } from "./own-pin.js";
 export { pageDocument } from "./page-document.js";
 export { TOKENS } from "./tokens.js";

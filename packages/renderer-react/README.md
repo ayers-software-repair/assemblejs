@@ -11,6 +11,6 @@ tell you what a page is made of.
 React is a peer dependency, so installing this does not install a framework you were not going
 to use, and a React team never pays for Vue.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

@@ -20,6 +20,6 @@ project is and the rules its code must satisfy, a `CLAUDE.md` that brings it to 
 `.vscode/mcp.json`, `.gemini/settings.json` and `opencode.json`. `check` holds them to what the
 installed version writes, and `add agents` rewrites only what is its own in each.
 
-See <https://ayers.repair/assemblejs/>.
+See <https://assemblejs.com/>.
 
 Apache-2.0. Copyright Ayers Electronics Inc.

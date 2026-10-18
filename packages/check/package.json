@@ -3,7 +3,7 @@
   "version": "1.0.0-next.0",
   "description": "The AssembleJS checks: the rules a project is held to, every problem found in one without building it, its shape, and what its pages weigh.",
   "license": "Apache-2.0",
-  "homepage": "https://ayers.repair/assemblejs/",
+  "homepage": "https://assemblejs.com/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ayers-software-repair/assemblejs.git",
