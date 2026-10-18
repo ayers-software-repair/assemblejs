@@ -5,64 +5,66 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
-**RESUME HERE (rewritten at every landing; this one 2026-10-18, at the push of Phase 7's first
-wave).**
+**RESUME HERE (rewritten at every landing; this one 2026-10-18, 11:40 EDT, at the owner's hold
+until 14:01 EDT).**
 
-THE HOLD IS LIFTED (owner, 2026-10-18, D1561: "Assemblejs may continue thorughn project
-completion"; AUDIT/DECISIONS.md:5928) and the seat works to project completion through the
-lead, avp, who is reached by message in the line form (STATE / DONE / FAIL / CAVEAT / ASK /
-NEXT), one report per wave's merge. HOW THE WORK IS DONE NOW, three rulings of the same morning,
-each recorded in DECISIONS 2026-10-18: (1) D1562, lanes implement and the seat reviews: one row
-per `builder` lane in a worktree of its own, Sonnet by default and Opus only where the row's
-defects would be semantics (named at dispatch), the brief carrying the row's text, its files
-and its proof; the seat reads every hand-back at the source, cherry-picks it onto `next` with
-the row ticked, the DECISIONS entry and the changeset in one commit, runs the gates on the
-merged tip, pushes, reads the run. A lane never edits this file, DECISIONS, CLAUDE.md or the
-lockfile by hand, never starts a browser or `node dist/server.js`; the seat runs the
-conformance fixtures and the example starts a hand-back names. (2) D1567, at most three lanes
-at once, two by default, counted before every dispatch. (3) The owner at the seat: "i approve
-allpushes": a push of `next` waits for nothing but a green gate and no run in flight; a
-release, a publish, a tag and a DNS change still wait for him. A lane's worktree is cut from
-`main`: every brief opens with `git reset --hard next`. A workspace install made before the
-command line is built leaves no `assemblejs` bin link in the examples: a gate or a lane runs
-`node packages/cli/dist/bin.js`, never a link.
+HELD BY THE OWNER'S WORD, relayed by avp: "hold fermi and assemlejs until after 2pm ... 2:01pm
+is session reset". No new lane; what was in hand is merged and committed; nothing is pushed
+until avp wakes the seat at 14:01 EDT. AT THE WAKE, in this order: (1) avp's answer on the
+checks' limit (asked: 45,000 to 46,000, measured 45,110 on the merged tip, R-17's +2,584 and
+R-19's +184); set `scripts/size-budgets.json` to his number, record it in DECISIONS under the
+R-17 entry with the measure, commit; (2) push the local commits as one bite (`git push origin
+next`, no run in flight), find the `ci` run by the full sha, watch it to its end with a
+Monitor: its `browser proof` job runs `browser/bus-and-relay.browser.ts` for the first time
+anywhere, and a red there is the next fix, forward; (3) report wave 3 to avp in the line form;
+(4) R-20.
 
-WHERE THE WORK STANDS. Phase 7 (below) is the list. LANDED AND PUSHED, each by a lane and read
-at the source, each with its proof in DECISIONS 2026-10-18: wave 1, R-4 proved, R-5, R-6, R-7,
-R-8, R-9, R-11; wave 2, R-13 (the first publish by workflow), R-10 (Lit isolated by an esbuild
-plugin on Lit's element base), R-14 (one bus a declared remote joins), R-12 (`NotFound`, the
-`not-found` page, the trailing slash), R-16 (an api learns who is asking, `reply()`), R-15 (the
-page's server relays a remote's api calls, `api(path)`, `connect-src 'self'`). The core's limit
-was raised once for the four of wave 2, 98,000 to 105,000, by avp's yes with the measure
-(DECISIONS 2026-10-18, "the core's limit raised"). IN HAND, one lane: R-17 (`perf` in two
-parts and a total, `addresses` beside the budgets). NEXT, in order: R-18 (the MCP SDK bundled;
-its limit rises: measured and sent to avp before any raise), R-19, R-20; then the rows outside
-Phase 7 that are the seat's: 1032 (VS Code's two registrations, a read and a decision), 1258
-and 1263 (after the first publish), 1278 (fold the changesets, at R-20), 1943 and 1970
-(install.html's renderer sentence), 1978 (the tutorial's price-feed import), 2042 (the outline
-page, taken from the site seat by avp's word). A ROW FOR THE BROWSER PROOF, found by the
-lanes: a two-server fixture with an assembly of the page's own, one from an admitted remote
-and one from a remote not admitted, for R-14, and a remote assembly calling its own api
-through the relay, for R-15; neither exists yet. THE OWNER'S, confirmed with avp on
-2026-10-18 and waited on by nothing: TODO:523 the admin clicks; 1134 the joint session; 1169
-and 1177 the first prerelease's token and tag and the stable publish; 2228 his three for the
-first publish, written out in `release.yml`'s header; 2456 the landing at `/assemblejs/`; and
-in the AUDIT backlog AJ.11 his mark and palette, AJ.16 the DNS flip. Corrected under his
-ruling of the 12th on CLAUDE.md's facts: line 11 names `serve()`.
+STATE. `origin/next` is `101a3a2` (R-19), its `ci` 39139090865 green. Local `next` is
+`227568c`, five commits ahead: `9e7e8da` R-18 (the protocol SDK bundled with its notices,
+zod a dependency, 2 packages not 91), `d84d624` the agent surface's limit 139,500 by avp's
+D1577, `071cf70` R-17 (`perf` in two parts and a total, `addresses` beside the budgets, the
+rule `a-page-with-a-parameter-names-an-address`), `227568c` R-14b/R-15b (the browser proof of
+the shared bus and the relay: the realtime example's `/bus` page, three servers from one
+build; never run here). THE MERGED TIP'S PASS, run once at the hold, every step exit 0 but the
+pack gate: builds, fourteen typechecks, every cheap gate, lint, modules, reference, exports,
+unused, publint on fourteen, the suites (core 1,084, build 426, check 335, cli 137, mcp 209),
+the examples gate, five conformance fixtures (trust 56, rendering 99, remote 27, agents 19,
+contract green), the shop's `perf` with the catalogue, reviews and fulfilment up (exit 0, the
+product page 96 kB gzipped in all). The pack gate: `@assemblejs/check` 45,110 of 45,000, the
+ask above; core 104,537 of 105,000; mcp 126,777 of 139,500.
 
-MEASURES A LATER CLAIM RESTS ON. The core packs to 104,356 bytes of its 105,000 limit after
-wave 2; R-18 raises the agent surface's and asks first (the rule of limits, 2026-10-12). `check:examples` takes 28 to 38 seconds warm on this machine.
-The ci run of each push is found by its full sha and watched to its end by a Monitor; a push
-never goes while a run is in flight (the concurrency group cancels it).
+HOW THE WORK IS DONE: D1561 (the lead drives this seat to completion), D1562 (lanes
+implement, the seat reviews at source; Sonnet by default, Opus only where the defects would
+be semantics, named at dispatch), D1567 (at most three lanes, two by default), the owner's
+"i approve allpushes" (a push of `next` waits only for a green gate and no run in flight),
+the rule of limits (a raise asks avp with the measure first; D1570 and D1577 today). A lane
+never edits this file, DECISIONS, CLAUDE.md, the lockfile by hand, or `site/`: a site page is
+written from `site-source/` by platform's `build-pages.mjs` at the pin (v0.63.1; the seat
+keeps a worktree of platform in its scratchpad), which only the deploy checks. A lane never
+starts a browser or `node dist/server.js` by hand; the seat runs the conformance fixtures and
+the example starts. A lane's worktree is cut from `main`: every brief opens with `git reset
+--hard next`; the examples have no `assemblejs` bin link after a worktree install, so a gate
+or a lane runs `node packages/cli/dist/bin.js`. A pass that rebuilds `dist` while another run
+reads it gives a false red (seen twice today on the stop hook): rerun the one file alone.
 
-WHAT CAME BEFORE. The owner's rulings of 2026-10-12 at the seat, one per Phase 7 row, are in
-DECISIONS 2026-10-12 ("the owner at the seat", "the ones not asked", "a remote assembly's
-calls are relayed"); the split of the command line into `build`, `check` and `cli` is R-2 and
-R-3, done; the audit of 2026-10-11 is Phase 6, every row of the seat's own done, the rest
-folded into Phase 7 or the owner's; its evidence is
-`~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/`. A SESSION THAT RESUMES HERE
-reads `origin/next`'s last run, counts the lanes (`git worktree list`), and takes the first
-open row of Phase 7 that no lane holds.
+WHAT IS LEFT, 15 open rows: R-20 (the seat says Phase 7 is done and its last run green; the
+owner adds the token and cuts the tag; before it, 1278 fold the waiting changesets into the
+first entry and 1263 the release-notes sentence in the version commit); then the small rows
+the seat's: 1032 (VS Code's two registrations, a read and a decision), 1258 (after the first
+publish), 1943 and 1970 (install.html's renderer sentence, in site-source), 1978 (the
+tutorial's price-feed import, in site-source), 2042 (the outline page, in site-source). THE
+OWNER'S, waited on by nothing: TODO:523 the admin clicks; 1134 the joint session; 1169 and
+1177 the first prerelease's token and tag and the stable publish; 2228 his three for the
+first publish, written in `release.yml`'s header; 2456 the landing at `/assemblejs/`; in the
+AUDIT backlog AJ.11 his mark and palette, AJ.16 the DNS flip. Named for his ear in DECISIONS:
+the not-found asymmetry (a local service's NotFound is a 404 page, a remote's 404 a fallback);
+the agent surface's library exports run a user's own SDK against the bundled copy, untested.
+
+WHAT CAME BEFORE. Phase 7's rulings of 2026-10-12 are in DECISIONS 2026-10-12 ("the owner at
+the seat", "the ones not asked", "a remote assembly's calls are relayed"); today's landings
+each have an entry in DECISIONS 2026-10-18, one per row, with what was expected, what was
+found and the proof; the audit of 2026-10-11 is Phase 6, every row of the seat's own done;
+its evidence is `~/source/AUDIT/evidence/2026-10-11-assemblejs-brutal-audit/`.
 
 ## Phase 0: the record
 
