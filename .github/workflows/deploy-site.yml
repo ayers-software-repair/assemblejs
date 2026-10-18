@@ -147,7 +147,7 @@ jobs:
         run: |
           rm -rf site/kit && mkdir -p site/kit
           cp _platform/sitekit/*.css site/kit/
-          cp _platform/sitekit/landing-{background,renderers,shaders,stores}.js _platform/sitekit/product-downloads.js site/kit/
+          cp _platform/sitekit/landing-{background,worker,renderers,shaders,stores}.js _platform/sitekit/product-downloads.js site/kit/
           cp -R _platform/sitekit/icons site/kit/icons
 
       # What the job above generated, put where the site links it.

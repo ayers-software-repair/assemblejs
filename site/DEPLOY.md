@@ -54,7 +54,7 @@ so `/assemblejs/next` does not redirect and `/assemblejs/next/` does.
 ## The kit is referenced, never copied
 
 `site/kit/` is gitignored. The deploy reads the one platform pin, `ayersPlatform` in the root
-`package.json`, checks `platform` out at exactly that tag, and stages the public CSS, four landing modules, download controls and icons into
+`package.json`, checks `platform` out at exactly that tag, and stages the public CSS, five landing modules, download controls and icons into
 `site/kit/`. This private checkout occurs only in the deployment job, using its existing
 credential. Public builds and pull-request checks need no platform access. Locally, symlink it
 for preview. The same platform pin also governs `.editorconfig` and the commit rule in
