@@ -7239,3 +7239,33 @@ R-3's second cut, and with it the split the owner ordered is made: `@assemblejs/
   the checks' and the command line's were 429 together an hour before and are one more,
   the case that a new project passes `check`. And the five conformance fixtures on the
   packed path, where the command line's tarball installs the two it now depends on.
+
+## 2026-10-18: the hold lifted, lanes, and the copyright line off generated files
+
+The lead woke the seat on the morning of 2026-10-18 with the owner's ruling of the day
+(AUDIT/DECISIONS.md D1425, verbatim): "Assemblejs may continue thorughn project completion".
+Two more rulings reached the seat the same hour and govern how the rest of Phase 7 is worked.
+
+- **Lanes implement, the seat reviews (D1426, owner, verbatim).** "everyone should go back
+  to the lane usage way with lesser models for lanes to implement and they review completely
+  and ensure things are on track. rather than just waste fable usage on impl". It supersedes
+  his word of 2026-10-09 in this seat, "dont use sub tasks do it yourself", for
+  implementation. Each row of Phase 7 goes to one lane in a worktree of its own, with the
+  row's text, its files and its proof in the brief; up to four at once; the seat reads every
+  hand-back at the source, runs the gates, commits with the row ticked and this record kept,
+  pushes, and reads the run. A lane never edits this file, the ledger or the instruction file.
+- **Pushes need no word (owner, at the seat, verbatim).** "i approve allpushes". Said as the
+  two commits of the hold were pushed; a release, a publish, a tag and a DNS change still wait
+  for him (D1247 stands).
+- **Pushed first, as the lead ordered:** the cheap chain over `build`, `check` and `cli`,
+  every gate exit 0, then `c0d03b0` and `35d46ef`, R-4 as it stood at the hold, whose proof
+  a lane now finishes.
+- **R-7, the copyright line off generated files (his "Remove it from generated files").**
+  Expected: a banner flaw mended by editing one constant. Found: true, and nothing else moved.
+  `GENERATED_HEADER` in `build/src/generate/generated-header.ts` is the one source of the
+  line; the TypeScript setup the build writes never carried it; `scripts/check-headers.mjs`
+  walks `packages/*/src` only and `scripts/identity-gate.sh` reads tracked files only, so
+  neither ever read a project's `.assemblejs/`. One test asserted the old text and now asserts
+  the banner opens with the generated notice and holds no copyright or SPDX line. Proof, in
+  the lane's worktree: the build's 412 cases, the checks' 298, the command line's 141, the
+  header gate, the identity gate and lint, each exit 0.

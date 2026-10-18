@@ -1493,10 +1493,11 @@ a spec watched red first, or struck with its reason.
       (DECISIONS 2026-10-12, "a limit raised by the seat that went over it")
       RULED 2026-10-12 (Phase 7, the rule of limits): a new package, or one just split, takes its
       measure and a tenth more; a later raise wants the lead's yes first, and is named to him
-- [ ] Every module the build generates into a project is headed with Ayers Electronics'
+- [x] Every module the build generates into a project is headed with Ayers Electronics'
       copyright line, beside the line that says it is generated
       (`packages/cli/src/generate/generated-header.ts`). An identity string in a file made of the
       project's own directories: THE OWNER'S (found 2026-10-12)
+      RULED 2026-10-12 "Remove it from generated files"; DONE 2026-10-18 (Phase 7, R-7)
       RULED 2026-10-12: the line comes off generated files (Phase 7, R-7)
 - [ ] The starter's hello page links `https://www.assemblejs.com/next/docs/tutorial.html`
       (`commands/project-files.ts:51`), which answers 404 until the owner launches the domain, and
@@ -2166,8 +2167,10 @@ rows are taken in this order; each is a bite with its own proof and its own push
       that answers one of two shapes. Tried as a type first (DECISIONS 2026-10-12, "the
       seat's advice on a handler's return tried"). An `interface` is still refused: one
       sentence for the guide, the site seat's
-- [ ] R-7 The copyright line comes off every file the build generates into a project; the
-      line that says a file is generated stays (`build/src/generate/generated-header.ts`)
+- [x] R-7 The copyright line comes off every file the build generates into a project; the
+      line that says a file is generated stays (`build/src/generate/generated-header.ts`).
+      DONE 2026-10-18, by a lane: one constant held the line, no gate reads generated output
+      (DECISIONS 2026-10-18, "the hold lifted, lanes, and the copyright line off generated files")
 - [ ] R-8 The `Renderer` and `RenderInput` objects nothing calls come out of every renderer
       package and the core, with their entry point, and DESIGN 7 says what the build does
 - [ ] R-9 One start call in the core: it reads the config, starts the server, says where it
