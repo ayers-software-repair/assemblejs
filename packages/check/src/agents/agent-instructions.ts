@@ -48,7 +48,8 @@ one framework or in none, and each hydrated in the browser by its own framework.
   so nothing a visitor sent is written raw. A service whose thing does not exist throws
   \`new NotFound()\`, from \`@assemblejs/core\`, and its page answers 404 with the not-found page.
 - An **api** is a file \`src/api/<name>.api.ts\`: a route that answers data, as JSON or as a
-  stream.
+  stream. Only an api is given the request's headers and cookies, and \`reply(...)\` lets it answer a
+  status, a cookie or a redirect; a service and a page are a function of the address.
 
 ## How to work in it
 

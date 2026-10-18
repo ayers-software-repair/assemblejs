@@ -7590,3 +7590,34 @@ the seat refusing the first's limit.
   browser spec on the market's product page, each server's elements hydrated by its own copy
   (`_$litPart$` prototypes equal to its own view's envelope's and distinct across the three
   servers), first runs in CI. renderer-lit packs to 9,090 of 9,200; build 54,839 of 56,700.
+
+## 2026-10-18: R-16 landed
+
+An api learns who is asking, his "Apis learn who is asking, pages do not", the seat's red tests
+first (a `reply` an api answers with, and four cases through the route), a lane to make them
+green without touching an assertion.
+
+- **Built.** `ApiContext` gains `headers` (lower-cased names, no prototype) and `cookies` (the
+  `cookie` header read by RFC 6265 section 4.2.1, split at the first `=`, trimmed,
+  percent-decoded, a value that does not decode kept as written, the first of a name sent
+  twice). `reply({ status, headers, cookies, body })` makes an `ApiReply` carrying a symbol mark
+  so a plain JSON object with the same members is never taken for one; `reply.redirect(location,
+status = 303)` so a form that posted lands on a page. The route sends a reply as it says: the
+  status, each header, each cookie as a `set-cookie` header of its own (Fastify appends them,
+  as RFC 6265 section 3 asks a server not to fold them), a body as JSON, or no body and no
+  content type. A cookie is written by section 4.1.1's attributes in the order Path, Domain,
+  Max-Age, Expires, Secure, HttpOnly, SameSite (MDN's, not the RFC's), name and value
+  percent-encoded, a path or domain holding `;` or a line break refused. `ServiceContext` is
+  unchanged and says why: a service and a page are a function of the address, which is what
+  keeps their answers keepable and the same from another server. DESIGN 8 and principle 13 say
+  it, the agent instructions in one sentence, the tutorial's api entry in two.
+- **The showcase.** The shop's staff door faked its session: the browser wrote
+  `document.cookie` itself after the api said ok. The api now answers `reply` with an
+  `HttpOnly`, `SameSite=Strict` cookie and the client only navigates; `authenticate` reads it
+  back through the core's `readCookies`, and the shop's own cookie helper is gone.
+- **Found against the brief.** The brand constant is `REPLY_MARK`, since the organization gate
+  names a constant after its file; SameSite is not in RFC 6265 section 4.1.1.
+- **Proof.** Eight red on the unchanged code, then the core's 1,037 cases and the checks' 298
+  green; every cheap gate, modules, exports, reference, design, site, unused, the examples
+  gate, exit 0. The core packs to 100,780 of 98,000 on the lane's base, with the lead on the
+  raise.

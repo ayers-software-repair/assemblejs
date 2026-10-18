@@ -1848,10 +1848,14 @@ rows are taken in this order; each is a bite with its own proof and its own push
       internet; a server on a private network, or a dev server, could be read by any site
       a person inside visits, through their browser. Asked again he chose "The page's server
       relays the call". Cost, to be measured as it is built: a hop on every such call
-- [ ] R-16 An api learns who is asking and a page does not: an api reads the request's
+- [x] R-16 An api learns who is asking and a page does not: an api reads the request's
       cookies and headers and may answer with a status, a cookie or a redirect; a service
       and a page stay a function of the address, kept and placed from another server as now
       (FINDINGS 37; owner, 2026-10-12, "Apis learn who is asking, pages do not")
+      DONE 2026-10-18, by a lane on the seat's red tests: `headers` and `cookies` on the api's
+      context, `reply({ status, headers, cookies, body })` and `reply.redirect(location)`, a
+      service and a page unchanged; the shop's staff door sets its cookie from the api
+      (DECISIONS 2026-10-18, "R-16 landed")
 - [ ] R-17 `perf` weighs what a page loads before anything mounts and what its assemblies
       fetch as they mount, shows both, and holds the total to the budget; and the config
       lists one example address for each page whose address has a parameter, weighed by

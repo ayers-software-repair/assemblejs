@@ -894,7 +894,12 @@ reply. What a handler or a service returns is a `ReturnedValue` (a `ReturnedObje
 JSON whose objects may leave a member out, so a handler that answers one of two shapes is accepted
 as written, and the absent member is dropped from the reply and from the data a view is given. A
 `Date`, a function and a `bigint` are refused. It is written as an object type or a union of them,
-not an `interface`, because an interface does not say its members are JSON. A path is literal segments and whole-segment `:parameters`. One that is declared twice for
+not an `interface`, because an interface does not say its members are JSON. An api is also handed
+who is asking, the request's `headers` (names lower-cased) and its `cookies` (parsed), and may
+answer with `reply(...)`: a status, headers, cookies, a body, or `reply.redirect(location)` to send
+a form that posted to a page (`303` unless told another status). A plain return is still the JSON
+reply. A service and a page are a function of the address and see none of it, which is what keeps
+their answers keepable and the same from another server. A path is literal segments and whole-segment `:parameters`. One that is declared twice for
 one method, does not start with `/`, uses a wildcard or any other pattern, or lands under
 `/assembly/` or `/_assemblejs/` is a boot error.
 
@@ -1385,8 +1390,9 @@ reason, so nothing has to be remembered.
 12. **Routes are a flat table with parameters** (`/products/:id`). Nested routes, wildcards and
     route groups are not in 1.0. Nothing the mission needs requires them, and every one of them
     is a way for two routes to disagree about which matched.
-13. **No form or mutation machinery in the framework.** An api takes a POST. Each framework
-    already has opinions about forms and ours would fight all of them.
+13. **No form or mutation machinery in the framework.** An api takes a POST, reads who is asking
+    and may answer with a cookie or a redirect. Each framework already has opinions about forms
+    and ours would fight all of them.
 14. **Nothing is exported without a test that exercises it from a consumer's position.** Doc
     examples compile in CI. An abstraction with no reader is deleted rather than kept for the
     day something might want it.

@@ -339,7 +339,7 @@ export default function Readout() {
 
 ### `src/api/time.api.ts`
 
-An api is a route. `GET` unless `method` says otherwise; the handler is given the request's `query`, its route `params` and its parsed `body`, and what it returns is the JSON reply. A handler's answer, and a service's, is written as an object type or a union of them, not an `interface`, because an interface does not say its members are JSON.
+An api is a route. `GET` unless `method` says otherwise; the handler is given the request's `query`, its route `params` and its parsed `body`, and what it returns is the JSON reply. It is also given the request's `headers` and `cookies`, and `reply({ status, headers, cookies, body })` answers a status, a cookie or a body of its own; `reply.redirect("/thanks")` sends a form that posted to a page. A service and a page are a function of the address and see none of it. A handler's answer, and a service's, is written as an object type or a union of them, not an `interface`, because an interface does not say its members are JSON.
 
 ```
 import { defineApi } from "@assemblejs/core";

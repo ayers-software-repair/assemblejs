@@ -9,7 +9,13 @@ describe("declaring an api", () => {
     if (isStreamApi(time)) throw new Error("declared with a handler");
     expect(time.path).toBe("/api/time");
     expect(
-      await time.handle({ query: new URLSearchParams(), params: {}, body: undefined }),
+      await time.handle({
+        query: new URLSearchParams(),
+        params: {},
+        body: undefined,
+        headers: {},
+        cookies: {},
+      }),
     ).toEqual({ ok: {} });
   });
 

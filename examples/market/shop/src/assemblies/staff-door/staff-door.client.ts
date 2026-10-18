@@ -1,9 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-// The staff door: asks this server whether a key is the staff key and, on a yes, keeps it in
-// a cookie for this site and goes to the board. The framework ships no session, so the product
-// brings its own; the shop's access check (assemblejs.config.ts) reads the cookie on every
-// request for a guarded address.
+// The staff door: asks this server whether a key is the staff key and, on a yes, goes to the
+// board. The api sets the session cookie itself, HttpOnly, so nothing here touches it; the
+// shop's access check (assemblejs.config.ts) reads it on every request for a guarded address.
 export default {
   mount(element: Element | ShadowRoot) {
     const form = element.querySelector("form");
@@ -18,7 +17,6 @@ export default {
           body: JSON.stringify({ key }),
         });
         if (((await answer.json()) as { ok: boolean }).ok) {
-          document.cookie = `staff=${encodeURIComponent(key)}; path=/; samesite=strict`;
           location.assign("/staff/stock");
           return;
         }

@@ -33,6 +33,7 @@ export { serviceSource } from "./service-source.js";
 export { viewSchema } from "./view-schema.js";
 export { resolveData } from "./resolve-data.js";
 export { queryOf } from "./query-of.js";
+export { headersOf } from "./headers-of.js";
 export { writeLogLine } from "./write-log-line.js";
 export { insideForm } from "./inside-form.js";
 export { isFlatRoute } from "./is-flat-route.js";

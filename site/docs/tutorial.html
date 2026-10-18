@@ -232,7 +232,12 @@ export default function Readout() {
                   An api is a route. <code>GET</code> unless <code>method</code> says otherwise; the
                   handler is given the request's <code>query</code>, its route
                   <code>params</code> and its parsed <code>body</code>, and what it returns is the
-                  JSON reply. A handler's answer, and a service's, is written as an object type or a
+                  JSON reply. It is also given the request's <code>headers</code> and
+                  <code>cookies</code>, and
+                  <code>reply({ status, headers, cookies, body })</code> answers a status, a cookie
+                  or a body of its own; <code>reply.redirect("/thanks")</code> sends a form that
+                  posted to a page. A service and a page are a function of the address and see none
+                  of it. A handler's answer, and a service's, is written as an object type or a
                   union of them, not an <code>interface</code>, because an interface does not say
                   its members are JSON.
                   <pre><code>import { defineApi } from "@assemblejs/core";

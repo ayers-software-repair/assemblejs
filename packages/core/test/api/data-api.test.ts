@@ -11,6 +11,8 @@ describe("an api that answers with data", () => {
       handle: (context) => context.body ?? null,
     };
     const query = new URLSearchParams();
-    expect(await echo.handle({ query, params: {}, body: { a: 1 } })).toEqual({ a: 1 });
+    expect(
+      await echo.handle({ query, params: {}, body: { a: 1 }, headers: {}, cookies: {} }),
+    ).toEqual({ a: 1 });
   });
 });

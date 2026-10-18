@@ -6,7 +6,13 @@ import type { DataApi, ReturnedValue } from "@assemblejs/core";
 // The type is pinned where it is used, as an api's handler: each line below must compile, or be
 // refused by its `@ts-expect-error`, which fails the type check when the line is not refused.
 const handler = (handle: DataApi["handle"]): DataApi["handle"] => handle;
-const context = { query: new URLSearchParams(), params: {}, body: undefined };
+const context = {
+  query: new URLSearchParams(),
+  params: {},
+  body: undefined,
+  headers: {},
+  cookies: {},
+};
 
 type Placed = { ok: true; id: string } | { ok: false; problems: string[] };
 type Loose = { ok: boolean; id?: string };
