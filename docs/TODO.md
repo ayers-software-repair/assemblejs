@@ -50,16 +50,19 @@ the example starts. A lane's worktree is cut from `main`: every brief opens with
 or a lane runs `node packages/cli/dist/bin.js`. A pass that rebuilds `dist` while another run
 reads it gives a false red (seen twice today on the stop hook): rerun the one file alone.
 
-WHAT IS LEFT, 15 open rows: R-20 (the seat says Phase 7 is done and its last run green; the
-owner adds the token and cuts the tag; the fold of the waiting changesets into the first
-entry, which came before it, is done); then the small rows
-the seat's: 1032 (VS Code's two registrations, a read and a decision), 1258 (after the first
-publish), 1943 and 1970 (install.html's renderer sentence, in site-source), 1978 (the
-tutorial's price-feed import, in site-source), 2042 (the outline page, in site-source). THE
-OWNER'S, waited on by nothing: TODO:523 the admin clicks; 1134 the joint session; 1169 and
-1177 the first prerelease's token and tag and the stable publish; 2228 his three for the
-first publish, written in `release.yml`'s header; 2456 the landing at `/assemblejs/`; in the
-AUDIT backlog AJ.11 his mark and palette, AJ.16 the DNS flip. Named for his ear in DECISIONS:
+WHAT IS LEFT, 9 open rows (`grep -n '^\s*- \[ \]'`): R-20 (the seat says Phase 7 is done and its
+last run green; the owner adds the token and cuts the tag; the fold of the waiting changesets
+into the first entry, which came before it, is done); then the seat's two, both waiting on
+something it cannot do: the VS Code double registration (a person opens VS Code; the docs
+were read again 2026-10-18 and do not say) and the release job's first run of the
+release-notes gate (after the first publish; the registry still answers 404). The small site
+rows are all ticked: install.html's renderer sentence (twice, premise gone), the tutorial's
+price-feed import, the outline page's screenshot, and the page's not-yet-published sentence
+(premise gone). THE OWNER'S, waited on by nothing: the repository settings that need admin
+scope; the joint session; B-27a and B-27b, the first prerelease's token and tag and the
+stable publish; his three for the first publish, written in `release.yml`'s header; P5-8, the
+landing at `/assemblejs/`; in the AUDIT backlog AJ.11 his mark and palette, AJ.16 the DNS
+flip. Named for his ear in DECISIONS:
 the not-found asymmetry (a local service's NotFound is a 404 page, a remote's 404 a fallback);
 the agent surface's library exports run a user's own SDK against the bundled copy, untested.
 
@@ -647,9 +650,6 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       its window, on this machine or any, and no seat starts a desktop app; it is the lead's to
       route. ROUTED 2026-10-18 to the owner's walk: at his VS Code, open the example project and
       read the MCP server list once; if the server shows twice, the lead removes `.vscode/mcp.json`.
-- [x] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
-      after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
-      (DECISIONS 2026-10-10, A-01). DONE 2026-10-11 for the two that read a registration from
       READ AGAIN 2026-10-18 (code.visualstudio.com/docs/copilot/customization/mcp-servers and
       /docs/copilot/reference/mcp-configuration): still not stated, what one name in both files
       does; the only related line is "Use a unique name for each server to avoid conflicts". New
@@ -658,6 +658,9 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 .assemblejs/...` entry runs from wherever VS Code starts it, while the `.vscode/mcp.json`
       entry names the server by `${workspaceFolder}` and starts anywhere (`mcp-registrations.ts:10-34`).
       The docs do not collide the two, so neither file is removed; OPEN until a person opens VS Code.
+- [x] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
+      after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
+      (DECISIONS 2026-10-10, A-01). DONE 2026-10-11 for the two that read a registration from
       the project, Gemini CLI (`.gemini/settings.json`) and opencode (`opencode.json`), each
       started by the agents fixture as its client does; Codex reads TOML and the other two no
       project file, so the instructions say how each takes the server (DECISIONS 2026-10-11,
@@ -883,7 +886,7 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       publish, by the owner's hand, that sentence becomes the date, in the same change that
       publishes (found 2026-10-10). PREMISE GONE 2026-10-18: `c2beecb` (2026-10-11) took the
       sentence out of the release notes page; `grep -rni "not yet published" site site-source
-    RELEASE_NOTES.md` finds nothing, so there is no sentence to turn into a date.
+  RELEASE_NOTES.md` finds nothing, so there is no sentence to turn into a date.
 - [x] ONE VERSION OR TWELVE: RULED "One number" (owner, D1252) and built as one fixed group
       with `check:one-version` (P5-2, `74ef101`, 2026-10-11). Measured in a
       clone: the packages' versions part ways at the first cut that does not name them all.
