@@ -655,7 +655,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       does; the only related line is "Use a unique name for each server to avoid conflicts". New
       from the pages: a Copilot harness session "doesn't read `.vscode/mcp.json` directly" and is
       forwarded it; `.mcp.json` supports no working directory, so its relative `node
-    .assemblejs/...` entry runs from wherever VS Code starts it, while the `.vscode/mcp.json`
+  .assemblejs/...` entry runs from wherever VS Code starts it, while the `.vscode/mcp.json`
       entry names the server by `${workspaceFolder}` and starts anywhere (`mcp-registrations.ts:10-34`).
       The docs do not collide the two, so neither file is removed; OPEN until a person opens VS Code.
       the project, Gemini CLI (`.gemini/settings.json`) and opencode (`opencode.json`), each
@@ -875,7 +875,8 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       red (DECISIONS 2026-10-10, "release notes")
 - [ ] The release job's run of that gate has not been seen in Actions: the job is skipped
       until the registry has `@assemblejs/core`. Read the step at the job's first run, after
-      the first publish (found 2026-10-10)
+      the first publish (found 2026-10-10). Still true 2026-10-18: `npm view @assemblejs/core`
+      answers E404.
 - [x] Standing bar, same ruling: no old releases left around. `gh release list` on 2026-10-10
       lists none, drafts and prereleases included. Checked again before any cut.
 - [ ] The page says its one version is not yet published, which is true today. At the first
