@@ -27,7 +27,7 @@ import { pathToFileURL } from "node:url";
 import { offThePin } from "./platform-pin.mjs";
 
 export const HOUSE = {
-  tag: "v0.67.2",
+  tag: "v0.67.5",
   directory: "scripts/house",
   files: {
     "check-conventional.sh": "e5a1139167d832dc8eecc00a50732f252c21a14799f77618c6160a0d8cee1258",

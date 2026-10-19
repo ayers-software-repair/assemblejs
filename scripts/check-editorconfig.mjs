@@ -17,7 +17,7 @@ import { pathToFileURL } from "node:url";
 import { offThePin } from "./platform-pin.mjs";
 
 export const CANONICAL = {
-  tag: "v0.67.2",
+  tag: "v0.67.5",
   changed: "v0.21.0",
   sha256: "d0bf9fa73b59194d7c67bb90b0ab3e2c33563e1e9f9f67e836f5640af3f133d9",
 };
