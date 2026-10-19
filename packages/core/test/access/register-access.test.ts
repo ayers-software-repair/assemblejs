@@ -255,7 +255,9 @@ describe("an encoded spelling of a guarded address", () => {
           views: { default: { renderer: "html", markup: () => "<p>members only</p>" } },
         }),
       ],
-      apis: [defineApi({ path: "/admin/users", handle: () => ({ users: ["ada"] }) })],
+      apis: [
+        defineApi({ path: "/admin/users", handle: () => ({ users: ["private-user-marker"] }) }),
+      ],
       authenticate: ({ path, headers }) => {
         seen.push(path);
         if (headers["x-member"] === "yes") return true;
@@ -274,7 +276,7 @@ describe("an encoded spelling of a guarded address", () => {
         const refused = await guarded.inject({ method: "GET", url: encoded });
         expect(refused.statusCode, encoded).toBe(401);
         expect(refused.body).not.toContain("members only");
-        expect(refused.body).not.toContain("ada");
+        expect(refused.body).not.toContain("private-user-marker");
         expect(seen).toEqual([spelled]);
         const admitted = await guarded.inject({
           method: "GET",
