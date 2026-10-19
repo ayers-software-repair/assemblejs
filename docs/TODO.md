@@ -655,7 +655,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       does; the only related line is "Use a unique name for each server to avoid conflicts". New
       from the pages: a Copilot harness session "doesn't read `.vscode/mcp.json` directly" and is
       forwarded it; `.mcp.json` supports no working directory, so its relative `node
-  .assemblejs/...` entry runs from wherever VS Code starts it, while the `.vscode/mcp.json`
+.assemblejs/...` entry runs from wherever VS Code starts it, while the `.vscode/mcp.json`
       entry names the server by `${workspaceFolder}` and starts anywhere (`mcp-registrations.ts:10-34`).
       The docs do not collide the two, so neither file is removed; OPEN until a person opens VS Code.
       the project, Gemini CLI (`.gemini/settings.json`) and opencode (`opencode.json`), each
@@ -879,9 +879,11 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       answers E404.
 - [x] Standing bar, same ruling: no old releases left around. `gh release list` on 2026-10-10
       lists none, drafts and prereleases included. Checked again before any cut.
-- [ ] The page says its one version is not yet published, which is true today. At the first
+- [x] The page says its one version is not yet published, which is true today. At the first
       publish, by the owner's hand, that sentence becomes the date, in the same change that
-      publishes (found 2026-10-10)
+      publishes (found 2026-10-10). PREMISE GONE 2026-10-18: `c2beecb` (2026-10-11) took the
+      sentence out of the release notes page; `grep -rni "not yet published" site site-source
+    RELEASE_NOTES.md` finds nothing, so there is no sentence to turn into a date.
 - [x] ONE VERSION OR TWELVE: RULED "One number" (owner, D1252) and built as one fixed group
       with `check:one-version` (P5-2, `74ef101`, 2026-10-11). Measured in a
       clone: the packages' versions part ways at the first cut that does not name them all.
