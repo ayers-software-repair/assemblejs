@@ -650,6 +650,14 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
 - [x] Registrations for the clients beyond the three: one entry in `MCP_REGISTRATIONS` each,
       after that client's documentation is read: opencode, Codex, Gemini CLI, Zed, JetBrains
       (DECISIONS 2026-10-10, A-01). DONE 2026-10-11 for the two that read a registration from
+      READ AGAIN 2026-10-18 (code.visualstudio.com/docs/copilot/customization/mcp-servers and
+      /docs/copilot/reference/mcp-configuration): still not stated, what one name in both files
+      does; the only related line is "Use a unique name for each server to avoid conflicts". New
+      from the pages: a Copilot harness session "doesn't read `.vscode/mcp.json` directly" and is
+      forwarded it; `.mcp.json` supports no working directory, so its relative `node
+    .assemblejs/...` entry runs from wherever VS Code starts it, while the `.vscode/mcp.json`
+      entry names the server by `${workspaceFolder}` and starts anywhere (`mcp-registrations.ts:10-34`).
+      The docs do not collide the two, so neither file is removed; OPEN until a person opens VS Code.
       the project, Gemini CLI (`.gemini/settings.json`) and opencode (`opencode.json`), each
       started by the agents fixture as its client does; Codex reads TOML and the other two no
       project file, so the instructions say how each takes the server (DECISIONS 2026-10-11,
