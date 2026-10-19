@@ -10,6 +10,31 @@ import { load } from "./site-api-theme.mjs";
 import { pageText } from "./site-page-text.mjs";
 import { renderLinks, sharedLinksMatch } from "./site-links.mjs";
 
+test("site deployment follows only site inputs and the platform pin on main and next", () => {
+  const workflow = readFileSync(
+    new URL("../.github/workflows/deploy-site.yml", import.meta.url),
+    "utf8",
+  );
+  const triggers = /^on:\n([\s\S]*?)\n\npermissions:/m.exec(workflow)?.[1];
+  assert.ok(triggers, "workflow trigger block");
+  const push = /^ {2}push:\n([\s\S]*?)(?=^ {2}workflow_dispatch:)/m.exec(triggers)?.[1];
+  assert.ok(push, "push trigger");
+  const branches = /^ {4}branches: \[([^\]]+)\]$/m.exec(push)?.[1].split(", ");
+  assert.deepEqual(branches, ["main", "next"]);
+  assert.doesNotMatch(push, /^ {4}tags:/m);
+  const pathBlock = /^ {4}paths:\n((?: {6}- .+\n?)+)/m.exec(push)?.[1] ?? "";
+  const paths = [...pathBlock.matchAll(/^ {6}- "([^"]+)"$/gm)].map((match) => match[1]);
+  assert.deepEqual(paths, [
+    "site/**",
+    "site-source/**",
+    "package.json",
+    ".github/workflows/deploy-site.yml",
+  ]);
+  assert.doesNotMatch(pathBlock, /(?:^|\/)\*\*(?:\/|$).*packages|packages\/\*\*/);
+  assert.match(triggers, /^ {2}workflow_dispatch:$/m);
+  assert.match(triggers, /^ {2}workflow_call:$/m);
+});
+
 test("illustrated procedures retain instructions, ordered steps, captions and links as text", () => {
   const page = pageText(
     `<main><aside><nav>Repeated chapters</nav></aside><article>

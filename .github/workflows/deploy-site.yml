@@ -22,10 +22,10 @@
 # applied to the site: `next` to /assemblejs/next/ alongside the `next` dist-tag, `main` to
 # /assemblejs/ alongside `latest`. The branch decides the prefix and the folder is identical.
 #
-# The paths filter is an INCLUDE on site/**, never an ignore list - most of a product repo is
-# not the site, so a skip-list publishes whatever is added next. Every run regenerates the
-# reference, but only a push that touches site/ starts one: a push that changes only the
-# packages leaves the published reference as it was until a site push, release or dispatch.
+# The paths filter is an exact INCLUDE on the site sources, the platform pin and this workflow,
+# never an ignore list - most of a product repo is not the site, so a skip-list publishes whatever
+# is added next. Every run regenerates the reference. A push that changes only the packages leaves
+# it for a release or dispatch, while a pin change deploys the newly selected shared kit.
 name: deploy-site
 on:
   push:
@@ -33,6 +33,8 @@ on:
     paths:
       - "site/**"
       - "site-source/**"
+      - "package.json"
+      - ".github/workflows/deploy-site.yml"
   workflow_dispatch:
   workflow_call:
     inputs:
