@@ -41,14 +41,6 @@ npm run dev
 
 Open the address printed by the development server.
 
-- A01 · Screenshot to capture
-
-The generated application
-
-Capture the untouched generated app in a browser and its terminal address as separate frames.
-
-- Use the released CLI · Preserve the actual output
-
 The page contains the hello assembly created by the scaffold.
 
 Check
@@ -198,13 +190,7 @@ Start a working page, change its first assembly and add a framework.
 
 - [Open the guide](install.html)
 
-- A01 · Screenshot to capture
-
-Your first application
-
-The generated application running from the released CLI.
-
-- Reuses the guide’s result capture
+[Inspect the assemblies in the Pour & Grind example.](docs/outline.html)
 
 ## Use AssembleJS
 
