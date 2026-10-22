@@ -35,14 +35,21 @@ export function scheduleMount(element: Element, mode: MountMode, run: () => void
     run();
     return () => {};
   }
+  let done = false;
   const observer = new IntersectionObserver((entries) => {
+    if (done) return;
     for (const entry of entries) {
       if (!entry.isIntersecting) continue;
+      done = true;
       observer.disconnect();
       run();
       return;
     }
   });
   observer.observe(element);
-  return () => observer.disconnect();
+  return () => {
+    if (done) return;
+    done = true;
+    observer.disconnect();
+  };
 }

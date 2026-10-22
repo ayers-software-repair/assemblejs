@@ -70,6 +70,7 @@ export function startServer(
   });
   return {
     ready,
+    exited,
     stop: async () => {
       if (child.exitCode !== null || child.signalCode !== null) return;
       child.kill();

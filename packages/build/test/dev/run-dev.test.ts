@@ -33,7 +33,7 @@ describe("dev", () => {
     );
     writeFileSync(
       join(root, "src", "server.ts"),
-      'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
+      'import { existsSync } from "node:fs";\nimport { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\nsetInterval(() => { if (existsSync("stop")) process.exit(); }, 20);\n',
     );
     const port = String(await freePort());
     process.env["ASSEMBLEJS_PORT"] = port;
@@ -52,9 +52,16 @@ describe("dev", () => {
       await until(async () => (await page()).includes("second"));
 
       // A view the build refuses: the last good server keeps answering, and dev says why.
-      writeFileSync(join(root, "src", "assemblies", "hello", "hello.angular.tsx"), "");
+      const broken = join(root, "src", "assemblies", "hello", "hello.angular.tsx");
+      writeFileSync(broken, "");
       await until(async () => errors.some((line) => line.includes("still running")));
       expect(await page()).toContain("second");
+
+      writeFileSync(join(root, "stop"), "");
+      await until(async () => errors.some((line) => line.includes("the server stopped")), 2000);
+      expect(existsSync(record)).toBe(false);
+      writeFileSync(broken, "still broken");
+      await until(async () => errors.some((line) => line === "waiting for a fix"));
     } finally {
       controller.abort();
       delete process.env["ASSEMBLEJS_PORT"];
@@ -62,8 +69,7 @@ describe("dev", () => {
     expect(await done).toBe(0);
     await expect(page()).rejects.toThrow();
     expect(existsSync(join(root, ".assemblejs", "dev.json"))).toBe(false);
-    // Every server here was stopped by dev itself, on a restart or at the end.
-    expect(errors.join()).not.toContain("the server stopped");
+    expect(errors.filter((line) => line.includes("the server stopped"))).toHaveLength(1);
   });
 });
 

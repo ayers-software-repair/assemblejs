@@ -92,6 +92,54 @@ describe("the mark, through the runtime, for an assembly whose module is loaded 
     }
   });
 
+  it.each(["lazy throw", "readiness rejection"])(
+    "releases a failed mount's listeners and keeps its healthy sibling live after a %s",
+    async (mode) => {
+      vi.spyOn(console, "error").mockImplementation(() => undefined);
+      const failure = new Error("the component did not mount");
+      const heard: string[] = [];
+      const unmount = vi.fn();
+      const subscribing: ClientRenderer = {
+        mount: (_element, _data, context) => {
+          context.events.on("ping", () => heard.push(context.name));
+          if (context.name === "broken") {
+            if (mode === "lazy throw") throw failure;
+            return { unmount: () => undefined, mounted: Promise.reject(failure) };
+          }
+          return { unmount, mounted: Promise.resolve() };
+        },
+      };
+      const renderer =
+        mode === "lazy throw"
+          ? lazyRenderer({
+              broken: async () => ({ default: subscribing }),
+              healthy: async () => ({ default: subscribing }),
+            })
+          : subscribing;
+      const root = page("broken");
+      root.append(page("healthy"));
+      const runtime = start({ renderers: { html: renderer }, root });
+      await expect(runtime.mounted.get("broken-1")?.handle.mounted).rejects.toBe(failure);
+      await runtime.mounted.get("healthy-1")?.handle.mounted;
+
+      expect(root.querySelector(`[data-id="broken-1"][${MARK}]`)).toBeNull();
+      expect(root.querySelector(`[data-id="healthy-1"][${MARK}]`)).not.toBeNull();
+      const sender = runtime.bus.forAssembly({ id: "outside", name: "outside", view: "default" });
+      sender.events.send("ping", {});
+      expect(heard).toEqual(["healthy"]);
+      expect(runtime.bus.size).toBe(1);
+
+      runtime.unmountAll();
+      runtime.unmountAll();
+      sender.events.send("ping", {});
+      expect(heard).toEqual(["healthy"]);
+      expect(runtime.bus.size).toBe(0);
+      expect(runtime.mounted.size).toBe(0);
+      expect(root.querySelector(`[${MARK}]`)).toBeNull();
+      expect(unmount).toHaveBeenCalledOnce();
+    },
+  );
+
   it("is not written for an assembly unmounted before its module arrived", async () => {
     let arrive = (): void => undefined;
     const arrived = new Promise<void>((resolve) => (arrive = resolve));

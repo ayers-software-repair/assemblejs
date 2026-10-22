@@ -12,6 +12,8 @@ import type { MountHandle } from "./mount-handle.js";
  * A mount that throws answers nothing: it is reported against the assembly's name, the assembly
  * stays the markup the server sent, and whatever it had subscribed before it threw is released,
  * so nothing of an assembly that never mounted is left listening on the page's bus.
+ * A mount that returns a handle but later rejects its readiness releases its subscriptions too,
+ * leaving the handle and its promise intact for the runtime and anyone waiting on it.
  *
  * An assembly that opted into Shadow DOM is mounted inside its shadow root, which the browser
  * built from the declarative template the server sent.
@@ -29,6 +31,7 @@ export function mountIsland(
       ...sender,
       events: held.events,
     });
+    handle.mounted?.catch(held.release);
     return { handle, release: held.release };
   } catch (error) {
     held.release();

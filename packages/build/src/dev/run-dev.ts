@@ -60,9 +60,14 @@ export async function runDev(
     const started = startServer(root, io);
     server = started;
     void started.ready.then((url) => {
+      if (server !== started || url === undefined) return;
+      io.write(record, `${JSON.stringify({ url: askedAt(url) })}\n`);
+    });
+    void started.exited?.then(() => {
       if (server !== started) return;
-      if (url === undefined) io.error("the server stopped; waiting for a change");
-      else io.write(record, `${JSON.stringify({ url: askedAt(url) })}\n`);
+      server = undefined;
+      io.remove(record);
+      io.error("the server stopped; waiting for a change");
     });
   };
   const runs = folded(step);

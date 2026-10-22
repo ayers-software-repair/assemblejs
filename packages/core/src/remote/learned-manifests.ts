@@ -76,8 +76,14 @@ export function learnedManifests(options: {
     string,
     { readonly version: string; readonly assets: AssemblyAssets }
   >();
-  // The read in flight for a url, so concurrent first requests ask once between them.
+  // The read in flight for a url, so concurrent requests share one runner.
   const reading = new Map<string, Promise<void>>();
+  // The newest version that runner must read. One target replaces another, so version changes do
+  // not grow a promise chain while a slow manifest is still answering.
+  const wanted = new Map<
+    string,
+    { readonly manifest: string; readonly origin: string; readonly version: string }
+  >();
   // What a url's answers have held inside them, for as long as its version stands: every child
   // seen is kept, so an answer served again from the page's cache links what it holds, and a
   // child one request's answer left out is still linked for the request whose answer has it.
@@ -86,7 +92,11 @@ export function learnedManifests(options: {
   // it: a line for every read left waiting would be a flood of its own.
   let full = false;
   const read = (url: string, manifest: string, origin: string, version: string): void => {
-    if (manifests.get(url)?.version === version || reading.has(url)) return;
+    if (reading.has(url)) {
+      if (wanted.get(url)?.version !== version) wanted.set(url, { manifest, origin, version });
+      return;
+    }
+    if (manifests.get(url)?.version === version) return;
     if (reading.size >= reads) {
       if (!full) {
         options.log({
@@ -99,26 +109,43 @@ export function learnedManifests(options: {
       return;
     }
     full = false;
-    const pending = readManifest({
-      url: manifest,
-      origin,
-      maxBytes: options.maxBytes,
-      deadline: MANIFEST_DEADLINE,
-    }).then((assets) => {
-      reading.delete(url);
-      if (typeof assets !== "string") {
-        // Set afresh, so a manifest read again is the newest kept.
-        manifests.delete(url);
-        manifests.set(url, { version, assets });
-        bound(manifests, kept);
-        return;
+    wanted.set(url, { manifest, origin, version });
+    const deadline = Date.now() + MANIFEST_DEADLINE;
+    const pending = (async () => {
+      for (;;) {
+        const current = wanted.get(url);
+        if (current === undefined) return;
+        const remaining = deadline - Date.now();
+        if (remaining <= 0) {
+          wanted.delete(url);
+          reading.delete(url);
+          return;
+        }
+        const assets = await readManifest({
+          url: current.manifest,
+          origin: current.origin,
+          maxBytes: options.maxBytes,
+          deadline: remaining,
+        });
+        if (typeof assets !== "string") {
+          // Set afresh, so a manifest read again is the newest kept.
+          manifests.delete(url);
+          manifests.set(url, { version: current.version, assets });
+          bound(manifests, kept);
+        } else {
+          options.log({
+            correlationId: newCorrelationId(),
+            message: `remote manifest ${current.manifest} could not be read, and will be asked for again: ${assets}`,
+            stack: undefined,
+          });
+        }
+        if (wanted.get(url)?.version === current.version) {
+          wanted.delete(url);
+          reading.delete(url);
+          return;
+        }
       }
-      options.log({
-        correlationId: newCorrelationId(),
-        message: `remote manifest ${manifest} could not be read, and will be asked for again: ${assets}`,
-        stack: undefined,
-      });
-    });
+    })();
     reading.set(url, pending);
   };
   const learned = async (url: string): Promise<AssemblyAssets | undefined> => {

@@ -34,6 +34,41 @@ describe("scheduling a mount", () => {
     expect(run).not.toHaveBeenCalled();
   });
 
+  it.each([true, false])(
+    "ignores queued visibility records after cancellation: %s",
+    (cancelled) => {
+      let deliver = (_visible: boolean): void => undefined;
+      const disconnect = vi.fn();
+      vi.stubGlobal(
+        "IntersectionObserver",
+        class {
+          constructor(callback: IntersectionObserverCallback) {
+            deliver = (visible) =>
+              callback(
+                [{ isIntersecting: visible } as IntersectionObserverEntry],
+                this as unknown as IntersectionObserver,
+              );
+          }
+          observe = vi.fn();
+          disconnect = disconnect;
+        },
+      );
+      try {
+        const run = vi.fn();
+        const cancel = scheduleMount(element(), "visible", run);
+        deliver(false);
+        expect(run).not.toHaveBeenCalled();
+        if (cancelled) cancel();
+        deliver(true);
+        deliver(true);
+        expect(run).toHaveBeenCalledTimes(cancelled ? 0 : 1);
+        expect(disconnect).toHaveBeenCalledOnce();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    },
+  );
+
   // Every mode returns a cancel, including the ones that already ran, so a caller never has to
   // ask which kind it got.
   it("always returns a cancel that is safe to call", () => {

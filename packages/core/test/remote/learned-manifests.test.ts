@@ -2,23 +2,43 @@
 // SPDX-License-Identifier: Apache-2.0
 import { createServer as createHttpServer } from "node:http";
 import type { AddressInfo } from "node:net";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { learnedManifests, parseContentUrl } from "@assemblejs/core";
 import type { LogLine } from "@assemblejs/core";
 
 // A server of manifests: each path answers the files named after it, and counts its reads.
 const reads = new Map<string, number>();
+let releaseChanging: () => void = () => undefined;
+const changingReleased = new Promise<void>((resolve) => {
+  releaseChanging = resolve;
+});
+let markChangingStarted: () => void = () => undefined;
+const changingStarted = new Promise<void>((resolve) => {
+  markChangingStarted = resolve;
+});
 const server = createHttpServer((request, response) => {
   const path = request.url ?? "";
-  reads.set(path, (reads.get(path) ?? 0) + 1);
+  const count = (reads.get(path) ?? 0) + 1;
+  reads.set(path, count);
   if (path.includes("/broken/")) {
     response.writeHead(500);
     response.end();
     return;
   }
   const name = /\/assembly\/([a-z]+)\//.exec(path)?.[1] ?? "none";
-  response.writeHead(200, { "content-type": "application/json" });
-  response.end(JSON.stringify({ assets: { css: [`/${name}.css`], js: [`/${name}.js`] } }));
+  const answer = () => {
+    const suffix = name === "changing" ? String(count) : "";
+    response.writeHead(200, { "content-type": "application/json" });
+    response.end(
+      JSON.stringify({ assets: { css: [`/${name}${suffix}.css`], js: [`/${name}${suffix}.js`] } }),
+    );
+  };
+  if (name === "changing" && count === 1) {
+    markChangingStarted();
+    void changingReleased.then(answer);
+  } else {
+    answer();
+  }
 });
 let origin = "";
 const content = (name: string): string => `${origin}/assembly/${name}/`;
@@ -63,6 +83,101 @@ describe("what other servers' manifests declared", () => {
       learned.learn(content("rush"), manifest("rush"), origin, "v1", []);
     await learned.assets(content("rush"));
     expect(readsOf("rush")).toBe(1);
+  });
+
+  it("reads a new version while the previous version is still being read", async () => {
+    const learned = learnedManifests({ maxBytes: 4096, log: () => undefined, reads: 1 });
+    learned.learn(content("changing"), manifest("changing"), origin, "v1", []);
+    await changingStarted;
+    for (let request = 0; request < 3; request += 1) {
+      learned.learn(content("changing"), manifest("changing"), origin, "v2", []);
+    }
+    releaseChanging();
+    expect(await learned.assets(content("changing"))).toEqual({
+      css: [`${origin}/changing2.css`],
+      js: [`${origin}/changing2.js`],
+    });
+    expect(readsOf("changing")).toBe(2);
+  });
+
+  it("returns to a cached version when the content rolls back during another read", async () => {
+    let releaseV2: () => void = () => undefined;
+    const v2Released = new Promise<void>((resolve) => {
+      releaseV2 = resolve;
+    });
+    let markV2Started: () => void = () => undefined;
+    const v2Started = new Promise<void>((resolve) => {
+      markV2Started = resolve;
+    });
+    let read = 0;
+    const fetched = vi.fn(async () => {
+      await Promise.resolve();
+      read += 1;
+      if (read === 2) {
+        markV2Started();
+        await v2Released;
+      }
+      const version = read === 2 ? "v2" : "v1";
+      return new Response(JSON.stringify({ assets: { css: [`/${version}.css`], js: [] } }), {
+        headers: { "content-type": "application/json" },
+      });
+    });
+    vi.stubGlobal("fetch", fetched);
+    try {
+      const learned = learnedManifests({ maxBytes: 4096, log: () => undefined });
+      learned.learn(content("rollback"), manifest("rollback"), origin, "v1", []);
+      expect((await learned.assets(content("rollback")))?.css).toEqual([`${origin}/v1.css`]);
+      learned.learn(content("rollback"), manifest("rollback"), origin, "v2", []);
+      await v2Started;
+      learned.learn(content("rollback"), manifest("rollback"), origin, "v1", []);
+      releaseV2();
+      expect((await learned.assets(content("rollback")))?.css).toEqual([`${origin}/v1.css`]);
+      expect(fetched).toHaveBeenCalledTimes(3);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("bounds every version read by one shared deadline and can read again afterward", async () => {
+    let now = 0;
+    const clock = vi.spyOn(Date, "now").mockImplementation(() => now);
+    const timeout = vi.spyOn(AbortSignal, "timeout");
+    const learned = learnedManifests({ maxBytes: 4096, log: () => undefined });
+    let read = 0;
+    const fetched = vi.fn(async () => {
+      await Promise.resolve();
+      read += 1;
+      now += 500;
+      if (read < 3) {
+        learned.learn(content("budget"), manifest("budget"), origin, `v${String(read + 1)}`, []);
+      }
+      return new Response(
+        JSON.stringify({ assets: { css: [`/budget${String(read)}.css`], js: [] } }),
+        { headers: { "content-type": "application/json" } },
+      );
+    });
+    vi.stubGlobal("fetch", fetched);
+    try {
+      learned.learn(content("budget"), manifest("budget"), origin, "v1", []);
+      expect(await learned.assets(content("budget"))).toEqual({
+        css: [`${origin}/budget2.css`],
+        js: [],
+      });
+      expect(fetched).toHaveBeenCalledTimes(2);
+      expect(timeout).toHaveBeenNthCalledWith(1, 1000);
+      expect(timeout).toHaveBeenNthCalledWith(2, 500);
+
+      learned.learn(content("budget"), manifest("budget"), origin, "v4", []);
+      expect(await learned.assets(content("budget"))).toEqual({
+        css: [`${origin}/budget3.css`],
+        js: [],
+      });
+      expect(fetched).toHaveBeenCalledTimes(3);
+    } finally {
+      vi.unstubAllGlobals();
+      timeout.mockRestore();
+      clock.mockRestore();
+    }
   });
 
   it("is a logged warning and a retry when it cannot be read, never an answer", async () => {

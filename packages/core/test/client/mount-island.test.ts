@@ -3,7 +3,7 @@
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createBus, mountIsland } from "@assemblejs/core/client";
-import type { ClientRenderer } from "@assemblejs/core/client";
+import type { ClientRenderer, Events } from "@assemblejs/core/client";
 
 const payload = {
   id: "cart-1",
@@ -64,5 +64,77 @@ describe("mounting one assembly's browser half", () => {
     expect(mountIsland(renderer, document.createElement("div"), payload, bus)).toBeUndefined();
     expect(bus.size).toBe(0);
     expect(error).toHaveBeenCalledWith('assemblejs: "cart" did not mount', expect.any(Error));
+  });
+
+  it("releases only the failed assembly's subscriptions when readiness rejects, preserving its handle", async () => {
+    const bus = createBus();
+    const sibling = bus.forAssembly({ ...payload, id: "cart-2" });
+    const kept = vi.fn();
+    sibling.events.on("cart:changed", kept);
+    const heard = vi.fn();
+    const failure = new Error("the renderer could not become ready");
+    let fail = (_reason: unknown): void => undefined;
+    const mounted = new Promise<void>((_resolve, reject) => (fail = reject));
+    const handle = { unmount: vi.fn(), mounted };
+    let events: Events | undefined;
+    const renderer: ClientRenderer = {
+      mount: (_element, _data, context) => {
+        events = context.events;
+        events.on("cart:changed", heard);
+        events.on("cart:emptied", heard);
+        return handle;
+      },
+    };
+    const island = mountIsland(renderer, document.createElement("div"), payload, bus);
+    expect(island?.handle).toBe(handle);
+    expect(island?.handle.mounted).toBe(mounted);
+    await Promise.resolve();
+    sibling.events.send("cart:changed", {});
+    expect(heard).toHaveBeenCalledOnce();
+    expect(bus.size).toBe(3);
+
+    fail(failure);
+    await expect(island?.handle.mounted).rejects.toBe(failure);
+    expect(bus.size).toBe(1);
+    // Work still finishing after failure cannot subscribe again through the released scope.
+    events?.on("cart:changed", heard);
+    sibling.events.send("cart:changed", {});
+    sibling.events.send("cart:emptied", {});
+    expect(heard).toHaveBeenCalledOnce();
+    expect(kept).toHaveBeenCalledTimes(2);
+    island?.release();
+    island?.release();
+    expect(bus.size).toBe(1);
+    expect(handle.unmount).not.toHaveBeenCalled();
+    sibling.release();
+    expect(bus.size).toBe(0);
+  });
+
+  it("keeps delivering while readiness is pending and after it succeeds, until released", async () => {
+    const bus = createBus();
+    const sender = bus.forAssembly({ id: "catalogue-1", name: "catalogue", view: "default" });
+    const heard = vi.fn();
+    let live = (): void => undefined;
+    const mounted = new Promise<void>((resolve) => (live = resolve));
+    const renderer: ClientRenderer = {
+      mount: (_element, _data, context) => {
+        context.events.on("cart:changed", heard);
+        return { unmount: () => undefined, mounted };
+      },
+    };
+    const island = mountIsland(renderer, document.createElement("div"), payload, bus);
+    await Promise.resolve();
+    sender.events.send("cart:changed", {});
+    expect(heard).toHaveBeenCalledOnce();
+    live();
+    await island?.handle.mounted;
+    sender.events.send("cart:changed", {});
+    expect(heard).toHaveBeenCalledTimes(2);
+    expect(bus.size).toBe(1);
+    island?.release();
+    island?.release();
+    sender.events.send("cart:changed", {});
+    expect(heard).toHaveBeenCalledTimes(2);
+    expect(bus.size).toBe(0);
   });
 });
