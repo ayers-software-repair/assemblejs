@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonObject, MarkupInput } from "@assemblejs/core";
-import { serverEvents } from "@assemblejs/core/client";
+import type { JsonObject, MarkupInput } from "@asmjs/core";
+import { serverEvents } from "@asmjs/core/client";
 import { render } from "@lit-labs/ssr";
 import { collectResultSync } from "@lit-labs/ssr/lib/render-result.js";
 import type { LitView } from "../props/lit-view.js";

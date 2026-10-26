@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { RULE_IDS } from "@assemblejs/build";
+import { RULE_IDS } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { RULES } from "@assemblejs/check";
+import { RULES } from "@asmjs/check";
 
 describe("what the framework knows", () => {
   it("gives every rule a reason and a smell, not just a sentence", () => {

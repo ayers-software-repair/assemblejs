@@ -1,9 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { createServer, defineAssembly } from "@assemblejs/core";
-import type { App, Config } from "@assemblejs/core";
+import { createServer, defineAssembly } from "@asmjs/core";
+import type { App, Config } from "@asmjs/core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { describeContract } from "@assemblejs/mcp";
+import { describeContract } from "@asmjs/mcp";
 
 // A real server with one assembly: what the contract says is held to what this server sends.
 const config: Config = { mode: "production", host: "127.0.0.1", port: 0, auth: undefined };

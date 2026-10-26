@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 import { CATEGORIES, PRODUCTS } from "../../catalogue/products.js";
 
 // The shelves, each with how many things stand on it, and which one the page is on.

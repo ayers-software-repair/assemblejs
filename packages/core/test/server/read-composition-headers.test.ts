@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readCompositionHeaders } from "@assemblejs/core";
+import { readCompositionHeaders } from "@asmjs/core";
 
 const UUID_A = "3f2504e0-4f89-41d3-9a0c-0305e82c3301";
 const UUID_B = "9f8b7c6d-1e2f-4a3b-8c9d-0e1f2a3b4c5d";

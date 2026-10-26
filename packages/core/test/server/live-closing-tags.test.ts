@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { liveClosingTags } from "@assemblejs/core";
+import { liveClosingTags } from "@asmjs/core";
 
 describe("finding the closing tags a browser would read as tags", () => {
   it("passes over one inside a comment, a script or a style", () => {

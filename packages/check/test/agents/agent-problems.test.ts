@@ -3,8 +3,9 @@
 import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { ownVersion } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { agentFiles, agentInstructions, agentProblems, checkProject } from "@assemblejs/check";
+import { agentFiles, agentInstructions, agentProblems, checkProject } from "@asmjs/check";
 import { rightProject } from "../fixtures/right-project.js";
 
 const project = (files: Readonly<Record<string, string>> = {}): string => {
@@ -15,7 +16,7 @@ const project = (files: Readonly<Record<string, string>> = {}): string => {
   }
   return root;
 };
-const MANIFEST = '{ "devDependencies": { "@assemblejs/mcp": "^1.0.0" } }';
+const MANIFEST = '{ "devDependencies": { "@asmjs/mcp": "^1.0.0" } }';
 const fresh = agentFiles("shop").files;
 const AGENTS = fresh["AGENTS.md"] ?? "";
 const REWRITE = expect.stringContaining("run assemblejs add agents") as unknown as string;
@@ -101,24 +102,24 @@ describe("what is out of date in the agent files a project carries", () => {
 
   it("is never a registration that says the same thing in another order", () => {
     const reordered =
-      '{"mcpServers":{"assemblejs":{"args":["node_modules/@assemblejs/mcp/dist/bin.js"],"command":"node","type":"stdio"}}}';
+      '{"mcpServers":{"assemblejs":{"args":["node_modules/@asmjs/mcp/dist/bin.js"],"command":"node","type":"stdio"}}}';
     expect(agentProblems(project({ "package.json": MANIFEST, ".mcp.json": reordered }))).toEqual(
       [],
     );
   });
 
-  it("is a registered server the project does not depend on", () => {
+  it("installs a registered server at this prerelease's exact version when the project lacks it", () => {
     const root = project({ "package.json": "{}", ".mcp.json": fresh[".mcp.json"] ?? "" });
     expect(agentProblems(root)).toEqual([
       {
         path: join(root, "package.json"),
         rule: "agent-instructions-are-current",
         message:
-          'the server "assemblejs" is registered, and the project does not depend on @assemblejs/mcp, which carries it',
-        fix: "npm install --save-dev @assemblejs/mcp",
+          'the server "assemblejs" is registered, and the project does not depend on @asmjs/mcp, which carries it',
+        fix: `npm install --save-dev @asmjs/mcp@${ownVersion(import.meta.url)}`,
       },
     ]);
-    const named = '{ "scripts": { "mcp": "npx @assemblejs/mcp" } }';
+    const named = '{ "scripts": { "mcp": "npx @asmjs/mcp" } }';
     expect(
       found(project({ "package.json": named, ".mcp.json": fresh[".mcp.json"] ?? "" })),
     ).toHaveLength(1);
@@ -127,10 +128,10 @@ describe("what is out of date in the agent files a project carries", () => {
   // Each would call the other's instructions out of date, and rewriting them satisfies one.
   it("is one thing alone where the agent surface is built on another command line than the one installed", () => {
     const installed = (builtOn: string, beside: string) => ({
-      "node_modules/@assemblejs/mcp/package.json": JSON.stringify({
-        dependencies: { "@assemblejs/cli": builtOn },
+      "node_modules/@asmjs/mcp/package.json": JSON.stringify({
+        dependencies: { "@asmjs/cli": builtOn },
       }),
-      "node_modules/@assemblejs/cli/package.json": JSON.stringify({ version: beside }),
+      "node_modules/@asmjs/cli/package.json": JSON.stringify({ version: beside }),
     });
     const stale = {
       ...rightProject("shop"),
@@ -142,8 +143,8 @@ describe("what is out of date in the agent files a project carries", () => {
         path: join(root, "package.json"),
         rule: "agent-instructions-are-current",
         message:
-          "the @assemblejs/mcp this project installs is built on @assemblejs/cli 1.0.0, and the project installs 1.1.0: each writes and checks its own agent instructions",
-        fix: "bring the two to versions released together: npm update @assemblejs/cli @assemblejs/mcp",
+          "the @asmjs/mcp this project installs is built on @asmjs/cli 1.0.0, and the project installs 1.1.0: each writes and checks its own agent instructions",
+        fix: "bring the two to versions released together: npm update @asmjs/cli @asmjs/mcp",
       },
     ]);
     // Released together, what is out of date is judged again.
@@ -153,20 +154,17 @@ describe("what is out of date in the agent files a project carries", () => {
 
   it("is never that, where the two cannot be compared or the project carries no agent files", () => {
     const both = (builtOn: string, beside: string) => ({
-      "node_modules/@assemblejs/mcp/package.json": JSON.stringify({
-        dependencies: { "@assemblejs/cli": builtOn },
+      "node_modules/@asmjs/mcp/package.json": JSON.stringify({
+        dependencies: { "@asmjs/cli": builtOn },
       }),
-      "node_modules/@assemblejs/cli/package.json": JSON.stringify({ version: beside }),
+      "node_modules/@asmjs/cli/package.json": JSON.stringify({ version: beside }),
     });
     const fresh = rightProject("shop");
     // A workspace names its own packages its own way, and a range is no version to compare.
     expect(agentProblems(project({ ...fresh, ...both("workspace:*", "1.1.0") }))).toEqual([]);
     expect(agentProblems(project({ ...fresh, ...both("^1.0.0", "1.1.0") }))).toEqual([]);
     // Only one of the two installed where the project's files are looked for.
-    const { "node_modules/@assemblejs/cli/package.json": _cli, ...onlyServer } = both(
-      "1.0.0",
-      "1.1.0",
-    );
+    const { "node_modules/@asmjs/cli/package.json": _cli, ...onlyServer } = both("1.0.0", "1.1.0");
     expect(agentProblems(project({ ...fresh, ...onlyServer }))).toEqual([]);
     expect(agentProblems(project({ "package.json": "{}", ...both("1.0.0", "1.1.0") }))).toEqual([]);
   });

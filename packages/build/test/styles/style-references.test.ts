@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { styleReferences } from "@assemblejs/build";
+import { styleReferences } from "@asmjs/build";
 
 describe("the files a CSS value names beside its stylesheet", () => {
   it("finds a relative url however it is quoted", () => {

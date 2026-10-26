@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { countPlacements, fallBack } from "@assemblejs/core";
-import type { AssemblyPlan, ContentCache, Diagnostic, SettleInput } from "@assemblejs/core";
+import { countPlacements, fallBack } from "@asmjs/core";
+import type { AssemblyPlan, ContentCache, Diagnostic, SettleInput } from "@asmjs/core";
 
 const failure: Diagnostic = {
   name: "cart",

@@ -4,8 +4,8 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { styleProblems } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { styleProblems } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 const withCss = (css: string, files: Record<string, string> = {}): DiscoveredAssembly => {
   const directory = join(mkdtempSync(join(tmpdir(), "style-problems-")), "cart");

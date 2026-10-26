@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { askedAt } from "@assemblejs/build";
+import { askedAt } from "@asmjs/build";
 
 describe("the address a dev server is asked at from this machine", () => {
   it("is the one it said, where that names an address", () => {

@@ -18,7 +18,7 @@
     <h2>Install the renderer</h2>
     <dl>
       <div class="item">
-        <dt><code>npm install @assemblejs/renderer-preact preact</code></dt>
+        <dt><code>npm install @asmjs/renderer-preact@next preact</code></dt>
         <dd>
           One renderer package per framework, so a project that has no React never installs React.
           Preact 11; the renderer's own machinery, <code>preact-render-to-string</code>, comes with
@@ -34,7 +34,7 @@
           Writes <code>src/assemblies/cart/cart.preact.tsx</code> and nothing else: the directory is
           the assembly, and the <code>.preact</code> infix says the framework, because React, Preact
           and Solid all write <code>.tsx</code>. Your server file does not change.
-          <pre><code>import type { AssemblyProps } from "@assemblejs/renderer-preact";
+          <pre><code>import type { AssemblyProps } from "@asmjs/renderer-preact";
 
 export default function Cart({ data }: AssemblyProps) {
   return &lt;p&gt;cart {Object.keys(data).length}&lt;/p&gt;;
@@ -62,7 +62,7 @@ export default function Cart({ data }: AssemblyProps) {
           its own, <code>&lt;div data-assembly-slot="price"&gt;</code>, and the placed assembly
           stands inside it: lay it out by that element, never by what is inside. An assembly in a
           project has one view, so no <code>view</code> is given.
-          <pre><code>import { Slot } from "@assemblejs/renderer-preact/client";
+          <pre><code>import { Slot } from "@asmjs/renderer-preact/client";
 
 export default function Cart() {
   return (
@@ -95,7 +95,7 @@ export function Label({ count }: { readonly count: number }) {
           given the request's <code>query</code> and the route <code>params</code> of the page that
           placed the assembly, and the same function answers the assembly's data endpoint, so the
           two cannot disagree. The component reads the result as <code>data</code>.
-          <pre><code>import { defineService } from "@assemblejs/core";
+          <pre><code>import { defineService } from "@asmjs/core";
 
 export default defineService({
   name: "label",
@@ -110,13 +110,13 @@ export default defineService({
       <div class="item">
         <dt><code>useEvents()</code></dt>
         <dd>
-          From <code>@assemblejs/renderer-preact/client</code>; the hooks are Preact's own, from
+          From <code>@asmjs/renderer-preact/client</code>; the hooks are Preact's own, from
           <code>preact/hooks</code>. The object is scoped to this assembly: <code>send</code> stamps
           the sender, <code>on</code> returns its unsubscribe, so returning it from an effect is the
           whole cleanup; what is still subscribed when the page unmounts its assemblies is released
           then. The counter from the frameworks example sends on every click and hears every other
           counter on the page, React, Svelte, Vue, Solid or Lit, with no adapter between them.
-          <pre><code>import { useEvents } from "@assemblejs/renderer-preact/client";
+          <pre><code>import { useEvents } from "@asmjs/renderer-preact/client";
 import { useEffect, useState } from "preact/hooks";
 import { Label } from "./label.js";
 
@@ -234,7 +234,7 @@ export default function PreactBox() {
           Policy, when a placement needs any, lives in the page's own file: a deadline in
           milliseconds, markup to show when the assembly does not answer, whether its failure fails
           the page, or a deferral the browser fills after load.
-          <pre><code>import { definePage } from "@assemblejs/core";
+          <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { readElements } from "@assemblejs/check";
-import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@assemblejs/core";
+import { readElements } from "@asmjs/check";
+import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@asmjs/core";
 
 /**
  * The envelopes in markup that are marked failed, in the order they stand: each one's assembly

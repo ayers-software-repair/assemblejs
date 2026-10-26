@@ -5,12 +5,12 @@ import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSy
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { AGENT_SERVER, agentInstructions } from "@assemblejs/check";
+import { AGENT_SERVER, agentInstructions } from "@asmjs/check";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createMcpServer, resolveRoot } from "@assemblejs/mcp";
+import { createMcpServer, resolveRoot } from "@asmjs/mcp";
 
 let dir = "";
 let client: Client;

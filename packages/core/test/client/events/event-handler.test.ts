@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { EventHandler } from "@assemblejs/core/client";
+import type { EventHandler } from "@asmjs/core/client";
 
 describe("a handler", () => {
   it("is called with the whole message, not just the payload", () => {

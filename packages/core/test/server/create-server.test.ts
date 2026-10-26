@@ -4,8 +4,8 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { BootError, createServer, defineApi, defineAssembly } from "@assemblejs/core";
-import type { App, Config, LogLine } from "@assemblejs/core";
+import { BootError, createServer, defineApi, defineAssembly } from "@asmjs/core";
+import type { App, Config, LogLine } from "@asmjs/core";
 
 const config: Config = { mode: "production", host: "127.0.0.1", port: 0, auth: undefined };
 

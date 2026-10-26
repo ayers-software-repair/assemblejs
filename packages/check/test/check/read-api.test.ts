@@ -3,9 +3,9 @@
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { OutsideRootError } from "@assemblejs/build";
+import { OutsideRootError } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { readApi } from "@assemblejs/check";
+import { readApi } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const api = (source: string): ReturnType<typeof readApi> => {

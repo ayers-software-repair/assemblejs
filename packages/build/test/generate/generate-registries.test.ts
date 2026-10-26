@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { generateRegistries } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { generateRegistries } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 const from = "/p/.assemblejs";
 const found = (name: string, view: string, renderer: string): DiscoveredAssembly => ({

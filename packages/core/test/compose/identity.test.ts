@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { identity } from "@assemblejs/core";
+import { identity } from "@asmjs/core";
 
 describe("an assembly's identity", () => {
   it("is its name and view, which is what makes a cycle detectable", () => {

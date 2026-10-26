@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readCookies } from "@assemblejs/core";
+import { readCookies } from "@asmjs/core";
 
 describe("reading a request's cookies", () => {
   it("splits pairs on semicolons, trims, and decodes the value", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { SvelteCompile } from "@assemblejs/build";
+import type { SvelteCompile } from "@asmjs/build";
 
 describe("the one Svelte compiler function a build calls", () => {
   it("takes a source and a side, and answers the compiled javascript", () => {

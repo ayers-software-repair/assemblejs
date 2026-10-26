@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkRoot, resolveRoot } from "@assemblejs/mcp";
+import { checkRoot, resolveRoot } from "@asmjs/mcp";
 
 describe("checking through the agent surface", () => {
   it("answers ok for a project with nothing wrong", async () => {

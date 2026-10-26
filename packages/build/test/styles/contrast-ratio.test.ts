@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { contrastRatio } from "@assemblejs/build";
+import { contrastRatio } from "@asmjs/build";
 
 describe("the contrast ratio of two colours", () => {
   it("is 21 for black on white, 1 for a colour on itself, and the same either way round", () => {

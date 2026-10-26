@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { placeChips } from "@assemblejs/core/outline";
+import { placeChips } from "@asmjs/core/outline";
 
 const chip = (left: number, top: number, width = 60) => ({ left, top, width, height: 18 });
 

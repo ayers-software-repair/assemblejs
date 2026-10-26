@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { networkInterfaces } from "node:os";
-import { loopbackHost } from "@assemblejs/core";
+import { loopbackHost } from "@asmjs/core";
 
 /**
  * Whether a url's host, with its port or without, is this machine's own: a loopback name, or an

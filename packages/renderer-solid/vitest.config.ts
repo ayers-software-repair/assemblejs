@@ -21,11 +21,11 @@ const solid = (side: "client" | "server"): Plugin => ({
 });
 
 const alias = {
-  "@assemblejs/renderer-solid/client": src("./src/client/index.ts"),
-  "@assemblejs/renderer-solid/compiler": src("./src/compiler/index.ts"),
-  "@assemblejs/renderer-solid": src("./src/index.ts"),
-  "@assemblejs/core/client": src("../core/src/client/index.ts"),
-  "@assemblejs/core": src("../core/src/index.ts"),
+  "@asmjs/renderer-solid/client": src("./src/client/index.ts"),
+  "@asmjs/renderer-solid/compiler": src("./src/compiler/index.ts"),
+  "@asmjs/renderer-solid": src("./src/index.ts"),
+  "@asmjs/core/client": src("../core/src/client/index.ts"),
+  "@asmjs/core": src("../core/src/index.ts"),
 };
 
 // Two projects, because Solid is two builds: its server build renders strings, its browser

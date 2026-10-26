@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { SEGMENT } from "@assemblejs/core";
+import { SEGMENT } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { COMPUTED } from "@assemblejs/check";
+import { COMPUTED } from "@asmjs/check";
 
 describe("the mark on a value a source computes", () => {
   it("is one word, said the same wherever a shape is shown", () => {

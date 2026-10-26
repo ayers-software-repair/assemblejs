@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readTags } from "@assemblejs/check";
+import { readTags } from "@asmjs/check";
 
 describe("reading a document's link, script and envelope tags", () => {
   it("reads attributes in any order, however quoted, names lower-cased", () => {

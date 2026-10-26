@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { carriesCredential } from "@assemblejs/core";
+import { carriesCredential } from "@asmjs/core";
 
 describe("detecting a credentialled request", () => {
   it("finds the credential headers whatever their case", () => {

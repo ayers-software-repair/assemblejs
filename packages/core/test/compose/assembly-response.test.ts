@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AssemblyResponse } from "@assemblejs/core";
+import type { AssemblyResponse } from "@asmjs/core";
 
 describe("an assembly response", () => {
   it("discriminates on ok, and a failure always carries a correlation id", () => {

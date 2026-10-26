@@ -3,10 +3,10 @@
 // @vitest-environment happy-dom
 import { useId as usePreactId } from "preact/hooks";
 import { act } from "preact/test-utils";
-import { createBus } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
 import { describe, expect, it } from "vitest";
-import { renderToMarkup } from "@assemblejs/renderer-preact";
-import { hydrate, useId } from "@assemblejs/renderer-preact/client";
+import { renderToMarkup } from "@asmjs/renderer-preact";
+import { hydrate, useId } from "@asmjs/renderer-preact/client";
 
 const Field = () => {
   const id = useId();

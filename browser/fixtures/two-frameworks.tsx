@@ -4,9 +4,9 @@
 // the React one displays. Neither imports the other, neither knows the other's framework, and
 // nothing sits between them but the page's own bus.
 import { useEffect, useState } from "react";
-import { start } from "@assemblejs/core/client";
-import { hydrate as hydrateReact, useEvents } from "@assemblejs/renderer-react/client";
-import { hydrate as hydrateSvelte } from "@assemblejs/renderer-svelte/client";
+import { start } from "@asmjs/core/client";
+import { hydrate as hydrateReact, useEvents } from "@asmjs/renderer-react/client";
+import { hydrate as hydrateSvelte } from "@asmjs/renderer-svelte/client";
 import Counter from "./Counter.svelte";
 
 const Readout = () => {

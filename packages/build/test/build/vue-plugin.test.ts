@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 import { describe, expect, it } from "vitest";
-import { describeBuildFailure, loadVueCompiler, vuePlugin } from "@assemblejs/build";
+import { describeBuildFailure, loadVueCompiler, vuePlugin } from "@asmjs/build";
 
 const example = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));
 

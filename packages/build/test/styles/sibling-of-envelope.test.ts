@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { siblingOfEnvelope } from "@assemblejs/build";
+import { siblingOfEnvelope } from "@asmjs/build";
 
 describe("selectors that reach a sibling of the assembly's envelope", () => {
   it("are those that name the envelope and then a sibling of it", () => {

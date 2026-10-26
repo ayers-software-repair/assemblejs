@@ -4,8 +4,8 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { describeAssembly, describeProject, resolveRoot } from "@assemblejs/mcp";
-import type { ProjectRoot } from "@assemblejs/mcp";
+import { describeAssembly, describeProject, resolveRoot } from "@asmjs/mcp";
+import type { ProjectRoot } from "@asmjs/mcp";
 
 let root: ProjectRoot;
 let dir = "";

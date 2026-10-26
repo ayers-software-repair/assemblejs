@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { api } from "@assemblejs/core/client";
-import type { ClientRenderer } from "@assemblejs/core/client";
+import { api } from "@asmjs/core/client";
+import type { ClientRenderer } from "@asmjs/core/client";
 
 interface Answer {
   readonly word: string;

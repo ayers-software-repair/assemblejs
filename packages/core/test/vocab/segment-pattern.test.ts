@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { SEGMENT_PATTERN } from "@assemblejs/core";
+import { SEGMENT_PATTERN } from "@asmjs/core";
 
 describe("the segment pattern", () => {
   it("can be embedded in a longer pattern: no anchors, no groups of its own", () => {

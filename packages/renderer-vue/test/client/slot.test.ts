@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
 import { createSSRApp, h } from "vue";
 import { renderToString } from "vue/server-renderer";
-import { Slot } from "@assemblejs/renderer-vue/client";
+import { Slot } from "@asmjs/renderer-vue/client";
 
 const render = (name: string, view?: string) =>
   renderToString(

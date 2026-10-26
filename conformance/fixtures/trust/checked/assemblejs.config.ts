@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineConfig } from "@assemblejs/core";
+import { defineConfig } from "@asmjs/core";
 
 // The product's own check, for what basic credentials cannot express: here a header a gateway
 // would set. One value breaks the check on purpose, so a spec can see that a broken gate is a

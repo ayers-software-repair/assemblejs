@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DevtoolsView } from "@assemblejs/core";
+import type { DevtoolsView } from "@asmjs/core";
 
 describe("what a devtools route is handed", () => {
   it("is the project and the failures logged most recently, read when asked", () => {

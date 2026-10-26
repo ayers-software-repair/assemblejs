@@ -6,10 +6,10 @@ import { defineConfig } from "vitest/config";
 const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 const alias = {
-  "@assemblejs/renderer-vue/client": src("./src/client/index.ts"),
-  "@assemblejs/renderer-vue": src("./src/index.ts"),
-  "@assemblejs/core/client": src("../core/src/client/index.ts"),
-  "@assemblejs/core": src("../core/src/index.ts"),
+  "@asmjs/renderer-vue/client": src("./src/client/index.ts"),
+  "@asmjs/renderer-vue": src("./src/index.ts"),
+  "@asmjs/core/client": src("../core/src/client/index.ts"),
+  "@asmjs/core": src("../core/src/index.ts"),
 };
 
 // The server tests run against both of Vue's builds: its development build throws where its

@@ -5,6 +5,25 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 ## RESUME HERE - the handoff. A fresh lane reads this block first and needs nothing else.
 
+**Current takeover checkpoint — 2026-10-26.** The active rescope worktree is
+`codex/asmjs-rescope` at `becca874a8d83233ebb65e1ef8edc965cfdb22c8`, with the existing
+uncommitted rescope preserved. All fourteen public packages use `@asmjs/*`; product,
+configuration and CLI names remain AssembleJS. The two packed-tarball helpers now consume
+the exact filename returned by `pnpm pack --json`, following `first-publish.mjs`.
+Capped `pnpm check`, packed starter and conformance proofs passed on this worktree
+(`/tmp/asmjs-final-proof-20261026.log`). This is local proof, not a publication.
+Historical records below retain the names and facts they originally recorded.
+
+The existing AUDIT Magpie backlog is the takeover queue. Publication remains an approved
+`1.0.0-next.N` only; stable/latest is not authorized. Verify the npm scope/account, prepare
+all fourteen trusted publishers, then remove the temporary bootstrap token after the
+approved initial publication. No token, registry or release was changed in this checkpoint.
+Generated `site/` files were checked against `site-source/` by the capped proof;
+the matching dirty files remain preserved until the reviewed commit. Only the root
+agent runs builds, tests, generators and hooks, serially within the owner's memory cap.
+
+### Historical handoff — 18 October (retained)
+
 **RESUME HERE (rewritten at every landing; this one 2026-10-18, 11:40 EDT, at the owner's hold
 until 14:01 EDT).**
 
@@ -886,7 +905,7 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       publish, by the owner's hand, that sentence becomes the date, in the same change that
       publishes (found 2026-10-10). PREMISE GONE 2026-10-18: `c2beecb` (2026-10-11) took the
       sentence out of the release notes page; `grep -rni "not yet published" site site-source
-  RELEASE_NOTES.md` finds nothing, so there is no sentence to turn into a date.
+RELEASE_NOTES.md` finds nothing, so there is no sentence to turn into a date.
 - [x] ONE VERSION OR TWELVE: RULED "One number" (owner, D1252) and built as one fixed group
       with `check:one-version` (P5-2, `74ef101`, 2026-10-11). Measured in a
       clone: the packages' versions part ways at the first cut that does not name them all.

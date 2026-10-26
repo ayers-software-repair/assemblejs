@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { listAssets, registerAssets } from "@assemblejs/core";
+import { listAssets, registerAssets } from "@asmjs/core";
 
 const root = mkdtempSync(join(tmpdir(), "assets-"));
 writeFileSync(join(root, "client-1a2b.js"), "export {};");

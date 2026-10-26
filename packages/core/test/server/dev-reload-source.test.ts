@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { DEV_RELOAD_SOURCE, DEV_RELOAD_SCRIPT, DEV_RELOAD_STREAM } from "@assemblejs/core";
+import { DEV_RELOAD_SOURCE, DEV_RELOAD_SCRIPT, DEV_RELOAD_STREAM } from "@asmjs/core";
 
 /**
  * Runs the script as a page that was rendered by the server with `boot` would, against a stand-in

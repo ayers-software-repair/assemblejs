@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { stagedIo } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { stagedIo } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 
 describe("an io that writes one directory's files beneath another", () => {
   const recorded = (): Io & { calls: string[] } => {

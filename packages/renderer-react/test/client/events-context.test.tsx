@@ -4,8 +4,8 @@
 import { createElement, useContext } from "react";
 import { renderToString } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { createBus } from "@assemblejs/core/client";
-import { EventsContext } from "@assemblejs/renderer-react/client";
+import { createBus } from "@asmjs/core/client";
+import { EventsContext } from "@asmjs/renderer-react/client";
 
 /** What a component finds in the context, each time one is rendered. */
 const found: unknown[] = [];

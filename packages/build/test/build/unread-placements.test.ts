@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { unreadPlacements } from "@assemblejs/build";
-import type { ProjectProblem } from "@assemblejs/build";
+import { unreadPlacements } from "@asmjs/build";
+import type { ProjectProblem } from "@asmjs/build";
 
 const problem = (rule: ProjectProblem["rule"], message: string): ProjectProblem => ({
   path: "src/assemblies/shell/shell.html",

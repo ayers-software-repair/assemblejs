@@ -1,9 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { serverEvents } from "@assemblejs/core/client";
-import type { Events } from "@assemblejs/core/client";
+import { serverEvents } from "@asmjs/core/client";
+import type { Events } from "@asmjs/core/client";
 import { describe, expect, it } from "vitest";
-import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+import type { AssemblyProps } from "@asmjs/renderer-svelte";
 
 describe("what a Svelte assembly receives", () => {
   it("is its data, by the name every renderer's assembly receives it", () => {

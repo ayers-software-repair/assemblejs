@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { isDirectory } from "@assemblejs/build";
+import { isDirectory } from "@asmjs/build";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { startedRoot } from "./root/started-root.js";
 import { createMcpServer } from "./server/create-mcp-server.js";

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { reservedPrefix } from "@assemblejs/core";
+import { reservedPrefix } from "@asmjs/core";
 
 describe("the framework's reserved prefixes", () => {
   it("names the prefix a route would land under, whatever its case", () => {

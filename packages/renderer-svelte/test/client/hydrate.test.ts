@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { createBus } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
 import { describe, expect, it } from "vitest";
-import { hydrate } from "@assemblejs/renderer-svelte/client";
+import { hydrate } from "@asmjs/renderer-svelte/client";
 import Counter from "../fixtures/Counter.svelte";
 
 // WHAT THIS FILE DOES NOT TEST, AND WHY.

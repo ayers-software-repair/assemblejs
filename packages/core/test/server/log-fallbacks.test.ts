@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { logFallbacks } from "@assemblejs/core";
-import type { Diagnostic, LogLine } from "@assemblejs/core";
+import { logFallbacks } from "@asmjs/core";
+import type { Diagnostic, LogLine } from "@asmjs/core";
 
 const answered: Diagnostic = { name: "hello", view: "default", id: "i-1", source: "local", ms: 1 };
 const fellBack: Diagnostic = {

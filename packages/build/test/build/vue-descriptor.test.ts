@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { VueDescriptor } from "@assemblejs/build";
+import type { VueDescriptor } from "@asmjs/build";
 
 describe("the parts of a component a build reads", () => {
   it("can be a template alone", () => {

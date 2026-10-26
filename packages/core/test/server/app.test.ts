@@ -3,7 +3,7 @@
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { createServer } from "@assemblejs/core";
+import { createServer } from "@asmjs/core";
 
 describe("a built server", () => {
   it("exposes inject, listen and close", async () => {

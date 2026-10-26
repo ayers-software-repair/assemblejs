@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-/** @module @assemblejs/core */
+/** @module @asmjs/core */
 // The package's public surface. It re-exports the directory indexes beneath it and nothing
 // else: no leaf file, no declaration of its own. `client` and `outline` are absent on purpose;
 // each is its own published entry point, and a thing published twice is a thing that can drift.

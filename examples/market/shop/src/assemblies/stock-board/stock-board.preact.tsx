@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { AssemblyProps } from "@assemblejs/renderer-preact";
-import { useEvents } from "@assemblejs/renderer-preact/client";
+import type { AssemblyProps } from "@asmjs/renderer-preact";
+import { useEvents } from "@asmjs/renderer-preact/client";
 import { useEffect, useState } from "preact/hooks";
 
 type Level = { sku: string; name: string; left: number };

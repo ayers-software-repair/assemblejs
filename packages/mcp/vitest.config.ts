@@ -11,11 +11,11 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@assemblejs/mcp": src("./src/index.ts"),
-      "@assemblejs/build": src("../build/src/index.ts"),
-      "@assemblejs/check": src("../check/src/index.ts"),
-      "@assemblejs/cli": src("../cli/src/index.ts"),
-      "@assemblejs/core": src("../core/src/index.ts"),
+      "@asmjs/mcp": src("./src/index.ts"),
+      "@asmjs/build": src("../build/src/index.ts"),
+      "@asmjs/check": src("../check/src/index.ts"),
+      "@asmjs/cli": src("../cli/src/index.ts"),
+      "@asmjs/core": src("../core/src/index.ts"),
     },
   },
 });

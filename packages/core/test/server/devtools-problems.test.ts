@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { createServer, devtoolsProblems } from "@assemblejs/core";
-import type { DevtoolsRoute } from "@assemblejs/core";
+import { createServer, devtoolsProblems } from "@asmjs/core";
+import type { DevtoolsRoute } from "@asmjs/core";
 
 const route = (path: string): DevtoolsRoute => ({
   method: "GET",

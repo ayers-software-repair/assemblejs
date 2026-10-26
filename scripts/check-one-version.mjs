@@ -10,7 +10,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
-const GROUP = "@assemblejs/*";
+const GROUP = "@asmjs/*";
 
 /** Every problem with the versions and the fixed group, one line each. */
 export function problems(packages, config) {
@@ -23,7 +23,7 @@ export function problems(packages, config) {
   const whole = fixed.length === 1 && fixed[0].length === 1 && fixed[0][0] === GROUP;
   if (!whole) found.push(`.changeset/config.json "fixed" is not [["${GROUP}"]]`);
   for (const { name } of packages) {
-    if (!name.startsWith("@assemblejs/")) found.push(`${name} is outside the fixed group`);
+    if (!name.startsWith("@asmjs/")) found.push(`${name} is outside the fixed group`);
   }
   return found;
 }
@@ -40,8 +40,8 @@ export function readPackages(root) {
 
 if (process.argv[2] === "--self-test") {
   const good = [
-    { name: "@assemblejs/core", version: "1.0.0-next.0" },
-    { name: "@assemblejs/cli", version: "1.0.0-next.0" },
+    { name: "@asmjs/core", version: "1.0.0-next.0" },
+    { name: "@asmjs/cli", version: "1.0.0-next.0" },
   ];
   assert.deepEqual(problems(good, { fixed: [[GROUP]] }), []);
   assert.equal(
@@ -49,7 +49,7 @@ if (process.argv[2] === "--self-test") {
     1,
   );
   assert.equal(problems(good, { fixed: [] }).length, 1);
-  assert.equal(problems(good, { fixed: [["@assemblejs/core"]] }).length, 1);
+  assert.equal(problems(good, { fixed: [["@asmjs/core"]] }).length, 1);
   assert.equal(
     problems([...good, { name: "other", version: "1.0.0-next.0" }], { fixed: [[GROUP]] }).length,
     1,

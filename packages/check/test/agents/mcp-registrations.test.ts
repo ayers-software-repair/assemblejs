@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { AGENT_SERVER, MCP_REGISTRATIONS } from "@assemblejs/check";
+import { AGENT_SERVER, MCP_REGISTRATIONS } from "@asmjs/check";
 
 const by = (path: string) => MCP_REGISTRATIONS.find((registration) => registration.path === path);
 

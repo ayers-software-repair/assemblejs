@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { needsTheDevServer } from "@assemblejs/mcp";
+import { needsTheDevServer } from "@asmjs/mcp";
 
 describe("why a framework or template view is refused with no dev server running", () => {
   it("names the assembly and its renderer, and says to start the dev server", () => {

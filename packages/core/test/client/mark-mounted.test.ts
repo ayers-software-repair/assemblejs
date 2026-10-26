@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { lazyRenderer, markMounted, start } from "@assemblejs/core/client";
-import type { ClientRenderer } from "@assemblejs/core/client";
+import { lazyRenderer, markMounted, start } from "@asmjs/core/client";
+import type { ClientRenderer } from "@asmjs/core/client";
 
 const MARK = "data-mounted";
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));

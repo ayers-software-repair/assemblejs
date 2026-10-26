@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { createServer } from "node:net";
 import { describe, expect, it } from "vitest";
-import { freePort } from "@assemblejs/build";
+import { freePort } from "@asmjs/build";
 
 describe("a free port", () => {
   it("is one a server can listen on at once", async () => {

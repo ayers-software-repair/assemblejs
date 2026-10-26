@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkProject } from "@assemblejs/check";
+import { checkProject } from "@asmjs/check";
 
 const check = (assemblies: Record<string, string>, pages: Record<string, string> = {}) => {
   const root = mkdtempSync(join(tmpdir(), "view-problems-"));
@@ -25,7 +25,7 @@ const check = (assemblies: Record<string, string>, pages: Record<string, string>
 };
 const one = (name: string) => `<assembly name="${name}"></assembly>`;
 const lit = (body: string, shadow = false) =>
-  `import { slot } from "@assemblejs/renderer-lit/client";\nimport { html } from "lit";\n${shadow ? "export const shadow = true;\n" : ""}export default () => html\`<section>${body}</section>\`;`;
+  `import { slot } from "@asmjs/renderer-lit/client";\nimport { html } from "lit";\n${shadow ? "export const shadow = true;\n" : ""}export default () => html\`<section>${body}</section>\`;`;
 // Only what this file is about: a project with no lit installed is told so by another rule.
 const about = async (found: ReturnType<typeof check>, ...rules: string[]) =>
   (await found).filter((problem) => rules.includes(problem.rule));
@@ -91,7 +91,7 @@ describe("what is wrong with what the views of a project place", () => {
           "shell/shell.lit.ts": lit('${slot("card")}'),
           // Not Lit itself, so the only Lit view here is the shell, and this root hides the badge.
           "card/card.react.tsx":
-            'import { Slot } from "@assemblejs/renderer-react/client";\nexport const shadow = true;\nexport default () => <Slot name="badge" />;',
+            'import { Slot } from "@asmjs/renderer-react/client";\nexport const shadow = true;\nexport default () => <Slot name="badge" />;',
           "badge/badge.lit.ts": lit("badge"),
         }),
         rule,
@@ -104,7 +104,7 @@ describe("what is wrong with what the views of a project place", () => {
   it("counts what a view places when it asks whether a page carries the runtime", async () => {
     const page = {
       "src/pages/home/home.page.ts":
-        'import { definePage } from "@assemblejs/core";\nexport default definePage({ place: { shell: { defer: true } } });',
+        'import { definePage } from "@asmjs/core";\nexport default definePage({ place: { shell: { defer: true } } });',
     };
     const react = "export default () => <p>live</p>;";
     expect(

@@ -26,7 +26,7 @@ export async function loadCompilers(
   for (const [name, used, loaded] of [
     ["svelte", uses("svelte"), svelte],
     ["vue", uses("vue"), vue],
-    ["@assemblejs/renderer-solid", uses("solid"), solid],
+    ["@asmjs/renderer-solid", uses("solid"), solid],
   ] as const) {
     if (used && loaded === undefined) {
       problems.push({

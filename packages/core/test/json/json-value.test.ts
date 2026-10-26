@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { JsonValue } from "@assemblejs/core";
+import type { JsonValue } from "@asmjs/core";
 
 describe("JsonValue", () => {
   it("admits every shape that survives a round trip, and nests", () => {

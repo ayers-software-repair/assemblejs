@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 
 // Answers its first call and fails its second, and so on, so a spec can fill a cache on one page
 // and fail on another.

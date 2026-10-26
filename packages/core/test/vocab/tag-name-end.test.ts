@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { TAG_NAME_END } from "@assemblejs/core";
+import { TAG_NAME_END } from "@asmjs/core";
 
 describe("where the name of a tag ends", () => {
   it("is at white space, a slash or the tag's end, and at nothing else", () => {

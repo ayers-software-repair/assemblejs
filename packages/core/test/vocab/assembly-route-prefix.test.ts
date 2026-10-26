@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ASSEMBLY_ROUTE_PREFIX, FRAMEWORK_ROUTE_PREFIX } from "@assemblejs/core";
+import { ASSEMBLY_ROUTE_PREFIX, FRAMEWORK_ROUTE_PREFIX } from "@asmjs/core";
 
 describe("where an assembly answers", () => {
   it("is the contract's own surface, and does not collide with the framework's", () => {

@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join, resolve } from "node:path";
-import type { Io } from "@assemblejs/build";
-import { rendererProblems } from "@assemblejs/build";
-import { insideRoot } from "@assemblejs/build";
-import { OutsideRootError } from "@assemblejs/build";
+import type { Io } from "@asmjs/build";
+import { rendererProblems } from "@asmjs/build";
+import { insideRoot } from "@asmjs/build";
+import { OutsideRootError } from "@asmjs/build";
 import { noProject } from "./no-project.js";
 import { planAssembly } from "./plan-assembly.js";
 

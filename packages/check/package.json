@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/check",
+  "name": "@asmjs/check",
   "version": "1.0.0-next.0",
   "description": "The AssembleJS checks: the rules a project is held to, every problem found in one without building it, its shape, and what its pages weigh.",
   "license": "Apache-2.0",
@@ -41,8 +41,8 @@
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "dependencies": {
-    "@assemblejs/build": "workspace:*",
-    "@assemblejs/core": "workspace:*",
+    "@asmjs/build": "workspace:*",
+    "@asmjs/core": "workspace:*",
     "acorn": "8.18.0",
     "esbuild": "0.28.2"
   },

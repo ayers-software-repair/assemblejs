@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { describeFailure, renderFailure } from "@assemblejs/core";
+import { describeFailure, renderFailure } from "@asmjs/core";
 
 describe("describing a failure for the log", () => {
   it("keeps the message and the stack, which the visitor never sees", () => {

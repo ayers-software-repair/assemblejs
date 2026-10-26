@@ -4,7 +4,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { readViewMount } from "@assemblejs/check";
+import { readViewMount } from "@asmjs/check";
 
 const file = (name: string, contents: string): string => {
   const path = join(mkdtempSync(join(tmpdir(), "view-mount-")), name);

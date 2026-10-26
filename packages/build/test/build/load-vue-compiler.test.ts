@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadVueCompiler } from "@assemblejs/build";
+import { loadVueCompiler } from "@asmjs/build";
 
 describe("loading the project's own Vue compiler", () => {
   it("finds it in a project with Vue installed", async () => {

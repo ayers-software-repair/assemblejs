@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ENVELOPE_ELEMENT, PLACEMENT_ELEMENT } from "@assemblejs/core";
+import { ENVELOPE_ELEMENT, PLACEMENT_ELEMENT } from "@asmjs/core";
 
 describe("the envelope element", () => {
   it("carries the hyphen a real custom element requires", () => {

@@ -4,7 +4,7 @@ import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } 
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { bundleClient, discoverAssemblies, loadCompilers, realIo } from "@assemblejs/build";
+import { bundleClient, discoverAssemblies, loadCompilers, realIo } from "@asmjs/build";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 // The example's source in a directory of this file's own, nested in the example so it resolves

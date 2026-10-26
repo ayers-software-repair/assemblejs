@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ServiceDefinition } from "@assemblejs/core";
+import type { ServiceDefinition } from "@asmjs/core";
 
 describe("a service", () => {
   it("returns its data rather than mutating anything", async () => {

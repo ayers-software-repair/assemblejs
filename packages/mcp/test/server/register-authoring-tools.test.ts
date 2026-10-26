@@ -8,7 +8,7 @@ import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ResourceListChangedNotificationSchema } from "@modelcontextprotocol/sdk/types.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { createMcpServer, registerAuthoringTools, resolveRoot } from "@assemblejs/mcp";
+import { createMcpServer, registerAuthoringTools, resolveRoot } from "@asmjs/mcp";
 
 let dir = "";
 let client: Client;

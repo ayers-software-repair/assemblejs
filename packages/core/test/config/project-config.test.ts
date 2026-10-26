@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ProjectConfig } from "@assemblejs/core";
+import type { ProjectConfig } from "@asmjs/core";
 
 describe("what assemblejs.config.ts declares", () => {
   it("is policy only, and none of it is required", () => {

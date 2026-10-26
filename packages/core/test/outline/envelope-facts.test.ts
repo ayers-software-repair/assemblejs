@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { EnvelopeFacts } from "@assemblejs/core/outline";
+import type { EnvelopeFacts } from "@asmjs/core/outline";
 
 describe("what an outline says of one assembly", () => {
   it("is a name, what answered, a few words and every fact in the order it is shown", () => {

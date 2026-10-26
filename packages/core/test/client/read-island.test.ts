@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { readIsland } from "@assemblejs/core/client";
+import { readIsland } from "@asmjs/core/client";
 
 const withIsland = (id: string, json: string): Element => {
   const element = document.createElement("assembly-root");

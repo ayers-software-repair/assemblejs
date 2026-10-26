@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { html } from "lit";
 import { describe, expect, it } from "vitest";
-import type { LitView } from "@assemblejs/renderer-lit";
+import type { LitView } from "@asmjs/renderer-lit";
 
 describe("a Lit view", () => {
   it("is a function from the assembly's props to a template", () => {

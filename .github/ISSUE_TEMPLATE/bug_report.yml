@@ -1,12 +1,12 @@
 name: Bug report
-description: A reproducible defect in an @assemblejs package
+description: A reproducible defect in an @asmjs package
 labels: ["bug", "needs-triage"]
 body:
   - type: input
     id: version
     attributes:
       label: Package and version
-      placeholder: "@assemblejs/core@1.0.0-next.3"
+      placeholder: "@asmjs/core@1.0.0-next.3"
     validations:
       required: true
   - type: textarea

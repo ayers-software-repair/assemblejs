@@ -1,5 +1,5 @@
 ---
-"@assemblejs/build": patch
+"@asmjs/build": patch
 ---
 
 Refuse linked source directories before enumerating their contents and stop symbolic-link cycles

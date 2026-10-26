@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ArrivedWith } from "@assemblejs/mcp";
+import type { ArrivedWith } from "@asmjs/mcp";
 
 describe("what a visitor arrives at a page with", () => {
   it("is a value for each parameter of the route, and a query, each of them optional", () => {

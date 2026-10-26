@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import { basket, price } from "../../browser/basket.js";
   import type { Held } from "../../browser/basket.js";
-  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
 
   type Priced = {
     sku: string;

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { realIo } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 
 /** An io that keeps what a run logged and what it reported as errors, for a test to read. */
 export function capture(): { io: Io; logs: string[]; errors: string[] } {

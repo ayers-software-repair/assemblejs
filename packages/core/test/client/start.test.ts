@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { PAGE_BUS_KEY, start } from "@assemblejs/core/client";
-import type { ClientRenderer } from "@assemblejs/core/client";
+import { PAGE_BUS_KEY, start } from "@asmjs/core/client";
+import type { ClientRenderer } from "@asmjs/core/client";
 
 const envelope = (
   id: string,

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ASSET_ROUTE_PREFIX, FRAMEWORK_ROUTE_PREFIX } from "@assemblejs/core";
+import { ASSET_ROUTE_PREFIX, FRAMEWORK_ROUTE_PREFIX } from "@asmjs/core";
 
 describe("where built browser files are served", () => {
   it("is under the framework's reserved prefix, so no product route can shadow it", () => {

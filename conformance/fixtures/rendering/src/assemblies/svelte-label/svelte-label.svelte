@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
 
   let { data }: AssemblyProps<{ label: string }> = $props();
 </script>

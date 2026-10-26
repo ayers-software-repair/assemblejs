@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { SEGMENT, SEGMENT_PATTERN } from "@assemblejs/core";
+import { SEGMENT, SEGMENT_PATTERN } from "@asmjs/core";
 
 describe("the segment shape", () => {
   it("accepts a lower-case name that starts with a letter, with digits and hyphens after", () => {

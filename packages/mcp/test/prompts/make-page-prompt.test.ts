@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { pageDocument } from "@assemblejs/cli";
+import { pageDocument } from "@asmjs/cli";
 import { describe, expect, it } from "vitest";
-import { MAKE_PAGE_PROMPT } from "@assemblejs/mcp";
+import { MAKE_PAGE_PROMPT } from "@asmjs/mcp";
 
 describe("the brief for making a page", () => {
   const brief = MAKE_PAGE_PROMPT.brief({ name: "about" });
@@ -29,7 +29,7 @@ describe("the brief for making a page", () => {
 
   it("says where a route, a placement's policy and a stream are declared, and only when needed", () => {
     expect(brief).toContain("src/pages/about/about.page.ts");
-    expect(brief).toContain('definePage({ ... }) from "@assemblejs/core"');
+    expect(brief).toContain('definePage({ ... }) from "@asmjs/core"');
     expect(brief).toContain("Write that file only when the page needs one of them.");
   });
 

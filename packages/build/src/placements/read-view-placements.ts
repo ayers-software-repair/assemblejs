@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import type { PugCompiler } from "../build/pug-compiler.js";
 import { TEMPLATE_RENDERERS } from "../discovery/template-renderers.js";
 import { collectPlacements } from "./collect-placements.js";

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isStreamApi } from "@assemblejs/core";
-import type { ApiDefinition } from "@assemblejs/core";
+import { isStreamApi } from "@asmjs/core";
+import type { ApiDefinition } from "@asmjs/core";
 
 describe("an api", () => {
   it("is one path, one method, and either a handler or a stream", () => {

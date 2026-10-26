@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slot } from "@assemblejs/renderer-vue/client";
+import { Slot } from "@asmjs/renderer-vue/client";
 </script>
 
 <template>

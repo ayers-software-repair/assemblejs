@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { Mode } from "@assemblejs/core";
+import type { Mode } from "@asmjs/core";
 
 describe("the mode", () => {
   it("has two values and neither is inferred", () => {

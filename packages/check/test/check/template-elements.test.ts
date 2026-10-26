@@ -1,9 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
-import { loadPug } from "@assemblejs/build";
+import { loadPug } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { templateElements } from "@assemblejs/check";
+import { templateElements } from "@asmjs/check";
 
 const templates = fileURLToPath(new URL("../../../../examples/templates/", import.meta.url));
 

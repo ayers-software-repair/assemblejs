@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ownManifest } from "@assemblejs/build";
+import { ownManifest } from "@asmjs/build";
 
 /**
  * The version of a tool the package a module belongs to was built and tested with, from its

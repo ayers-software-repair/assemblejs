@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { serverEvents } from "@assemblejs/core/client";
+import { serverEvents } from "@asmjs/core/client";
 
 describe("the events an assembly holds while rendering on the server", () => {
   it("accepts a subscription and never calls it", () => {

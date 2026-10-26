@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { StreamMessage } from "@assemblejs/core";
+import type { StreamMessage } from "@asmjs/core";
 
 describe("a message on a page's stream", () => {
   it("is a topic, a JSON payload, and the assemblies it is for when not every one", () => {

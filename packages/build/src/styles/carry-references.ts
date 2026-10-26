@@ -3,7 +3,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { basename, dirname, extname, join, resolve } from "node:path";
-import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
+import { ASSET_ROUTE_PREFIX } from "@asmjs/core";
 import postcss from "postcss";
 import type { Io } from "../io/io.js";
 import { insideRoot } from "../root/inside-root.js";

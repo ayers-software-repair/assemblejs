@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { DeadLinkError, OutsideRootError } from "@assemblejs/build";
+import { DeadLinkError, OutsideRootError } from "@asmjs/build";
 
 describe("the refusal of a link that leads nowhere", () => {
   it("says what was asked for and that it leads nowhere", () => {

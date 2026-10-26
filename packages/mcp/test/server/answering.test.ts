@@ -11,12 +11,12 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { insideRoot } from "@assemblejs/build";
+import { insideRoot } from "@asmjs/build";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { afterEach, describe, expect, it } from "vitest";
-import { answering, createMcpServer, resolveRoot } from "@assemblejs/mcp";
-import type { ToolResult } from "@assemblejs/mcp";
+import { answering, createMcpServer, resolveRoot } from "@asmjs/mcp";
+import type { ToolResult } from "@asmjs/mcp";
 
 const said = async (tool: () => ToolResult | Promise<ToolResult>): Promise<ToolResult> => {
   const { content } = await answering(tool)(undefined);

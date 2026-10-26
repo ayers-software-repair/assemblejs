@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ServeOptions } from "@assemblejs/core";
+import type { ServeOptions } from "@asmjs/core";
 
 describe("what serve is handed", () => {
   it("is a server's options without the configuration, which serve reads itself", () => {

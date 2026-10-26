@@ -10,10 +10,10 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { realIo } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { addAssembly } from "@assemblejs/cli";
+import { addAssembly } from "@asmjs/cli";
 
 const project = (): string => {
   const root = mkdtempSync(join(tmpdir(), "add-"));
@@ -23,7 +23,7 @@ const project = (): string => {
 /** A project that has installed one renderer, as far as a build looks to find it. */
 const installed = (): string => {
   const root = project();
-  const at = join(root, "node_modules", "@assemblejs", "renderer-react");
+  const at = join(root, "node_modules", "@asmjs", "renderer-react");
   mkdirSync(at, { recursive: true });
   writeFileSync(join(at, "package.json"), "{}");
   return root;
@@ -94,7 +94,7 @@ describe("adding an assembly from the command line", () => {
     const { io, said } = quiet();
     expect(addAssembly("board", "svelte", root, io)).toBe(0);
     expect(said.join("\n")).toContain(
-      '"board" is a svelte assembly and @assemblejs/renderer-svelte is not installed: install @assemblejs/renderer-svelte',
+      '"board" is a svelte assembly and @asmjs/renderer-svelte is not installed: install @asmjs/renderer-svelte',
     );
     expect(said.join("\n")).toContain(
       "this project has Svelte assemblies and svelte is not installed: install svelte",

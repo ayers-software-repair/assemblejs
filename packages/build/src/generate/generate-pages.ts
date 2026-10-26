@@ -37,7 +37,7 @@ export function generatePages(pages: readonly DiscoveredPage[], from: string): s
       ? ""
       : `\nexport const notFound: Omit<PageDefinition, "route"> = { ${fieldsOf(notFound).join(", ")} };\n`;
   return `${GENERATED_HEADER}
-import type { PageDefinition } from "@assemblejs/core";
+import type { PageDefinition } from "@asmjs/core";
 ${imports.join("\n")}
 
 export const pages: readonly PageDefinition[] = [

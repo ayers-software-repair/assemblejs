@@ -52,12 +52,12 @@ test("the starter writes the instructions and the file that brings them to Claud
 test("the project installs the server it registers, beside the command line", () => {
   const manifest = JSON.parse(read("package.json"));
   assert.deepEqual(Object.keys(manifest.devDependencies), [
-    "@assemblejs/cli",
-    "@assemblejs/mcp",
+    "@asmjs/cli",
+    "@asmjs/mcp",
     "@types/node",
     "typescript",
   ]);
-  assert.deepEqual(Object.keys(manifest.dependencies), ["@assemblejs/core"]);
+  assert.deepEqual(Object.keys(manifest.dependencies), ["@asmjs/core"]);
 });
 
 for (const [file, servers, cwd, env] of CLIENTS) {
@@ -340,13 +340,13 @@ test("check refuses a CLAUDE.md that hides the instructions from Claude Code", (
 // Each surface runs its own command line: the project's, and the one the server is built on.
 // Where they are not the same version, neither can call the other's instructions current.
 test("the command line and the server name one problem when they were not released together", async () => {
-  const manifest = join(root, "node_modules", "@assemblejs", "mcp", "package.json");
+  const manifest = join(root, "node_modules", "@asmjs", "mcp", "package.json");
   const original = readFileSync(manifest, "utf8");
   const drifted = JSON.parse(original);
-  const beside = installed("@assemblejs/cli/package.json").version;
-  drifted.dependencies["@assemblejs/cli"] = "0.0.1";
+  const beside = installed("@asmjs/cli/package.json").version;
+  drifted.dependencies["@asmjs/cli"] = "0.0.1";
   writeFileSync(manifest, JSON.stringify(drifted));
-  const message = `the @assemblejs/mcp this project installs is built on @assemblejs/cli 0.0.1, and the project installs ${beside}: each writes and checks its own agent instructions`;
+  const message = `the @asmjs/mcp this project installs is built on @asmjs/cli 0.0.1, and the project installs ${beside}: each writes and checks its own agent instructions`;
   try {
     const refused = run("check");
     assert.equal(refused.status, 1, refused.stdout);

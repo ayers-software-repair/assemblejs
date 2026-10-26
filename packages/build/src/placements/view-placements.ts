@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ViewPlacement } from "@assemblejs/core";
+import type { ViewPlacement } from "@asmjs/core";
 
 /** What a view's source says it places, as far as that can be read without rendering it. */
 export interface ViewPlacements {

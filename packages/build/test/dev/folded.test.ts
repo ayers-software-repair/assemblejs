@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { folded } from "@assemblejs/build";
+import { folded } from "@asmjs/build";
 
 const gate = (): { open: () => void; passed: Promise<void> } => {
   let open = (): void => undefined;

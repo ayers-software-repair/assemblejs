@@ -4,7 +4,7 @@ import { createServer as createHttpServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { LogLine } from "@assemblejs/core";
+import type { LogLine } from "@asmjs/core";
 import {
   DEFAULT_LIMITS,
   createMemoryCache,
@@ -13,7 +13,7 @@ import {
   defineAssembly,
   localFetch,
   registerPages,
-} from "@assemblejs/core";
+} from "@asmjs/core";
 import { askedAndLeft, grand, slowkid } from "../fixtures/slow-child.js";
 
 const hello = defineAssembly({

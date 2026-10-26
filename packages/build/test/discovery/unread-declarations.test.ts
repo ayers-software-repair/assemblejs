@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { unreadDeclarations } from "@assemblejs/build";
+import { unreadDeclarations } from "@asmjs/build";
 
 const service = [{ kind: "service", what: "assembly's service" }];
 const named = (files: readonly string[], kinds = service) =>

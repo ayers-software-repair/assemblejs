@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { readMountMode } from "@assemblejs/core/client";
+import { readMountMode } from "@asmjs/core/client";
 
 const envelope = (declared?: string): Element => {
   const element = document.createElement("assembly-root");

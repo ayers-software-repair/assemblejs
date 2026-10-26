@@ -1,6 +1,6 @@
 index.ts: [rule 3] re-exports the leaf "./thing/wrong-name.js"; the surface names child indexes only
-packages/core/own-surface.ts: [rule 4] imports its own package as "@assemblejs/core"; a module imports the leaf by relative path, never the package surface
-packages/core/own-surface.ts: [rule 4] imports its own package as "@assemblejs/core/client"; a module imports the leaf by relative path, never the package surface
+packages/core/own-surface.ts: [rule 4] imports its own package as "@asmjs/core"; a module imports the leaf by relative path, never the package surface
+packages/core/own-surface.ts: [rule 4] imports its own package as "@asmjs/core/client"; a module imports the leaf by relative path, never the package surface
 thing/Shouting.ts: [rule 1] filename "Shouting" is not kebab-case
 thing/Shouting.ts: [rule 1] exports Shouting, so the file is "shouting.ts"
 thing/exports-nothing.ts: [rule 1] exports nothing; a source file that is not an index declares exactly one thing

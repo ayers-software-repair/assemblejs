@@ -87,7 +87,7 @@ export function foldAll(dir, packages, io) {
   for (const file of files) {
     const { bumps, note } = readChangeset(io.read(join(dir, file)));
     for (const { name, bump } of bumps) {
-      const folder = name.replace(/^@assemblejs\//, "");
+      const folder = name.replace(/^@asmjs\//, "");
       const manifest = JSON.parse(io.read(join(packages, folder, "package.json")));
       const path = join(packages, folder, "CHANGELOG.md");
       const current =
@@ -102,12 +102,11 @@ export function foldAll(dir, packages, io) {
 }
 
 if (process.argv[2] === "--self-test") {
-  const log =
-    "# @assemblejs/core\n\n## 1.0.0-next.0\n\n### Major Changes\n\n- The first prerelease.\n";
+  const log = "# @asmjs/core\n\n## 1.0.0-next.0\n\n### Major Changes\n\n- The first prerelease.\n";
   const one = fold(log, "1.0.0-next.0", "minor", "A minor note.\n\nIts second paragraph.");
   assert.equal(
     one,
-    "# @assemblejs/core\n\n## 1.0.0-next.0\n\n### Major Changes\n\n- The first prerelease.\n\n### Minor Changes\n\n- A minor note.\n  \n  Its second paragraph.\n",
+    "# @asmjs/core\n\n## 1.0.0-next.0\n\n### Major Changes\n\n- The first prerelease.\n\n### Minor Changes\n\n- A minor note.\n  \n  Its second paragraph.\n",
   );
   const two = fold(one, "1.0.0-next.0", "minor", "Another minor note.");
   assert.ok(
@@ -125,11 +124,11 @@ if (process.argv[2] === "--self-test") {
   assert.ok(four.endsWith("\n## 0.9.0\n\n### Patch Changes\n\n- Old.\n"), four);
   assert.throws(() => fold(log, "2.0.0", "patch", "x"), /no section for 2.0.0/);
   assert.deepEqual(
-    readChangeset('---\n"@assemblejs/core": minor\n"@assemblejs/cli": patch\n---\n\nThe note.\n'),
+    readChangeset('---\n"@asmjs/core": minor\n"@asmjs/cli": patch\n---\n\nThe note.\n'),
     {
       bumps: [
-        { name: "@assemblejs/core", bump: "minor" },
-        { name: "@assemblejs/cli", bump: "patch" },
+        { name: "@asmjs/core", bump: "minor" },
+        { name: "@asmjs/cli", bump: "patch" },
       ],
       note: "The note.",
     },
@@ -150,17 +149,17 @@ if (process.argv[2] === "--self-test") {
       mkdirSync(join(root, "packages", name), { recursive: true });
       writeFileSync(
         join(root, "packages", name, "package.json"),
-        `{"name":"@assemblejs/${name}","version":"1.0.0-next.0"}`,
+        `{"name":"@asmjs/${name}","version":"1.0.0-next.0"}`,
       );
     }
     writeFileSync(join(root, "packages", "core", "CHANGELOG.md"), log);
     writeFileSync(
       join(root, ".changeset", "a.md"),
-      '---\n"@assemblejs/core": minor\n"@assemblejs/check": patch\n---\n\nThe note.\n',
+      '---\n"@asmjs/core": minor\n"@asmjs/check": patch\n---\n\nThe note.\n',
     );
     writeFileSync(
       join(root, ".changeset", "b.md"),
-      '---\n"@assemblejs/check": minor\n---\n\nAnother.\n',
+      '---\n"@asmjs/check": minor\n---\n\nAnother.\n',
     );
     assert.deepEqual(foldAll(join(root, ".changeset"), join(root, "packages"), io), [
       "a.md",
@@ -168,10 +167,10 @@ if (process.argv[2] === "--self-test") {
     ]);
     assert.equal(
       readFileSync(join(root, "packages", "check", "CHANGELOG.md"), "utf8"),
-      "# @assemblejs/check\n\n## 1.0.0-next.0\n\n### Minor Changes\n\n- Another.\n\n### Patch Changes\n\n- The note.\n",
+      "# @asmjs/check\n\n## 1.0.0-next.0\n\n### Minor Changes\n\n- Another.\n\n### Patch Changes\n\n- The note.\n",
     );
     assert.deepEqual(readdirSync(join(root, ".changeset")), []);
-    writeFileSync(join(root, ".changeset", "c.md"), '---\n"@assemblejs/core": patch\n---\n\nC.\n');
+    writeFileSync(join(root, ".changeset", "c.md"), '---\n"@asmjs/core": patch\n---\n\nC.\n');
     writeFileSync(join(root, ".changeset", "d.md"), "no front matter");
     assert.throws(
       () => foldAll(join(root, ".changeset"), join(root, "packages"), io),

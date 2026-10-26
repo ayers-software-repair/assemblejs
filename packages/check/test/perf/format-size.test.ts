@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { formatSize } from "@assemblejs/check";
+import { formatSize } from "@asmjs/check";
 
 describe("a byte count as a report reads it", () => {
   it("is bytes under a thousand, and kilobytes to one place above", () => {

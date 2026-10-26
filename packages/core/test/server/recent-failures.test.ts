@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { recentFailures } from "@assemblejs/core";
+import { recentFailures } from "@asmjs/core";
 
 const line = (n: number) => ({ correlationId: String(n), message: "m", stack: undefined });
 

@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { vuePlacements } from "@assemblejs/build";
+import { vuePlacements } from "@asmjs/build";
 
 const component = (template: string, imported = "Slot"): string =>
-  `<script setup lang="ts">\nimport { ${imported} } from "@assemblejs/renderer-vue/client";\nconst view = "compact";\n</script>\n\n<template>\n  <section>${template}</section>\n</template>`;
+  `<script setup lang="ts">\nimport { ${imported} } from "@asmjs/renderer-vue/client";\nconst view = "compact";\n</script>\n\n<template>\n  <section>${template}</section>\n</template>`;
 
 describe("the slots a Vue component's template places", () => {
   it("are every Slot it writes, with the name and the view written as strings", () => {
@@ -45,7 +45,7 @@ describe("the slots a Vue component's template places", () => {
       ).placements,
     ).toEqual([]);
     // Under a namespace it is the same Slot, written as Vue writes a component of an object.
-    const whole = `<script setup lang="ts">\nimport * as c from "@assemblejs/renderer-vue/client";\n</script>\n<template><c.Slot name="cart" /><c-Slot name="price" /></template>`;
+    const whole = `<script setup lang="ts">\nimport * as c from "@asmjs/renderer-vue/client";\n</script>\n<template><c.Slot name="cart" /><c-Slot name="price" /></template>`;
     expect(vuePlacements(whole).placements).toEqual([{ name: "cart", view: "default" }]);
   });
 

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { literalColours } from "@assemblejs/build";
+import { literalColours } from "@asmjs/build";
 
 describe("the literal colours a value holds", () => {
   it("finds a hex colour, a colour function and a named colour, in any case", () => {

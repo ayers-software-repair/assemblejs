@@ -13,10 +13,10 @@ import type { SolidCompile } from "./solid-compile.js";
  * Babel to anyone else.
  */
 export async function loadSolidCompiler(root: string): Promise<SolidCompile | undefined> {
-  const renderer = findPackage(root, "@assemblejs/renderer-solid");
+  const renderer = findPackage(root, "@asmjs/renderer-solid");
   if (renderer === undefined) return undefined;
   const path = createRequire(join(renderer, "package.json")).resolve(
-    "@assemblejs/renderer-solid/compiler",
+    "@asmjs/renderer-solid/compiler",
   );
   const loaded = (await import(pathToFileURL(path).href)) as { readonly compileSolid?: unknown };
   return typeof loaded.compileSolid === "function"

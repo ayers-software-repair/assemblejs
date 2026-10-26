@@ -1,11 +1,11 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { isAbsolute, join } from "node:path";
-import type { DiscoveredPage } from "@assemblejs/build";
-import { fromRoot } from "@assemblejs/build";
-import { NOT_FOUND_PAGE } from "@assemblejs/build";
-import { readInside } from "@assemblejs/build";
-import { findPlacements } from "@assemblejs/core";
+import type { DiscoveredPage } from "@asmjs/build";
+import { fromRoot } from "@asmjs/build";
+import { NOT_FOUND_PAGE } from "@asmjs/build";
+import { readInside } from "@asmjs/build";
+import { findPlacements } from "@asmjs/core";
 import { declaredRoute } from "../check/declared-route.js";
 import { readDefaultExport } from "../check/read-default-export.js";
 import { COMPUTED } from "./computed.js";

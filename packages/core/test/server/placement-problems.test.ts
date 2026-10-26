@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { findPlacements, placementProblems } from "@assemblejs/core";
-import type { PlacedAssembly } from "@assemblejs/core";
+import { findPlacements, placementProblems } from "@asmjs/core";
+import type { PlacedAssembly } from "@asmjs/core";
 
 const assemblies = new Map<string, PlacedAssembly>([
   ["hello", { views: ["default"], browserHalf: false }],

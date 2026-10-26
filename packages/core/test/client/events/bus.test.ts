@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { createBus } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
 
 describe("the page's bus", () => {
   it("reports how many handlers are subscribed", () => {

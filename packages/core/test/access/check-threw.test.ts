@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { checkThrew } from "@assemblejs/core";
+import { checkThrew } from "@asmjs/core";
 
 describe("the line logged when the product's own check throws", () => {
   it("carries what it threw against the id whoever was refused is told", () => {

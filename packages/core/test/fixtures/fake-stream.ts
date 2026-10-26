@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { StreamSource } from "@assemblejs/core/client";
+import type { StreamSource } from "@asmjs/core/client";
 
 /** An event source a test drives by hand, recording the url it was opened with. */
 export const fakeStream = () => {

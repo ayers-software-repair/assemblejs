@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Diagnostic } from "@assemblejs/core";
+import type { Diagnostic } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { fallbackProblems } from "@assemblejs/mcp";
+import { fallbackProblems } from "@asmjs/mcp";
 
 const placed = (name: string, over: Partial<Diagnostic> = {}): Diagnostic => ({
   name,

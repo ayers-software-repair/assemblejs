@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it, vi } from "vitest";
-import { scheduleMount } from "@assemblejs/core/client";
+import { scheduleMount } from "@asmjs/core/client";
 
 const element = () => document.createElement("assembly-root");
 

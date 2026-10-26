@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { renderFailure } from "@assemblejs/core";
+import { renderFailure } from "@asmjs/core";
 
 describe("rendering a failure for the visitor", () => {
   it("is built from the id alone", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DescribedAssembly } from "@assemblejs/mcp";
+import type { DescribedAssembly } from "@asmjs/mcp";
 
 describe("one assembly as an agent reads it", () => {
   it("is what it is made of, and each place it stands with what that place says of it", () => {

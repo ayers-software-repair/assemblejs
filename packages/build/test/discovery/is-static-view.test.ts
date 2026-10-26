@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isStaticView } from "@assemblejs/build";
+import { isStaticView } from "@asmjs/build";
 
 describe("whether a view is server markup and nothing more", () => {
   it("is for plain html and every template language", () => {

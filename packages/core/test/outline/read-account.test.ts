@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { OUTLINE_ATTRIBUTE } from "@assemblejs/core";
-import { readAccount } from "@assemblejs/core/outline";
+import { OUTLINE_ATTRIBUTE } from "@asmjs/core";
+import { readAccount } from "@asmjs/core/outline";
 
 const block = (account: unknown): string =>
   `<script type="application/json" ${OUTLINE_ATTRIBUTE}>${JSON.stringify(account)}</script>`;

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { importOf } from "@assemblejs/build";
+import { importOf } from "@asmjs/build";
 
 const from = "/p/.assemblejs";
 // The compiler passes over the import, and a linter over the comment that says so.

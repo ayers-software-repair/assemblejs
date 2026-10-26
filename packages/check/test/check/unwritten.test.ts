@@ -3,7 +3,7 @@
 import { parse } from "acorn";
 import type { Expression, ExpressionStatement } from "acorn";
 import { describe, expect, it } from "vitest";
-import { UNWRITTEN, literalOf } from "@assemblejs/check";
+import { UNWRITTEN, literalOf } from "@asmjs/check";
 
 describe("the mark on an object whose keys are not all written", () => {
   it("is a symbol beside the entries, which a walk over the entries never meets", () => {

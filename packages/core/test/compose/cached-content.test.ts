@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { createMemoryCache } from "@assemblejs/core";
-import type { CachedContent } from "@assemblejs/core";
+import { createMemoryCache } from "@asmjs/core";
+import type { CachedContent } from "@asmjs/core";
 
 describe("what the cache holds for one placement", () => {
   it("is the answer, with its version and the assemblies it holds when they were recorded", () => {

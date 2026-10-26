@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { scriptPlacements } from "@assemblejs/build";
+import { scriptPlacements } from "@asmjs/build";
 
 const react = (body: string, imported = "Slot"): string =>
-  `import { ${imported} } from "@assemblejs/renderer-react/client";\nexport default function Shell(props: { view: string; name: string }) { return <section>${body}</section>; }`;
+  `import { ${imported} } from "@asmjs/renderer-react/client";\nexport default function Shell(props: { view: string; name: string }) { return <section>${body}</section>; }`;
 
 describe("the slots a view written as a module places", () => {
   it("are every Slot it writes, with the name and the view written in place", () => {
@@ -40,11 +40,11 @@ describe("the slots a view written as a module places", () => {
   });
 
   it("are read under a namespace the module imports the whole of a renderer's client as", () => {
-    const react = `import * as client from "@assemblejs/renderer-react/client";\nexport default (props: { name: string }) => <><client.Slot name="cart" view="wide" /><client.Slot name={props.name} /><client.Other name="price" /></>;`;
+    const react = `import * as client from "@asmjs/renderer-react/client";\nexport default (props: { name: string }) => <><client.Slot name="cart" view="wide" /><client.Slot name={props.name} /><client.Other name="price" /></>;`;
     const read = scriptPlacements(react, "tsx");
     expect(read.placements).toEqual([{ name: "cart", view: "wide" }]);
     expect(read.unnamed).toEqual(["<client.Slot> with a name the view computes"]);
-    const lit = `import * as client from "@assemblejs/renderer-lit/client";\nimport { html } from "lit";\nexport default () => html\`<section>\${client.slot("price")}\${client["slot"]("cart")}</section>\`;`;
+    const lit = `import * as client from "@asmjs/renderer-lit/client";\nimport { html } from "lit";\nexport default () => html\`<section>\${client.slot("price")}\${client["slot"]("cart")}</section>\`;`;
     expect(scriptPlacements(lit, "ts").placements).toEqual([
       { name: "price", view: "default" },
       { name: "cart", view: "default" },
@@ -55,7 +55,7 @@ describe("the slots a view written as a module places", () => {
   });
 
   it("are every call of a renderer's slot() in a Lit view", () => {
-    const lit = `import { slot } from "@assemblejs/renderer-lit/client";\nimport { html } from "lit";\nexport default (props: { which: string }) => html\`<section>\${slot("cart")}\${slot("price", "compact")}\${slot("badge", props.which)}\${slot(props.which)}</section>\`;`;
+    const lit = `import { slot } from "@asmjs/renderer-lit/client";\nimport { html } from "lit";\nexport default (props: { which: string }) => html\`<section>\${slot("cart")}\${slot("price", "compact")}\${slot("badge", props.which)}\${slot(props.which)}</section>\`;`;
     const read = scriptPlacements(lit, "ts");
     expect(read.placements).toEqual([
       { name: "cart", view: "default" },
@@ -66,7 +66,7 @@ describe("the slots a view written as a module places", () => {
   });
 
   it("reports a slot written inside an element's render as placed in its shadow root, not by the view", () => {
-    const lit = `import { slot } from "@assemblejs/renderer-lit/client";\nimport { LitElement, html } from "lit";\nexport class ShopCard extends LitElement { render() { return html\`<p>\${slot("price")}</p>\`; } helper() { return slot("badge"); } }\nexport default () => html\`<shop-card></shop-card>\${slot("cart")}\`;`;
+    const lit = `import { slot } from "@asmjs/renderer-lit/client";\nimport { LitElement, html } from "lit";\nexport class ShopCard extends LitElement { render() { return html\`<p>\${slot("price")}</p>\`; } helper() { return slot("badge"); } }\nexport default () => html\`<shop-card></shop-card>\${slot("cart")}\`;`;
     const read = scriptPlacements(lit, "ts");
     expect(read.placements).toEqual([
       { name: "badge", view: "default" },
@@ -79,7 +79,7 @@ describe("the slots a view written as a module places", () => {
   // component has no shadow root, and its Slot is a placement of the view's like any other.
   it("reads a Slot in a class component's render as a placement of the view's", () => {
     for (const renderer of ["react", "preact"]) {
-      const view = `import { Component } from "${renderer}";\nimport { Slot } from "@assemblejs/renderer-${renderer}/client";\nexport default class Shell extends Component { render() { return <section><Slot name="cart" /></section>; } }`;
+      const view = `import { Component } from "${renderer}";\nimport { Slot } from "@asmjs/renderer-${renderer}/client";\nexport default class Shell extends Component { render() { return <section><Slot name="cart" /></section>; } }`;
       const read = scriptPlacements(view, "tsx");
       expect(read.placements, renderer).toEqual([{ name: "cart", view: "default" }]);
       expect(read.shadowed, renderer).toBeUndefined();

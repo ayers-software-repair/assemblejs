@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@assemblejs/core";
+import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@asmjs/core";
 import postcss from "postcss";
 import type { AtRule, Container, Document, Rule } from "postcss";
 import selectorParser from "postcss-selector-parser";

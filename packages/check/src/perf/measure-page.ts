@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@assemblejs/core";
+import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT } from "@asmjs/core";
 import type { AssetWeight } from "./asset-weight.js";
 import { lazyModules } from "./lazy-modules.js";
 import { mountsInTheBrowser } from "./mounts-in-the-browser.js";

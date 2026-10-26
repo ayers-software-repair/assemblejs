@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 import { productBySku } from "../../catalogue/products.js";
 
 // The facts of the product the page's route names, as rows for a table.

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useEvents } from "@assemblejs/renderer-vue/client";
+import { useEvents } from "@asmjs/renderer-vue/client";
 import { onMounted, onUnmounted, ref, watch } from "vue";
 
 type Choice = { value: string; label: string; count: number };

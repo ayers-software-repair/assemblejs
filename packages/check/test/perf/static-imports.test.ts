@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { staticImports } from "@assemblejs/check";
+import { staticImports } from "@asmjs/check";
 
 describe("what a module imports before it runs", () => {
   it("is every specifier it imports or exports from, in the order written", () => {

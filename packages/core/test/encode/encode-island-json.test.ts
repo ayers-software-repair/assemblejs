@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { encodeIslandJson } from "@assemblejs/core";
+import { encodeIslandJson } from "@asmjs/core";
 
 describe("encoding the data island", () => {
   it("round trips an ordinary payload", () => {

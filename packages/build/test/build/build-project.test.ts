@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { buildProject } from "@assemblejs/build";
+import { buildProject } from "@asmjs/build";
 import { builtScripts } from "../fixtures/built-scripts.js";
 import { capture } from "../fixtures/capture.js";
 import { serve } from "../fixtures/serve.js";

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { html } from "lit";
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
-import { slot } from "@assemblejs/renderer-lit/client";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
+import { slot } from "@asmjs/renderer-lit/client";
 
 /**
  * A view that places a child after a button of its own. Both test projects build it: the server

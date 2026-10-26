@@ -5,9 +5,9 @@ import { mkdirSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Io } from "@assemblejs/build";
+import type { Io } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { createProject } from "@assemblejs/create";
+import { createProject } from "@asmjs/create";
 
 const fake = () => {
   const written = new Map<string, string>();
@@ -22,7 +22,7 @@ const fake = () => {
   return { io, written, errors };
 };
 
-describe("npm create @assemblejs", () => {
+describe("npm create @asmjs@next", () => {
   it("writes the same project the command line's new writes", () => {
     const { io, written } = fake();
     expect(createProject(["my-app"], io)).toBe(0);
@@ -30,7 +30,7 @@ describe("npm create @assemblejs", () => {
     expect([...written.keys()]).toContain("my-app/src/server.ts");
   });
 
-  // `npm create @assemblejs .`, in a directory made for the project, was refused as a name.
+  // `npm create @asmjs .`, in a directory made for the project, was refused as a name.
   it("makes the project in the directory it runs in, when that is the one named", () => {
     const here = join(mkdtempSync(join(tmpdir(), "create-")), "my-shop");
     mkdirSync(here);
@@ -48,7 +48,7 @@ describe("npm create @assemblejs", () => {
       const { io, written, errors } = fake();
       expect(createProject(argv, io)).toBe(2);
       expect(written.size).toBe(0);
-      expect(errors.join()).toContain("npm create @assemblejs <directory>");
+      expect(errors.join()).toContain("npm create @asmjs@next <directory>");
     }
   });
 });

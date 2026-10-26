@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { OutlineRect } from "@assemblejs/core/outline";
+import type { OutlineRect } from "@asmjs/core/outline";
 
 describe("a box on the screen", () => {
   it("is measured from the top left of the viewport", () => {

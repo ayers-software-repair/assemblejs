@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 import { priceFeed } from "./price-feed.js";
 
 // Each page's one connection starts from the latest price, joins the feed, and leaves it when the

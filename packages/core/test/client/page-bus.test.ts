@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it } from "vitest";
-import { PAGE_BUS_KEY, pageBus } from "@assemblejs/core/client";
+import { PAGE_BUS_KEY, pageBus } from "@asmjs/core/client";
 
 const REMOTE = "https://b.example";
 const OTHER = "https://c.example";

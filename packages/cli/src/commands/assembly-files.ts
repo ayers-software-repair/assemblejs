@@ -19,7 +19,7 @@ const VIEWS: Readonly<Record<string, (name: string) => readonly [string, string]
   pug: (name) => [`${name}.pug`, `p= data.title || "${name}"\n`],
   react: (name) => [
     `${name}.react.tsx`,
-    `import type { AssemblyProps } from "@assemblejs/renderer-react";
+    `import type { AssemblyProps } from "@asmjs/renderer-react";
 
 export default function ${pascal(name)}({ data }: AssemblyProps) {
   return <p>${name} {Object.keys(data).length}</p>;
@@ -28,7 +28,7 @@ export default function ${pascal(name)}({ data }: AssemblyProps) {
   ],
   lit: (name) => [
     `${name}.lit.ts`,
-    `import type { AssemblyProps } from "@assemblejs/renderer-lit";
+    `import type { AssemblyProps } from "@asmjs/renderer-lit";
 import { html } from "lit";
 
 export default (props: AssemblyProps) => html\`<p>${name} \${Object.keys(props.data).length}</p>\`;
@@ -36,7 +36,7 @@ export default (props: AssemblyProps) => html\`<p>${name} \${Object.keys(props.d
   ],
   preact: (name) => [
     `${name}.preact.tsx`,
-    `import type { AssemblyProps } from "@assemblejs/renderer-preact";
+    `import type { AssemblyProps } from "@asmjs/renderer-preact";
 
 export default function ${pascal(name)}({ data }: AssemblyProps) {
   return <p>${name} {Object.keys(data).length}</p>;
@@ -45,7 +45,7 @@ export default function ${pascal(name)}({ data }: AssemblyProps) {
   ],
   solid: (name) => [
     `${name}.solid.tsx`,
-    `import type { AssemblyProps } from "@assemblejs/renderer-solid";
+    `import type { AssemblyProps } from "@asmjs/renderer-solid";
 
 export default function ${pascal(name)}(props: AssemblyProps) {
   return <p>${name} {Object.keys(props.data).length}</p>;
@@ -55,7 +55,7 @@ export default function ${pascal(name)}(props: AssemblyProps) {
   svelte: (name) => [
     `${name}.svelte`,
     `<script lang="ts">
-  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
 
   let { data }: AssemblyProps = $props();
 </script>

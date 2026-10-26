@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineRemote } from "@assemblejs/core";
+import { defineRemote } from "@asmjs/core";
 
 describe("declaring a remote", () => {
   it("returns the declaration unchanged", () => {

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Slot } from "@assemblejs/renderer-solid/client";
+import { Slot } from "@asmjs/renderer-solid/client";
 import { createSignal } from "solid-js";
 
 // A Solid assembly that places a Lit one.

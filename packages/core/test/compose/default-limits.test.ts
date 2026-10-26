@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { DEFAULT_LIMITS } from "@assemblejs/core";
+import { DEFAULT_LIMITS } from "@asmjs/core";
 
 describe("the default limits", () => {
   it("bound depth, size and how many, and each is finite", () => {

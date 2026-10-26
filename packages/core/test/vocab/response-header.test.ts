@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { COMPOSITION_HEADER, RESPONSE_HEADER } from "@assemblejs/core";
+import { COMPOSITION_HEADER, RESPONSE_HEADER } from "@asmjs/core";
 
 describe("the headers a content answer carries", () => {
   it("are two, under the prefix the request's headers have", () => {

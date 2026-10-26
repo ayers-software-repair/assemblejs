@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { findPlacements } from "@assemblejs/core";
-import { placementDirective } from "@assemblejs/core/client";
+import { findPlacements } from "@asmjs/core";
+import { placementDirective } from "@asmjs/core/client";
 
 describe("the directive that places an assembly, as markup", () => {
   it("names the assembly, and its view when one is asked for", () => {

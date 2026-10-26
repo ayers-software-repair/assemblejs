@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { declaredView } from "@assemblejs/core";
-import type { AssemblyDefinition, AssemblyView } from "@assemblejs/core";
+import { declaredView } from "@asmjs/core";
+import type { AssemblyDefinition, AssemblyView } from "@asmjs/core";
 
 const view: AssemblyView = { renderer: "html", markup: () => "" };
 const cart: AssemblyDefinition = { name: "cart", views: { default: view } };

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { DevtoolsRoute } from "@assemblejs/core";
+import type { DevtoolsRoute } from "@asmjs/core";
 
 /** The same reading as JSON, for a tool or an agent rather than a person. */
 export const projectRoute: DevtoolsRoute = {

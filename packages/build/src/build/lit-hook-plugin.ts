@@ -6,7 +6,7 @@ import type { Plugin } from "esbuild";
 // Lit's element base, the one module of Lit that reads the hydration hook as it loads.
 const ELEMENT_BASE = /[\\/]lit-element[\\/](?:development[\\/])?lit-element\.js$/;
 const READ = "litElementHydrateSupport?.(";
-const HOOK = "@assemblejs/renderer-lit/hydration-hook";
+const HOOK = "@asmjs/renderer-lit/hydration-hook";
 
 /**
  * Has Lit's element base set this bundle's hydration hook itself, as the first thing its own

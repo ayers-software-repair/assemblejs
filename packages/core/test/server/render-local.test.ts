@@ -1,13 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineAssembly, localFetch, renderLocal } from "@assemblejs/core";
-import type {
-  AssemblyDefinition,
-  AssemblyRequest,
-  Fetch,
-  LocalRenderInput,
-} from "@assemblejs/core";
+import { defineAssembly, localFetch, renderLocal } from "@asmjs/core";
+import type { AssemblyDefinition, AssemblyRequest, Fetch, LocalRenderInput } from "@asmjs/core";
 
 const limits = { depth: 3, maxBytes: 1024 * 1024, placements: 64 };
 let minted = 0;

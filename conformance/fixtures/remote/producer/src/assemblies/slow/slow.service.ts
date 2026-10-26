@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 
 // Answers after a second and a half, longer than any page placing it waits.
 export default defineService({

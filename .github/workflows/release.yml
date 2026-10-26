@@ -12,7 +12,7 @@ name: release
 # The first publish, the owner's three steps:
 #   1. When ready to go public, save one npm token as the secret NPM_TOKEN of the release
 #      environment. Create it under npm Access Tokens as a granular token: permission "Read and
-#      write (publish and stage)" on the @assemblejs scope (a name that does not exist yet
+#      write (publish and stage)" on the @asmjs scope (a name that does not exist yet
 #      cannot be picked one by one), "Bypass two-factor authentication" checked because this
 #      run has no one to give a code, and the shortest expiry that covers the release.
 #   2. After that release, give each of the fourteen names a trusted publisher, with the

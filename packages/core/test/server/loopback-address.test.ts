@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { loopbackAddress } from "@assemblejs/core";
+import { loopbackAddress } from "@asmjs/core";
 
 describe("whether a connection came from this machine", () => {
   it("is for a loopback peer, IPv4, IPv6 or IPv4 mapped into IPv6", () => {

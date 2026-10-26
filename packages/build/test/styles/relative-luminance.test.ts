@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { relativeLuminance } from "@assemblejs/build";
+import { relativeLuminance } from "@asmjs/build";
 
 describe("the relative luminance of a hex colour", () => {
   it("is 0 for black, 1 for white, and WCAG's number in between", () => {

@@ -1,13 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import {
-  DEFAULT_LIMITS,
-  createMemoryCache,
-  createRemoteTransport,
-  localFetch,
-} from "@assemblejs/core";
-import type { PageServing } from "@assemblejs/core";
+import { DEFAULT_LIMITS, createMemoryCache, createRemoteTransport, localFetch } from "@asmjs/core";
+import type { PageServing } from "@asmjs/core";
 
 describe("what every page of a server is answered with", () => {
   it("needs only the transports, the bounds, the cache and the log", () => {

@@ -12,18 +12,18 @@ import type { RendererPackage } from "./renderer-package.js";
 export const RENDERER_PACKAGES: Readonly<Record<string, RendererPackage>> = {
   lit: {
     name: "lit",
-    package: "@assemblejs/renderer-lit",
-    browserSetup: "@assemblejs/renderer-lit/hydration-support",
+    package: "@asmjs/renderer-lit",
+    browserSetup: "@asmjs/renderer-lit/hydration-support",
   },
-  preact: { name: "preact", package: "@assemblejs/renderer-preact" },
-  react: { name: "react", package: "@assemblejs/renderer-react" },
-  solid: { name: "solid", package: "@assemblejs/renderer-solid" },
-  svelte: { name: "svelte", package: "@assemblejs/renderer-svelte", compiler: "svelte" },
-  vue: { name: "vue", package: "@assemblejs/renderer-vue", compiler: "vue" },
+  preact: { name: "preact", package: "@asmjs/renderer-preact" },
+  react: { name: "react", package: "@asmjs/renderer-react" },
+  solid: { name: "solid", package: "@asmjs/renderer-solid" },
+  svelte: { name: "svelte", package: "@asmjs/renderer-svelte", compiler: "svelte" },
+  vue: { name: "vue", package: "@asmjs/renderer-vue", compiler: "vue" },
   ...Object.fromEntries(
     TEMPLATE_RENDERERS.map((name) => [
       name,
-      { name, package: "@assemblejs/renderer-templates", template: true } as const,
+      { name, package: "@asmjs/renderer-templates", template: true } as const,
     ]),
   ),
 };

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { createToolbar } from "@assemblejs/core/outline";
+import { createToolbar } from "@asmjs/core/outline";
 
 describe("what is made as the outline's control", () => {
   it("is a switch that says whether it is on, and calls back when it is pressed", () => {

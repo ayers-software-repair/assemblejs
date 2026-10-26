@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { countPlacements } from "@assemblejs/core";
+import { countPlacements } from "@asmjs/core";
 
 describe("what counts the placements of one request", () => {
   it("numbers them from one, in the order they are asked for", () => {

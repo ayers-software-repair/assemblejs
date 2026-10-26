@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ViewPlacement } from "@assemblejs/core";
+import type { ViewPlacement } from "@asmjs/core";
 import type { ViewPlacements } from "./view-placements.js";
 
 /**

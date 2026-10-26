@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { MCP_REGISTRATIONS, registeredEntry } from "@assemblejs/check";
+import { MCP_REGISTRATIONS, registeredEntry } from "@asmjs/check";
 
 const [claude, , code] = MCP_REGISTRATIONS;
 if (claude === undefined || code === undefined) throw new Error("no registrations");

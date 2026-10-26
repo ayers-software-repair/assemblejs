@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { SettingsShape } from "@assemblejs/check";
+import type { SettingsShape } from "@asmjs/check";
 
 describe("what a project's config declares", () => {
   it("is policy, field by named field, and no file where the project has none", () => {

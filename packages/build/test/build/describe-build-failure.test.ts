@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { describeBuildFailure } from "@assemblejs/build";
+import { describeBuildFailure } from "@asmjs/build";
 
 describe("reporting a failed bundle", () => {
   it("names the file and line of each of the bundler's errors", () => {

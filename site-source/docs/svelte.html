@@ -17,7 +17,7 @@
     <h2>Install the renderer</h2>
     <dl>
       <div class="item">
-        <dt><code>npm install @assemblejs/renderer-svelte svelte</code></dt>
+        <dt><code>npm install @asmjs/renderer-svelte@next svelte</code></dt>
         <dd>
           The renderer and Svelte 5 itself; the build compiles your components with the project's
           own compiler, so it has to be there.
@@ -61,7 +61,7 @@
           came from a visitor with <code>{@html}</code>: it is markup there, and a directive in it
           is placed like one you wrote.
           <pre><code>&lt;script lang="ts"&gt;
-  import { slot } from "@assemblejs/renderer-svelte/client";
+  import { slot } from "@asmjs/renderer-svelte/client";
 &lt;/script&gt;
 
 &lt;section class="cart"&gt;{@html slot("price")}&lt;/section&gt;</code></pre>
@@ -76,7 +76,7 @@
           A service beside the view runs on the server before the render and returns the data. It is
           given the request's <code>query</code> and the route <code>params</code> of the page that
           placed the assembly, and the same function answers the assembly's data endpoint.
-          <pre><code>import { defineService } from "@assemblejs/core";
+          <pre><code>import { defineService } from "@asmjs/core";
 
 export default defineService({
   name: "label",
@@ -197,7 +197,7 @@ export default defineService({
           Policy, when a placement needs any, lives in the page's own file: a deadline in
           milliseconds, markup to show when the assembly does not answer, whether its failure fails
           the page, or a deferral the browser fills after load.
-          <pre><code>import { definePage } from "@assemblejs/core";
+          <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },

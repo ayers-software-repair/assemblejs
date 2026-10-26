@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { countPlacements, settlePlacement } from "@assemblejs/core";
-import type { AssemblyRequest, ContentCache, Fetch, SettleInput } from "@assemblejs/core";
+import { countPlacements, settlePlacement } from "@asmjs/core";
+import type { AssemblyRequest, ContentCache, Fetch, SettleInput } from "@asmjs/core";
 
 const answering =
   (html: string): Fetch =>

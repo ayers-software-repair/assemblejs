@@ -3,7 +3,7 @@
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { readManifest } from "@assemblejs/core";
+import { readManifest } from "@asmjs/core";
 
 const answers: Record<string, readonly [string, string]> = {
   "/ok": ["application/json", JSON.stringify({ assets: { css: ["/a.css"], js: ["/a.js"] } })],

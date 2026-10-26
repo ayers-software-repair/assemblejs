@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ASSEMBLY_ROUTE_PREFIX, COMPOSITION_HEADER, encodeParams } from "@assemblejs/core";
-import type { Fetch, LogLine } from "@assemblejs/core";
+import { ASSEMBLY_ROUTE_PREFIX, COMPOSITION_HEADER, encodeParams } from "@asmjs/core";
+import type { Fetch, LogLine } from "@asmjs/core";
 import { failedEnvelopes } from "./failed-envelopes.js";
 
 /**

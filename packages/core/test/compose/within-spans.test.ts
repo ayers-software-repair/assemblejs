@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { withinSpans } from "@assemblejs/core";
+import { withinSpans } from "@asmjs/core";
 
 describe("whether an offset falls inside one of a list of stretches", () => {
   const within = withinSpans([

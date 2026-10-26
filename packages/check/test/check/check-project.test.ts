@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { checkProject } from "@assemblejs/check";
+import { checkProject } from "@asmjs/check";
 import { templatedProject } from "../../../build/test/fixtures/templated-project.js";
 
 const project = (files: Record<string, string>): string => {

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkProject, readPagePolicy } from "@assemblejs/check";
+import { checkProject, readPagePolicy } from "@asmjs/check";
 
 describe("reading a page's policy from its declaration", () => {
   it("names each placement from another server, with the url when it is a literal", () => {

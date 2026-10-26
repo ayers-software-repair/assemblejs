@@ -1,4 +1,4 @@
-import { definePage } from "@assemblejs/core";
+import { definePage } from "@asmjs/core";
 
 const producer = process.env.PRODUCER_ORIGIN ?? "";
 const from = (origin: string, name: string): string => `${origin}/assembly/${name}/`;

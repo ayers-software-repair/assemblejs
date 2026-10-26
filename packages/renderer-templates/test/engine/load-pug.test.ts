@@ -3,9 +3,9 @@
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { loadPug } from "@assemblejs/renderer-templates";
+import { loadPug } from "@asmjs/renderer-templates";
 
 const input = { data: { name: '<b>"Ann" & co</b>' } };
 

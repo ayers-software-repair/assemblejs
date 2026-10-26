@@ -6,8 +6,8 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createServer, defineApi, defineAssembly, registerAccess } from "@assemblejs/core";
-import type { App, LogLine } from "@assemblejs/core";
+import { createServer, defineApi, defineAssembly, registerAccess } from "@asmjs/core";
+import type { App, LogLine } from "@asmjs/core";
 
 const config = (auth?: { user: string; password: string }) => ({
   mode: "production" as const,

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join, relative, resolve } from "node:path";
-import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
+import { ASSET_ROUTE_PREFIX } from "@asmjs/core";
 import { build } from "esbuild";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { generateClientEntry } from "../generate/generate-client-entry.js";

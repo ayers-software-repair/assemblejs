@@ -3,9 +3,9 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { realIo } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD, readApiShape } from "@assemblejs/check";
+import { COMPUTED, UNREAD, readApiShape } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const api = (source: string) => {
@@ -19,7 +19,7 @@ describe("one api file's route, read from its source", () => {
   it("is its path and its method, GET where it names none, and that it answers once", () => {
     expect(
       api(
-        'import { defineApi } from "@assemblejs/core";\nexport default defineApi({ path: "/api/prices", handle: () => ({}) });',
+        'import { defineApi } from "@asmjs/core";\nexport default defineApi({ path: "/api/prices", handle: () => ({}) });',
       ),
     ).toEqual({
       file: "src/api/prices.api.ts",

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { markRemote } from "@assemblejs/core";
+import { markRemote } from "@asmjs/core";
 
 const envelope = '<assembly-root data-name="cart" data-id="1"><p>x</p></assembly-root>';
 const origin = "https://a.example.com";

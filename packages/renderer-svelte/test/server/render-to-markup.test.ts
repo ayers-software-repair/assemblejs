@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { renderToMarkup } from "@assemblejs/renderer-svelte";
+import { renderToMarkup } from "@asmjs/renderer-svelte";
 import Counter from "../fixtures/Counter.svelte";
 import Field from "../fixtures/Field.svelte";
 import Listener from "../fixtures/Listener.svelte";

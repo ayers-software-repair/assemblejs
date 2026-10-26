@@ -3,7 +3,7 @@
 
 /**
  * The renderers whose views are templates in a language of their own, read as text and rendered
- * on the server by `@assemblejs/renderer-templates`, each named for its engine.
+ * on the server by `@asmjs/renderer-templates`, each named for its engine.
  */
 export const TEMPLATE_RENDERERS: readonly string[] = [
   "ejs",

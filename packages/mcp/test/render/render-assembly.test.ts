@@ -6,8 +6,8 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { renderAssembly, resolveRoot } from "@assemblejs/mcp";
-import type { ProjectRoot } from "@assemblejs/mcp";
+import { renderAssembly, resolveRoot } from "@asmjs/mcp";
+import type { ProjectRoot } from "@asmjs/mcp";
 import { devServer } from "../fixtures/dev-server.js";
 
 let root: ProjectRoot;

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineConfig, readCookies } from "@assemblejs/core";
+import { defineConfig, readCookies } from "@asmjs/core";
 import { CATALOG, FULFILMENT, REVIEWS } from "./src/shop/origins.js";
 import { forStaff, isStaffKey } from "./src/shop/staff.js";
 

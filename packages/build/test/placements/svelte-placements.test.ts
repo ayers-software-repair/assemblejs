@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { sveltePlacements } from "@assemblejs/build";
+import { sveltePlacements } from "@asmjs/build";
 
 const component = (markup: string, imported = "slot"): string =>
-  `<script lang="ts">\n  import { ${imported} } from "@assemblejs/renderer-svelte/client";\n  let { data } = $props();\n  const unused = "slot('in-a-script')";\n</script>\n${markup}\n<style>\n  .x::after { content: "slot('in-a-style')"; }\n</style>`;
+  `<script lang="ts">\n  import { ${imported} } from "@asmjs/renderer-svelte/client";\n  let { data } = $props();\n  const unused = "slot('in-a-script')";\n</script>\n${markup}\n<style>\n  .x::after { content: "slot('in-a-style')"; }\n</style>`;
 
 describe("the slots a Svelte component's markup places", () => {
   it("are every call of the renderer's slot() outside its script and style", () => {
@@ -34,7 +34,7 @@ describe("the slots a Svelte component's markup places", () => {
       sveltePlacements(component('{@html place("cart")}', "slot as place")).placements,
     ).toEqual([{ name: "cart", view: "default" }]);
     // Under a namespace it is the same slot, and a name that only ends like it is another's.
-    const whole = `<script lang="ts">\n  import * as c from "@assemblejs/renderer-svelte/client";\n</script>\n<div>{@html c.slot("cart")}{@html abc.slot("price")}{@html c_slot("gone")}</div>`;
+    const whole = `<script lang="ts">\n  import * as c from "@asmjs/renderer-svelte/client";\n</script>\n<div>{@html c.slot("cart")}{@html abc.slot("price")}{@html c_slot("gone")}</div>`;
     expect(sveltePlacements(whole).placements).toEqual([{ name: "cart", view: "default" }]);
     expect(sveltePlacements('<div>{@html slot("cart")}</div>').placements).toEqual([]);
   });

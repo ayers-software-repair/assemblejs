@@ -16,11 +16,11 @@
     <h2>1. Make a project</h2>
     <dl>
       <div class="item">
-        <dt><code>npm create @assemblejs shop</code></dt>
+        <dt><code>npm create @asmjs@next shop</code></dt>
         <dd>
           Writes a project that runs: a page, one assembly, a server file that will never grow, and
           a package.json whose one runtime dependency is
-          <code>@assemblejs/core</code>, the command and the agent surface being development
+          <code>@asmjs/core</code>, the command and the agent surface being development
           dependencies. Beside them, for an AI agent that opens the project: an
           <code>AGENTS.md</code> that says what the project is and the rules its code must satisfy,
           and the project's own MCP server registered for Claude Code, Cursor, VS Code, Gemini CLI
@@ -58,7 +58,7 @@
         <dd>
           Writes <code>src/assemblies/counter/counter.svelte</code> and prints the tag that places
           it. Install the renderer it needs:
-          <code>npm install @assemblejs/renderer-svelte svelte</code>. The guides for
+          <code>npm install @asmjs/renderer-svelte@next svelte</code>. The guides for
           <a href="react.html">React</a> and <a href="vue.html">Vue</a> show the same step in those
           idioms.
         </dd>
@@ -78,7 +78,7 @@
         <dd>
           A service beside the view returns the assembly's data. It runs on the server before the
           render and also answers the assembly's data endpoint, so the two can never disagree.
-          <pre><code>import { defineService } from "@assemblejs/core";
+          <pre><code>import { defineService } from "@asmjs/core";
 
 export default defineService({
   name: "label",
@@ -107,10 +107,10 @@ export default defineService({
       <div class="item">
         <dt><code>npx assemblejs add assembly readout --renderer react</code></dt>
         <dd>
-          Then <code>npm install @assemblejs/renderer-react react react-dom</code>, and the tag on
+          Then <code>npm install @asmjs/renderer-react@next react react-dom</code>, and the tag on
           the page. The readout hears what the Svelte counter sends, because the bus belongs to the
           page and not to either framework's tree.
-          <pre><code>import { useEvents } from "@assemblejs/renderer-react/client";
+          <pre><code>import { useEvents } from "@asmjs/renderer-react/client";
 import { useEffect, useState } from "react";
 
 export default function Readout() {
@@ -142,7 +142,7 @@ export default function Readout() {
           of it. A handler's answer, and a service's, is
           written as an object type or a union of them, not an <code>interface</code>, because an
           interface does not say its members are JSON.
-          <pre><code>import { defineApi } from "@assemblejs/core";
+          <pre><code>import { defineApi } from "@asmjs/core";
 
 export default defineApi({ path: "/api/time", handle: () =&gt; ({ now: new Date().toISOString() }) });</code></pre>
         </dd>
@@ -156,7 +156,7 @@ export default defineApi({ path: "/api/time", handle: () =&gt; ({ now: new Date(
           Policy lives beside the page's template, only for the placements that need any. A deadline
           in milliseconds; the markup shown when the assembly does not answer; or that its failure
           fails the page. A slow assembly renders its fallback and the page still ships.
-          <pre><code>import { definePage } from "@assemblejs/core";
+          <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   place: {
@@ -172,7 +172,7 @@ export default definePage({
           the browser fetches it after load. A route with a parameter reaches the deferred
           assembly's services as <code>params</code>, exactly as it reaches one rendered with the
           page.
-          <pre><code>import { definePage } from "@assemblejs/core";
+          <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({ route: "/item/:sku", place: { tag: { defer: true } } });</code></pre>
         </dd>
@@ -186,7 +186,7 @@ export default definePage({ route: "/item/:sku", place: { tag: { defer: true } }
           The state the stream shares: the latest price, and the <code>send</code> of every open
           connection. It is a plain module beside the api, not an api itself, because only files
           named <code>*.api.ts</code> are routes.
-          <pre><code>import type { JsonValue, StreamContext } from "@assemblejs/core";
+          <pre><code>import type { JsonValue, StreamContext } from "@asmjs/core";
 
 export const priceFeed = {
   latest: { price: 0 } as JsonValue,
@@ -200,7 +200,7 @@ export const priceFeed = {
           An api with <code>stream</code> in place of <code>handle</code> holds its response open
           and sends events; the browser opens one connection per page and puts each message on the
           page's bus, where assemblies receive it like any other event.
-          <pre><code>import { defineApi } from "@assemblejs/core";
+          <pre><code>import { defineApi } from "@asmjs/core";
 import { priceFeed } from "./price-feed.js";
 
 export default defineApi({
@@ -241,7 +241,7 @@ export default defineApi({
           a page over one fails the command. A page whose route has a parameter is weighed at the
           example address <code>addresses</code> gives for its route, beside the budgets, and
           <code>check</code> asks for one for each such page.
-          <pre><code>import { defineConfig } from "@assemblejs/core";
+          <pre><code>import { defineConfig } from "@asmjs/core";
 
 export default defineConfig({
   budgets: { document: 20000, styles: 10000, scripts: 60000, total: 150000 },

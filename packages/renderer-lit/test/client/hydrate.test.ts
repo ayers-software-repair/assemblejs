@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { createBus } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
 import { beforeEach, describe, expect, it } from "vitest";
-import { hydrate } from "@assemblejs/renderer-lit/client";
+import { hydrate } from "@asmjs/renderer-lit/client";
 import { BUTTON_MARKUP } from "../fixtures/button-markup.js";
 import { buttonView } from "../fixtures/button-view.js";
 import { shellHolding } from "../fixtures/shell-markup.js";

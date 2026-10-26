@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readStreamMessage } from "@assemblejs/core/client";
+import { readStreamMessage } from "@asmjs/core/client";
 
 describe("reading a message from a page's stream", () => {
   it("reads a topic, a payload and an optional address by name", () => {

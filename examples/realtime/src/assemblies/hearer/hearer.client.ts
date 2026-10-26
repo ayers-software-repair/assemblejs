@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ClientRenderer } from "@assemblejs/core/client";
+import type { ClientRenderer } from "@asmjs/core/client";
 
 // Marks itself ready once it listens, then writes what a ping said and who sent it.
 const hearer: ClientRenderer = {

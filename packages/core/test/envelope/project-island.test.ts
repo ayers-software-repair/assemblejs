@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { projectIsland } from "@assemblejs/core";
-import type { IslandSource } from "@assemblejs/core";
+import { projectIsland } from "@asmjs/core";
+import type { IslandSource } from "@asmjs/core";
 
 describe("projecting the island payload", () => {
   it("takes the six fields it names", () => {

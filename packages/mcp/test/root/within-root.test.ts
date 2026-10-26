@@ -3,9 +3,9 @@
 import { mkdirSync, mkdtempSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { OutsideRootError } from "@assemblejs/build";
+import { OutsideRootError } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { resolveRoot, withinRoot } from "@assemblejs/mcp";
+import { resolveRoot, withinRoot } from "@asmjs/mcp";
 
 // The rule itself is the command line's, and held there. Here: that a tool's guard is that rule,
 // asked of the root the server was started on.

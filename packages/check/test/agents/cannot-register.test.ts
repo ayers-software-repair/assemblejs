@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { cannotRegister } from "@assemblejs/check";
+import { cannotRegister } from "@asmjs/check";
 
 describe("why a registration that cannot be read stops a write to it", () => {
   it("names the file, the commonest cause, and what would be lost", () => {

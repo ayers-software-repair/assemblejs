@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { pickView } from "@assemblejs/build";
+import { pickView } from "@asmjs/build";
 
 describe("picking an assembly's view from its view files", () => {
   it("takes the only one, whatever it is named", () => {

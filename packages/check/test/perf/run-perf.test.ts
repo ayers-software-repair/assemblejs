@@ -6,10 +6,10 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { realIo } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 import { afterAll, describe, expect, it } from "vitest";
-import { runPerf } from "@assemblejs/check";
+import { runPerf } from "@asmjs/check";
 
 // Nested in an example, so the generated project resolves the workspace's packages as an
 // installed one would.

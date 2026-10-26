@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { encodeParams } from "@assemblejs/core";
+import { encodeParams } from "@asmjs/core";
 
 describe("a page's parameters as one string", () => {
   it("is form encoded in name order, the same whatever order they were read in", () => {

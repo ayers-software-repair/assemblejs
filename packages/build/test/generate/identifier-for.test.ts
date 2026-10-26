@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { identifierFor } from "@assemblejs/build";
+import { identifierFor } from "@asmjs/build";
 
 describe("naming an import in generated code", () => {
   it("survives a hyphen, which an identifier cannot carry", () => {

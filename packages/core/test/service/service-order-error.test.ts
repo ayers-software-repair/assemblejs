@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ServiceOrderError } from "@assemblejs/core";
+import { ServiceOrderError } from "@asmjs/core";
 
 describe("a service ordering error", () => {
   it("carries every problem, not the first", () => {

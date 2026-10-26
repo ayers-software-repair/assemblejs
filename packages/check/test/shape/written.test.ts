@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { Written } from "@assemblejs/check";
+import type { Written } from "@asmjs/check";
 
 describe("a value as its source writes it", () => {
   it("is carried whole by JSON, at any depth", () => {

@@ -5,8 +5,8 @@ import { h } from "preact";
 import { useContext } from "preact/hooks";
 import { renderToString } from "preact-render-to-string";
 import { describe, expect, it } from "vitest";
-import { createBus } from "@assemblejs/core/client";
-import { EventsContext } from "@assemblejs/renderer-preact/client";
+import { createBus } from "@asmjs/core/client";
+import { EventsContext } from "@asmjs/renderer-preact/client";
 
 /** What a component finds in the context, each time one is rendered. */
 const found: unknown[] = [];

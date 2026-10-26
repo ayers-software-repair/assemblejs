@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { formatWeight } from "@assemblejs/check";
-import type { PageWeight } from "@assemblejs/check";
+import { formatWeight } from "@asmjs/check";
+import type { PageWeight } from "@asmjs/check";
 
 const weight: PageWeight = {
   route: "/shop",

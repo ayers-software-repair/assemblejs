@@ -1,4 +1,4 @@
-import { defineConfig } from "@assemblejs/core";
+import { defineConfig } from "@asmjs/core";
 
 // The bounds on composition, set where the project's policy is: one level deep, and two
 // placements a request, so the page below shows each bound refusing.

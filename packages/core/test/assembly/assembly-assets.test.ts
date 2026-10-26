@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AssemblyAssets } from "@assemblejs/core";
+import type { AssemblyAssets } from "@asmjs/core";
 
 describe("an assembly's browser files", () => {
   it("are stylesheets and modules, as urls", () => {

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { BootError, createServer, defineAssembly } from "@assemblejs/core";
-import type { ServerOptions } from "@assemblejs/core";
+import { BootError, createServer, defineAssembly } from "@asmjs/core";
+import type { ServerOptions } from "@asmjs/core";
 
 describe("what a server is built from", () => {
   it("needs a configuration and its assemblies, and defaults the rest", () => {

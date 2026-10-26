@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/build",
+  "name": "@asmjs/build",
   "version": "1.0.0-next.0",
   "description": "The AssembleJS build: what is known of a project, the modules generated for it, and the server and browser files it becomes.",
   "license": "Apache-2.0",
@@ -41,7 +41,7 @@
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "dependencies": {
-    "@assemblejs/core": "workspace:*",
+    "@asmjs/core": "workspace:*",
     "acorn": "8.18.0",
     "esbuild": "0.28.2",
     "postcss": "8.5.28",

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { compileSolid } from "@assemblejs/renderer-solid/compiler";
+import { compileSolid } from "@asmjs/renderer-solid/compiler";
 
 const view = 'export default (props) => <p class="a">{props.data.n}</p>;';
 

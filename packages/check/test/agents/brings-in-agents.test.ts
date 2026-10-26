@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { agentInstructions, bringsInAgents } from "@assemblejs/check";
+import { agentInstructions, bringsInAgents } from "@asmjs/check";
 
 describe("whether a CLAUDE.md brings the project's AGENTS.md in", () => {
   it("does when it imports it, alone, above its own text or in the middle of a line", () => {

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fillDeferred } from "@assemblejs/core/client";
+import { fillDeferred } from "@asmjs/core/client";
 
 const placeholder = (fallback = "", attributes = ""): Element => {
   document.body.innerHTML = `<assembly-root data-name="cart" data-id="a1" data-view="default" data-renderer="" data-defer=""${attributes}>${fallback}<script type="application/json" data-assembly="a1">{}</script></assembly-root>`;

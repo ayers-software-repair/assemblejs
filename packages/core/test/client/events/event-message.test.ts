@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { EventMessage } from "@assemblejs/core/client";
+import type { EventMessage } from "@asmjs/core/client";
 
 describe("a message", () => {
   it("carries its sender and a sequence, so two are always orderable", () => {

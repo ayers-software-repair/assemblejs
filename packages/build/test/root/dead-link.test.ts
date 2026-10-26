@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { deadLink } from "@assemblejs/build";
+import { deadLink } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 describe("the first link along a path that leads nowhere", () => {

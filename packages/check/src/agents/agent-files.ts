@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { isDeepStrictEqual } from "node:util";
-import { BYTE_ORDER_MARK } from "@assemblejs/build";
-import { lineEnding } from "@assemblejs/build";
+import { BYTE_ORDER_MARK } from "@asmjs/build";
+import { lineEnding } from "@asmjs/build";
 import { agentInstructions } from "./agent-instructions.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { AGENTS_IMPORT } from "./agents-import.js";

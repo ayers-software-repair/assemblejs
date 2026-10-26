@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { loopbackHost } from "@assemblejs/core";
+import { loopbackHost } from "@asmjs/core";
 
 describe("whether a request names this machine's loopback", () => {
   it("is for localhost, 127.x and ::1, with or without a port", () => {

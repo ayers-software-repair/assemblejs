@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { encodeParams, readParams } from "@assemblejs/core";
+import { encodeParams, readParams } from "@asmjs/core";
 
 describe("a page's parameters read back from the wire", () => {
   it("reads what was encoded, values of any text, and nothing from an empty string", () => {

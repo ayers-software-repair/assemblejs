@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { Io } from "@assemblejs/build";
+import type { Io } from "@asmjs/build";
 
 describe("what a command does to the world outside itself", () => {
   it("is five operations, passed in rather than reached for", () => {

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
-import { discoverAssemblies, unreadPlacements, viewFindings } from "@assemblejs/build";
+import { discoverAssemblies, unreadPlacements, viewFindings } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 import { templatedProject } from "../fixtures/templated-project.js";
 
@@ -16,7 +16,7 @@ const findings = (files: Record<string, string>) => {
   }
   return viewFindings(root, discoverAssemblies(root).assemblies);
 };
-const REACT = 'import { Slot } from "@assemblejs/renderer-react/client";\n';
+const REACT = 'import { Slot } from "@asmjs/renderer-react/client";\n';
 // The same, in a project that has the templates renderer installed, and so a Pug of its own.
 const made: string[] = [];
 afterAll(() => {
@@ -102,7 +102,7 @@ describe("what every view in a project says it places", () => {
 
   it("reports a slot written inside a Lit element's render, and keeps the view's own placements", () => {
     const { placements, problems } = findings({
-      "shell/shell.lit.ts": `import { slot } from "@assemblejs/renderer-lit/client";\nimport { LitElement, html } from "lit";\nexport class ShellCard extends LitElement { render() { return html\`\${slot("price")}\`; } }\nexport default () => html\`<shell-card></shell-card>\${slot("cart")}\`;`,
+      "shell/shell.lit.ts": `import { slot } from "@asmjs/renderer-lit/client";\nimport { LitElement, html } from "lit";\nexport class ShellCard extends LitElement { render() { return html\`\${slot("price")}\`; } }\nexport default () => html\`<shell-card></shell-card>\${slot("cart")}\`;`,
       "cart/cart.html": "<p>cart</p>",
       "price/price.html": "<p>price</p>",
     });
@@ -138,7 +138,7 @@ describe("what every view in a project says it places", () => {
       "board/board.svelte":
         '<script lang="ts">\n  import Row from "./Row.svelte";\n</script>\n<Row />',
       "board/Row.svelte":
-        '<script lang="ts">\n  import { slot } from "@assemblejs/renderer-svelte/client";\n</script>\n<div>{@html slot("price")}</div>',
+        '<script lang="ts">\n  import { slot } from "@asmjs/renderer-svelte/client";\n</script>\n<div>{@html slot("price")}</div>',
     });
     expect(placements.get("shell")).toEqual([{ name: "cart", view: "default" }]);
     expect(placements.get("board")).toEqual([{ name: "price", view: "default" }]);

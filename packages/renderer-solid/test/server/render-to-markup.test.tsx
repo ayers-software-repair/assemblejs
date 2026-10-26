@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ErrorBoundary, Suspense, createResource } from "solid-js";
 import { describe, expect, it } from "vitest";
-import { findPlacements } from "@assemblejs/core";
-import { renderToMarkup } from "@assemblejs/renderer-solid";
-import { Slot, hydrate, useEvents } from "@assemblejs/renderer-solid/client";
-import type { AssemblyProps } from "@assemblejs/renderer-solid";
+import { findPlacements } from "@asmjs/core";
+import { renderToMarkup } from "@asmjs/renderer-solid";
+import { Slot, hydrate, useEvents } from "@asmjs/renderer-solid/client";
+import type { AssemblyProps } from "@asmjs/renderer-solid";
 import { counterMarkup } from "../fixtures/counter-markup.js";
 import { Counter } from "../fixtures/counter.js";
 import { LateIsland } from "../fixtures/late-island.js";

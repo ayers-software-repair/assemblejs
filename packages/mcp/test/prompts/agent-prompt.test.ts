@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AgentPrompt } from "@assemblejs/mcp";
+import type { AgentPrompt } from "@asmjs/mcp";
 
 describe("one thing a person asks an agent for", () => {
   it("is a name to pick it by, what a client shows, what is filled in, and the brief", () => {

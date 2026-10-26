@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/example-market-catalog",
+  "name": "@asmjs/example-market-catalog",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,12 +10,12 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@assemblejs/core": "workspace:*",
-    "@assemblejs/renderer-lit": "workspace:*",
-    "@assemblejs/renderer-preact": "workspace:*",
-    "@assemblejs/renderer-react": "workspace:*",
-    "@assemblejs/renderer-templates": "workspace:*",
-    "@assemblejs/renderer-vue": "workspace:*",
+    "@asmjs/core": "workspace:*",
+    "@asmjs/renderer-lit": "workspace:*",
+    "@asmjs/renderer-preact": "workspace:*",
+    "@asmjs/renderer-react": "workspace:*",
+    "@asmjs/renderer-templates": "workspace:*",
+    "@asmjs/renderer-vue": "workspace:*",
     "lit": "3.3.3",
     "preact": "11.0.0",
     "react": "19.2.8",
@@ -23,7 +23,7 @@
     "vue": "3.5.43"
   },
   "devDependencies": {
-    "@assemblejs/cli": "workspace:*",
+    "@asmjs/cli": "workspace:*",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5"
   }

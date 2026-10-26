@@ -13,7 +13,7 @@ them in the browser. Besides assemblies a project has pages (routes), services (
 that return an assembly's data), apis (routes that serve data) and an events wiring (how
 assemblies talk in the browser, including one server-sent-events stream per page). A command line
 (`assemblejs`) scaffolds, builds, checks and deploys projects, and an MCP server
-(`@assemblejs/mcp`) gives an AI agent the same abilities over stdio.
+(`@asmjs/mcp`) gives an AI agent the same abilities over stdio.
 
 The code of a project's own assemblies, services, apis, pages and config is written by the project
 author and is trusted. The following is not trusted:
@@ -60,9 +60,9 @@ dependencies. A defect in a dependency with no reachable path through AssembleJS
 ## How to exercise it
 
 - Everything is installed and built in the image. Unit tests are vitest, offline: `pnpm -r test`,
-  or `pnpm --filter @assemblejs/core test` for one package.
+  or `pnpm --filter @asmjs/core test` for one package.
 - A live server for a reproducer: the examples are workspace projects with their dependencies
-  installed. Build one with `pnpm --filter "@assemblejs/example-market-*" build`, then
+  installed. Build one with `pnpm --filter "@asmjs/example-market-*" build`, then
   `node examples/market/start.mjs` starts four servers that compose each other's assemblies over
   HTTP on ports 4700 to 4703 (see `examples/market/README.md`). `examples/html/server.mjs` is the
   smallest server the contract allows. `ASSEMBLEJS_HOST` and `ASSEMBLEJS_PORT` set the address.

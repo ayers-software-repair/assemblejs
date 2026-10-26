@@ -34,11 +34,11 @@ export async function bundleFixture(entry) {
       },
     ],
     alias: {
-      "@assemblejs/core/client": here("../packages/core/src/client/index.ts"),
-      "@assemblejs/renderer-react/client": here("../packages/renderer-react/src/client/index.ts"),
-      "@assemblejs/renderer-react": here("../packages/renderer-react/src/index.ts"),
-      "@assemblejs/renderer-svelte/client": here("../packages/renderer-svelte/src/client/index.ts"),
-      "@assemblejs/renderer-svelte": here("../packages/renderer-svelte/src/index.ts"),
+      "@asmjs/core/client": here("../packages/core/src/client/index.ts"),
+      "@asmjs/renderer-react/client": here("../packages/renderer-react/src/client/index.ts"),
+      "@asmjs/renderer-react": here("../packages/renderer-react/src/index.ts"),
+      "@asmjs/renderer-svelte/client": here("../packages/renderer-svelte/src/client/index.ts"),
+      "@asmjs/renderer-svelte": here("../packages/renderer-svelte/src/index.ts"),
     },
   });
   return result.outputFiles[0].text;

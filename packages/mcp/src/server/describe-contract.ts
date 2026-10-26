@@ -12,7 +12,7 @@ import {
   ISLAND_SCRIPT_TYPE,
   PLACEMENT_ELEMENT,
   RESPONSE_HEADER,
-} from "@assemblejs/core";
+} from "@asmjs/core";
 import type { DescribedContract } from "./described-contract.js";
 
 /**

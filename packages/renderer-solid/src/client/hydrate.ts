@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ClientRenderer, JsonObject, MountContext } from "@assemblejs/core/client";
+import type { ClientRenderer, JsonObject, MountContext } from "@asmjs/core/client";
 import { createComponent, sharedConfig } from "solid-js";
 import type { Component } from "solid-js";
 import { hydrate as hydrateInto } from "solid-js/web";

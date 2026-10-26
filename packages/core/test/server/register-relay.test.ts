@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { registerRelay } from "@assemblejs/core";
+import { registerRelay } from "@asmjs/core";
 
 const SHOP = "https://shop.example";
 const relay = (origin: string, path: string) =>

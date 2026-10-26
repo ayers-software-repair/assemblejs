@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { loadMarkdown } from "@assemblejs/renderer-templates";
+import { loadMarkdown } from "@asmjs/renderer-templates";
 
 describe("a Markdown view", () => {
   it("renders the author's prose", async () => {

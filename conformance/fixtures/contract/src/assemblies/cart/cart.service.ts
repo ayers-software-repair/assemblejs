@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 
 // Data with markup in it, which the island must carry without ending its own script element.
 export default defineService({

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { routeKey } from "@assemblejs/core";
+import { routeKey } from "@asmjs/core";
 
 describe("what the router matches", () => {
   it("treats paths that differ only in a parameter's name as one route", () => {

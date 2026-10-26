@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { OUTLINE_ATTRIBUTE, outlineIsland } from "@assemblejs/core";
+import { OUTLINE_ATTRIBUTE, outlineIsland } from "@asmjs/core";
 
 describe("the block a page carries for its outline", () => {
   it("is data a browser does not run, marked as the outline's", () => {

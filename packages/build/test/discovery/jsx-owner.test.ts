@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { RENDERERS, jsxOwner } from "@assemblejs/build";
+import { RENDERERS, jsxOwner } from "@asmjs/build";
 
 describe("the owner of a renderer's JSX", () => {
   it("is the framework itself, for the three whose views are JSX", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { contentSecurityPolicy } from "@assemblejs/core";
+import { contentSecurityPolicy } from "@asmjs/core";
 
 describe("the default content security policy", () => {
   it("allows this origin and the declared remotes, and nothing inline or framed", () => {

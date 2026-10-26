@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { PROJECT_NAME } from "@assemblejs/cli";
+import { PROJECT_NAME } from "@asmjs/cli";
 
 describe("what a new project may be called", () => {
   it("is lower case, a letter first, then letters, digits and hyphens", () => {

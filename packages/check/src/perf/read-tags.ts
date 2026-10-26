@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ENVELOPE_ELEMENT } from "@assemblejs/core";
+import { ENVELOPE_ELEMENT } from "@asmjs/core";
 
 // A name ends where its tag's attributes or end begin, so `<script-loader>` is not a script.
 const TAG = new RegExp(

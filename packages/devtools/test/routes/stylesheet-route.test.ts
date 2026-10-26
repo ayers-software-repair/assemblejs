@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { OVERVIEW_STYLESHEET, stylesheetRoute } from "@assemblejs/devtools";
+import { OVERVIEW_STYLESHEET, stylesheetRoute } from "@asmjs/devtools";
 import { view } from "../fixtures/view.js";
 
 describe("the stylesheet route", () => {

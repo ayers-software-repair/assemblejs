@@ -8,8 +8,8 @@ import {
   defineAssembly,
   localFetch,
   pageAssets,
-} from "@assemblejs/core";
-import type { AssemblyDefinition, Diagnostic, RemoteTransport } from "@assemblejs/core";
+} from "@asmjs/core";
+import type { AssemblyDefinition, Diagnostic, RemoteTransport } from "@asmjs/core";
 
 const assembly = (name: string, over: Partial<AssemblyDefinition> = {}): AssemblyDefinition =>
   defineAssembly({

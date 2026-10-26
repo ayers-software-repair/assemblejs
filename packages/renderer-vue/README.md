@@ -1,4 +1,4 @@
-# @assemblejs/renderer-vue
+# @asmjs/renderer-vue
 
 Write an AssembleJS assembly in Vue.
 

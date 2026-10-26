@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { createServer, defineAssembly, defineService } from "@assemblejs/core";
-import type { App, LogLine } from "@assemblejs/core";
+import { createServer, defineAssembly, defineService } from "@asmjs/core";
+import type { App, LogLine } from "@asmjs/core";
 import { afterAll, beforeAll } from "vitest";
 
 const served = (name: string) =>

@@ -4,7 +4,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { readViewExport } from "@assemblejs/check";
+import { readViewExport } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const file = (name: string, source: string): string => {

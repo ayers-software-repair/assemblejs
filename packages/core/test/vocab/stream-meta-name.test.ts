@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { STREAM_META_NAME } from "@assemblejs/core";
+import { STREAM_META_NAME } from "@asmjs/core";
 
 describe("the name a page's stream is written under", () => {
   it("is the product's own, so no other meta element is read as one", () => {

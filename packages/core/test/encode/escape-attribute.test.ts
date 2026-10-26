@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { escapeAttribute } from "@assemblejs/core";
+import { escapeAttribute } from "@asmjs/core";
 
 describe("escaping an attribute value", () => {
   it("stops a value ending the attribute it sits in", () => {

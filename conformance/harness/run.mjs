@@ -6,7 +6,7 @@
 //
 //   1. build and pack the packages, once, so what is installed is what a publish would ship;
 //   2. create a project from the starter's tarball and lay the fixture's files over it;
-//   3. install every @assemblejs package the starter wrote or the fixture names from its
+//   3. install every @asmjs package the starter wrote or the fixture names from its
 //      tarball, never through a workspace link, and build with the command line the project
 //      installed;
 //   4. start dist/server.js under plain node, in production;

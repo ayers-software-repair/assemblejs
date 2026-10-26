@@ -110,7 +110,7 @@
             <h2>Install the renderer</h2>
             <dl>
               <div class="item">
-                <dt><code>npm install @assemblejs/renderer-react react react-dom</code></dt>
+                <dt><code>npm install @asmjs/renderer-react@next react react-dom</code></dt>
                 <dd>
                   One renderer package per framework, so a project that has no Vue never installs
                   Vue. React 18.3 or newer.
@@ -127,7 +127,7 @@
                   because
                   <code>.tsx</code>
                   alone could be Preact or Solid. Your server file does not change.
-                  <pre><code>import type { AssemblyProps } from "@assemblejs/renderer-react";
+                  <pre><code>import type { AssemblyProps } from "@asmjs/renderer-react";
 
 export default function Cart({ data }: AssemblyProps) {
   return &lt;p&gt;cart {Object.keys(data).length}&lt;/p&gt;;
@@ -155,7 +155,7 @@ export default function Cart({ data }: AssemblyProps) {
                   <code>&lt;div data-assembly-slot="price"&gt;</code>, and the placed assembly
                   stands inside it: lay it out by that element, never by what is inside. An assembly
                   in a project has one view, so no <code>view</code> is given.
-                  <pre><code>import { Slot } from "@assemblejs/renderer-react/client";
+                  <pre><code>import { Slot } from "@asmjs/renderer-react/client";
 
 export default function Cart() {
   return (
@@ -176,7 +176,7 @@ export default function Cart() {
                   data. It is given the request's <code>query</code> and the route
                   <code>params</code> of the page that placed the assembly, and the same function
                   answers the assembly's data endpoint, so the two cannot disagree.
-                  <pre><code>import { defineService } from "@assemblejs/core";
+                  <pre><code>import { defineService } from "@asmjs/core";
 
 export default defineService({
   name: "tag",
@@ -201,13 +201,13 @@ export default defineService({
               <div class="item">
                 <dt><code>useEvents()</code></dt>
                 <dd>
-                  From <code>@assemblejs/renderer-react/client</code>. The object is scoped to this
+                  From <code>@asmjs/renderer-react/client</code>. The object is scoped to this
                   assembly: <code>send</code> stamps the sender, <code>on</code> returns its
                   unsubscribe, so returning it from an effect is the whole cleanup; what is still
                   subscribed when the page unmounts its assemblies is released then. A Svelte
                   counter on the same page sends; this React readout hears, with no adapter between
                   them.
-                  <pre><code>import { useEvents } from "@assemblejs/renderer-react/client";
+                  <pre><code>import { useEvents } from "@asmjs/renderer-react/client";
 import { useEffect, useState } from "react";
 
 export const mount = "visible";
@@ -290,7 +290,7 @@ export default function Readout() {
                   milliseconds, markup to show when the assembly does not answer, whether its
                   failure fails the page, or a deferral the browser fills after load. A route with a
                   parameter reaches the services as <code>params</code>.
-                  <pre><code>import { definePage } from "@assemblejs/core";
+                  <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   route: "/item/:sku",

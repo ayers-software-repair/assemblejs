@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DataApi } from "@assemblejs/core";
+import type { DataApi } from "@asmjs/core";
 
 describe("an api that answers with data", () => {
   it("answers each request through its handler", async () => {

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonObject } from "@assemblejs/core";
+import type { JsonObject } from "@asmjs/core";
 import type { TemplateResult } from "lit";
 import type { AssemblyProps } from "./assembly-props.js";
 

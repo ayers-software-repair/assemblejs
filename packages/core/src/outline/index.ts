@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-/** @module @assemblejs/core/outline */
+/** @module @asmjs/core/outline */
 // A page's outline, drawn in the browser: its own published entry point. A server told to show
 // its outline serves this module and starts it on every page; a page made some other way
 // starts it by hand.

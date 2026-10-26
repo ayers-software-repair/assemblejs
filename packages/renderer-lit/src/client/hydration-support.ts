@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-/** @module @assemblejs/renderer-lit/hydration-support */
+/** @module @asmjs/renderer-lit/hydration-support */
 import { hydrationHook } from "./hydration-hook.js";
 
 /**

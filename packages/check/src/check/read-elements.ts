@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { COMPUTED_MARKER } from "@assemblejs/build";
-import { inertSpans } from "@assemblejs/core";
+import { COMPUTED_MARKER } from "@asmjs/build";
+import { inertSpans } from "@asmjs/core";
 import type { ViewElement } from "./view-element.js";
 
 // A start tag: its name, then its attributes as far as the next `>`, a self-closing slash allowed.

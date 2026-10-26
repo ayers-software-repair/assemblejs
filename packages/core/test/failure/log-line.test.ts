@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { LogLine } from "@assemblejs/core";
+import type { LogLine } from "@asmjs/core";
 
 describe("a log line", () => {
   it("pairs what the visitor was told with what actually happened", () => {

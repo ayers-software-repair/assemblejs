@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DevtoolsRoute } from "@assemblejs/core";
+import type { DevtoolsRoute } from "@asmjs/core";
 
 describe("one route devtools serve", () => {
   it("answers a read, at a path under the prefix, from what it is shown", async () => {

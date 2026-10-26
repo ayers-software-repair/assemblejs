@@ -3,7 +3,7 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
-import { leadsOut } from "@assemblejs/build";
+import { leadsOut } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 describe("whether a path leaves the project", () => {

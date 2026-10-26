@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { scheduleFill, start } from "@assemblejs/core/client";
-import type { ClientRenderer } from "@assemblejs/core/client";
+import { scheduleFill, start } from "@asmjs/core/client";
+import type { ClientRenderer } from "@asmjs/core/client";
 
 const island = (id: string) =>
   `<script type="application/json" data-assembly="${id}">${JSON.stringify({ id, name: "cart", view: "default", renderer: "html", data: { n: 1 }, deferred: false })}</script>`;

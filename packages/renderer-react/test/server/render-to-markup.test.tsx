@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 import { useId } from "react";
 import { describe, expect, it } from "vitest";
-import { renderToMarkup } from "@assemblejs/renderer-react";
-import { hydrate, useEvents } from "@assemblejs/renderer-react/client";
-import type { AssemblyProps } from "@assemblejs/renderer-react";
+import { renderToMarkup } from "@asmjs/renderer-react";
+import { hydrate, useEvents } from "@asmjs/renderer-react/client";
+import type { AssemblyProps } from "@asmjs/renderer-react";
 
 const Cart = ({ data }: AssemblyProps) => <p>Items: {String(data["total"])}</p>;
 

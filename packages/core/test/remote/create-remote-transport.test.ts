@@ -3,8 +3,8 @@
 import { createServer as createHttpServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createRemoteTransport } from "@assemblejs/core";
-import type { AssemblyRequest, LogLine } from "@assemblejs/core";
+import { createRemoteTransport } from "@asmjs/core";
+import type { AssemblyRequest, LogLine } from "@asmjs/core";
 
 // A remote server that misbehaves on purpose, one route per way a remote can be wrong.
 // The version the versioned route answers with, changed by the test that reads it.

@@ -3,12 +3,12 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { COMPUTED, UNREAD } from "@assemblejs/check";
+import { COMPUTED, UNREAD } from "@asmjs/check";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { RESOURCE_NOT_FOUND, registerResources, resolveRoot } from "@assemblejs/mcp";
+import { RESOURCE_NOT_FOUND, registerResources, resolveRoot } from "@asmjs/mcp";
 
 let dir = "";
 let client: Client;

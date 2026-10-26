@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readNamedExport } from "@assemblejs/check";
+import { readNamedExport } from "@asmjs/check";
 
 describe("reading what a module exports under a name, without running it", () => {
   it("reads a declared export and a re-exported declaration, as literals", () => {

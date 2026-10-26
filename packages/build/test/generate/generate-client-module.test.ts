@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { generateClientModule } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { generateClientModule } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 const assembly = (over: Partial<DiscoveredAssembly>): DiscoveredAssembly => ({
   name: "hi",
@@ -20,9 +20,9 @@ describe("one assembly's browser half, as its own module", () => {
     const source = generateClientModule(
       assembly({}),
       "/p/.assemblejs/client",
-      "@assemblejs/renderer-react",
+      "@asmjs/renderer-react",
     );
-    expect(source).toContain('import { hydrate } from "@assemblejs/renderer-react/client";');
+    expect(source).toContain('import { hydrate } from "@asmjs/renderer-react/client";');
     expect(source).toContain('import View from "../../src/assemblies/hi/hi.react.js";');
     expect(source).toContain("export default hydrate(View);");
   });
@@ -36,7 +36,7 @@ describe("one assembly's browser half, as its own module", () => {
     expect(source).toContain(
       '// @ts-ignore: not TypeScript, and read by the build\nimport View from "../../src/assemblies/hi/hi.svelte";',
     );
-    expect(source).toContain('import { hydrate } from "@assemblejs/renderer-svelte/client";');
+    expect(source).toContain('import { hydrate } from "@asmjs/renderer-svelte/client";');
   });
 
   it("re-exports a plain html view's own browser behaviour", () => {
@@ -60,7 +60,7 @@ describe("one assembly's browser half, as its own module", () => {
         client: "/p/src/assemblies/hi/hi.client.ts",
       }),
       "/p/.assemblejs/client",
-      "@assemblejs/renderer-templates",
+      "@asmjs/renderer-templates",
     );
     expect(source).toContain('export { default } from "../../src/assemblies/hi/hi.client.js";');
     expect(source).not.toContain("hydrate");

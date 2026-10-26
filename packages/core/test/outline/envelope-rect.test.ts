@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { envelopeRect } from "@assemblejs/core/outline";
+import { envelopeRect } from "@asmjs/core/outline";
 
 /** A box as a browser that lays a page out would answer it. */
 const box = (left: number, top: number, width: number, height: number): DOMRect =>

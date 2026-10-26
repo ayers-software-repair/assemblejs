@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AdmitVisitor } from "@assemblejs/core";
+import type { AdmitVisitor } from "@asmjs/core";
 
 describe("how a route asks whether one request's visitor may be shown a placement", () => {
   it("is made from what the visitor sent, or is nothing where everyone is let in", () => {

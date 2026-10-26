@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadTemplateCompiler } from "@assemblejs/build";
+import { loadTemplateCompiler } from "@asmjs/build";
 
 // The example that installs the templates package, as a project that did; the loader only walks
 // upward from the root it is given, so the example's own root serves and nothing is written.

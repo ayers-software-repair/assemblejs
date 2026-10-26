@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { rendererProblems } from "@assemblejs/build";
+import { rendererProblems } from "@asmjs/build";
 
 /** A project with the named packages installed, as far as a build looks to find them. */
 const project = (...installed: readonly string[]): string => {
@@ -23,17 +23,17 @@ const said = (root: string, renderer: string): string[] =>
 describe("what stops a view being built for want of its renderer", () => {
   it("is nothing for plain html, or for a renderer the project has installed", () => {
     expect(said(project(), "html")).toEqual([]);
-    expect(said(project("@assemblejs/renderer-react"), "react")).toEqual([]);
-    expect(said(project("@assemblejs/renderer-svelte", "svelte"), "svelte")).toEqual([]);
-    expect(said(project("@assemblejs/renderer-templates"), "pug")).toEqual([]);
+    expect(said(project("@asmjs/renderer-react"), "react")).toEqual([]);
+    expect(said(project("@asmjs/renderer-svelte", "svelte"), "svelte")).toEqual([]);
+    expect(said(project("@asmjs/renderer-templates"), "pug")).toEqual([]);
   });
 
   it("is the renderer's package, at the view, where the project has not installed it", () => {
     expect(said(project(), "react")).toEqual([
-      'src/assemblies/cart/cart.x | "cart" is a react assembly and @assemblejs/renderer-react is not installed | install @assemblejs/renderer-react',
+      'src/assemblies/cart/cart.x | "cart" is a react assembly and @asmjs/renderer-react is not installed | install @asmjs/renderer-react',
     ]);
     expect(said(project(), "ejs")).toEqual([
-      'src/assemblies/cart/cart.x | "cart" is an ejs assembly and @assemblejs/renderer-templates is not installed | install @assemblejs/renderer-templates',
+      'src/assemblies/cart/cart.x | "cart" is an ejs assembly and @asmjs/renderer-templates is not installed | install @asmjs/renderer-templates',
     ]);
   });
 
@@ -41,9 +41,9 @@ describe("what stops a view being built for want of its renderer", () => {
   it("is the framework too, at the manifest, where the build compiles with the project's own", () => {
     expect(said(project(), "vue")).toEqual([
       "package.json | this project has Vue assemblies and vue is not installed | install vue",
-      'src/assemblies/cart/cart.x | "cart" is a vue assembly and @assemblejs/renderer-vue is not installed | install @assemblejs/renderer-vue',
+      'src/assemblies/cart/cart.x | "cart" is a vue assembly and @asmjs/renderer-vue is not installed | install @asmjs/renderer-vue',
     ]);
-    expect(said(project("@assemblejs/renderer-svelte"), "svelte")).toEqual([
+    expect(said(project("@asmjs/renderer-svelte"), "svelte")).toEqual([
       "package.json | this project has Svelte assemblies and svelte is not installed | install svelte",
     ]);
     expect(said(project("vue"), "vue")).toHaveLength(1);

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { mountsInTheBrowser } from "@assemblejs/check";
+import { mountsInTheBrowser } from "@asmjs/check";
 
 describe("whether an envelope's assembly is mounted by the browser", () => {
   it("is for every mode but none, and for an envelope that names none", () => {

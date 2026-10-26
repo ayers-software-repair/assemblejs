@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { DEFAULT_VIEW } from "@assemblejs/core";
+import { DEFAULT_VIEW } from "@asmjs/core";
 import { parse } from "acorn";
 import type {
   Class,

@@ -12,8 +12,8 @@ import {
   OUTLINE_STYLES,
   createServer,
   defineAssembly,
-} from "@assemblejs/core";
-import type { OutlineAccount } from "@assemblejs/core/outline";
+} from "@asmjs/core";
+import type { OutlineAccount } from "@asmjs/core/outline";
 
 const view = (markup: string | (() => string)) => ({
   default: { renderer: "html", markup: typeof markup === "string" ? () => markup : markup },

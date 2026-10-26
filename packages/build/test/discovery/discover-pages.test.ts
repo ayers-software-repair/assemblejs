@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { discoverPages } from "@assemblejs/build";
+import { discoverPages } from "@asmjs/build";
 
 const project = (pages: Record<string, readonly string[]>): string => {
   const root = mkdtempSync(join(tmpdir(), "pages-"));

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { formatMs } from "@assemblejs/core/outline";
+import { formatMs } from "@asmjs/core/outline";
 
 describe("a length of time, in the fewest words that say it", () => {
   it("is tenths under ten milliseconds, whole ones under a second, and seconds from there", () => {

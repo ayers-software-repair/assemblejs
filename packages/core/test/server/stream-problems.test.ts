@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { streamProblems } from "@assemblejs/core";
+import { streamProblems } from "@asmjs/core";
 
 const streams = new Set(["/api/ticks"]);
 

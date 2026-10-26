@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { COMPONENTS } from "@assemblejs/cli";
+import { COMPONENTS } from "@asmjs/cli";
 
 describe("the components a new project starts with", () => {
   it("style each element the memo names, by a class and the tokens, with a focus ring", () => {

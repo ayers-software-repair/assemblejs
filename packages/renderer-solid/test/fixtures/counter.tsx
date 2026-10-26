@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { createSignal } from "solid-js";
-import type { AssemblyProps } from "@assemblejs/renderer-solid";
+import type { AssemblyProps } from "@asmjs/renderer-solid";
 
 /** A counter both test projects build: the server one renders it, the browser one hydrates it. */
 export const Counter = (props: AssemblyProps) => {

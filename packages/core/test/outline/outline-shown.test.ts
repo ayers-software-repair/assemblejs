@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it } from "vitest";
-import { outlineShown } from "@assemblejs/core/outline";
+import { outlineShown } from "@asmjs/core/outline";
 
 beforeEach(() => localStorage.clear());
 

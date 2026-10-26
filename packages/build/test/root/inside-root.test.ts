@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DeadLinkError, OutsideRootError, insideRoot } from "@assemblejs/build";
+import { DeadLinkError, OutsideRootError, insideRoot } from "@asmjs/build";
 
 const root = "/home/dev/app";
 

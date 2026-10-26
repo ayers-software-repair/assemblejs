@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ComposedPage } from "@assemblejs/mcp";
+import type { ComposedPage } from "@asmjs/mcp";
 
 describe("what composing answered", () => {
   it("pairs the markup with one account per placement", () => {

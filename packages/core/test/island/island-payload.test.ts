@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { IslandPayload } from "@assemblejs/core";
+import type { IslandPayload } from "@asmjs/core";
 
 describe("the island payload", () => {
   it("is six fields, and the set is closed", () => {

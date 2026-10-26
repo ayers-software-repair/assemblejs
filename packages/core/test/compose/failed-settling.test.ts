@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { RequiredFailure, failedSettling } from "@assemblejs/core";
+import { RequiredFailure, failedSettling } from "@asmjs/core";
 
 const placement = { name: "cart", view: "wide" };
 

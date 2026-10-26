@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
 import { LitElement, css, html } from "lit";
 
 // Five marks, as many filled as the product was given, and the number beside them. A Lit

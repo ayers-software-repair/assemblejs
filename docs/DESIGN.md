@@ -676,7 +676,7 @@ names (`renderTemplate` for a template view), and wires the one to the other, so
 found by the package it ships in and nothing asks it for a name or a list of extensions.
 
 ```ts
-// @assemblejs/renderer-x/client     browser
+// @asmjs/renderer-x/client     browser
 export interface ClientRenderer {
   mount(element: Element | ShadowRoot, data: JsonObject, context: MountContext): MountHandle;
 }
@@ -777,7 +777,7 @@ The view file's extension picks the renderer. Where an extension is shared, the 
 which: `cart.react.tsx`, `cart.preact.tsx`, `cart.solid.tsx`, and `cart.lit.ts` among a
 project's own TypeScript. `cart.svelte`, `cart.vue`, `cart.md` and `cart.html` need no infix,
 and nor do the template languages, `cart.ejs`, `cart.hbs`, `cart.njk` and `cart.pug`, which with
-`cart.md` render through `@assemblejs/renderer-templates`. A page's frameworks are then visible
+`cart.md` render through `@asmjs/renderer-templates`. A page's frameworks are then visible
 from a directory listing.
 
 Renderers ship one per package with one real peer dependency, so installing the framework you
@@ -972,7 +972,7 @@ events.keep("cart:add"); // later sends on this topic are kept for `last`
   sender.
 - The public surface is this typed object. Raw event dispatch is never the API.
 
-An assembly reaches its own server's apis by `api(path)`, from `@assemblejs/core/client`:
+An assembly reaches its own server's apis by `api(path)`, from `@asmjs/core/client`:
 `fetch(api("/api/stock"))`. It is the path on the page's own server, and the relay under it
 (5.1) for an assembly placed from another server, whose api the browser could not otherwise read.
 It takes a path under `/api` and throws for any other; the origin is the one the assembly's
@@ -1017,7 +1017,7 @@ choice is kept in their own browser and reaches no server.
 - **A server with it off is the server it was.** It links nothing, writes nothing and serves
   nothing for an outline; its pages are the same bytes.
 
-The module is published as `@assemblejs/core/outline`, so a page made some other way can draw
+The module is published as `@asmjs/core/outline`, so a page made some other way can draw
 its own.
 
 ---
@@ -1118,7 +1118,7 @@ for and for each one that server composed inside its answer.
   under `/_assemblejs/devtools/`, each answering a read from a summary of the project (names,
   routes, settings; no function, credential or template source) and the failures the process
   logged most recently. In production the server mounts none of them, so a project hands them
-  over unconditionally; `@assemblejs/devtools` supplies an overview page and the same reading as
+  over unconditionally; `@asmjs/devtools` supplies an overview page and the same reading as
   JSON. Devtools answer only a request from this machine's loopback, by where the connection came
   from and the name it used, so neither another machine nor a page on another site that points
   its own name at 127.0.0.1 reads anything from them.
@@ -1151,7 +1151,7 @@ for and for each one that server composed inside its answer.
 
 ## 13. The agent surface
 
-An MCP server, shipped as `@assemblejs/mcp`, so an agent builds with this framework the way a
+An MCP server, shipped as `@asmjs/mcp`, so an agent builds with this framework the way a
 developer does, with the framework's own knowledge behind it rather than a guess at it.
 
 This is the thing nothing else in the category has, and it follows from the mission rather than
@@ -1291,7 +1291,7 @@ The framework ships capability, not autonomy.
   never put in the project is not the project's to show.
 - The packages a project installs are the one thing found outside it (5.5), wherever the
   package manager linked them: a workspace's root, or a store beside it. That is the boundary
-  the server itself runs inside, started from `node_modules/@assemblejs/mcp`. Nothing else
+  the server itself runs inside, started from `node_modules/@asmjs/mcp`. Nothing else
   follows a link out.
 - Nothing runs a shell command. `check` runs the gates in process and returns findings.
 - Nothing publishes, deploys, or touches a remote. Those stay in the command line, where a
@@ -1310,7 +1310,7 @@ the project's own files, `new` writes what an agent needs in its first minute:
 | `CLAUDE.md`                                                                                   | One line, `@AGENTS.md`. Claude Code reads a `CLAUDE.md` in place of `AGENTS.md` wherever one exists in the project or above it, and the import is its documented way to share the one file.                                               |
 | `.mcp.json`, `.cursor/mcp.json`, `.vscode/mcp.json`, `.gemini/settings.json`, `opencode.json` | The project's own server, registered for each client that reads a registration from a project, in that client's form; Codex, Zed and JetBrains read none from a project, and the instructions say how each takes it.                      |
 
-The server is a development dependency of the project, `@assemblejs/mcp` beside the command
+The server is a development dependency of the project, `@asmjs/mcp` beside the command
 line, and each registration runs its entry point with node. No shell, no package runner and
 nothing fetched when an agent starts, and the server an agent talks to is the one the project
 installed. It is built on one exact version of the command line, and checks with that one.
@@ -1468,7 +1468,7 @@ the built server still has a static import graph and production never scans a di
 `server.ts` never grows. Its whole job is to hand the server what the build found:
 
 ```ts
-import { serve } from "@assemblejs/core";
+import { serve } from "@asmjs/core";
 import project from "../.assemblejs/project.js";
 
 await serve(project);

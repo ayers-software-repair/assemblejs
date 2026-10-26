@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { slot } from "@assemblejs/renderer-svelte/client";
+import { slot } from "@asmjs/renderer-svelte/client";
 
 describe("placing a child assembly", () => {
   it("answers the directive the composer replaces, for a component to write with {@html}", () => {

@@ -7,7 +7,7 @@ import { findPackage } from "./find-package.js";
 import type { PugCompiler } from "./pug-compiler.js";
 
 /**
- * The project's own Pug, the one its `@assemblejs/renderer-templates` renders with, or
+ * The project's own Pug, the one its `@asmjs/renderer-templates` renders with, or
  * undefined when the project has not installed that package or its Pug cannot be loaded, which
  * the build and the template rule each report on their own. The project's copy, never one of
  * ours, so a view is read by the Pug its server will render it with. Pug is CommonJS, so this
@@ -20,7 +20,7 @@ import type { PugCompiler } from "./pug-compiler.js";
  * never installed.
  */
 export function loadPug(root: string): PugCompiler | undefined {
-  const templates = findPackage(root, "@assemblejs/renderer-templates");
+  const templates = findPackage(root, "@asmjs/renderer-templates");
   if (templates === undefined) return undefined;
   try {
     const pug = findPackage(realpathSync(templates), "pug");

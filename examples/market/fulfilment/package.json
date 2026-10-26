@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/example-market-fulfilment",
+  "name": "@asmjs/example-market-fulfilment",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,12 +10,12 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@assemblejs/core": "workspace:*",
-    "@assemblejs/renderer-solid": "workspace:*",
-    "@assemblejs/renderer-templates": "workspace:*",
+    "@asmjs/core": "workspace:*",
+    "@asmjs/renderer-solid": "workspace:*",
+    "@asmjs/renderer-templates": "workspace:*",
     "solid-js": "1.9.15"
   },
   "devDependencies": {
-    "@assemblejs/cli": "workspace:*"
+    "@asmjs/cli": "workspace:*"
   }
 }

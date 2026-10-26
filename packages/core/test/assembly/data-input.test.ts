@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DataInput } from "@assemblejs/core";
+import type { DataInput } from "@asmjs/core";
 
 describe("what producing data is given", () => {
   it("is the assembly's own query and nothing of the page's", () => {

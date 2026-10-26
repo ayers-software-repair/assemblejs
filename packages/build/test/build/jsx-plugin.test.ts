@@ -6,8 +6,8 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 import { describe, expect, it } from "vitest";
-import { jsxPlugin, loadSolidCompiler } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { jsxPlugin, loadSolidCompiler } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 describe("compiling each JSX file through its own framework's runtime", () => {
   it("builds a React and a Preact view side by side, each against its own runtime", async () => {

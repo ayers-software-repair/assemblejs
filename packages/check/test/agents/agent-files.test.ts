@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { MCP_REGISTRATIONS, agentFiles, agentInstructions } from "@assemblejs/check";
+import { MCP_REGISTRATIONS, agentFiles, agentInstructions } from "@asmjs/check";
 
 const fresh = agentFiles("shop").files;
 const having =
@@ -114,7 +114,7 @@ describe("what a project that has agent files is written with", () => {
   // The same registration with its keys in another order and no indentation is the same one.
   it("leaves a registration that says the same thing exactly as its author formatted it", () => {
     const compact =
-      '{"mcpServers":{"assemblejs":{"args":["node_modules/@assemblejs/mcp/dist/bin.js"],"command":"node","type":"stdio"}}}';
+      '{"mcpServers":{"assemblejs":{"args":["node_modules/@asmjs/mcp/dist/bin.js"],"command":"node","type":"stdio"}}}';
     expect(agentFiles("shop", having({ ...fresh, ".mcp.json": compact })).files).toEqual({});
   });
 

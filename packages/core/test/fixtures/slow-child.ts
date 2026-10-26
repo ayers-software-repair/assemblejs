@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { expect } from "vitest";
-import { defineAssembly } from "@assemblejs/core";
-import type { LogLine } from "@assemblejs/core";
+import { defineAssembly } from "@asmjs/core";
+import type { LogLine } from "@asmjs/core";
 
 // How often the grandchild rendered: what an asker who left must not add to.
 const renders = { grand: 0 };

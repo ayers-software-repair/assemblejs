@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { agentFiles } from "@assemblejs/check";
+import { agentFiles } from "@asmjs/check";
 
 /**
  * A project that is right, as far as anything beneath the command line reads one: a manifest
@@ -15,7 +15,7 @@ export function rightProject(name: string): Readonly<Record<string, string>> {
         name,
         private: true,
         type: "module",
-        devDependencies: { "@assemblejs/cli": "^1.0.0", "@assemblejs/mcp": "^1.0.0" },
+        devDependencies: { "@asmjs/cli": "^1.0.0", "@asmjs/mcp": "^1.0.0" },
       },
       null,
       2,

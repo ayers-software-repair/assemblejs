@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ConfigError, readConfig } from "@assemblejs/core";
+import { ConfigError, readConfig } from "@asmjs/core";
 
 describe("reading configuration from the environment", () => {
   it("takes safe defaults when nothing is set", () => {

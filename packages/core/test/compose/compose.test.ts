@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { compose } from "@assemblejs/core";
-import type { ComposeOptions, Fetch } from "@assemblejs/core";
+import { compose } from "@asmjs/core";
+import type { ComposeOptions, Fetch } from "@asmjs/core";
 
 const byName =
   (answers: Record<string, string>, delays: Record<string, number> = {}): Fetch =>

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ISLAND_ATTRIBUTE, ISLAND_SCRIPT_TYPE, escapeAttribute } from "@assemblejs/core";
-import type { JsonObject } from "@assemblejs/core";
+import { ISLAND_ATTRIBUTE, ISLAND_SCRIPT_TYPE, escapeAttribute } from "@asmjs/core";
+import type { JsonObject } from "@asmjs/core";
 
 /**
  * The data an envelope's island carries, read from served markup by the envelope's id: what the

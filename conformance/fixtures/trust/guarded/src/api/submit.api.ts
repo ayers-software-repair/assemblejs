@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 
 // Reads a body, so a spec can see that the access decision comes before the body is read.
 export default defineApi({

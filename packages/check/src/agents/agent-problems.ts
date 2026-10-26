@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import type { ProjectProblem } from "@assemblejs/build";
-import { outsideProblems } from "@assemblejs/build";
+import type { ProjectProblem } from "@asmjs/build";
+import { outsideProblems, ownVersion } from "@asmjs/build";
 import { agentInstructions } from "./agent-instructions.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { AGENTS_IMPORT } from "./agents-import.js";
@@ -95,7 +95,7 @@ export function agentProblems(root: string): readonly ProjectProblem[] {
     report(
       "package.json",
       `the server "${AGENT_SERVER.name}" is registered, and the project does not depend on ${AGENT_SERVER.package}, which carries it`,
-      `npm install --save-dev ${AGENT_SERVER.package}`,
+      `npm install --save-dev ${AGENT_SERVER.package}@${ownVersion(import.meta.url)}`,
     );
   }
 

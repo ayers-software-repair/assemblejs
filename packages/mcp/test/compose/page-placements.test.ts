@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { COMPUTED, readPagePolicy } from "@assemblejs/check";
+import { COMPUTED, readPagePolicy } from "@asmjs/check";
 import { describe, expect, it } from "vitest";
-import { pagePlacements } from "@assemblejs/mcp";
+import { pagePlacements } from "@asmjs/mcp";
 
 const placements = (source: string) => pagePlacements(readPagePolicy(source));
 

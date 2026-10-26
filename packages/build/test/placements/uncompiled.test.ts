@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { transformSync } from "esbuild";
 import { describe, expect, it } from "vitest";
-import { uncompiled } from "@assemblejs/build";
+import { uncompiled } from "@asmjs/build";
 
 describe("what the compiler said of a source it could not compile", () => {
   it("is each thing it said, with the line it said it of", () => {

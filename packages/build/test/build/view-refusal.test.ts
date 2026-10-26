@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { viewRefusal } from "@assemblejs/build";
+import { viewRefusal } from "@asmjs/build";
 
 const SOURCE = "<h1>shop</h1>\r\n<p>{</p>\r\n";
 const refused = (error: unknown) => viewRefusal(error, "/shop/src/a/a.svelte", SOURCE, "/shop");

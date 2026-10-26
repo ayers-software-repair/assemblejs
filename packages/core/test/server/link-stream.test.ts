@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { linkStream } from "@assemblejs/core";
+import { linkStream } from "@asmjs/core";
 
 describe("naming a page's stream in its document", () => {
   it("adds a meta element at the end of the head, its path escaped", () => {

@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadSolidCompiler } from "@assemblejs/build";
+import { loadSolidCompiler } from "@asmjs/build";
 
 describe("loading the compiler the project's Solid renderer carries", () => {
   it("finds it in a project with the renderer installed, and it compiles", async () => {
@@ -18,13 +18,13 @@ describe("loading the compiler the project's Solid renderer carries", () => {
 
   it("is undefined when the installed renderer carries no compiler", async () => {
     const root = mkdtempSync(join(tmpdir(), "broken-solid-"));
-    const renderer = join(root, "node_modules", "@assemblejs", "renderer-solid");
+    const renderer = join(root, "node_modules", "@asmjs", "renderer-solid");
     mkdirSync(renderer, { recursive: true });
     writeFileSync(join(root, "package.json"), "{}");
     writeFileSync(
       join(renderer, "package.json"),
       JSON.stringify({
-        name: "@assemblejs/renderer-solid",
+        name: "@asmjs/renderer-solid",
         type: "module",
         exports: { "./compiler": "./compiler.js" },
       }),

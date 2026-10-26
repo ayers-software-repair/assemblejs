@@ -1,9 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { renderToMarkup } from "@assemblejs/renderer-preact";
-import { hydrate, useEvents } from "@assemblejs/renderer-preact/client";
-import type { AssemblyProps } from "@assemblejs/renderer-preact";
+import { renderToMarkup } from "@asmjs/renderer-preact";
+import { hydrate, useEvents } from "@asmjs/renderer-preact/client";
+import type { AssemblyProps } from "@asmjs/renderer-preact";
 
 const Cart = ({ data }: AssemblyProps) => <p>Items: {String(data["total"])}</p>;
 

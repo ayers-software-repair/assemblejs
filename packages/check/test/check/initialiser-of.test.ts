@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { parse } from "acorn";
 import { describe, expect, it } from "vitest";
-import { initialiserOf } from "@assemblejs/check";
+import { initialiserOf } from "@asmjs/check";
 
 const program = (source: string) => parse(source, { ecmaVersion: "latest", sourceType: "module" });
 

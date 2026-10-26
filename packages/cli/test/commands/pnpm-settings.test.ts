@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Io } from "@assemblejs/build";
+import type { Io } from "@asmjs/build";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { PNPM_SETTINGS, projectFiles, run } from "@assemblejs/cli";
+import { PNPM_SETTINGS, projectFiles, run } from "@asmjs/cli";
 
 // With pnpm 11.4.0, a fresh project's first `pnpm install` without them ends in
 // ERR_PNPM_IGNORED_BUILDS for esbuild and exit 1, and every `pnpm exec` after it refuses to run.

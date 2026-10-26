@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ProjectProblem } from "@assemblejs/build";
-import { routeParameters } from "@assemblejs/core";
+import type { ProjectProblem } from "@asmjs/build";
+import { routeParameters } from "@asmjs/core";
 import type { DeclaredAddresses } from "../perf/declared-addresses.js";
 import { addressMatches } from "./address-matches.js";
 

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { AssemblyProps } from "@assemblejs/renderer-preact";
+import type { AssemblyProps } from "@asmjs/renderer-preact";
 import { useState } from "preact/hooks";
 import type { Found, Missing } from "./product-detail.service.js";
 

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 import { CATEGORIES, price, productBySku } from "../../catalogue/products.js";
 
 const GRINDS = ["Whole bean", "Filter", "Press", "Espresso"];

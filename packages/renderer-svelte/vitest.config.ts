@@ -20,10 +20,10 @@ export default defineConfig({
     // unaffected because it imports svelte/server, which is its own export path.
     conditions: ["browser"],
     alias: {
-      "@assemblejs/renderer-svelte/client": src("./src/client/index.ts"),
-      "@assemblejs/renderer-svelte": src("./src/index.ts"),
-      "@assemblejs/core/client": src("../core/src/client/index.ts"),
-      "@assemblejs/core": src("../core/src/index.ts"),
+      "@asmjs/renderer-svelte/client": src("./src/client/index.ts"),
+      "@asmjs/renderer-svelte": src("./src/index.ts"),
+      "@asmjs/core/client": src("../core/src/client/index.ts"),
+      "@asmjs/core": src("../core/src/index.ts"),
     },
   },
 });

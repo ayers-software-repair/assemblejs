@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DataApi, ReturnedValue } from "@assemblejs/core";
+import type { DataApi, ReturnedValue } from "@asmjs/core";
 
 // The type is pinned where it is used, as an api's handler: each line below must compile, or be
 // refused by its `@ts-expect-error`, which fails the type check when the line is not refused.

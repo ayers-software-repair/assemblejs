@@ -111,7 +111,7 @@
             <h2>Install the renderer</h2>
             <dl>
               <div class="item">
-                <dt><code>npm install @assemblejs/renderer-lit lit</code></dt>
+                <dt><code>npm install @asmjs/renderer-lit@next lit</code></dt>
                 <dd>
                   One renderer package per framework, so a project that has no React never installs
                   React. Lit 3.3.3 or newer in the 3.x line; the renderer's own machinery,
@@ -129,7 +129,7 @@
                   directory is the assembly, and the <code>.lit</code> infix says the framework,
                   because a Lit view is TypeScript like a service or a client file. Your server file
                   does not change.
-                  <pre><code>import type { AssemblyProps } from "@assemblejs/renderer-lit";
+                  <pre><code>import type { AssemblyProps } from "@asmjs/renderer-lit";
 import { html } from "lit";
 
 export default (props: AssemblyProps) =&gt; html`&lt;p&gt;cart ${Object.keys(props.data).length}&lt;/p&gt;`;</code></pre>
@@ -158,7 +158,7 @@ export default (props: AssemblyProps) =&gt; html`&lt;p&gt;cart ${Object.keys(pro
                   path; a slot inside a component that comes from a package is a render's alone, so
                   nothing is decided about it before a request. An assembly in a project has one
                   view, so the second argument, which names one, is left out.
-                  <pre><code>import { slot } from "@assemblejs/renderer-lit/client";
+                  <pre><code>import { slot } from "@asmjs/renderer-lit/client";
 import { html } from "lit";
 
 export default () =&gt; html`&lt;section class="cart"&gt;${slot("price")}&lt;/section&gt;`;</code></pre>
@@ -192,7 +192,7 @@ export default () =&gt; html`&lt;section class="cart"&gt;${slot("price")}&lt;/se
                   <code>params</code> of the page that placed the assembly, and the same function
                   answers the assembly's data endpoint, so the two cannot disagree. The view reads
                   the result as <code>props.data</code>.
-                  <pre><code>import { defineService } from "@assemblejs/core";
+                  <pre><code>import { defineService } from "@asmjs/core";
 
 export default defineService({
   name: "label",
@@ -216,8 +216,8 @@ export default defineService({
                   assemblies is released then. The counter from the frameworks example sends on
                   every click and hears every other counter on the page, React, Svelte, Preact, Vue
                   or Solid, with no adapter between them.
-                  <pre><code>import type { Events } from "@assemblejs/core/client";
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
+                  <pre><code>import type { Events } from "@asmjs/core/client";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
 import { LitElement, css, html } from "lit";
 
 // A Lit element: rendered into a declarative shadow root on the server, hydrated in the browser.
@@ -301,8 +301,8 @@ export default (props: AssemblyProps) =&gt; html`&lt;lit-counter .events=${props
               <div class="item">
                 <dt>Lit's hydration support, first</dt>
                 <dd>
-                  The build imports <code>@assemblejs/renderer-lit/hydration-support</code> first in
-                  the page's one script, before the runtime and before any assembly's own module,
+                  The build imports <code>@asmjs/renderer-lit/hydration-support</code> first in the
+                  page's one script, before the runtime and before any assembly's own module,
                   because Lit's support for hydrating elements a server rendered must be installed
                   before Lit's element base loads. The build also has Lit's element base set its own
                   server's support just before it reads it, so on a page with Lit assemblies from
@@ -329,7 +329,7 @@ export default (props: AssemblyProps) =&gt; html`&lt;lit-counter .events=${props
                   Renders the whole assembly in a shadow root of its own, outside any element's: no
                   page style reaches in, none of its own leaks out. The box from the shadow example
                   is a template with no element in it, whose button counts through its own binding.
-                  <pre><code>import type { AssemblyProps } from "@assemblejs/renderer-lit";
+                  <pre><code>import type { AssemblyProps } from "@asmjs/renderer-lit";
 import { html } from "lit";
 
 export const shadow = true;
@@ -393,7 +393,7 @@ export default (props: AssemblyProps) =&gt; {
                   Policy, when a placement needs any, lives in the page's own file: a deadline in
                   milliseconds, markup to show when the assembly does not answer, whether its
                   failure fails the page, or a deferral the browser fills after load.
-                  <pre><code>import { definePage } from "@assemblejs/core";
+                  <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },

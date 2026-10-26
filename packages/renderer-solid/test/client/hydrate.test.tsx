@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 import { onMount, sharedConfig } from "solid-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createBus } from "@assemblejs/core/client";
-import { hydrate, useEvents } from "@assemblejs/renderer-solid/client";
+import { createBus } from "@asmjs/core/client";
+import { hydrate, useEvents } from "@asmjs/renderer-solid/client";
 import type { Component } from "solid-js";
-import type { AssemblyProps } from "@assemblejs/renderer-solid";
+import type { AssemblyProps } from "@asmjs/renderer-solid";
 import { counterMarkup } from "../fixtures/counter-markup.js";
 import { Counter } from "../fixtures/counter.js";
 import { LateIsland } from "../fixtures/late-island.js";

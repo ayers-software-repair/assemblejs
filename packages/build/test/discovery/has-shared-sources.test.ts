@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
-import { hasSharedSources } from "@assemblejs/build";
+import { hasSharedSources } from "@asmjs/build";
 
 const made: string[] = [];
 afterAll(() => {

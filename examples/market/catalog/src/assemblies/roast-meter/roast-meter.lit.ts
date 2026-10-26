@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
 import { LitElement, css, html, nothing } from "lit";
 
 // A scale with one step lit: a Lit element, rendered into its own shadow root on the server

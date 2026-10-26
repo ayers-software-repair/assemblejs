@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findEnvelopes } from "@assemblejs/core/client";
+import { findEnvelopes } from "@asmjs/core/client";
 
 // What Lit's hydration reads a comment as one of its own markers by.
 const MARKER = /^\/?lit-(?:part|node)/;

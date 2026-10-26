@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { createRoot } from "solid-js";
 import { describe, expect, it } from "vitest";
-import { createBus } from "@assemblejs/core/client";
-import { EventsContext, useEvents } from "@assemblejs/renderer-solid/client";
+import { createBus } from "@asmjs/core/client";
+import { EventsContext, useEvents } from "@asmjs/renderer-solid/client";
 
 describe("reaching this assembly's events", () => {
   it("returns the object the assembly was mounted with", () => {

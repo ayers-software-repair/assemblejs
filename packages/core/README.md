@@ -1,4 +1,4 @@
-# @assemblejs/core
+# @asmjs/core
 
 The server that composes pages out of assemblies, and the types the contract is written in.
 

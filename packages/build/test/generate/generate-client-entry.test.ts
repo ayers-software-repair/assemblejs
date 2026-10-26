@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { generateClientEntry } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { generateClientEntry } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 const assembly = (name: string, renderer: string): DiscoveredAssembly => ({
   name,
@@ -22,7 +22,7 @@ describe("the page's one script", () => {
     ]);
     expect(source).toContain('"counter": () => import("./client/counter.js"),');
     expect(source).toContain('"readout": () => import("./client/readout.js"),');
-    expect(source).toContain('import { lazyRenderer, start } from "@assemblejs/core/client";');
+    expect(source).toContain('import { lazyRenderer, start } from "@asmjs/core/client";');
   });
 
   it("starts the runtime with that one browser half for every renderer present", () => {
@@ -38,13 +38,11 @@ describe("the page's one script", () => {
   it("imports a framework's setup first, before the runtime and every assembly, once", () => {
     const source = generateClientEntry(
       [],
-      ["@assemblejs/renderer-lit/hydration-support", "@assemblejs/renderer-lit/hydration-support"],
+      ["@asmjs/renderer-lit/hydration-support", "@asmjs/renderer-lit/hydration-support"],
     );
     const body = source.slice(source.search(/^import/m));
     expect(
-      body.startsWith(
-        'import "@assemblejs/renderer-lit/hydration-support";\nimport { lazyRenderer',
-      ),
+      body.startsWith('import "@asmjs/renderer-lit/hydration-support";\nimport { lazyRenderer'),
     ).toBe(true);
     expect(source.match(/hydration-support/g)).toHaveLength(1);
   });

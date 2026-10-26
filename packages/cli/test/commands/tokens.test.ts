@@ -3,9 +3,9 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { tokenProblems } from "@assemblejs/build";
+import { tokenProblems } from "@asmjs/build";
 import { afterEach, describe, expect, it } from "vitest";
-import { TOKENS } from "@assemblejs/cli";
+import { TOKENS } from "@asmjs/cli";
 
 describe("the tokens a new project starts with", () => {
   it("declare every role at :root, the three scales, and a dark scheme rebinding the colours", () => {

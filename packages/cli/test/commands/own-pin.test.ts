@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { ownPin } from "@assemblejs/cli";
+import { ownPin } from "@asmjs/cli";
 
 const pinned = (
   JSON.parse(readFileSync(new URL("../../package.json", import.meta.url), "utf8")) as {

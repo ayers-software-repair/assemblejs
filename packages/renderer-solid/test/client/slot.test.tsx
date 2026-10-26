@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { render } from "solid-js/web";
 import { describe, expect, it } from "vitest";
-import { Slot } from "@assemblejs/renderer-solid/client";
+import { Slot } from "@asmjs/renderer-solid/client";
 
 describe("placing a child assembly", () => {
   it("writes the directive the composer replaces, inside the slot's element", () => {

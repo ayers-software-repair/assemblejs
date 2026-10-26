@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { slot } from "@assemblejs/renderer-svelte/client";
+  import { slot } from "@asmjs/renderer-svelte/client";
 
   let count = $state(0);
 </script>

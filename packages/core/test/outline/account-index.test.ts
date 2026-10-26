@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { accountIndex } from "@assemblejs/core/outline";
+import { accountIndex } from "@asmjs/core/outline";
 
 describe("an account's placements, by the id on each envelope", () => {
   it("holds every one at any depth", () => {

@@ -3,7 +3,7 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
-import { ASSET_ROUTE_PREFIX } from "@assemblejs/core";
+import { ASSET_ROUTE_PREFIX } from "@asmjs/core";
 import { COMPONENTS_FILE } from "../discovery/components-file.js";
 import { TOKENS_FILE } from "../discovery/tokens-file.js";
 import type { Io } from "../io/io.js";

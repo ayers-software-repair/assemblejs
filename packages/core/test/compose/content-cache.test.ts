@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { compose } from "@assemblejs/core";
-import type { ContentCache, Fetch } from "@assemblejs/core";
+import { compose } from "@asmjs/core";
+import type { ContentCache, Fetch } from "@asmjs/core";
 
 describe("the content cache", () => {
   it("is a shape anything that stores bytes can satisfy", () => {

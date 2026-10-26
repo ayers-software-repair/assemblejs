@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { scriptEnd } from "@assemblejs/core";
+import { scriptEnd } from "@asmjs/core";
 
 /** What follows the script a piece of markup opens with, as its text is read to end. */
 const after = (html: string): string => html.slice(scriptEnd(html, "<script>".length));

@@ -4,7 +4,7 @@ import { mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { isDirectory } from "@assemblejs/build";
+import { isDirectory } from "@asmjs/build";
 
 describe("whether a path is a directory now", () => {
   it("is true for a directory and false for a file", () => {

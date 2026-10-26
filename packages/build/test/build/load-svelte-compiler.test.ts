@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadSvelteCompiler } from "@assemblejs/build";
+import { loadSvelteCompiler } from "@asmjs/build";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 

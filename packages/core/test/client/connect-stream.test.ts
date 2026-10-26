@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { connectStream, createBus } from "@assemblejs/core/client";
-import type { EventMessage } from "@assemblejs/core/client";
+import { connectStream, createBus } from "@asmjs/core/client";
+import type { EventMessage } from "@asmjs/core/client";
 import { fakeStream } from "../fixtures/fake-stream.js";
 
 describe("connecting a page's stream to its bus", () => {

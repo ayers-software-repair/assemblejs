@@ -12,8 +12,8 @@ import {
   watchEffect,
 } from "vue";
 import type { PropType } from "vue";
-import { renderToMarkup } from "@assemblejs/renderer-vue";
-import { useEvents } from "@assemblejs/renderer-vue/client";
+import { renderToMarkup } from "@asmjs/renderer-vue";
+import { useEvents } from "@asmjs/renderer-vue/client";
 
 const props = {
   data: { type: Object as PropType<Record<string, unknown>>, required: true },

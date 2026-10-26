@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 import { productBySku } from "../catalogue/products.js";
 
 // One product by its sku, or null where there is none: an api answers data, and what is not

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isPublicRoute } from "@assemblejs/core";
+import { isPublicRoute } from "@asmjs/core";
 
 describe("a public route", () => {
   it("is an exact path, or anything under an entry ending in /*", () => {

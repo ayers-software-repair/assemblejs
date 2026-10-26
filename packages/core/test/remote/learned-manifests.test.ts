@@ -3,8 +3,8 @@
 import { createServer as createHttpServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
-import { learnedManifests, parseContentUrl } from "@assemblejs/core";
-import type { LogLine } from "@assemblejs/core";
+import { learnedManifests, parseContentUrl } from "@asmjs/core";
+import type { LogLine } from "@asmjs/core";
 
 // A server of manifests: each path answers the files named after it, and counts its reads.
 const reads = new Map<string, number>();

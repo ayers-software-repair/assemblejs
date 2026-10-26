@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { PugCompiler } from "@assemblejs/build";
-import { markedTemplate } from "@assemblejs/build";
+import type { PugCompiler } from "@asmjs/build";
+import { markedTemplate } from "@asmjs/build";
 import { readElements } from "./read-elements.js";
 import type { ViewElement } from "./view-element.js";
 

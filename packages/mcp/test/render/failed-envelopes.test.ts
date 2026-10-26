@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { renderEnvelope } from "@assemblejs/core";
+import { renderEnvelope } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { failedEnvelopes } from "@assemblejs/mcp";
+import { failedEnvelopes } from "@asmjs/mcp";
 
 const envelope = (name: string, markup: string, failed?: string): string =>
   renderEnvelope({

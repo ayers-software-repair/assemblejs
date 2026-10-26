@@ -27,27 +27,27 @@
     "examples/two-frameworks": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/api/*.api.ts"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
-      "ignoreDependencies": ["@assemblejs/renderer-svelte", "svelte"]
+      "ignoreDependencies": ["@asmjs/renderer-svelte", "svelte"]
     },
     "examples/styles": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx}"],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": ["@assemblejs/renderer-react", "@types/react-dom"]
+      "ignoreDependencies": ["@asmjs/renderer-react", "@types/react-dom"]
     },
     "examples/frameworks": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/pages/*/*.page.ts"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
-      "ignoreDependencies": ["@assemblejs/renderer-.*", "svelte", "vue"]
+      "ignoreDependencies": ["@asmjs/renderer-.*", "svelte", "vue"]
     },
     "examples/shadow": {
       "entry": ["src/server.ts", "src/assemblies/*/*.{ts,tsx,svelte}", "src/pages/*/*.page.ts"],
       "project": ["src/**/*.{ts,tsx,svelte}"],
-      "ignoreDependencies": ["@assemblejs/renderer-.*", "@types/react-dom", "svelte", "vue"]
+      "ignoreDependencies": ["@asmjs/renderer-.*", "@types/react-dom", "svelte", "vue"]
     },
     "examples/templates": {
       "entry": ["src/server.ts", "src/assemblies/*/*.ts"],
       "project": ["src/**/*.ts"],
-      "ignoreDependencies": ["@assemblejs/renderer-templates"]
+      "ignoreDependencies": ["@asmjs/renderer-templates"]
     },
     "examples/realtime": {
       "entry": [
@@ -58,7 +58,7 @@
         "src/pages/*/*.page.ts"
       ],
       "project": ["src/**/*.{ts,tsx,svelte}"],
-      "ignoreDependencies": ["@assemblejs/renderer-svelte"]
+      "ignoreDependencies": ["@asmjs/renderer-svelte"]
     },
     "examples/market/shop": {
       "entry": [
@@ -70,7 +70,7 @@
       ],
       "project": ["src/**/*.{ts,tsx,svelte}"],
       "ignoreDependencies": [
-        "@assemblejs/renderer-.*",
+        "@asmjs/renderer-.*",
         "lit",
         "preact",
         "react",
@@ -89,14 +89,7 @@
         "src/pages/*/*.page.ts"
       ],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": [
-        "@assemblejs/renderer-.*",
-        "lit",
-        "preact",
-        "react",
-        "react-dom",
-        "vue"
-      ]
+      "ignoreDependencies": ["@asmjs/renderer-.*", "lit", "preact", "react", "react-dom", "vue"]
     },
     "examples/market/reviews": {
       "entry": [
@@ -107,7 +100,7 @@
         "src/pages/*/*.page.ts"
       ],
       "project": ["src/**/*.ts"],
-      "ignoreDependencies": ["@assemblejs/renderer-.*", "lit", "vue"]
+      "ignoreDependencies": ["@asmjs/renderer-.*", "lit", "vue"]
     },
     "examples/market/fulfilment": {
       "entry": [
@@ -118,7 +111,7 @@
         "src/pages/*/*.page.ts"
       ],
       "project": ["src/**/*.{ts,tsx}"],
-      "ignoreDependencies": ["@assemblejs/renderer-.*", "solid-js"]
+      "ignoreDependencies": ["@asmjs/renderer-.*", "solid-js"]
     }
   }
 }

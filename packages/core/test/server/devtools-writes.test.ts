@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { describe, expect, it } from "vitest";
-import { BootError, createServer, DEVTOOLS_ROUTE_PREFIX, devtoolsWrites } from "@assemblejs/core";
-import type { DevtoolsRoute } from "@assemblejs/core";
+import { BootError, createServer, DEVTOOLS_ROUTE_PREFIX, devtoolsWrites } from "@asmjs/core";
+import type { DevtoolsRoute } from "@asmjs/core";
 
 const answer = () => ({ type: "text/plain", body: "" });
 

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { queryOf } from "@assemblejs/core";
+import { queryOf } from "@asmjs/core";
 
 describe("reading a request's query", () => {
   it("parses what follows the first question mark", () => {

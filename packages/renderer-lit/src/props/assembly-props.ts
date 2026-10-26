@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonObject } from "@assemblejs/core";
-import type { Events } from "@assemblejs/core/client";
+import type { JsonObject } from "@asmjs/core";
+import type { Events } from "@asmjs/core/client";
 
 /**
  * What a Lit view receives.

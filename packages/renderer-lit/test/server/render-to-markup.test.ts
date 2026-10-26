@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { html as serverHtml } from "@lit-labs/ssr";
 import { LitElement, css, html } from "lit";
 import { describe, expect, it } from "vitest";
-import { renderToMarkup } from "@assemblejs/renderer-lit";
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
-import { hydrate } from "@assemblejs/renderer-lit/client";
+import { renderToMarkup } from "@asmjs/renderer-lit";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
+import { hydrate } from "@asmjs/renderer-lit/client";
 import { BUTTON_MARKUP } from "../fixtures/button-markup.js";
 import { buttonView } from "../fixtures/button-view.js";
 import { SHELL_MARKUP } from "../fixtures/shell-markup.js";
@@ -21,10 +21,10 @@ import { stepsView } from "../fixtures/steps-view.js";
 // so the server loads that half too, and Lit's support for hydration with it.
 const RENDER_A_CARD = `
 const first = process.argv[1] === "browser-half-first";
-if (first) await import("@assemblejs/renderer-lit/client");
+if (first) await import("@asmjs/renderer-lit/client");
 const { LitElement, css, html } = await import("lit");
-const { renderToMarkup } = await import("@assemblejs/renderer-lit");
-if (!first) await import("@assemblejs/renderer-lit/client");
+const { renderToMarkup } = await import("@asmjs/renderer-lit");
+if (!first) await import("@asmjs/renderer-lit/client");
 class Card extends LitElement {
   static properties = { name: { type: String }, tone: { type: String, reflect: true } };
   static styles = css\`p { color: red; }\`;

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { CompositionHeaders } from "@assemblejs/core";
+import type { CompositionHeaders } from "@asmjs/core";
 
 describe("the composition state a request carries", () => {
   it("says it is the page itself by the absence of a page id", () => {

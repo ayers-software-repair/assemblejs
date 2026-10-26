@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { RENDERERS } from "@assemblejs/build";
+import { RENDERERS } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { ADD_ASSEMBLY_PROMPT } from "@assemblejs/mcp";
+import { ADD_ASSEMBLY_PROMPT } from "@asmjs/mcp";
 
 const order = (brief: string, words: readonly string[]): number[] =>
   words.map((word) => brief.indexOf(word));

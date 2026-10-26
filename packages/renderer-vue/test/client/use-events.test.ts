@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { createBus } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
 import { describe, expect, it } from "vitest";
 import { createSSRApp, defineComponent, h } from "vue";
 import { renderToString } from "vue/server-renderer";
-import { EVENTS_KEY, useEvents } from "@assemblejs/renderer-vue/client";
+import { EVENTS_KEY, useEvents } from "@asmjs/renderer-vue/client";
 
 const Sender = defineComponent({
   setup() {

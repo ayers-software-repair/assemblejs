@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { useEvents } from "@assemblejs/renderer-preact/client";
+import { useEvents } from "@asmjs/renderer-preact/client";
 import { useEffect, useState } from "preact/hooks";
 import { Label } from "./label.js";
 

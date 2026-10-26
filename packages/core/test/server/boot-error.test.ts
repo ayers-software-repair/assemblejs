@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { BootError } from "@assemblejs/core";
+import { BootError } from "@asmjs/core";
 
 describe("a boot error", () => {
   it("carries every problem", () => {

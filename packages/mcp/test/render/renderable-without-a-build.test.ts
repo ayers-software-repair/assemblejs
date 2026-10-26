@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { RENDERABLE_WITHOUT_A_BUILD } from "@assemblejs/mcp";
+import { RENDERABLE_WITHOUT_A_BUILD } from "@asmjs/mcp";
 
 describe("what can be shown immediately", () => {
   it("is the renderers whose view file is its own output", () => {

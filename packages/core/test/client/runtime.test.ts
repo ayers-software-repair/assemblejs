@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { start } from "@assemblejs/core/client";
-import type { Runtime } from "@assemblejs/core/client";
+import { start } from "@asmjs/core/client";
+import type { Runtime } from "@asmjs/core/client";
 
 describe("the runtime", () => {
   it("exposes what is mounted, a way to mount more, and a teardown", () => {

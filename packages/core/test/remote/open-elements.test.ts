@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { OpenElements } from "@assemblejs/core";
+import { OpenElements } from "@asmjs/core";
 
 const opened = (
   ...elements: ReadonlyArray<readonly [string, "html" | "svg" | "math"]>

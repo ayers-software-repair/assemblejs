@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 import { stock } from "../shop/stock.js";
 
 // What setting a level answers: the level as it now stands, or that what was sent was not one.

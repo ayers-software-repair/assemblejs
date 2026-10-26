@@ -3,12 +3,12 @@
 import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { isAbsolute, join, relative } from "node:path";
-import { realIo } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD, readShape } from "@assemblejs/check";
+import { COMPUTED, UNREAD, readShape } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
-const REACT = 'import { Slot } from "@assemblejs/renderer-react/client";\n';
+const REACT = 'import { Slot } from "@asmjs/renderer-react/client";\n';
 
 const project = (files: Record<string, string>): string => {
   const root = mkdtempSync(join(tmpdir(), "shape-"));

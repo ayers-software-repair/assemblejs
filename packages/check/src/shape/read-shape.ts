@@ -1,13 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { isAbsolute, join, resolve } from "node:path";
-import { CONFIG_FILE } from "@assemblejs/build";
-import { discoverApis } from "@assemblejs/build";
-import { discoverAssemblies } from "@assemblejs/build";
-import { discoverPages } from "@assemblejs/build";
-import { fromRoot } from "@assemblejs/build";
-import { viewFindings } from "@assemblejs/build";
-import { outsideProblems } from "@assemblejs/build";
+import { CONFIG_FILE } from "@asmjs/build";
+import { discoverApis } from "@asmjs/build";
+import { discoverAssemblies } from "@asmjs/build";
+import { discoverPages } from "@asmjs/build";
+import { fromRoot } from "@asmjs/build";
+import { viewFindings } from "@asmjs/build";
+import { outsideProblems } from "@asmjs/build";
 import { hasBrowserHalf } from "../check/has-browser-half.js";
 import type { AssemblyShape } from "./assembly-shape.js";
 import { COMPUTED } from "./computed.js";

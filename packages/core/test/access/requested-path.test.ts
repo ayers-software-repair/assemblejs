@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { createServer, defineAssembly, requestedPath } from "@assemblejs/core";
+import { createServer, defineAssembly, requestedPath } from "@asmjs/core";
 
 describe("the path a request asked for, as the router reads it", () => {
   it("is the path without its query, as written, when nothing in it is encoded", () => {

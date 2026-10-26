@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { FailureReason, RefusedReason } from "@assemblejs/core";
+import type { FailureReason, RefusedReason } from "@asmjs/core";
 
 describe("the refusals a request accounts for once", () => {
   it("are the two the request shares one id for, each a failure reason", () => {

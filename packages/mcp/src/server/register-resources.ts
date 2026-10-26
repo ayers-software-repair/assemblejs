@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { discoverAssemblies } from "@assemblejs/build";
-import { COMPUTED, RULES, UNREAD } from "@assemblejs/check";
+import { discoverAssemblies } from "@asmjs/build";
+import { COMPUTED, RULES, UNREAD } from "@asmjs/check";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { McpError } from "@modelcontextprotocol/sdk/types.js";

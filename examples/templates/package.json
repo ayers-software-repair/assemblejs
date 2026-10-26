@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/example-templates",
+  "name": "@asmjs/example-templates",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,10 +10,10 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@assemblejs/core": "workspace:*",
-    "@assemblejs/renderer-templates": "workspace:*"
+    "@asmjs/core": "workspace:*",
+    "@asmjs/renderer-templates": "workspace:*"
   },
   "devDependencies": {
-    "@assemblejs/cli": "workspace:*"
+    "@asmjs/cli": "workspace:*"
   }
 }

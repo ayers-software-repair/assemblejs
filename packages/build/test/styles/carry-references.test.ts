@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, symlinkSync, writeFileSync } from
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { OutsideRootError, carryReferences, realIo } from "@assemblejs/build";
+import { OutsideRootError, carryReferences, realIo } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 describe("carrying the files a stylesheet names into the build", () => {

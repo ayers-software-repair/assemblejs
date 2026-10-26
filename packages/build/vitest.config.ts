@@ -16,8 +16,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@assemblejs/build": src("./src/index.ts"),
-      "@assemblejs/core": src("../core/src/index.ts"),
+      "@asmjs/build": src("./src/index.ts"),
+      "@asmjs/core": src("../core/src/index.ts"),
     },
   },
 });

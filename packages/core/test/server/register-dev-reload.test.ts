@@ -10,7 +10,7 @@ import {
   createServer,
   registerAccess,
   registerDevReload,
-} from "@assemblejs/core";
+} from "@asmjs/core";
 
 const apps: FastifyInstance[] = [];
 afterEach(async () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { StreamApi } from "@assemblejs/core";
+import type { StreamApi } from "@asmjs/core";
 
 describe("an api that streams", () => {
   it("runs once per connection, sending what it has", async () => {

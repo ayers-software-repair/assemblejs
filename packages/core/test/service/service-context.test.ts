@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ServiceContext } from "@assemblejs/core";
+import type { ServiceContext } from "@asmjs/core";
 
 describe("what a service is given", () => {
   it("is its own request and nothing of any other assembly's", () => {

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { RENDERERS, docsAddress, ownVersion } from "@assemblejs/build";
+import { RENDERERS, docsAddress, ownVersion } from "@asmjs/build";
 import { RULES } from "../rules/rules.js";
 import { AGENT_SERVER } from "./agent-server.js";
 import { INSTRUCTION_MARKERS } from "./instruction-markers.js";
@@ -50,12 +50,12 @@ one framework or in none, and each hydrated in the browser by its own framework.
   the view's data. A view writes that data escaped, as every renderer does by default. Written
   with a raw form it is markup, and an \`<assembly>\` in it is placed like one the view wrote,
   so nothing a visitor sent is written raw. A service whose thing does not exist throws
-  \`new NotFound()\`, from \`@assemblejs/core\`, and its page answers 404 with the not-found page.
+  \`new NotFound()\`, from \`@asmjs/core\`, and its page answers 404 with the not-found page.
 - An **api** is a file \`src/api/<name>.api.ts\`: a route that answers data, as JSON or as a
   stream. Only an api is given the request's headers and cookies, and \`reply(...)\` lets it answer a
   status, a cookie or a redirect; a service and a page are a function of the address.
   An assembly's browser half calls its own server's apis as \`fetch(api("/api/..."))\`,
-  with \`api\` from \`@assemblejs/core/client\`, so the call also works when a page on another
+  with \`api\` from \`@asmjs/core/client\`, so the call also works when a page on another
   server placed the assembly.
 
 ## How to work in it

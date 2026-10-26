@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { gunzipSync, gzipSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
-import { weigh } from "@assemblejs/check";
+import { weigh } from "@asmjs/check";
 
 describe("weighing a body", () => {
   it("counts its bytes as sent and as gzip would send them", () => {

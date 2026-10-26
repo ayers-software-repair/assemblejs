@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { FailureBody } from "@assemblejs/core";
+import type { FailureBody } from "@asmjs/core";
 
 describe("the body a failed request answers with", () => {
   it("has one field, and no place to put a message", () => {

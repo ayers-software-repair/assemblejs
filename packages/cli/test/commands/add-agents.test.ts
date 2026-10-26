@@ -10,10 +10,10 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
-import { realIo } from "@assemblejs/build";
-import { AGENT_SERVER, MCP_REGISTRATIONS, agentFiles, agentInstructions } from "@assemblejs/check";
+import { ownVersion, realIo } from "@asmjs/build";
+import { AGENT_SERVER, MCP_REGISTRATIONS, agentFiles, agentInstructions } from "@asmjs/check";
 import { describe, expect, it } from "vitest";
-import { addAgents } from "@assemblejs/cli";
+import { addAgents } from "@asmjs/cli";
 
 const project = (files: Readonly<Record<string, string>> = {}): string => {
   const root = mkdtempSync(join(tmpdir(), "add-agents-"));
@@ -33,7 +33,7 @@ const told = () => {
   };
   return { io, logs, errors };
 };
-const MANIFEST = '{ "name": "shop", "devDependencies": { "@assemblejs/mcp": "^1.0.0" } }';
+const MANIFEST = '{ "name": "shop", "devDependencies": { "@asmjs/mcp": "^1.0.0" } }';
 const ALL = [
   "AGENTS.md",
   "CLAUDE.md",
@@ -103,7 +103,7 @@ describe("the add agents command", () => {
     const { io, logs } = told();
     addAgents(project({ "package.json": '{ "name": "shop" }' }), io);
     expect(logs.at(-1)).toBe(
-      "\ninstall the server they register: npm install --save-dev @assemblejs/mcp",
+      `\ninstall the server they register: npm install --save-dev @asmjs/mcp@${ownVersion(import.meta.url)}`,
     );
     const depended = told();
     addAgents(project({ "package.json": MANIFEST }), depended.io);

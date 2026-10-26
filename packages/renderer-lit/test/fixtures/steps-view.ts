@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { LitElement, html } from "lit";
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
 
 /** An element whose list is a property: what it renders is nothing until it is given one. */
 export class ProbeSteps extends LitElement {

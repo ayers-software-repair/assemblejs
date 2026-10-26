@@ -4,8 +4,8 @@ import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, describe, expect, it } from "vitest";
-import { buildProject, discoverAssemblies, templateProblems } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { buildProject, discoverAssemblies, templateProblems } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 import { templatedProject } from "../fixtures/templated-project.js";
 
 const made: string[] = [];
@@ -86,18 +86,18 @@ describe("template views the project's own engine cannot read", () => {
       fix: "make the view a file this build can read",
     });
     const hollow = project({ "bad-ejs.ejs": "<% if (data.n) { %>" }, tmpdir());
-    const fake = join(hollow, "node_modules", "@assemblejs", "renderer-templates");
+    const fake = join(hollow, "node_modules", "@asmjs", "renderer-templates");
     mkdirSync(fake, { recursive: true });
     writeFileSync(
       join(fake, "package.json"),
-      JSON.stringify({ name: "@assemblejs/renderer-templates", exports: "./dist/index.js" }),
+      JSON.stringify({ name: "@asmjs/renderer-templates", exports: "./dist/index.js" }),
     );
     expect(await found(hollow)).toEqual([
       expect.objectContaining({
         path: join(hollow, "package.json"),
         rule: "a-view-needs-its-renderer",
         message: expect.stringMatching(/could not load at all: Cannot find module/),
-        fix: "reinstall @assemblejs/renderer-templates",
+        fix: "reinstall @asmjs/renderer-templates",
       }),
     ]);
   });

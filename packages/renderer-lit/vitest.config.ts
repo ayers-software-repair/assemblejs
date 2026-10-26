@@ -6,10 +6,10 @@ import { defineConfig } from "vitest/config";
 const src = (path: string) => fileURLToPath(new URL(path, import.meta.url));
 
 const alias = {
-  "@assemblejs/renderer-lit/client": src("./src/client/index.ts"),
-  "@assemblejs/renderer-lit": src("./src/index.ts"),
-  "@assemblejs/core/client": src("../core/src/client/index.ts"),
-  "@assemblejs/core": src("../core/src/index.ts"),
+  "@asmjs/renderer-lit/client": src("./src/client/index.ts"),
+  "@asmjs/renderer-lit": src("./src/index.ts"),
+  "@asmjs/core/client": src("../core/src/client/index.ts"),
+  "@asmjs/core": src("../core/src/index.ts"),
 };
 
 // Two projects, because Lit is two builds: its node build renders on the server, its browser

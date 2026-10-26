@@ -5,10 +5,10 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { realIo } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { projectFiles, run } from "@assemblejs/cli";
+import { projectFiles, run } from "@asmjs/cli";
 
 const fake = (existing: readonly string[] = []) => {
   const written = new Map<string, string>();
@@ -135,7 +135,7 @@ describe("add agents", () => {
 
   it("writes into the project it is pointed at, and check then finds nothing to bring up to date", async () => {
     const root = mkdtempSync(join(tmpdir(), "add-agents-"));
-    writeFileSync(join(root, "package.json"), '{ "devDependencies": { "@assemblejs/mcp": "*" } }');
+    writeFileSync(join(root, "package.json"), '{ "devDependencies": { "@asmjs/mcp": "*" } }');
     mkdirSync(join(root, "src", "assemblies", "hello"), { recursive: true });
     writeFileSync(join(root, "src", "assemblies", "hello", "hello.html"), "<p>hello</p>");
     writeFileSync(join(root, "src", "server.ts"), "");

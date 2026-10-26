@@ -10,7 +10,7 @@ export function generateApis(apis: readonly string[], from: string): string {
   const names = apis.map((file) => identifierFor("api", basename(file, ".api.ts")));
   const imports = apis.map((file, index) => importOf(names[index] ?? "", from, file));
   return `${GENERATED_HEADER}
-import type { ApiDefinition } from "@assemblejs/core";
+import type { ApiDefinition } from "@asmjs/core";
 ${imports.join("\n")}
 
 export const apis: readonly ApiDefinition[] = [${names.join(", ")}];

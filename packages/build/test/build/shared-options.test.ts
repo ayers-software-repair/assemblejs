@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { sharedOptions } from "@assemblejs/build";
+import { sharedOptions } from "@asmjs/build";
 
 describe("what both bundles agree on", () => {
   it("reads a template as text and leaves stylesheets out until they are scoped", () => {

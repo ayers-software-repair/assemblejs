@@ -3,7 +3,7 @@
 import { useContext } from "preact/hooks";
 import { renderToString } from "preact-render-to-string";
 import { describe, expect, it } from "vitest";
-import { IdContext } from "@assemblejs/renderer-preact/client";
+import { IdContext } from "@asmjs/renderer-preact/client";
 
 const Shown = () => <p>{useContext(IdContext)}</p>;
 

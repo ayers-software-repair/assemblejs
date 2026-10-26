@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it, vi } from "vitest";
-import { loadCompiler, renderTemplate } from "@assemblejs/renderer-templates";
+import { loadCompiler, renderTemplate } from "@asmjs/renderer-templates";
 
 const input = (name: string) => ({ data: { name } });
 

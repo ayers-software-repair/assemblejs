@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { AssemblyShape, Written } from "@assemblejs/check";
+import type { AssemblyShape, Written } from "@asmjs/check";
 
 /**
  * One assembly as an agent reads it: what it is made of, and each place it stands, with what

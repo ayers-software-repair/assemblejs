@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { engineSaid } from "@assemblejs/build";
+import { engineSaid } from "@asmjs/build";
 
 describe("what an engine said, on one line", () => {
   it("keeps the message up to its first blank line, without the lines that only draw", () => {

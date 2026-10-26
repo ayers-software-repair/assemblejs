@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, realpathSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { followLinks } from "@assemblejs/build";
+import { followLinks } from "@asmjs/build";
 
 const scratch = (): string => realpathSync(mkdtempSync(join(tmpdir(), "links-")));
 

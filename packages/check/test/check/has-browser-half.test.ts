@@ -3,9 +3,9 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { discoverAssemblies, realIo } from "@assemblejs/build";
+import { discoverAssemblies, realIo } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { hasBrowserHalf } from "@assemblejs/check";
+import { hasBrowserHalf } from "@asmjs/check";
 
 const halves = (files: Record<string, string>): Record<string, boolean> => {
   const root = mkdtempSync(join(tmpdir(), "browser-half-"));

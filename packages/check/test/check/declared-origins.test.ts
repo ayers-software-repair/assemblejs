@@ -4,14 +4,14 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkProject, declaredOrigins } from "@assemblejs/check";
+import { checkProject, declaredOrigins } from "@asmjs/check";
 
 const config = (remotes: string): string =>
-  `import { defineConfig } from "@assemblejs/core";\nconst producer = process.env.PRODUCER_ORIGIN ?? "";\nexport default defineConfig({ ${remotes} });`;
+  `import { defineConfig } from "@asmjs/core";\nconst producer = process.env.PRODUCER_ORIGIN ?? "";\nexport default defineConfig({ ${remotes} });`;
 
 describe("the remotes a project's config declares", () => {
   it("are its literal origins, however quoted, and never one in a comment", () => {
-    const source = `import { defineConfig } from "@assemblejs/cli";
+    const source = `import { defineConfig } from "@asmjs/cli";
       // { origin: "https://commented.example" }
       const elsewhere = { origin: "https://not-a-remote.example" };
       export default defineConfig({
@@ -56,7 +56,7 @@ describe("the remotes a project's config declares", () => {
     );
     file(
       "src/pages/home/home.page.ts",
-      'import { definePage } from "@assemblejs/core";\nexport default definePage({ place: { tally: { url: "https://shop.example.com/assembly/tally/" } } });',
+      'import { definePage } from "@asmjs/core";\nexport default definePage({ place: { tally: { url: "https://shop.example.com/assembly/tally/" } } });',
     );
     const undeclared = async (remotes: string) => {
       file("assemblejs.config.ts", config(remotes));

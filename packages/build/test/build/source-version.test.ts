@@ -12,7 +12,7 @@ import type * as NodeFs from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { OutsideRootError, sourceVersion } from "@assemblejs/build";
+import { OutsideRootError, sourceVersion } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 const walkGuard = vi.hoisted(() => ({

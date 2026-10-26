@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readCookies, writeCookie } from "@assemblejs/core";
+import { readCookies, writeCookie } from "@asmjs/core";
 
 describe("writing a cookie", () => {
   it("is name=value and nothing else when nothing else is given", () => {

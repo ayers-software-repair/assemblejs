@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 
 // What the check keeps from the visitors' team by its path.
 export default defineApi({

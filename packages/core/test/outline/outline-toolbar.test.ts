@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { OutlineToolbar } from "@assemblejs/core/outline";
-import { createToolbar } from "@assemblejs/core/outline";
+import type { OutlineToolbar } from "@asmjs/core/outline";
+import { createToolbar } from "@asmjs/core/outline";
 
 describe("the outline's one control on a page", () => {
   it("is an element, and a way to show what it says", () => {

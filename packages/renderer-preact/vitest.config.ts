@@ -12,10 +12,10 @@ export default defineConfig({
   esbuild: { jsx: "automatic", jsxImportSource: "preact" },
   resolve: {
     alias: {
-      "@assemblejs/renderer-preact/client": src("./src/client/index.ts"),
-      "@assemblejs/renderer-preact": src("./src/index.ts"),
-      "@assemblejs/core/client": src("../core/src/client/index.ts"),
-      "@assemblejs/core": src("../core/src/index.ts"),
+      "@asmjs/renderer-preact/client": src("./src/client/index.ts"),
+      "@asmjs/renderer-preact": src("./src/index.ts"),
+      "@asmjs/core/client": src("../core/src/client/index.ts"),
+      "@asmjs/core": src("../core/src/index.ts"),
     },
   },
 });

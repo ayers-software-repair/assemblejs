@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkProject, notFoundRouteProblems } from "@assemblejs/check";
+import { checkProject, notFoundRouteProblems } from "@asmjs/check";
 
 const project = (files: Record<string, string>): string => {
   const root = mkdtempSync(join(tmpdir(), "check-"));

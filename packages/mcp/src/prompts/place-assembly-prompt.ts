@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { SEGMENT } from "@assemblejs/core";
+import { SEGMENT } from "@asmjs/core";
 import type { AgentPrompt } from "./agent-prompt.js";
 
 /** Placing an assembly, on a page or in another assembly, and seeing what the placement made. */

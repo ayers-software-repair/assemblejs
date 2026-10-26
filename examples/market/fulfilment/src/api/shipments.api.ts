@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 import { depot } from "../depot/shipments.js";
 
 // The shop's server tells this one of each order as it is placed. Server to server: no browser

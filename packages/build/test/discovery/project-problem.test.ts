@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ProjectProblem } from "@assemblejs/build";
+import type { ProjectProblem } from "@asmjs/build";
 
 describe("something wrong with a project", () => {
   it("says where, which rule, what, and what would fix it", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { lazyModules } from "@assemblejs/check";
+import { lazyModules } from "@asmjs/check";
 
 describe("the modules a built entry loads for its assemblies", () => {
   it("maps each name to the module its import() asks for, quoted or bare as the bundler left it", () => {

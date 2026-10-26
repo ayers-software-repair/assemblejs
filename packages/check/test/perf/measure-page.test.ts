@@ -3,7 +3,7 @@
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { measurePage, weigh } from "@assemblejs/check";
+import { measurePage, weigh } from "@asmjs/check";
 
 const files: Record<string, string> = {
   "/": '<head><link rel="stylesheet" href="/a.css?x=1&amp;y=2"><link rel="stylesheet" href="/a.css?x=1&amp;y=2"></head><body><script type="module" src="/c.js"></script></body>',

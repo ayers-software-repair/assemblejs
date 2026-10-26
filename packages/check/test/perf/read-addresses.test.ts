@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readAddresses } from "@assemblejs/check";
+import { readAddresses } from "@asmjs/check";
 
 describe("the page addresses a config declares", () => {
   it("reads each route's address as written, and none from a config that declares none", () => {

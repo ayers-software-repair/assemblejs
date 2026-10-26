@@ -3,8 +3,8 @@
 import Fastify from "fastify";
 import type { FastifyInstance } from "fastify";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { defineApi, registerAccess, registerStreams } from "@assemblejs/core";
-import type { ApiDefinition, LogLine, StreamContext } from "@assemblejs/core";
+import { defineApi, registerAccess, registerStreams } from "@asmjs/core";
+import type { ApiDefinition, LogLine, StreamContext } from "@asmjs/core";
 
 let app: FastifyInstance | undefined;
 afterEach(async () => {

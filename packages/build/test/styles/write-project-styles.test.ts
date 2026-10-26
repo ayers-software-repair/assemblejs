@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { OutsideRootError, realIo, writeProjectStyles } from "@assemblejs/build";
+import { OutsideRootError, realIo, writeProjectStyles } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 let root = "";

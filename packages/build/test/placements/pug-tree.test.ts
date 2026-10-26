@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadPug, pugTree } from "@assemblejs/build";
-import type { PugCompiler } from "@assemblejs/build";
+import { loadPug, pugTree } from "@asmjs/build";
+import type { PugCompiler } from "@asmjs/build";
 
 const templates = fileURLToPath(new URL("../../../../examples/templates/", import.meta.url));
 const installed = (): PugCompiler => {

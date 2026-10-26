@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { scanFragment } from "@assemblejs/core";
+import { scanFragment } from "@asmjs/core";
 
 const wrap = (inner: string): string => `<assembly-root data-name="a">${inner}</assembly-root>`;
 const refused = (html: string): boolean => typeof scanFragment(html) === "string";

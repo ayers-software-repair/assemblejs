@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { docsAddress } from "@assemblejs/build";
+import { docsAddress } from "@asmjs/build";
 
 describe("the address of the documentation for a version's channel", () => {
   it("is beneath next for a prerelease, whatever its tag", () => {

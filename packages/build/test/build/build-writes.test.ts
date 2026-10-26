@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { BUILD_WRITES, DEV_RECORD, buildProject, realIo } from "@assemblejs/build";
+import { BUILD_WRITES, DEV_RECORD, buildProject, realIo } from "@asmjs/build";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 const root = mkdtempSync(join(example, ".dev-writes-"));
@@ -36,7 +36,7 @@ describe("what a build writes in the generated directory", () => {
     );
     writeFileSync(
       join(root, "src", "server.ts"),
-      'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nawait (await createServer(project)).listen();\n',
+      'import { createServer } from "@asmjs/core";\nimport project from "../.assemblejs/project.js";\nawait (await createServer(project)).listen();\n',
     );
     const server = join(root, "dist", "server.js");
     expect(await buildProject(root, quiet)).toBe(0);

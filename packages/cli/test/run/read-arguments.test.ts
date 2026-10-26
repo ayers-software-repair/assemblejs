@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readArguments } from "@assemblejs/cli";
+import { readArguments } from "@asmjs/cli";
 
 describe("a command line's arguments, read", () => {
   it("are the words in order, and each flag with its value, written apart or with an equals", () => {

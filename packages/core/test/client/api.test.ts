@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { api, start } from "@assemblejs/core/client";
+import { api, start } from "@asmjs/core/client";
 
 // R-15, the owner's "The page's server relays the call" (2026-10-12): an assembly reaches its own
 // server's apis by one address, which is the path itself on the page's own server and the relay

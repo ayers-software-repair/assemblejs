@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { noProject } from "@assemblejs/cli";
+import { noProject } from "@asmjs/cli";
 
 describe("what add says where there is no project", () => {
   it("names where it looked and what to do", () => {

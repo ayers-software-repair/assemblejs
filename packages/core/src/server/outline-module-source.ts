@@ -9,6 +9,6 @@ import { createRequire } from "node:module";
  * serves the one file whether it runs from that build or beside the source it was built from.
  */
 export function outlineModuleSource(): string {
-  const published = createRequire(import.meta.url).resolve("@assemblejs/core/outline");
+  const published = createRequire(import.meta.url).resolve("@asmjs/core/outline");
   return readFileSync(published, "utf8");
 }

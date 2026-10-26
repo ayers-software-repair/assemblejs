@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { parseContentUrl } from "@assemblejs/core";
+import { parseContentUrl } from "@asmjs/core";
 
 describe("reading a placement url as a content endpoint", () => {
   it("takes the contract's path apart, the default view when none is named", () => {

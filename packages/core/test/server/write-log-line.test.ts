@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { writeLogLine } from "@assemblejs/core";
+import { writeLogLine } from "@asmjs/core";
 
 describe("the default log", () => {
   afterEach(() => {

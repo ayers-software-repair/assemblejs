@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { useEvents } from "@assemblejs/renderer-react/client";
+import { useEvents } from "@asmjs/renderer-react/client";
 import { useEffect, useState } from "react";
 
 export default function Ticker() {

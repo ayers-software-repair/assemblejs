@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/renderer-preact",
+  "name": "@asmjs/renderer-preact",
   "version": "1.0.0-next.0",
   "description": "Write an AssembleJS assembly in Preact.",
   "license": "Apache-2.0",
@@ -49,12 +49,12 @@
     "preact-render-to-string": "6.8.0"
   },
   "peerDependencies": {
-    "@assemblejs/core": "1.0.0-next.0",
+    "@asmjs/core": "1.0.0-next.0",
     "preact": "^11.0.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
-    "@assemblejs/core": "workspace:*",
+    "@asmjs/core": "workspace:*",
     "@types/node": "26.4.1",
     "preact": "11.0.0",
     "publint": "0.3.24",

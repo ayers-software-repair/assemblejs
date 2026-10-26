@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi, reply } from "@assemblejs/core";
+import { defineApi, reply } from "@asmjs/core";
 import { isStaffKey } from "../shop/staff.js";
 
 // Answers whether a key is the staff key. On a yes the api itself sets the session cookie,

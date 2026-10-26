@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Diagnostic, JsonObject } from "@assemblejs/core";
+import type { Diagnostic, JsonObject } from "@asmjs/core";
 
 /**
  * What rendering an assembly answered.

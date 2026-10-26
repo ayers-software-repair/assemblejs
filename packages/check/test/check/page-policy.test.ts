@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { PagePolicy } from "@assemblejs/check";
+import type { PagePolicy } from "@asmjs/check";
 
 describe("what a page's declaration says, as far as it is written", () => {
   it("is each placement's policy, the ones from another server, and the stream", () => {

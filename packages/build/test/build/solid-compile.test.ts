@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { SolidCompile } from "@assemblejs/build";
+import type { SolidCompile } from "@asmjs/build";
 
 describe("the Solid compiler a build calls", () => {
   it("takes JSX and the side, and answers code", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isRemotePolicy } from "@assemblejs/core";
+import { isRemotePolicy } from "@asmjs/core";
 
 describe("whether policy places a name from another server", () => {
   it("is an entry that is an object with a url, and nothing else", () => {

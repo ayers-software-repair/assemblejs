@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { declaredRoute, readDefaultExport } from "@assemblejs/check";
+import { declaredRoute, readDefaultExport } from "@asmjs/check";
 
 const route = (source: string) => declaredRoute(readDefaultExport(source), "/shop");
 

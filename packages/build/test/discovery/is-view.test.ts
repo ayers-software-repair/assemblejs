@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isView } from "@assemblejs/build";
+import { isView } from "@asmjs/build";
 
 describe("whether a file in an assembly's directory is a view of it", () => {
   it("is, where its name says its renderer", () => {

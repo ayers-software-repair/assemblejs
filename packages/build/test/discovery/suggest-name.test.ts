@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { suggestName } from "@assemblejs/build";
+import { suggestName } from "@asmjs/build";
 
 describe("the usable name nearest to one that is not", () => {
   it("lowers the case and joins the words with hyphens", () => {

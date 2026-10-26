@@ -22,7 +22,7 @@ export function generateProject(options: {
   const assets = options.client
     ? `\n  assets: fileURLToPath(new URL("./client/", import.meta.url)),`
     : "";
-  return `${GENERATED_HEADER}${options.client ? 'import { fileURLToPath } from "node:url";\n' : ""}import type { ServerOptions } from "@assemblejs/core";
+  return `${GENERATED_HEADER}${options.client ? 'import { fileURLToPath } from "node:url";\n' : ""}import type { ServerOptions } from "@asmjs/core";
 import { apis } from "./apis.js";
 import { assemblies } from "./assemblies.js";
 import { ${options.notFound === true ? "notFound, " : ""}pages } from "./pages.js";${options.config ? '\nimport config from "../assemblejs.config.js";' : ""}

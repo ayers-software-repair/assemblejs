@@ -1,6 +1,6 @@
 # Third-party notices
 
-`@assemblejs/mcp` bundles the packages below into its own `dist/`, so a project that installs it
+`@asmjs/mcp` bundles the packages below into its own `dist/`, so a project that installs it
 gets them inside it and not as separate installs. Each is used under the licence named here.
 Each licence text is given once, under the packages that use it, with the copyright line of
 every one of those packages.

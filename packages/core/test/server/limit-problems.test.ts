@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { limitProblems } from "@assemblejs/core";
+import { limitProblems } from "@asmjs/core";
 
 describe("what is wrong with the limits a project set", () => {
   it("is nothing for none, or for whole numbers in their bounds", () => {

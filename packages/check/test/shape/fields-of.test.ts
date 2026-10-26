@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { fieldsOf, readDefaultExport } from "@assemblejs/check";
+import { fieldsOf, readDefaultExport } from "@asmjs/check";
 
 describe("the entries of a value its source writes as an object", () => {
   it("are the object itself", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ViewPlacements } from "@assemblejs/build";
+import type { ViewPlacements } from "@asmjs/build";
 
 describe("what a view's source says it places", () => {
   it("is what was read, or undefined where the source cannot be read for it at all", () => {

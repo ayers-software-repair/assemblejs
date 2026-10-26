@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isFlatRoute } from "@assemblejs/core";
+import { isFlatRoute } from "@asmjs/core";
 
 describe("a flat route", () => {
   it("is literal segments and whole-segment parameters, a trailing slash included", () => {

@@ -1,4 +1,4 @@
-# @assemblejs/renderer-preact
+# @asmjs/renderer-preact
 
 Write an AssembleJS assembly in Preact.
 

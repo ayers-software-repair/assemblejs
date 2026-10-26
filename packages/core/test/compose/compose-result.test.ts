@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ComposeResult } from "@assemblejs/core";
+import type { ComposeResult } from "@asmjs/core";
 
 describe("the composer's result", () => {
   it("is html plus one diagnostic per placement, never html alone", () => {

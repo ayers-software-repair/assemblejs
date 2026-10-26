@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readdirSync } from "node:fs";
-import { SEGMENT_PATTERN } from "@assemblejs/core";
+import { SEGMENT_PATTERN } from "@asmjs/core";
 import { leadsOut } from "../root/leads-out.js";
 import { outsideProblems } from "../root/outside-problems.js";
 import { isDirectory } from "./is-directory.js";

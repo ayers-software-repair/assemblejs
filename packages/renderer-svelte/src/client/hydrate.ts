@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ClientRenderer, JsonObject, MountContext } from "@assemblejs/core/client";
+import type { ClientRenderer, JsonObject, MountContext } from "@asmjs/core/client";
 import type { Component } from "svelte";
 import { hydrate as hydrateSvelte, unmount } from "svelte";
 

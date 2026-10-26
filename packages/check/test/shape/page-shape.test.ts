@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { PageShape } from "@assemblejs/check";
+import type { PageShape } from "@asmjs/check";
 
 describe("one page as its sources say it", () => {
   it("is its route, its files, what it places and the policy it declares", () => {

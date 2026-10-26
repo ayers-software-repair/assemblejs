@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { DEFAULT_DEADLINE, pagePlan } from "@assemblejs/core";
+import { DEFAULT_DEADLINE, pagePlan } from "@asmjs/core";
 
 describe("a page's plan for the composer", () => {
   it("has no entry for a placement with no policy", () => {

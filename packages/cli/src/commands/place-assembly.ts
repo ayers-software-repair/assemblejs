@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ProjectProblem } from "@assemblejs/build";
-import { TAG_NAME_END, findPlacements, headEnd, inertSpans } from "@assemblejs/core";
+import type { ProjectProblem } from "@asmjs/build";
+import { TAG_NAME_END, findPlacements, headEnd, inertSpans } from "@asmjs/core";
 import type { PlacementPosition } from "./placement-position.js";
 import { writeTag } from "./write-tag.js";
 

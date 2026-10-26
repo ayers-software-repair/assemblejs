@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { tokenProblems } from "@assemblejs/build";
+import { tokenProblems } from "@asmjs/build";
 
 let root = "";
 afterEach(() => rmSync(root, { recursive: true, force: true }));

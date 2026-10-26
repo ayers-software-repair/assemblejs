@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadPug, readViewPlacements, uncompiled } from "@assemblejs/build";
+import { loadPug, readViewPlacements, uncompiled } from "@asmjs/build";
 
 const pug = loadPug(fileURLToPath(new URL("../../../../examples/templates/", import.meta.url)));
 
@@ -35,7 +35,7 @@ describe("what a view's source says it places, each kind of view by what it is",
   });
 
   it("reads a framework view by the slots it writes", () => {
-    const client = (framework: string) => `@assemblejs/renderer-${framework}/client`;
+    const client = (framework: string) => `@asmjs/renderer-${framework}/client`;
     expect(
       readViewPlacements(
         "shell.react.tsx",

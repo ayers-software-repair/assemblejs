@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { ENVELOPE_ATTRIBUTE, MOUNTED_ATTRIBUTE, renderEnvelope } from "@assemblejs/core";
-import { start } from "@assemblejs/core/client";
+import { ENVELOPE_ATTRIBUTE, MOUNTED_ATTRIBUTE, renderEnvelope } from "@asmjs/core";
+import { start } from "@asmjs/core/client";
 
 // An envelope as the server sends one, with its island, for the runtime to mount.
 const sent = (name: string, mount = ""): string =>

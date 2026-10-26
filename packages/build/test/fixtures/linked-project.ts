@@ -21,7 +21,7 @@ const OUTSIDE: Readonly<Record<string, string>> = {
   "secret.ejs": "<p>SECRET-TEMPLATE <%= data.missing( %></p>",
   "secret.css": "p { color: SECRET-COLOUR",
   "row.tsx":
-    'import { Slot } from "@assemblejs/renderer-react/client";\nexport const Row = () => <Slot name="secret-slot" />;',
+    'import { Slot } from "@asmjs/renderer-react/client";\nexport const Row = () => <Slot name="secret-slot" />;',
   "note.md": "SECRET-NOTE\n",
   "shadowed.lit.ts":
     'export const shadow = true;\nexport const mount = "SECRET-MOUNT";\nexport default () => null;',

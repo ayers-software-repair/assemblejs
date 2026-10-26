@@ -1,8 +1,8 @@
-# @assemblejs/create
+# @asmjs/create
 
 Starts an AssembleJS project.
 
-    npm create @assemblejs my-app
+    npm create @asmjs@next my-app
     cd my-app
     npm install
     npm run dev

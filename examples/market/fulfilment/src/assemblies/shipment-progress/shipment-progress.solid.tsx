@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { AssemblyProps } from "@assemblejs/renderer-solid";
+import type { AssemblyProps } from "@asmjs/renderer-solid";
 import { For, Show, createSignal, onCleanup, onMount } from "solid-js";
 
 type Progress = {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { FIX_FINDINGS_PROMPT } from "@assemblejs/mcp";
+import { FIX_FINDINGS_PROMPT } from "@asmjs/mcp";
 
 describe("the brief for fixing what check finds", () => {
   const brief = FIX_FINDINGS_PROMPT.brief({});

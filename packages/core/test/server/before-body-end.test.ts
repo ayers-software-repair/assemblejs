@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { beforeBodyEnd } from "@assemblejs/core";
+import { beforeBodyEnd } from "@asmjs/core";
 
 describe("adding markup where a document's body ends", () => {
   it("puts it before the last closing tag a browser would read as the body's", () => {

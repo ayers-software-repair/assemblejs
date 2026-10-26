@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/cli",
+  "name": "@asmjs/cli",
   "version": "1.0.0-next.0",
   "description": "The AssembleJS command line: scaffold a project, add an assembly, build and run it.",
   "license": "Apache-2.0",
@@ -45,9 +45,9 @@
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "dependencies": {
-    "@assemblejs/build": "workspace:*",
-    "@assemblejs/check": "workspace:*",
-    "@assemblejs/core": "workspace:*",
+    "@asmjs/build": "workspace:*",
+    "@asmjs/check": "workspace:*",
+    "@asmjs/core": "workspace:*",
     "acorn": "8.18.0"
   },
   "devDependencies": {

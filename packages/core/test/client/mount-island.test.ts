@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createBus, mountIsland } from "@assemblejs/core/client";
-import type { ClientRenderer, Events } from "@assemblejs/core/client";
+import { createBus, mountIsland } from "@asmjs/core/client";
+import type { ClientRenderer, Events } from "@asmjs/core/client";
 
 const payload = {
   id: "cart-1",

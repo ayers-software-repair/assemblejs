@@ -110,7 +110,7 @@
             <h2>Install the renderer</h2>
             <dl>
               <div class="item">
-                <dt><code>npm install @assemblejs/renderer-solid solid-js</code></dt>
+                <dt><code>npm install @asmjs/renderer-solid@next solid-js</code></dt>
                 <dd>
                   One renderer package per framework, so a project that has no React never installs
                   React. Solid 1.9.15 or newer in the 1.x line. Solid's JSX is compiled by Solid's
@@ -128,7 +128,7 @@
                   directory is the assembly, and the <code>.solid</code> infix says the framework,
                   because React, Preact and Solid all write <code>.tsx</code>. Your server file does
                   not change. The scaffold reads <code>props.data</code> and does not destructure.
-                  <pre><code>import type { AssemblyProps } from "@assemblejs/renderer-solid";
+                  <pre><code>import type { AssemblyProps } from "@asmjs/renderer-solid";
 
 export default function Cart(props: AssemblyProps) {
   return &lt;p&gt;cart {Object.keys(props.data).length}&lt;/p&gt;;
@@ -158,7 +158,7 @@ export default function Cart(props: AssemblyProps) {
                   <code>&lt;div data-assembly-slot="price"&gt;</code>, and the placed assembly
                   stands inside it: lay it out by that element, never by what is inside. An assembly
                   in a project has one view, so no <code>view</code> is given.
-                  <pre><code>import { Slot } from "@assemblejs/renderer-solid/client";
+                  <pre><code>import { Slot } from "@asmjs/renderer-solid/client";
 
 export default function Cart() {
   return (
@@ -192,7 +192,7 @@ export default function Cart() {
                   <code>params</code> of the page that placed the assembly, and the same function
                   answers the assembly's data endpoint, so the two cannot disagree. The component
                   reads the result as <code>props.data</code>.
-                  <pre><code>import { defineService } from "@assemblejs/core";
+                  <pre><code>import { defineService } from "@asmjs/core";
 
 export default defineService({
   name: "label",
@@ -207,14 +207,14 @@ export default defineService({
               <div class="item">
                 <dt><code>useEvents()</code></dt>
                 <dd>
-                  From <code>@assemblejs/renderer-solid/client</code>. The object is scoped to this
+                  From <code>@asmjs/renderer-solid/client</code>. The object is scoped to this
                   assembly: <code>send</code> stamps the sender and <code>on</code> returns its
                   unsubscribe. Subscribe in <code>onMount</code> and hand the unsubscribe to
                   <code>onCleanup</code>; what is still subscribed when the page unmounts its
                   assemblies is released then. The counter from the frameworks example sends on
                   every click and hears every other counter on the page, React, Svelte, Preact, Vue
                   or Lit, with no adapter between them.
-                  <pre><code>import { useEvents } from "@assemblejs/renderer-solid/client";
+                  <pre><code>import { useEvents } from "@asmjs/renderer-solid/client";
 import { createSignal, onCleanup, onMount } from "solid-js";
 
 export default function SolidCounter() {
@@ -329,7 +329,7 @@ export default function SolidBox() {
                   Policy, when a placement needs any, lives in the page's own file: a deadline in
                   milliseconds, markup to show when the assembly does not answer, whether its
                   failure fails the page, or a deferral the browser fills after load.
-                  <pre><code>import { definePage } from "@assemblejs/core";
+                  <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },

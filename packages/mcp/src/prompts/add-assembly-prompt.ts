@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { RENDERERS } from "@assemblejs/build";
-import { SEGMENT } from "@assemblejs/core";
+import { RENDERERS } from "@asmjs/build";
+import { SEGMENT } from "@asmjs/core";
 import type { AgentPrompt } from "./agent-prompt.js";
 
 /** Adding an assembly: scaffolded, written, seen, and placed or said not to be. */

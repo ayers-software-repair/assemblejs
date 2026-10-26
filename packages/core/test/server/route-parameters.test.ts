@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { routeParameters } from "@assemblejs/core";
+import { routeParameters } from "@asmjs/core";
 
 describe("the names of a route's parameters", () => {
   it("are its whole segments that begin with a colon, in the order it writes them", () => {

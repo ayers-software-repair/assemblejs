@@ -2,24 +2,24 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { ProjectProblem } from "@assemblejs/build";
-import { templateProblems } from "@assemblejs/build";
-import { CONFIG_FILE } from "@assemblejs/build";
-import { discoverApis } from "@assemblejs/build";
-import { discoverAssemblies } from "@assemblejs/build";
-import { discoverPages } from "@assemblejs/build";
-import { NOT_FOUND_PAGE } from "@assemblejs/build";
-import { fromRoot } from "@assemblejs/build";
-import { componentProblems } from "@assemblejs/build";
-import { buildProblems } from "@assemblejs/build";
-import { unreadableSource } from "@assemblejs/build";
-import { viewFindings } from "@assemblejs/build";
-import { outsideProblems } from "@assemblejs/build";
-import { OutsideRootError } from "@assemblejs/build";
-import { readInside } from "@assemblejs/build";
-import { colourProblems } from "@assemblejs/build";
-import { tokenProblems } from "@assemblejs/build";
-import type { ApiDefinition, PlacedAssembly } from "@assemblejs/core";
+import type { ProjectProblem } from "@asmjs/build";
+import { templateProblems } from "@asmjs/build";
+import { CONFIG_FILE } from "@asmjs/build";
+import { discoverApis } from "@asmjs/build";
+import { discoverAssemblies } from "@asmjs/build";
+import { discoverPages } from "@asmjs/build";
+import { NOT_FOUND_PAGE } from "@asmjs/build";
+import { fromRoot } from "@asmjs/build";
+import { componentProblems } from "@asmjs/build";
+import { buildProblems } from "@asmjs/build";
+import { unreadableSource } from "@asmjs/build";
+import { viewFindings } from "@asmjs/build";
+import { outsideProblems } from "@asmjs/build";
+import { OutsideRootError } from "@asmjs/build";
+import { readInside } from "@asmjs/build";
+import { colourProblems } from "@asmjs/build";
+import { tokenProblems } from "@asmjs/build";
+import type { ApiDefinition, PlacedAssembly } from "@asmjs/core";
 import {
   apiProblems,
   findPlacements,
@@ -30,7 +30,7 @@ import {
   routeKey,
   streamPaths,
   streamProblems,
-} from "@assemblejs/core";
+} from "@asmjs/core";
 import { agentProblems } from "../agents/agent-problems.js";
 import { readAddresses } from "../perf/read-addresses.js";
 import { readBudgets } from "../perf/read-budgets.js";

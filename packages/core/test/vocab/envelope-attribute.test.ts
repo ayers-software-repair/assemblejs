@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT, renderEnvelope } from "@assemblejs/core";
+import { ENVELOPE_ATTRIBUTE, ENVELOPE_ELEMENT, renderEnvelope } from "@asmjs/core";
 
 const opening = (html: string): readonly string[] => {
   const tag = new RegExp(`^<${ENVELOPE_ELEMENT}((?:\\s[^>]*)?)>`).exec(html)?.[1] ?? "";

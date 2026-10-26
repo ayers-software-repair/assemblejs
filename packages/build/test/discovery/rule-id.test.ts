@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { RuleId } from "@assemblejs/build";
+import type { RuleId } from "@asmjs/build";
 
 describe("a rule a problem names", () => {
   it("is one of the listed ids, which the compiler holds it to", () => {

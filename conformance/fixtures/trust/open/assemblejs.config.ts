@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineConfig } from "@assemblejs/core";
+import { defineConfig } from "@asmjs/core";
 
 // A declared remote, placed by no page: the default policy names it all the same, because it is
 // the one other origin a page here is designed to load from.

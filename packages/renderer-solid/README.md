@@ -1,4 +1,4 @@
-# @assemblejs/renderer-solid
+# @asmjs/renderer-solid
 
 Write an AssembleJS assembly in Solid.
 

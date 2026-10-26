@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { css, html, LitElement } from "lit";
 import { describe, expect, it } from "vitest";
-import { renderToMarkup } from "@assemblejs/renderer-lit";
+import { renderToMarkup } from "@asmjs/renderer-lit";
 
 class Quoted extends LitElement {
   static override styles = css`

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineService, viewSchema } from "@assemblejs/core";
-import type { AssemblyView } from "@assemblejs/core";
+import { defineService, viewSchema } from "@asmjs/core";
+import type { AssemblyView } from "@asmjs/core";
 
 describe("the composed schema of one view", () => {
   it("merges the services' schemas and the view's own", () => {

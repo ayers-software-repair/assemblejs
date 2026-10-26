@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readTokens } from "@assemblejs/build";
+import { readTokens } from "@asmjs/build";
 
 describe("the tokens a stylesheet binds at :root", () => {
   it("reads the light scheme at the top, and the dark one rebinding it under its media rule", () => {

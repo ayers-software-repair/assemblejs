@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Diagnostic, LogLine } from "@assemblejs/core";
+import type { Diagnostic, LogLine } from "@asmjs/core";
 import { noSuchAssembly } from "../render/no-such-assembly.js";
 
 /**

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { resolveRoot } from "@assemblejs/mcp";
-import type { ProjectRoot } from "@assemblejs/mcp";
+import { resolveRoot } from "@asmjs/mcp";
+import type { ProjectRoot } from "@asmjs/mcp";
 
 describe("the project root", () => {
   it("is a branded type, so a bare string cannot stand in for one", () => {

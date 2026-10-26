@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ProjectSummary } from "@assemblejs/core";
+import type { ProjectSummary } from "@asmjs/core";
 
 describe("the project as devtools may read it", () => {
   it("is names, routes and settings, which survive being written as JSON", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DiscoveredPage } from "@assemblejs/build";
+import type { DiscoveredPage } from "@asmjs/build";
 
 describe("a page found on disk", () => {
   it("is its route, its template, and the file declaring it when there is one", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { PLACE_ASSEMBLY_PROMPT } from "@assemblejs/mcp";
+import { PLACE_ASSEMBLY_PROMPT } from "@asmjs/mcp";
 
 describe("the brief for placing an assembly", () => {
   it("gives both calls for a place that is named: a page, or another assembly", () => {

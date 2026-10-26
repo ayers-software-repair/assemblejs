@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineApi, defineAssembly, summarizeProject } from "@assemblejs/core";
+import { defineApi, defineAssembly, summarizeProject } from "@asmjs/core";
 
 describe("the project as devtools may read it", () => {
   it("copies names, routes and settings, and nothing that runs", () => {

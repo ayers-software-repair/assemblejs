@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { componentProblems, discoverAssemblies } from "@assemblejs/build";
+import { componentProblems, discoverAssemblies } from "@asmjs/build";
 import { templatedProject } from "../fixtures/templated-project.js";
 
 // The example that installs Svelte and Vue: a project nested in it finds their compilers.

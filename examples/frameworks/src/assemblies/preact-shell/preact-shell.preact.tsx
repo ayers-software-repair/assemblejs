@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Slot } from "@assemblejs/renderer-preact/client";
+import { Slot } from "@asmjs/renderer-preact/client";
 import { useState } from "preact/hooks";
 
 // A Preact assembly that places a Vue one.

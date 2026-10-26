@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readCapped } from "@assemblejs/core";
+import { readCapped } from "@asmjs/core";
 
 const streamed = (chunks: string[]) =>
   new Response(

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { shadowCss } from "@assemblejs/build";
+import { shadowCss } from "@asmjs/build";
 
 describe("an assembly's stylesheet for its own shadow root", () => {
   it("leaves selectors as written, because the shadow boundary is the scope", () => {

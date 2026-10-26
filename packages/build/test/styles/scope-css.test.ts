@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { scopeCss } from "@assemblejs/build";
+import { scopeCss } from "@asmjs/build";
 
 const scope = (css: string) => scopeCss(css, "cart", "cart.css").replace(/\s+/g, " ").trim();
 

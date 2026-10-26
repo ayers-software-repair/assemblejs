@@ -9,12 +9,12 @@ import { readInside } from "../root/read-inside.js";
 import { engineSaid } from "./engine-said.js";
 import { loadTemplateCompiler } from "./load-template-compiler.js";
 
-const PACKAGE = "@assemblejs/renderer-templates";
+const PACKAGE = "@asmjs/renderer-templates";
 
 /**
  * Every template view the project's own engine cannot read, found before anything is built or
  * served: each `.ejs`, `.hbs`, `.md`, `.njk` and `.pug` view is compiled, once, with the
- * compiler the project's `@assemblejs/renderer-templates` loads for its language, and one that
+ * compiler the project's `@asmjs/renderer-templates` loads for its language, and one that
  * throws is a problem naming the file and what the engine said. A view that cannot be read, and
  * a package or an engine of it that cannot be loaded, are problems of their own kind, never
  * blamed on the template. Without the package there is nothing to compile with, which the build

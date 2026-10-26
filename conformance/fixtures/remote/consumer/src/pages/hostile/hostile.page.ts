@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { definePage } from "@assemblejs/core";
+import { definePage } from "@asmjs/core";
 
 const hostile = process.env.HOSTILE_ORIGIN ?? "";
 const from = (origin: string, name: string): string => `${origin}/assembly/${name}/`;

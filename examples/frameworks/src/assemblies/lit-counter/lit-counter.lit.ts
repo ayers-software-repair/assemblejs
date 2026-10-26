@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Events } from "@assemblejs/core/client";
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import type { Events } from "@asmjs/core/client";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
 import { LitElement, css, html } from "lit";
 
 // A Lit element: rendered into a declarative shadow root on the server, hydrated in the browser.

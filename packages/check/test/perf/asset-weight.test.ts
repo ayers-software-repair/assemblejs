@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AssetWeight } from "@assemblejs/check";
+import type { AssetWeight } from "@asmjs/check";
 
 describe("what one thing a page sends weighs", () => {
   it("is its bytes as sent and gzipped", () => {

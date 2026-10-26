@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { NotFound, createServer, defineAssembly, defineService } from "@assemblejs/core";
-import type { App, Config, LogLine } from "@assemblejs/core";
+import { NotFound, createServer, defineAssembly, defineService } from "@asmjs/core";
+import type { App, Config, LogLine } from "@asmjs/core";
 
 const config: Config = { mode: "production", host: "127.0.0.1", port: 0, auth: undefined };
 const failure = { error: { correlationId: expect.any(String) } };

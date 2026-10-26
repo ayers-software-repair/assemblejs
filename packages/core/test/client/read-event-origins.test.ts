@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { readEventOrigins } from "@assemblejs/core/client";
+import { readEventOrigins } from "@asmjs/core/client";
 
 describe("reading the remotes a page admits to its bus", () => {
   it("is the meta element's origins, or none for none or an empty one", () => {

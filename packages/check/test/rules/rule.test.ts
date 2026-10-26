@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { Rule } from "@assemblejs/check";
+import type { Rule } from "@asmjs/check";
 
 describe("a rule", () => {
   it("carries the reason, not just the constraint", () => {

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { PageBudgets } from "@assemblejs/core";
+import type { PageBudgets } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { PAGE_PARTS } from "@assemblejs/check";
+import { PAGE_PARTS } from "@asmjs/check";
 
 describe("the parts of what a page sends", () => {
   it("are the parts a budget can name, no more and no fewer", () => {

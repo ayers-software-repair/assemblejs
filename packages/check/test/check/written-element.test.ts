@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { WrittenElement } from "@assemblejs/check";
+import type { WrittenElement } from "@asmjs/check";
 
 describe("one element with the file it is written in", () => {
   it("pairs the element with its file", () => {

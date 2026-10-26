@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { reply } from "@assemblejs/core";
+import { reply } from "@asmjs/core";
 
 describe("the mark on a reply", () => {
   it("is one symbol-keyed member, which JSON leaves out", () => {

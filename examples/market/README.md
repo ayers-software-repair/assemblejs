@@ -26,7 +26,7 @@ From the repository's root:
 ```sh
 pnpm install
 pnpm build
-pnpm --filter "@assemblejs/example-market-*" build
+pnpm --filter "@asmjs/example-market-*" build
 node examples/market/start.mjs
 ```
 

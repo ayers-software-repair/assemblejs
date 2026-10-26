@@ -10,8 +10,8 @@ import {
   defineAssembly,
   localFetch,
   pageAnswer,
-} from "@assemblejs/core";
-import type { PageServing } from "@assemblejs/core";
+} from "@asmjs/core";
+import type { PageServing } from "@asmjs/core";
 
 const echo = defineAssembly({
   name: "echo",

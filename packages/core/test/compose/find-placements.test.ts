@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 
 describe("finding placements in a template", () => {
   it("finds each one in the order it appears, with where it sits", () => {

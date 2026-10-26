@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { shadowTemplates } from "@assemblejs/core";
+import { shadowTemplates } from "@asmjs/core";
 
 const inside = (template: string) => shadowTemplates(template)(template.indexOf("|"));
 

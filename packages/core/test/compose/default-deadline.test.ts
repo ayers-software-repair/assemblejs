@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { DEFAULT_DEADLINE } from "@assemblejs/core";
+import { DEFAULT_DEADLINE } from "@asmjs/core";
 
 describe("the default deadline", () => {
   it("is finite, because a placement with no deadline waits on someone else's outage", () => {

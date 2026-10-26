@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { networkInterfaces } from "node:os";
 import { describe, expect, it } from "vitest";
-import { ownAddress } from "@assemblejs/mcp";
+import { ownAddress } from "@asmjs/mcp";
 
 describe("whether a host is this machine's own", () => {
   it("is, for a loopback name, with its port or without", () => {

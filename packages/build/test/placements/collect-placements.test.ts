@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { collectPlacements } from "@assemblejs/build";
+import { collectPlacements } from "@asmjs/build";
 
 describe("gathering what a reader found into what a view places", () => {
   it("keeps each name and view once, in the order first written", () => {

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 import { CATEGORIES, band, price, productsIn } from "../../catalogue/products.js";
 
 // The page's route says which shelf (`/c/:category`), and its query narrows it to the words a

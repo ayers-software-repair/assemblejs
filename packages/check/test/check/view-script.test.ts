@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { viewScript } from "@assemblejs/check";
+import { viewScript } from "@asmjs/check";
 
 describe("the part of a view that is a module", () => {
   it("is a ts or tsx file whole, with the loader its extension names", () => {

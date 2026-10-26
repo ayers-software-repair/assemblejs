@@ -1,10 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { readFileSync } from "node:fs";
-import { discoverAssemblies, isOccupied, realIo, viewFindings } from "@assemblejs/build";
-import type { ProjectProblem } from "@assemblejs/build";
-import { placeAssembly } from "@assemblejs/cli";
-import type { PlacementPosition } from "@assemblejs/cli";
+import { discoverAssemblies, isOccupied, realIo, viewFindings } from "@asmjs/build";
+import type { ProjectProblem } from "@asmjs/build";
+import { placeAssembly } from "@asmjs/cli";
+import type { PlacementPosition } from "@asmjs/cli";
 import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";
@@ -15,7 +15,7 @@ const HOLDS_THE_DIRECTIVE: readonly string[] = ["html", "ejs", "handlebars", "nu
 
 // What its author writes by hand in any other view, which only they know where to put.
 const byHand = (renderer: string, name: string): string => {
-  const client = `"@assemblejs/renderer-${renderer}/client"`;
+  const client = `"@asmjs/renderer-${renderer}/client"`;
   if (renderer === "markdown") {
     return `a Markdown view is prose and places nothing: place "${name}" from a page or from an html view`;
   }

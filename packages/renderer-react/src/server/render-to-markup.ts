@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonObject, MarkupInput } from "@assemblejs/core";
-import { serverEvents } from "@assemblejs/core/client";
+import type { JsonObject, MarkupInput } from "@asmjs/core";
+import { serverEvents } from "@asmjs/core/client";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
 import { EventsContext } from "../client/events-context.js";

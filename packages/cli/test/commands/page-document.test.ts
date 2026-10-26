@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { pageDocument, placeAssembly, projectFiles } from "@assemblejs/cli";
+import { pageDocument, placeAssembly, projectFiles } from "@asmjs/cli";
 
 describe("a page's whole document, as the starter writes one", () => {
   it("is what every page needs, titled, placing what it is given in the order given", () => {

@@ -4,8 +4,8 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { OutsideRootError, realIo, writeStyles } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { OutsideRootError, realIo, writeStyles } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 const project = () => {

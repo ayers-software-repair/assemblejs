@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { GENERATED_HEADER } from "@assemblejs/build";
+import { GENERATED_HEADER } from "@asmjs/build";
 
 describe("the generated module's banner", () => {
   it("says it is generated, and says not to commit it", () => {

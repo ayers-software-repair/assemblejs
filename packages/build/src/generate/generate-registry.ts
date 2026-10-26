@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { dirname, relative, sep } from "node:path";
-import type { ViewPlacement } from "@assemblejs/core";
+import type { ViewPlacement } from "@asmjs/core";
 import type { DiscoveredAssembly } from "../discovery/discovered-assembly.js";
 import { isStaticView } from "../discovery/is-static-view.js";
 import { TEMPLATE_RENDERERS } from "../discovery/template-renderers.js";
@@ -17,7 +17,7 @@ const projectPath = (from: string, file: string): string =>
 
 // The package every template language renders through, and the name its one render function is
 // imported under.
-const TEMPLATE_PACKAGE = "@assemblejs/renderer-templates";
+const TEMPLATE_PACKAGE = "@asmjs/renderer-templates";
 const TEMPLATE_RENDER = "render_template";
 
 // How the registry reads what a framework view says of itself. A view may export `mount` and
@@ -116,7 +116,7 @@ export function generateRegistry(
   });
 
   const rendererImports = [...renderers].sort().map((renderer) => {
-    const from = options.packages[renderer] ?? `@assemblejs/renderer-${renderer}`;
+    const from = options.packages[renderer] ?? `@asmjs/renderer-${renderer}`;
     return `import { renderToMarkup as ${identifierFor("render", renderer)} } from "${from}";`;
   });
   if (templates !== undefined) {
@@ -130,7 +130,7 @@ export function generateRegistry(
   const spreadEntries = spread.map((owner) => `  ...assemblies_${owner},`);
 
   return `${GENERATED_HEADER}
-import type { AssemblyDefinition } from "@assemblejs/core";
+import type { AssemblyDefinition } from "@asmjs/core";
 ${[...rendererImports, ...spreadImports, ...imports].join("\n")}
 ${entries.some((entry) => entry.includes(`${SAID}(`)) ? SAYS : ""}
 export const ${options.exported ?? "assemblies"}: readonly AssemblyDefinition[] = [

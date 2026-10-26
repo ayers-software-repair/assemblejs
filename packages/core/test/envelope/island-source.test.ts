@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { IslandSource } from "@assemblejs/core";
+import type { IslandSource } from "@asmjs/core";
 
 describe("what a projection is built from", () => {
   it("needs everything but the deferred flag, which defaults", () => {

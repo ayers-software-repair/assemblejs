@@ -4,8 +4,8 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { realIo, runDev } from "@assemblejs/build";
-import { freePort } from "@assemblejs/build";
+import { realIo, runDev } from "@asmjs/build";
+import { freePort } from "@asmjs/build";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 const root = mkdtempSync(join(example, ".dev-run-"));
@@ -33,7 +33,7 @@ describe("dev", () => {
     );
     writeFileSync(
       join(root, "src", "server.ts"),
-      'import { existsSync } from "node:fs";\nimport { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\nsetInterval(() => { if (existsSync("stop")) process.exit(); }, 20);\n',
+      'import { existsSync } from "node:fs";\nimport { createServer } from "@asmjs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\nsetInterval(() => { if (existsSync("stop")) process.exit(); }, 20);\n',
     );
     const port = String(await freePort());
     process.env["ASSEMBLEJS_PORT"] = port;
@@ -92,7 +92,7 @@ describe("dev, while a later build runs or fails", () => {
       );
       writeFileSync(
         join(kept, "src", "server.ts"),
-        'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
+        'import { createServer } from "@asmjs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
       );
       const port = String(await freePort());
       process.env["ASSEMBLEJS_PORT"] = port;
@@ -188,7 +188,7 @@ describe("dev, when the project misbehaves", () => {
       // Listens, and says nothing at all.
       writeFileSync(
         join(quiet, "src", "server.ts"),
-        'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nawait (await createServer(project)).listen();\n',
+        'import { createServer } from "@asmjs/core";\nimport project from "../.assemblejs/project.js";\nawait (await createServer(project)).listen();\n',
       );
       const port = String(await freePort());
       process.env["ASSEMBLEJS_PORT"] = port;

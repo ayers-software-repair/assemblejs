@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineConfig } from "@assemblejs/core";
+import { defineConfig } from "@asmjs/core";
 import { ADMITTED, OTHER } from "./src/servers/origins.js";
 
 export default defineConfig({

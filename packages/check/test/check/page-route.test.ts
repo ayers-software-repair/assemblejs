@@ -3,9 +3,9 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { OutsideRootError, realIo } from "@assemblejs/build";
+import { OutsideRootError, realIo } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { pageRoute } from "@assemblejs/check";
+import { pageRoute } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const page = (declaration?: string) => {
@@ -32,7 +32,7 @@ describe("the route a page answers at", () => {
 
   it("is the one its own file declares, through definePage or a name", () => {
     for (const source of [
-      'import { definePage } from "@assemblejs/core";\nexport default definePage({ route: "/store" });',
+      'import { definePage } from "@asmjs/core";\nexport default definePage({ route: "/store" });',
       'const page = { route: "/store" };\nexport default page;',
     ]) {
       const { root, page: declared } = page(source);

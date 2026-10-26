@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { ENVELOPE_ATTRIBUTE } from "@assemblejs/core";
+import { ENVELOPE_ATTRIBUTE } from "@asmjs/core";
 
 /** Whether the browser mounts an envelope's assembly: not for `none`, nor a mode it does not know. */
 export function mountsInTheBrowser(attributes: Readonly<Record<string, string>>): boolean {

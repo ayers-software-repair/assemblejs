@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { BootError, createServer, defineAssembly, sentHeaderProblems } from "@assemblejs/core";
-import type { ServerOptions } from "@assemblejs/core";
+import { BootError, createServer, defineAssembly, sentHeaderProblems } from "@asmjs/core";
+import type { ServerOptions } from "@asmjs/core";
 
 const cart = defineAssembly({
   name: "cart",

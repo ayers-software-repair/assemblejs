@@ -1,4 +1,4 @@
-# @assemblejs/renderer-react
+# @asmjs/renderer-react
 
 Write an AssembleJS assembly in React.
 

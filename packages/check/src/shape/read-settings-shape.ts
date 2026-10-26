@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { CONFIG_FILE } from "@assemblejs/build";
-import { leadsOut } from "@assemblejs/build";
-import { readInside } from "@assemblejs/build";
+import { CONFIG_FILE } from "@asmjs/build";
+import { leadsOut } from "@asmjs/build";
+import { readInside } from "@asmjs/build";
 import { readDefaultExport } from "../check/read-default-export.js";
 import { UNWRITTEN } from "../check/unwritten.js";
 import { COMPUTED } from "./computed.js";

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { LocalRenderInput } from "@assemblejs/core";
+import type { LocalRenderInput } from "@asmjs/core";
 
 describe("what one local render is given", () => {
   it("says where in the composition the assembly stands, and how its children are reached", () => {

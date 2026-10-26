@@ -15,7 +15,7 @@ export const agentIn = (root) => {
   const told = read("AGENTS.md");
   // The name AGENTS.md tells an agent to look for, which is the name each registration uses.
   const [, name] = /Its MCP server, `([a-z-]+)`, is registered in/.exec(told) ?? [];
-  const installed = createRequire(join(root, "node_modules", "@assemblejs", "mcp", "package.json"));
+  const installed = createRequire(join(root, "node_modules", "@asmjs", "mcp", "package.json"));
   // The client is the agent host's, not the project's: the server bundles its own protocol SDK,
   // so the host's copy is the workspace's, at the version the server is built against.
   const host = createRequire(new URL("../../packages/mcp/package.json", import.meta.url));
@@ -58,7 +58,7 @@ export const agentIn = (root) => {
    * line that wrote it was published on, `/next/` for a prerelease, written here on its own.
    */
   const docs = () =>
-    installed("@assemblejs/cli/package.json").version.includes("-")
+    installed("@asmjs/cli/package.json").version.includes("-")
       ? "https://assemblejs.com/next/"
       : "https://assemblejs.com/";
   const hello = () =>

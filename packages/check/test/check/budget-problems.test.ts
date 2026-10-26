@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { budgetProblems } from "@assemblejs/check";
+import { budgetProblems } from "@asmjs/check";
 
 describe("the findings a config's budgets earn", () => {
   it("is one finding at the config for each thing wrong, with the fix", () => {

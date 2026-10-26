@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { pageDocument, placeAssembly } from "@assemblejs/cli";
+import { pageDocument, placeAssembly } from "@asmjs/cli";
 
 const CART = '<assembly name="cart"></assembly>';
 const NAV = '<assembly name="nav"></assembly>';

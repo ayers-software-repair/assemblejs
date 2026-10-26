@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
-import { readInside } from "@assemblejs/build";
+import { readInside } from "@asmjs/build";
 
 /**
  * Reads a project's own files as text, each by its path from the project's root: undefined for

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { MarkupInput } from "@assemblejs/core";
+import type { MarkupInput } from "@asmjs/core";
 
 describe("what producing markup is given", () => {
   it("is the view's data and its placement's id, and never a child", () => {

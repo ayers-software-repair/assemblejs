@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { admitFor } from "@assemblejs/core";
-import type { AccessPolicy, AccessRequest, LogLine } from "@assemblejs/core";
+import { admitFor } from "@asmjs/core";
+import type { AccessPolicy, AccessRequest, LogLine } from "@asmjs/core";
 
 const policy = (over: Partial<AccessPolicy>): AccessPolicy => ({
   basic: undefined,

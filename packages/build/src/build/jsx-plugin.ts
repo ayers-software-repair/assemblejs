@@ -71,9 +71,7 @@ export function jsxPlugin(
         const loader = args.path.endsWith(".jsx") ? "jsx" : "tsx";
         if (framework === "solid") {
           if (solid === undefined) {
-            throw new Error(
-              `${args.path} is Solid, and @assemblejs/renderer-solid is not installed`,
-            );
+            throw new Error(`${args.path} is Solid, and @asmjs/renderer-solid is not installed`);
           }
           const stripped = await transform(source, { loader, jsx: "preserve", target: "es2022" });
           return { contents: solid(stripped.code, { filename: args.path, side }), loader: "js" };

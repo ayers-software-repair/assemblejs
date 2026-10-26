@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { AssemblyProps } from "@assemblejs/renderer-react";
-import { useEvents } from "@assemblejs/renderer-react/client";
+import type { AssemblyProps } from "@asmjs/renderer-react";
+import { useEvents } from "@asmjs/renderer-react/client";
 import { useEffect, useMemo, useState } from "react";
 
 type Card = {

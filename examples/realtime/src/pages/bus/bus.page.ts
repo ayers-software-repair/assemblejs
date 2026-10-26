@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { definePage } from "@assemblejs/core";
+import { definePage } from "@asmjs/core";
 import { ADMITTED, OTHER, from } from "../../servers/origins.js";
 
 // The sender is this server's own; the hearers and the caller are other servers' assemblies.

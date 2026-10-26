@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { defineApi, registerApis, reply } from "@assemblejs/core";
-import type { ApiContext } from "@assemblejs/core";
+import { defineApi, registerApis, reply } from "@asmjs/core";
+import type { ApiContext } from "@asmjs/core";
 
 const seen: ApiContext[] = [];
 const app = Fastify({ logger: false });

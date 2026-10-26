@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { createBus } from "@assemblejs/core/client";
-import type { ClientRenderer } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
+import type { ClientRenderer } from "@asmjs/core/client";
 
 describe("a client renderer", () => {
   it("mounts into the element it is given and returns a handle", () => {

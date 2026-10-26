@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 import { placed } from "../shop/orders.js";
 import { FULFILMENT } from "../shop/origins.js";
 import { asked, quote } from "../shop/quote.js";

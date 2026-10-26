@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { insideForm } from "@assemblejs/core";
+import { insideForm } from "@asmjs/core";
 
 const at = (template: string): boolean => insideForm(template, template.indexOf("<assembly"));
 

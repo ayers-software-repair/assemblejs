@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { OUTLINE_STYLES } from "@assemblejs/core";
+import { OUTLINE_STYLES } from "@asmjs/core";
 
 /** Contrast by WCAG 2.2's definitions of relative luminance and contrast ratio. */
 const contrast = (one: string, other: string): number => {

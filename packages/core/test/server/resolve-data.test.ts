@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { defineService, resolveData } from "@assemblejs/core";
-import type { AssemblyView } from "@assemblejs/core";
+import { defineService, resolveData } from "@asmjs/core";
+import type { AssemblyView } from "@asmjs/core";
 
 const context = { query: new URLSearchParams("name=ada"), params: {} };
 const view = (over: Partial<AssemblyView> = {}): AssemblyView => ({

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Events } from "@assemblejs/core/client";
+import type { Events } from "@asmjs/core/client";
 import { useContext } from "solid-js";
 import { EventsContext } from "./events-context.js";
 

@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { EnvelopeFacts } from "@assemblejs/core/outline";
-import { createBox } from "@assemblejs/core/outline";
+import type { EnvelopeFacts } from "@asmjs/core/outline";
+import { createBox } from "@asmjs/core/outline";
 
 const facts: EnvelopeFacts = {
   name: "<img src=x onerror=alert(1)>",

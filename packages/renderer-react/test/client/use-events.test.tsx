@@ -4,8 +4,8 @@
 import { renderToString } from "react-dom/server";
 import { createElement } from "react";
 import { describe, expect, it } from "vitest";
-import { createBus } from "@assemblejs/core/client";
-import { EventsContext, useEvents } from "@assemblejs/renderer-react/client";
+import { createBus } from "@asmjs/core/client";
+import { EventsContext, useEvents } from "@asmjs/renderer-react/client";
 
 const Sender = () => {
   const events = useEvents();

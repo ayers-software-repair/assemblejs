@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { lineEnding } from "@assemblejs/build";
+import { lineEnding } from "@asmjs/build";
 
 const CR = String.fromCharCode(13);
 

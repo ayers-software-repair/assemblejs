@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { RENDERERS } from "@assemblejs/build";
+import { RENDERERS } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
 import {
   AGENT_SERVER,
@@ -10,7 +10,7 @@ import {
   MCP_REGISTRATIONS,
   RULES,
   agentInstructions,
-} from "@assemblejs/check";
+} from "@asmjs/check";
 
 describe("what an agent that opens a project is told", () => {
   const told = agentInstructions();
@@ -45,13 +45,13 @@ describe("what an agent that opens a project is told", () => {
   });
 
   it("says how a service says not found, and what the not-found page is", () => {
-    expect(visible).toContain("throws\n  `new NotFound()`, from `@assemblejs/core`");
+    expect(visible).toContain("throws\n  `new NotFound()`, from `@asmjs/core`");
     expect(visible).toContain("A page named `not-found` has no route");
   });
 
   it("says how an assembly's browser half reaches its own server's apis", () => {
     expect(visible).toContain('`fetch(api("/api/..."))`');
-    expect(visible).toContain("`@assemblejs/core/client`");
+    expect(visible).toContain("`@asmjs/core/client`");
   });
 
   it("names the agent surface, where it is registered, and how to start it where it is not", () => {

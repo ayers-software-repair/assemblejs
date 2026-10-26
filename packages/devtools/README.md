@@ -1,8 +1,8 @@
-# @assemblejs/devtools
+# @asmjs/devtools
 
 Read-only devtools for an AssembleJS server in development.
 
-    import { devtools } from "@assemblejs/devtools";
+    import { devtools } from "@asmjs/devtools";
 
     await serve({ ...project, devtools: devtools() });
 

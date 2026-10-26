@@ -4,9 +4,9 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 import { afterAll, describe, expect, it } from "vitest";
-import { typesProblems } from "@assemblejs/check";
+import { typesProblems } from "@asmjs/check";
 
 // The package that installs React's types, which a project nested in it finds as the bundler
 // would; a project in a temporary directory finds none.

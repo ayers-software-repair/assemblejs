@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { escapeText } from "@assemblejs/core";
+import { escapeText } from "@asmjs/core";
 
 describe("escaping a value that sits between tags", () => {
   it("neutralises a tag", () => {

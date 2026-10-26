@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readStartTag } from "@assemblejs/core";
+import { readStartTag } from "@asmjs/core";
 
 describe("reading one start tag as the browser's tokenizer does", () => {
   it("reads the name and every attribute, with its source as sent", () => {

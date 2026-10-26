@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { outsideProblems } from "@assemblejs/build";
+import { outsideProblems } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 describe("one finding for each path that leads out of the project", () => {

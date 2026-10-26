@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AssemblyView } from "@assemblejs/core";
+import type { AssemblyView } from "@asmjs/core";
 
 describe("one view of one assembly", () => {
   it("declares a renderer, a data function and a markup function", () => {

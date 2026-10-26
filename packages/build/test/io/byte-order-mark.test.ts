@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { BYTE_ORDER_MARK } from "@assemblejs/build";
+import { BYTE_ORDER_MARK } from "@asmjs/build";
 
 describe("the byte order mark", () => {
   it("is the one character U+FEFF, which JSON does not read past", () => {

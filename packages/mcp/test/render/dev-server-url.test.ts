@@ -6,8 +6,8 @@ import type { AddressInfo } from "node:net";
 import { networkInterfaces, tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { devServerUrl, resolveRoot } from "@assemblejs/mcp";
-import type { ProjectRoot } from "@assemblejs/mcp";
+import { devServerUrl, resolveRoot } from "@asmjs/mcp";
+import type { ProjectRoot } from "@asmjs/mcp";
 
 let root: ProjectRoot;
 let dir = "";

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { addressProblems, checkProject, readAddresses } from "@assemblejs/check";
+import { addressProblems, checkProject, readAddresses } from "@asmjs/check";
 
 const pages = [
   { name: "home", route: "/", at: "/p/src/pages/home/home.html" },

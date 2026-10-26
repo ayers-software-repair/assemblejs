@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AssemblyManifest } from "@assemblejs/core";
+import type { AssemblyManifest } from "@asmjs/core";
 
 describe("the manifest", () => {
   it("separates the specification's version from this assembly's output version", () => {

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { insideDirectory } from "@assemblejs/build";
+import { insideDirectory } from "@asmjs/build";
 
 describe("whether a file really lies inside a directory", () => {
   it("follows every link, and reads a name starting with dots as a name", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { accessProblems } from "@assemblejs/core";
+import { accessProblems } from "@asmjs/core";
 
 describe("what is checked about access before anything listens", () => {
   it("passes one control, or none", () => {

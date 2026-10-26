@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { Environment } from "@assemblejs/core";
+import type { Environment } from "@asmjs/core";
 
 describe("the environment", () => {
   it("is a value, which is what makes reading configuration a pure function", () => {

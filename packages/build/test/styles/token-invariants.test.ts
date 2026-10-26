@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { TOKEN_INVARIANTS } from "@assemblejs/build";
+import { TOKEN_INVARIANTS } from "@asmjs/build";
 
 describe("what must be true of the colour roles", () => {
   it("holds each ink to 4.5:1 on each ground, and each accent to 3:1 on the surfaces", () => {

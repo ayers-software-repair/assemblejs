@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { cacheKey } from "@assemblejs/core";
+import { cacheKey } from "@asmjs/core";
 
 describe("the cache key", () => {
   it("is the identity when there is no query", () => {

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { checkProject, missingAssemblyFix } from "@assemblejs/check";
+import { checkProject, missingAssemblyFix } from "@asmjs/check";
 
 describe("what to do about a placement that names no assembly", () => {
   it("is to add it, or to place one of those that exist", () => {

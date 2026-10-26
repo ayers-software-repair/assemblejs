@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { RequiredFailure } from "@assemblejs/core";
-import type { Diagnostic } from "@assemblejs/core";
+import { RequiredFailure } from "@asmjs/core";
+import type { Diagnostic } from "@asmjs/core";
 
 describe("a required failure", () => {
   it("carries the diagnostic, so a dead page names its cause", () => {

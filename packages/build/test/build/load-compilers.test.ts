@@ -5,8 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadCompilers } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { loadCompilers } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 const assembly = (renderer: string): DiscoveredAssembly => ({
   name: renderer,
@@ -40,7 +40,7 @@ describe("loading the compilers a project's views need", () => {
       assembly("solid"),
     ]);
     expect(problems).toEqual(
-      ["svelte", "vue", "@assemblejs/renderer-solid"].map((name) =>
+      ["svelte", "vue", "@asmjs/renderer-solid"].map((name) =>
         expect.objectContaining({ fix: `reinstall ${name}`, rule: "a-view-needs-its-renderer" }),
       ),
     );

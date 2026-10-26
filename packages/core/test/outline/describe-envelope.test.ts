@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { OutlinePlacement } from "@assemblejs/core/outline";
-import { describeEnvelope } from "@assemblejs/core/outline";
+import type { OutlinePlacement } from "@asmjs/core/outline";
+import { describeEnvelope } from "@asmjs/core/outline";
 
 /** The first envelope of some markup, on a page of its own. */
 const envelope = (markup: string, pick = "assembly-root"): Element => {

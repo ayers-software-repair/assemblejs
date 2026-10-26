@@ -111,7 +111,7 @@
             <h2>Install the renderer</h2>
             <dl>
               <div class="item">
-                <dt><code>npm install @assemblejs/renderer-templates</code></dt>
+                <dt><code>npm install @asmjs/renderer-templates@next</code></dt>
                 <dd>
                   One package for the five languages, with no framework to install beside it: the
                   five engines are its own dependencies, and each is imported the first time a
@@ -222,7 +222,7 @@ ships any JavaScript.</code></pre>
                   answers the assembly's data endpoint, so the two cannot disagree. The templates
                   example gives each card a title with markup in it, which the template writes
                   escaped.
-                  <pre><code>import { defineService } from "@assemblejs/core";
+                  <pre><code>import { defineService } from "@asmjs/core";
 
 // A title with markup in it, which the template writes escaped.
 export default defineService({
@@ -360,7 +360,7 @@ export default {
                   Policy, when a placement needs any, lives in the page's own file: a deadline in
                   milliseconds, markup to show when the assembly does not answer, whether its
                   failure fails the page, or a deferral the browser fills after load.
-                  <pre><code>import { definePage } from "@assemblejs/core";
+                  <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { placedBeneath } from "@assemblejs/core";
-import type { PlacedAssembly, ViewPlacement } from "@assemblejs/core";
+import { placedBeneath } from "@asmjs/core";
+import type { PlacedAssembly, ViewPlacement } from "@asmjs/core";
 
 const one = (
   placements: Record<string, readonly ViewPlacement[]> = {},

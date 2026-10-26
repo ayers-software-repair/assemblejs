@@ -7,8 +7,8 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { registerSeeingTools, resolveRoot } from "@assemblejs/mcp";
-import type { ToolResult } from "@assemblejs/mcp";
+import { registerSeeingTools, resolveRoot } from "@asmjs/mcp";
+import type { ToolResult } from "@asmjs/mcp";
 import { devServer } from "../fixtures/dev-server.js";
 
 let dir = "";

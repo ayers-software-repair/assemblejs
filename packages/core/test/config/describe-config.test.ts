@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { describeConfig } from "@assemblejs/core";
+import { describeConfig } from "@asmjs/core";
 
 describe("describing the configuration for the banner", () => {
   it("shows what the server actually read", () => {

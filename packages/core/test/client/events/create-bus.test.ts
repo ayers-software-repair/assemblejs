@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it, vi } from "vitest";
-import { createBus } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
 
 const catalogue = { id: "c1", name: "catalogue", view: "default" };
 const cart = { id: "c2", name: "cart", view: "default" };

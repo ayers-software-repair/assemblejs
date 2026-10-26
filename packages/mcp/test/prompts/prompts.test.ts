@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { PROMPTS } from "@assemblejs/mcp";
+import { PROMPTS } from "@asmjs/mcp";
 
 describe("what a person asks an agent for most", () => {
   it("is an assembly, its place, a page and what check found, in the order a project grows", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { DevtoolsView } from "@assemblejs/core";
-import { DEVTOOLS_ROUTE_PREFIX, escapeText } from "@assemblejs/core";
+import type { DevtoolsView } from "@asmjs/core";
+import { DEVTOOLS_ROUTE_PREFIX, escapeText } from "@asmjs/core";
 
 /** A table of rows of text, each cell escaped, or a line saying there is nothing. */
 const table = (head: readonly string[], rows: readonly (readonly string[])[], none: string) =>

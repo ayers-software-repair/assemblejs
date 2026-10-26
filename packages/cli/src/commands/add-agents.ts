@@ -1,13 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { basename, join } from "node:path";
-import type { Io } from "@assemblejs/build";
-import { outsideProblems } from "@assemblejs/build";
-import { agentFiles } from "@assemblejs/check";
-import { AGENT_SERVER } from "@assemblejs/check";
-import { cannotRegister } from "@assemblejs/check";
-import { manifestOf } from "@assemblejs/check";
-import { textIn } from "@assemblejs/check";
+import type { Io } from "@asmjs/build";
+import { outsideProblems, ownVersion } from "@asmjs/build";
+import { agentFiles } from "@asmjs/check";
+import { AGENT_SERVER } from "@asmjs/check";
+import { cannotRegister } from "@asmjs/check";
+import { manifestOf } from "@asmjs/check";
+import { textIn } from "@asmjs/check";
 import { noProject } from "./no-project.js";
 
 /**
@@ -49,7 +49,9 @@ export function addAgents(root: string, io: Io): number {
     io.log("the agent instructions and registrations are current");
   }
   if (!Object.hasOwn(manifest.dependencies, AGENT_SERVER.package)) {
-    io.log(`\ninstall the server they register: npm install --save-dev ${AGENT_SERVER.package}`);
+    io.log(
+      `\ninstall the server they register: npm install --save-dev ${AGENT_SERVER.package}@${ownVersion(import.meta.url)}`,
+    );
   }
   return 0;
 }

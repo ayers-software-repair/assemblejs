@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 import { STEPS, depot } from "../../depot/shipments.js";
 
 // Where the parcel of the order the page's route names has got to (`/orders/:id`), and how

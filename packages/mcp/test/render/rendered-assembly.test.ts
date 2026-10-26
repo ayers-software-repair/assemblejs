@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { RenderedAssembly } from "@assemblejs/mcp";
+import type { RenderedAssembly } from "@asmjs/mcp";
 
 describe("what rendering answered", () => {
   it("is the markup, the data and the account, together", () => {

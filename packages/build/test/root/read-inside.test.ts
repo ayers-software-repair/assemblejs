@@ -3,7 +3,7 @@
 import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
-import { OutsideRootError, readInside } from "@assemblejs/build";
+import { OutsideRootError, readInside } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 
 describe("a file of the project, as text", () => {

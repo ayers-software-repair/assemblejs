@@ -12,10 +12,10 @@ export default defineConfig({
   esbuild: { jsx: "automatic" },
   resolve: {
     alias: {
-      "@assemblejs/renderer-react/client": src("./src/client/index.ts"),
-      "@assemblejs/renderer-react": src("./src/index.ts"),
-      "@assemblejs/core/client": src("../core/src/client/index.ts"),
-      "@assemblejs/core": src("../core/src/index.ts"),
+      "@asmjs/renderer-react/client": src("./src/client/index.ts"),
+      "@asmjs/renderer-react": src("./src/index.ts"),
+      "@asmjs/core/client": src("../core/src/client/index.ts"),
+      "@asmjs/core": src("../core/src/index.ts"),
     },
   },
 });

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { TEMPLATE_RENDERERS, rendererForView } from "@assemblejs/build";
+import { TEMPLATE_RENDERERS, rendererForView } from "@asmjs/build";
 
 describe("the template renderers", () => {
   it("are the five languages, each the renderer its extension declares", () => {

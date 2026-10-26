@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { leadsTo } from "@assemblejs/mcp";
+import { leadsTo } from "@asmjs/mcp";
 
 const placements = new Map(
   Object.entries({

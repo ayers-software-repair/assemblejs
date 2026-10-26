@@ -9,7 +9,7 @@
  */
 export const AGENT_SERVER = {
   name: "assemblejs",
-  package: "@assemblejs/mcp",
-  path: "node_modules/@assemblejs/mcp/dist/bin.js",
-  commandLine: "@assemblejs/cli",
+  package: "@asmjs/mcp",
+  path: "node_modules/@asmjs/mcp/dist/bin.js",
+  commandLine: "@asmjs/cli",
 } as const;

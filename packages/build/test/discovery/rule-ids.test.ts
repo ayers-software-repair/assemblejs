@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { RULE_IDS } from "@assemblejs/build";
+import { RULE_IDS } from "@asmjs/build";
 
 describe("the rules a project problem can name", () => {
   it("are unique kebab-case ids", () => {

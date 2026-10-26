@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { definePage } from "@assemblejs/core";
+import { definePage } from "@asmjs/core";
 
 // Two assemblies in their own shadow roots, fetched once the page has loaded.
 export default definePage({

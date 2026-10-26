@@ -1,13 +1,13 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { serverImports } from "@assemblejs/cli";
+import { serverImports } from "@asmjs/cli";
 
 describe("the packages a built server imports", () => {
   it("are every bare specifier it imports, exports from or imports at run time, by package", () => {
     const code = [
-      'import { createServer } from "@assemblejs/core";',
-      'import "@assemblejs/renderer-react/server";',
+      'import { createServer } from "@asmjs/core";',
+      'import "@asmjs/renderer-react/server";',
       'export * from "lib/deep/path.js";',
       'export { a } from "other";',
       'const later = () => import("lazy-pkg");',
@@ -18,8 +18,8 @@ describe("the packages a built server imports", () => {
     ].join("\n");
     expect(serverImports(code)).toEqual([
       "#internal/thing.js",
-      "@assemblejs/core",
-      "@assemblejs/renderer-react",
+      "@asmjs/core",
+      "@asmjs/renderer-react",
       "lazy-pkg",
       "lib",
       "other",

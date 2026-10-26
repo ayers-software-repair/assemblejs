@@ -17,7 +17,7 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 
 const step = (text) => console.log(`\n== ${text}`);
 const sh = (command, args, cwd) =>
@@ -29,14 +29,20 @@ const tarballs = join(work, "tarballs");
 // The starter, and every package of ours it writes into a project.
 const packed = ["create", "core", "build", "check", "cli", "mcp"];
 step(`build and pack ${packed.join(", ")}, so the tarballs are the source at this commit`);
-sh("pnpm", [...packed.flatMap((name) => ["--filter", `@assemblejs/${name}`]), "build"], ".");
+sh("pnpm", [...packed.flatMap((name) => ["--filter", `@asmjs/${name}`]), "build"], ".");
+const packedFiles = new Map();
 for (const name of packed) {
-  sh("pnpm", ["pack", "--pack-destination", tarballs], join("packages", name));
+  const { filename } = JSON.parse(
+    sh("pnpm", ["pack", "--json", "--pack-destination", tarballs], join("packages", name)),
+  );
+  const file = join(tarballs, basename(filename));
+  if (!existsSync(file)) throw new Error(`no tarball for ${name}`);
+  packedFiles.set(name, file);
 }
 const tarball = (name) => {
-  const file = readdirSync(tarballs).find((entry) => entry.startsWith(`assemblejs-${name}-`));
+  const file = packedFiles.get(name);
   if (file === undefined) throw new Error(`no tarball for ${name}`);
-  return join(tarballs, file);
+  return file;
 };
 console.log(readdirSync(tarballs).join("\n"));
 
@@ -62,14 +68,14 @@ const manifest = JSON.parse(readFileSync(join(app, "package.json"), "utf8"));
 // command line and the agent surface are development dependencies is part of what this proves.
 for (const field of ["dependencies", "devDependencies"]) {
   for (const name of packed) {
-    if (manifest[field]?.[`@assemblejs/${name}`] !== undefined) {
-      manifest[field][`@assemblejs/${name}`] = `file:${tarball(name)}`;
+    if (manifest[field]?.[`@asmjs/${name}`] !== undefined) {
+      manifest[field][`@asmjs/${name}`] = `file:${tarball(name)}`;
     }
   }
 }
 // One copy of core, the build, the checks and the command line, whoever asks: the tarball.
 manifest.overrides = Object.fromEntries(
-  ["core", "build", "check", "cli"].map((name) => [`@assemblejs/${name}`, `file:${tarball(name)}`]),
+  ["core", "build", "check", "cli"].map((name) => [`@asmjs/${name}`, `file:${tarball(name)}`]),
 );
 writeFileSync(join(app, "package.json"), `${JSON.stringify(manifest, null, 2)}\n`);
 sh("npm", ["install", "--no-audit", "--no-fund"], app);
@@ -79,13 +85,7 @@ console.log(sh("npx", ["assemblejs", "build"], app).trim());
 
 step("prune every development dependency");
 sh("npm", ["prune", "--omit=dev", "--no-audit", "--no-fund"], app);
-for (const gone of [
-  "esbuild",
-  "@assemblejs/build",
-  "@assemblejs/check",
-  "@assemblejs/cli",
-  "@assemblejs/mcp",
-]) {
+for (const gone of ["esbuild", "@asmjs/build", "@asmjs/check", "@asmjs/cli", "@asmjs/mcp"]) {
   if (existsSync(join(app, "node_modules", gone))) throw new Error(`${gone} is still installed`);
   console.log(`${gone}: not installed`);
 }

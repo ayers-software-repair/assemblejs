@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadPug, templatePlacements } from "@assemblejs/build";
+import { loadPug, templatePlacements } from "@asmjs/build";
 
 // The example that installs the templates package, for the Pug a project of its own would have.
 const pug = loadPug(fileURLToPath(new URL("../../../../examples/templates/", import.meta.url)));

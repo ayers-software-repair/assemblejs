@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { useEvents } from "@assemblejs/renderer-solid/client";
+import { useEvents } from "@asmjs/renderer-solid/client";
 import { createSignal, onCleanup, onMount } from "solid-js";
 
 export default function SolidCounter() {

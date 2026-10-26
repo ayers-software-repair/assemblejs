@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it } from "vitest";
-import { MOUNTED_ATTRIBUTE } from "@assemblejs/core";
-import type { EnvelopeStamps } from "@assemblejs/core/outline";
-import { stampEnvelopes } from "@assemblejs/core/outline";
+import { MOUNTED_ATTRIBUTE } from "@asmjs/core";
+import type { EnvelopeStamps } from "@asmjs/core/outline";
+import { stampEnvelopes } from "@asmjs/core/outline";
 
 /** Lets the page tell its observers what has changed. */
 const settle = () => new Promise((resolve) => setTimeout(resolve, 0));

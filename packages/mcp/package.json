@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/mcp",
+  "name": "@asmjs/mcp",
   "version": "1.0.0-next.0",
   "description": "The AssembleJS agent surface: an MCP server so an agent builds with the framework the way a developer does.",
   "license": "Apache-2.0",
@@ -51,10 +51,10 @@
     "vitest": "4.1.11"
   },
   "dependencies": {
-    "@assemblejs/build": "workspace:*",
-    "@assemblejs/check": "workspace:*",
-    "@assemblejs/cli": "workspace:*",
-    "@assemblejs/core": "workspace:*",
+    "@asmjs/build": "workspace:*",
+    "@asmjs/check": "workspace:*",
+    "@asmjs/cli": "workspace:*",
+    "@asmjs/core": "workspace:*",
     "zod": "4.5.4"
   },
   "peerDependencies": {

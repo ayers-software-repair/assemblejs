@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { renderToString } from "preact-render-to-string";
 import { describe, expect, it } from "vitest";
-import { findPlacements } from "@assemblejs/core";
-import { Slot } from "@assemblejs/renderer-preact/client";
+import { findPlacements } from "@asmjs/core";
+import { Slot } from "@asmjs/renderer-preact/client";
 
 describe("placing a child assembly", () => {
   it("writes the directive the composer replaces, inside the slot's element", () => {

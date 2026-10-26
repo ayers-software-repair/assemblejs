@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
-import type { DiscoveredAssembly, ProjectProblem } from "@assemblejs/build";
-import { findPackage } from "@assemblejs/build";
+import type { DiscoveredAssembly, ProjectProblem } from "@asmjs/build";
+import { findPackage } from "@asmjs/build";
 
 // The packages a React view is checked against. React ships no types of its own.
 const REACT_TYPES = ["@types/react", "@types/react-dom"] as const;

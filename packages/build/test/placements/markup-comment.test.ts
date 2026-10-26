@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { MARKUP_COMMENT } from "@assemblejs/build";
+import { MARKUP_COMMENT } from "@asmjs/build";
 
 describe("a comment in a component's markup", () => {
   it("is each one whole, over as many lines as it takes, and nothing between two", () => {

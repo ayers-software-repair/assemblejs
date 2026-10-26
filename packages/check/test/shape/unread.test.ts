@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { SEGMENT } from "@assemblejs/core";
+import { SEGMENT } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD } from "@assemblejs/check";
+import { COMPUTED, UNREAD } from "@asmjs/check";
 
 describe("the mark on what a file that cannot be read would have said", () => {
   it("is one word, and never the mark of a value that is computed", () => {

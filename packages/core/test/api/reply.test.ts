@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isReply, reply } from "@assemblejs/core";
+import { isReply, reply } from "@asmjs/core";
 
 // R-16, the owner's "Apis learn who is asking, pages do not" (2026-10-12): an api may answer
 // with a status, a cookie or a redirect, through one maker a plain JSON answer can never be

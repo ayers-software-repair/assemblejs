@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isReply, reply } from "@assemblejs/core";
+import { isReply, reply } from "@asmjs/core";
 
 describe("telling a reply from a JSON answer", () => {
   it("takes what reply made", () => {

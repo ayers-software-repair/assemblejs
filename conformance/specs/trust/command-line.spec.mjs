@@ -67,8 +67,8 @@ test("deploy writes a directory that runs on its own, with no bundler and no dev
   const manifest = JSON.parse(readFileSync(join(deploy, "package.json"), "utf8"));
   assert.deepEqual(manifest.scripts, { start: "node dist/server.js" });
   assert.ok(!("devDependencies" in manifest), "nothing a running server does not need");
-  assert.ok("@assemblejs/core" in manifest.dependencies);
-  assert.ok(!("@assemblejs/cli" in manifest.dependencies), "the command line is not shipped");
+  assert.ok("@asmjs/core" in manifest.dependencies);
+  assert.ok(!("@asmjs/cli" in manifest.dependencies), "the command line is not shipped");
   // Moved away from the project, so nothing of the project's own node_modules is in reach, and
   // installed with what its own package.json says, as a deployment would.
   const elsewhere = mkdtempSync(join(tmpdir(), "assemblejs-deployed-"));
@@ -78,7 +78,7 @@ test("deploy writes a directory that runs on its own, with no bundler and no dev
       cwd: elsewhere,
       stdio: ["ignore", "ignore", "pipe"],
     });
-    for (const absent of ["esbuild", "@assemblejs/cli"]) {
+    for (const absent of ["esbuild", "@asmjs/cli"]) {
       assert.ok(!existsSync(join(elsewhere, "node_modules", absent)), `${absent} was installed`);
     }
     const server = await started(elsewhere, { ASSEMBLEJS_MODE: "production" });

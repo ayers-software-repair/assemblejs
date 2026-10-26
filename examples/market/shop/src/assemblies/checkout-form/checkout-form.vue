@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useEvents } from "@assemblejs/renderer-vue/client";
+import { useEvents } from "@asmjs/renderer-vue/client";
 import { onMounted, ref } from "vue";
 import { basket } from "../../browser/basket.js";
 

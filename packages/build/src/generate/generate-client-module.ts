@@ -21,7 +21,7 @@ export function generateClientModule(
     return `${GENERATED_HEADER}export { default } from "${importPath(from, assembly.client ?? assembly.view)}";
 `;
   }
-  return `${GENERATED_HEADER}import { hydrate } from "${rendererPackage ?? `@assemblejs/renderer-${assembly.renderer}`}/client";
+  return `${GENERATED_HEADER}import { hydrate } from "${rendererPackage ?? `@asmjs/renderer-${assembly.renderer}`}/client";
 ${importOf("View", from, assembly.view)}
 
 export default hydrate(View);

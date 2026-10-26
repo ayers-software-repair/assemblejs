@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ScannedTag } from "@assemblejs/core";
+import type { ScannedTag } from "@asmjs/core";
 
 describe("a start tag read from a remote's answer", () => {
   it("says where it sits, so it can be rewritten in place", () => {

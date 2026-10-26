@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readBudgets } from "@assemblejs/check";
+import { readBudgets } from "@asmjs/check";
 
 describe("the page budgets a config declares", () => {
   it("reads each part's bytes as written, and none from a config that declares none", () => {

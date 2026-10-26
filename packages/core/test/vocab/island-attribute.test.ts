@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ENVELOPE_ATTRIBUTE, ISLAND_ATTRIBUTE, renderEnvelope } from "@assemblejs/core";
+import { ENVELOPE_ATTRIBUTE, ISLAND_ATTRIBUTE, renderEnvelope } from "@asmjs/core";
 
 describe("the attribute on the island's script", () => {
   it("carries the id of the envelope the data belongs to", () => {

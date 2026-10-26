@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 import { placed } from "../../shop/orders.js";
 
 const price = (cents: number): string => `$${(cents / 100).toFixed(2)}`;

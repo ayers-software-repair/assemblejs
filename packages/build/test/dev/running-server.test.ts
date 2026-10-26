@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { RunningServer } from "@assemblejs/build";
+import type { RunningServer } from "@asmjs/build";
 
 describe("a built server dev holds", () => {
   it("says when it is listening and can be stopped", async () => {

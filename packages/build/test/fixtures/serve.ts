@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { freePort, realIo, startServer } from "@assemblejs/build";
+import { freePort, realIo, startServer } from "@asmjs/build";
 
 /**
  * What a built project's server answers at one path.

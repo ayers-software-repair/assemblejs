@@ -19,7 +19,7 @@ const watched = async () => {
       return await original();
     });
   }
-  const loaded = await import("@assemblejs/renderer-templates");
+  const loaded = await import("@asmjs/renderer-templates");
   return { imported, loaded };
 };
 
@@ -47,7 +47,7 @@ describe("loading a template engine", () => {
       if (attempts === 1) throw new Error("not installed");
       return await original();
     });
-    const { loadCompiler } = await import("@assemblejs/renderer-templates");
+    const { loadCompiler } = await import("@asmjs/renderer-templates");
     await expect(loadCompiler("nunjucks")).rejects.toThrow();
     expect(typeof (await loadCompiler("nunjucks"))).toBe("function");
   });

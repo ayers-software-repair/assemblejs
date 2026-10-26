@@ -4,7 +4,7 @@ import { createServer } from "node:http";
 import type { IncomingHttpHeaders } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { devServerFetch } from "@assemblejs/mcp";
+import { devServerFetch } from "@asmjs/mcp";
 
 const asked: { url: string; headers: IncomingHttpHeaders }[] = [];
 const server = createServer((request, response) => {

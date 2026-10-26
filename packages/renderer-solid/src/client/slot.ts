@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { placementDirective } from "@assemblejs/core/client";
+import { placementDirective } from "@asmjs/core/client";
 import { createComponent } from "solid-js";
 import type { JSX } from "solid-js";
 import { Dynamic } from "solid-js/web";

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { PagePlacement } from "@assemblejs/core";
+import type { PagePlacement } from "@asmjs/core";
 
 describe("policy for one placement", () => {
   it("is all optional, because a local placement needs none", () => {

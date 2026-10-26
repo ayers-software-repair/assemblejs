@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { beforeEach, describe, expect, it } from "vitest";
-import { createBus, openPageStream } from "@assemblejs/core/client";
+import { createBus, openPageStream } from "@asmjs/core/client";
 import { fakeStream } from "../fixtures/fake-stream.js";
 
 beforeEach(() => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { OutlinePlacement } from "@assemblejs/core/outline";
+import type { OutlinePlacement } from "@asmjs/core/outline";
 
 describe("how one placement was answered, as an outline is told", () => {
   it("holds its children as the composer's account does, and no reason and no cause", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 // A real project, made the way a user makes one: the starter run from its tarball, the
-// fixture's files laid over what it wrote, every @assemblejs package installed from its
+// fixture's files laid over what it wrote, every @asmjs package installed from its
 // tarball, the ones the starter wrote where it put them, and the build run by the command line
 // the project installed.
 import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -26,7 +26,7 @@ const peersOf = (name) => {
   );
   return Object.fromEntries(
     Object.keys(manifest.peerDependencies ?? {})
-      .filter((peer) => !peer.startsWith("@assemblejs/"))
+      .filter((peer) => !peer.startsWith("@asmjs/"))
       .map((peer) => {
         const pin = manifest.devDependencies?.[peer];
         if (pin === undefined) throw new Error(`${name} pins no version of its peer ${peer}`);
@@ -59,7 +59,7 @@ export function project(fixture, work, tarball, packages) {
   const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
   manifest.dependencies ??= {};
   manifest.devDependencies ??= {};
-  const ours = "@assemblejs/";
+  const ours = "@asmjs/";
   // Each package of ours the starter wrote is pointed at its tarball where the starter put it,
   // never moved: which of them a running server needs is part of what a project is.
   for (const field of ["dependencies", "devDependencies"]) {

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { PageBudgets } from "@assemblejs/core";
+import type { PageBudgets } from "@asmjs/core";
 import { formatSize } from "./format-size.js";
 import { PAGE_PARTS } from "./page-parts.js";
 import type { PageWeight } from "./page-weight.js";

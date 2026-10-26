@@ -6,10 +6,10 @@ import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildProject, realIo } from "@assemblejs/build";
-import { MCP_REGISTRATIONS, agentFiles, runCheck, runPerf } from "@assemblejs/check";
+import { buildProject, realIo } from "@asmjs/build";
+import { MCP_REGISTRATIONS, agentFiles, runCheck, runPerf } from "@asmjs/check";
 import { describe, expect, it } from "vitest";
-import { projectFiles } from "@assemblejs/cli";
+import { projectFiles } from "@asmjs/cli";
 import { capture } from "../../../build/test/fixtures/capture.js";
 import { serve } from "../../../build/test/fixtures/serve.js";
 
@@ -32,10 +32,10 @@ describe("the smallest project that runs", () => {
       dependencies: Record<string, string>;
       devDependencies: Record<string, string>;
     };
-    expect(manifest.dependencies["@assemblejs/core"]).toBe(`^${own}`);
+    expect(manifest.dependencies["@asmjs/core"]).toBe(`^${own}`);
     expect(manifest.devDependencies).toEqual({
-      "@assemblejs/cli": `^${own}`,
-      "@assemblejs/mcp": `^${own}`,
+      "@asmjs/cli": `^${own}`,
+      "@asmjs/mcp": `^${own}`,
       "@types/node": `^${pinned["@types/node"]}`,
       typescript: `^${pinned["typescript"]}`,
     });
@@ -88,7 +88,7 @@ describe("the smallest project that runs", () => {
     const manifest = JSON.parse(files["package.json"] ?? "{}") as {
       dependencies: Record<string, string>;
     };
-    expect(Object.keys(manifest.dependencies)).toEqual(["@assemblejs/core"]);
+    expect(Object.keys(manifest.dependencies)).toEqual(["@asmjs/core"]);
   });
 
   it("starts with the project's tokens, the one place its look is set, and the components styled by them", () => {
@@ -119,7 +119,7 @@ describe("the smallest project that runs", () => {
     const script = `import { projectFiles } from ${JSON.stringify(dist)};
 const files = projectFiles("probe");
 const manifest = JSON.parse(files["package.json"]);
-console.log(JSON.stringify({ cli: manifest.devDependencies["@assemblejs/cli"], hello: files["src/assemblies/hello/hello.html"] }));`;
+console.log(JSON.stringify({ cli: manifest.devDependencies["@asmjs/cli"], hello: files["src/assemblies/hello/hello.html"] }));`;
     const out = execFileSync(process.execPath, ["--input-type=module", "-e", script], {
       encoding: "utf8",
     });
@@ -162,7 +162,7 @@ describe("building a project with styles and no browser script", { timeout: 60_0
   });
 });
 
-// Nested in this package, so the project resolves @assemblejs/core and @types/node as installed.
+// Nested in this package, so the project resolves @asmjs/core and @types/node as installed.
 const cliRoot = fileURLToPath(new URL("../../", import.meta.url));
 
 describe("what the checks make of a new project", { timeout: 60_000 }, () => {
@@ -211,7 +211,7 @@ describe("what the checks make of a new project", { timeout: 60_000 }, () => {
       );
       realIo.write(
         join(root, "src", "pages", "shop", "shop.page.ts"),
-        'import { definePage } from "@assemblejs/core";\nexport default definePage({ route: "/store" });\n',
+        'import { definePage } from "@asmjs/core";\nexport default definePage({ route: "/store" });\n',
       );
       const { io, logs, errors } = capture();
       expect(await runPerf(root, io)).toBe(0);

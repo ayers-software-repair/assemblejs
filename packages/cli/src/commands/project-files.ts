@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { docsAddress, ownVersion } from "@assemblejs/build";
-import { agentFiles } from "@assemblejs/check";
-import { MCP_REGISTRATIONS } from "@assemblejs/check";
+import { docsAddress, ownVersion } from "@asmjs/build";
+import { agentFiles } from "@asmjs/check";
+import { MCP_REGISTRATIONS } from "@asmjs/check";
 import { COMPONENTS } from "./components.js";
 import { ownPin } from "./own-pin.js";
 import { pageDocument } from "./page-document.js";
@@ -40,10 +40,10 @@ export function projectFiles(name: string, manager = "npm"): Readonly<Record<str
           start: "node dist/server.js",
           typecheck: "assemblejs build && tsc -b",
         },
-        dependencies: { "@assemblejs/core": range },
+        dependencies: { "@asmjs/core": range },
         devDependencies: {
-          "@assemblejs/cli": range,
-          "@assemblejs/mcp": range,
+          "@asmjs/cli": range,
+          "@asmjs/mcp": range,
           "@types/node": tool("@types/node"),
           typescript: tool("typescript"),
         },
@@ -56,7 +56,7 @@ export function projectFiles(name: string, manager = "npm"): Readonly<Record<str
 
     ".gitignore": ["node_modules/", "dist/", ".assemblejs/", "deploy/", ""].join("\n"),
 
-    "src/server.ts": `import { serve } from "@assemblejs/core";
+    "src/server.ts": `import { serve } from "@asmjs/core";
 import project from "../.assemblejs/project.js";
 
 await serve(project);

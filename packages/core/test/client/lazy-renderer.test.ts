@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createBus, lazyRenderer } from "@assemblejs/core/client";
-import type { ClientRenderer, MountContext } from "@assemblejs/core/client";
+import { createBus, lazyRenderer } from "@asmjs/core/client";
+import type { ClientRenderer, MountContext } from "@asmjs/core/client";
 
 const context = (name: string): MountContext => ({
   id: `${name}-1`,

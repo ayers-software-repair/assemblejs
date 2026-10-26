@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { RemoteDefinition } from "@assemblejs/core";
+import type { RemoteDefinition } from "@asmjs/core";
 
 describe("a declared remote", () => {
   it("is an exact origin, the request headers it is given and whether it is trusted with the query, none by default", () => {

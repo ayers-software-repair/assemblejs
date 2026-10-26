@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { fromRoot } from "@assemblejs/build";
+import { fromRoot } from "@asmjs/build";
 
 describe("a path as a finding or a shape shows it", () => {
   it("is from the project's root, with forward slashes whatever wrote it", () => {

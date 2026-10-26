@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { matchesBasic } from "@assemblejs/core";
+import { matchesBasic } from "@asmjs/core";
 
 const basic = (pair: string) => `Basic ${Buffer.from(pair).toString("base64")}`;
 const credentials = { user: "ada", password: "s3cret:with:colons" };

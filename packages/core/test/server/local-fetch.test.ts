@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { countPlacements, defineAssembly, defineService, localFetch } from "@assemblejs/core";
-import type { AssemblyRequest, Diagnostic, LogLine } from "@assemblejs/core";
+import { countPlacements, defineAssembly, defineService, localFetch } from "@asmjs/core";
+import type { AssemblyRequest, Diagnostic, LogLine } from "@asmjs/core";
 
 const hello = defineAssembly({
   name: "hello",

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { countPlacements, createServer, defineAssembly, placementCache } from "@assemblejs/core";
-import type { Admit, AssemblyPlan, ContentCache, Diagnostic, SettleInput } from "@assemblejs/core";
+import { countPlacements, createServer, defineAssembly, placementCache } from "@asmjs/core";
+import type { Admit, AssemblyPlan, ContentCache, Diagnostic, SettleInput } from "@asmjs/core";
 
 const memory = (): ContentCache & { store: Map<string, string> } => {
   const store = new Map<string, string>();

@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { StreamContext } from "@assemblejs/core";
+import type { StreamContext } from "@asmjs/core";
 
 // What is on the shelves, kept by the shop: the catalogue says what a thing is, the shop knows
 // how many it has. Held in memory, as a showcase holds it; a real shop would ask a database.

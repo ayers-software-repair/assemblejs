@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ToolResult } from "@assemblejs/mcp";
+import type { ToolResult } from "@asmjs/mcp";
 
 describe("what a tool answers with", () => {
   it("is a structure, and carries what to do next", () => {

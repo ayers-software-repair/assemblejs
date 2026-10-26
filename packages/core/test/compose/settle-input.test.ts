@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { countPlacements } from "@assemblejs/core";
-import type { SettleInput } from "@assemblejs/core";
+import { countPlacements } from "@asmjs/core";
+import type { SettleInput } from "@asmjs/core";
 
 describe("what settling a placement needs", () => {
   it("includes the clock and the id source, so the function owns neither", () => {

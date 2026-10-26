@@ -4,11 +4,11 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { realIo, startServer } from "@assemblejs/build";
-import { freePort } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { realIo, startServer } from "@asmjs/build";
+import { freePort } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 import { afterAll, describe, expect, it } from "vitest";
-import { projectFiles, runDeploy } from "@assemblejs/cli";
+import { projectFiles, runDeploy } from "@asmjs/cli";
 
 // Nested in an example, so the deploy resolves the workspace's packages as one whose
 // dependencies were installed would.
@@ -52,7 +52,7 @@ describe("the deploy verb", { timeout: 60_000 }, () => {
     expect(manifest["scripts"]).toEqual({ start: "node dist/server.js" });
     expect(manifest).not.toHaveProperty("devDependencies");
     // Every package the server imports is one the deploy installs.
-    expect(Object.keys(manifest["dependencies"] as object)).toContain("@assemblejs/core");
+    expect(Object.keys(manifest["dependencies"] as object)).toContain("@asmjs/core");
     expect(await serveDeploy("/")).toContain("Hello from AssembleJS");
   });
 
@@ -96,13 +96,13 @@ describe("the deploy verb", { timeout: 60_000 }, () => {
         JSON.stringify({
           name: "unlisted",
           dependencies: {},
-          devDependencies: { "@assemblejs/core": "^1.0.0" },
+          devDependencies: { "@asmjs/core": "^1.0.0" },
         }),
       );
       const errors: string[] = [];
       expect(await runDeploy(at, { ...quiet, error: (line) => errors.push(line) })).toBe(1);
       expect(errors.join()).toMatch(
-        /imports @assemblejs\/core, which package.json lists only in devDependencies/,
+        /imports @asmjs\/core, which package.json lists only in devDependencies/,
       );
       expect(existsSync(join(at, "deploy"))).toBe(false);
     } finally {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { rendererForView } from "@assemblejs/build";
+import { rendererForView } from "@asmjs/build";
 
 describe("choosing a renderer from a file name", () => {
   it("reads an unambiguous extension directly", () => {

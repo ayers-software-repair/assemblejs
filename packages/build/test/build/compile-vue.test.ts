@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
 import { beforeAll, describe, expect, it } from "vitest";
-import { compileVue, loadVueCompiler } from "@assemblejs/build";
-import type { VueCompiler } from "@assemblejs/build";
+import { compileVue, loadVueCompiler } from "@asmjs/build";
+import type { VueCompiler } from "@asmjs/build";
 
 const example = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));
 let compiler: VueCompiler;

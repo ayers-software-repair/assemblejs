@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { PageDeclaration } from "@assemblejs/core";
+import type { PageDeclaration } from "@asmjs/core";
 
 describe("what a page's own file declares", () => {
   it("is a route and placement policy, both optional, and never the template", () => {

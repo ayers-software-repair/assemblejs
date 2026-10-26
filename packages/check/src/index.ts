@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-/** @module @assemblejs/check */
+/** @module @asmjs/check */
 export * from "./rules/index.js";
 export * from "./check/index.js";
 export * from "./shape/index.js";

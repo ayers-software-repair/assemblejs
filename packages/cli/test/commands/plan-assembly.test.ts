@@ -3,9 +3,9 @@
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildProject, realIo } from "@assemblejs/build";
+import { buildProject, realIo } from "@asmjs/build";
 import { afterAll, describe, expect, it } from "vitest";
-import { planAssembly, projectFiles } from "@assemblejs/cli";
+import { planAssembly, projectFiles } from "@asmjs/cli";
 import { capture } from "../../../build/test/fixtures/capture.js";
 import { serve } from "../../../build/test/fixtures/serve.js";
 
@@ -130,7 +130,7 @@ describe("building what the command line scaffolds, in Solid and Lit", { timeout
     expect(await serve(everyFramework, "/assembly/badge/")).toContain("<!--lit-part");
     // Lit's hydration support is installed before anything else in the browser entry.
     const entry = readFileSync(join(everyFramework, ".assemblejs", "client.ts"), "utf8");
-    expect(entry).toMatch(/^import "@assemblejs\/renderer-lit\/hydration-support";$/m);
+    expect(entry).toMatch(/^import "@asmjs\/renderer-lit\/hydration-support";$/m);
     expect(entry.indexOf("hydration-support")).toBeLessThan(entry.indexOf("badge"));
   });
 });

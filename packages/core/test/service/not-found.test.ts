@@ -8,8 +8,8 @@ import {
   defineAssembly,
   defineService,
   localFetch,
-} from "@assemblejs/core";
-import type { Fetch, LogLine } from "@assemblejs/core";
+} from "@asmjs/core";
+import type { Fetch, LogLine } from "@asmjs/core";
 
 describe("a service saying not found", () => {
   it("is an error of its own kind, its message for the log alone", () => {

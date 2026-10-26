@@ -3,9 +3,9 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { discoverPages, realIo } from "@assemblejs/build";
+import { discoverPages, realIo } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, NO_ROUTE, UNREAD, readPageShape } from "@assemblejs/check";
+import { COMPUTED, NO_ROUTE, UNREAD, readPageShape } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const TEMPLATE =
@@ -40,7 +40,7 @@ describe("one page, read from its sources", () => {
     const shape = page({
       "shop/shop.html": TEMPLATE,
       "shop/shop.page.ts":
-        'import { definePage } from "@assemblejs/core";\nexport default definePage({ route: "/store", place: { cart: { defer: true, timeout: 800 } }, stream: "/api/prices" });',
+        'import { definePage } from "@asmjs/core";\nexport default definePage({ route: "/store", place: { cart: { defer: true, timeout: 800 } }, stream: "/api/prices" });',
     });
     expect(shape).toMatchObject({
       route: "/store",

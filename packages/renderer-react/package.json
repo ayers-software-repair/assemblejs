@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/renderer-react",
+  "name": "@asmjs/renderer-react",
   "version": "1.0.0-next.0",
   "description": "Write an AssembleJS assembly in React.",
   "license": "Apache-2.0",
@@ -46,13 +46,13 @@
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "peerDependencies": {
-    "@assemblejs/core": "1.0.0-next.0",
+    "@asmjs/core": "1.0.0-next.0",
     "react": ">=18.3",
     "react-dom": ">=18.3"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
-    "@assemblejs/core": "workspace:*",
+    "@asmjs/core": "workspace:*",
     "@types/node": "26.4.1",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",

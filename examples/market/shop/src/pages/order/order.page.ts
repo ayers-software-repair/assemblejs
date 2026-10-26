@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { definePage } from "@assemblejs/core";
+import { definePage } from "@asmjs/core";
 import { FULFILMENT, from } from "../../shop/origins.js";
 
 // The order is the shop's; where the parcel is, is the fulfilment team's, asked of their server

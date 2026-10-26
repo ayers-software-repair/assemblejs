@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { loadVueCompiler } from "@assemblejs/build";
-import type { VueCompiler } from "@assemblejs/build";
+import { loadVueCompiler } from "@asmjs/build";
+import type { VueCompiler } from "@asmjs/build";
 
 describe("the functions of Vue's compiler a build calls", () => {
   it("are the project's own Vue's", async () => {

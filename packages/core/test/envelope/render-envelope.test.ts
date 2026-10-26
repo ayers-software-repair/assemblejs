@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { renderEnvelope } from "@assemblejs/core";
-import type { EnvelopeInput } from "@assemblejs/core";
+import { renderEnvelope } from "@asmjs/core";
+import type { EnvelopeInput } from "@asmjs/core";
 
 const input = (over: Partial<EnvelopeInput> = {}): EnvelopeInput => ({
   id: "a7f3",

@@ -1,12 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { UNWRITTEN, readDefaultExport } from "@assemblejs/check";
+import { UNWRITTEN, readDefaultExport } from "@asmjs/check";
 
 describe("reading what a module default-exports without running it", () => {
   it("reads the argument of the call it is, literals kept and anything computed undefined", () => {
     // A number, a negated number, a boolean and null are literals too, kept as written.
-    const source = `import { definePage } from "@assemblejs/core";
+    const source = `import { definePage } from "@asmjs/core";
       const quote = /"/;
       const base: string = "https://a.example";
       export default definePage({

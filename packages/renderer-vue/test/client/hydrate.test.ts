@@ -1,12 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
-import { createBus } from "@assemblejs/core/client";
+import { createBus } from "@asmjs/core/client";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, h, nextTick, onMounted, ref, useId } from "vue";
 import type { PropType } from "vue";
-import { renderToMarkup } from "@assemblejs/renderer-vue";
-import { Slot, hydrate, useEvents } from "@assemblejs/renderer-vue/client";
+import { renderToMarkup } from "@asmjs/renderer-vue";
+import { Slot, hydrate, useEvents } from "@asmjs/renderer-vue/client";
 
 const Counter = defineComponent({
   props: { data: { type: Object as PropType<Record<string, unknown>>, required: true } },

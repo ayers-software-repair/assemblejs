@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { MarkupInput } from "@assemblejs/core";
-import { serverEvents } from "@assemblejs/core/client";
+import type { MarkupInput } from "@asmjs/core";
+import { serverEvents } from "@asmjs/core/client";
 import { createSSRApp } from "vue";
 import type { Component } from "vue";
 import { renderToString } from "vue/server-renderer";

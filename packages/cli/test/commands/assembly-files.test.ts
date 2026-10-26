@@ -3,9 +3,9 @@
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildProject, realIo } from "@assemblejs/build";
+import { buildProject, realIo } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { assemblyFiles, planAssembly, projectFiles } from "@assemblejs/cli";
+import { assemblyFiles, planAssembly, projectFiles } from "@asmjs/cli";
 import { builtScripts } from "../../../build/test/fixtures/built-scripts.js";
 import { capture } from "../../../build/test/fixtures/capture.js";
 import { serve } from "../../../build/test/fixtures/serve.js";
@@ -29,7 +29,7 @@ describe("what a new assembly is made of", () => {
     expect(svelte).not.toContain("export default function");
     // Its props are typed by the renderer's own type, as every other view the scaffold writes:
     // untyped, a new view read its data and its events as `any`.
-    expect(svelte).toContain('import type { AssemblyProps } from "@assemblejs/renderer-svelte";');
+    expect(svelte).toContain('import type { AssemblyProps } from "@asmjs/renderer-svelte";');
     expect(svelte).toContain("let { data }: AssemblyProps = $props();");
     const react = Object.values(assemblyFiles("cart-item", "react") ?? {})[0] ?? "";
     // A React component's name starts with a capital, or React treats it as an html tag.

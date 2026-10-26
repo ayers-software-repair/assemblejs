@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { headEnd } from "@assemblejs/core";
+import { headEnd } from "@asmjs/core";
 
 describe("where something for a document's head goes", () => {
   it("is before the first closing head tag the browser reads as one", () => {

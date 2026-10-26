@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineConfig } from "@assemblejs/core";
+import { defineConfig } from "@asmjs/core";
 
 export default defineConfig({
   // Where `perf` weighs the two pages whose route has a parameter.

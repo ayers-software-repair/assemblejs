@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AssemblyPlan } from "@assemblejs/core";
+import type { AssemblyPlan } from "@asmjs/core";
 
 describe("a placement", () => {
   it("needs only a name, a view and a finite deadline", () => {

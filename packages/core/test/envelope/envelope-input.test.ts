@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { EnvelopeInput } from "@assemblejs/core";
+import type { EnvelopeInput } from "@asmjs/core";
 
 describe("what the envelope is built from", () => {
   it("treats the assembly's own markup as the one verbatim value", () => {

@@ -1,4 +1,4 @@
-# @assemblejs/renderer-svelte
+# @asmjs/renderer-svelte
 
 Write an AssembleJS assembly in Svelte.
 
@@ -13,7 +13,7 @@ assembly in the other with nothing in between.
 A view types what it is handed by the renderer's own type, its data and its events:
 
     <script lang="ts">
-      import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+      import type { AssemblyProps } from "@asmjs/renderer-svelte";
 
       let { data, events }: AssemblyProps<{ label: string }> = $props();
     </script>

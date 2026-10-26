@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { DevtoolsView, LogLine } from "@assemblejs/core";
+import type { DevtoolsView, LogLine } from "@asmjs/core";
 
 /** A view of a small project, its text chosen to show whether the overview escapes it. */
 export const view = (failures: readonly LogLine[] = []): DevtoolsView => ({

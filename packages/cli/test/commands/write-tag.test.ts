@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { writeTag } from "@assemblejs/cli";
+import { writeTag } from "@asmjs/cli";
 
 const TAG = "<x-tag></x-tag>";
 const CR = String.fromCharCode(13);

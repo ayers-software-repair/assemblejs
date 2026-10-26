@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Diagnostic } from "@assemblejs/core";
+import type { Diagnostic } from "@asmjs/core";
 
 /**
  * What composing a page answered: the markup, and one account per placement.

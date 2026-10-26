@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { afterEach, describe, expect, it } from "vitest";
-import { createServer, DEVTOOLS_ROUTE_PREFIX } from "@assemblejs/core";
-import type { App, Devtools, DevtoolsView, LogLine } from "@assemblejs/core";
+import { createServer, DEVTOOLS_ROUTE_PREFIX } from "@asmjs/core";
+import type { App, Devtools, DevtoolsView, LogLine } from "@asmjs/core";
 
 const seen: DevtoolsView[] = [];
 const devtools: Devtools = {

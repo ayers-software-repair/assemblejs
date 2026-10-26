@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/example-two-frameworks",
+  "name": "@asmjs/example-two-frameworks",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,16 +10,16 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@assemblejs/core": "workspace:*",
-    "@assemblejs/devtools": "workspace:*",
-    "@assemblejs/renderer-react": "workspace:*",
-    "@assemblejs/renderer-svelte": "workspace:*",
+    "@asmjs/core": "workspace:*",
+    "@asmjs/devtools": "workspace:*",
+    "@asmjs/renderer-react": "workspace:*",
+    "@asmjs/renderer-svelte": "workspace:*",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "svelte": "5.57.0"
   },
   "devDependencies": {
-    "@assemblejs/cli": "workspace:*",
+    "@asmjs/cli": "workspace:*",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5"
   }

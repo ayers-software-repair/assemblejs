@@ -1,5 +1,5 @@
 {
-  "name": "@assemblejs/renderer-svelte",
+  "name": "@asmjs/renderer-svelte",
   "version": "1.0.0-next.0",
   "description": "Write an AssembleJS assembly in Svelte.",
   "license": "Apache-2.0",
@@ -46,12 +46,12 @@
     "check:publish": "publint && attw --pack . --profile esm-only"
   },
   "peerDependencies": {
-    "@assemblejs/core": "1.0.0-next.0",
+    "@asmjs/core": "1.0.0-next.0",
     "svelte": ">=5"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
-    "@assemblejs/core": "workspace:*",
+    "@asmjs/core": "workspace:*",
     "@sveltejs/vite-plugin-svelte": "7.3.0",
     "@types/node": "26.4.1",
     "publint": "0.3.24",

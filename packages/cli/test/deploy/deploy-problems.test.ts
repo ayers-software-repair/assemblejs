@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { deployProblems } from "@assemblejs/cli";
+import { deployProblems } from "@asmjs/cli";
 
 describe("what would make a deploy fail where it is installed", () => {
   it("passes imports the project lists in its dependencies", () => {

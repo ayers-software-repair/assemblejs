@@ -27,7 +27,7 @@ export function generateClientEntry(
   const setup = [...new Set(setups)]
     .map((module) => `import ${JSON.stringify(module)};\n`)
     .join("");
-  return `${GENERATED_HEADER}${setup}import { lazyRenderer, start } from "@assemblejs/core/client";
+  return `${GENERATED_HEADER}${setup}import { lazyRenderer, start } from "@asmjs/core/client";
 
 const renderer = lazyRenderer({
 ${modules}

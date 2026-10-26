@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { MarkupInput } from "@assemblejs/core";
+import type { MarkupInput } from "@asmjs/core";
 import type { CompiledTemplate } from "../engine/compiled-template.js";
 import { loadCompiler } from "../engine/load-compiler.js";
 import type { TemplateEngine } from "../engine/template-engine.js";

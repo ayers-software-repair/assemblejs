@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import { EventEmitter } from "node:events";
 import { describe, expect, it } from "vitest";
-import { exitOnUnhandled } from "@assemblejs/core";
-import type { LogLine } from "@assemblejs/core";
+import { exitOnUnhandled } from "@asmjs/core";
+import type { LogLine } from "@asmjs/core";
 
 describe("a failure nothing handled", () => {
   it("is logged against a correlation id, and ends the process", () => {

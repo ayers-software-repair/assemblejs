@@ -1,9 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { fileURLToPath } from "node:url";
-import { findPlacements } from "@assemblejs/core";
+import { findPlacements } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { loadPug, pugMarkup, pugTree } from "@assemblejs/build";
+import { loadPug, pugMarkup, pugTree } from "@asmjs/build";
 
 const templates = fileURLToPath(new URL("../../../../examples/templates/", import.meta.url));
 // Each source through the installed Pug's own parser, so the trees are the ones a project's are.

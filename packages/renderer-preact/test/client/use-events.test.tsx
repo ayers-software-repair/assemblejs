@@ -3,8 +3,8 @@
 import { h } from "preact";
 import { renderToString } from "preact-render-to-string";
 import { describe, expect, it } from "vitest";
-import { createBus } from "@assemblejs/core/client";
-import { EventsContext, useEvents } from "@assemblejs/renderer-preact/client";
+import { createBus } from "@asmjs/core/client";
+import { EventsContext, useEvents } from "@asmjs/renderer-preact/client";
 
 const Sender = () => {
   const events = useEvents();

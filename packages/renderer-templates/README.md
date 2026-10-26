@@ -1,4 +1,4 @@
-# @assemblejs/renderer-templates
+# @asmjs/renderer-templates
 
 Write an AssembleJS assembly as an EJS, Markdown, Nunjucks, Handlebars or Pug template.
 

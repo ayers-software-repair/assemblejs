@@ -11,7 +11,7 @@ its root; a fixture of several servers names them under `projects`, each in its 
 built and started in the order written, and may set ports aside under `ports` for a server a
 spec runs itself. A project's `env` names an earlier project's origin or a set-aside port as
 `{name}`, which is how a consumer is told where its producer is. `fixture.json` names the
-`@assemblejs` packages each project installs beside the ones the starter wrote into it; a
+`@asmjs` packages each project installs beside the ones the starter wrote into it; a
 renderer brings the framework it needs at the one version that renderer is tested against, read
 from its own package, so a fixture never pins a framework of its own. A project with no files
 of its own, or no directory at all, is a project exactly as the starter wrote it.

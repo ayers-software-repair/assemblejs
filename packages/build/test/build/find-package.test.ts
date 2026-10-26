@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { findPackage } from "@assemblejs/build";
+import { findPackage } from "@asmjs/build";
 
 describe("finding a package the project installed", () => {
   it("looks in node_modules beside the project and each directory above it", () => {
@@ -18,7 +18,7 @@ describe("finding a package the project installed", () => {
 
   it("is undefined when no directory above has it, though node itself might resolve it", () => {
     const project = mkdtempSync(join(tmpdir(), "find-none-"));
-    expect(findPackage(project, "@assemblejs/renderer-react")).toBeUndefined();
+    expect(findPackage(project, "@asmjs/renderer-react")).toBeUndefined();
   });
 
   it("does not count a directory without a package manifest as a package", () => {

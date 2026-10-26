@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { renderEnvelope } from "@assemblejs/core";
+import { renderEnvelope } from "@asmjs/core";
 import { describe, expect, it } from "vitest";
-import { islandData } from "@assemblejs/mcp";
+import { islandData } from "@asmjs/mcp";
 
 const envelope = (id: string, data: Record<string, string>, markup = "<p>x</p>"): string =>
   renderEnvelope({ id, name: "cart", view: "default", renderer: "html", markup, data });

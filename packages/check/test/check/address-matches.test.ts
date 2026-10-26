@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { addressMatches } from "@assemblejs/check";
+import { addressMatches } from "@asmjs/check";
 
 describe("whether an address is one a route answers", () => {
   it("is when every literal segment is the route's and each parameter has a value", () => {

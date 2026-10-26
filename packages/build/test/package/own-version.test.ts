@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { describe, expect, it } from "vitest";
-import { ownVersion } from "@assemblejs/build";
+import { ownVersion } from "@asmjs/build";
 
 const versionIn = (manifest: URL): string =>
   (JSON.parse(readFileSync(manifest, "utf8")) as { version: string }).version;

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { refuseBeforeDispatch } from "@assemblejs/core";
+import { refuseBeforeDispatch } from "@asmjs/core";
 
 const at = (depth: number, path: readonly string[] = [], signal?: AbortSignal, ordinal = 1) => ({
   name: "cart",

@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { serverEvents } from "@assemblejs/core/client";
+import { serverEvents } from "@asmjs/core/client";
 import { describe, expect, it } from "vitest";
-import type { AssemblyProps } from "@assemblejs/renderer-lit";
+import type { AssemblyProps } from "@asmjs/renderer-lit";
 
 describe("what a Lit view receives", () => {
   it("is its data and its events, and nothing of its children", () => {

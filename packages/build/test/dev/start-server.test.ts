@@ -4,9 +4,9 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterAll, describe, expect, it } from "vitest";
-import { buildProject, realIo, startServer } from "@assemblejs/build";
-import { freePort } from "@assemblejs/build";
-import type { RunningServer } from "@assemblejs/build";
+import { buildProject, realIo, startServer } from "@asmjs/build";
+import { freePort } from "@asmjs/build";
+import type { RunningServer } from "@asmjs/build";
 
 // Nested inside the example, so the project resolves the workspace's packages from its
 // node_modules exactly as an installed project would.
@@ -26,7 +26,7 @@ describe("starting a built server", () => {
     writeFileSync(join(root, "src", "assemblies", "hello", "hello.html"), "<p>hi</p>");
     writeFileSync(
       join(root, "src", "server.ts"),
-      'import { createServer } from "@assemblejs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
+      'import { createServer } from "@asmjs/core";\nimport project from "../.assemblejs/project.js";\nconst app = await createServer(project);\nconst { url } = await app.listen();\nconsole.log(`listening ${url}`);\n',
     );
     const logs: string[] = [];
     const io = { ...realIo, log: (line: string) => logs.push(line), error: () => undefined };

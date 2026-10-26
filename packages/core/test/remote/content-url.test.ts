@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ContentUrl } from "@assemblejs/core";
+import type { ContentUrl } from "@asmjs/core";
 
 describe("a content endpoint, taken apart", () => {
   it("names the origin, the assembly, its view, and both of its endpoints", () => {

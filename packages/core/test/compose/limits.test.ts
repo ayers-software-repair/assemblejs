@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { Limits } from "@assemblejs/core";
+import type { Limits } from "@asmjs/core";
 
 describe("the composition limits", () => {
   it("are each finite, because an unbounded one is not a limit", () => {

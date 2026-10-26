@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { placementDirective } from "@assemblejs/core/client";
+import { placementDirective } from "@asmjs/core/client";
 
 /**
  * Places a child assembly: answers the directive the composer replaces with the child's

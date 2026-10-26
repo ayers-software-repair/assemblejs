@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { ClientRenderer, JsonObject, MountContext } from "@assemblejs/core/client";
+import type { ClientRenderer, JsonObject, MountContext } from "@asmjs/core/client";
 import { createElement } from "react";
 import { hydrateRoot } from "react-dom/client";
 import type { AssemblyProps } from "../props/assembly-props.js";

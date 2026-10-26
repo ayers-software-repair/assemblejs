@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 describe("an assembly found on disk", () => {
   it("names its view and the renderer that view chose", () => {

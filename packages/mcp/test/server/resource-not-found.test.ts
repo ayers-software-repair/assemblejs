@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { describe, expect, it } from "vitest";
-import { RESOURCE_NOT_FOUND } from "@assemblejs/mcp";
+import { RESOURCE_NOT_FOUND } from "@asmjs/mcp";
 
 describe("the code for a resource that does not exist", () => {
   it("is the one the protocol gives it", () => {

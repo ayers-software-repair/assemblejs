@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 describe("Lit's support for hydrating server-rendered elements", () => {
   it("is installed, and an element hydrating a server's shadow root adopts its styles", async () => {
     // The browser half first, as a page loads it, so Lit's element base loads after its support.
-    const { HYDRATION_SUPPORT } = await import("@assemblejs/renderer-lit/client");
+    const { HYDRATION_SUPPORT } = await import("@asmjs/renderer-lit/client");
     const { digestForTemplateResult } = await import("@lit-labs/ssr-client");
     const { css, html, LitElement } = await import("lit");
     const card = () => html`<p>card</p>`;

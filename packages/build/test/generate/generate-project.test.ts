@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { generateProject } from "@assemblejs/build";
+import { generateProject } from "@asmjs/build";
 
 describe("generating the one module the server file imports", () => {
   it("carries everything found and the version of this build", () => {

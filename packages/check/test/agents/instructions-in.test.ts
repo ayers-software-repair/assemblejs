@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { agentInstructions, instructionsIn } from "@assemblejs/check";
+import { agentInstructions, instructionsIn } from "@asmjs/check";
 
 describe("the part of an AGENTS.md the command line wrote", () => {
   it("is found with its two comments, and where it stands, whatever is written around it", () => {

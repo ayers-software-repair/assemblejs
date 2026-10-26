@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { API_PATH } from "@assemblejs/core";
+import { API_PATH } from "@asmjs/core";
 
 describe("which paths are an api's", () => {
   it("takes /api, what is under it and a query on it", () => {

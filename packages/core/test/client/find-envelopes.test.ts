@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import { findEnvelopes } from "@assemblejs/core/client";
+import { findEnvelopes } from "@asmjs/core/client";
 
 const ids = (root: ParentNode): Array<string | null> =>
   findEnvelopes(root).map((envelope) => envelope.getAttribute("data-id"));

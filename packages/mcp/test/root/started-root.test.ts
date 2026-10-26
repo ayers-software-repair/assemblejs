@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { startedRoot } from "@assemblejs/mcp";
+import { startedRoot } from "@asmjs/mcp";
 
 const HERE = resolve("/work/here");
 

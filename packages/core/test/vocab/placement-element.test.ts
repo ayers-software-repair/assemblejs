@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { PLACEMENT_ELEMENT } from "@assemblejs/core";
+import { PLACEMENT_ELEMENT } from "@asmjs/core";
 
 describe("the placement element", () => {
   it("is the plain noun, because the server replaces it and never emits it", () => {

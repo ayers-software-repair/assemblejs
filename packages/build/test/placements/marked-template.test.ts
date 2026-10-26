@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { COMPUTED_MARKER, markedTemplate } from "@assemblejs/build";
+import { COMPUTED_MARKER, markedTemplate } from "@asmjs/build";
 
 describe("a template's source as markup", () => {
   it("stands the marker where EJS, Handlebars and Nunjucks compute, and leaves the rest", () => {

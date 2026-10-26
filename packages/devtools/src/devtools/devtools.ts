@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { Devtools } from "@assemblejs/core";
+import type { Devtools } from "@asmjs/core";
 import { overviewRoute } from "../routes/overview-route.js";
 import { projectRoute } from "../routes/project-route.js";
 import { stylesheetRoute } from "../routes/stylesheet-route.js";

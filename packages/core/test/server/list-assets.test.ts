@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { listAssets } from "@assemblejs/core";
+import { listAssets } from "@asmjs/core";
 
 describe("listing a build's browser files", () => {
   it("keys every file, nested or not, by the url it is served at", () => {

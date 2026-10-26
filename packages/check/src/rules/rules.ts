@@ -271,7 +271,7 @@ export const RULES: readonly Rule[] = [
     because:
       "An agent reads AGENTS.md before anything else, and believes it. Instructions an earlier version wrote describe rules that have since changed; a registration naming a server the project does not depend on starts nothing; and Claude Code reads a CLAUDE.md in place of AGENTS.md, so one that does not import it hides every instruction. Nothing else in the project would say so. The agent surface checks with the command line it is built on, so the two a project installs are versions released together, or each calls the other's instructions out of date.",
     smell:
-      "The marked part of AGENTS.md edited by hand or left as an earlier version wrote it, a registration with no @assemblejs/mcp among the project's dependencies, a CLAUDE.md without the line @AGENTS.md, or @assemblejs/cli updated and @assemblejs/mcp left behind.",
+      "The marked part of AGENTS.md edited by hand or left as an earlier version wrote it, a registration with no @asmjs/mcp among the project's dependencies, a CLAUDE.md without the line @AGENTS.md, or @asmjs/cli updated and @asmjs/mcp left behind.",
   },
   {
     id: "a-source-file-compiles",

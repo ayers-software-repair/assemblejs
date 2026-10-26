@@ -1,4 +1,4 @@
-# @assemblejs/renderer-lit
+# @asmjs/renderer-lit
 
 Write an AssembleJS assembly in Lit.
 

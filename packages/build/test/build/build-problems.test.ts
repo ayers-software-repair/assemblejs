@@ -5,8 +5,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { buildProblems } from "@assemblejs/build";
-import type { DiscoveredAssembly } from "@assemblejs/build";
+import { buildProblems } from "@asmjs/build";
+import type { DiscoveredAssembly } from "@asmjs/build";
 
 const example = fileURLToPath(new URL("../../../../examples/two-frameworks/", import.meta.url));
 const assembly = (renderer: string, client?: string): DiscoveredAssembly => ({
@@ -40,7 +40,7 @@ describe("what would stop a build, found before the bundler runs", () => {
     expect(buildProblems(root, [assembly("react")])).toContainEqual(
       expect.objectContaining({
         rule: "a-view-needs-its-renderer",
-        fix: "install @assemblejs/renderer-react",
+        fix: "install @asmjs/renderer-react",
       }),
     );
   });
@@ -60,7 +60,7 @@ describe("what would stop a build, found before the bundler runs", () => {
     expect(problems).toContainEqual(
       expect.objectContaining({
         rule: "a-view-needs-its-renderer",
-        fix: "install @assemblejs/renderer-templates",
+        fix: "install @asmjs/renderer-templates",
       }),
     );
     expect(problems).not.toContainEqual(
@@ -69,7 +69,7 @@ describe("what would stop a build, found before the bundler runs", () => {
     // Said as it is read aloud: "a ejs assembly" was what a project missing its templates read.
     expect(buildProblems(root, [assembly("ejs")])).toContainEqual(
       expect.objectContaining({
-        message: '"a" is an ejs assembly and @assemblejs/renderer-templates is not installed',
+        message: '"a" is an ejs assembly and @asmjs/renderer-templates is not installed',
       }),
     );
   });

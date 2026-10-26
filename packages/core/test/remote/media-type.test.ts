@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { mediaType } from "@assemblejs/core";
+import { mediaType } from "@asmjs/core";
 
 describe("the media type a content-type header names", () => {
   it("drops the parameters and the case, and is nothing for no header", () => {

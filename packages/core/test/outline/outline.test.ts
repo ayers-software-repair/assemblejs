@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { OUTLINE_ATTRIBUTE, OUTLINE_ELEMENT, OUTLINE_ROUTE } from "@assemblejs/core";
-import { outline } from "@assemblejs/core/outline";
+import { OUTLINE_ATTRIBUTE, OUTLINE_ELEMENT, OUTLINE_ROUTE } from "@asmjs/core";
+import { outline } from "@asmjs/core/outline";
 
 const PAGE =
   '<main><assembly-root data-name="shell" data-id="a" data-view="default" data-renderer="html">' +

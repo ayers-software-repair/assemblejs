@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { decideAccess } from "@assemblejs/core";
-import type { AccessPolicy } from "@assemblejs/core";
+import { decideAccess } from "@asmjs/core";
+import type { AccessPolicy } from "@asmjs/core";
 
 const request = (path: string, headers: Record<string, string> = {}) => ({
   method: "GET",

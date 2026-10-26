@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { withoutAbsentMembers } from "@assemblejs/core";
+import { withoutAbsentMembers } from "@asmjs/core";
 
 describe("dropping a returned object's absent members", () => {
   it("removes the key, not only the value", () => {

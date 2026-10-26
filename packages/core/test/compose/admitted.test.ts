@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { admitted } from "@assemblejs/core";
-import type { Admit } from "@assemblejs/core";
+import { admitted } from "@asmjs/core";
+import type { Admit } from "@asmjs/core";
 
 const placement = { name: "cart", view: "wide", plan: undefined };
 

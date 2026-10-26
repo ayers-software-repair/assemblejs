@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ServiceOrderError, defineService, orderServices } from "@assemblejs/core";
+import { ServiceOrderError, defineService, orderServices } from "@asmjs/core";
 
 const service = (name: string, after?: readonly string[]) =>
   defineService({ name, ...(after === undefined ? {} : { after }), run: () => ({}) });

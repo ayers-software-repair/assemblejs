@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AssemblyProps } from "@assemblejs/renderer-solid";
+import type { AssemblyProps } from "@asmjs/renderer-solid";
 
 describe("what a Solid assembly receives", () => {
   it("is its data, and nothing of its children", () => {

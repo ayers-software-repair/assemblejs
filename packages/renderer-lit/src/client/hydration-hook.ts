@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-/** @module @assemblejs/renderer-lit/hydration-hook */
+/** @module @asmjs/renderer-lit/hydration-hook */
 import "@lit-labs/ssr-client/lit-element-hydrate-support.js";
 import type { CSSResultOrNative } from "lit";
 

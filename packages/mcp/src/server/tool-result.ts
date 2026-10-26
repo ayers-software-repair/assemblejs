@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ProjectProblem } from "@assemblejs/build";
+import type { ProjectProblem } from "@asmjs/build";
 
 /**
  * What a tool answers with.

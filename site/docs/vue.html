@@ -109,7 +109,7 @@
             <h2>Install the renderer</h2>
             <dl>
               <div class="item">
-                <dt><code>npm install @assemblejs/renderer-vue vue</code></dt>
+                <dt><code>npm install @asmjs/renderer-vue@next vue</code></dt>
                 <dd>
                   The renderer and Vue itself, 3.4 or newer; the build compiles your components with
                   the project's own Vue, so it has to be there.
@@ -154,7 +154,7 @@ defineProps&lt;{ data: Record&lt;string, unknown&gt; }&gt;();
                   stands inside it: lay it out by that element, never by what is inside. An assembly
                   in a project has one view, so no <code>view</code> is given.
                   <pre><code>&lt;script setup lang="ts"&gt;
-import { Slot } from "@assemblejs/renderer-vue/client";
+import { Slot } from "@asmjs/renderer-vue/client";
 &lt;/script&gt;
 
 &lt;template&gt;
@@ -174,7 +174,7 @@ import { Slot } from "@assemblejs/renderer-vue/client";
                   data. It is given the request's <code>query</code> and the route
                   <code>params</code> of the page that placed the assembly, and the same function
                   answers the assembly's data endpoint.
-                  <pre><code>import { defineService } from "@assemblejs/core";
+                  <pre><code>import { defineService } from "@asmjs/core";
 
 export default defineService({
   name: "label",
@@ -189,14 +189,14 @@ export default defineService({
               <div class="item">
                 <dt><code>useEvents()</code></dt>
                 <dd>
-                  From <code>@assemblejs/renderer-vue/client</code>. The object is scoped to this
+                  From <code>@asmjs/renderer-vue/client</code>. The object is scoped to this
                   assembly: <code>send</code> stamps the sender and <code>on</code> returns its
                   unsubscribe. Subscribe when mounted and stop when unmounted; what is still
                   subscribed when the page unmounts its assemblies is released then. A React or
                   Svelte assembly on the same page hears the same message, with no adapter between
                   them.
                   <pre><code>&lt;script setup lang="ts"&gt;
-import { useEvents } from "@assemblejs/renderer-vue/client";
+import { useEvents } from "@asmjs/renderer-vue/client";
 import { onMounted, onUnmounted, ref } from "vue";
 
 const events = useEvents();
@@ -287,7 +287,7 @@ defineProps&lt;{ data: Record&lt;string, unknown&gt; }&gt;();
                   Policy, when a placement needs any, lives in the page's own file: a deadline in
                   milliseconds, markup to show when the assembly does not answer, whether its
                   failure fails the page, or a deferral the browser fills after load.
-                  <pre><code>import { definePage } from "@assemblejs/core";
+                  <pre><code>import { definePage } from "@asmjs/core";
 
 export default definePage({
   place: { cart: { deadline: 500, fallback: "&lt;p&gt;Cart unavailable&lt;/p&gt;" } },

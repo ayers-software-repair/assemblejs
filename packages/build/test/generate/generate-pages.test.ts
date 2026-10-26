@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { generatePages } from "@assemblejs/build";
+import { generatePages } from "@asmjs/build";
 
 describe("generating the pages the built server imports", () => {
   it("joins each template to its declaration, the declaration's route winning", () => {

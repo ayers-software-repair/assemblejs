@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { deployPackage } from "@assemblejs/cli";
+import { deployPackage } from "@asmjs/cli";
 
 describe("the package a deploy carries", () => {
   it("keeps the name, version, engines and dependencies, and drops what a server does not need", () => {
@@ -12,8 +12,8 @@ describe("the package a deploy carries", () => {
           version: "2.1.0",
           engines: { node: ">=24" },
           scripts: { dev: "assemblejs dev", build: "assemblejs build" },
-          dependencies: { "@assemblejs/core": "^1.0.0" },
-          devDependencies: { "@assemblejs/cli": "^1.0.0" },
+          dependencies: { "@asmjs/core": "^1.0.0" },
+          devDependencies: { "@asmjs/cli": "^1.0.0" },
         },
         "/p",
         "/p/deploy",
@@ -25,7 +25,7 @@ describe("the package a deploy carries", () => {
       type: "module",
       engines: { node: ">=24" },
       scripts: { start: "node dist/server.js" },
-      dependencies: { "@assemblejs/core": "^1.0.0" },
+      dependencies: { "@asmjs/core": "^1.0.0" },
     });
   });
 

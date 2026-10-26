@@ -3,7 +3,7 @@
 import { parse } from "acorn";
 import type { Expression, ExpressionStatement } from "acorn";
 import { describe, expect, it } from "vitest";
-import { UNWRITTEN, literalOf } from "@assemblejs/check";
+import { UNWRITTEN, literalOf } from "@asmjs/check";
 
 const of = (source: string) => {
   const [statement] = parse(source, { ecmaVersion: "latest", sourceType: "module" }).body;

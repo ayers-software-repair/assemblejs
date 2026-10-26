@@ -7806,3 +7806,13 @@ run, since no browser runs here (D1276), and CI's `browser proof` is where it fi
   organization, mirror, headers, identity, emoji, knip, exit 0. What CI may still show:
   whether Chromium lets `setExtraHTTPHeaders` set `accept-language` on a `fetch`; the
   assertion then names the browser's header, not the relay.
+
+## 2026-10-26: npm packages use @asmjs
+
+The owner chose the npm organization `asmjs`. The fourteen packages use `@asmjs/<name>`,
+including `@asmjs/create`, so the prerelease starter is `npm create @asmjs@next`. Package folders,
+the AssembleJS product name, configuration filenames and command-line bins stay the same.
+Historical decisions, research and changelogs retain the names they recorded.
+
+Releases remain `1.0.0-next.N` on npm's `next` tag until the owner approves stable 1.0.0.
+The unscoped `create-assemblejs` package is a separate optional publication.

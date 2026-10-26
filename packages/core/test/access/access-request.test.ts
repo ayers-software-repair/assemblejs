@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { AccessRequest } from "@assemblejs/core";
+import type { AccessRequest } from "@asmjs/core";
 
 describe("what the access decision is given", () => {
   it("is the method, the path without its query, and the headers", () => {

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { tagEnd } from "@assemblejs/core";
+import { tagEnd } from "@asmjs/core";
 
 /** What follows the tag a piece of markup opens with, read from just past its name. */
 const after = (html: string): string =>

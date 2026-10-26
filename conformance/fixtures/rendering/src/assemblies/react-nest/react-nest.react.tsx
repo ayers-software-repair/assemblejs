@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { Slot } from "@assemblejs/renderer-react/client";
+import { Slot } from "@asmjs/renderer-react/client";
 
 export default function Nest() {
   return (

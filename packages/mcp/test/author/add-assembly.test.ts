@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, mkdtempSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { addAssembly, resolveRoot } from "@assemblejs/mcp";
+import { addAssembly, resolveRoot } from "@asmjs/mcp";
 
 describe("adding an assembly through the agent surface", () => {
   it("writes the files and answers with the tag that places it", () => {
@@ -26,7 +26,7 @@ describe("adding an assembly through the agent surface", () => {
     const dir = mkdtempSync(join(tmpdir(), "mcp-add-"));
     expect(addAssembly(resolveRoot(dir), "cart", "svelte").next).toEqual([
       "install svelte: this project has Svelte assemblies and svelte is not installed",
-      'install @assemblejs/renderer-svelte: "cart" is a svelte assembly and @assemblejs/renderer-svelte is not installed',
+      'install @asmjs/renderer-svelte: "cart" is a svelte assembly and @asmjs/renderer-svelte is not installed',
       'place it with place_assembly, or by writing <assembly name="cart"></assembly> into a page template',
     ]);
     expect(addAssembly(resolveRoot(dir), "nav", "html").next).toHaveLength(1);

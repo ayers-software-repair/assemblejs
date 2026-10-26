@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { remoteProblems } from "@assemblejs/core";
+import { remoteProblems } from "@asmjs/core";
 
 describe("what is checked about remotes before anything listens", () => {
   it("passes exact origins with lower-case forwarded keys, trusted or not", () => {

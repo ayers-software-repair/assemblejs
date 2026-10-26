@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { generateRegistry } from "@assemblejs/build";
-import type { AssemblyStyles, DiscoveredAssembly } from "@assemblejs/build";
+import { generateRegistry } from "@asmjs/build";
+import type { AssemblyStyles, DiscoveredAssembly } from "@asmjs/build";
 
 const from = "/p/.assemblejs";
 const found = (
@@ -29,7 +29,7 @@ const generate = (
     from,
     script,
     ...(styles === undefined ? {} : { styles }),
-    packages: { react: "@assemblejs/renderer-react" },
+    packages: { react: "@asmjs/renderer-react" },
   });
 
 describe("generating the registry the built server imports", () => {
@@ -68,7 +68,7 @@ describe("generating the registry the built server imports", () => {
       found("hi", "hi.react.tsx", "react"),
     ]);
     expect(source).toContain(
-      'import { renderToMarkup as render_react } from "@assemblejs/renderer-react";',
+      'import { renderToMarkup as render_react } from "@asmjs/renderer-react";',
     );
     expect(source).toContain("markup: (input) => render_react(view_hi.default, input)");
     expect(source).toContain("markup: () => view_cart");
@@ -158,7 +158,7 @@ describe("generating the registry the built server imports", () => {
     expect(source).toContain('import view_notes from "../src/assemblies/notes/notes.md";');
     expect(
       source.match(
-        /import \{ renderTemplate as render_template \} from "@assemblejs\/renderer-templates";/g,
+        /import \{ renderTemplate as render_template \} from "@asmjs\/renderer-templates";/g,
       )?.length,
     ).toBe(1);
     // A template's errors name its file, by its path from the project root.

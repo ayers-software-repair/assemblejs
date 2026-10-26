@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AssemblyProps } from "@assemblejs/renderer-svelte";
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
 
   // What every Svelte assembly receives: its data and its events, on either side.
   let { data, events }: AssemblyProps<{ label: string }> = $props();

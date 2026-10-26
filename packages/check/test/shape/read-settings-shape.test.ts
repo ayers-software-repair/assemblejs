@@ -3,9 +3,9 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { realIo } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { COMPUTED, UNREAD, readSettingsShape } from "@assemblejs/check";
+import { COMPUTED, UNREAD, readSettingsShape } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
 const settings = (source?: string) => {
@@ -32,7 +32,7 @@ describe("what a project's config declares, read from its source", () => {
   it("is each field as written, and what its absence means for one not written", () => {
     expect(
       settings(
-        'import { defineConfig } from "@assemblejs/core";\nexport default defineConfig({ remotes: [{ origin: "https://shop.example", forward: ["cookie"] }], budgets: { document: 14000 } });',
+        'import { defineConfig } from "@asmjs/core";\nexport default defineConfig({ remotes: [{ origin: "https://shop.example", forward: ["cookie"] }], budgets: { document: 14000 } });',
       ),
     ).toEqual({
       ...NOTHING,

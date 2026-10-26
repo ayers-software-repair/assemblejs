@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { registerFailures } from "@assemblejs/core";
-import type { LogLine } from "@assemblejs/core";
+import { registerFailures } from "@asmjs/core";
+import type { LogLine } from "@asmjs/core";
 
 const logged: LogLine[] = [];
 const app = Fastify({ logger: false });

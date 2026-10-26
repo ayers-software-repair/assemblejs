@@ -1,8 +1,8 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { randomUUID } from "node:crypto";
-import { DEFAULT_LIMITS, localFetch } from "@assemblejs/core";
-import type { LogLine } from "@assemblejs/core";
+import { DEFAULT_LIMITS, localFetch } from "@asmjs/core";
+import type { LogLine } from "@asmjs/core";
 import type { ArrivedWith } from "../compose/arrived-with.js";
 import { fallbackProblems } from "../compose/fallback-problems.js";
 import type { ProjectRoot } from "../root/project-root.js";

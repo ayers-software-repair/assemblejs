@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { readViewElements } from "@assemblejs/check";
+import { readViewElements } from "@asmjs/check";
 
 const tags = (file: string, renderer: string, source: string) =>
   readViewElements(file, renderer, source)?.map((element) => element.tag);

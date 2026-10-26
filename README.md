@@ -19,8 +19,8 @@ it writes.
 
 Status: under construction on the `next` branch. Nothing is published yet.
 
-- Packages: `@assemblejs/core`, `@assemblejs/build`, `@assemblejs/check`, `@assemblejs/cli`,
-  `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp`, one `@assemblejs/renderer-*`
+- Packages: `@asmjs/core`, `@asmjs/build`, `@asmjs/check`, `@asmjs/cli`,
+  `@asmjs/create`, `@asmjs/devtools`, `@asmjs/mcp`, one `@asmjs/renderer-*`
   package per framework.
 - Command: `assemblejs` (alias `asm`): `new`, `add`, `dev`, `build`, `check`, `perf`, `deploy`.
 - Docs: https://assemblejs.com/docs/

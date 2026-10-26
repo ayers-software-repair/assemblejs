@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { describe, expect, it } from "vitest";
-import { answerFailure, createServer, defineAssembly } from "@assemblejs/core";
-import type { LogLine } from "@assemblejs/core";
+import { answerFailure, createServer, defineAssembly } from "@asmjs/core";
+import type { LogLine } from "@asmjs/core";
 
 const failure = { error: { correlationId: expect.any(String) } };
 const cart = defineAssembly({

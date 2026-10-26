@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import type { JsonValue, StreamContext } from "@assemblejs/core";
+import type { JsonValue, StreamContext } from "@asmjs/core";
 
 /**
  * The latest price, and every open stream's send, for the push api to reach each page that is

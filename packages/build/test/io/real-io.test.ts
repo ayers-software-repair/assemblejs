@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { realIo } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
 
 let root = "";
 afterEach(() => {

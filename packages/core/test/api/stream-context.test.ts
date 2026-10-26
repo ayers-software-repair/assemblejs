@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { StreamContext } from "@assemblejs/core";
+import type { StreamContext } from "@asmjs/core";
 
 describe("what a stream is given", () => {
   it("is the request's query and parameters, a send, and the connection's signal", () => {

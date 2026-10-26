@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { installedManifest } from "@assemblejs/check";
+import { installedManifest } from "@asmjs/check";
 
 describe("the manifest of a package a project installs", () => {
   it("is its name, its version and what it depends on", () => {

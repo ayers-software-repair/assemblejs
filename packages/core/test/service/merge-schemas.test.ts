@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { mergeSchemas } from "@assemblejs/core";
+import { mergeSchemas } from "@asmjs/core";
 
 describe("deep-merging the schemas that compose one view's data", () => {
   it("unions the properties and concatenates the required lists", () => {

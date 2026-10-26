@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { defineApi } from "@assemblejs/core";
+import { defineApi } from "@asmjs/core";
 import { search } from "../shop/catalogue.js";
 
 // What the search box shows as a visitor types: asked of the catalogue, a few at most.

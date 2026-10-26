@@ -15,24 +15,24 @@ only). CLI bin `assemblejs`, alias `asm`; verbs new, add, dev, build, check, per
 
 ## Packages
 
-- `@assemblejs/core`: the server and the composer, the declaration types, the contract's
+- `@asmjs/core`: the server and the composer, the declaration types, the contract's
   endpoints, the browser runtime (`/client`) and the outline a page may show (`/outline`). It
   holds no renderer: a plain html view is its own markup.
-- `@assemblejs/build`: what turns a project into a server and its browser files: what is
+- `@asmjs/build`: what turns a project into a server and its browser files: what is
   known of a project by its directories, the modules generated for it, the bundles, the dev
-  loop. `@assemblejs/cli` brings it.
-- `@assemblejs/check`: what reads a project and names what is wrong with it: the rules
+  loop. `@asmjs/cli` brings it.
+- `@asmjs/check`: what reads a project and names what is wrong with it: the rules
   `check` names, every problem found without building, a project's shape, what its pages
-  weigh, and the text of the files written for a project's agents. `@assemblejs/cli` brings
+  weigh, and the text of the files written for a project's agents. `@asmjs/cli` brings
   it.
-- `@assemblejs/cli` (the verbs; it writes a new project its `AGENTS.md` and MCP registrations,
+- `@asmjs/cli` (the verbs; it writes a new project its `AGENTS.md` and MCP registrations,
   which `check` holds current and `add agents` rewrites),
-  `@assemblejs/create`, `@assemblejs/devtools`, `@assemblejs/mcp` (the agent surface: an MCP
+  `@asmjs/create`, `@asmjs/devtools`, `@asmjs/mcp` (the agent surface: an MCP
   server that reads the project, creates one, adds and places an assembly, checks it, renders
   and composes, explains every rule `check` names, and lists the prompts a person asks an
   agent for).
-- `@assemblejs/renderer-templates` (EJS, Markdown, Nunjucks, Handlebars, Pug; no peer deps).
-- `@assemblejs/renderer-{preact,react,vue,svelte,solid,lit}`: one real peer dependency each.
+- `@asmjs/renderer-templates` (EJS, Markdown, Nunjucks, Handlebars, Pug; no peer deps).
+- `@asmjs/renderer-{preact,react,vue,svelte,solid,lit}`: one real peer dependency each.
 
 ## Identity: hard law, enforced by CI, not a style preference
 
@@ -52,7 +52,7 @@ DECISIONS 2026-10-05 rulings). Every `packages/*/src/**/*.ts` opens with:
 
     pnpm install
     pnpm check            # identity, headers, lint, typecheck, build, test, pack: what CI runs
-    pnpm --filter @assemblejs/core dev
+    pnpm --filter @asmjs/core dev
 
 ## Rules that are hooks, not requests (.claude/hooks/)
 

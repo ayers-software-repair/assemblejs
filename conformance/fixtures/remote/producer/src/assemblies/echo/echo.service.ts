@@ -1,4 +1,4 @@
-import { defineService } from "@assemblejs/core";
+import { defineService } from "@asmjs/core";
 
 // What the page's visitor typed, which reaches this server only from a page that trusts it.
 export default defineService({

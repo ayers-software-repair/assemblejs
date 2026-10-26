@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { MountedAssembly } from "@assemblejs/core/client";
+import type { MountedAssembly } from "@asmjs/core/client";
 
 describe("a mounted assembly", () => {
   it("holds the handle that tears it down", () => {

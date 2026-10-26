@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // @vitest-environment happy-dom
 import { describe, expect, it } from "vitest";
-import type { EnvelopeStamps } from "@assemblejs/core/outline";
+import type { EnvelopeStamps } from "@asmjs/core/outline";
 
 describe("when each envelope came to be on a page and came alive", () => {
   it("answers nothing for an envelope it never saw arrive or mount", () => {

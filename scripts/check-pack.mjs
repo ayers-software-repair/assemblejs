@@ -92,14 +92,14 @@ if (budgets === null || typeof budgets !== "object" || Array.isArray(budgets)) {
 // The self-test: a package shipping a test file, a budget a byte too small and a package with
 // none, each refused by name, before the real check is believed.
 const [first, second] = packed;
-const bad = { ...budgets, [first.name]: first.size - 1, "@assemblejs/self-test": 1 };
+const bad = { ...budgets, [first.name]: first.size - 1, "@asmjs/self-test": 1 };
 delete bad[second.name];
-const shipping = { name: "@assemblejs/self-test", files: [{ path: "dist/x.test.js" }], size: 1 };
+const shipping = { name: "@asmjs/self-test", files: [{ path: "dist/x.test.js" }], size: 1 };
 const seen = problemsOf([...packed, shipping], bad);
 const required = [
   `${first.name}: packs to ${first.size} bytes, over its budget of ${first.size - 1}`,
   `${second.name}: has no size budget in ${BUDGETS}`,
-  "@assemblejs/self-test: tarball would ship forbidden path dist/x.test.js",
+  "@asmjs/self-test: tarball would ship forbidden path dist/x.test.js",
 ];
 if (!required.every((line) => seen.includes(line))) {
   console.error("pack check self-test: FAILED to refuse a known-bad input");

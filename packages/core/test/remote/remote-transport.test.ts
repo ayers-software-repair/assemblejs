@@ -3,8 +3,8 @@
 import { createServer as createHttpServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { createRemoteTransport } from "@assemblejs/core";
-import type { AssemblyRequest, RemoteTransport } from "@assemblejs/core";
+import { createRemoteTransport } from "@asmjs/core";
+import type { AssemblyRequest, RemoteTransport } from "@asmjs/core";
 
 // A server whose shell composes a cart inside its answer, as a view that places a child does.
 const envelope = (name: string, inside: string): string =>

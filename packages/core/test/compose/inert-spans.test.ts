@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { inertSpans } from "@assemblejs/core";
+import { inertSpans } from "@asmjs/core";
 
 /** Whether the first "TAG" written in the markup falls where the parser reads text. */
 const inertAt = (html: string): boolean => inertSpans(html)(html.indexOf("TAG"));

@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { PugCompiler } from "@assemblejs/build";
+import type { PugCompiler } from "@asmjs/build";
 
 describe("the one function of Pug the command line calls", () => {
   it("compiles a source, handing each plugin's postParse the tree and keeping what it answers", () => {

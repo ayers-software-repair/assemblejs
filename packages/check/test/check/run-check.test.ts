@@ -3,10 +3,10 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { realIo } from "@assemblejs/build";
-import type { Io } from "@assemblejs/build";
+import { realIo } from "@asmjs/build";
+import type { Io } from "@asmjs/build";
 import { describe, expect, it } from "vitest";
-import { runCheck } from "@assemblejs/check";
+import { runCheck } from "@asmjs/check";
 import { rightProject } from "../fixtures/right-project.js";
 
 const capture = () => {

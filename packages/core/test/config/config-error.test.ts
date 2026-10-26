@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { ConfigError } from "@assemblejs/core";
+import { ConfigError } from "@asmjs/core";
 
 describe("a configuration error", () => {
   it("carries every problem, so a boot failure is not one restart per variable", () => {

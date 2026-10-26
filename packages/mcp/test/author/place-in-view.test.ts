@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { placeInView, resolveRoot } from "@assemblejs/mcp";
+import { placeInView, resolveRoot } from "@asmjs/mcp";
 
 const project = (files: Record<string, string>): string => {
   const dir = mkdtempSync(join(tmpdir(), "mcp-place-in-"));
@@ -67,7 +67,7 @@ describe("placing one assembly in another's view through the agent surface", () 
         {
           path: "src/assemblies/panel/panel.react.tsx",
           rule: "a-view-places-a-child-with-the-directive",
-          fix: 'import { Slot } from "@assemblejs/renderer-react/client", then write <Slot name="cart" /> where the child should stand',
+          fix: 'import { Slot } from "@asmjs/renderer-react/client", then write <Slot name="cart" /> where the child should stand',
         },
       ],
     });

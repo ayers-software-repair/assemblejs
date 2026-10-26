@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { NotFound, defineService } from "@assemblejs/core";
+import { NotFound, defineService } from "@asmjs/core";
 import { listed } from "../../shop/catalogue.js";
 import { stock } from "../../shop/stock.js";
 

@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { discoverApis } from "@assemblejs/build";
+import { discoverApis } from "@asmjs/build";
 
 describe("discovering apis", () => {
   it("finds every api file in name order, and reports one that is misnamed", () => {

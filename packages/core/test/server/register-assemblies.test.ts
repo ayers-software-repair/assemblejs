@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 import Fastify from "fastify";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { NotFound, defineAssembly, localFetch, registerAssemblies } from "@assemblejs/core";
-import type { LogLine } from "@assemblejs/core";
+import { NotFound, defineAssembly, localFetch, registerAssemblies } from "@asmjs/core";
+import type { LogLine } from "@asmjs/core";
 import { askedAndLeft, grand, slowkid } from "../fixtures/slow-child.js";
 
 const hello = defineAssembly({

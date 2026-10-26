@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { manifestOf } from "@assemblejs/check";
+import { manifestOf } from "@asmjs/check";
 
 describe("what a package.json says that a project's agent files rest on", () => {
   it("is its name and version, and every package it depends on, of any kind, with what it asks", () => {
@@ -10,8 +10,8 @@ describe("what a package.json says that a project's agent files rest on", () => 
         JSON.stringify({
           name: "shop",
           version: "2.1.0",
-          dependencies: { "@assemblejs/core": "^1.0.0" },
-          devDependencies: { "@assemblejs/cli": "1.0.0-next.0" },
+          dependencies: { "@asmjs/core": "^1.0.0" },
+          devDependencies: { "@asmjs/cli": "1.0.0-next.0" },
           optionalDependencies: { fsevents: "*" },
           peerDependencies: { react: "*" },
         }),
@@ -20,8 +20,8 @@ describe("what a package.json says that a project's agent files rest on", () => 
       name: "shop",
       version: "2.1.0",
       dependencies: {
-        "@assemblejs/core": "^1.0.0",
-        "@assemblejs/cli": "1.0.0-next.0",
+        "@asmjs/core": "^1.0.0",
+        "@asmjs/cli": "1.0.0-next.0",
         fsevents: "*",
       },
     });
@@ -29,7 +29,7 @@ describe("what a package.json says that a project's agent files rest on", () => 
 
   // A package named in a script or a description is not one the project installs.
   it("is read from the manifest's fields, never from its text", () => {
-    const manifest = JSON.stringify({ scripts: { mcp: "npx @assemblejs/mcp" } });
+    const manifest = JSON.stringify({ scripts: { mcp: "npx @asmjs/mcp" } });
     expect(manifestOf(manifest).dependencies).toEqual({});
   });
 

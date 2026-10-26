@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { ComposeOptions } from "@assemblejs/core";
+import type { ComposeOptions } from "@asmjs/core";
 
 describe("the composer's options", () => {
   it("need only a template, a plan, a fetch, a page, and the two injected sources", () => {

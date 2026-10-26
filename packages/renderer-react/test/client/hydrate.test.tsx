@@ -3,10 +3,10 @@
 // @vitest-environment happy-dom
 import { useEffect, useId, useState } from "react";
 import { act } from "react";
-import { renderToMarkup } from "@assemblejs/renderer-react";
-import { Slot, hydrate, useEvents } from "@assemblejs/renderer-react/client";
-import { createBus } from "@assemblejs/core/client";
-import type { AssemblyProps } from "@assemblejs/renderer-react";
+import { renderToMarkup } from "@asmjs/renderer-react";
+import { Slot, hydrate, useEvents } from "@asmjs/renderer-react/client";
+import { createBus } from "@asmjs/core/client";
+import type { AssemblyProps } from "@asmjs/renderer-react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const Counter = ({ data }: AssemblyProps) => {

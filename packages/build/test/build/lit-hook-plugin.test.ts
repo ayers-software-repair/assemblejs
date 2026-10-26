@@ -16,7 +16,7 @@ import { fileURLToPath } from "node:url";
 import { parse } from "acorn";
 import { build } from "esbuild";
 import { afterAll, describe, expect, it } from "vitest";
-import { bundleClient, discoverAssemblies, loadCompilers, realIo } from "@assemblejs/build";
+import { bundleClient, discoverAssemblies, loadCompilers, realIo } from "@asmjs/build";
 import { litHookPlugin } from "../../src/build/lit-hook-plugin.js";
 
 const example = fileURLToPath(new URL("../../../../examples/frameworks/", import.meta.url));

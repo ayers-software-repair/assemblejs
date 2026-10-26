@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import type { LocalRendered } from "@assemblejs/core";
+import type { LocalRendered } from "@asmjs/core";
 
 describe("one assembly, rendered in this process", () => {
   it("is its envelope and the account of every child its view placed", () => {

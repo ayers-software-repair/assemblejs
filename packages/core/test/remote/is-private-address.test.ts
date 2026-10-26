@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { isPrivateAddress } from "@assemblejs/core";
+import { isPrivateAddress } from "@asmjs/core";
 
 describe("an address inside the server's own network", () => {
   it("is loopback, link-local, private, shared or unspecified", () => {

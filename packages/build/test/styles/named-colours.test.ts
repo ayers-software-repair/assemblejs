@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { NAMED_COLOURS } from "@assemblejs/build";
+import { NAMED_COLOURS } from "@asmjs/build";
 
 describe("the named colours of CSS", () => {
   it("holds the 148 names of CSS Color Level 4, lower-cased, and neither transparent nor currentcolor", () => {

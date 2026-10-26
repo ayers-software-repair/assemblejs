@@ -1,7 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { describe, expect, it } from "vitest";
-import { OpenElements, startTagRefusal } from "@assemblejs/core";
+import { OpenElements, startTagRefusal } from "@asmjs/core";
 
 const root = "assembly-root";
 /** These elements open, outermost first, each of them HTML. */

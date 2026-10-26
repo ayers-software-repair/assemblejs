@@ -1,6 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { definePage } from "@assemblejs/core";
+import { definePage } from "@asmjs/core";
 import { CATALOG, REVIEWS, from } from "../../shop/origins.js";
 
 // One page, three servers. The product is the catalogue team's and the page is nothing without

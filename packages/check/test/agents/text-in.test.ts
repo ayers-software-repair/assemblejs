@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { textIn } from "@assemblejs/check";
+import { textIn } from "@asmjs/check";
 
 describe("a project's files, read as text by their path from its root", () => {
   const root = mkdtempSync(join(tmpdir(), "text-in-"));

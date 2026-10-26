@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { transformSync } from "esbuild";
 import { describe, expect, it } from "vitest";
-import { unreadableSource } from "@assemblejs/build";
+import { unreadableSource } from "@asmjs/build";
 
 const thrownBy = (source: string): unknown => {
   try {
