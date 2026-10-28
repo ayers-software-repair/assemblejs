@@ -7821,3 +7821,22 @@ rungs keep the names they recorded.
 Releases stay `1.0.0-next.N` on npm's `next` tag until the owner opens stable. The unscoped
 `create-assemblejs`, so that `npm create assemblejs` works too, is a separate, optional
 publication.
+
+## 2026-10-27: The first publish is staged
+
+The owner withdrew the first-publish token that bypassed two-factor authentication ("the bypass
+part is weird. we shouldnt bypass if its being deprecated"). npm says "Bypass-2FA tokens with
+direct-publish access are being deprecated" and that direct publishing with a granular token
+ends in January 2027 (npm, "About access tokens").
+
+Chosen: the release run stages each name npm has never seen with a "Read and write (stage
+only)" token, which cannot publish, and stops red; the owner approves each staged name with his
+second factor, one name first, and re-runs the run. npm's `npm stage` page says staging "will
+allow you to create a new package if it does not exist", and its staged-publishing page that a
+new name gets a public placeholder, `0.0.0-stage`, until approval. Not chosen: the owner
+publishing each name by hand, which his 2026-10-12 ruling on R-13 rules out ("these are done by
+workflow not by a script I run"). Trusted publishers follow the first publish, since `npm trust`
+needs a package that exists. `scripts/first-publish.mjs` counts a name holding only the
+placeholder as unseen. Not stated by npm, and so tested on the first name: which dist-tag the
+placeholder carries, and whether a token limited to the `@asmjs` scope covers names not yet
+published. His steps: `docs/FIRST-PUBLISH.md`.
