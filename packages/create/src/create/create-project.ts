@@ -3,10 +3,10 @@
 import type { Io } from "@asmjs/build";
 import { run } from "@asmjs/cli";
 
-const USAGE = "npm create @asmjs@next <directory>";
+const USAGE = "npm create @asmjs <directory>";
 
 /**
- * What `npm create @asmjs@next my-app` does: the command line's own `new`, so a project started
+ * What `npm create @asmjs my-app` does: the command line's own `new`, so a project started
  * either way is the same project. It takes the directory as its one argument and never asks for
  * it, because a starter that prompts is a starter that hangs in a script.
  */

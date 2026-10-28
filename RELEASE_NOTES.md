@@ -6,7 +6,7 @@ One page from every framework: each piece written in the framework its author kn
 
 **The renderers** are one package for each framework, React, Preact, Vue, Svelte, Solid and Lit, and one for the template languages EJS, Handlebars, Markdown, Nunjucks and Pug.
 
-**The command line** (`@asmjs/cli`, and `npm create @asmjs@next`) makes a project, adds an assembly to it, runs, builds, checks and weighs it, and writes the directory that runs it anywhere Node does.
+**The command line** (`@asmjs/cli`, and `npm create @asmjs`) makes a project, adds an assembly to it, runs, builds, checks and weighs it, and writes the directory that runs it anywhere Node does.
 
 **The agent surface** (`@asmjs/mcp`) is an MCP server that every new project installs and registers, with an `AGENTS.md` beside it, so an AI agent knows the framework before it writes.
 

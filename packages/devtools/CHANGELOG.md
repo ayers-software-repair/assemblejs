@@ -1,4 +1,4 @@
-# @assemblejs/devtools
+# @asmjs/devtools
 
 ## 1.0.0-next.0
 
@@ -9,6 +9,6 @@
 ### Patch Changes
 
 - Updated dependencies
-  - @assemblejs/core@1.0.0-next.0
+  - @asmjs/core@1.0.0-next.0
 - Each published entry point names its own specifier in a `@module` comment, which is the name the API reference lists it under. Nothing any of them exports changes.
 

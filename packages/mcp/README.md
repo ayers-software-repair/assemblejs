@@ -19,7 +19,7 @@ It lists four prompts, which Claude Code and VS Code show their user as commands
 supports as well: `add_assembly`, `place_assembly`, `make_page` and `fix_findings`. Each answers a brief that has the agent look
 before it adds, ask where it was not told, see what it made and run `check` last.
 
-A project made with `npm create @asmjs@next` has it already: installed as a development
+A project made with `npm create @asmjs` has it already: installed as a development
 dependency and registered for Claude Code, Cursor, VS Code, Gemini CLI and opencode, beside an
 `AGENTS.md` that tells
 an agent to use it. In an older project, `npx assemblejs add agents` writes the same files.

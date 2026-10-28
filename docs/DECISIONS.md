@@ -7809,10 +7809,15 @@ run, since no browser runs here (D1276), and CI's `browser proof` is where it fi
 
 ## 2026-10-26: npm packages use @asmjs
 
-The owner chose the npm organization `asmjs`. The fourteen packages use `@asmjs/<name>`,
-including `@asmjs/create`, so the prerelease starter is `npm create @asmjs@next`. Package folders,
-the AssembleJS product name, configuration filenames and command-line bins stay the same.
-Historical decisions, research and changelogs retain the names they recorded.
+The owner chose the npm organization `asmjs`. The fourteen packages are `@asmjs/<name>`, and
+`npm create @asmjs` starts a project, since npm runs `@asmjs/create` for it ("`npm init @usr`
+-> `npm exec @usr/create`", npm's page on `npm init`). The product name, `assemblejs.config.ts`,
+the `.assemblejs/` directory, the `/_assemblejs` routes, the element and event names and the
+`assemblejs`, `asm`, `create-assemblejs` and `assemblejs-mcp` bins keep their names: the scope is
+what changed. The changelogs move with the packages, since no version was ever published under
+the old scope and they ship in the new tarballs; dated decisions, research and finished plan
+rungs keep the names they recorded.
 
-Releases remain `1.0.0-next.N` on npm's `next` tag until the owner approves stable 1.0.0.
-The unscoped `create-assemblejs` package is a separate optional publication.
+Releases stay `1.0.0-next.N` on npm's `next` tag until the owner opens stable. The unscoped
+`create-assemblejs`, so that `npm create assemblejs` works too, is a separate, optional
+publication.

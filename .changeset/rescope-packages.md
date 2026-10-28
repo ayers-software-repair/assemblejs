@@ -15,8 +15,10 @@
 "@asmjs/renderer-vue": patch
 ---
 
-Publish the framework packages under the @asmjs scope. Use `npm create @asmjs@next` to start a
-project; the AssembleJS product name and the `assemblejs`, `asm` and `create-assemblejs`
-commands stay the same.
+The packages are published under the `@asmjs` scope: `@asmjs/core`, `@asmjs/cli` and the rest,
+and `npm create @asmjs` starts a project. The `assemblejs`, `asm`, `create-assemblejs` and
+`assemblejs-mcp` commands, `assemblejs.config.ts` and the `.assemblejs/` directory keep their
+names.
 
-Missing agent-server installation commands name the same version as the running framework.
+When a project registers the agent server and does not depend on it, the install command `check`
+and `add agents` print names the version of the command line that is running.

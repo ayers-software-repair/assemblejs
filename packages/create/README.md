@@ -2,7 +2,7 @@
 
 Starts an AssembleJS project.
 
-    npm create @asmjs@next my-app
+    npm create @asmjs my-app
     cd my-app
     npm install
     npm run dev
