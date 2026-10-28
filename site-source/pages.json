@@ -75,7 +75,7 @@
     {
       "file": "index.html",
       "title": "AssembleJS — Your frameworks. One application.",
-      "description": "The first micro-frontend framework for AI-enabled development. Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.",
+      "description": "Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools.",
       "kind": "overview",
       "section": ""
     },

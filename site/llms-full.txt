@@ -1,6 +1,6 @@
 # AssembleJS
 
-> The first micro-frontend framework for AI-enabled development. Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+> Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools.
 
 Every page of this site as text, in the order [llms.txt](llms.txt) lists them. Every link is relative to this file.
 
@@ -8,7 +8,7 @@ Every page of this site as text, in the order [llms.txt](llms.txt) lists them. E
 
 Source: [index.html](index.html)
 
-The first micro-frontend framework for AI-enabled development.
+React. Vue. Svelte. One application.
 
 One application built with React, Vue, Svelte and more. Server-rendered assemblies, connected through page events, with an MCP server for your development tools.
 
