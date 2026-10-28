@@ -20,5 +20,5 @@ and `npm create @asmjs` starts a project. The `assemblejs`, `asm`, `create-assem
 `assemblejs-mcp` commands, `assemblejs.config.ts` and the `.assemblejs/` directory keep their
 names.
 
-When a project registers the agent server and does not depend on it, the install command `check`
-and `add agents` print names the version of the command line that is running.
+When a project registers the agent server without depending on it, `check` and `add agents`
+print an install command that names the running version.

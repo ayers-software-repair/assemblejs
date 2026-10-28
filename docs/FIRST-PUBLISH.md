@@ -46,7 +46,9 @@ The fourteen names: `@asmjs/build`, `@asmjs/check`, `@asmjs/cli`, `@asmjs/core`,
 
    If the staging step fails with an authorization error, the scope selection did not cover
    names that do not exist yet. Make the token again with "All Packages" in place of the
-   `@asmjs` scope, still stage only, save it with step 2, and re-run the run (step 6).
+   `@asmjs` scope, still stage only, save it with step 2, and re-run the run (step 6). If some
+   names were staged before the failure, approve those first (step 5): npm refuses to stage a
+   version that is already waiting, and an approved name is skipped by the re-run.
 
 4. **Test one name first.**
 
