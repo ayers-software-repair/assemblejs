@@ -1,10 +1,9 @@
 # The first publish of the @asmjs packages
 
 None of the fourteen names is on npm yet. npm lets a trusted publisher be set only on a package
-that already exists, so the first version of each name is staged by the release run and goes
-live when you approve it with your second factor. The token the run uses can only stage: it
-cannot publish, and nothing here bypasses two-factor authentication. After the first publish,
-trusted publishing releases every version and no token is kept.
+that already exists, so you publish each name once by hand, with your second factor. Then you
+add the trusted publishers, and from then on the release run publishes every tag with no npm
+token at all. Until a name is on npm, the release run fails and prints the command for it.
 
 The fourteen names: `@asmjs/build`, `@asmjs/check`, `@asmjs/cli`, `@asmjs/core`,
 `@asmjs/create`, `@asmjs/devtools`, `@asmjs/mcp`, `@asmjs/renderer-lit`,
@@ -13,104 +12,111 @@ The fourteen names: `@asmjs/build`, `@asmjs/check`, `@asmjs/cli`, `@asmjs/core`,
 
 ## Before you start
 
-- Two-factor authentication is on for your npm account. Approving a staged version needs it.
-- npm 11.15.0 or later, for `npm stage`:
+Two-factor authentication is on for your npm account. Then:
 
-      npm install -g npm@^11.15.0
-      npm login
+    npm install -g npm@11
+    npm login
 
-## Steps
+## Publish each name once
 
-1. **Make the stage-only token** on npmjs.com: your avatar, Access Tokens, Generate New Token.
-   - Token name: `asmjs first publish`.
-   - "Bypass two-factor authentication": leave it unchecked.
-   - Packages and scopes: permission "Read and write (stage only)", "Only select packages and
-     scopes", then the `@asmjs` scope.
-   - Organizations: "No access".
-   - Expiration: 7 days.
+1. **Check out the commit the seat names**, the one with the versions prepared and CI green:
 
-   Generate it and copy it.
+       git clone https://github.com/ayers-software-repair/assemblejs.git ~/asmjs-publish
+       cd ~/asmjs-publish
+       git switch --detach <commit>
 
-2. **Save it for the release run.** Paste the token when the command asks for it:
+2. **Build it once:**
 
-       gh secret set NPM_STAGE_TOKEN --env release --repo ayers-software-repair/assemblejs
+       pnpm install --frozen-lockfile && pnpm build
 
-3. **Cut the release tag** on the commit the seat names, with the version it prepared:
+3. **Print the publish commands.** It fails on purpose, listing one command per unpublished
+   name:
 
-       git tag -a v1.0.0-next.N -m v1.0.0-next.N <commit>
-       git push origin v1.0.0-next.N
+       node scripts/first-publish.mjs next
 
-   The release run stages all fourteen names, then stops red with
-   `staged ...: nothing is published until each is approved`. Nothing is public yet except
-   npm's placeholder version `0.0.0-stage` for each name.
+   Each command packs the package with pnpm and publishes the tarball with npm, for example:
 
-   If the staging step fails with an authorization error, the scope selection did not cover
-   names that do not exist yet. Make the token again with "All Packages" in place of the
-   `@asmjs` scope, still stage only, save it with step 2, and re-run the run (step 6). If some
-   names were staged before the failure, approve those first (step 5): npm refuses to stage a
-   version that is already waiting, and an approved name is skipped by the re-run.
+       (cd packages/create && pnpm pack && npm publish ./asmjs-create-<version>.tgz --access public --tag next --provenance=false && rm asmjs-create-<version>.tgz)
 
-4. **Test one name first.**
+4. **Publish `@asmjs/create` first.** Paste its line; npm asks for your code. Then:
 
        npm view @asmjs/create dist-tags
-       npm stage list @asmjs/create
-       npm stage approve <stage-id> --otp <code>
-       npm view @asmjs/create dist-tags versions
 
-   Expect `next: '1.0.0-next.N'`. If `latest` still points at `0.0.0-stage`, stop and tell the
-   seat: `npm create @asmjs` reads `latest`, and would run the empty placeholder.
+   Expect `next: '<version>'`. Tell the seat what `latest` shows: `npm create @asmjs` with no
+   version reads `latest`.
 
-5. **Approve the other thirteen.** For each name:
+5. **Publish the other thirteen**, one line each, each asking for your code.
 
-       npm stage list <name>
-       npm stage approve <stage-id> --otp <code>
+6. **Confirm every name is on npm:**
 
-   You can approve on npmjs.com as well; it asks for the same code.
+       node scripts/first-publish.mjs next
 
-6. **Re-run the release run.** Every name is now on the registry, so it stages nothing,
-   `changeset publish` skips the versions that are already there, and the site deploys:
+   It ends with `every name is on the registry; trusted publishing publishes`.
 
-       gh run list --workflow release.yml --repo ayers-software-repair/assemblejs --limit 1
-       gh run rerun <run-id> --repo ayers-software-repair/assemblejs
+7. **Cut the tag for this version.** The release run finds every version already on npm,
+   publishes nothing, and deploys the site:
 
-7. **Delete the token.** On npmjs.com, Access Tokens, delete `asmjs first publish`. Then:
+       git tag -a v<version> -m v<version>
+       git push origin v<version>
 
-       gh secret delete NPM_STAGE_TOKEN --env release --repo ayers-software-repair/assemblejs
+   Then `rm -rf ~/asmjs-publish`.
 
-8. **Add the trusted publishers when the next release is ready.** A new trusted publisher
-   expires unless it completes a publish within two days, so do this the day the seat says the
-   next tag is ready, then cut that tag. The first command asks for your code; the rest run
-   without it for five minutes. For each of the fourteen names:
+## Hand over to trusted publishing
 
-       npm trust github <name> --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+Do this on the day the seat says the next version is ready. A new trusted publisher expires
+unless it publishes within two days.
+
+8. **Add the trusted publishers.** The first command asks for your code; the rest run without it
+   for five minutes:
+
+       npm trust github @asmjs/build --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/check --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/cli --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/core --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/create --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/devtools --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/mcp --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/renderer-lit --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/renderer-preact --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/renderer-react --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/renderer-solid --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/renderer-svelte --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/renderer-templates --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github @asmjs/renderer-vue --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
 
 9. **Close token publishing.** On each package's Settings, Publishing access, choose "Require
    two-factor authentication and disallow tokens". Trusted publishing is unaffected.
 
+10. **Cut that next tag the same day.** Its release run publishes all fourteen through trusted
+    publishing, with provenance.
+
+## Why the command is shaped this way
+
+- `pnpm pack`, not `npm publish` from the folder: pnpm's pack writes real versions where the
+  workspace says `workspace:*`; npm's pages never mention that protocol.
+- `--tag next`: npm refuses a prerelease without a tag.
+- `--provenance=false`: provenance can only be made on a supported cloud CI runner, and the
+  packages set `publishConfig.provenance`. A flag on the command line replaces that key. Your
+  first versions carry no provenance; every later one does.
+- `--access public`: a new scoped package defaults to public, and the packages say so too.
+- No `--otp`: npm prompts for the code when the registry asks for it.
+
 ## Sources
 
-- Staging creates a new name and publishes the placeholder `0.0.0-stage`; approval needs a
-  second factor on the command line or on npmjs.com; npm 11.15.0 or later:
-  https://docs.npmjs.com/staged-publishing
-- "Staged publishing will allow you to create a new package if it does not exist"; staging
-  works with any token type, approving prompts for the second factor; `--tag`, `--access`,
-  `--provenance`, `npm stage list` and `npm stage approve <stage-id>`:
-  https://docs.npmjs.com/cli/v11/commands/npm-stage
-- The "Read and write (stage only)" permission, the "Bypass two-factor authentication" checkbox
-  (unchecked by default) and package or scope selection:
-  https://docs.npmjs.com/creating-and-viewing-access-tokens
-- "Bypass-2FA tokens with direct-publish access are being deprecated"; direct publishing with a
-  granular token is removed in January 2027; a stage-only token cannot publish
-  (`E_STAGE_REQUIRED`): https://docs.npmjs.com/about-access-tokens
+- `workspace:` replaced "through `pnpm pack` or one of the publish commands like `pnpm
+publish`": https://pnpm.io/workspaces
+- "You must specify a tag using --tag when publishing a prerelease version", and "Filter out
+  properties set in CLI flags to prioritize them over corresponding `publishConfig` settings":
+  https://github.com/npm/cli/blob/latest/lib/commands/publish.js
+- Provenance needs "a supported cloud CI/CD provider using a cloud-hosted runner", and trusted
+  publishing makes it automatically: https://docs.npmjs.com/generating-provenance-statements
+- `--access` is "'public' for new packages"; `--otp`: "npm will prompt on the command line for
+  one": https://docs.npmjs.com/cli/v11/commands/npm-publish
 - "The package you're configuring must already exist on the npm registry"; the `npm trust
-  github` flags; the first request asks for a second factor, then five minutes without:
+github` flags; the first request asks for a second factor, then five minutes without:
   https://docs.npmjs.com/cli/v11/commands/npm-trust
-- A new trusted publisher must complete its first publish within two days; disallowing tokens:
+- A new trusted publisher must publish within two days; disallowing tokens:
   https://docs.npmjs.com/trusted-publishers
-- `gh secret set --env`, `gh secret delete --env`, `gh run rerun`:
-  https://cli.github.com/manual/gh_secret_set, https://cli.github.com/manual/gh_secret_delete,
-  https://cli.github.com/manual/gh_run_rerun
 
-Not stated by those pages: which dist-tag the `0.0.0-stage` placeholder carries (step 4 tests
-it), and whether a token limited to the `@asmjs` scope covers names not yet published (step 3
-names the fallback).
+Not stated by those pages: whether a first publish under `--tag next` also sets `latest`. Step 4
+reads it.

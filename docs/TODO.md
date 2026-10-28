@@ -7,9 +7,9 @@ in a batch afterwards. An unchecked box is work not done. Order is the order of 
 
 **RESUME HERE (2026-10-27, branch `seat/asmjs-rename`).** The fourteen packages are
 `@asmjs/<name>` and `npm create @asmjs` starts a project (DECISIONS 2026-10-26, "npm packages
-use @asmjs"). The first publish of the new names is staged by the release run and approved by
-the owner with his code, with no token that bypasses two-factor authentication: his steps are
-`docs/FIRST-PUBLISH.md` (DECISIONS 2026-10-27, "The first publish is staged"). Not yet run on
+use @asmjs"). The first publish of the new names is the owner's, by hand with his code, and
+then trusted publishing alone, with no npm token anywhere: his steps are
+`docs/FIRST-PUBLISH.md` (DECISIONS 2026-10-27, "The first publish is by hand"). Not yet run on
 this branch: `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm conformance`. The block below
 is the handoff before it.
 
@@ -894,7 +894,7 @@ each package's `CHANGELOG.md`, written by changesets, the action's default.
       publish, by the owner's hand, that sentence becomes the date, in the same change that
       publishes (found 2026-10-10). PREMISE GONE 2026-10-18: `c2beecb` (2026-10-11) took the
       sentence out of the release notes page; `grep -rni "not yet published" site site-source
-  RELEASE_NOTES.md` finds nothing, so there is no sentence to turn into a date.
+RELEASE_NOTES.md` finds nothing, so there is no sentence to turn into a date.
 - [x] ONE VERSION OR TWELVE: RULED "One number" (owner, D1252) and built as one fixed group
       with `check:one-version` (P5-2, `74ef101`, 2026-10-11). Measured in a
       clone: the packages' versions part ways at the first cut that does not name them all.
@@ -1960,12 +1960,11 @@ rows are taken in this order; each is a bite with its own proof and its own push
       with the one token, packed by pnpm so `workspace:*` is written as versions; `release.yml`
       runs it before `changeset publish` and holds stable publication until his word; his three
       steps are written in the workflow's header (DECISIONS 2026-10-18, "R-13 landed")
-- [ ] THE OWNER'S, for the first prerelease, in `docs/FIRST-PUBLISH.md`: a stage-only token
-      saved as the `release` environment's NPM_STAGE_TOKEN, the tag, his approval of each
-      staged name with his second factor (one name first), the run re-run, the token deleted,
-      and the trusted publishers added within two days of the release that follows. No token
-      that bypasses two-factor authentication (DECISIONS 2026-10-27, "The first publish is
-      staged")
+- [ ] THE OWNER'S, for the first prerelease, in `docs/FIRST-PUBLISH.md`: each of the fourteen
+      names published once by his hand with his second factor (`@asmjs/create` first), its
+      tag cut, then on the day the next version is ready the trusted publishers added and
+      token publishing disallowed on each, and that tag cut within two days. No npm token
+      anywhere (DECISIONS 2026-10-27, "The first publish is by hand")
 
 ## Phase 4: the site, on the pattern howland and magpie already use
 

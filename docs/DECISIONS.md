@@ -7840,3 +7840,25 @@ needs a package that exists. `scripts/first-publish.mjs` counts a name holding o
 placeholder as unseen. Not stated by npm, and so tested on the first name: which dist-tag the
 placeholder carries, and whether a token limited to the `@asmjs` scope covers names not yet
 published. His steps: `docs/FIRST-PUBLISH.md`.
+
+## 2026-10-27: The first publish is by hand
+
+Replaces "The first publish is staged" above, on the owner's word (D1963): "cant i just run npm
+publish and does it auto do it after?". He publishes each of the fourteen names once by hand
+with his second factor, adds the trusted publishers, and from then on the release run publishes
+every tag through trusted publishing with no npm token at all. `scripts/first-publish.mjs` is
+the guard: it fails the run on a name npm has never seen and prints the command that publishes
+it by hand.
+
+The command, per package: `pnpm pack`, then `npm publish ./<tarball> --access public --tag
+next --provenance=false`. pnpm's pack writes real versions where the workspace says
+`workspace:*` (pnpm, "Workspace"); npm's pages never mention that protocol, so a publish from
+the folder with npm would ship it. npm refuses a prerelease without `--tag` ("You must specify a
+tag using --tag when publishing a prerelease version", npm/cli `lib/commands/publish.js`).
+Provenance comes only from a supported cloud CI runner (npm, "Generating provenance
+statements"), and the packages set `publishConfig.provenance`; a flag given on the command line
+replaces the `publishConfig` key of the same name (the same file: "Filter out properties set in
+CLI flags to prioritize them over corresponding `publishConfig` settings"). The first versions
+therefore carry no provenance; every later one, published by trusted publishing, does. A new
+trusted publisher expires unless it publishes within two days (npm, "Trusted publishing"), so
+the trusted publishers are added on the day the next version's tag is cut.

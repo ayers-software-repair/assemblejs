@@ -117,9 +117,9 @@ commit before the owner cuts the tag. `v1.0.0-next.N` publishes to npm `next`; `
 `latest`. `release.yml` checks the tag against every public package and the channel's branch,
 requires successful CI for that commit, and publishes through the `release` environment
 (npm trusted publishing). The same run then calls the existing site deployment at that exact
-commit: `/assemblejs/next/` or `/assemblejs/`. A name's first version is staged by the run and
-published when the owner approves it (`docs/FIRST-PUBLISH.md`); after it, registry
-publication is CI only. No package is published by a normal branch push.
+commit: `/assemblejs/next/` or `/assemblejs/`. A name's first version is published once by the
+owner's hand with his second factor (`docs/FIRST-PUBLISH.md`); after it, registry
+publication is CI only, with no token. No package is published by a normal branch push.
 The release neither commits back nor creates another tag or version pull request.
 
 Release notes are four surfaces, the estate's one pattern: each package's `CHANGELOG.md`, which

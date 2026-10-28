@@ -4,14 +4,11 @@ name: release
 # npm trusted publishing remains bound to this file and the release environment. Only the
 # `next` channel publishes until the owner opens stable.
 #
-# A name npm has never seen cannot have a trusted publisher yet, so its first version is staged
-# (scripts/first-publish.mjs) with the NPM_STAGE_TOKEN secret of the release environment, a
-# granular token whose only write permission is "Read and write (stage only)": it cannot publish,
-# and no token here bypasses two-factor authentication. A run that stages anything stops red
-# before `changeset publish`; the owner approves each staged name with his second factor and
-# re-runs it. Every name already on the registry is published tokenless by `changeset publish`,
-# which skips a version the registry has. With every name on the registry the token is never
-# read. The owner's steps for the first publish are docs/FIRST-PUBLISH.md.
+# This run holds no npm token: every version is published by trusted publishing. A name npm has
+# never seen cannot have a trusted publisher yet, so its first version is published once by the
+# owner's hand with his second factor (docs/FIRST-PUBLISH.md); until then
+# scripts/first-publish.mjs fails the run, naming each unseen package and the command that
+# publishes it. `changeset publish` skips a version the registry has.
 
 on:
   push:
@@ -75,13 +72,11 @@ jobs:
       - name: Check packed packages
         run: node scripts/check-pack.mjs
       - name: Set up npm trusted publishing
-        # Staged publishing needs npm 11.15.0 or later.
-        run: npm install -g npm@^11.15.0 && npm --version
-      - name: Stage the names npm has never seen, for the owner to approve
+        run: npm install -g npm@^11.5.1 && npm --version
+      - name: Refuse a name npm has never seen
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_STAGE_TOKEN }}
           NPM_TAG: ${{ steps.channel.outputs.npm-tag }}
-        run: node scripts/first-publish.mjs --self-test && node scripts/first-publish.mjs --stage "$NPM_TAG"
+        run: node scripts/first-publish.mjs --self-test && node scripts/first-publish.mjs "$NPM_TAG"
       - name: Publish the tagged version
         env:
           NPM_CONFIG_PROVENANCE: "true"
