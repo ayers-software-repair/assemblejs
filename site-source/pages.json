@@ -103,7 +103,7 @@
     {
       "file": "docs/index.html",
       "title": "Documentation — AssembleJS",
-      "description": "Get started, learn a task, or find the answer to a problem.",
+      "description": "Build pages, connect data and deploy an AssembleJS application.",
       "kind": "manual",
       "section": "docs/index.html"
     },
