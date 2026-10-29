@@ -19,7 +19,7 @@ Add it to a page:
 ```
 
 The server renders declarative shadow roots; the browser hydrates them.
-Requires `@asmjs/core` and this package's declared Lit peer dependencies.
+Requires `@asmjs/core`.
 
 [Documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
 

@@ -1,7 +1,6 @@
 # @asmjs/core
 
-Compose frontend assemblies into one application. Render React, Vue, Svelte, Preact,
-Solid, Lit, Web Components, and templates on the server; hydrate them in the browser.
+Compose frontend assemblies into one application, with server rendering and browser hydration.
 
 ## Install
 
@@ -9,7 +8,7 @@ Solid, Lit, Web Components, and templates on the server; hydrate them in the bro
 npm install @asmjs/core
 ```
 
-Node.js 22 or newer. ESM only. For a complete project, run `npm create @asmjs my-app`.
+Requires Node.js 22 or newer. ESM only.
 
 ## Entry points
 
