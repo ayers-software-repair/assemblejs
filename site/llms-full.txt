@@ -10,7 +10,7 @@ Source: [index.html](index.html)
 
 React. Vue. Svelte. One application.
 
-One application built with React, Vue, Svelte and more. Server-rendered assemblies, connected through page events, with an MCP server for your development tools.
+Compose server-rendered pages from multiple frontend frameworks. Connect assemblies through page events, and use the MCP server from your coding agent.
 
 - [Install AssembleJS](downloads.html)
 - [Read the manual](docs/index.html)
@@ -182,7 +182,7 @@ Everything the framework is, for the first time: pages composed on the server fr
 
 Source: [docs/index.html](docs/index.html)
 
-Get started, learn a task, or find the answer to a problem.
+Build pages from assemblies, connect data and events, and deploy your application.
 
 ## Create your first application
 
@@ -1798,9 +1798,9 @@ npm install -D @asmjs/cli@next
 
 Source: [support.html](support.html)
 
-Get help with AssembleJS.
+Report framework errors or find installation and API documentation.
 
-## Send us the details
+## Report a problem
 
 Include your operating system, product version, the step you tried and what happened.
 
@@ -1808,11 +1808,11 @@ Include your operating system, product version, the step you tried and what happ
 
 Remove passwords, access tokens and private content from logs or screenshots before sharing them.
 
-- [Installation — Choose the right package and complete setup.](install.html)
+- [Installation — Install the CLI and create an application.](install.html)
 
-- [Documentation — Follow the guide for the task you are working on.](docs/index.html)
+- [Documentation — Assemblies, renderers, services and page events.](docs/index.html)
 
-- [Get started — Reach your first working result.](start.html)
+- [Get started — Build a page with React, Vue or Svelte.](start.html)
 
 # See how a page is composed
 
