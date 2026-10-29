@@ -1,26 +1,32 @@
 # @asmjs/renderer-svelte
 
-Write an AssembleJS assembly in Svelte.
+Server rendering and browser hydration for Svelte assemblies in AssembleJS.
 
-    src/assemblies/cart/cart.svelte
+## Add a Svelte assembly
 
-No infix, unlike the React renderer: `.svelte` says which framework wrote the file on its own.
+Inside an AssembleJS project:
 
-The events object arrives as a prop, which is Svelte's idiom; the React renderer uses a context,
-which is React's. Neither wraps the other's habits, and an assembly in either can talk to an
-assembly in the other with nothing in between.
+```sh
+npm install @asmjs/renderer-svelte svelte
+npx assemblejs add assembly cart --renderer svelte
+```
 
-A view types what it is handed by the renderer's own type, its data and its events:
+The view is written to `src/assemblies/cart/cart.svelte`. Place the assembly in a page with:
 
-    <script lang="ts">
-      import type { AssemblyProps } from "@asmjs/renderer-svelte";
+```html
+<assembly name="cart"></assembly>
+```
 
-      let { data, events }: AssemblyProps<{ label: string }> = $props();
-    </script>
+Svelte views receive typed `data` and `events` props. The `.svelte` extension identifies the renderer.
 
-Svelte is a peer dependency, so installing this does not install a framework you were not going
-to use.
+## Requirements
 
-See <https://assemblejs.com/>.
+Node.js 22 or newer, `@asmjs/core`, and the Svelte peer dependencies declared by this package.
+The framework remains a peer dependency so your application controls its version.
+Assemblies using different frameworks can share a page and communicate through AssembleJS events.
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.

@@ -1,16 +1,32 @@
 # @asmjs/renderer-react
 
-Write an AssembleJS assembly in React.
+Server rendering and browser hydration for React assemblies in AssembleJS.
 
-    src/assemblies/cart/cart.react.tsx
+## Add a React assembly
 
-The infix is not decoration: React, Preact and Solid all write `.tsx`, so a file that does not
-say which is a file whose framework only the configuration knows. A directory listing should
-tell you what a page is made of.
+Inside an AssembleJS project:
 
-React is a peer dependency, so installing this does not install a framework you were not going
-to use, and a React team never pays for Vue.
+```sh
+npm install @asmjs/renderer-react react react-dom
+npx assemblejs add assembly cart --renderer react
+```
 
-See <https://assemblejs.com/>.
+The view is written to `src/assemblies/cart/cart.react.tsx`. Place the assembly in a page with:
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+```html
+<assembly name="cart"></assembly>
+```
+
+React views receive typed assembly data. React, Preact, and Solid use distinct filename infixes so the build can select the correct renderer.
+
+## Requirements
+
+Node.js 22 or newer, `@asmjs/core`, and the React peer dependencies declared by this package.
+The framework remains a peer dependency so your application controls its version.
+Assemblies using different frameworks can share a page and communicate through AssembleJS events.
+
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.

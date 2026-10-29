@@ -1,19 +1,34 @@
 # @asmjs/devtools
 
-Read-only devtools for an AssembleJS server in development.
+Read-only inspection for an AssembleJS development server: assemblies, pages, APIs, remotes, and recent failures.
 
-    import { devtools } from "@asmjs/devtools";
+## Install
 
-    await serve({ ...project, devtools: devtools() });
+```sh
+npm install --save-dev @asmjs/devtools
+```
 
-Open `/_assemblejs/devtools/` on the running server: the assemblies, pages, apis and remotes it
-was built from, and the failures it logged most recently with their correlation ids. The same
-reading is at `/_assemblejs/devtools/project.json`.
+Requires `@asmjs/core` and Node.js 22 or newer.
 
-The server mounts devtools only in development; in production it mounts nothing of them, so a
-project can hand them over unconditionally. Nothing under the devtools prefix accepts a write: a
-server with a route there that answers anything but GET or HEAD refuses to boot.
+## Enable
 
-See <https://assemblejs.com/>.
+Add devtools to the project object passed to the runtime:
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+```ts
+import { serve } from "@asmjs/core";
+import { devtools } from "@asmjs/devtools";
+
+await serve({ ...project, devtools: devtools() });
+```
+
+Here `project` is your application's existing server definition.
+Open `/_assemblejs/devtools/` on the development server. A JSON representation is available at `/_assemblejs/devtools/project.json`.
+
+The runtime mounts these routes only in development. Production mounts no devtools routes.
+The devtools prefix accepts only GET and HEAD; a conflicting write route prevents the server from starting.
+
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.

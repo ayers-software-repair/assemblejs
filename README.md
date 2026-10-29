@@ -1,23 +1,25 @@
 # AssembleJS
 
-An assembly is a piece of a web page written in one UI framework: React, Vue, Svelte, Preact,
-Solid, Lit, a web component, or a plain template. AssembleJS composes assemblies into pages on
-the server, whether they live in the same project or on another server, and hydrates them in
-the browser, so a team can hire any kind of frontend developer and have them building on day
-one, in the framework they already know, on the same page as everyone else.
+Compose React, Vue, Svelte, Preact, Solid, Lit, Web Components, and templates in one application.
+AssembleJS renders each assembly on the server, places it in a page, and hydrates its browser code.
+Assemblies can live in one project or on explicitly configured remote servers.
 
-It also ships an MCP server, so an AI agent builds with the framework the way a developer does,
-with the framework's own knowledge behind it: it can read the project's shape, add an assembly,
-place it on a page, check its work against the framework's own rules, and render an assembly or
-compose a page to see what it actually produced: any view while the project's dev server runs,
-plain html with nothing running. The server
-carries no model and no credential of its own; the intelligence is whichever agent you already
-use. Every new project is written with an `AGENTS.md` that says what it is and the rules its
-code must satisfy, and with that server installed and registered for Claude Code, Cursor,
-VS Code, Gemini CLI and opencode, so an agent that opens the project knows the framework before
-it writes.
+The MCP development server lets your AI coding agent inspect the project, add and place assemblies,
+check project rules, and render the result. New projects include agent instructions and client registrations.
+The framework uses the agent and model you already work with.
 
-Status: under construction on the `next` branch. Nothing is published yet.
+## Start an application
+
+```sh
+npm create @asmjs my-app
+cd my-app
+npm install
+npm run dev
+```
+
+Node.js 22 or newer. Add a framework renderer when the project needs it; an application can compose assemblies written in different frameworks on the same page.
+
+## Packages and documentation
 
 - Packages: `@asmjs/core`, `@asmjs/build`, `@asmjs/check`, `@asmjs/cli`,
   `@asmjs/create`, `@asmjs/devtools`, `@asmjs/mcp`, one `@asmjs/renderer-*`

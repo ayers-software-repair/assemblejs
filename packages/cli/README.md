@@ -1,25 +1,44 @@
 # @asmjs/cli
 
-The AssembleJS command line.
+Create, develop, check, build, and package AssembleJS applications.
+The executable is `assemblejs`; `asm` is an alias.
 
-    assemblejs new my-app
-    assemblejs add assembly cart
-    assemblejs add agents     the agent instructions and MCP registrations, written or brought up to date
-    assemblejs dev       build, run, and rebuild on every change
-    assemblejs build     dist/server.js and its browser files
-    assemblejs check     every problem found without building, each with its fix
-    assemblejs perf      build, then weigh what each page sends a visitor, against its budgets
-    assemblejs deploy    build, then write deploy/: dist and its dependencies
+## Start a project
 
-A directory under `src/assemblies/` is an assembly. There is nothing to register: the command
-generates the typed module the built server imports, and you never open it.
+```sh
+npm create @asmjs my-app
+cd my-app
+npm install
+npm run dev
+```
 
-A new project is written for the agents that will work in it: an `AGENTS.md` that says what the
-project is and the rules its code must satisfy, a `CLAUDE.md` that brings it to Claude Code, and
-`@asmjs/mcp` installed and registered in `.mcp.json`, `.cursor/mcp.json`,
-`.vscode/mcp.json`, `.gemini/settings.json` and `opencode.json`. `check` holds them to what the
-installed version writes, and `add agents` rewrites only what is its own in each.
+New projects include the CLI. To add it to an existing project:
 
-See <https://assemblejs.com/>.
+```sh
+npm install --save-dev @asmjs/cli
+```
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+Node.js 22 or newer.
+
+## Commands
+
+Run these inside the project:
+
+| Command | Result |
+| --- | --- |
+| `npx assemblejs add assembly cart --renderer react` | Create a React assembly and report any missing renderer dependencies |
+| `npx assemblejs add agents` | Write or refresh the project's agent instructions and MCP registrations |
+| `npx assemblejs dev` | Build, serve, and rebuild when files change |
+| `npx assemblejs build` | Write the server and browser output to `dist/` |
+| `npx assemblejs check` | Report project findings with their rules and fixes |
+| `npx assemblejs perf` | Build and compare page payloads with the configured budgets |
+| `npx assemblejs deploy` | Write a deployment directory containing the build and dependencies |
+
+Assemblies live under `src/assemblies/`. Add an assembly's printed tag to a page to place it there.
+The build generates the server's module registrations.
+
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.

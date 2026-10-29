@@ -1,38 +1,36 @@
 # @asmjs/renderer-templates
 
-Write an AssembleJS assembly as an EJS, Markdown, Nunjucks, Handlebars or Pug template.
+Server-rendered EJS, Markdown, Nunjucks, Handlebars, and Pug assemblies for AssembleJS.
 
-    src/assemblies/cart/cart.ejs
-    src/assemblies/cart/cart.njk
-    src/assemblies/cart/cart.hbs
-    src/assemblies/cart/cart.pug
-    src/assemblies/notes/notes.md
+## Install
 
-The extension names the language. A template renders on the server only, like an `.html` view;
-a `.client.ts` beside it gives it browser behaviour.
+```sh
+npm install @asmjs/renderer-templates
+```
 
-A template sees one name: `data`, from the assembly's service. What a template writes from
-`data` is escaped. It places another assembly by writing the directive in its own markup, as a
-page does, and the server puts that assembly where the directive stood:
+Requires `@asmjs/core` and Node.js 22 or newer. Template engines are included and loaded when their language is first used.
 
-| Language   | A value from `data` | Another assembly                    |
-| ---------- | ------------------- | ----------------------------------- |
-| EJS        | `<%= data.total %>` | `<assembly name="cart"></assembly>` |
-| Nunjucks   | `{{ data.total }}`  | `<assembly name="cart"></assembly>` |
-| Handlebars | `{{data.total}}`    | `<assembly name="cart"></assembly>` |
-| Pug        | `p= data.total`     | `assembly(name="cart")`             |
+## View files
 
-A Markdown view is prose: it reads no data, places no assembly, and shows HTML written inside it
-as text.
+| Language | Example file | Data interpolation |
+| --- | --- | --- |
+| EJS | `src/assemblies/cart/cart.ejs` | `<%= data.total %>` |
+| Nunjucks | `src/assemblies/cart/cart.njk` | `{{ data.total }}` |
+| Handlebars | `src/assemblies/cart/cart.hbs` | `{{data.total}}` |
+| Pug | `src/assemblies/cart/cart.pug` | `p= data.total` |
+| Markdown | `src/assemblies/notes/notes.md` | Plain prose; no data interpolation |
 
-A view is one file: an include, an extends, an import or a partial from another file is refused
-when it renders; a Handlebars inline partial, defined in the same file, renders. Each engine is
-imported the first time a template in its language renders, so a project using one language
-never loads the other four, and each template compiles once. An error names the view's file.
+Templates receive the assembly service's `data`. They render on the server; add a sibling `.client.ts` file for browser behavior.
+EJS, Nunjucks, Handlebars, and Pug views can place another assembly with the language's equivalent of `<assembly name="cart"></assembly>`.
+Markdown treats embedded HTML as text and does not place assemblies.
 
-Pug's escaping leaves `'` as it is: write an attribute with Pug's own syntax, `a(title=data.name)`,
-rather than inside a single-quoted attribute in raw HTML.
+## Template boundaries
 
-See <https://assemblejs.com/>.
+Each view is one file. Cross-file includes, inheritance, imports, and partials are refused; a Handlebars inline partial defined in that same file is supported.
+Values interpolated from `data` are escaped. In Pug, use Pug attribute syntax such as `a(title=data.name)` rather than a single-quoted raw HTML attribute.
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.
