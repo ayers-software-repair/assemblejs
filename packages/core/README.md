@@ -1,41 +1,27 @@
 # @asmjs/core
 
-The AssembleJS runtime for composing a page from independent frontend assemblies.
-An assembly can use React, Vue, Svelte, Preact, Solid, Lit, Web Components, or a template.
-The server composes local and explicitly configured remote assemblies; their browser code hydrates the result.
+Compose frontend assemblies into one application. Render React, Vue, Svelte, Preact,
+Solid, Lit, Web Components, and templates on the server; hydrate them in the browser.
 
-## Get started
-
-Create an application with the CLI, which configures the runtime and build tools:
-
-```sh
-npm create @asmjs my-app
-cd my-app
-npm install
-npm run dev
-```
-
-For a program that embeds the runtime directly:
+## Install
 
 ```sh
 npm install @asmjs/core
 ```
 
-Node.js 22 or newer. ESM only.
+Node.js 22 or newer. ESM only. For a complete project, run `npm create @asmjs my-app`.
 
-## Package entry points
+## Entry points
 
-| Import | Purpose |
-| --- | --- |
-| `@asmjs/core` | Server composition, project declarations, services, APIs, and configuration types |
-| `@asmjs/core/client` | Browser runtime and cross-assembly events |
-| `@asmjs/core/outline` | Optional page outline showing assembly boundaries |
+| Import                | Purpose                                                             |
+| --------------------- | ------------------------------------------------------------------- |
+| `@asmjs/core`         | Server composition, project declarations, services, APIs, and types |
+| `@asmjs/core/client`  | Browser runtime and cross-assembly events                           |
+| `@asmjs/core/outline` | Page outline with assembly boundaries                               |
 
-`serve()` starts a configured project. `createServer()` returns an application you can start and close yourself.
-Renderers are separate packages; install the ones your assemblies use.
+`serve()` starts a project. `createServer()` returns an application you can start and close.
+Install a renderer package for each framework you use.
 
-## Documentation
+[Documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
 
-[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
-
-Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.
+Apache-2.0. Copyright Ayers Electronics Inc. See LICENSE and NOTICE.
