@@ -1,16 +1,26 @@
 # @asmjs/renderer-lit
 
-Write an AssembleJS assembly in Lit.
+Server rendering and browser hydration for Lit assemblies in AssembleJS.
 
-    src/assemblies/cart/cart.lit.ts
+## Install
 
-A Lit view default-exports a function from the assembly's props to a template. The server
-renders it, its elements into declarative shadow roots, with `@lit-labs/ssr`; the browser
-hydrates it, and each element hydrates its own shadow root.
+Inside an AssembleJS project using Node.js 22 or newer:
 
-Lit is a peer dependency, so installing this does not install a framework you were not going to
-use.
+```sh
+npm install @asmjs/renderer-lit lit
+npx assemblejs add assembly cart --renderer lit
+```
 
-See <https://assemblejs.com/>.
+Edit `src/assemblies/cart/cart.lit.ts`. Its default export maps props to a Lit template.
+Add it to a page:
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+```html
+<assembly name="cart"></assembly>
+```
+
+The server renders declarative shadow roots; the browser hydrates them.
+Requires `@asmjs/core`.
+
+[Documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See LICENSE and NOTICE.

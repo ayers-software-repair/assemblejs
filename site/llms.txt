@@ -1,8 +1,8 @@
 # AssembleJS
 
-> The first micro-frontend framework for AI-enabled development. Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+> Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools.
 
-The first micro-frontend framework for AI-enabled development.
+React. Vue. Svelte. One application.
 
 Every link here is relative to this file. All of these pages are one file, [llms-full.txt](llms-full.txt).
 
@@ -11,7 +11,7 @@ Every link here is relative to this file. All of these pages are one file, [llms
 - [Installing](install.html): Run an AssembleJS page, then add the frameworks you want to use.
 - [Getting started](start.html): An assembly is a piece of a page written in one framework.
 - [Release notes](release-notes.html): What is in each version of AssembleJS, newest first.
-- [Documentation](docs/index.html): Get started, learn a task, or find the answer to a problem.
+- [Documentation](docs/index.html): Build pages from assemblies, connect data and events, and deploy your application.
 - [The tutorial](docs/tutorial.html): One project, from nothing to a deployed server, in the order you would actually do it.
 - [For React developers](docs/react.html): A React assembly is a component in a file whose name says it is React.
 - [For Vue developers](docs/vue.html): A Vue assembly is a single-file component.
@@ -22,7 +22,7 @@ Every link here is relative to this file. All of these pages are one file, [llms
 - [For template authors](docs/templates.html): A template assembly is one file in EJS, Handlebars, Nunjucks, Pug or Markdown, rendered on the server by its own engine and nothing else; it ships no JavaScript unless a file beside it asks for some.
 - [API reference](docs/api/index.html): Every published entry point of the twelve packages, generated from the sources when the site deploys.
 - [Downloads](downloads.html): AssembleJS is distributed through npm.
-- [Support](support.html): Get help with AssembleJS.
+- [Support](support.html): Report framework errors or find installation and API documentation.
 - [Inspect a composed page](docs/outline.html): Find each assembly, the server that supplied it, and when it became interactive.
 
 ## Optional

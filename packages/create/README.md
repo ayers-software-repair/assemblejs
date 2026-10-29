@@ -1,18 +1,36 @@
 # @asmjs/create
 
-Starts an AssembleJS project.
+Create an AssembleJS application with one page and one assembly.
 
-    npm create @asmjs@next my-app
-    cd my-app
-    npm install
-    npm run dev
+## Usage
 
-It writes the smallest project that runs: one page placing one assembly, and no framework you
-did not ask for. It never asks a question, so it behaves the same in a terminal and in a script.
-For an AI agent that opens the project it writes an `AGENTS.md`, which says what the project is
-and the rules its code must satisfy, and registers the project's own MCP server.
-Add a second framework with `npx assemblejs add assembly cart --renderer svelte`.
+```sh
+npm create @asmjs my-app
+cd my-app
+npm install
+npm run dev
+```
 
-See <https://assemblejs.com/>.
+Node.js 22 or newer. The directory is required; the command does not prompt for one.
+It refuses to overwrite files that would collide with the starter.
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+## What it creates
+
+- An application with the AssembleJS runtime, CLI, and MCP development server.
+- One page placing one plain HTML assembly.
+- Agent instructions and registrations for Claude Code, Cursor, VS Code, Gemini CLI, and opencode.
+
+To add a React assembly, install its renderer and framework, then generate the files:
+
+```sh
+npm install @asmjs/renderer-react react react-dom
+npx assemblejs add assembly cart --renderer react
+```
+
+Place the tag printed by the command in a page. Other renderers can be used in the same application.
+
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.

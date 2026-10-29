@@ -22,7 +22,7 @@ const fake = () => {
   return { io, written, errors };
 };
 
-describe("npm create @asmjs@next", () => {
+describe("npm create @asmjs", () => {
   it("writes the same project the command line's new writes", () => {
     const { io, written } = fake();
     expect(createProject(["my-app"], io)).toBe(0);
@@ -48,7 +48,7 @@ describe("npm create @asmjs@next", () => {
       const { io, written, errors } = fake();
       expect(createProject(argv, io)).toBe(2);
       expect(written.size).toBe(0);
-      expect(errors.join()).toContain("npm create @asmjs@next <directory>");
+      expect(errors.join()).toContain("npm create @asmjs <directory>");
     }
   });
 });

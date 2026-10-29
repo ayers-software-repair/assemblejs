@@ -17,7 +17,8 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { basename, join } from "node:path";
+import { join } from "node:path";
+import { pack } from "../conformance/harness/pack.mjs";
 
 const step = (text) => console.log(`\n== ${text}`);
 const sh = (command, args, cwd) =>
@@ -29,21 +30,7 @@ const tarballs = join(work, "tarballs");
 // The starter, and every package of ours it writes into a project.
 const packed = ["create", "core", "build", "check", "cli", "mcp"];
 step(`build and pack ${packed.join(", ")}, so the tarballs are the source at this commit`);
-sh("pnpm", [...packed.flatMap((name) => ["--filter", `@asmjs/${name}`]), "build"], ".");
-const packedFiles = new Map();
-for (const name of packed) {
-  const { filename } = JSON.parse(
-    sh("pnpm", ["pack", "--json", "--pack-destination", tarballs], join("packages", name)),
-  );
-  const file = join(tarballs, basename(filename));
-  if (!existsSync(file)) throw new Error(`no tarball for ${name}`);
-  packedFiles.set(name, file);
-}
-const tarball = (name) => {
-  const file = packedFiles.get(name);
-  if (file === undefined) throw new Error(`no tarball for ${name}`);
-  return file;
-};
+const tarball = pack(packed, tarballs);
 console.log(readdirSync(tarballs).join("\n"));
 
 step("npm create, from the starter's tarball, into an empty directory");

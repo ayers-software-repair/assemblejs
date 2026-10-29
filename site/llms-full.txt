@@ -1,6 +1,6 @@
 # AssembleJS
 
-> The first micro-frontend framework for AI-enabled development. Compose a page on the server from assemblies, each written in one UI framework, and hire any kind of frontend developer.
+> Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools.
 
 Every page of this site as text, in the order [llms.txt](llms.txt) lists them. Every link is relative to this file.
 
@@ -8,9 +8,9 @@ Every page of this site as text, in the order [llms.txt](llms.txt) lists them. E
 
 Source: [index.html](index.html)
 
-The first micro-frontend framework for AI-enabled development.
+React. Vue. Svelte. One application.
 
-One application built with React, Vue, Svelte and more. Server-rendered assemblies, connected through page events, with an MCP server for your development tools.
+Compose server-rendered pages from multiple frontend frameworks. Connect assemblies through page events, and use the MCP server from your coding agent.
 
 - [Install AssembleJS](downloads.html)
 - [Read the manual](docs/index.html)
@@ -33,7 +33,7 @@ Install Node.js 22 or newer. The project includes its own CLI; no global install
 ## 01Create the project
 
 ```
-npm create @asmjs@next my-app
+npm create @asmjs@latest my-app
 cd my-app
 npm install
 npm run dev
@@ -164,7 +164,7 @@ Everything the framework is, for the first time: pages composed on the server fr
 
 ### The command line
 
-- `npm create @asmjs@next` writes a project that runs, with a tokens file every page links, the components HTML already has styled from it, and a dark scheme.
+- `npm create @asmjs` writes a project that runs, with a tokens file every page links, the components HTML already has styled from it, and a dark scheme.
 
 - `add`, `dev`, `build`, `check`, `perf` and `deploy` take it from one assembly to a server you can put anywhere Node runs.
 
@@ -182,7 +182,7 @@ Everything the framework is, for the first time: pages composed on the server fr
 
 Source: [docs/index.html](docs/index.html)
 
-Get started, learn a task, or find the answer to a problem.
+Build pages from assemblies, connect data and events, and deploy your application.
 
 ## Create your first application
 
@@ -230,7 +230,7 @@ One project, from nothing to a deployed server, in the order you would actually 
 
 ## 1. Make a project
 
-### `npm create @asmjs@next shop`
+### `npm create @asmjs shop`
 
 Writes a project that runs: a page, one assembly, a server file that will never grow, and a package.json whose one runtime dependency is `@asmjs/core`, the command and the agent surface being development dependencies. Beside them, for an AI agent that opens the project: an `AGENTS.md` that says what the project is and the rules its code must satisfy, and the project's own MCP server registered for Claude Code, Cursor, VS Code, Gemini CLI and opencode.
 
@@ -1775,7 +1775,7 @@ AssembleJS is distributed through npm. Use Node.js 22 or newer.
 Start with a working page and add the frameworks you need.
 
 ```
-npm create @asmjs@next my-app
+npm create @asmjs@latest my-app
 cd my-app
 npm install
 npm run dev
@@ -1798,9 +1798,9 @@ npm install -D @asmjs/cli@next
 
 Source: [support.html](support.html)
 
-Get help with AssembleJS.
+Report framework errors or find installation and API documentation.
 
-## Send us the details
+## Report a problem
 
 Include your operating system, product version, the step you tried and what happened.
 
@@ -1808,11 +1808,11 @@ Include your operating system, product version, the step you tried and what happ
 
 Remove passwords, access tokens and private content from logs or screenshots before sharing them.
 
-- [Installation — Choose the right package and complete setup.](install.html)
+- [Installation — Install the CLI and create an application.](install.html)
 
-- [Documentation — Follow the guide for the task you are working on.](docs/index.html)
+- [Documentation — Assemblies, renderers, services and page events.](docs/index.html)
 
-- [Get started — Reach your first working result.](start.html)
+- [Get started — Build a page with React, Vue or Svelte.](start.html)
 
 # See how a page is composed
 

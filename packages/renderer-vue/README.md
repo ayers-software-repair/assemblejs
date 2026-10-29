@@ -1,15 +1,32 @@
 # @asmjs/renderer-vue
 
-Write an AssembleJS assembly in Vue.
+Server rendering and browser hydration for Vue assemblies in AssembleJS.
 
-    src/assemblies/cart/cart.vue
+## Add a Vue assembly
 
-A single-file component, compiled by the build with the project's own Vue: its template for
-the server and the browser, its `<style scoped>` scoped as Vue scopes it.
+Inside an AssembleJS project:
 
-Vue is a peer dependency, so installing this does not install a framework you were not going
-to use.
+```sh
+npm install @asmjs/renderer-vue vue
+npx assemblejs add assembly cart --renderer vue
+```
 
-See <https://assemblejs.com/>.
+The view is written to `src/assemblies/cart/cart.vue`. Place the assembly in a page with:
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+```html
+<assembly name="cart"></assembly>
+```
+
+Single-file components are compiled for the server and browser using the project’s Vue installation. Scoped styles use Vue’s scoping behavior.
+
+## Requirements
+
+Node.js 22 or newer, `@asmjs/core`, and the Vue peer dependencies declared by this package.
+The framework remains a peer dependency so your application controls its version.
+Assemblies using different frameworks can share a page and communicate through AssembleJS events.
+
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.

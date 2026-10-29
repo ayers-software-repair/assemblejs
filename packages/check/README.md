@@ -1,17 +1,33 @@
 # @asmjs/check
 
-What reads an AssembleJS project and names what is wrong with it.
+Checks project structure, views, pages, APIs, design tokens, agent files, and page budgets.
 
-It holds the rules a project is held to, each with its reason and its fix; finds every problem
-it can without building, in a view, a page, an api, the project's tokens and the files written
-for its agents; reads a project's shape for a tool that asks; and weighs what each page of a
-build sends a visitor against the project's budgets.
+The CLI includes this package. Findings identify the relevant rule and a suggested fix. Checks and performance budgets use the project configuration.
 
-You do not install this yourself: `@asmjs/cli` brings it, and its verbs are how it is run.
+## Usage
 
-    assemblejs check
-    assemblejs perf
+In an AssembleJS project, install the CLI if it is not already present:
 
-See <https://assemblejs.com/>.
+```sh
+npm install --save-dev @asmjs/cli
+```
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+Inspect the project without building:
+
+```sh
+npx assemblejs check
+```
+
+Build and check page payload budgets:
+
+```sh
+npx assemblejs perf
+```
+
+Node.js 22 or newer. For custom tooling, the package exports its implementation as ESM with TypeScript declarations.
+
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.

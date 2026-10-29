@@ -1,16 +1,32 @@
 # @asmjs/renderer-preact
 
-Write an AssembleJS assembly in Preact.
+Server rendering and browser hydration for Preact assemblies in AssembleJS.
 
-    src/assemblies/cart/cart.preact.tsx
+## Add a Preact assembly
 
-The infix is not decoration: React, Preact and Solid all write `.tsx`, so a file that does not
-say which is a file whose framework only the configuration knows. A directory listing should
-tell you what a page is made of.
+Inside an AssembleJS project:
 
-Preact is a peer dependency, so installing this does not install a framework you were not going
-to use.
+```sh
+npm install @asmjs/renderer-preact preact
+npx assemblejs add assembly cart --renderer preact
+```
 
-See <https://assemblejs.com/>.
+The view is written to `src/assemblies/cart/cart.preact.tsx`. Place the assembly in a page with:
 
-Apache-2.0. Copyright Ayers Electronics Inc.
+```html
+<assembly name="cart"></assembly>
+```
+
+Preact views receive assembly data and hydrate with Preact. The `.preact.tsx` infix distinguishes them from React and Solid views.
+
+## Requirements
+
+Node.js 22 or newer, `@asmjs/core`, and the Preact peer dependencies declared by this package.
+The framework remains a peer dependency so your application controls its version.
+Assemblies using different frameworks can share a page and communicate through AssembleJS events.
+
+## Documentation
+
+[AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
+
+Apache-2.0. Copyright Ayers Electronics Inc. See the distributed LICENSE and NOTICE files.
