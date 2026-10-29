@@ -37,6 +37,21 @@ Run these inside the project:
 Assemblies live under `src/assemblies/`. Add an assembly's printed tag to a page to place it there.
 The build generates the server's module registrations.
 
+## Agent registrations
+
+`assemblejs add agents` writes or refreshes the managed agent instructions and these MCP registrations:
+
+| Client | Project file |
+| --- | --- |
+| Claude Code | `.mcp.json` |
+| Cursor | `.cursor/mcp.json` |
+| VS Code | `.vscode/mcp.json` |
+| Gemini CLI | `.gemini/settings.json` |
+| opencode | `opencode.json` |
+
+`AGENTS.md` describes the framework rules. `CLAUDE.md` imports those instructions for Claude Code.
+The command updates its managed entries while preserving unrelated client settings.
+
 ## Documentation
 
 [AssembleJS documentation](https://assemblejs.com/docs/) · [Source](https://github.com/ayers-software-repair/assemblejs)
