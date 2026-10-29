@@ -101,11 +101,13 @@ workflow already uses a GitHub-hosted runner and `id-token: write`. Do not creat
        npm trust github @asmjs/renderer-templates --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
        npm trust github @asmjs/renderer-vue --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
 
-9. **Close token publishing.** On each package's Settings, Publishing access, choose "Require
-   two-factor authentication and disallow tokens". Trusted publishing is unaffected.
+9. **Run the authorized trusted release within the two-day window.** Verify the exact npm
+   versions, archive integrity, provenance and successful release workflow for every package
+   before changing an existing working authentication path.
 
-10. **Cut that next tag the same day.** Its release run publishes all fourteen through trusted
-    publishing, with provenance.
+10. **Then restrict token publishing.** After the trusted release is verified, the owner opens
+    each package's Settings, Publishing access, and chooses "Require two-factor authentication
+    and disallow tokens". Trusted publishing is unaffected. Read back the saved setting.
 
 ## Why the command is shaped this way
 
