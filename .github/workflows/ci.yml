@@ -14,9 +14,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
+  reuse-ci:
     if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
-    name: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      run_id: ${{ steps.proof.outputs.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: CI proof contracts
+        run: node --test scripts/ci-reuse.test.mjs
+      - name: Reuse complete next push proof for an unchanged PR tree
+        id: proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id=$(node scripts/ci-reuse.mjs)
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+  verify:
+    needs: reuse-ci
+    if: needs['reuse-ci'].outputs.run_id == '' && (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]')
+    name: verify (${{ matrix.node }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -62,7 +90,8 @@ jobs:
         run: pnpm check
 
   browser:
-    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+    needs: reuse-ci
+    if: needs['reuse-ci'].outputs.run_id == '' && (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]')
     name: browser proof
     runs-on: ubuntu-latest
     permissions:
@@ -85,7 +114,8 @@ jobs:
       - run: pnpm test:browser
 
   conformance:
-    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+    needs: reuse-ci
+    if: needs['reuse-ci'].outputs.run_id == '' && (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]')
     name: conformance
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -113,7 +143,8 @@ jobs:
   # vue-tsc over the Vue views and svelte-check over the Svelte ones. Kept out of `pnpm check`
   # because it builds eleven projects, and `verify` runs that chain on two Node versions.
   examples:
-    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+    needs: reuse-ci
+    if: needs['reuse-ci'].outputs.run_id == '' && (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]')
     name: examples
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -144,7 +175,8 @@ jobs:
   # to pass, on a branch that is never rewritten, is passed by moving the floor above it, with the
   # reason in docs/DECISIONS.md, never by loosening a step.
   commits:
-    if: github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]'
+    needs: reuse-ci
+    if: needs['reuse-ci'].outputs.run_id == '' && (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]')
     name: commits
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -197,3 +229,34 @@ jobs:
           BASE_SHA: ${{ steps.range.outputs.base }}
           HEAD_SHA: ${{ steps.range.outputs.head }}
         run: bash scripts/check-trailers.sh "$BASE_SHA" "$HEAD_SHA"
+
+  ci-ready:
+    needs: [reuse-ci, verify, browser, conformance, examples, commits]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.user.login != 'dependabot[bot]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: Require complete checks or revalidate original push proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REUSED_RUN: ${{ needs.reuse-ci.outputs.run_id }}
+          PROOF: ${{ needs.reuse-ci.result }}
+          RESULTS: ${{ needs.verify.result }},${{ needs.browser.result }},${{ needs.conformance.result }},${{ needs.examples.result }},${{ needs.commits.result }}
+        run: |
+          test "$PROOF" = success
+          if [ -n "$REUSED_RUN" ]; then
+            current=$(node scripts/ci-reuse.mjs --no-wait)
+            test "$current" = "$REUSED_RUN"
+          else
+            test "$RESULTS" = success,success,success,success,success
+          fi

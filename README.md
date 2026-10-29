@@ -31,3 +31,19 @@ Contributing: read CONTRIBUTING.md first; every pull request references an accep
 Security: SECURITY.md. Conduct: CODE_OF_CONDUCT.md.
 
 Published by Ayers Electronics.
+
+## Verification
+
+Pull requests run the complete check matrix on GitHub: Node 22 and 24, browser proof,
+packed conformance, examples and commit checks. A local full suite is not a prerequisite.
+An unchanged pull request can reuse complete trusted push proof; missing or invalid proof
+runs the full matrix. Main-merge proof reuse is not enabled by this change.
+
+For an explicitly needed local diagnosis, `verification.json` runs the source-header check
+before `pnpm check`, with resource limits and package `dist/` outputs retained for its
+receipt. Test counts come from command output; the plan declares no synthetic count.
+When the platform verifier is available in `_platform`, its invocation is:
+
+```sh
+node _platform/codestyle/scripts/verify.mjs --plan verification.json --out /tmp/assemblejs-verification
+```
