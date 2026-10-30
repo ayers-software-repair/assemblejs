@@ -12,6 +12,7 @@ const renderers = ["preact", "react", "vue", "svelte", "solid", "lit"];
 const templates = ["ejs", "handlebars", "markdown", "nunjucks", "pug"];
 const root = "/academy-open-build";
 const version = "1.0.0-next.2";
+const compiler = "node_modules/typescript/bin/tsc";
 let runtime;
 let terminal = false;
 const report = (phase) => {
@@ -82,6 +83,7 @@ try {
   }
   pkg.devDependencies.typescript = "6.0.3";
   pkg.devDependencies["@types/node"] = "26.4.1";
+  pkg.scripts.typecheck = `assemblejs build && node ${compiler} -b`;
   await write(packagePath, JSON.stringify(pkg));
   const cwd = await command("node", ["-p", "process.cwd()"], { cwd: root });
   if (cwd.trim() !== root) throw new Error("process working directory differs from project root");
@@ -111,6 +113,16 @@ try {
     effectivePackages[name] = { name: data.name, version: data.version };
   }
   records.push({ effectivePackages });
+  const compilerVersion = await command("node", [compiler, "--version"], { cwd: root });
+  if (compilerVersion.trim() !== "Version 6.0.3") throw new Error("unexpected compiler version");
+  const typePath = `${root}/src/compiler-probe.ts`;
+  const typeArgs = [compiler, "--noEmit", "--ignoreConfig", "--skipLibCheck", typePath];
+  await write(typePath, 'export const quantity: number = "bad";\n');
+  const typeFailure = await command("node", typeArgs, { cwd: root }, 2);
+  if (!typeFailure.includes("compiler-probe.ts") || !typeFailure.includes("TS2322"))
+    throw new Error("compiler missed the deliberate type error");
+  await write(typePath, "export const quantity: number = 1;\n");
+  await command("node", typeArgs, { cwd: root });
   const cli = ["node_modules/@asmjs/cli/dist/bin.js"];
   for (const renderer of [...renderers, ...templates]) {
     await command(

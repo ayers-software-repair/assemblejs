@@ -27,7 +27,9 @@ test("the open runtime installs and checks/builds the published framework", asyn
     const state = JSON.parse((await page.locator("#result").textContent()) ?? "{}");
     const commands = state.records.filter((record: { program?: string }) => record.program);
     expect(commands.map((record: { exit?: number }) => record.exit)).toEqual([
-      ...Array(16).fill(0),
+      ...Array(6).fill(0),
+      2,
+      ...Array(12).fill(0),
       1,
       0,
       0,

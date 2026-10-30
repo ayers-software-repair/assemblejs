@@ -96,6 +96,27 @@ regression rejected relative spawn directories before this change and passed aft
 Scaffolding/install/check/build must still pass in the hosted runtime; this correction is
 not a claim that later compatibility gaps are resolved.
 
+At `eb18e61d46d9229e54fd55528d6476c90fbc841f`, run `41124557748`, job `124299595570`,
+all 19 expected command exits passed: actual install added 239 packages, eleven assemblies
+were added, the missing-assembly check failed then recovered, and the build/typecheck command
+exited 0 with twelve assemblies and nonempty server output. Effective esbuild is explicitly
+`esbuild-wasm@0.28.2`; core/CLI are next.2 and TypeScript metadata is 6.0.3. The full probe
+still failed its strict network assertion: one optional `/vendor/tsgo-pack.bin` request
+returned 404 and then ERR_ABORTED. These are two recorded events for one request, not two
+missing assets. Page errors are empty; no service worker was registered.
+
+Artifact `13010456571` has SHA-256
+`7ae6ff79135e774d963587c876b856bb5c573d3cda584b69403445f2c4d81bb1`.
+The pinned runtime registers bare `tsc`/`tsgo` for lazy TypeScript 7 loading before resolving
+the project's PATH. Missing asset loading returns null and then PATH resolution continues;
+the prior command's exit 0 does not independently identify its compiler implementation.
+Keep the network gate strict. Invoke installed `node node_modules/typescript/bin/tsc`
+explicitly in the generated project's typecheck script, report Version 6.0.3, require an
+intentional TS2322 error with exit 2, repair it and require exit 0 before the full build.
+This uses the declared compiler, without a missing optional SDK tool or a vendor patch.
+The exact compiler's small isolated local red/green fixture calibrates that exit/diagnostic;
+only hosted proof can establish the browser runtime's behavior.
+
 ## Scenario and evidence limits
 
 The first evaluated runtime was `@vivari/core@1.0.0`; its source/archive and historical cleanup

@@ -8045,3 +8045,8 @@ stack overflow was traced through the retained npm log to the harness's relative
 directory, which this runtime preserves unchanged. Pass an absolute project directory and
 require the process to report that root before installing; do not patch npm or the vendor
 runtime. The corrected install/check/build still requires actual hosted evidence.
+
+That correction reached successful install/check/build commands, but the strict network
+gate caught a missing optional SDK tsgo asset triggered by bare `tsc`. Keep that gate and
+invoke the declared TypeScript 6 compiler through its installed Node script. Require its
+actual version and a deliberate semantic error/recovery before accepting browser typechecking.

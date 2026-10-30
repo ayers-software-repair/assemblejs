@@ -33,6 +33,8 @@ failure and repair, then builds/typechecks all twelve assemblies including the s
 It records the runtime's reported Node version and effective core/CLI/esbuild/TypeScript
 package names/versions. Native-tool aliases and the runtime's node-gyp skip stub mean that
 install success alone cannot prove native compatibility. No preview server starts.
+TypeScript is invoked through its installed Node script, including version and deliberate
+type-error rejection/recovery, rather than the runtime's bare `tsc`/tsgo lazy loader.
 The build scenario has a five-minute test limit and bounded commands; the job has ten minutes.
 
 Published 1.1.4 batches mount writes and settles pending operations on teardown; its write

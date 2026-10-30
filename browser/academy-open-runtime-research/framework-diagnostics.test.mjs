@@ -47,7 +47,7 @@ for (const scenario of ["bounded before teardown", "outside the cache", "unreada
         readFile: async (file) => {
           assert.equal(tornDown, false, "diagnostics read after teardown");
           if (file === "/academy-open-build/package.json")
-            return '{"dependencies":{},"devDependencies":{}}';
+            return '{"dependencies":{},"devDependencies":{},"scripts":{}}';
           reads.push(file);
           assert.equal(file, cachePath);
           if (scenario === "unreadable") throw new Error("diagnostic unavailable");
