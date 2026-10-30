@@ -8066,3 +8066,16 @@ invalid duplicate value exports instead. A separate reader reproduced the confli
 change the framework's accepted syntax to accommodate this runtime or turn narrow unit success
 into compatibility acceptance. The owned package/dependency/lock/changeset edits were set aside;
 this checkpoint records evidence only. Full Academy work and runtime evaluation remain open.
+
+## 2026-10-30: owner approves async tooling inspection
+
+The owner answered the existing PR29 question: "Approve async API migration (Recommended)".
+Implement the scoped Promise-return migration of the 28 published helpers using the existing
+esbuild compiler. Preserve CLI behavior, syntax acceptance/rejection, diagnostic content and
+order, root confinement and MCP serialization. Await compiler operations inside their existing
+try blocks, resolve collections before consumption, and keep Lit traversal callbacks synchronous.
+Document the breaking helper contracts and verify all callers and packed consumers. Existing
+synchronous helper contracts are replaced together; no compatibility compiler or alternate
+parser is added. Rollback is a source revert of the coordinated change before any publication;
+there is no stored-data migration. This approval grants no runtime adoption, spending, vendor
+contact, release tag, npm publication, shared-router change or stable promotion.

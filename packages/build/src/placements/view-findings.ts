@@ -31,14 +31,14 @@ const DIRECTIVE_FIX = 'write each placement as <assembly name="..."></assembly>'
  * placement that cannot be read, which is a problem here and no render's secret, or lead out of
  * the project, where nothing is read. An import that leads out is a problem, and is not followed.
  */
-export function viewFindings(
+export async function viewFindings(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
-): {
+): Promise<{
   readonly placements: ReadonlyMap<string, readonly ViewPlacement[]>;
   readonly problems: readonly ProjectProblem[];
   readonly unread: ReadonlySet<string>;
-} {
+}> {
   const placements = new Map<string, readonly ViewPlacement[]>();
   const problems: ProjectProblem[] = [];
   const unread = new Set<string>();
@@ -68,22 +68,26 @@ export function viewFindings(
     }
     let read: ViewPlacements;
     try {
-      const [own, ...parts] = found.modules.map((module): ViewPlacements => {
+      const modules: ViewPlacements[] = [];
+      for (const module of found.modules) {
         try {
-          return readViewPlacements(
-            module,
-            assembly.renderer,
-            readInside(root, module),
-            pugFor(assembly.renderer),
+          modules.push(
+            await readViewPlacements(
+              module,
+              assembly.renderer,
+              readInside(root, module),
+              pugFor(assembly.renderer),
+            ),
           );
         } catch (error) {
           // A module that does not compile is a finding against it, and what it places unknown.
           if (uncompiled(error) === undefined) throw error;
           problems.push(unreadableSource(module, error));
           unread.add(assembly.name);
-          return { placements: undefined, unnamed: [] };
+          modules.push({ placements: undefined, unnamed: [] });
         }
-      });
+      }
+      const [own, ...parts] = modules;
       // A view that cannot be read places nothing known, and its render reads it.
       if (own?.placements === undefined) continue;
       const all = [own, ...parts];

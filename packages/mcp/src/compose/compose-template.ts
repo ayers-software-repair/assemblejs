@@ -35,7 +35,7 @@ export async function composeTemplate(
   plan: Readonly<Record<string, AssemblyPlan>> = {},
   arrived: ArrivedWith = {},
 ): Promise<ComposedPage> {
-  const assemblies = projectAssemblies(root);
+  const assemblies = await projectAssemblies(root);
   const logged: LogLine[] = [];
   const inside: string[] = [];
   const dev = await devServerUrl(root);

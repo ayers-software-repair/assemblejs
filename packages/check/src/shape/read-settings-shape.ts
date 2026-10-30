@@ -18,7 +18,7 @@ import { UNREAD } from "./unread.js";
  * nothing the config holds reaches a reader because it happened to be there. A project with no
  * config declares nothing, which is every field at what its absence means.
  */
-export function readSettingsShape(root: string): SettingsShape {
+export async function readSettingsShape(root: string): Promise<SettingsShape> {
   const nothing = {
     remotes: [],
     publicRoutes: [],
@@ -43,7 +43,7 @@ export function readSettingsShape(root: string): SettingsShape {
   });
   let declared;
   try {
-    declared = fieldsOf(readDefaultExport(readInside(root, file)));
+    declared = fieldsOf(await readDefaultExport(readInside(root, file)));
   } catch {
     return all(UNREAD);
   }

@@ -49,8 +49,8 @@ export async function runPerf(
   if (existsSync(configFile)) {
     try {
       const source = readFileSync(configFile, "utf8");
-      const read = readBudgets(source);
-      const declared = readAddresses(source);
+      const read = await readBudgets(source);
+      const declared = await readAddresses(source);
       for (const problem of [...read.problems, ...declared.problems]) {
         io.error(`assemblejs.config.ts: ${problem}`);
       }
@@ -96,7 +96,7 @@ export async function runPerf(
         continue;
       }
       try {
-        const route = pageRoute(root, page);
+        const route = await pageRoute(root, page);
         if (route === undefined)
           throw new Error(
             "its route is not written as a literal, so only running the project could tell it",

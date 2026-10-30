@@ -10,7 +10,7 @@ import type {
   SpreadElement,
   Super,
 } from "acorn";
-import { transformSync } from "esbuild";
+import { transform } from "esbuild";
 import { collectPlacements } from "./collect-placements.js";
 import { isRendererClient } from "./is-renderer-client.js";
 import type { ViewPlacements } from "./view-placements.js";
@@ -89,11 +89,14 @@ const property = (
  * and is no placement of the view's. A class component of React's or Preact's has no root of its
  * own, and a `Slot` in its `render` is a placement like any other.
  *
- * Throws for a module that cannot be compiled or parsed. A slot handed on under another name,
+ * Rejects for a module that cannot be compiled or parsed. A slot handed on under another name,
  * assigned or passed, is not seen here, and is left to the render.
  */
-export function scriptPlacements(source: string, loader: "ts" | "tsx"): ViewPlacements {
-  const code = transformSync(source, { loader, format: "esm", jsx: "automatic" }).code;
+export async function scriptPlacements(
+  source: string,
+  loader: "ts" | "tsx",
+): Promise<ViewPlacements> {
+  const code = (await transform(source, { loader, format: "esm", jsx: "automatic" })).code;
   const program = parse(code, { ecmaVersion: "latest", sourceType: "module" });
   const components = new Set<string>();
   const functions = new Set<string>();

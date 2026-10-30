@@ -9,18 +9,18 @@ import { elementProblems } from "@asmjs/check";
 
 let root = "";
 afterEach(() => rmSync(root, { recursive: true, force: true }));
-const problems = (files: Readonly<Record<string, string>>) => {
+const problems = async (files: Readonly<Record<string, string>>) => {
   root = mkdtempSync(join(tmpdir(), "element-problems-"));
   for (const [path, contents] of Object.entries(files)) {
     mkdirSync(join(root, path, ".."), { recursive: true });
     writeFileSync(join(root, path), contents);
   }
-  return elementProblems(root, discoverAssemblies(root).assemblies);
+  return await elementProblems(root, discoverAssemblies(root).assemblies);
 };
 
 describe("a view has no inline style", () => {
-  it("refuses a style attribute in any kind of view, written or computed, naming the element", () => {
-    const found = problems({
+  it("refuses a style attribute in any kind of view, written or computed, naming the element", async () => {
+    const found = await problems({
       "src/assemblies/card/card.html": '<p style="color: red">x</p>',
       "src/assemblies/note/note.ejs": '<section style="<%= tone %>">y</section>',
       "src/assemblies/counter/counter.react.tsx":
@@ -41,8 +41,8 @@ describe("a view has no inline style", () => {
 
   // A spread may carry the alt or the name, whatever else on the element is computed. With a
   // computed attribute beside it the spread was not seen, and each of these was a finding.
-  it("leaves to the render an element with a spread on it, beside whatever else it computes", () => {
-    const found = problems({
+  it("leaves to the render an element with a spread on it, beside whatever else it computes", async () => {
+    const found = await problems({
       "src/assemblies/hero/hero.react.tsx":
         "export default (p: { readonly src: string; readonly rest: object }) => <><img {...p.rest} src={p.src} /><input {...p.rest} value={p.src} /></>;",
       "src/assemblies/logo/logo.svelte": "<img {...rest} src={src} /><input {...rest} value={v} />",
@@ -52,8 +52,8 @@ describe("a view has no inline style", () => {
     expect(found.map((one) => [one.rule, one.message])).toEqual([]);
   });
 
-  it("refuses an img with no alt at all, in any kind of view, and passes an empty, a computed, or a spread one", () => {
-    const found = problems({
+  it("refuses an img with no alt at all, in any kind of view, and passes an empty, a computed, or a spread one", async () => {
+    const found = await problems({
       "src/assemblies/photo/photo.html": '<img src="a.png"><img src="b.png" alt="">',
       "src/assemblies/hero/hero.react.tsx":
         'export default (p: { readonly alt: string; readonly rest: object }) => <><img src="c.png" /><img src="d.png" alt={p.alt} /><img {...p.rest} /></>;',
@@ -76,8 +76,8 @@ describe("a view has no inline style", () => {
     expect(found[0]?.fix).toContain('alt="" if it is decoration');
   });
 
-  it("refuses a control with no name in any kind of view, and passes one a label names or wraps", () => {
-    const found = problems({
+  it("refuses a control with no name in any kind of view, and passes one a label names or wraps", async () => {
+    const found = await problems({
       "src/assemblies/form/form.html":
         '<label for="n">Name</label><input id="n"><select id="s"></select><label><textarea></textarea></label>',
       "src/assemblies/search/search.react.tsx":
@@ -98,9 +98,9 @@ describe("a view has no inline style", () => {
     expect(found[0]?.fix).toContain("<label for> it");
   });
 
-  it("is quiet for views with a class and no style, and for a view it cannot read", () => {
+  it("is quiet for views with a class and no style, and for a view it cannot read", async () => {
     expect(
-      problems({
+      await problems({
         "src/assemblies/card/card.html": '<p class="notice">x</p>',
         "src/assemblies/broken/broken.react.tsx": "export default (",
       }),

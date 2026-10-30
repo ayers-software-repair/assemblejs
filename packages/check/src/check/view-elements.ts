@@ -19,10 +19,10 @@ import type { WrittenElement } from "./written-element.js";
  * out, and the rules that read this say nothing of it: a rule refuses only what its reader is
  * certain of. The project's own Pug is loaded for the first Pug view and not before.
  */
-export function viewElements(
+export async function viewElements(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
-): ReadonlyMap<string, readonly WrittenElement[]> {
+): Promise<ReadonlyMap<string, readonly WrittenElement[]>> {
   const found = new Map<string, WrittenElement[]>();
   let pug: { readonly loaded: PugCompiler | undefined } | undefined;
   for (const assembly of assemblies) {
@@ -36,7 +36,12 @@ export function viewElements(
         assembly.renderer === "pug" ? (pug ??= { loaded: loadPug(root) }).loaded : undefined;
       let elements: readonly ViewElement[] | undefined;
       try {
-        elements = readViewElements(module, assembly.renderer, readInside(root, module), loaded);
+        elements = await readViewElements(
+          module,
+          assembly.renderer,
+          readInside(root, module),
+          loaded,
+        );
       } catch {
         elements = undefined;
       }

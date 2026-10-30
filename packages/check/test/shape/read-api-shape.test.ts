@@ -8,17 +8,17 @@ import { describe, expect, it } from "vitest";
 import { COMPUTED, UNREAD, readApiShape } from "@asmjs/check";
 import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 
-const api = (source: string) => {
+const api = async (source: string) => {
   const root = mkdtempSync(join(tmpdir(), "api-shape-"));
   const file = join(root, "src", "api", "prices.api.ts");
   realIo.write(file, source);
-  return readApiShape(root, file);
+  return await readApiShape(root, file);
 };
 
 describe("one api file's route, read from its source", () => {
-  it("is its path and its method, GET where it names none, and that it answers once", () => {
+  it("is its path and its method, GET where it names none, and that it answers once", async () => {
     expect(
-      api(
+      await api(
         'import { defineApi } from "@asmjs/core";\nexport default defineApi({ path: "/api/prices", handle: () => ({}) });',
       ),
     ).toEqual({
@@ -28,40 +28,42 @@ describe("one api file's route, read from its source", () => {
       streams: false,
     });
     expect(
-      api('export default { path: "/api/push", method: "POST", handle: () => null };'),
+      await api('export default { path: "/api/push", method: "POST", handle: () => null };'),
     ).toMatchObject({ path: "/api/push", method: "POST", streams: false });
   });
 
-  it("streams where it declares a stream in place of a handler", () => {
+  it("streams where it declares a stream in place of a handler", async () => {
     expect(
-      api('export default { path: "/api/prices", stream: ({ send }) => send("p", 1) };'),
+      await api('export default { path: "/api/prices", stream: ({ send }) => send("p", 1) };'),
     ).toMatchObject({ path: "/api/prices", method: "GET", streams: true });
   });
 
-  it("marks a path or a method the file computes, and a file computed whole", () => {
-    expect(api('export default { path: "/api/" + name, method: verb, handle };')).toMatchObject({
+  it("marks a path or a method the file computes, and a file computed whole", async () => {
+    expect(
+      await api('export default { path: "/api/" + name, method: verb, handle };'),
+    ).toMatchObject({
       path: COMPUTED,
       method: COMPUTED,
       streams: false,
     });
-    expect(api("export default routeFor(prices);")).toMatchObject({
+    expect(await api("export default routeFor(prices);")).toMatchObject({
       path: COMPUTED,
       method: COMPUTED,
       streams: COMPUTED,
     });
   });
 
-  it("marks what a spread may bring in, and says a missing path is missing", () => {
-    expect(api('export default { ...base, path: "/api/prices" };')).toMatchObject({
+  it("marks what a spread may bring in, and says a missing path is missing", async () => {
+    expect(await api('export default { ...base, path: "/api/prices" };')).toMatchObject({
       path: "/api/prices",
       method: COMPUTED,
       streams: COMPUTED,
     });
-    expect(api("export default { handle: () => null };")).toMatchObject({ path: null });
+    expect(await api("export default { handle: () => null };")).toMatchObject({ path: null });
   });
 
-  it("marks every part of a file that cannot be read", () => {
-    expect(api("export default { path: ")).toEqual({
+  it("marks every part of a file that cannot be read", async () => {
+    expect(await api("export default { path: ")).toEqual({
       file: "src/api/prices.api.ts",
       path: UNREAD,
       method: UNREAD,
@@ -69,9 +71,9 @@ describe("one api file's route, read from its source", () => {
     });
   });
 
-  it("marks every part of a file that leads out of the project, which is not opened", () => {
+  it("marks every part of a file that leads out of the project, which is not opened", async () => {
     const { root } = linkedProject({}, { "src/api/prices.api.ts": "outside:secret.api.ts" });
-    expect(readApiShape(root, join(root, "src/api/prices.api.ts"))).toEqual({
+    expect(await readApiShape(root, join(root, "src/api/prices.api.ts"))).toEqual({
       file: "src/api/prices.api.ts",
       path: UNREAD,
       method: UNREAD,

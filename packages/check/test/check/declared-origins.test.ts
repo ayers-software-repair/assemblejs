@@ -10,28 +10,30 @@ const config = (remotes: string): string =>
   `import { defineConfig } from "@asmjs/core";\nconst producer = process.env.PRODUCER_ORIGIN ?? "";\nexport default defineConfig({ ${remotes} });`;
 
 describe("the remotes a project's config declares", () => {
-  it("are its literal origins, however quoted, and never one in a comment", () => {
+  it("are its literal origins, however quoted, and never one in a comment", async () => {
     const source = `import { defineConfig } from "@asmjs/cli";
       // { origin: "https://commented.example" }
       const elsewhere = { origin: "https://not-a-remote.example" };
       export default defineConfig({
         remotes: [{ origin: 'https://shop.example.com', forward: ["accept-language"] }, { origin: process.env.X }],
       });`;
-    expect([...declaredOrigins(source).origins]).toEqual(["https://shop.example.com"]);
+    expect([...(await declaredOrigins(source)).origins]).toEqual(["https://shop.example.com"]);
   });
 
-  it("are all of them where each is written, and where the config declares none", () => {
-    expect(declaredOrigins(config('remotes: [{ origin: "https://a.example" }]')).whole).toBe(true);
-    expect(declaredOrigins(config("limits: { depth: 4 }"))).toEqual({
+  it("are all of them where each is written, and where the config declares none", async () => {
+    expect(
+      (await declaredOrigins(config('remotes: [{ origin: "https://a.example" }]'))).whole,
+    ).toBe(true);
+    expect(await declaredOrigins(config("limits: { depth: 4 }"))).toEqual({
       origins: new Set(),
       whole: true,
     });
-    expect(declaredOrigins("").whole).toBe(true);
+    expect((await declaredOrigins("")).whole).toBe(true);
   });
 
   // Where a server is, is known only where it runs, so an origin is read from the environment
   // as often as it is written. What cannot be read is not known to be absent.
-  it("are not all of them where one is computed, or the list is, or the config is spread from another", () => {
+  it("are not all of them where one is computed, or the list is, or the config is spread from another", async () => {
     for (const remotes of [
       "remotes: [{ origin: producer }]",
       'remotes: [{ origin: "https://a.example" }, { origin: producer, trusted: true }]',
@@ -39,7 +41,7 @@ describe("the remotes a project's config declares", () => {
       "remotes: [...shared]",
       "...base",
     ]) {
-      expect(declaredOrigins(config(remotes)).whole, remotes).toBe(false);
+      expect((await declaredOrigins(config(remotes))).whole, remotes).toBe(false);
     }
   });
 

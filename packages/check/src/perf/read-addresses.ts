@@ -7,12 +7,12 @@ import type { DeclaredAddresses } from "./declared-addresses.js";
 
 const NONE: DeclaredAddresses = { addresses: {}, whole: true, problems: [] };
 
-/** The page addresses a config declares, read off its source, never run. Throws if it does not compile. */
-export function readAddresses(source: string): DeclaredAddresses {
+/** The page addresses a config declares, read off its source, never run. Rejects if it does not compile. */
+export async function readAddresses(source: string): Promise<DeclaredAddresses> {
   // A config built by a spread or a call that writes none beside it is not `whole`: it may
   // declare some, and `readBudgets` already says such a config cannot be read.
   if (source.trim() === "") return NONE;
-  const config = readDefaultExport(source);
+  const config = await readDefaultExport(source);
   if (config === null || typeof config !== "object" || Array.isArray(config)) {
     return { ...NONE, whole: false };
   }

@@ -68,6 +68,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       with independently verified public API impact and nine local parser comparisons:
       `docs/studies/academy-async-inspection-scope.md`. This selects neither an API migration nor
       a runtime; full hosted browser compatibility remains open.
+- [ ] Implement the owner-approved PR29 async inspection migration across the 28 published
+      helper APIs and their callers, preserving syntax/diagnostics, ordered results, root
+      confinement, MCP serialization and safe pre-write validation. Verify independent source
+      review, full exact-head CI and packed consumers; no runtime adoption or release.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages

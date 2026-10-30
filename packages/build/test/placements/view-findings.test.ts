@@ -8,13 +8,13 @@ import { discoverAssemblies, unreadPlacements, viewFindings } from "@asmjs/build
 import { linkedProject } from "../fixtures/linked-project.js";
 import { templatedProject } from "../fixtures/templated-project.js";
 
-const findings = (files: Record<string, string>) => {
+const findings = async (files: Record<string, string>) => {
   const root = mkdtempSync(join(tmpdir(), "view-findings-"));
   for (const [path, contents] of Object.entries(files)) {
     mkdirSync(join(root, "src/assemblies", path, ".."), { recursive: true });
     writeFileSync(join(root, "src/assemblies", path), contents);
   }
-  return viewFindings(root, discoverAssemblies(root).assemblies);
+  return await viewFindings(root, discoverAssemblies(root).assemblies);
 };
 const REACT = 'import { Slot } from "@asmjs/renderer-react/client";\n';
 // The same, in a project that has the templates renderer installed, and so a Pug of its own.
@@ -22,19 +22,19 @@ const made: string[] = [];
 afterAll(() => {
   for (const root of made) rmSync(root, { recursive: true, force: true });
 });
-const templated = (files: Record<string, string>) => {
+const templated = async (files: Record<string, string>) => {
   const root = templatedProject(
     made,
     Object.fromEntries(
       Object.entries(files).map(([path, contents]) => [`src/assemblies/${path}`, contents]),
     ),
   );
-  return viewFindings(root, discoverAssemblies(root).assemblies);
+  return await viewFindings(root, discoverAssemblies(root).assemblies);
 };
 
 describe("what every view in a project says it places", () => {
-  it("is each view's placements by its assembly's name, a view only its render knows left out", () => {
-    const { placements, problems } = findings({
+  it("is each view's placements by its assembly's name, a view only its render knows left out", async () => {
+    const { placements, problems } = await findings({
       "shell/shell.html": '<assembly name="cart"></assembly>',
       "cart/cart.react.tsx": `${REACT}export default () => <Slot name="price" view="compact" />;`,
       "price/price.html": "<p>price</p>",
@@ -49,8 +49,8 @@ describe("what every view in a project says it places", () => {
     });
   });
 
-  it("reads a Pug view with the project's own Pug, where its templates renderer is installed", () => {
-    const { placements, problems } = templated({
+  it("reads a Pug view with the project's own Pug, where its templates renderer is installed", async () => {
+    const { placements, problems } = await templated({
       "card/card.pug": 'section\n  assembly(name="cart")\n  assembly(name=data.which)',
       "cart/cart.html": "<p>cart</p>",
     });
@@ -67,8 +67,8 @@ describe("what every view in a project says it places", () => {
   // render that reaches it, and is reported: passed over, its view passed check and a build.
   // One that does not read only for what the template computes in it may read at every render,
   // and is its render's to tell of: no finding, no record, and nothing refuses its build.
-  it("reports a directive written wrong in each language, and leaves one only a render can read", () => {
-    const { placements, problems, unread } = templated({
+  it("reports a directive written wrong in each language, and leaves one only a render can read", async () => {
+    const { placements, problems, unread } = await templated({
       "open/open.ejs": '<assembly name="cart"><p><%= data.n %></p>',
       "torn/torn.hbs": '{{data.n}}<assembly name="cart" timeout="5"></assembly>',
       "wide/wide.hbs": '<assembly name="cart" {{#if x}}view="wide"{{/if}}></assembly>',
@@ -90,8 +90,8 @@ describe("what every view in a project says it places", () => {
     expect(placements.size).toBe(0);
   });
 
-  it("reports a directive that cannot be read, where it is written", () => {
-    const { placements, problems } = findings({
+  it("reports a directive that cannot be read, where it is written", async () => {
+    const { placements, problems } = await findings({
       "shell/shell.html": '<assembly name="cart" timeout="5"></assembly>',
     });
     expect(placements.has("shell")).toBe(false);
@@ -100,8 +100,8 @@ describe("what every view in a project says it places", () => {
     expect(problems[0]?.path).toMatch(/shell\/shell\.html$/);
   });
 
-  it("reports a slot written inside a Lit element's render, and keeps the view's own placements", () => {
-    const { placements, problems } = findings({
+  it("reports a slot written inside a Lit element's render, and keeps the view's own placements", async () => {
+    const { placements, problems } = await findings({
       "shell/shell.lit.ts": `import { slot } from "@asmjs/renderer-lit/client";\nimport { LitElement, html } from "lit";\nexport class ShellCard extends LitElement { render() { return html\`\${slot("price")}\`; } }\nexport default () => html\`<shell-card></shell-card>\${slot("cart")}\`;`,
       "cart/cart.html": "<p>cart</p>",
       "price/price.html": "<p>price</p>",
@@ -115,8 +115,8 @@ describe("what every view in a project says it places", () => {
     expect(placements.get("shell")).toEqual([{ name: "cart", view: "default" }]);
   });
 
-  it("reports a placement whose name is computed, and one no assembly could be named", () => {
-    const { placements, problems } = findings({
+  it("reports a placement whose name is computed, and one no assembly could be named", async () => {
+    const { placements, problems } = await findings({
       "shell/shell.react.tsx": `${REACT}export default (props: { which: string }) => <><Slot name={props.which} /><Slot name="Cart" /><Slot name="price" /></>;`,
     });
     expect(problems.map((problem) => problem.rule)).toEqual([
@@ -130,8 +130,8 @@ describe("what every view in a project says it places", () => {
 
   // A slot is the view's wherever its author wrote it: in the view's file, or in a component
   // the view is split into.
-  it("reads the slots of the components a framework view is split into", () => {
-    const { placements, problems } = findings({
+  it("reads the slots of the components a framework view is split into", async () => {
+    const { placements, problems } = await findings({
       "shell/shell.react.tsx":
         'import { Panel } from "./panel.js";\nexport default () => <Panel />;',
       "shell/panel.tsx": `${REACT}export const Panel = (props: { which: string }) => <><Slot name="cart" /><Slot name={props.which} /></>;`,
@@ -151,12 +151,12 @@ describe("what every view in a project says it places", () => {
   });
 
   // Nothing outside the project is read for what it places.
-  it("names a view that leads out among the unread, and says nothing of what stood there", () => {
+  it("names a view that leads out among the unread, and says nothing of what stood there", async () => {
     const { root } = linkedProject(
       { "src/assemblies/cart/cart.html": "<p>cart</p>" },
       { "src/assemblies/shell/shell.html": "outside:asm/stolen.html" },
     );
-    const { placements, problems, unread } = viewFindings(
+    const { placements, problems, unread } = await viewFindings(
       root,
       discoverAssemblies(root).assemblies,
     );
@@ -166,14 +166,14 @@ describe("what every view in a project says it places", () => {
     expect(problems).toEqual([]);
   });
 
-  it("reports an import that leads out of the project, and reads the rest of the view", () => {
+  it("reports an import that leads out of the project, and reads the rest of the view", async () => {
     const { root } = linkedProject(
       {
         "src/assemblies/shell/shell.react.tsx": `${REACT}import { Row } from "../../../../outside/row.js";\nexport default () => <><Row /><Slot name="cart" /></>;`,
       },
       {},
     );
-    const { placements, problems } = viewFindings(root, discoverAssemblies(root).assemblies);
+    const { placements, problems } = await viewFindings(root, discoverAssemblies(root).assemblies);
     expect(placements.get("shell")).toEqual([{ name: "cart", view: "default" }]);
     expect(problems).toEqual([
       {

@@ -197,6 +197,9 @@ design reference, then improves that direction with the owner's tagline, "Framew
 Each completed rung requires independent source review and the relevant hosted checks.
 No release tag, npm publication, shared router change or stable promotion is granted here.
 The owner further requires no additional paid hosting or required paid runtime licence.
+The owner approved the PR29 async tooling API migration: reuse esbuild, migrate the 28
+helper contracts and all callers together, preserve CLI/syntax/diagnostic behavior, and verify
+source, packed consumers and hosted checks. This does not select a runtime or authorize release.
 Continue independent curriculum/interface work and verify free browser-delivery options;
 no vendor submission, account, purchase or final runtime adoption is authorized.
 

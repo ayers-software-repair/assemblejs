@@ -23,29 +23,29 @@ const page = (declaration?: string) => {
 };
 
 describe("the route a page answers at", () => {
-  it("is the one its directory implies when it declares none", () => {
+  it("is the one its directory implies when it declares none", async () => {
     const { root, page: discovered } = page();
-    expect(pageRoute(root, discovered)).toBe("/shop");
+    expect(await pageRoute(root, discovered)).toBe("/shop");
     const { root: other, page: plain } = page("export default { place: {} };");
-    expect(pageRoute(other, plain)).toBe("/shop");
+    expect(await pageRoute(other, plain)).toBe("/shop");
   });
 
-  it("is the one its own file declares, through definePage or a name", () => {
+  it("is the one its own file declares, through definePage or a name", async () => {
     for (const source of [
       'import { definePage } from "@asmjs/core";\nexport default definePage({ route: "/store" });',
       'const page = { route: "/store" };\nexport default page;',
     ]) {
       const { root, page: declared } = page(source);
-      expect(pageRoute(root, declared), source).toBe("/store");
+      expect(await pageRoute(root, declared), source).toBe("/store");
     }
   });
 
-  it("is unknown for a route the file computes", () => {
+  it("is unknown for a route the file computes", async () => {
     const { root, page: computed } = page('const r = "/s" + "tore";\nexport default { route: r };');
-    expect(pageRoute(root, computed)).toBeUndefined();
+    expect(await pageRoute(root, computed)).toBeUndefined();
   });
 
-  it("is refused, unopened, for a declaration that leads out of the project", () => {
+  it("is refused, unopened, for a declaration that leads out of the project", async () => {
     const { root } = linkedProject(
       { "src/pages/shop/shop.html": "<main></main>" },
       { "src/pages/shop/shop.page.ts": "outside:secret.page.ts" },
@@ -56,6 +56,6 @@ describe("the route a page answers at", () => {
       template: "src/pages/shop/shop.html",
       declaration: "src/pages/shop/shop.page.ts",
     };
-    expect(() => pageRoute(root, linked)).toThrow(OutsideRootError);
+    await expect(pageRoute(root, linked)).rejects.toThrow(OutsideRootError);
   });
 });

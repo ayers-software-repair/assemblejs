@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import { checkProject, readPagePolicy } from "@asmjs/check";
 
 describe("reading a page's policy from its declaration", () => {
-  it("names each placement from another server, with the url when it is a literal", () => {
+  it("names each placement from another server, with the url when it is a literal", async () => {
     const source = `const link = { cart: { url: "https://elsewhere.example/" } };
     export default definePage({
       place: {
@@ -18,14 +18,14 @@ describe("reading a page's policy from its declaration", () => {
         local: { deadline: 300 },
       },
     });`;
-    expect([...readPagePolicy(source).remote]).toEqual([
+    expect([...(await readPagePolicy(source)).remote]).toEqual([
       ["cart", "https://shop.example.com/assembly/cart/"],
       ["mini-cart", "https://shop.example.com/assembly/mini/"],
       ["search", undefined],
     ]);
   });
 
-  it("reads each policy as written, a computed value left out, a computed url kept as a mark", () => {
+  it("reads each policy as written, a computed value left out, a computed url kept as a mark", async () => {
     // Inside a nested object a computed value stays as it is: the rules read only that the cache
     // is there. What is written is kept whole: a null, a negated number, an array of policies.
     const source = `export default definePage({
@@ -38,34 +38,36 @@ describe("reading a page's policy from its declaration", () => {
         late: { deadline: -1 },
       },
     });`;
-    expect(readPagePolicy(source).place).toStrictEqual({
+    expect((await readPagePolicy(source)).place).toStrictEqual({
       cart: { deadline: 800, defer: true, cache: { ttl: undefined } },
       search: { url: "(computed)", defer: true },
       odd: "not an object",
       none: null,
       late: { deadline: -1 },
     });
-    expect(readPagePolicy("export default { place: [{ defer: true }] };").place).toStrictEqual({
+    expect(
+      (await readPagePolicy("export default { place: [{ defer: true }] };")).place,
+    ).toStrictEqual({
       "0": { defer: true },
     });
   });
 
-  it("reads the stream when it is written, and no policy from a declaration that is not an object", () => {
-    expect(readPagePolicy('export default definePage({ stream: "/api/ticks" });').stream).toBe(
-      "/api/ticks",
-    );
-    expect(readPagePolicy("export default definePage({ stream: process.env.S });").stream).toBe(
-      undefined,
-    );
-    expect(readPagePolicy("export default page();")).toEqual({
+  it("reads the stream when it is written, and no policy from a declaration that is not an object", async () => {
+    expect(
+      (await readPagePolicy('export default definePage({ stream: "/api/ticks" });')).stream,
+    ).toBe("/api/ticks");
+    expect(
+      (await readPagePolicy("export default definePage({ stream: process.env.S });")).stream,
+    ).toBe(undefined);
+    expect(await readPagePolicy("export default page();")).toEqual({
       place: {},
       remote: new Map(),
       stream: undefined,
     });
   });
 
-  it("throws for a declaration that cannot be compiled, for the caller to report", () => {
-    expect(() => readPagePolicy("export default {")).toThrow();
+  it("throws for a declaration that cannot be compiled, for the caller to report", async () => {
+    await expect(readPagePolicy("export default {")).rejects.toThrow();
   });
 });
 

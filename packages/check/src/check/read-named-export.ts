@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { parse } from "acorn";
 import type { Expression, Program } from "acorn";
-import { transformSync } from "esbuild";
+import { transform } from "esbuild";
 import { initialiserOf } from "./initialiser-of.js";
 import { literalOf } from "./literal-of.js";
 import type { LiteralValue } from "./literal-value.js";
@@ -14,12 +14,12 @@ import type { LiteralValue } from "./literal-value.js";
  * computed. The loader says what the source is, as a framework view may hold JSX. Throws for a
  * module that cannot be compiled or parsed.
  */
-export function readNamedExport(
+export async function readNamedExport(
   source: string,
   name: string,
   loader: "ts" | "tsx" = "ts",
-): LiteralValue {
-  const code = transformSync(source, { loader, format: "esm", jsx: "automatic" }).code;
+): Promise<LiteralValue> {
+  const code = (await transform(source, { loader, format: "esm", jsx: "automatic" })).code;
   const program = parse(code, { ecmaVersion: "latest", sourceType: "module" });
   const expression = namedExpression(program, name);
   return expression === undefined ? undefined : literalOf(expression);

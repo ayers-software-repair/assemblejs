@@ -3,12 +3,12 @@
 import { describe, expect, it } from "vitest";
 import { COMPUTED, asWritten, readDefaultExport } from "@asmjs/check";
 
-const shown = (source: string) => asWritten(readDefaultExport(source));
+const shown = async (source: string) => asWritten(await readDefaultExport(source));
 
 describe("a value read from source, as it is shown", () => {
-  it("is every literal as written", () => {
+  it("is every literal as written", async () => {
     expect(
-      shown('export default { a: 1, b: "two", c: true, d: null, e: -3, f: ["x", 2] };'),
+      await shown('export default { a: 1, b: "two", c: true, d: null, e: -3, f: ["x", 2] };'),
     ).toEqual({
       a: 1,
       b: "two",
@@ -19,9 +19,9 @@ describe("a value read from source, as it is shown", () => {
     });
   });
 
-  it("marks what is computed where it stands, at any depth, and leaves nothing out", () => {
+  it("marks what is computed where it stands, at any depth, and leaves nothing out", async () => {
     expect(
-      shown(
+      await shown(
         'const ms = 400 * 2;\nexport default { timeout: ms, place: { cart: { url: remote("cart"), defer: true } }, list: [1, ms, ...more] };',
       ),
     ).toEqual({
@@ -29,19 +29,21 @@ describe("a value read from source, as it is shown", () => {
       place: { cart: { url: COMPUTED, defer: true } },
       list: [1, COMPUTED, COMPUTED],
     });
-    expect(shown("export default settings();")).toBe(COMPUTED);
+    expect(await shown("export default settings();")).toBe(COMPUTED);
   });
 
-  it("says an object brings in entries it does not name, beside the ones it does", () => {
-    expect(shown("export default { ...shared, a: 1, [key]: 2, inner: { ...more } };")).toEqual({
+  it("says an object brings in entries it does not name, beside the ones it does", async () => {
+    expect(
+      await shown("export default { ...shared, a: 1, [key]: 2, inner: { ...more } };"),
+    ).toEqual({
       a: 1,
       inner: { "...": COMPUTED },
       "...": COMPUTED,
     });
   });
 
-  it("is what JSON carries: no symbol and nothing undefined is left in it", () => {
-    const written = shown("export default { ...shared, a: later(), b: [later()] };");
+  it("is what JSON carries: no symbol and nothing undefined is left in it", async () => {
+    const written = await shown("export default { ...shared, a: later(), b: [later()] };");
     expect(JSON.parse(JSON.stringify(written))).toEqual(written);
   });
 });

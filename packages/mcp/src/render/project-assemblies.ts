@@ -15,9 +15,11 @@ import { RENDERABLE_WITHOUT_A_BUILD } from "./renderable-without-a-build.js";
  * be shown, so whatever placed it falls back as it would for any render that throws, and the
  * reason is in the log.
  */
-export function projectAssemblies(root: ProjectRoot): ReadonlyMap<string, AssemblyDefinition> {
+export async function projectAssemblies(
+  root: ProjectRoot,
+): Promise<ReadonlyMap<string, AssemblyDefinition>> {
   const { assemblies } = discoverAssemblies(root.path);
-  const { placements } = viewFindings(root.path, assemblies);
+  const { placements } = await viewFindings(root.path, assemblies);
   return new Map(
     assemblies.map((found): [string, AssemblyDefinition] => {
       const placed = placements.get(found.name);

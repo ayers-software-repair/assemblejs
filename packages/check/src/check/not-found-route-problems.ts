@@ -12,15 +12,15 @@ import { readDefaultExport } from "./read-default-export.js";
  * from the source, never run. A declaration that cannot be read is reported where its
  * placements are read, so it is not reported again here.
  */
-export function notFoundRouteProblems(
+export async function notFoundRouteProblems(
   root: string,
   page: DiscoveredPage,
-): readonly ProjectProblem[] {
+): Promise<readonly ProjectProblem[]> {
   if (page.name !== NOT_FOUND_PAGE || page.declaration === undefined) return [];
   const file = isAbsolute(page.declaration) ? page.declaration : join(root, page.declaration);
   let declared;
   try {
-    declared = readDefaultExport(readInside(root, file));
+    declared = await readDefaultExport(readInside(root, file));
   } catch {
     return [];
   }

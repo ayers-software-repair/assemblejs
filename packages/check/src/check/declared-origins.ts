@@ -14,13 +14,13 @@ import { UNWRITTEN } from "./unwritten.js";
  * from an origin that was not read is not known to be undeclared. Boot holds every placement to
  * the remotes the project really declares.
  */
-export function declaredOrigins(source: string): {
+export async function declaredOrigins(source: string): Promise<{
   readonly origins: ReadonlySet<string>;
   readonly whole: boolean;
-} {
+}> {
   const origins = new Set<string>();
   if (source.trim() === "") return { origins, whole: true };
-  const config = readDefaultExport(source);
+  const config = await readDefaultExport(source);
   if (config === null || typeof config !== "object" || Array.isArray(config)) {
     return { origins, whole: false };
   }

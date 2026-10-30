@@ -19,12 +19,12 @@ import { viewElements } from "./view-elements.js";
  * - `a-control-has-a-name`: an `input`, a `select` or a `textarea` with no name the reader can
  *   find, as `unnamedControls` judges it (WCAG 2.2, 3.3.2 and 4.1.2, level A).
  */
-export function elementProblems(
+export async function elementProblems(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
-): readonly ProjectProblem[] {
+): Promise<readonly ProjectProblem[]> {
   const problems: ProjectProblem[] = [];
-  for (const [name, written] of viewElements(root, assemblies)) {
+  for (const [name, written] of await viewElements(root, assemblies)) {
     for (const { file, element } of written) {
       if (element.attributes.has("style")) {
         problems.push({

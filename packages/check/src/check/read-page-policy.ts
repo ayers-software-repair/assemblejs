@@ -16,10 +16,10 @@ const isObject = (value: LiteralValue): value is { readonly [key: string]: Liter
  * computed url is the one exception, kept as a mark that the placement is another server's,
  * which is all the rules read of it; where it is written, it is read for the url rules too.
  * What is written is kept as written, a null or an array included, for the rules to refuse.
- * Throws for a module that cannot be compiled or parsed.
+ * Rejects for a module that cannot be compiled or parsed.
  */
-export function readPagePolicy(source: string): PagePolicy {
-  const declared = readDefaultExport(source);
+export async function readPagePolicy(source: string): Promise<PagePolicy> {
+  const declared = await readDefaultExport(source);
   const fields = isObject(declared) ? declared : {};
   const stream = fields["stream"];
   const place: Record<string, unknown> = {};

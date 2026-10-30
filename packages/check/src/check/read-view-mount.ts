@@ -8,7 +8,7 @@ import { readViewExport } from "./read-view-export.js";
  * string where one is written; undefined where the view declares none, computes it, or cannot
  * be read, which the registry resolves at run time and `check` takes as a view that mounts.
  */
-export function readViewMount(root: string, file: string): string | undefined {
-  const mount = readViewExport(root, file, "mount");
+export async function readViewMount(root: string, file: string): Promise<string | undefined> {
+  const mount = await readViewExport(root, file, "mount");
   return typeof mount === "string" ? mount : undefined;
 }

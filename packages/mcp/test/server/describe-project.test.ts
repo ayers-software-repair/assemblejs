@@ -23,16 +23,16 @@ const file = (path: string, contents = ""): void => {
 };
 
 describe("the project's whole shape", () => {
-  it("is one read, so an agent does not spend turns asking what exists", () => {
+  it("is one read, so an agent does not spend turns asking what exists", async () => {
     file("src/assemblies/cart/cart.svelte");
     file("src/assemblies/counter/counter.react.tsx");
-    const project = describeProject(root);
+    const project = await describeProject(root);
     expect(project.assemblies.map((a) => a.name)).toEqual(["cart", "counter"]);
     expect(project.renderers).toEqual(["react", "svelte"]);
     expect(project.root).toBe(dir);
   });
 
-  it("is the pages, the apis and the config too, and how they are wired", () => {
+  it("is the pages, the apis and the config too, and how they are wired", async () => {
     file("src/assemblies/cart/cart.html", "<p>cart</p>");
     file("src/pages/home/home.html", '<main><assembly name="cart"></assembly></main>');
     file("src/pages/home/home.page.ts", "export default { place: { cart: { defer: true } } };");
@@ -41,7 +41,7 @@ describe("the project's whole shape", () => {
       'export default { path: "/api/prices", stream: () => undefined };',
     );
     file("assemblejs.config.ts", "export default { budgets: { document: 14000 } };");
-    const project = describeProject(root);
+    const project = await describeProject(root);
     expect(project.pages).toMatchObject([
       {
         name: "home",
@@ -58,26 +58,26 @@ describe("the project's whole shape", () => {
     });
   });
 
-  it("says which assemblies have a browser half", () => {
+  it("says which assemblies have a browser half", async () => {
     file("src/assemblies/cart/cart.html");
     file("src/assemblies/cart/cart.client.ts");
     file("src/assemblies/note/note.html");
-    expect(describeProject(root).assemblies).toMatchObject([
+    expect((await describeProject(root)).assemblies).toMatchObject([
       { name: "cart", client: "src/assemblies/cart/cart.client.ts", browserHalf: true },
       { name: "note", browserHalf: false },
     ]);
   });
 
-  it("carries the problems rather than hiding them behind an empty list", () => {
+  it("carries the problems rather than hiding them behind an empty list", async () => {
     mkdirSync(join(dir, "src", "assemblies", "Broken"), { recursive: true });
-    const [problem] = describeProject(root).problems;
+    const [problem] = (await describeProject(root)).problems;
     expect(problem?.message).toContain("Broken");
     expect(problem?.fix).toBe('rename the directory to "broken"');
     expect(problem?.path).toBe("src/assemblies/Broken");
   });
 
-  it("is an empty project, not a broken one, when nothing has been written yet", () => {
-    const project = describeProject(root);
+  it("is an empty project, not a broken one, when nothing has been written yet", async () => {
+    const project = await describeProject(root);
     expect(project.assemblies).toEqual([]);
     expect(project.pages).toEqual([]);
     expect(project.apis).toEqual([]);
@@ -86,7 +86,7 @@ describe("the project's whole shape", () => {
 
   // Nothing outside the project is read. Each place the shape is read from that leads out of
   // the root is marked, and reported by the rule that says why, and the rest is still told.
-  it("stops at the root wherever a part of the project leads out of it, and says where", () => {
+  it("stops at the root wherever a part of the project leads out of it, and says where", async () => {
     const outside = mkdtempSync(join(tmpdir(), "assemblejs-mcp-outside-"));
     try {
       mkdirSync(join(outside, "home"));
@@ -101,7 +101,7 @@ describe("the project's whole shape", () => {
       ] as const) {
         symlinkSync(target, join(dir, link));
       }
-      const project = describeProject(root);
+      const project = await describeProject(root);
       expect(project.pages).toEqual([]);
       expect(project.apis).toEqual([]);
       expect(project.settings).toMatchObject({ file: "assemblejs.config.ts", budgets: "(unread)" });

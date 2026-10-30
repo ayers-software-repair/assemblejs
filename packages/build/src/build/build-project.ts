@@ -57,7 +57,7 @@ export async function buildProject(
   const found = discoverAssemblies(root);
   const pages = discoverPages(root);
   const apis = discoverApis(root);
-  const views = viewFindings(root, found.assemblies);
+  const views = await viewFindings(root, found.assemblies);
   const problems = [
     ...found.problems,
     ...pages.problems,

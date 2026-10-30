@@ -13,24 +13,22 @@ import { readViewExport } from "./read-view-export.js";
  * view it lacks, a view that leads back to itself, and a Lit assembly standing in a Lit view's
  * own tree, at any depth, with no shadow root between them.
  */
-export function viewProblems(
+export async function viewProblems(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
   placeable: ReadonlyMap<string, PlacedAssembly>,
-): readonly ProjectProblem[] {
+): Promise<readonly ProjectProblem[]> {
   const problems: ProjectProblem[] = [];
   const byName = new Map(assemblies.map((assembly) => [assembly.name, assembly]));
   const names = [...byName.keys()];
   const rooted = new Map<string, boolean>();
-  // Whether an assembly renders in a shadow root of its own, which hides what is inside it.
-  const hasRoot = (assembly: DiscoveredAssembly): boolean => {
-    const known = rooted.get(assembly.name);
-    if (known !== undefined) return known;
-    const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
-    const own = readViewExport(root, file, "shadow") === true;
-    rooted.set(assembly.name, own);
-    return own;
-  };
+  // Resolve flags before the synchronous traversal, so a Promise cannot become its state.
+  if (assemblies.some((assembly) => assembly.renderer === "lit")) {
+    for (const assembly of assemblies) {
+      const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
+      rooted.set(assembly.name, (await readViewExport(root, file, "shadow")) === true);
+    }
+  }
 
   for (const assembly of assemblies) {
     const from = { name: assembly.name, view: DEFAULT_VIEW };
@@ -56,7 +54,7 @@ export function viewProblems(
       (name) => placeable.get(name),
       (placed, hidden: boolean) => {
         const child = byName.get(placed.name);
-        const own = child !== undefined && hasRoot(child);
+        const own = child !== undefined && rooted.get(child.name) === true;
         if (!hidden && !own && child?.renderer === "lit") {
           problems.push({
             path: assembly.view,

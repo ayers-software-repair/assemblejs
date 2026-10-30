@@ -1,8 +1,9 @@
 # Async inspection: bounded source investigation
 
-Status: read-only scope investigation, independently verified. No helper signature, compiler,
-runtime, hosting or release change is selected or implemented by this record. PR28 preserves
-the rejected second-parser experiment; this investigates reuse of the existing compiler.
+Status: the read-only investigation in PR29 was independently verified. The owner subsequently
+approved the async migration; see `docs/DECISIONS.md` and `docs/ASYNC_INSPECTION.md`. The findings
+and alternatives below record the pre-approval checkpoint. They establish no browser-runtime
+adoption, hosting or release acceptance.
 
 ## Compiler reuse is plausible; a synchronous drop-in is not
 

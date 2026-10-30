@@ -28,17 +28,17 @@ afterEach(() => {
 describe("a project's assemblies, as a server would declare them without a build", () => {
   it("makes a plain html view its file, read when it renders, with what its source places", async () => {
     assembly("shell", "shell.html", '<section><assembly name="cart"></assembly></section>');
-    const shell = projectAssemblies(root).get("shell")?.views["default"];
+    const shell = (await projectAssemblies(root)).get("shell")?.views["default"];
     expect(shell?.placements).toEqual([{ name: "cart", view: "default" }]);
     // Read at render, so an edit made after this was built is what the next render shows.
     assembly("shell", "shell.html", "<p>edited</p>");
     expect(await shell?.markup({ data: {} })).toBe("<p>edited</p>");
   });
 
-  it("makes every other view throw the reason it cannot be shown", () => {
+  it("makes every other view throw the reason it cannot be shown", async () => {
     assembly("counter", "counter.react.tsx", "export default () => null;");
     assembly("notes", "notes.md", "# Notes");
-    const all = projectAssemblies(root);
+    const all = await projectAssemblies(root);
     expect([...all.keys()]).toEqual(["counter", "notes"]);
     expect(() => all.get("counter")?.views["default"]?.markup({ data: {} })).toThrow(
       /"counter" is a react assembly/,
