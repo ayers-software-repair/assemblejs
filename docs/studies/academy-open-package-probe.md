@@ -74,6 +74,12 @@ with bounded capture. Its mocked runtime/DOM boundaries also exercise an outside
 path and an unreadable log, preserving the original failure and teardown. These tests do
 not execute or qualify the third-party runtime.
 
+Diagnostic head `73771ef` did not execute: merging the lesson-copy checkpoint into next
+created a TODO conflict in the open experiment. GitHub
+[does not run pull-request workflows with merge conflicts](https://docs.github.com/en/actions/how-tos/troubleshoot-workflows#triggering-event-conditions).
+Merge next into the owned branch and preserve both the completed authored-copy record and
+the open runtime task. No workflow trigger/security setting or acceptance gate is relaxed.
+
 ## Scenario and evidence limits
 
 The first evaluated runtime was `@vivari/core@1.0.0`; its source/archive and historical cleanup

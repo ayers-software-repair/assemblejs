@@ -48,13 +48,19 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [x] Preserve the negative public editor-SDK result from draft PR22: actual CLI/check/build,
       initial hydration and retained VM edit/rebuild passed, but changed-preview acceptance
       failed at `c41abed` with 67 SDK/editor errors; stop was not reached. Artifact `13004966173`.
-- [ ] Run the exact MIT runtime's hosted basic boot/filesystem/finite-process probe, with
-      expected missing npm delivery and published-version cleanup limits recorded. No
+- [x] Run the exact MIT runtime's hosted basic boot/filesystem/finite-process probe: PR23
+      merged as `ea60a16` after six normal CI jobs, landing and mechanics proof passed at
+      `d7047ae`, plus personal review and separate artifact/source verification. Actual shared
+      file/output/exits 0/7 passed; only npm's expected missing delivery was observed. No
       framework installation, preview or production runtime acceptance is implied.
 - [ ] Evaluate actual npm delivery and published next.2 six-renderer/five-template installation,
       check failure/recovery and build/typecheck in the MIT runtime. Keep command/package
       evidence and failures; `docs/studies/academy-open-package-probe.md` defines the scope.
       This does not accept previews, persistence, live-agent access or production adoption.
+- [x] Author and independently review short learner/tutor copy for all 20 proposed stages
+      in `docs/studies/academy-lesson-copy.md`. Source review corrected stage 2 to a shop-local
+      edit and checked quote/parser, event/relay, stock and renderer anchors. These are proposed
+      lessons; snapshots, checks and interface wiring remain open.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
