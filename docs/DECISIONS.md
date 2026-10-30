@@ -8056,3 +8056,8 @@ preview-only display mode with the same VM file operations; the full hosted Mona
 is not accepted by this result, and Academy's own code view remains unbuilt. Keep all
 page-error/hydration/changed-preview assertions. This is an integration hypothesis until
 the new hosted run proves it, not acceptance inferred from a successful rebuild.
+
+That hypothesis did not complete the SDK workflow: run `41112973798` at `c41abed` had no
+CSP violations but still failed the changed-preview assertion and retained 67 SDK/editor
+page errors. The VM edit and updated server HTML are proven; a usable updated preview and
+process stop are not. Preserve the failed artifact and keep production adoption open.

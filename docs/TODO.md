@@ -48,6 +48,9 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [ ] Run the bounded public editor-SDK proof in hosted CI: actual CLI scaffold, failing check
       and recovery, build/typecheck, React hydration, VM source edit and observed process stop.
       `browser/academy-embed-research/` is an evaluation fixture, not Academy or runtime adoption.
+- [x] Record the SDK candidate's negative hosted result at `c41abed`: real CLI/check/build and
+      retained edit/rebuild passed, but changed-preview acceptance failed with 67 SDK/editor
+      page errors and stop not reached. Preserve artifact `13004966173`; no runtime is adopted.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
