@@ -7985,6 +7985,15 @@ lifecycle. This is a timing hypothesis to prove, not permission to ignore transi
 The browser contract is documented in the [Chrome guide](https://developer.chrome.com/docs/web-platform/view-transitions/cross-document)
 and the [CSS working draft](https://drafts.csswg.org/css-view-transitions-2/#dom-document-activeviewtransition).
 
+The timing hypothesis failed: run `41100557772` caught the same error twice across the
+repeated guide/home visits, before teardown. The shared CSS opts both pages into native
+cross-document transitions; no page script starts one. The scoped correction opts only the
+overview out through its own stylesheet in the existing per-page head slot. Both endpoints
+must opt in for that enhancement, so this removes it from landing/guide navigation without
+patching the shared kit or filtering any page error. Standard links and the background remain.
+The strict repeated-navigation proof must pass before accepting this correction. The underlying
+browser rejection is not attributed to the landing's content or to a specific browser bug.
+
 The 26 October Studio design and audit were read in full from the estate's AssembleJS
 project records. Their reusable direction is one project and common operations behind UI,
 CLI and agent access, with reviewable changes and checks. The latest owner direction makes

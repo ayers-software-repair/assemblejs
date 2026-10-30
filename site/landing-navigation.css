@@ -1,0 +1,6 @@
+/* Copyright Ayers Electronics Inc. All rights reserved. */
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Native cross-document transitions abort during guide navigation in the hosted browser. */
+@view-transition {
+  navigation: none;
+}

@@ -76,6 +76,7 @@
       "file": "index.html",
       "title": "AssembleJS — Frameworks Assemble",
       "description": "Compose one application from assemblies written in React, Vue, Svelte and more, served locally or by other teams. Build with your editor, the CLI or your coding agent.",
+      "head": "<link rel=\"stylesheet\" href=\"{{ROOT}}landing-navigation.css\" />",
       "kind": "overview",
       "section": ""
     },
