@@ -7994,6 +7994,15 @@ patching the shared kit or filtering any page error. Standard links and the back
 The strict repeated-navigation proof must pass before accepting this correction. The underlying
 browser rejection is not attributed to the landing's content or to a specific browser bug.
 
+The page-only opt-out also failed (`41102473401`): both remaining errors occur during
+guide-to-home navigation, while the guide still opts in. The delivered overview stylesheet
+was fetched successfully, so this was not a missing asset or a relaxed check. Move the opt-out
+to the product stylesheet already loaded by every page, and remove the extra per-page asset.
+This disables that optional enhancement across this product's pages, including the outgoing
+guide, while leaving the shared kit and other products untouched. It is not acceptance until
+the same strict repeated-navigation proof passes. The retained source comment names the
+condition for restoring native transitions; no promise rejection is ignored.
+
 The 26 October Studio design and audit were read in full from the estate's AssembleJS
 project records. Their reusable direction is one project and common operations behind UI,
 CLI and agent access, with reviewable changes and checks. The latest owner direction makes

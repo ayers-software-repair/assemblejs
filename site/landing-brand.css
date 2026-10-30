@@ -1,5 +1,9 @@
 /* Copyright Ayers Electronics Inc. All rights reserved. */
 /* SPDX-License-Identifier: Apache-2.0 */
+/* shortcut: keep native page transitions off until the shared frame passes repeated navigation. */
+@view-transition {
+  navigation: none;
+}
 .product-site {
   color-scheme: dark;
   --surface: #0b1715;
