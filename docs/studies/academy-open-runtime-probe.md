@@ -60,3 +60,16 @@ must be refused. All waits/test/job are bounded; no retries. Retain actual outpu
 
 A pass proves only those mechanics. It does not resolve framework installation/build,
 preview routing, persistence, complete cleanup, atomic approval or external-agent access.
+
+## Bounded result
+
+PR23 merged as `ea60a16b972aca91e783c4ffcabf87af183ee6a2`, with the reviewed/tested tree
+equal to `d7047aef81b65d95f7c4098e581e35d450c29320`. Hosted run `41115669173` passed one
+mechanics test in 2.3 seconds; all six normal CI jobs (`41115668933`) and the landing proof
+also passed. Personal review and a separate reader independently checked full source and
+artifact `13004938531`, SHA-256
+`a083480dd4117b9f11ec9ea6888f20abfaa02b5dd4af292af7a858fb8767c832`.
+
+The actual records show the copied file content, expected process output and exits 0/7,
+teardown called after both finite exits, no page errors and only the expected missing npm
+delivery. This accepts the scoped research proof. The limits above remain open.
