@@ -32,7 +32,9 @@ adds six framework and five template assemblies, requires a real missing-assembl
 failure and repair, then builds/typechecks all twelve assemblies including the starter.
 It records the runtime's reported Node version and effective core/CLI/esbuild/TypeScript
 package names/versions. Native-tool aliases and the runtime's node-gyp skip stub mean that
-install success alone cannot prove native compatibility. No preview server starts.
+install success alone cannot prove native compatibility. This package scenario starts no
+preview server; the separate `academy-open-preview-research` scenario enables one only on
+its disposable isolated origin.
 TypeScript is invoked through its installed Node script, including version and deliberate
 type-error rejection/recovery, rather than the runtime's bare `tsc`/tsgo lazy loader.
 The build scenario has a five-minute test limit and bounded commands; the job has ten minutes.

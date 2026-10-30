@@ -61,6 +61,9 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       explicit; no preview, persistence, live-agent access or production adoption acceptance.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
+- [ ] Prove the built application preview, six mounts, real interaction and server stop in the
+      free runtime on a disposable hosted origin; `docs/studies/academy-open-preview-probe.md`.
+      Preserve project CSP and remove the test service worker; no production adoption implied.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages
       in `docs/studies/academy-lesson-copy.md`. Source review corrected stage 2 to a shop-local
       edit and checked quote/parser, event/relay, stock and renderer anchors. These are proposed
