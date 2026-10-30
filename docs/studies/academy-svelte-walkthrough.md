@@ -56,10 +56,43 @@ URLs below are under `https://svelte.dev/tutorial/svelte/`.
 | key-blocks                       | Read full exercise and used Solve; source keyed the periodically replaced loading message; preview displayed its heading and paragraph.                                                    |
 | raw-state                        | Read full exercise and used Solve; source used raw state for polled chart data. Plot rendering was not visually verified.                                                                  |
 | reactive-classes                 | Read full exercise and used Solve; clicking embiggen changed dimensions from 100/100 to 110/110 and derived area from 10000 to 12100.                                                      |
+| getters-and-setters              | Read full exercise and used Solve; source added private state/accessor bounds. Preview showed initial dimensions/area. Maximum-bound interaction remains.                                  |
+| reactive-builtins                | Read full exercise and used Solve; preview displayed a clock using the reactive date class.                                                                                                |
+| stores                           | Read full exercise and used Solve; clicking one instance changed all three subscribed buttons to 1.                                                                                        |
+| snippets-and-render-tags         | Read full exercise and used Solve; a settled preview rendered all three described table rows.                                                                                              |
+| passing-snippets                 | Read full exercise and used Solve; filtering to Tomato rendered its name, hex and RGB row.                                                                                                 |
+| implicit-snippet-props           | Read full exercise and used Solve; source nested the header/row content and used implicit children. Runtime filtering remains to be reprobed on this version.                              |
+| tweens                           | Read full exercise and used Solve; preview exposed progress and five percentage controls. Animation values remain to be measured.                                                          |
+| springs                          | Read full exercise and used Solve; preview exposed stiffness/damping controls. Pointer motion remains unverified.                                                                          |
+| contenteditable-bindings         | Read full exercise and used Solve; editing the preview text changed the bound serialized paragraph markup.                                                                                 |
+| each-block-bindings              | Read full exercise and used Solve; preview exposed three editable items, remaining count and add/clear controls.                                                                           |
+| media-elements                   | Read full exercise and used Solve; preview exposed four track controls and initial times. Audio was not played.                                                                            |
+| dimensions                       | Read full exercise and used Solve; End on the font-size slider changed size from 42 to 100 and measurements from 256 x 79 to 587 x 166.                                                    |
+| bind-this                        | Read full exercise and used Solve; source connected canvas lifecycle/cleanup. Canvas rendering was not visually verified.                                                                  |
+| component-bindings               | Read full exercise and used Solve; preview exposed a keypad, empty prompt and disabled clear/submit. No personal PIN entered or submitted.                                                 |
+| component-this                   | Read full exercise and used Solve; source referenced the canvas component's clear method. Canvas interaction remains.                                                                      |
+| deferred-transitions             | Read full exercise and used Solve; source coordinated list transitions; preview exposed six items across two lists. Moving items remains unprobed.                                         |
+| animations                       | Read full exercise and used Solve; source added list animation; preview exposed the two lists. Animation behavior remains unmeasured.                                                      |
+| context-api                      | Read full exercise and used Solve; source supplied context to a canvas example. Canvas output was not visually verified.                                                                   |
+| svelte-window                    | Read full exercise and used Solve; preview exposed the keyboard-event prompt. Keyboard interaction remains unprobed.                                                                       |
+| svelte-window-bindings           | Read full exercise and used Solve; preview showed initial scroll depth. Scrolling behavior remains unprobed.                                                                               |
+| svelte-document                  | Read full exercise and used Solve; preview exposed the initial selection state. Selection interaction remains unprobed.                                                                    |
+| svelte-body                      | Read full exercise and used Solve; preview exposed the image. Pointer interaction remains unprobed.                                                                                        |
+| svelte-head                      | Read full exercise and used Solve; source set document-head/theme content and preview exposed the selector. Theme changes remain unprobed.                                                 |
+| svelte-element                   | Read full exercise and used Solve; selecting p produced the corresponding paragraph in preview.                                                                                            |
+| svelte-boundary                  | Read full exercise and used Solve; clicking the failure trigger displayed the null-property error. Reset restored the coordinate output and trigger.                                       |
+| sharing-code                     | Read full exercise and used Solve; preview exposed four audio tracks. Audio was not played.                                                                                                |
+| module-exports                   | Read full exercise and used Solve; preview exposed Pause all. Audio was not played.                                                                                                        |
+| congratulations                  | Read the course-end page. Solve was disabled; reaching it is navigation, not a claim of independently passing every exercise.                                                              |
 
 The compiler preview settles asynchronously. Immediate navigation snapshots sometimes show
 the previous lesson's output; a changed editor alone is not runtime proof. Rows record only
 the outcomes actually observed. Mobile, keyboard, error and reload probes are in the parent study.
 
-The sequential walkthrough reached Advanced Svelte. Continue with the current Next exercise
-link after reactive-classes. Missing interaction probes above still remain open.
+One rapid navigation batch mixed a lesson's prose with a later lesson's editor/preview.
+Those mixed observations were discarded; the snippet lessons were revisited individually
+with target URL and previous-link checks before their outcomes were recorded above.
+
+The sequential source/solution walkthrough reached the core course end and continued into
+SvelteKit. Missing interaction probes above still remain open; source inspection and use of
+Solve do not establish independent manual completion.

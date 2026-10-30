@@ -118,6 +118,16 @@ open. At 390 by 844, the document measured 375 pixels wide; a screenshot showed 
 preview, with horizontal scrolling inside the code editor. Native mobile editing and full
 keyboard/screen-reader coverage are not established. The viewport was reset afterwards.
 
+Returned to the complete game sandbox and read its actual Square/Board/Game source.
+Played five moves to an X win; another empty-square click left the board/history unchanged.
+Jumped to move 2 and made a different move: the board returned to the earlier position,
+the new branch contained three moves, and the abandoned moves 4 and 5 disappeared.
+Copied the complete editor document through its UI and changed the turn-label text; the
+preview changed while retaining the current board/history. Escape then Tab again retained
+editor focus. Clear restored the original turn label and empty board. This is a manual
+customization and interaction probe of the completed example, not manual rebuilding of
+the whole game from the starter.
+
 ### Vue: observed 30 October
 
 <https://vuejs.org/tutorial/> exposes 15 steps: start, declarative rendering, attribute
@@ -136,6 +146,16 @@ unsolved starter. Tab stayed in the editor during the probe. At 390 by 844, Outp
 the lower workspace to preview and became Code; screenshot confirmed the responsive layout.
 No account used. Full 15-step completion and native mobile/screen-reader proof remain open.
 
+Returned for connected state/component work. Manually implemented step 8's computed todo
+filter: hiding completed items reduced three rows to one; checking the last row emptied
+the filtered list. Manually imported/rendered step 11's child and saw its heading. In step
+12, used Show me, then manually changed the parent's greeting; the child's heading updated.
+In step 13, inspected the child's emit declaration and manually connected the parent listener;
+the parent changed from its placeholder to the emitted message. In step 14, manually supplied
+slot content using parent state; it replaced the child's fallback. Transient import-map
+errors appeared during step changes and cleared as the compiler settled. This expands actual
+data-flow evidence without claiming the untouched lifecycle/watcher exercises complete.
+
 ### Preact: observed 30 October
 
 <https://preactjs.com/tutorial/01-vdom>: manually added emphasis and a purple style, then
@@ -151,6 +171,15 @@ import produced the working button. No root-cause claim about the compiler is ma
 Reload restored the starter and removed completion. Tab stayed in the editor. At 390 by
 844, a screenshot showed narrow side-by-side lesson/editor panes with separate scrolling,
 rather than a stacked mobile workspace. No account used. Further chapters remain open.
+
+Continued to `03-components`: read the component/children/lifecycle exercise, used Solve
+and clicked the rendered button through its passed handler. In `04-state`, read both class
+and hook variants and manually added hook state plus a functional increment. Run produced
+an empty iframe, both with and without an additional createElement import. Reload and the
+official Solve recovered a visible counter; two clicks changed 0 to 2. Reapplying the manual
+edit through Run again yielded an empty preview. The cause was not established; this is
+successful interaction with the official solution and a reproducible manual-run limitation,
+not a completed manual state exercise. Later refs/effects/application chapters remain open.
 
 ### Solid: observed 30 October
 
@@ -196,8 +225,18 @@ vertically; native mobile editing is unproven. Tab focus reached the editor's sh
 keyboard-exit claim is made. Reload kept step 8 but restored its unsolved starter, both list
 items and unchecked Hide completed control; edits and runtime completion did not resume.
 
-Later Svelte/SvelteKit chapters, full React/Vue/Preact/Solid coverage and full course inventory
-remain open. Lit's introductory sequence is covered; its separate advanced courses are not.
+The sequential Svelte source/Solve walkthrough now reaches the core course end, with selected
+manual interaction probes; it is not independent manual completion of every exercise.
+Detailed evidence and untested interactions are in `academy-svelte-walkthrough.md`.
+`academy-sveltekit-walkthrough.md` continues through routing, data, forms and api handlers,
+including observed errors and recovery. Later Kit chapters and deeper React/Vue/Preact/Solid
+application exercises remain open. Lit's introductory sequence is covered; its separate
+advanced courses are not.
+
+`academy-workspace-source-inventory.md` records the actual reuse boundary: existing inspector
+routes are deliberately read-only. Shared assembly planning, checks and dev rebuild/reload
+exist; editable source, reviewed application and concurrent-edit protection do not. Failure
+diagnostics are not redacted, so public Academy reuse cannot copy the loopback response.
 
 ## Continuation
 
@@ -223,3 +262,11 @@ Hook setup unexpectedly populated worktree dependencies from the existing pnpm c
 running Husky. It completed in 1.8 seconds, without changes to the lockfile or package metadata.
 No build, broad tests, product browser proof, publication or deployment ran here. Full product
 verification remains hosted and pending actual implementation.
+
+The next source-only checkpoint adds the sequential walkthroughs and workspace inventory.
+An independent GPT-6.1 Sol reader reviewed all four records and the TODO diff with no
+remaining findings. Its complete-source review verified the inventory and corrected the
+failure-log disclosure wording; it did not reproduce browser actions. Identity and emoji
+self-tests again rejected known-bad fixtures; both trees passed, headers passed across
+fourteen packages, all five records passed formatting, and the staged diff check passed.
+Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/issues/16>.

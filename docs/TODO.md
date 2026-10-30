@@ -2,6 +2,8 @@
 
 ## Academy and landing research (owner, 2026-10-30)
 
+Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/issues/16>.
+
 - [x] Correct the market README and About page's stale claims about agent route parameters,
       remote api calls and api headers/cookies, verified against the current source.
 - [ ] Work through official framework training in a browser and record exact observations in
@@ -20,6 +22,10 @@
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
 the manager. This branch does not change release metadata or the shared router.
+
+QA subsequently reported the company product/footer links still reach the gated root page,
+while `/next/` loads. The existing company issue tracks this access dependency; website-management
+owns company link/routing integration. Research continues here without a stable promotion.
 
 The ledger. Every task lives here; a task is checked off in the same commit that does it, never
 in a batch afterwards. An unchecked box is work not done. Order is the order of work.
