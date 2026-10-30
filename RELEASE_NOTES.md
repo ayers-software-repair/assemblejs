@@ -1,3 +1,8 @@
+## AssembleJS 1.0.0-next.1
+
+Each package README includes installation commands, an example and links to its guide.
+All fourteen packages are published together through the release workflow.
+
 ## AssembleJS 1.0.0-next.0
 
 One page from every framework: each piece written in the framework its author knows, composed on the server. Free and open source.

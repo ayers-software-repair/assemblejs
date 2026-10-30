@@ -136,6 +136,12 @@ Source: [release-notes.html](release-notes.html)
 
 What is in each version of AssembleJS, newest first.
 
+## 1.0.0-next.1
+
+Each package README includes installation commands, an example and links to its guide.
+
+All fourteen packages are published together through the release workflow.
+
 ## 1.0.0-next.0
 
 The first release of AssembleJS: server composition, framework renderers and a complete project toolchain.
