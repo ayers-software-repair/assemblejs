@@ -16,8 +16,8 @@ The shop and the catalogue were begun with the command line, as a person begins 
 servers were begun through the agent surface, as an agent begins one: `create_project` and
 `add_assembly`, then `check`, and for reviews `render_assembly` and `compose_page` to see what
 was made. Every view, service, api and page template was then written by hand, the agent's
-servers included: `place_assembly` put its tags where the template's layout did not want them,
-and the agent surface takes no route parameter, so it could not show a product's reviews.
+servers included: placement and layout were then adjusted in the templates. The agent surface
+can render an assembly or compose a page with the route parameters and query values supplied.
 
 ## Run it
 
@@ -59,15 +59,17 @@ three servers.
   it starts, made for that run, or the `STAFF_KEY` you gave it. The stock board is behind the
   shop's own access check, and changes as orders are placed, over the page's stream.
 
-## What it does not do
+## Composition boundaries
 
-Three things a shop like this would want, and that the framework does not do yet. The showcase
-is built inside them and says so on its own About page.
+The shop declares how its teams' assemblies interact. Services supply address-dependent data;
+apis handle requests that need the visitor's headers or cookies.
 
 - Two servers' assemblies on one page share an event bus only where the shop's config says so
   for that server (`events: true`, which it does for the catalogue). Where two teams must agree, the
   address carries it, which is how the grind reaches the buy box.
-- An assembly placed from another server cannot call its own server from the browser, so the
-  reviews here are read, not written.
-- Nothing of who is asking reaches a service or an api. The basket is kept by the browser and
-  priced by the server; an order is found by its address alone.
+- An assembly's browser half can call its own server's apis with `fetch(api("/api/..."))`,
+  using `api` from `@asmjs/core/client`. The page's server relays calls for a declared origin;
+  the realtime example demonstrates this. The reviews in this showcase are read-only.
+- A service receives route parameters and query values, without headers or cookies. An api
+  receives both headers and cookies. The basket here is kept by the browser and priced by
+  the server; an order is found by its address alone.

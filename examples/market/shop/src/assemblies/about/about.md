@@ -21,16 +21,17 @@ down, a product page has nothing to show, and says so with an error rather than 
 Press **Outline** at the corner of any page. Every assembly gets a box: its name, which server
 answered it, how long that took, and when the browser brought it to life.
 
-## What it does not do
+## How the teams interact
 
-Three things a shop like this would want, and that the framework does not do yet.
+Each team keeps its own assemblies and apis. The shop declares which servers its page trusts.
 
 - The teams' assemblies talk to each other in the browser across servers only where the shop
   says so for that server: the catalogue's join the page's bus, the others are on a bus of their
   own. So where two teams must agree, the address carries it. The grind you pick is the
   catalogue team's control; it reloads the page with `?grind=`, and the shop's buy box reads it
   from there.
-- An assembly from another server cannot call its own server from your browser. So the reviews
-  are read-only here: there is no form to write one.
-- The server never knows who you are. Your basket is kept by your browser, and an order is
-  found by its address alone.
+- An assembly can call its own server's apis through the page's server. The reviews here are
+  read-only: this showcase has no form to write one.
+- Services depend on the address; apis can also read request headers and cookies. Your basket
+  here is kept by your browser, and an order is found by its address alone. The staff door
+  checks its session cookie.

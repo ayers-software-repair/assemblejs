@@ -148,6 +148,55 @@ the long gate once at S-08:
 | S-08 | Conformance: the `nested` fixture and the two-server nested spec                                                                               | `pnpm conformance` green with the new specs                                                 |
 | S-09 | DESIGN 2.4, 3.4, 7, 8, 10; the guides; the changeset; the studies deleted                                                                      | the site gates; a reader with no stake confirms DESIGN against the tests                    |
 
+### 4.3 AssembleJS Academy and landing (owner, 2026-10-30)
+
+The owner requested a full interactive Academy within assemblejs.com, with original lessons
+about server composition across frameworks, real completion checks, saved progress and a
+downloadable completion certificate. The latest owner correction makes Academy AI first:
+the learner's agent teaches as they go. The owner selected both their existing agent and an
+embedded tutor, preferring hardcoded guidance without real AI inference. Use authored hints
+and explanations tied to actual lesson checks, clearly labelled as guided tutoring, with
+honest fallback for unknown errors. The learner's agent receives current lesson/code/check
+context. No account requirement is invented.
+The owner agreed to this approach and requires a very easy connection path: one clear
+Connect your agent action, client-specific verified setup and current lesson/check context.
+Built-in guided tutoring must work without setup.
+Further owner direction puts the finished application beside its actual editable code.
+Agent mode demonstrates prepared feature workflows such as "Add a calculator", explains
+its choices and changes real files and preview. Supported natural-language customizations
+must be explicit; broader requests belong to the learner's connected agent. The owner
+clarified that this demonstrates AssembleJS's selling point in the provided project;
+learners do not upload their own code. No repository-import flow is added.
+The owner also requires a coding-agent-style code view: file tree, tabs, highlighted editable
+source beside preview, plus changed files and readable diffs for agent-mode actions.
+Teach all three agent modes through required exercises: Plan proposes without editing;
+Approval shows a diff and applies only approved changes, including a real reject/revise/
+approve sequence; Auto applies supported changes and runs checks. Verify file and preview
+outcomes for each mode rather than merely exposing a mode selector.
+The owner's latest clarification makes Academy the guided introduction to a real optional
+visual workspace over AssembleJS: UI, CLI, manual editing and the learner's existing agent
+operate on the same project. Reuse the existing server/tooling operations and reconcile the
+earlier Studio design; do not implement a disconnected tutorial engine that only mimics them.
+The owner's clarification names <https://svelte.dev/tutorial/svelte/welcome-to-svelte>
+as the standard: examples need substantial depth and connected application work.
+The reference is too wordy for the owner: preserve depth while teaching through short
+instructions, clear tasks and immediate feedback. Create original lessons and examples.
+This work began separately from the website session's next.2 publication and routing work.
+That session subsequently reported next.2 accepted and transferred ongoing product
+implementation here; shared company routing remains with the manager.
+
+Research is the first gate: work through official Svelte/SvelteKit, React, Vue, Preact, Solid
+and Lit training in a browser; record actual exercises, editor/preview behavior, feedback,
+solve/reset, progress/resume, keyboard and mobile observations. Inspect the existing examples,
+docs generation, conformance and demo flow before choosing runtime, editor, hosting or licensing.
+The record is `docs/studies/academy-research.md`; it must distinguish observed proof from open work.
+
+After research, define the lesson and proof ladder, reuse existing examples and tooling, then
+implement and verify it. The landing work first inspects older GitHub history and the read-only
+design reference, then improves that direction with the owner's tagline, "Frameworks Assemble".
+Each completed rung requires independent source review and the relevant hosted checks.
+No release tag, npm publication, shared router change or stable promotion is granted here.
+
 ## 5. Verification
 
 - `pnpm check` runs, in order, what CI runs: the identity gate against its own red fixtures then
