@@ -59,6 +59,11 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       and independently verified artifact `13010966427`. Earlier failures remain recorded
       in `docs/studies/academy-open-package-probe.md`. Native substitutions/notice gaps stay
       explicit; no preview, persistence, live-agent access or production adoption acceptance.
+- [x] Evaluate and reject the in-process TypeScript static-reader replacement: 28 focused
+      regressions passed, but additional valid type-export cases failed compiler parity,
+      independently reproduced. Preserve the two failed published next.2 preview attempts
+      and exact counterexamples in `docs/studies/academy-static-reader-probe.md`; no framework
+      compiler/dependency change or preview acceptance follows.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages

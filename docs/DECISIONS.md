@@ -8050,3 +8050,19 @@ That correction reached successful install/check/build commands, but the strict 
 gate caught a missing optional SDK tsgo asset triggered by bare `tsc`. Keep that gate and
 invoke the declared TypeScript 6 compiler through its installed Node script. Require its
 actual version and a deliberate semantic error/recovery before accepting browser typechecking.
+
+## 2026-10-30: the static-reader compiler candidate is not adopted
+
+The MIT preview experiment reached real installation but stopped reading a config written in
+TypeScript. esbuild-wasm's synchronous worker path received no message; disabling its workers
+instead stopped its synchronous service. Both negative results stay in
+`docs/studies/academy-static-reader-probe.md`; neither reached preview acceptance.
+
+A source-only candidate replaced four static esbuild calls with in-process TypeScript and the
+existing Acorn readers. It passed 28 focused tests after worker, duplicate-export and alias
+regressions were corrected. A further parity probe nevertheless found valid local type exports
+that the candidate rejected. Disabling value-module preservation fixed those cases but erased
+invalid duplicate value exports instead. A separate reader reproduced the conflict. Do not
+change the framework's accepted syntax to accommodate this runtime or turn narrow unit success
+into compatibility acceptance. The owned package/dependency/lock/changeset edits were set aside;
+this checkpoint records evidence only. Full Academy work and runtime evaluation remain open.
