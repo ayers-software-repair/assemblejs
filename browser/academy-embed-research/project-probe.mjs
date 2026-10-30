@@ -93,12 +93,18 @@ try {
   );
   await command("node", [...cli, "add", "assembly", "react-probe", "--renderer", "react"], root);
   const parent = JSON.parse(readFileSync("probe-parent.json", "utf8"));
+  // The SDK injects exactly `window.__sb_state = {};` into this isolated preview.
+  const sdkStateHash = "'sha256-9VIfqMonp15xwF2wvp1RmHfbksUeX7jimMpejnf5jYk='";
   writeFileSync(
     `${root}/assemblejs.config.ts`,
     'import { contentSecurityPolicy, defineConfig } from "@asmjs/core";\n' +
       "const policy = contentSecurityPolicy([]);\n" +
       'if (!policy.includes("frame-ancestors \'self\'")) throw new Error("framing policy changed");\n' +
-      "export default defineConfig({ contentSecurityPolicy: policy.replace(\"frame-ancestors 'self'\", " +
+      'if (!policy.includes("script-src \'self\'")) throw new Error("script policy changed");\n' +
+      "const scripts = policy.replace(\"script-src 'self'\", " +
+      JSON.stringify("script-src 'self' " + sdkStateHash) +
+      ");\n" +
+      "export default defineConfig({ contentSecurityPolicy: scripts.replace(\"frame-ancestors 'self'\", " +
       JSON.stringify("frame-ancestors 'self' https://stackblitz.com " + parent.origin) +
       ") });\n",
   );

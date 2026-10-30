@@ -19,8 +19,14 @@ The GET-only fixture exposes only the SDK bundle and its own three resources.
 
 The framework's framing default is unchanged. Only this project adds the exact controller
 origin and documented StackBlitz editor origin to its existing frame-ancestor policy.
+It permits the exact hash of the SDK's injected `window.__sb_state = {};` initialization,
+which the retained failed trace showed blocked by the default script policy. No unsafe-inline
+or framework-default change is made. The SDK is now displayed in its documented preview-only
+mode: its full Monaco editor emitted source-file/worker errors in the first edit/rebuild run.
+This evaluates VM file control and preview; it does not accept that hosted editor or implement
+Academy's own code view. All page-error and actual-preview assertions remain strict.
 The normal framework browser suite is unchanged. Run this proof only in its hosted workflow,
-never on the desktop seat. JSON, screenshot and failure trace are retained as artifacts.
+never on the desktop seat. Result/page-error JSON, screenshot and failure trace are retained.
 The adjacent Node regression covers buffered output after a stop failure by executing the
 actual guest source with process/filesystem/timer boundaries replaced; it launches no runtime.
 

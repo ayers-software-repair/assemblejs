@@ -73,7 +73,7 @@ try {
     },
     {
       startScript: "start",
-      openFile: "project-probe.mjs",
+      view: "preview",
       height: 700,
       showSidebar: true,
       clickToLoad: false,

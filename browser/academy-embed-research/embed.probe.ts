@@ -55,6 +55,7 @@ test("the public editor SDK runs real framework checks and source edits without 
           .catch(() => null)) ?? "missing result",
       );
       await info.attach("final-state.json", { path: evidence, contentType: "application/json" });
+      await writeFile(info.outputPath("page-errors.json"), JSON.stringify(errors, null, 2));
       await page
         .screenshot({ path: info.outputPath("editor-sdk.png"), fullPage: true })
         .catch(() => undefined);

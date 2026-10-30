@@ -8044,3 +8044,15 @@ filesystem and timer boundaries replaced: its final-phase assertion failed as re
 failed before the correction. The reporter now latches a successfully written failed/stopped
 phase; the same delayed-output test passes. This local source regression starts no browser,
 server or runtime child process. The hosted SDK compatibility proof remains a separate gate.
+
+At `be1da32`, hosted run `41111065538` recorded scaffold/install/add/check recovery and
+build/typecheck success, initial React hydration, the saved VM edit and a second dev build.
+Its fresh HTML response contains the edited label, but the visible preview was blank and
+the strict changed-preview assertion failed. The trace shows the SDK's injected
+`window.__sb_state = {};` blocked by script-src self, plus Monaco source-file/worker errors.
+Test the literal initialization's exact hash in only this generated project's policy;
+do not enable unsafe-inline or change the framework default. Evaluate the documented
+preview-only display mode with the same VM file operations; the full hosted Monaco editor
+is not accepted by this result, and Academy's own code view remains unbuilt. Keep all
+page-error/hydration/changed-preview assertions. This is an integration hypothesis until
+the new hosted run proves it, not acceptance inferred from a successful rebuild.
