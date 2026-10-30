@@ -27,8 +27,8 @@ importers:
         specifier: 1.62.1
         version: 1.62.1
       '@vivari/core':
-        specifier: 1.0.0
-        version: 1.0.0
+        specifier: 1.1.4
+        version: 1.1.4
       '@webcontainer/api':
         specifier: 1.6.4
         version: 1.6.4
@@ -2508,8 +2508,8 @@ packages:
   '@vitest/utils@4.1.11':
     resolution: {integrity: sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ==}
 
-  '@vivari/core@1.0.0':
-    resolution: {integrity: sha512-JUNhsM5V1VuKxIRsVLZllo/x77h+/xmLWP7zNNG8nJ2g7TOw1kPUohoXgZ/IDkT38aw/ELnwiDkT8UaqTDvHOA==}
+  '@vivari/core@1.1.4':
+    resolution: {integrity: sha512-kVxb9A9PF0ZRyMZpOXT/WgnWxFKjLMH9NIwegFVfQDUjO+ubs3YAVsV2CMm9Ee6pObKR6XF281nhsXk9ukJVMQ==}
 
   '@volar/language-core@2.4.28':
     resolution: {integrity: sha512-w4qhIJ8ZSitgLAkVay6AbcnC7gP3glYM3fYwKV3srj8m494E3xtrCv6E+bWviiK/8hs6e6t1ij1s2Endql7vzQ==}
@@ -6299,7 +6299,7 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
 
-  '@vivari/core@1.0.0': {}
+  '@vivari/core@1.1.4': {}
 
   '@volar/language-core@2.4.28':
     dependencies:

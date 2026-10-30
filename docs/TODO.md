@@ -53,6 +53,14 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `d7047ae`, plus personal review and separate artifact/source verification. Actual shared
       file/output/exits 0/7 passed; only npm's expected missing delivery was observed. No
       framework installation, preview or production runtime acceptance is implied.
+- [x] Evaluate actual npm delivery and published next.2 six-renderer/five-template installation,
+      check failure/recovery and build/typecheck in the MIT runtime: hosted proof passed at
+      `f9adade`, with five Node regressions, two browser tests, actual compiler error/recovery
+      and independently verified artifact `13010966427`. Earlier failures remain recorded
+      in `docs/studies/academy-open-package-probe.md`. Native substitutions/notice gaps stay
+      explicit; no preview, persistence, live-agent access or production adoption acceptance.
+- [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
+      redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages
       in `docs/studies/academy-lesson-copy.md`. Source review corrected stage 2 to a shop-local
       edit and checked quote/parser, event/relay, stock and renderer anchors. These are proposed

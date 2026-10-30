@@ -6,6 +6,11 @@ vendor contact, accounts or adoption. Academy remains browser-based; independent
 work continues. The public editor-SDK candidate's failed result is preserved separately in
 `academy-runtime-research.md` and draft PR22.
 
+This record describes the original published 1.0.0 study. The later package experiment found
+a missing builtin during actual next.2 CLI startup. The current development-only fixture
+evaluates 1.1.4, whose inspected API, lazy npm loading and improved teardown behavior differ;
+see `academy-open-package-probe.md`. Neither version is selected for production.
+
 ## Exact published source
 
 `@vivari/core@1.0.0`, first-party MIT, is pinned as a development-only dependency. Its npm
