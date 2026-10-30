@@ -45,6 +45,12 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [ ] Verify free browser-runtime and StackBlitz editor-SDK routes against actual Academy
       requirements. The owner requires no added paid hosting or required paid runtime licence;
       continue curriculum/interface work while evaluating, without vendor/account/spend action.
+- [x] Preserve the negative public editor-SDK result from draft PR22: actual CLI/check/build,
+      initial hydration and retained VM edit/rebuild passed, but changed-preview acceptance
+      failed at `c41abed` with 67 SDK/editor errors; stop was not reached. Artifact `13004966173`.
+- [ ] Run the exact MIT runtime's hosted basic boot/filesystem/finite-process probe, with
+      expected missing npm delivery and published-version cleanup limits recorded. No
+      framework installation, preview or production runtime acceptance is implied.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with

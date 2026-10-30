@@ -26,6 +26,9 @@ importers:
       '@playwright/test':
         specifier: 1.62.1
         version: 1.62.1
+      '@vivari/core':
+        specifier: 1.0.0
+        version: 1.0.0
       '@webcontainer/api':
         specifier: 1.6.4
         version: 1.6.4
@@ -2504,6 +2507,9 @@ packages:
 
   '@vitest/utils@4.1.11':
     resolution: {integrity: sha512-zTCVGpyFsGWBhllOyKlTw/vnr6D9qxsfSDyfbyZmTyjHw5N/VuvzHpHoQjm2ZJzn4RJgx5w4r7V0er69CmLgPQ==}
+
+  '@vivari/core@1.0.0':
+    resolution: {integrity: sha512-JUNhsM5V1VuKxIRsVLZllo/x77h+/xmLWP7zNNG8nJ2g7TOw1kPUohoXgZ/IDkT38aw/ELnwiDkT8UaqTDvHOA==}
 
   '@volar/language-core@2.4.28':
     resolution: {integrity: sha512-w4qhIJ8ZSitgLAkVay6AbcnC7gP3glYM3fYwKV3srj8m494E3xtrCv6E+bWviiK/8hs6e6t1ij1s2Endql7vzQ==}
@@ -6292,6 +6298,8 @@ snapshots:
       '@vitest/pretty-format': 4.1.11
       convert-source-map: 2.0.0
       tinyrainbow: 3.1.1
+
+  '@vivari/core@1.0.0': {}
 
   '@volar/language-core@2.4.28':
     dependencies:

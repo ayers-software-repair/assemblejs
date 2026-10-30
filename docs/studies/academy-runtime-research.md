@@ -154,8 +154,8 @@ Its documented API has no process-spawn, command-exit or atomic compare-and-appl
 Those missing controls matter for real CLI/check evidence and preserving concurrent edits;
 a snapshot followed by `applyFsDiff` is not a demonstrated approval transaction. Generated
 projects are ephemeral unless forked to an account; Academy's own saved-state requirements
-remain. Exact AssembleJS execution, multi-server previews, current-revision checks, approval
-safety and live-agent access have not been tested through this SDK. It is a concrete free
+remain. The bounded execution result below does not establish multi-server previews,
+approval safety or live-agent access. It is a concrete free
 public-project candidate to evaluate, not an accepted replacement for the earlier API probe.
 
 [Vivari](https://vivari.run/docs/) is a self-hostable browser runtime with a first-party
@@ -189,6 +189,21 @@ permissive licence does not establish blanket Nodebox coverage for this Academy.
 These source checks establish fee-free candidates and concrete gaps, not production
 compatibility or adoption. Next, use a bounded hosted probe of the real published framework
 before choosing one; keep paid services, new accounts and vendor submissions out of that work.
+
+The editor-SDK probe in PR22 reached real execution but failed acceptance. At `c41abed`,
+hosted run `41112973798` recorded scaffold/install/add exits 0, the deliberate missing-assembly
+check 1, repaired check 0 and build/typecheck 0. Initial React hydration passed. A VM file edit
+was retained, the dev server rebuilt and a fresh HTML response contained the edited label;
+the changed-preview assertion still failed and the final visible preview was blank/loading.
+Stop was not reached, so no process-exit acceptance is claimed. Artifact `13004966173`
+has SHA-256 `15252b797fde32d9d5a505ab0c8281f875f3fc023b0225ec873d30ef653dd117`.
+
+The exact project-only hash allowed the SDK's static initialization and eliminated the
+recorded CSP violations. Preview-only display did not eliminate editor faults:
+`page-errors.json` retains 67 errors, including 33 worker DataCloneErrors and 34 missing-source
+errors. No error assertion was filtered. The lower-level cause is unconfirmed; successful
+CLI execution and edited HTML do not establish a usable preview/editor. Keep this failed
+candidate evidence separate from a production runtime decision or the earlier direct-API proof.
 
 ## Connecting the learner's agent
 
