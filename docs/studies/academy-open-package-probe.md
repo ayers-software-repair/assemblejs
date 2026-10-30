@@ -31,7 +31,7 @@ Registry metadata now reports a newer published 1.1.4, source commit
 newer online documentation as applicable or attempting another development-only probe.
 No production runtime is selected by that investigation.
 
-## Newer published 1.1.4: scaffold passes, installation fails
+## Newer published 1.1.4: bounded package proof
 
 The development-only dependency now pins 1.1.4. Its 27-file published archive has SHA-256
 `46c0cac57f9185ded3cf0ab013f1fa383a770b0ae65b6fec2711aeb9ff22ac27`; the registry SHA-512
@@ -116,6 +116,28 @@ intentional TS2322 error with exit 2, repair it and require exit 0 before the fu
 This uses the declared compiler, without a missing optional SDK tool or a vendor patch.
 The exact compiler's small isolated local red/green fixture calibrates that exit/diagnostic;
 only hosted proof can establish the browser runtime's behavior.
+
+## Successful bounded result
+
+At `f9adade00caa5b068c511f802ae43f2c88f635bf`, hosted run `41125751628`, job
+`124303705638`, passed all five Node regressions and both browser tests (2.0 minutes).
+Artifact `13010966427` has SHA-256
+`47ccc859f2fd34e87b2592515dea90bca615b90598554f1aa39e106aef500aa7`.
+A separate reader verified its raw hash, actual JSON and upload metadata, and that the
+synthetic merge checkout `8cf1092d8e4f48e461922fde8a7f2599c4e48195` has the same tree.
+
+All 22 expected command exits match: npm/version/scaffold/install, actual compiler version,
+TS2322 exit 2 then repaired exit 0, eleven assembly additions, missing-assembly check exit 1
+then repair, and final build/typecheck exit 0. Actual compiler output identifies TypeScript
+6.0.3; install added 239 packages. Build reports twelve assemblies and retains nonempty
+server output length 9,011. Both browser-error arrays and all missing/failed-request arrays
+are empty; no service worker was registered. Finite commands finish before teardown.
+
+This accepts only the evaluated install/check/build/typecheck mechanics, with the documented
+native substitutions and explicit compiler invocation. It does not accept preview/hydration,
+remote composition in this runtime, persistence, atomic approval, pending-operation cleanup,
+mobile editing, live-agent access or production adoption. Concrete bundled-notice gaps are
+recorded in `academy-open-runtime-notices.md`.
 
 ## Scenario and evidence limits
 
