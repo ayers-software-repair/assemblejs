@@ -7873,3 +7873,43 @@ it to the coordinated package version when packing; published archives remain im
 The one-version gate now rejects stale internal references in all four dependency fields
 and self-tests every field. No force/legacy-peer-deps install exception is permitted.
 Reference: https://pnpm.io/workspaces#publishing-workspace-packages.
+
+## 2026-10-30: Academy teaches by doing, with guided tutoring
+
+The owner requests AssembleJS Academy inside the product site: a full interactive tutorial
+with substantial connected examples, real completion checks, saved progress and a downloadable
+completion certificate. The reference is <https://svelte.dev/tutorial/svelte/welcome-to-svelte>,
+but the owner finds it too wordy. Keep instructions short and make the next task clear;
+expand application depth rather than copying course content.
+
+The latest direct correction supersedes the earlier no-AI brief: Academy is AI first, with
+the learner's own agent teaching as they go. The owner selected both that agent path and an
+in-site tutor, then agreed to scripted guidance rather than real inference. The guided tutor
+uses authored explanations and hints tied to real check outcomes, and identifies unknown
+failures honestly. It works immediately without setup. A clear Connect your agent action
+provides the shortest verified client setup plus current lesson/code/check context; copying
+instructions alone must not be reported as an established connection.
+
+Official tutorial browser research, current examples and older landing-history inspection
+precede design. Runtime, hosting and licensing remain research questions, not infrastructure
+approval. The landing preserves the owner's "Frameworks Assemble" direction. At handoff,
+the website session retained next.2 publication and installed acceptance; it subsequently
+reported both complete and handed ongoing product implementation here. Shared company routing
+remains with the manager; this branch changes no release authority. Research is recorded in `docs/studies/academy-research.md`
+and planned in PLAN 4.3.
+
+The owner then emphasized agent mode as AssembleJS's selling point: request a feature such
+as "Add a calculator", show the prepared workflow's choices and update the actual files
+and working application together. Support clearly bounded customization requests without
+claiming arbitrary language generation. The provided project demonstrates the product;
+the owner explicitly clarified that learners do not need to upload their own code.
+The owner also requires a coding-agent-style code view showing the actual project: file
+tree, tabs, highlighted editable source and readable changes beside the working preview.
+All three agent modes are taught through exercises: Plan makes a proposal without edits,
+Approval requires approve/reject before application, and Auto applies supported changes
+and checks the result. Include rejection, revised approval and automatic application in
+the learning path; a mode selector alone does not satisfy this requirement.
+The owner clarified that the demo is a UI built on AssembleJS, demonstrating an optional
+visual workspace while retaining CLI, manual and existing-agent ways to build the same
+project. The prepared guided workflows demonstrate real framework operations, not a
+separate implementation of the product. Reconcile the existing Studio design at source.

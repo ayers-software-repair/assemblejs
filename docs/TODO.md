@@ -1,5 +1,26 @@
 # Todo
 
+## Academy and landing research (owner, 2026-10-30)
+
+- [x] Correct the market README and About page's stale claims about agent route parameters,
+      remote api calls and api headers/cookies, verified against the current source.
+- [ ] Work through official framework training in a browser and record exact observations in
+      `docs/studies/academy-research.md`, before Academy design or implementation.
+- [ ] Inspect current examples, docs generation, conformance and demo flow; research editor,
+      runtime, hosting and licensing constraints before choosing infrastructure.
+- [ ] Inspect historical landing designs; improve that direction with "Frameworks Assemble".
+- [ ] Define and build the full Academy lesson/proof ladder, with real checks, saved progress
+      and a completion-gated downloadable certificate. The owner's latest direction is AI first,
+      with the learner's agent teaching along the way; keep instructions short and clear.
+      Support both the learner's agent and a scripted in-site guided tutor tied to real checks;
+      no real inference connection or invented account requirement.
+- [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
+      rejection and revised approval, with code view and readable diffs.
+
+Website-management reported next.2 publication and installed acceptance complete and handed
+ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
+the manager. This branch does not change release metadata or the shared router.
+
 The ledger. Every task lives here; a task is checked off in the same commit that does it, never
 in a batch afterwards. An unchecked box is work not done. Order is the order of work.
 
