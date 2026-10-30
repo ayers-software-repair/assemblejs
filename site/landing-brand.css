@@ -210,7 +210,16 @@
     gap: 24px;
   }
 }
-@media (max-width: 380px) {
+@media (max-width: 600px) {
+  .landing-hero .product-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .landing-hero .product-actions .product-button {
+    flex: 0 0 auto;
+    justify-content: center;
+    width: 100%;
+  }
   .assembly-parts {
     grid-template-columns: 1fr;
   }
