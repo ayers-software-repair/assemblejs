@@ -7913,3 +7913,44 @@ The owner clarified that the demo is a UI built on AssembleJS, demonstrating an 
 visual workspace while retaining CLI, manual and existing-agent ways to build the same
 project. The prepared guided workflows demonstrate real framework operations, not a
 separate implementation of the product. Reconcile the existing Studio design at source.
+
+## 2026-10-30: Controlled browser runtime proof precedes adoption
+
+The public vendor tutorial proved a plain-html next.2 starter could install, check, build
+and typecheck, but all-renderer installation failed there with resolver/fetch errors.
+The next research step is a bounded, isolated hosted-Linux probe using API 1.6.4 as a test
+dependency, the published framework and the repository's exact renderer/type peers.
+It does not select a production runtime or establish commercial licensing or live-agent access.
+
+The default framework CSP refuses framing by another origin. The generated research project
+uses the existing project policy setting and public default-policy function to allow only
+the exact ephemeral controller origin; all other default directives remain. The framework
+default is unchanged. This measures an explicitly configured preview.
+
+A one-dependency install unexpectedly changed core's Vitest/Vite esbuild peer resolution.
+Restoring that lockfile and regenerating it with the offline lock-only command preserved
+the original graph and added only the new dependency. The public test suite keeps its
+existing configuration; the prototype has a separate workflow, one worker and bounded logs.
+
+## 2026-10-30: Checked source merge authority
+
+The owner confirmed routine checked source merges and the administrator path when a second
+GitHub reviewer is unavailable. Personal exact-head PR review, applicable QA, hosted checks
+and the complete squash message's conventional/DCO gates still precede integration.
+Rulesets stay intact. History replacement and release, deployment, infrastructure or spending
+decisions retain their separate authority.
+
+## 2026-10-30: Remote composition and retained runtime evidence
+
+The first controlled hosted probe passed at `1002b5351b308cccc121c050386e1be0e6076c59`
+(research run `41092354803`; normal CI `41092354683`). Its browser assertions proved all six
+framework mounts, five template renders, a known-bad check and recovery, and server shutdown.
+However, body-only test attachments were not retained by the list reporter: the upload found
+no files. Write the final bounded command record to the test output directory before attaching
+it, so a successful run also has downloadable evidence.
+
+Extend the controlled probe before selecting a runtime: start the same built project twice
+on separate ports, use the remote process's actual SDK origin for a required React placement,
+and check that remote content hydrates. This measures two-server composition through the
+browser runtime's port proxy; it does not establish independently built projects or live-agent
+access. Production licensing and hosting remain unresolved.

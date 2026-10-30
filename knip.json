@@ -6,6 +6,7 @@
         "scripts/*.mjs",
         "scripts/site/*.mjs",
         "browser/*.browser.ts",
+        "browser/academy-runtime-research/runtime.probe.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",
         "browser/build-examples.mjs"

@@ -99,6 +99,17 @@ WebContainer servers cannot be reached outside the browser. A local agent cannot
 edits through the current stdio server. A downloaded lesson project is a snapshot, not live
 synchronization. A live bridge would be new scoped infrastructure.
 
+The current public API package was also checked at 1.6.4. Its `./connect` export provides
+`setupConnect`, which reconnects a separate browser preview tab through an opener and
+MessagePorts; it does not supply an existing local-agent/MCP/filesystem bridge. The
+[contributor explanation](https://github.com/stackblitz/webcontainer-core/issues/1725)
+requires the `/webcontainer/connect/*` helper route to be non-isolated, separately from
+the main runtime page's COOP/COEP requirements. The
+[versioned package](https://registry.npmjs.org/@webcontainer/api/-/api-1.6.4.tgz) was inspected
+at source. This leaves a deliberately implemented agent transport possible, but unproven.
+The [current AI documentation](https://webcontainers.io/ai) describes embedded agents; it
+does not establish that external-agent connection or replace the scripted-tutor scope.
+
 Current official setup references:
 
 - [Claude Code](https://code.claude.com/docs/en/mcp): project `.mcp.json`, reviewed/approved
