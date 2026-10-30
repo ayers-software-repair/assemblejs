@@ -23,6 +23,8 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent
       access before choosing or advertising that architecture. The first public-package probe
       is `docs/studies/academy-browser-runtime-probe.md`, not successful build acceptance.
+      The next controlled proof is `browser/academy-runtime-research/`, run only in hosted CI;
+      renderer hydration, configured preview and shutdown results are still pending.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
