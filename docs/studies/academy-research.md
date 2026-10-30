@@ -264,7 +264,7 @@ No build, broad tests, product browser proof, publication or deployment ran here
 verification remains hosted and pending actual implementation.
 
 The next source-only checkpoint adds the sequential walkthroughs and workspace inventory.
-An independent GPT-6.1 Sol reader reviewed all four records and the TODO diff with no
+An independent reader reviewed all four records and the TODO diff with no
 remaining findings. Its complete-source review verified the inventory and corrected the
 failure-log disclosure wording; it did not reproduce browser actions. Identity and emoji
 self-tests again rejected known-bad fixtures; both trees passed, headers passed across
