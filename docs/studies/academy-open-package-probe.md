@@ -31,7 +31,7 @@ Registry metadata now reports a newer published 1.1.4, source commit
 newer online documentation as applicable or attempting another development-only probe.
 No production runtime is selected by that investigation.
 
-## Newer published 1.1.4: source inspected, execution pending
+## Newer published 1.1.4: scaffold passes, installation fails
 
 The development-only dependency now pins 1.1.4. Its 27-file published archive has SHA-256
 `46c0cac57f9185ded3cf0ab013f1fa383a770b0ae65b6fec2711aeb9ff22ac27`; the registry SHA-512
@@ -53,6 +53,26 @@ Native aliases and node-gyp skipping remain. Bcrypt also maps to bcryptjs, and t
 patches npm Arborist peer handling. Delivering the actual pinned npm archive does not mean
 the executed toolchain is unmodified. No guest install flags suppress scripts, peer checks
 or executable links. The earlier 1.0.0 result remains failed and is not relabelled.
+
+At `ef653edc0e040f4af02fabf55f66c13332eb4e06`, hosted run `41122153163`, job
+`124290724496`, passed basic mechanics and the two Node tests. Framework execution progressed
+through npm 10.9.2, reported Node v24.18.0 and the actual next.2 CLI scaffold, all exit 0.
+The scaffold wrote the expected project files. The subsequent actual framework/peer install
+exited 1: `npm error Maximum call stack size exceeded`. Package inspection, checker exercises
+and build/typecheck were not reached. Framework browser/network errors are empty; the basic
+test has no missing resources, matching lazy npm loading.
+
+Artifact `13007734988` has SHA-256
+`01134ed5943643d3d940f3138f0f2874bdb5a8b7a094e258bfafbee34b28d66b`, independently
+verified against its upload log and metadata. It retains the actual command state and trace,
+but not the referenced npm debug file. The stack overflow's cause remains unproven. The
+next diagnostic revision reads only that npm-cache log path before teardown, retaining its
+last 64,000 characters or the actual read failure. It keeps the failed install expectation
+and all build/check/browser gates; this is diagnostic collection, not acceptance by retry.
+The actual-runner Node regression was watched failing without log collection, then passing
+with bounded capture. Its mocked runtime/DOM boundaries also exercise an outside-cache
+path and an unreadable log, preserving the original failure and teardown. These tests do
+not execute or qualify the third-party runtime.
 
 ## Scenario and evidence limits
 

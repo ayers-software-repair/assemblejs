@@ -150,6 +150,16 @@ try {
   report("passed");
 } catch (error) {
   records.push({ failure: String(error) });
+  const logPath = records
+    .findLast((record) => record.program === "npm")
+    ?.output.match(/\/home\/user\/\.cache\/npm\/_logs\/[-\w.]+\.log(?=\s|$)/)?.[0];
+  if (logPath) {
+    try {
+      records.push({ npmDebugLog: logPath, output: (await read(logPath)).slice(-64000) });
+    } catch (logError) {
+      records.push({ npmDebugFailure: String(logError) });
+    }
+  }
   try {
     runtime?.teardown();
   } catch (cleanupError) {

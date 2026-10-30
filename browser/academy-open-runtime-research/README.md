@@ -22,6 +22,11 @@ files are never served as npm. The hosted preparation uses `--ignore-scripts --b
 only to package npm itself without generated host links; the guest framework install keeps
 lifecycle scripts and executable links enabled.
 
+The actual-runner Node regression mocks only runtime/DOM boundaries. It requires failed npm
+logs to be read before teardown, capped at 64,000 characters, and confined to the npm cache;
+an unreadable log must retain the original failure and still tear down. It proves diagnostic
+handling, not runtime/framework compatibility.
+
 That test invokes published `@asmjs/cli@1.0.0-next.2`, installs exact framework/renderer peers,
 adds six framework and five template assemblies, requires a real missing-assembly check
 failure and repair, then builds/typechecks all twelve assemblies including the starter.

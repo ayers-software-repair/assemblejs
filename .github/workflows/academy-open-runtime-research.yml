@@ -36,7 +36,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
-      - run: node --test browser/academy-open-runtime-research/pack-npm.test.mjs
+      - run: node --test browser/academy-open-runtime-research/*.test.mjs
       - name: Prepare the real pinned npm delivery
         run: |
           npm install --prefix "$RUNNER_TEMP/academy-pm" --ignore-scripts --bin-links=false --no-save --no-audit --no-fund --fetch-retries=0 --fetch-timeout=20000 npm@10.9.2
