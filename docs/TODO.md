@@ -45,6 +45,9 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [ ] Verify free browser-runtime and StackBlitz editor-SDK routes against actual Academy
       requirements. The owner requires no added paid hosting or required paid runtime licence;
       continue curriculum/interface work while evaluating, without vendor/account/spend action.
+- [ ] Run the bounded public editor-SDK proof in hosted CI: actual CLI scaffold, failing check
+      and recovery, build/typecheck, React hydration, VM source edit and observed process stop.
+      `browser/academy-embed-research/` is an evaluation fixture, not Academy or runtime adoption.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
