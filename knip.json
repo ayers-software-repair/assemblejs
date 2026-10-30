@@ -7,6 +7,7 @@
         "scripts/site/*.mjs",
         "browser/*.browser.ts",
         "browser/academy-runtime-research/runtime.probe.ts",
+        "browser/academy-open-runtime-research/open-runtime.probe.ts",
         "browser/landing-proof/landing.probe.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",
