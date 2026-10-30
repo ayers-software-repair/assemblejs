@@ -10,10 +10,15 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `docs/studies/academy-research.md`, before Academy design or implementation.
 - [ ] Inspect current examples, docs generation, conformance and demo flow; research editor,
       runtime, hosting and licensing constraints before choosing infrastructure.
-- [ ] Inspect historical landing designs; improve that direction with "Frameworks Assemble".
-      The landing candidate restores that headline and shows Market's actual Preact/React/Vue
-      assemblies across three servers. Source generation and palette checks pass; hosted proof
-      and review remain required before this item closes.
+- [x] Inspect historical landing designs and restore "Frameworks Assemble". PR20 merged as
+      `d1f0d5b` after all six normal CI jobs, hosted five-width/keyboard/repeated-navigation
+      proof and independent visual QA passed at `46ebb89`. Source generation and palette
+      checks pass; shared frame/pin and other pages' palettes remain unchanged. Optional
+      native page transitions are disabled product-wide; error checks remain strict.
+- [x] Verify the merged landing's existing next-site deployment and actual delivered bytes:
+      all six post-merge CI jobs (`41106297217`), landing proof (`41106297250`) and deployment
+      (`41106297243`) passed at `d1f0d5b`. All 21 checked files match the deployed bytes after
+      the workflow's canonical metadata and error-page prefix transforms. No stable promotion.
 - [ ] Define and build the full Academy lesson/proof ladder, with real checks, saved progress
       and a completion-gated downloadable certificate. The owner's latest direction is AI first,
       with the learner's agent teaching along the way; keep instructions short and clear.
@@ -33,6 +38,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       independent QA. Six framework mounts, five template renders, real check failure/recovery,
       two-server remote React hydration and both process exits passed. Artifact `12994939244`
       retains command evidence; production runtime and live-agent access remain open.
+- [x] Independently verify the official licensing/OSS/pricing and existing-infrastructure
+      comparison before requesting a production runtime decision. Updated
+      `docs/studies/academy-runtime-research.md`; no vendor contact, account, spending,
+      infrastructure change or local-only Academy substitution is authorized by the research.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
