@@ -86,8 +86,16 @@ try {
     const snapshot = await vm.getFsSnapshot();
     const raw = snapshot["probe-result.json"];
     if (typeof raw !== "string") throw new Error("SDK snapshot has no probe result");
-    latest = { ...JSON.parse(raw), previewUrl: await vm.preview.getUrl() };
-    show(latest.phase);
+    latest = { ...JSON.parse(raw), previewUrl: null };
+    if (latest.phase === "ready") {
+      try {
+        latest.previewUrl = await vm.preview.getUrl();
+      } catch (error) {
+        if (error !== "SDK_GET_PREVIEW_URL_FAILURE") throw error;
+        latest.previewStatus = error;
+      }
+    }
+    show(latest.phase === "ready" && !latest.previewUrl ? "waiting for preview" : latest.phase);
     if (latest.phase === "ready" && latest.previewUrl && !edited) edit.disabled = false;
     if (latest.phase === "failed" || latest.phase === "stopped") break;
     await new Promise((done) => setTimeout(done, 1000));

@@ -15,28 +15,37 @@ const report = (phase) => {
 async function command(program, args, cwd = ".", expected = 0) {
   const child = spawn(program, args, { cwd, env: process.env });
   const record = { program, args, output: "", exit: null, timedOut: false };
+  let finished = false;
   records.push(record);
   report("running");
   const collect = (chunk) => {
+    if (finished) return;
     record.output = (record.output + chunk).slice(-16000);
     report("running");
   };
   child.stdout.on("data", collect);
   child.stderr.on("data", collect);
-  const timer = setTimeout(() => {
-    record.timedOut = true;
-    child.kill();
-  }, 90000);
+  let timer;
   try {
-    record.exit = await new Promise((done, reject) => {
-      child.once("error", reject);
-      child.once("close", done);
-    });
+    record.exit = await Promise.race([
+      new Promise((done, reject) => {
+        child.once("error", reject);
+        child.once("close", done);
+      }),
+      new Promise((_done, reject) => {
+        timer = setTimeout(() => {
+          record.timedOut = true;
+          child.kill("SIGKILL");
+          reject(new Error(`${program} exceeded its command deadline`));
+        }, 90000);
+      }),
+    ]);
     report("running");
     if (record.timedOut || record.exit !== expected)
       throw new Error(`${program} exited ${record.exit}, expected ${expected}`);
     return record.output;
   } finally {
+    finished = true;
     clearTimeout(timer);
   }
 }
@@ -138,10 +147,20 @@ try {
     }, reject);
   });
   server.kill();
-  output.exit = await closed;
+  let stopTimer;
+  try {
+    output.exit = await Promise.race([
+      closed,
+      new Promise((_done, reject) => {
+        stopTimer = setTimeout(() => reject(new Error("dev process did not stop")), 5000);
+      }),
+    ]);
+  } finally {
+    clearTimeout(stopTimer);
+  }
   report("stopped");
 } catch (error) {
-  server?.kill();
+  server?.kill("SIGKILL");
   records.push({ failure: String(error) });
   report("failed");
   process.exitCode = 1;

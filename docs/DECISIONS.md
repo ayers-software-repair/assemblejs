@@ -8028,3 +8028,12 @@ research, not selected options or a spending request. Check the StackBlitz edito
 project route separately from direct WebContainer API licensing. An OSS inquiry or grant
 application is not confirmed eligibility. No vendor contact, account, purchase, new hosting
 or final runtime adoption is authorized by this direction.
+
+The first editor-SDK probe (`41110579474`, head `4e26737`) booted its ephemeral Node project
+but the controller requested a preview URL before startup had opened a server. The API
+rejected with `SDK_GET_PREVIEW_URL_FAILURE`; the assignment also discarded the just-read
+command snapshot. Preserve snapshot evidence first, discover the URL only after the guest
+reports ready, and retain that specific not-ready response while waiting for a real URL.
+All other errors still fail; preview/check/hydration assertions remain unchanged. Independent
+review also found SIGTERM alone did not bound a command's exit wait: reject at the deadline
+and bound stop's exit wait too. No successful SDK execution is inferred from the failed run.
