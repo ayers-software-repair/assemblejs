@@ -36,3 +36,10 @@ and the single-worker/no-retry job ten minutes. Await finite commands before tea
 retain final state, browser/network errors and failure traces even when the experiment fails.
 Only hosted CI runs the browser/server proof; local checks cover source and the small format/
 deadline tests. No runtime assets are deployed to the shared product/company origin.
+
+The first workflow revision at `fd8a841` was rejected before any job started (run
+`41120240434`): it placed `runner.temp` in job-level environment expressions. GitHub's
+[context availability table](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability)
+allows the runner context in step environment expressions, not job environment expressions.
+Use the shell's `RUNNER_TEMP` during preparation and step environment for the browser command.
+This is harness validation failure, not evidence about runtime/package compatibility.
