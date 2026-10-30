@@ -80,6 +80,22 @@ created a TODO conflict in the open experiment. GitHub
 Merge next into the owned branch and preserve both the completed authored-copy record and
 the open runtime task. No workflow trigger/security setting or acceptance gate is relaxed.
 
+At merged-base head `1a5fe79e0ba2136baef7f86c5599fb4c772c047a`, diagnostic run
+`41123911249`, job `124297369522`, artifact `13008879915` retains the actual npm log.
+Its ZIP SHA-256 is `8ecfaa3e59742f98e3b1bb1aad285185d53d0b1c1f00aeebb2044de57363ced0`.
+The five Node tests and basic mechanics passed; installation still failed. The log shows
+relative cwd `academy-open-build`, a doubled config path and repeated Arborist
+`realpathCached` recursion at line 38. Independent readers traced this to the published
+runtime retaining `options.cwd` unchanged: its path resolver can repeatedly prepend that
+relative directory instead of reaching `/`. This is a harness path correction, not a reason
+to patch npm, weaken dependency checks or remove framework protection.
+
+Use `/academy-open-build` consistently; the real CLI supports absolute project directories.
+Before installing, invoke `node -p process.cwd()` and require that exact root. The actual-runner
+regression rejected relative spawn directories before this change and passed afterward.
+Scaffolding/install/check/build must still pass in the hosted runtime; this correction is
+not a claim that later compatibility gaps are resolved.
+
 ## Scenario and evidence limits
 
 The first evaluated runtime was `@vivari/core@1.0.0`; its source/archive and historical cleanup

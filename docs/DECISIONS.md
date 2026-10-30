@@ -8039,3 +8039,9 @@ ran real npm but failed invoking the published next.2 CLI because the runtime la
 do not stub framework security or claim install/build success. Inspect the newer published
 1.1.4 independently before another research probe. Evidence is
 `docs/studies/academy-open-package-probe.md`; no production runtime is adopted.
+
+Published 1.1.4 supplies the missing builtin and scaffolds successfully. Its later install
+stack overflow was traced through the retained npm log to the harness's relative working
+directory, which this runtime preserves unchanged. Pass an absolute project directory and
+require the process to report that root before installing; do not patch npm or the vendor
+runtime. The corrected install/check/build still requires actual hosted evidence.

@@ -20,15 +20,18 @@ for (const scenario of ["bounded before teardown", "outside the cache", "unreada
     let tornDown = false;
     const reads = [];
     const runtime = {
-      spawn: async (_program, args) => {
+      spawn: async (_program, args, options = {}) => {
+        assert.ok(!options.cwd || options.cwd.startsWith("/"), "spawn cwd must be absolute");
         const failed = args[0] === "install";
         const output = failed
           ? `npm error Maximum call stack size exceeded\nin: ${path}\n`
-          : args[0] === "--version"
-            ? _program === "npm"
-              ? "10.9.2\n"
-              : "v24.18.0\n"
-            : "scaffolded";
+          : args[0] === "-p"
+            ? options.cwd
+            : args[0] === "--version"
+              ? _program === "npm"
+                ? "10.9.2\n"
+                : "v24.18.0\n"
+              : "scaffolded";
         return {
           output: new ReadableStream({
             start(controller) {
@@ -43,7 +46,7 @@ for (const scenario of ["bounded before teardown", "outside the cache", "unreada
       fs: {
         readFile: async (file) => {
           assert.equal(tornDown, false, "diagnostics read after teardown");
-          if (file === "academy-open-build/package.json")
+          if (file === "/academy-open-build/package.json")
             return '{"dependencies":{},"devDependencies":{}}';
           reads.push(file);
           assert.equal(file, cachePath);

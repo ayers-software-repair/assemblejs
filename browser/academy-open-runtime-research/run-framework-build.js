@@ -10,7 +10,7 @@ if (!status || !result) throw new Error("incomplete framework-build fixture");
 const records = [];
 const renderers = ["preact", "react", "vue", "svelte", "solid", "lit"];
 const templates = ["ejs", "handlebars", "markdown", "nunjucks", "pug"];
-const root = "academy-open-build";
+const root = "/academy-open-build";
 const version = "1.0.0-next.2";
 let runtime;
 let terminal = false;
@@ -83,6 +83,8 @@ try {
   pkg.devDependencies.typescript = "6.0.3";
   pkg.devDependencies["@types/node"] = "26.4.1";
   await write(packagePath, JSON.stringify(pkg));
+  const cwd = await command("node", ["-p", "process.cwd()"], { cwd: root });
+  if (cwd.trim() !== root) throw new Error("process working directory differs from project root");
   await command(
     "npm",
     [
