@@ -1,8 +1,9 @@
 # Academy research
 
 Research began 30 October 2026 on `codex/assemblejs-academy`, based on
-`024ab2b8e9bf27e5e40c57f650068096d4027092`. No Academy runtime or landing design
-has been chosen. Website-management subsequently reported next.2 publication and installed
+`024ab2b8e9bf27e5e40c57f650068096d4027092`, before a runtime or landing design was chosen.
+The landing is now accepted as recorded in `academy-runtime-research.md`; production Academy
+runtime selection remains open. Website-management subsequently reported next.2 publication and installed
 acceptance complete and transferred ongoing AssembleJS implementation to this maintainer.
 This session read the local acceptance receipts' source/version identifiers but did not
 rerun publication or installed acceptance. Shared company routing remains with the manager.
@@ -197,6 +198,13 @@ so cause remains unknown. The editor advertised Alt+F1 accessibility options; pr
 not expose an accessible dialog in this probe. At 390 by 844, the document measured 375 pixels
 wide and the screenshot showed lesson text and navigation; native editing is unproven.
 
+A fresh visit reproduced the blank Result even after Solve supplied the signals solution;
+captured warning/error logs were empty. At `stores_createstore`, copied the complete editor
+source through its UI and manually converted the todo signal to a store, including the
+predicate/path setter and list binding. Output showed the corresponding generated client
+code, but Result stayed an empty `about:blank` frame. This proves the edit/compiler path,
+not a working todo interaction or lesson completion. The cause remains unknown.
+
 ### Lit: observed 30 October
 
 Worked through all eight Intro to Lit steps at <https://lit.dev/tutorials/intro-to-lit/>:
@@ -240,10 +248,11 @@ diagnostics are not redacted, so public Academy reuse cannot copy the loopback r
 
 ## Continuation
 
-Finish and record tutorial observations; inspect hosting/runtime licences; complete the
-source and historical-design inventory. Only then choose Academy architecture, lesson
-ladder and landing changes. Independent review and hosted proof are required before
-reporting implementation complete. Stable publication remains held.
+Finish and record the remaining tutorial observations. Source inventory, a proposed lesson
+ladder, runtime/licensing comparison and the accepted landing are recorded in the linked
+studies. Production Academy runtime selection and live external-agent access remain open.
+Independent review and hosted proof are required before reporting implementation complete.
+Stable publication remains held.
 
 ## Research checkpoint verification
 
