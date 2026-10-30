@@ -1,8 +1,8 @@
 # AssembleJS
 
-> Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools.
+> Compose one application from assemblies written in React, Vue, Svelte and more, served locally or by other teams. Build with your editor, the CLI or your coding agent.
 
-React. Vue. Svelte. One application.
+Build one application from the frameworks you know. Compose its pages from assemblies on your server or another team's.
 
 Every link here is relative to this file. All of these pages are one file, [llms-full.txt](llms-full.txt).
 

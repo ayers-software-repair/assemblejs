@@ -11,6 +11,9 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [ ] Inspect current examples, docs generation, conformance and demo flow; research editor,
       runtime, hosting and licensing constraints before choosing infrastructure.
 - [ ] Inspect historical landing designs; improve that direction with "Frameworks Assemble".
+      The landing candidate restores that headline and shows Market's actual Preact/React/Vue
+      assemblies across three servers. Source generation and palette checks pass; hosted proof
+      and review remain required before this item closes.
 - [ ] Define and build the full Academy lesson/proof ladder, with real checks, saved progress
       and a completion-gated downloadable certificate. The owner's latest direction is AI first,
       with the learner's agent teaching along the way; keep instructions short and clear.
@@ -24,9 +27,12 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       access before choosing or advertising that architecture. The first public-package probe
       is `docs/studies/academy-browser-runtime-probe.md`, not successful build acceptance.
       The controlled proof is `browser/academy-runtime-research/`, run only in hosted CI.
-      Initial renderer hydration, configured preview, known-bad check/recovery and shutdown
-      passed at `1002b535` (run `41092354803`). Retained command evidence and two-server remote
-      composition are the next proof; live external-agent access remains unproven.
+      The bounded result is recorded below; live external-agent access remains unproven.
+- [x] Prove the bounded published-package runtime scenario: PR19 merged as `bdcc92e1` after
+      exact-head normal CI `41095157434`, runtime proof `41095157424`, personal PR review and
+      independent QA. Six framework mounts, five template renders, real check failure/recovery,
+      two-server remote React hydration and both process exits passed. Artifact `12994939244`
+      retains command evidence; production runtime and live-agent access remain open.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with

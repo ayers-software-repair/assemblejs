@@ -5,15 +5,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AssembleJS — Your frameworks. One application.</title>
+    <title>AssembleJS — Frameworks Assemble</title>
     <meta
       name="description"
-      content="Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools."
+      content="Compose one application from assemblies written in React, Vue, Svelte and more, served locally or by other teams. Build with your editor, the CLI or your coding agent."
     />
-    <meta property="og:title" content="AssembleJS — Your frameworks. One application." />
+    <meta property="og:title" content="AssembleJS — Frameworks Assemble" />
     <meta
       property="og:description"
-      content="Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools."
+      content="Compose one application from assemblies written in React, Vue, Svelte and more, served locally or by other teams. Build with your editor, the CLI or your coding agent."
     />
     <meta property="og:type" content="website" />
     <link rel="canonical" href="https://assemblejs.com/" />
@@ -47,34 +47,93 @@
       <main class="product-main" id="main" tabindex="-1">
         <!-- Copyright Ayers Electronics Inc. All rights reserved. -->
         <!-- SPDX-License-Identifier: Apache-2.0 -->
-        <span id="composition-title" aria-hidden="true"></span>
-        <section class="landing-hero">
-          <div class="product-signature">
-            <img src="mark.svg" width="152" height="177" alt="" />
-            <h1>AssembleJS</h1>
+        <section class="landing-hero" aria-labelledby="composition-title">
+          <div class="assembly-intro">
+            <p class="assembly-wordmark">
+              <img src="mark.svg" width="34" height="40" alt="" />AssembleJS
+            </p>
+            <h1 id="composition-title">Frameworks <br /><span>Assemble</span></h1>
+            <p class="description">
+              Build one application from the frameworks you know. Compose its pages from assemblies
+              on your server or another team's.
+            </p>
+            <div class="product-actions" id="downloads">
+              <a class="product-button primary" href="install.html">Build your first page</a>
+              <a class="product-button" href="docs/outline.html">Explore the market example</a>
+            </div>
+            <p class="assembly-agent">
+              Use your editor, the CLI or your coding agent. AssembleJS includes the MCP tools to
+              add, check and preview assemblies.
+            </p>
           </div>
-          <p class="lead">React. Vue. Svelte.<br />One application.</p>
-          <p class="description">
-            Compose server-rendered pages from multiple frontend frameworks. Connect assemblies
-            through page events, and use the MCP server from your coding agent.
-          </p>
-          <div class="product-actions" id="downloads">
-            <a class="product-button primary" href="downloads.html"
-              >Install AssembleJS
-              <span class="action-icon arrow-right" aria-hidden="true"></span></a
-            ><a class="product-button" href="docs/index.html"
-              >Read the manual <span class="action-icon arrow-right" aria-hidden="true"></span
-            ></a>
+          <figure class="assembly-example">
+            <figcaption>One page. Three servers.</figcaption>
+            <p class="assembly-file">src/pages/product/product.html <span>excerpt</span></p>
+            <pre><code>&lt;main&gt;
+  &lt;assembly name="product-detail"&gt;
+  &lt;/assembly&gt;
+  &lt;assembly name="buy-box"&gt;
+  &lt;/assembly&gt;
+  &lt;assembly name="review-list"&gt;
+  &lt;/assembly&gt;
+&lt;/main&gt;</code></pre>
+            <ul class="assembly-parts" aria-label="Assemblies in this example">
+              <li>
+                <span class="assembly-framework catalog">Preact</span>
+                <strong>Product detail</strong>
+                <small>Catalog server · 4701</small>
+              </li>
+              <li>
+                <span class="assembly-framework shop">React</span> <strong>Buy box</strong>
+                <small>Page server · 4700</small>
+              </li>
+              <li>
+                <span class="assembly-framework reviews">Vue</span> <strong>Reviews</strong>
+                <small>Reviews server · 4702</small>
+              </li>
+            </ul>
+            <p class="assembly-caption">
+              The page declares its remote addresses. Each assembly hydrates in its own framework.
+            </p>
+          </figure>
+        </section>
+        <section class="assembly-frameworks" aria-label="Supported assembly views">
+          <p>Your frameworks. One application.</p>
+          <ul>
+            <li>React</li>
+            <li>Vue</li>
+            <li>Svelte</li>
+            <li>Preact</li>
+            <li>Solid</li>
+            <li>Lit</li>
+            <li>HTML &amp; templates</li>
+          </ul>
+        </section>
+        <section class="assembly-next" aria-label="Build with AssembleJS">
+          <div>
+            <h2>Make an assembly</h2>
+            <p>
+              A directory, a view and an optional service for server-side data. Place it in a page.
+            </p>
+            <a href="start.html">Learn the composition model</a>
           </div>
-          <div class="landing-platforms" aria-label="Platforms">
-            <span><i class="platform-icon icon-npm" aria-hidden="true"></i>npm</span
-            ><span><i class="platform-icon icon-globe" aria-hidden="true"></i>Web</span>
+          <div>
+            <h2>Connect the pieces</h2>
+            <p>
+              Page events connect frameworks. Remote placements connect teams, with deadlines and
+              fallbacks.
+            </p>
+            <a href="docs/tutorial.html">Build a connected application</a>
+          </div>
+          <div>
+            <h2>Bring your agent</h2>
+            <p>
+              The project includes instructions and MCP tools. Your agent works on the same files
+              you do.
+            </p>
+            <a href="start.html#working-with-an-agent">Set up your coding agent</a>
           </div>
         </section>
-        <nav class="landing-guide-links" id="setup" aria-label="Product guides">
-          <a href="start.html">Quick start</a><a href="docs/tutorial.html">Build a page</a
-          ><a href="https://github.com/ayers-software-repair/assemblejs">GitHub</a>
-        </nav>
       </main>
       <footer class="product-footer">
         <div class="product-footer-inner">
