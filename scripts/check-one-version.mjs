@@ -1,10 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-// The fourteen packages share one version (owner, DECISIONS 2026-10-11, "One number"). Two things
-// make that true and this gate holds both: every packages/*/package.json names the same version,
-// and .changeset/config.json keeps every package in one fixed group, so a changeset to any of
-// them moves them all. A package left out of the group would be versioned alone, and the
-// release-notes gate and a new project's manifest both assume it never is.
+// The fixed group moves every package together. Internal dependencies, including peers, use
+// workspace:* so packing resolves the same current version instead of retaining an old one.
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -22,8 +19,20 @@ export function problems(packages, config) {
   const fixed = Array.isArray(config.fixed) ? config.fixed : [];
   const whole = fixed.length === 1 && fixed[0].length === 1 && fixed[0][0] === GROUP;
   if (!whole) found.push(`.changeset/config.json "fixed" is not [["${GROUP}"]]`);
-  for (const { name } of packages) {
-    if (!name.startsWith("@asmjs/")) found.push(`${name} is outside the fixed group`);
+  for (const pkg of packages) {
+    if (!pkg.name.startsWith("@asmjs/")) found.push(`${pkg.name} is outside the fixed group`);
+    for (const field of [
+      "dependencies",
+      "devDependencies",
+      "peerDependencies",
+      "optionalDependencies",
+    ]) {
+      for (const [name, version] of Object.entries(pkg[field] ?? {})) {
+        if (name.startsWith("@asmjs/") && version !== "workspace:*") {
+          found.push(`${pkg.name} ${field}.${name} must use workspace:* instead of ${version}`);
+        }
+      }
+    }
   }
   return found;
 }
@@ -34,8 +43,7 @@ export function readPackages(root) {
   return readdirSync(dir)
     .map((entry) => join(dir, entry, "package.json"))
     .filter((file) => existsSync(file))
-    .map((file) => JSON.parse(readFileSync(file, "utf8")))
-    .map(({ name, version }) => ({ name, version }));
+    .map((file) => JSON.parse(readFileSync(file, "utf8")));
 }
 
 if (process.argv[2] === "--self-test") {
@@ -54,8 +62,24 @@ if (process.argv[2] === "--self-test") {
     problems([...good, { name: "other", version: "1.0.0-next.0" }], { fixed: [[GROUP]] }).length,
     1,
   );
+  for (const field of [
+    "dependencies",
+    "devDependencies",
+    "peerDependencies",
+    "optionalDependencies",
+  ]) {
+    const stale = { ...good[1], [field]: { "@asmjs/core": "1.0.0-next.0" } };
+    assert.equal(problems([good[0], stale], { fixed: [[GROUP]] }).length, 1);
+    assert.deepEqual(
+      problems(
+        [good[0], { ...good[1], [field]: { "@asmjs/core": "workspace:*", external: "^1.0.0" } }],
+        { fixed: [[GROUP]] },
+      ),
+      [],
+    );
+  }
   console.log(
-    "one-version gate self-test: red on a second version, a missing group, a partial group and a package outside it, as required",
+    "one-version gate self-test: red on a second version, a missing group, a partial group and a package outside it and stale internal dependency/peer versions, as required",
   );
 } else if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const root = process.cwd();

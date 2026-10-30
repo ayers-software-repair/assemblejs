@@ -1,5 +1,11 @@
 # @asmjs/renderer-solid
 
+## 1.0.0-next.2
+
+### Patch Changes
+
+- Keep internal package and peer dependencies aligned when publishing the coordinated release.
+
 ## 1.0.0-next.1
 
 ### Patch Changes

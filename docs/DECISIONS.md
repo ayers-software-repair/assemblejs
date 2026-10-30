@@ -7862,3 +7862,14 @@ CLI flags to prioritize them over corresponding `publishConfig` settings"). The 
 therefore carry no provenance; every later one, published by trusted publishing, does. A new
 trusted publisher expires unless it publishes within two days (npm, "Trusted publishing"), so
 the trusted publishers are added on the day the next version's tag is cut.
+
+## 2026-10-30: Internal peers follow the coordinated version
+
+The next.1 publication passed source CI, but a real npm resolution of core and the React
+renderer failed ERESOLVE: eight internal core peers still demanded next.0. Workspace links
+hid the mismatch, and check-one-version discarded dependency fields before checking them.
+Use workspace:* for internal peers as for the other internal dependencies. pnpm rewrites
+it to the coordinated package version when packing; published archives remain immutable.
+The one-version gate now rejects stale internal references in all four dependency fields
+and self-tests every field. No force/legacy-peer-deps install exception is permitted.
+Reference: https://pnpm.io/workspaces#publishing-workspace-packages.

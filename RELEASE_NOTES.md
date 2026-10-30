@@ -1,3 +1,8 @@
+## AssembleJS 1.0.0-next.2
+
+Renderer and devtools peer dependencies use the same core version as the release.
+This fixes installing the packages together with npm.
+
 ## AssembleJS 1.0.0-next.1
 
 Each package README includes installation commands, an example and links to its guide.
