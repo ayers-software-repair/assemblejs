@@ -42,6 +42,9 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       comparison before requesting a production runtime decision. Updated
       `docs/studies/academy-runtime-research.md`; no vendor contact, account, spending,
       infrastructure change or local-only Academy substitution is authorized by the research.
+- [ ] Verify free browser-runtime and StackBlitz editor-SDK routes against actual Academy
+      requirements. The owner requires no added paid hosting or required paid runtime licence;
+      continue curriculum/interface work while evaluating, without vendor/account/spend action.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with

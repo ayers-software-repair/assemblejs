@@ -130,10 +130,65 @@ state or unrelated host is available to visitor code under this comparison. Ordi
 and [environment reuse](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html)
 do not provide an existing persistent, isolated learner workspace.
 
-The next decision is whether to seek nonbinding OSS/licence clarification for the proven
-candidate, evaluate the unproven alternative, or review a separately isolated Node service.
-No local-only delivery substitution is selected. Every option still needs persistence,
-current-revision completion checks and verified external-agent access.
+The owner subsequently excluded additional paid hosting and required paid runtime licensing.
+The prices above are comparison evidence, not selected options. No vendor inquiry is
+authorized; an OSS inquiry/grant route is not a confirmed free entitlement. Academy remains
+browser-based. Continue independent lesson/interface work and the free-route checks below.
+Every option still needs persistence, current-revision checks and verified external-agent access.
+
+## Free browser-delivery routes
+
+The [StackBlitz editor SDK](https://developer.stackblitz.com/platform/api/javascript-sdk)
+is different from directly embedding the WebContainer API. Its documented `embedProject`
+can create a supplied `node` project without a pre-created project ID; public GitHub
+projects can also be embedded. The [pricing FAQ](https://stackblitz.com/pricing) permits
+viewing/editing public projects without a GitHub account and lists unlimited public projects
+on Personal. [Terms 1.5(b)](https://stackblitz.com/terms-of-service) expressly permits SDK/editor
+embedding within the applicable plan/documentation limits, separately from 1.5(c)'s direct
+WebContainer API licence. The general restrictions still apply; this is not clearance of
+Academy's eventual workspace scope or a claim that paid embedding is always required.
+
+The [VM interface](https://developer.stackblitz.com/platform/api/javascript-sdk-vm) exposes
+file snapshots, full-content file diffs and editor/preview controls for Node projects.
+Its documented API has no process-spawn, command-exit or atomic compare-and-apply method.
+Those missing controls matter for real CLI/check evidence and preserving concurrent edits;
+a snapshot followed by `applyFsDiff` is not a demonstrated approval transaction. Generated
+projects are ephemeral unless forked to an account; Academy's own saved-state requirements
+remain. Exact AssembleJS execution, multi-server previews, current-revision checks, approval
+safety and live-agent access have not been tested through this SDK. It is a concrete free
+public-project candidate to evaluate, not an accepted replacement for the earlier API probe.
+
+[Vivari](https://vivari.run/docs/) is a self-hostable browser runtime with a first-party
+[MIT licence](https://github.com/maitrungduc1410/vivari/blob/master/LICENSE), rather than a
+metered hosted runtime requirement. Its [embedding guide](https://vivari.run/docs/embedding/)
+documents same-origin SDK/worker assets, a preview service worker and separately hosted
+package-manager deliveries. No vendor account or paid runtime API is specified by this route.
+The published `@vivari/core@1.0.0` archive was inspected without running it: registry metadata
+says MIT and no runtime dependencies; the archive omits a licence file, so redistribution
+must deliberately retain the upstream notice and audit bundled third-party notices.
+
+That archive's fetcher aliases native esbuild to esbuild-wasm, Rollup to its Wasm package
+and lightningcss to its Wasm package; its process worker patches esbuild's service path.
+This is a toolchain difference, not the exact previously proven WebContainer scenario.
+Its [deployment guide](https://vivari.run/docs/deployment/) requires isolation headers and a
+root-scoped preview service worker. Default previews share the editor origin and its storage;
+separate-origin preview modes need extra static-origin configuration. Do not register that
+worker at the shared company's origin or assume arbitrary preview code is isolated there.
+Published API docs describe spawn/exit, filesystem and teardown, but no AssembleJS proof has
+run. The inspected archive SHA-256 is
+`f3ccad6b04976bd1926c019acc92e2068d3dd2f4ce8f38300ab25c3978213bd5`.
+
+[Rifty's source](https://github.com/vanilla-wave/rifty) also publishes first-party code under
+MIT and documents self-hosted browser execution. Its own compatibility boundary is a Node
+API subset, changing 0.x APIs, explicit worker/service-worker bundling and package
+substitutions; its transitive licence audit is separately tracked upstream. It has not been
+tested with AssembleJS. [Nodebox's actual licence](https://github.com/Sandpack/nodebox-runtime/blob/main/LICENSE)
+limits external distribution/use to specified non-commercial cases; Sandpack's separate
+permissive licence does not establish blanket Nodebox coverage for this Academy.
+
+These source checks establish fee-free candidates and concrete gaps, not production
+compatibility or adoption. Next, use a bounded hosted probe of the real published framework
+before choosing one; keep paid services, new accounts and vendor submissions out of that work.
 
 ## Connecting the learner's agent
 

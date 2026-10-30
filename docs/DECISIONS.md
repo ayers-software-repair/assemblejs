@@ -8018,3 +8018,13 @@ and existing next-site deployment (`41106297243`) passed. Live reads of all 18 d
 the product stylesheet and both model-readable exports match that commit after the deploy's
 metadata and error-page prefix transforms. This closes the candidate landing's acceptance;
 Academy implementation, production runtime selection and stable promotion remain separate.
+
+## 2026-10-30: Academy adds no paid runtime or hosting requirement
+
+The owner rejected additional paid hosting and a required paid runtime licence. Keep the
+browser-based Academy scope and continue independent curriculum, interface and source work
+while verifying genuinely free delivery routes. Existing commercial price examples are
+research, not selected options or a spending request. Check the StackBlitz editor SDK/public
+project route separately from direct WebContainer API licensing. An OSS inquiry or grant
+application is not confirmed eligibility. No vendor contact, account, purchase, new hosting
+or final runtime adoption is authorized by this direction.
