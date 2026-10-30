@@ -24,8 +24,11 @@ const report = (phase) => {
   terminal = phase === "passed" || phase === "failed";
 };
 async function command(program, args, options = {}, expected = 0) {
-  const child = await boundedOperation(runtime.spawn(program, args, options), "spawn");
-  const record = { program, args, output: "", exit: null };
+  const configured = preview
+    ? { ...options, env: { ...options.env, ESBUILD_WORKER_THREADS: "0" } }
+    : options;
+  const child = await boundedOperation(runtime.spawn(program, args, configured), "spawn");
+  const record = { program, args, environment: configured.env, output: "", exit: null };
   records.push(record);
   report("running");
   const reading = child.output.pipeTo(

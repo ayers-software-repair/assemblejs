@@ -31,3 +31,26 @@ boundaries was watched failing for launch/early-exit cleanup before passing with
 No local browser/server/framework build runs. The hosted test has six minutes, the job ten,
 one worker and no retries. This does not establish production isolation, pending-operation
 cleanup in general, bundled notice completeness, persistence, atomic approval or agent access.
+
+## First hosted result
+
+At `9bcadd597df8b18d7892129ea30e8195f33aeb62`, run `41130937926`, job `124321346943`,
+the preview test failed after 1.8 minutes, before build or server startup. Artifact
+`13012927422` has SHA-256
+`9494c1aaa5d8059884a9585f5c8fd06f77ee8793aba3f3591333b1abe748a8c0`.
+A separate reader verified the raw artifact and exact synthetic merge/source tree match.
+
+Installation, compiler error/recovery and eleven additions succeeded. Reading the new
+project config through the real checker failed in esbuild's synchronous worker service:
+`receiveMessageOnPort()` returned undefined after its wait. The deliberate missing-assembly
+case retained both problems; its repair still returned the config problem and exit 1.
+No preview document, mount, interaction or stop was reached. Page/network arrays are empty;
+the screenshot exists and SW cleanup records 1 to 0.
+
+The actual downloaded esbuild-wasm 0.28.2 source supports `ESBUILD_WORKER_THREADS=0`,
+which sends synchronous transformation through its `execFileSync` service instead of worker
+message polling. The pinned SDK implements synchronous child spawning, but its output
+transport's byte fidelity and nonzero-error handling remain unproven. One controlled next
+probe sets that variable before preview CLI imports and records it in command evidence;
+the ordinary package scenario remains unchanged. No vendor patch or checker bypass is made.
+The runtime's existing async esbuild service patch does not establish this sync fallback.
