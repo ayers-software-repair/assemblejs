@@ -31,6 +31,7 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`${fixture.origin}/?width=${String(width)}`);
+      await page.evaluate(() => document.activeViewTransition?.finished);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText("Frameworks Assemble");
       await expect(page.locator(".assembly-parts li")).toHaveCount(3);
       await expect(page.locator(".assembly-parts li")).toContainText(["Preact", "React", "Vue"]);
@@ -52,9 +53,17 @@ test("the landing keeps composition, links and keyboard access at desktop and na
       await page.keyboard.press("Enter");
       await expect(page.locator("#main")).toBeFocused();
     }
-    await page.getByRole("link", { name: "Set up your coding agent" }).click();
-    await expect(page).toHaveURL(/\/start\.html#working-with-an-agent$/);
-    await expect(page.getByRole("heading", { name: "Working with an agent" })).toBeVisible();
+    for (let visit = 0; visit < 3; visit += 1) {
+      await page.getByRole("link", { name: "Set up your coding agent" }).click();
+      await expect(page).toHaveURL(/\/start\.html#working-with-an-agent$/);
+      await page.evaluate(() => document.activeViewTransition?.finished);
+      await expect(page.getByRole("heading", { name: "Working with an agent" })).toBeVisible();
+      if (visit < 2) {
+        await page.getByRole("link", { name: "AssembleJS home", exact: true }).click();
+        await page.evaluate(() => document.activeViewTransition?.finished);
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText("Frameworks Assemble");
+      }
+    }
     expect(failures).toEqual([]);
   } finally {
     try {

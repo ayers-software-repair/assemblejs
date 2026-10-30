@@ -7977,6 +7977,14 @@ the same clipping guard; keep the new proof red until the corrected candidate pa
 Screenshots are taken before the keyboard test focuses the whole main region, so the focus
 outline is not mistaken for a permanent design border.
 
+At `dcb50d8`, all five layouts passed, but hosted run `41099716063` caught an AbortError
+"Transition was skipped" while navigating to the agent guide. The pinned shared CSS enables
+native cross-document transitions. Keep page-error collection strict, wait for the active
+transition's `finished` promise, and exercise three guide/home visits to check the navigation
+lifecycle. This is a timing hypothesis to prove, not permission to ignore transition errors.
+The browser contract is documented in the [Chrome guide](https://developer.chrome.com/docs/web-platform/view-transitions/cross-document)
+and the [CSS working draft](https://drafts.csswg.org/css-view-transitions-2/#dom-document-activeviewtransition).
+
 The 26 October Studio design and audit were read in full from the estate's AssembleJS
 project records. Their reusable direction is one project and common operations behind UI,
 CLI and agent access, with reviewable changes and checks. The latest owner direction makes
