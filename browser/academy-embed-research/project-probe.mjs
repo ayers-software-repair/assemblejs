@@ -7,9 +7,12 @@ const records = [];
 const root = "academy-sdk";
 const cli = ["node_modules/@asmjs/cli/dist/bin.js"];
 let server;
+let terminal = false;
 const report = (phase) => {
+  if (terminal) return;
   writeFileSync(".probe-result.tmp", JSON.stringify({ phase, records }));
   renameSync(".probe-result.tmp", "probe-result.json");
+  terminal = phase === "failed" || phase === "stopped";
 };
 
 async function command(program, args, cwd = ".", expected = 0) {

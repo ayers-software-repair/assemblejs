@@ -8037,3 +8037,10 @@ reports ready, and retain that specific not-ready response while waiting for a r
 All other errors still fail; preview/check/hydration assertions remain unchanged. Independent
 review also found SIGTERM alone did not bound a command's exit wait: reject at the deadline
 and bound stop's exit wait too. No successful SDK execution is inferred from the failed run.
+
+Personal PR review then reproduced buffered dev output changing a terminal failure back to
+ready during cleanup. A regression executes the actual guest source with only process,
+filesystem and timer boundaries replaced: its final-phase assertion failed as ready versus
+failed before the correction. The reporter now latches a successfully written failed/stopped
+phase; the same delayed-output test passes. This local source regression starts no browser,
+server or runtime child process. The hosted SDK compatibility proof remains a separate gate.

@@ -9,6 +9,7 @@
         "browser/academy-runtime-research/runtime.probe.ts",
         "browser/academy-embed-research/embed.probe.ts",
         "browser/academy-embed-research/project-probe.mjs",
+        "browser/academy-embed-research/project-probe.test.mjs",
         "browser/landing-proof/landing.probe.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",

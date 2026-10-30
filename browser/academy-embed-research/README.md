@@ -21,6 +21,8 @@ The framework's framing default is unchanged. Only this project adds the exact c
 origin and documented StackBlitz editor origin to its existing frame-ancestor policy.
 The normal framework browser suite is unchanged. Run this proof only in its hosted workflow,
 never on the desktop seat. JSON, screenshot and failure trace are retained as artifacts.
+The adjacent Node regression covers buffered output after a stop failure by executing the
+actual guest source with process/filesystem/timer boundaries replaced; it launches no runtime.
 
 Snapshot followed by file replacement does not demonstrate atomic approval or safe concurrent
 editing. This probe also does not establish all six frameworks, two-server SDK previews,
