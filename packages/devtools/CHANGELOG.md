@@ -1,5 +1,11 @@
 # @asmjs/devtools
 
+## 1.0.0-next.1
+
+### Patch Changes
+
+- Expand the package README with installation commands, a working example and links to the relevant guide.
+
 ## 1.0.0-next.0
 
 ### Major Changes

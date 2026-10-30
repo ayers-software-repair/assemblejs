@@ -1,6 +1,6 @@
 {
   "name": "@asmjs/devtools",
-  "version": "1.0.0-next.0",
+  "version": "1.0.0-next.1",
   "description": "Read-only devtools for an AssembleJS server in development: its assemblies, pages, apis and recent failures.",
   "license": "Apache-2.0",
   "homepage": "https://assemblejs.com/",
