@@ -1,6 +1,6 @@
 {
   "name": "@asmjs/renderer-templates",
-  "version": "1.0.0-next.1",
+  "version": "1.0.0-next.2",
   "description": "Write an AssembleJS assembly as an EJS, Markdown, Nunjucks, Handlebars or Pug template.",
   "license": "Apache-2.0",
   "homepage": "https://assemblejs.com/",
@@ -48,7 +48,7 @@
     "pug": "3.0.4"
   },
   "peerDependencies": {
-    "@asmjs/core": "1.0.0-next.0"
+    "@asmjs/core": "workspace:*"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.5",
