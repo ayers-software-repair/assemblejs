@@ -69,10 +69,21 @@ Solve replaced it with the provided redirect-only function. Reset removed the ne
 briefly logged a stale missing-module reload error. Preview reload recovered B with 200; then
 following A rendered A at `/a`, without redirection. The temporary research tab was closed.
 
+At [handle](https://svelte.dev/tutorial/kit/handle), manually edited the existing server hook
+before using Solve. The variant intercepted `/ping` with a plain response and changed the home
+heading through an HTML-response transform, rather than copying the lesson's inline-color
+example. Preview reload showed the changed heading and a 200 GET; following Ping returned
+`pong` with a 200 GET. The screenshot `/tmp/assemblejs-academy-kit-handle.png` shows the manual
+hook and intercepted response. Solve replaced the text transform with the provided body-color
+solution; its styling was not independently asserted. Reset restored the resolve-only hook.
+Reloading Ping then produced 404 Not Found with a matching GET; navigating home restored its
+original heading and a 200 GET. The temporary reference tab was closed. This exercises one
+hook, not authentication, production middleware or the rest of the Hooks chapter.
+
 The development server, preview and file editor settle separately. A changed source tree
 does not by itself prove the preview has rebuilt successfully. Record recoverable errors
 and recovery steps rather than silently counting Solve as success.
 
-The walkthrough is in progress. Hooks, advanced loading and the remaining course have not
-yet been exercised here. Earlier rows do not imply that every interaction, language variant or
+The walkthrough is in progress. RequestEvent and the remaining hook exercises, advanced loading
+and the rest of the course have not yet been exercised here. Earlier rows do not imply that every interaction, language variant or
 keyboard/mobile path was tested.
