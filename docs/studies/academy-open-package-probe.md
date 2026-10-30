@@ -1,12 +1,63 @@
 # Open runtime package/build probe
 
-This is a pending hosted compatibility experiment under accepted issue 16. It extends the
+This is a hosted compatibility experiment under accepted issue 16. It extends the
 merged MIT runtime mechanics probe without selecting a production runtime, adding paid
 hosting, contacting a vendor or creating an account. Basic file/process success does not
 establish package/build compatibility. Academy's curriculum and interface work continue.
 
-The exact runtime is `@vivari/core@1.0.0`; its source/archive and cleanup limits are recorded
-in `academy-open-runtime-probe.md`. Its
+## Published 1.0.0 result: incompatible at CLI startup
+
+At `2b91553581d72dc8cb4328dd728ec6e9d045427f`, hosted run `41120957170`, job
+`124287022521`, passed the original mechanics probe and both Node format/deadline tests,
+but failed the framework probe. npm reported 10.9.2 and exited 0; Node reported v24.18.0
+and exited 0. The real `npm exec --package=@asmjs/cli@1.0.0-next.2 -- assemblejs new ...`
+then exited 1: `Vivari: no vendored Node builtin 'internal/blocklist'`.
+
+The trace retains successful registry tarball downloads. Its actual published core bundle
+imports and constructs `net.BlockList` at module load. The runtime's getter requires
+`internal/blocklist`, absent from its builtin factory registry. A separate reader verified
+that source chain and the downloaded artifact. No project install, check, build, preview
+or hydration acceptance follows. No framework security behavior is bypassed to hide this.
+
+Artifact `13007823375` has SHA-256
+`f47600133c07c29affe7d536d24013a091f8a091bcf6cfbec98a8ab524516848` and retains the command
+state, empty browser/network error arrays, the passing mechanics state and failure trace.
+The delivered real-npm asset has 2,408 files, 11,745,533 raw file bytes and SHA-256
+`89404abe9a5c4dd78130f34a122e6ed9fbc4869f3fb5a54212ce2cfeeaa435cd`; independent local
+preparation produced the same asset and its actual npm CLI reported 10.9.2.
+
+Registry metadata now reports a newer published 1.1.4, source commit
+`8e91ade350445a61abed81dad61dc6ab1734cb40`. Inspect its actual archive/API before treating
+newer online documentation as applicable or attempting another development-only probe.
+No production runtime is selected by that investigation.
+
+## Newer published 1.1.4: source inspected, execution pending
+
+The development-only dependency now pins 1.1.4. Its 27-file published archive has SHA-256
+`46c0cac57f9185ded3cf0ab013f1fa383a770b0ae65b6fec2711aeb9ff22ac27`; the registry SHA-512
+also matches. Independent inspection found an actual `internal/blocklist` factory and
+address/range/subnet implementation, including IPv4-mapped IPv6 handling. This is a reason
+to rerun the experiment, not successful framework execution.
+
+The published boot/filesystem/spawn/output/exit/kill/teardown calls used here remain compatible.
+Npm now loads lazily, so the dependency-free mechanics test requires no missing resources.
+The npm asset format is unchanged. Mount batches its writes but supplies no transactional
+rollback. Teardown now rejects pending filesystem requests, settles process exits with -1,
+closes output and removes registered listeners; this finite-command test does not prove those
+pending-operation paths. Use the published source/declarations rather than assuming every
+newer online guarantee. The fixture carries the exact
+[1.1.4 upstream notice](https://raw.githubusercontent.com/maitrungduc1410/vivari/8e91ade350445a61abed81dad61dc6ab1734cb40/LICENSE);
+the archive still has no LICENSE/NOTICE files and full bundled notices remain open.
+
+Native aliases and node-gyp skipping remain. Bcrypt also maps to bcryptjs, and the runtime
+patches npm Arborist peer handling. Delivering the actual pinned npm archive does not mean
+the executed toolchain is unmodified. No guest install flags suppress scripts, peer checks
+or executable links. The earlier 1.0.0 result remains failed and is not relabelled.
+
+## Scenario and evidence limits
+
+The first evaluated runtime was `@vivari/core@1.0.0`; its source/archive and historical cleanup
+limits are recorded in `academy-open-runtime-probe.md`. Its
 [pinned npm generator](https://raw.githubusercontent.com/maitrungduc1410/vivari/2629c71097238400c45aefa213ef61df4794c2b7/scripts/vendor-npm.mjs)
 and [loader](https://raw.githubusercontent.com/maitrungduc1410/vivari/2629c71097238400c45aefa213ef61df4794c2b7/packages/kernel-host/load-real-npm.js)
 define gzip around a four-byte little-endian header length, JSON file index and concatenated

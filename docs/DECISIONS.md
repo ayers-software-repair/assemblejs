@@ -8028,3 +8028,14 @@ research, not selected options or a spending request. Check the StackBlitz edito
 project route separately from direct WebContainer API licensing. An OSS inquiry or grant
 application is not confirmed eligibility. No vendor contact, account, purchase, new hosting
 or final runtime adoption is authorized by this direction.
+
+## 2026-10-30: Open runtime package compatibility is separate from mechanics
+
+The MIT runtime's accepted finite file/process proof did not establish framework support.
+The actual npm delivery needed host executable-link generation disabled; the packer still
+rejects symlinks, and guest lifecycle scripts/links stay enabled. The corrected 1.0.0 probe
+ran real npm but failed invoking the published next.2 CLI because the runtime lacks
+`internal/blocklist`, required by core's real `net.BlockList` import. Preserve that failure;
+do not stub framework security or claim install/build success. Inspect the newer published
+1.1.4 independently before another research probe. Evidence is
+`docs/studies/academy-open-package-probe.md`; no production runtime is adopted.

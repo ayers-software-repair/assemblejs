@@ -35,7 +35,7 @@ test("published MIT runtime boots and preserves finite process/file results", as
     expect(commands[1].output).toContain("deliberate nonzero exit");
     expect(state.records.at(-1).fileRoundTrip).toBe("assembly proof");
     expect(errors).toEqual([]);
-    expect(missing.map((url) => new URL(url).pathname)).toEqual(["/vendor/npm-pack.bin"]);
+    expect(missing).toEqual([]);
     expect(
       await page.evaluate(async () => (await navigator.serviceWorker.getRegistrations()).length),
     ).toBe(0);

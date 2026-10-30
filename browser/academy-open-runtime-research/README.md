@@ -1,14 +1,13 @@
 # Hosted open-runtime mechanics research
 
-This evaluates exact `@vivari/core@1.0.0` mechanics and published framework installation/build,
+This evaluates exact `@vivari/core@1.1.4` mechanics and published framework installation/build,
 not a selected production runtime. It uses no account, metered service, model inference or new hosting.
 Do not run its browser/server proof on the desktop seat; use the separate hosted workflow.
 
 The temporary isolated origin serves the unchanged published SDK/hashed workers and the
 pinned upstream MIT notice. Wasm is embedded in those workers. Boot disables the preview
-service worker; the kernel still attempts its npm delivery fetch. The missing
-`/vendor/npm-pack.bin` is expected and explicitly checked, without supplying a fake package
-manager or claiming an installation. Fresh hosted browser storage avoids a restored npm tree.
+service worker. Version 1.1.4 loads npm on first use, so the dependency-free mechanics test
+expects no npm request or missing resource. Fresh hosted browser storage avoids a restored npm tree.
 
 The probe mounts one file, reads it through the host API, runs a dependency-free Node command
 that copies it, reads the result back and requires actual finite process exits 0 and 7.
@@ -31,11 +30,14 @@ package names/versions. Native-tool aliases and the runtime's node-gyp skip stub
 install success alone cannot prove native compatibility. No preview server starts.
 The build scenario has a five-minute test limit and bounded commands; the job has ten minutes.
 
-Published 1.0.0 differs from current online docs: mount is sequential and teardown does not
-settle pending filesystem/process promises or remove every window listener. This test does
-not claim atomic application, pending-operation cleanup, persistent restore, previews,
+Published 1.1.4 batches mount writes and settles pending operations on teardown; its write
+loop still supplies no transactional rollback. This test awaits finite processes before
+teardown and does not exercise pending-operation cleanup. It does not claim atomic application,
+persistent restore, previews,
 mobile editing or external-agent access. Installation/build remain pending until hosted
-evidence passes; the basic mechanics result cannot satisfy that gate. The full bundled third-party
+evidence passes; 1.0.0 failed CLI startup and its passing basic mechanics result cannot satisfy
+that gate. Native substitutions include bcryptjs and patched npm Arborist peer handling.
+The full bundled third-party
 notice audit remains open. No runtime assets are deployed to the product/company origin.
 
 Source/version/asset constraints are recorded in `docs/studies/academy-open-runtime-probe.md`.
