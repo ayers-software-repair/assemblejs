@@ -18,6 +18,11 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       no real inference connection or invented account requirement.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
+- [x] Record and independently review the candidate learning/proof path in
+      `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
+- [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent
+      access before choosing or advertising that architecture. The first public-package probe
+      is `docs/studies/academy-browser-runtime-probe.md`, not successful build acceptance.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
