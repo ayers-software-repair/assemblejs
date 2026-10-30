@@ -5,10 +5,12 @@ import { createServer } from "node:http";
 import { dirname, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-/** Serves the exact published runtime only on the isolated hosted test origin. */
-export async function serveOpenRuntime() {
+/** @param {string} [npmAsset] The real pinned npm delivery, for the install/build scenario. */
+export async function serveOpenRuntime(npmAsset) {
   const root = dirname(fileURLToPath(import.meta.resolve("@vivari/core")));
   const run = fileURLToPath(new URL("./run-open-runtime.js", import.meta.url));
+  const framework = fileURLToPath(new URL("./run-framework-build.js", import.meta.url));
+  const deadline = fileURLToPath(new URL("./bounded-operation.js", import.meta.url));
   const notice = fileURLToPath(new URL("./vivari-license.txt", import.meta.url));
   const server = createServer(async (request, response) => {
     response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
@@ -21,20 +23,29 @@ export async function serveOpenRuntime() {
         response.setHeader("Content-Type", "text/html; charset=utf-8");
         response.end(`<!doctype html><html lang="en"><meta charset="utf-8">
 <title>Open runtime mechanics research</title><h1>Basic runtime mechanics</h1>
-<p>No framework installation or preview acceptance.</p><a href="/vivari-license.txt">Runtime licence</a>
+<p>${npmAsset ? "Published framework install/build; no preview acceptance." : "Basic mechanics; no framework or preview acceptance."}</p><a href="/vivari-license.txt">Runtime licence</a>
 <pre id="status">starting</pre><pre id="result"></pre>
 <script type="importmap">{"imports":{"@vivari/core":"/index.js"}}</script>
-<script type="module" src="/run-open-runtime.js"></script></html>`);
+<script type="module" src="${npmAsset ? "/run-framework-build.js" : "/run-open-runtime.js"}"></script></html>`);
         return;
       }
       const file =
         path === "/run-open-runtime.js"
           ? run
-          : path === "/vivari-license.txt"
-            ? notice
-            : resolve(root, "." + path);
+          : path === "/run-framework-build.js"
+            ? framework
+            : path === "/bounded-operation.js"
+              ? deadline
+              : path === "/vendor/npm-pack.bin" && npmAsset
+                ? npmAsset
+                : path === "/vivari-license.txt"
+                  ? notice
+                  : resolve(root, "." + path);
       if (
         path !== "/run-open-runtime.js" &&
+        path !== "/run-framework-build.js" &&
+        path !== "/bounded-operation.js" &&
+        !(path === "/vendor/npm-pack.bin" && npmAsset) &&
         path !== "/vivari-license.txt" &&
         (!file.startsWith(root + sep) || !file.endsWith(".js"))
       )
@@ -42,7 +53,11 @@ export async function serveOpenRuntime() {
       const contents = await readFile(file);
       response.setHeader(
         "Content-Type",
-        file === notice ? "text/plain; charset=utf-8" : "text/javascript; charset=utf-8",
+        file === notice
+          ? "text/plain; charset=utf-8"
+          : file === npmAsset
+            ? "application/octet-stream"
+            : "text/javascript; charset=utf-8",
       );
       response.end(contents);
     } catch {

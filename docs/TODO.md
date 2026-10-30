@@ -51,6 +51,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [ ] Run the exact MIT runtime's hosted basic boot/filesystem/finite-process probe, with
       expected missing npm delivery and published-version cleanup limits recorded. No
       framework installation, preview or production runtime acceptance is implied.
+- [ ] Evaluate actual npm delivery and published next.2 six-renderer/five-template installation,
+      check failure/recovery and build/typecheck in the MIT runtime. Keep command/package
+      evidence and failures; `docs/studies/academy-open-package-probe.md` defines the scope.
+      This does not accept previews, persistence, live-agent access or production adoption.
 
 Website-management reported next.2 publication and installed acceptance complete and handed
 ongoing AssembleJS implementation to this maintainer. Shared company routing remains with
