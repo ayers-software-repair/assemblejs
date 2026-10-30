@@ -39,7 +39,7 @@ jobs:
       - run: node --test browser/academy-open-runtime-research/pack-npm.test.mjs
       - name: Prepare the real pinned npm delivery
         run: |
-          npm install --prefix "$RUNNER_TEMP/academy-pm" --ignore-scripts --no-save --no-audit --no-fund --fetch-retries=0 --fetch-timeout=20000 npm@10.9.2
+          npm install --prefix "$RUNNER_TEMP/academy-pm" --ignore-scripts --bin-links=false --no-save --no-audit --no-fund --fetch-retries=0 --fetch-timeout=20000 npm@10.9.2
           node browser/academy-open-runtime-research/pack-npm.mjs "$RUNNER_TEMP/academy-pm/node_modules/npm" "$RUNNER_TEMP/academy-npm-pack.bin"
       - run: pnpm exec playwright test -c browser/academy-open-runtime-research/playwright.config.ts
         env:

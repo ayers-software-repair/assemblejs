@@ -19,8 +19,9 @@ processes before calling teardown, then closes the page and fixture. One worker,
 The separate framework test receives real npm 10.9.2, packed from its installed archive using
 the pinned runtime's binary format. A small Node test independently decodes file offsets and
 rejects wrong versions and symlinks; it also checks operation deadlines. The synthetic test
-files are never served as npm. The hosted preparation uses `--ignore-scripts` only to package
-npm itself; the guest framework install keeps lifecycle scripts enabled.
+files are never served as npm. The hosted preparation uses `--ignore-scripts --bin-links=false`
+only to package npm itself without generated host links; the guest framework install keeps
+lifecycle scripts and executable links enabled.
 
 That test invokes published `@asmjs/cli@1.0.0-next.2`, installs exact framework/renderer peers,
 adds six framework and five template assemblies, requires a real missing-assembly check

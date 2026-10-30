@@ -43,3 +43,10 @@ The first workflow revision at `fd8a841` was rejected before any job started (ru
 allows the runner context in step environment expressions, not job environment expressions.
 Use the shell's `RUNNER_TEMP` during preparation and step environment for the browser command.
 This is harness validation failure, not evidence about runtime/package compatibility.
+
+At `727b9a1`, hosted run `41120445643`, job `124285523562`, passed both small Node tests
+but preparation refused the host-generated `node_modules/.bin/arborist` symlink. No browser
+or guest framework command ran and no browser artifact exists. Keep the packer's refusal;
+prepare the host npm tree with [`--bin-links=false`](https://docs.npmjs.com/cli/v10/commands/npm-install/#bin-links)
+so generated host executable links are not added. Guest framework commands retain normal
+script/link behavior. The pinned upstream generator itself packs regular files only.
