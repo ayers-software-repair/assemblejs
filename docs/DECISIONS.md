@@ -7939,3 +7939,18 @@ GitHub reviewer is unavailable. Personal exact-head PR review, applicable QA, ho
 and the complete squash message's conventional/DCO gates still precede integration.
 Rulesets stay intact. History replacement and release, deployment, infrastructure or spending
 decisions retain their separate authority.
+
+## 2026-10-30: Remote composition and retained runtime evidence
+
+The first controlled hosted probe passed at `1002b5351b308cccc121c050386e1be0e6076c59`
+(research run `41092354803`; normal CI `41092354683`). Its browser assertions proved all six
+framework mounts, five template renders, a known-bad check and recovery, and server shutdown.
+However, body-only test attachments were not retained by the list reporter: the upload found
+no files. Write the final bounded command record to the test output directory before attaching
+it, so a successful run also has downloadable evidence.
+
+Extend the controlled probe before selecting a runtime: start the same built project twice
+on separate ports, use the remote process's actual SDK origin for a required React placement,
+and check that remote content hydrates. This measures two-server composition through the
+browser runtime's port proxy; it does not establish independently built projects or live-agent
+access. Production licensing and hosting remain unresolved.

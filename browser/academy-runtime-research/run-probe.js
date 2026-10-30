@@ -14,7 +14,7 @@ const stop = document.querySelector("#stop");
 if (!status || !result || !preview || !stop) throw new Error("incomplete research fixture");
 
 let runtime;
-let server;
+const servers = [];
 const report = (phase) => {
   status.textContent = phase;
   result.textContent = JSON.stringify({ phase, records });
@@ -54,8 +54,8 @@ async function command(program, args, options = {}, expected = 0) {
 
 stop.addEventListener("click", async () => {
   try {
-    server?.kill();
-    if (server) records.push({ stoppedServerExit: await server.exit });
+    for (const server of servers) server.kill();
+    records.push({ stoppedServerExits: await Promise.all(servers.map((server) => server.exit)) });
     runtime?.teardown();
     report("stopped");
   } catch (error) {
@@ -82,16 +82,16 @@ try {
     "academy-probe",
   ]);
   const root = "academy-probe";
-  const manifestPath = `${root}/package.json`;
-  const manifest = JSON.parse(await runtime.fs.readFile(manifestPath, "utf8"));
-  for (const dependencies of [manifest.dependencies, manifest.devDependencies]) {
+  const packagePath = `${root}/package.json`;
+  const projectPackage = JSON.parse(await runtime.fs.readFile(packagePath, "utf8"));
+  for (const dependencies of [projectPackage.dependencies, projectPackage.devDependencies]) {
     for (const name of Object.keys(dependencies)) {
       if (name.startsWith("@asmjs/")) dependencies[name] = version;
     }
   }
-  manifest.devDependencies["typescript"] = "6.0.3";
-  manifest.devDependencies["@types/node"] = "26.4.1";
-  await runtime.fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+  projectPackage.devDependencies["typescript"] = "6.0.3";
+  projectPackage.devDependencies["@types/node"] = "26.4.1";
+  await runtime.fs.writeFile(packagePath, JSON.stringify(projectPackage, null, 2));
   report("installing exact framework and peer versions");
   await command(
     "npm",
@@ -123,11 +123,12 @@ try {
   await runtime.fs.writeFile(
     root + "/assemblejs.config.ts",
     'import { contentSecurityPolicy, defineConfig } from "@asmjs/core";\n' +
-      "const policy = contentSecurityPolicy([]);\n" +
+      'const origin = process.env["PROBE_REMOTE_ORIGIN"] ?? "http://127.0.0.1:3211";\n' +
+      "const policy = contentSecurityPolicy([origin]);\n" +
       "if (!policy.includes(" +
       defaultFramePolicy +
       ')) throw new Error("default framing policy changed");\n' +
-      "export default defineConfig({ contentSecurityPolicy: policy.replace(" +
+      "export default defineConfig({ remotes: [{ origin }], contentSecurityPolicy: policy.replace(" +
       defaultFramePolicy +
       ", " +
       framePolicy +
@@ -143,11 +144,20 @@ try {
       { cwd: root },
     );
   }
+  await command("node", [...cli, "add", "assembly", "remote-probe", "--renderer", "react"], {
+    cwd: root,
+  });
+  await runtime.fs.writeFile(
+    `${root}/src/pages/home/home.page.ts`,
+    'import { definePage } from "@asmjs/core";\n' +
+      'const origin = process.env["PROBE_REMOTE_ORIGIN"] ?? "http://127.0.0.1:3211";\n' +
+      'export default definePage({ place: { "remote-probe": { url: origin + "/assembly/remote-probe/", required: true, deadline: 15000 } } });\n',
+  );
   const pagePath = `${root}/src/pages/home/home.html`;
   const starter = await runtime.fs.readFile(pagePath, "utf8");
   const page = starter.replace(
     "</body>",
-    [...renderers, ...templates]
+    [...renderers, ...templates, "remote"]
       .map((name) => `<assembly name="${name}-probe"></assembly>`)
       .join("\n") + "\n</body>",
   );
@@ -164,39 +174,46 @@ try {
   await command("node", [...cli, "check"], { cwd: root });
   await command("npm", ["run", "typecheck"], { cwd: root });
 
-  const ready = new Promise((resolve) => {
-    runtime.on("server-ready", (port, url) => {
-      if (port === 3210) resolve(url);
+  async function serve(port, remoteOrigin) {
+    const ready = new Promise((resolve) => {
+      runtime.on("server-ready", (listening, url) => {
+        if (listening === port) resolve(url);
+      });
     });
-  });
-  server = await runtime.spawn("node", ["dist/server.js"], {
-    cwd: root,
-    env: { ASSEMBLEJS_PORT: "3210" },
-  });
-  const serverRecord = { program: "built server", output: "" };
-  records.push(serverRecord);
-  server.output
-    .pipeTo(
-      new WritableStream({
-        write(text) {
-          serverRecord.output = (serverRecord.output + text).slice(-16000);
-          report(status.textContent);
-        },
+    const server = await runtime.spawn("node", ["dist/server.js"], {
+      cwd: root,
+      env: { ASSEMBLEJS_PORT: String(port), PROBE_REMOTE_ORIGIN: remoteOrigin },
+    });
+    servers.push(server);
+    const serverRecord = { program: "built server", port, output: "" };
+    records.push(serverRecord);
+    server.output
+      .pipeTo(
+        new WritableStream({
+          write(text) {
+            serverRecord.output = (serverRecord.output + text).slice(-16000);
+            report(status.textContent);
+          },
+        }),
+      )
+      .catch((error) => {
+        serverRecord.output += `\n${String(error)}`;
+      });
+    const url = await Promise.race([
+      ready,
+      server.exit.then((code) => {
+        throw new Error(`built server ${String(port)} exited ${String(code)}`);
       }),
-    )
-    .catch((error) => {
-      serverRecord.output += `\n${String(error)}`;
-    });
-  preview.src = await Promise.race([
-    ready,
-    server.exit.then((code) => {
-      throw new Error(`built server exited ${String(code)}`);
-    }),
-  ]);
+    ]);
+    return new URL(url).origin;
+  }
+  const remoteOrigin = await serve(3211, "http://127.0.0.1:3211");
+  preview.src = await serve(3210, remoteOrigin);
+  records.push({ pageOrigin: preview.src, remoteOrigin });
   report("ready");
 } catch (error) {
   records.push({ failure: String(error) });
-  server?.kill();
+  for (const server of servers) server.kill();
   runtime?.teardown();
   report("failed");
 }

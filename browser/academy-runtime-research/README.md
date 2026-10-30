@@ -12,17 +12,20 @@ The probe scaffolds an actual project with the published CLI, pins its framework
 and tested renderer peers, then generates six framework and five template assemblies.
 It places a missing assembly and requires the real check to fail before repairing the page,
 checking again and running the project's build/typecheck. The browser then verifies the
-rendered content and all six framework mounts, and observes the built server exit on stop.
+rendered content and all six framework mounts. Two processes run the same build on distinct
+ports: the page server composes a required React assembly from the other server's actual
+SDK origin. Its remote origin and mounted state are checked in the browser. Stop awaits both
+server exits before tearing down the runtime.
 
 The generated project opts into framing by the exact ephemeral research-controller origin
 through the existing `contentSecurityPolicy` project setting and public default-policy
 function. All other default directives remain. The framework's default policy is unchanged;
 this is proof of an explicitly configured preview, not arbitrary cross-origin framing.
 
-Commands retain real exit codes, timeout state and bounded output in JSON attachments.
+Commands retain real exit codes, timeout state and bounded output in a JSON file and attachment.
 Failures retain the final state and Playwright trace. The overall test and job also have
 deadlines, and the fixture/browser are closed on failures.
 
-This first controlled probe does not establish multi-server composition, api relay, streams,
+This controlled probe does not establish independently built projects, api relay, streams,
 edit/rebuild, saved-state recovery, native mobile editing or connection to an existing agent.
 Those remain separate acceptance work even if this probe passes.
