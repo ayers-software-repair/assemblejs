@@ -8028,3 +8028,36 @@ research, not selected options or a spending request. Check the StackBlitz edito
 project route separately from direct WebContainer API licensing. An OSS inquiry or grant
 application is not confirmed eligibility. No vendor contact, account, purchase, new hosting
 or final runtime adoption is authorized by this direction.
+
+The first editor-SDK probe (`41110579474`, head `4e26737`) booted its ephemeral Node project
+but the controller requested a preview URL before startup had opened a server. The API
+rejected with `SDK_GET_PREVIEW_URL_FAILURE`; the assignment also discarded the just-read
+command snapshot. Preserve snapshot evidence first, discover the URL only after the guest
+reports ready, and retain that specific not-ready response while waiting for a real URL.
+All other errors still fail; preview/check/hydration assertions remain unchanged. Independent
+review also found SIGTERM alone did not bound a command's exit wait: reject at the deadline
+and bound stop's exit wait too. No successful SDK execution is inferred from the failed run.
+
+Personal PR review then reproduced buffered dev output changing a terminal failure back to
+ready during cleanup. A regression executes the actual guest source with only process,
+filesystem and timer boundaries replaced: its final-phase assertion failed as ready versus
+failed before the correction. The reporter now latches a successfully written failed/stopped
+phase; the same delayed-output test passes. This local source regression starts no browser,
+server or runtime child process. The hosted SDK compatibility proof remains a separate gate.
+
+At `be1da32`, hosted run `41111065538` recorded scaffold/install/add/check recovery and
+build/typecheck success, initial React hydration, the saved VM edit and a second dev build.
+Its fresh HTML response contains the edited label, but the visible preview was blank and
+the strict changed-preview assertion failed. The trace shows the SDK's injected
+`window.__sb_state = {};` blocked by script-src self, plus Monaco source-file/worker errors.
+Test the literal initialization's exact hash in only this generated project's policy;
+do not enable unsafe-inline or change the framework default. Evaluate the documented
+preview-only display mode with the same VM file operations; the full hosted Monaco editor
+is not accepted by this result, and Academy's own code view remains unbuilt. Keep all
+page-error/hydration/changed-preview assertions. This is an integration hypothesis until
+the new hosted run proves it, not acceptance inferred from a successful rebuild.
+
+That hypothesis did not complete the SDK workflow: run `41112973798` at `c41abed` had no
+CSP violations but still failed the changed-preview assertion and retained 67 SDK/editor
+page errors. The VM edit and updated server HTML are proven; a usable updated preview and
+process stop are not. Preserve the failed artifact and keep production adoption open.
