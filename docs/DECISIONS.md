@@ -7954,3 +7954,25 @@ on separate ports, use the remote process's actual SDK origin for a required Rea
 and check that remote content hydrates. This measures two-server composition through the
 browser runtime's port proxy; it does not establish independently built projects or live-agent
 access. Production licensing and hosting remain unresolved.
+
+## 2026-10-30: The landing shows the composition model
+
+The owner asked to restore "Frameworks Assemble" and improve the earlier visual direction.
+The source research records the earlier split hero and code window. The new candidate uses
+a navy ground and gold headline, retains the product mark and shared frame at the existing
+platform pin, and illustrates Market's actual product-detail (Preact, catalog), buy-box
+(React, shop) and review-list (Vue, reviews) assemblies. The template is labelled an excerpt;
+the illustration is static and links to instructions for running the real example.
+Do not advertise Academy or its workspace as available before their own acceptance.
+
+Following the new landing's installation link found a channel mismatch: registry metadata
+reports `@asmjs/create` latest at next.0 and next at next.2. The installation and downloads
+commands now request `@next` explicitly, matching the renderer instructions and the accepted
+candidate. This changes no npm tag, package version or publication authority.
+
+The 26 October Studio design and audit were read in full from the estate's AssembleJS
+project records. Their reusable direction is one project and common operations behind UI,
+CLI and agent access, with reviewable changes and checks. The latest owner direction makes
+Academy a supplied project without upload/import; the older import-first proposal does not
+govern this tutorial. Separate desktop/mobile clients, model comparisons and arbitrary-stack
+import are not part of Academy acceptance. The existing inspector stays read-only.

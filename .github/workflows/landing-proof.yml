@@ -1,0 +1,61 @@
+name: landing proof
+on:
+  pull_request:
+    branches: [next]
+    paths:
+      [
+        "site/**",
+        "site-source/**",
+        "browser/landing-proof/**",
+        ".github/workflows/landing-proof.yml",
+      ]
+  push:
+    branches: [next]
+    paths:
+      [
+        "site/**",
+        "site-source/**",
+        "browser/landing-proof/**",
+        ".github/workflows/landing-proof.yml",
+      ]
+permissions:
+  contents: read
+concurrency:
+  group: landing-proof-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  landing:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - id: pin
+        run: |
+          ref=$(node -p "require('./package.json').ayersPlatform || ''")
+          test -n "$ref"
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ayers-software-repair/platform
+          ref: ${{ steps.pin.outputs.ref }}
+          token: ${{ secrets.RELEASES_PAT }}
+          path: _platform
+          persist-credentials: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test -c browser/landing-proof/playwright.config.ts
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: landing-proof
+          path: test-results/landing
+          if-no-files-found: error
+          retention-days: 7

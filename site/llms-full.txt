@@ -1,24 +1,82 @@
 # AssembleJS
 
-> Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools.
+> Compose one application from assemblies written in React, Vue, Svelte and more, served locally or by other teams. Build with your editor, the CLI or your coding agent.
 
 Every page of this site as text, in the order [llms.txt](llms.txt) lists them. Every link is relative to this file.
 
-# AssembleJS
+AssembleJS
 
 Source: [index.html](index.html)
 
-React. Vue. Svelte. One application.
+# Frameworks  Assemble
 
-Compose server-rendered pages from multiple frontend frameworks. Connect assemblies through page events, and use the MCP server from your coding agent.
+Build one application from the frameworks you know. Compose its pages from assemblies on your server or another team's.
 
-- [Install AssembleJS](downloads.html)
-- [Read the manual](docs/index.html)
+- [Build your first page](install.html)
+- [Explore the market example](docs/outline.html)
 
-Platforms:
+Use your editor, the CLI or your coding agent. AssembleJS includes the MCP tools to add, check and preview assemblies.
 
-- npm
-- Web
+One page. Three servers.
+
+src/pages/product/product.html excerpt
+
+```
+<main>
+  <assembly name="product-detail">
+  </assembly>
+  <assembly name="buy-box">
+  </assembly>
+  <assembly name="review-list">
+  </assembly>
+</main>
+```
+
+- Preact Product detail  — Catalog server · 4701
+
+- React Buy box  — Page server · 4700
+
+- Vue Reviews  — Reviews server · 4702
+
+The page declares its remote addresses. Each assembly hydrates in its own framework.
+
+Supported assembly views:
+
+Your frameworks. One application.
+
+- React
+
+- Vue
+
+- Svelte
+
+- Preact
+
+- Solid
+
+- Lit
+
+- HTML & templates
+
+Build with AssembleJS:
+
+## Make an assembly
+
+A directory, a view and an optional service for server-side data. Place it in a page.
+
+- [Learn the composition model](start.html)
+
+## Connect the pieces
+
+Page events connect frameworks. Remote placements connect teams, with deadlines and fallbacks.
+
+- [Build a connected application](docs/tutorial.html)
+
+## Bring your agent
+
+The project includes instructions and MCP tools. Your agent works on the same files you do.
+
+- [Set up your coding agent](start.html#working-with-an-agent)
 
 # Create your first application
 
@@ -33,7 +91,7 @@ Install Node.js 22 or newer. The project includes its own CLI; no global install
 ## 01Create the project
 
 ```
-npm create @asmjs@latest my-app
+npm create @asmjs@next my-app
 cd my-app
 npm install
 npm run dev
@@ -1787,7 +1845,7 @@ AssembleJS is distributed through npm. Use Node.js 22 or newer.
 Start with a working page and add the frameworks you need.
 
 ```
-npm create @asmjs@latest my-app
+npm create @asmjs@next my-app
 cd my-app
 npm install
 npm run dev

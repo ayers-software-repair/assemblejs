@@ -74,8 +74,8 @@
   "pages": [
     {
       "file": "index.html",
-      "title": "AssembleJS — Your frameworks. One application.",
-      "description": "Combine React, Vue, Svelte and other UI frameworks in one server-rendered application. Connect assemblies through page events and use the MCP server from your development tools.",
+      "title": "AssembleJS — Frameworks Assemble",
+      "description": "Compose one application from assemblies written in React, Vue, Svelte and more, served locally or by other teams. Build with your editor, the CLI or your coding agent.",
       "kind": "overview",
       "section": ""
     },
