@@ -7970,6 +7970,13 @@ reports `@asmjs/create` latest at next.0 and next at next.2. The installation an
 commands now request `@next` explicitly, matching the renderer instructions and the accepted
 candidate. This changes no npm tag, package version or publication authority.
 
+The first hosted landing proof (`41098666395`, head `51592c3`) passed the four wider layouts
+but detected clipped heading text at 320px. Its retained screenshots/trace showed that the
+small-screen headline's minimum size was too large. Reduce that minimum while retaining
+the same clipping guard; keep the new proof red until the corrected candidate passes.
+Screenshots are taken before the keyboard test focuses the whole main region, so the focus
+outline is not mistaken for a permanent design border.
+
 The 26 October Studio design and audit were read in full from the estate's AssembleJS
 project records. Their reusable direction is one project and common operations behind UI,
 CLI and agent access, with reviewable changes and checks. The latest owner direction makes

@@ -44,13 +44,13 @@ test("the landing keeps composition, links and keyboard access at desktop and na
         });
       }
       expect(await fits()).toBe(true);
+      const screenshot = info.outputPath(`landing-${String(width)}.png`);
+      await page.screenshot({ path: screenshot, fullPage: true });
+      await info.attach(`landing-${String(width)}`, { path: screenshot, contentType: "image/png" });
       await page.keyboard.press("Tab");
       await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
       await page.keyboard.press("Enter");
       await expect(page.locator("#main")).toBeFocused();
-      const screenshot = info.outputPath(`landing-${String(width)}.png`);
-      await page.screenshot({ path: screenshot, fullPage: true });
-      await info.attach(`landing-${String(width)}`, { path: screenshot, contentType: "image/png" });
     }
     await page.getByRole("link", { name: "Set up your coding agent" }).click();
     await expect(page).toHaveURL(/\/start\.html#working-with-an-agent$/);
