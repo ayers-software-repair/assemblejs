@@ -103,6 +103,10 @@ Coverage below is partial; visiting a course is not completing it.
   routing, loading, headers/cookies, shared modules, forms, API routes, app state and
   errors/redirects. This confirms practical application progression, not full course coverage.
 
+The follow-up in `academy-sveltekit-walkthrough.md` records actual manual custom-error hooks,
+unknown-message output, guarded redirect, document versus data responses and Solve/Reset
+recovery. Those observations cover two more exercises; hooks and advanced loading remain open.
+
 ### React: observed 30 October
 
 <https://react.dev/learn/tutorial-tic-tac-toe> is a connected game tutorial with many

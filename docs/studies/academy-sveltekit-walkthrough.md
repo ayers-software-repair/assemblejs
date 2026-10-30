@@ -43,10 +43,36 @@ that toast. Reset removed the import/conditional and restored the starter's visi
 and reload button. No production deployment/version-polling behavior was tested; a solution
 source change is not proof of a real app update.
 
+At [custom-error-messages](https://svelte.dev/tutorial/kit/custom-error-messages), manually
+added page status/message handling to the root error view. About initially showed the generic
+Internal Error; its client data request logged 200. Manually edited both existing error hooks
+to return the example's message only for unknown errors. After preview reload, the terminal
+showed 500 GETs; a first observation displayed the offline branch, then the next source-view
+observation showed Oops and the actual example error text. The reason for that transient branch
+was not established. The screenshot `/tmp/assemblejs-academy-kit-custom-error.png` shows the
+edited server hook beside the resulting message. Solve replaced the manual edits with the
+provided solution; Reset restored both empty hooks and the initial generic error view.
+
+During that manual exercise, character-by-character input triggered editor auto-closing and
+left extra closing tags. The actual compiler overlay named the invalid closing tag and source
+line. Pasting the corrected complete source removed it; preview reload recovered home and a
+200 GET before the error-route tests. This was an input-method artifact, not a claimed framework
+bug or a completion check. No production error-reporting or real offline-network test was run.
+
+At [redirects](https://svelte.dev/tutorial/kit/redirects), first followed A to its own heading.
+Manually created `src/routes/a/+page.server.js`, called the temporary redirect to B, and placed
+a deliberate throw after it. Preview reload logged 307 for A and 200 for B, with B rendered;
+the guard error did not appear. Following A through the app again left the preview at B while
+its data request logged 200. Do not call that data response a 307 document response. The retained
+screenshot `/tmp/assemblejs-academy-kit-redirect.png` shows the manual guard and the B result.
+Solve replaced it with the provided redirect-only function. Reset removed the new file but
+briefly logged a stale missing-module reload error. Preview reload recovered B with 200; then
+following A rendered A at `/a`, without redirection. The temporary research tab was closed.
+
 The development server, preview and file editor settle separately. A changed source tree
 does not by itself prove the preview has rebuilt successfully. Record recoverable errors
 and recovery steps rather than silently counting Solve as success.
 
-The walkthrough is in progress. Custom error messages, redirects, advanced loading and the
-remaining course have not yet been exercised here. Earlier rows do
-not imply that every interaction, language variant or keyboard/mobile path was tested.
+The walkthrough is in progress. Hooks, advanced loading and the remaining course have not
+yet been exercised here. Earlier rows do not imply that every interaction, language variant or
+keyboard/mobile path was tested.
