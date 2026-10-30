@@ -241,6 +241,11 @@ including observed errors and recovery. Later Kit chapters and deeper React/Vue/
 application exercises remain open. Lit's introductory sequence is covered; its separate
 advanced courses are not.
 
+The Kit follow-up now includes manual navigation-state feedback and a solution/reset
+inspection of update-state gating. Its development preview cannot demonstrate an actual
+production update. These observations and the earlier page/error-boundary probes are
+recorded in `academy-sveltekit-walkthrough.md`; no full-course completion is claimed.
+
 `academy-workspace-source-inventory.md` records the actual reuse boundary: existing inspector
 routes are deliberately read-only. Shared assembly planning, checks and dev rebuild/reload
 exist; editable source, reviewed application and concurrent-edit protection do not. Failure
