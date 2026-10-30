@@ -6,6 +6,8 @@ on:
       [
         "site/**",
         "site-source/**",
+        "package.json",
+        "pnpm-lock.yaml",
         "browser/landing-proof/**",
         ".github/workflows/landing-proof.yml",
       ]
@@ -15,6 +17,8 @@ on:
       [
         "site/**",
         "site-source/**",
+        "package.json",
+        "pnpm-lock.yaml",
         "browser/landing-proof/**",
         ".github/workflows/landing-proof.yml",
       ]

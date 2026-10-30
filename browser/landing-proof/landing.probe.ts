@@ -30,7 +30,7 @@ test("the landing keeps composition, links and keyboard access at desktop and na
   try {
     for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto(fixture.origin);
+      await page.goto(`${fixture.origin}/?width=${String(width)}`);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText("Frameworks Assemble");
       await expect(page.locator(".assembly-parts li")).toHaveCount(3);
       await expect(page.locator(".assembly-parts li")).toContainText(["Preact", "React", "Vue"]);
