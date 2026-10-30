@@ -8009,3 +8009,22 @@ CLI and agent access, with reviewable changes and checks. The latest owner direc
 Academy a supplied project without upload/import; the older import-first proposal does not
 govern this tutorial. Separate desktop/mobile clients, model comparisons and arbitrary-stack
 import are not part of Academy acceptance. The existing inspector stays read-only.
+
+The product-wide transition opt-out passed the unchanged strict proof at `46ebb89`:
+five viewport widths, keyboard access and three guide/home navigation cycles, with no
+ignored page errors. Independent source review and visual QA passed before PR20 merged
+as `d1f0d5b`. All six post-merge CI jobs (`41106297217`), hosted landing proof (`41106297250`)
+and existing next-site deployment (`41106297243`) passed. Live reads of all 18 declared pages,
+the product stylesheet and both model-readable exports match that commit after the deploy's
+metadata and error-page prefix transforms. This closes the candidate landing's acceptance;
+Academy implementation, production runtime selection and stable promotion remain separate.
+
+## 2026-10-30: Academy adds no paid runtime or hosting requirement
+
+The owner rejected additional paid hosting and a required paid runtime licence. Keep the
+browser-based Academy scope and continue independent curriculum, interface and source work
+while verifying genuinely free delivery routes. Existing commercial price examples are
+research, not selected options or a spending request. Check the StackBlitz editor SDK/public
+project route separately from direct WebContainer API licensing. An OSS inquiry or grant
+application is not confirmed eligibility. No vendor contact, account, purchase, new hosting
+or final runtime adoption is authorized by this direction.

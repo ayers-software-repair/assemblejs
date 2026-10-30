@@ -1,8 +1,8 @@
 # Academy runtime research
 
 Read 30 October 2026. These are constraints and candidate tools, not an architecture decision.
-No infrastructure was provisioned, licence accepted or model service connected. Context7 and
-language-server tools were unavailable; external facts were read from primary documentation.
+No infrastructure was provisioned, production runtime adopted or model service connected.
+Context7 and language-server tools were unavailable; external facts were read from primary documentation.
 
 ## Existing site and executable source
 
@@ -38,9 +38,10 @@ requires retained notices. It uses WebContainers; it does not remove their const
 Academy's completion, progress, tutoring and certificate behavior.
 
 [WebContainer commercial terms](https://webcontainers.io/enterprise) require a licence for
-production commercial/for-profit use; prototypes are exempt. The introduction advertises free
-open-source usage, but company-hosted Academy eligibility and terms are unconfirmed. No price
-is inferred and no inquiry was submitted.
+production commercial/for-profit use; prototypes are exempt. The
+[contact page](https://webcontainers.io/contact) explicitly offers a free open-source API
+inquiry route, not an automatic eligibility grant. Company-hosted Academy eligibility and
+price remain unconfirmed. No inquiry, account or purchase was submitted.
 
 [Required headers](https://webcontainers.io/guides/configuring-headers) are COOP `same-origin`
 and COEP `require-corp`, or the documented `credentialless` mode. These need scoped response
@@ -51,9 +52,13 @@ Safari is beta; the page calls Firefox beta in its introduction and alpha in its
 Do not promise equal browser support. Storage/cookie restrictions can prevent startup.
 
 The [API](https://webcontainers.io/api) permits one concurrent WebContainer instance;
-it can spawn several processes and expose multiple ports. Multiple composition servers in one
-instance are plausible, not yet proven. Filesystem state is ephemeral; saved progress and edits
-need explicit persistence. [Binary snapshots and filesystem mounting](https://webcontainers.io/guides/working-with-the-file-system)
+it can spawn several processes and expose multiple ports. The controlled next.2 probe now
+proves required remote React composition/hydration across two processes using the same build,
+alongside six framework mounts, five templates, real check failure/recovery and both process
+exits (PR19, research run `41095157424`, artifact `12994939244`). Full Market, independently
+built projects, relay and streams remain unproven in this runtime. Filesystem state is ephemeral;
+saved progress and edits need explicit persistence.
+[Binary snapshots and filesystem mounting](https://webcontainers.io/guides/working-with-the-file-system)
 and [bundled dependency guidance](https://webcontainers.io/guides/troubleshooting) may reduce
 repeat boot work, but do not establish first-load offline support.
 
@@ -86,6 +91,104 @@ A hosted Node runner would require new execution infrastructure. Node's
 [resource limits](https://docs.docker.com/engine/containers/resource_constraints/) require
 deliberate isolation, expiry, bounded resources and verified cleanup for visitor code.
 Current static hosting does not provide these and no new service/spend authority is inferred.
+
+## Production browser-runtime comparison
+
+Read 30 October 2026 after the bounded probe. Academy remains browser-based. These options
+do not authorize vendor contact, accounts, subscriptions or infrastructure changes.
+
+| Option                                     | Verified price or unknown                                                                                                                                                           | Hosting reuse and material limits                                                                                                                                                                                                           |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WebContainer API                           | No verified public production API quote; free OSS inquiry route exists, eligibility unconfirmed.                                                                                    | Existing static delivery can serve the UI; scoped isolation headers are needed. It is the tested candidate, with the bounded limits above.                                                                                                  |
+| BrowserPod Pro                             | $20/month includes 20,000 runtime-metering tokens; top-ups cost $10 per 10,000 tokens. OSS grants require application.                                                              | Reuses static delivery and browser compute, but requires a publisher account/key and origin setup. Native esbuild substitution and exact AssembleJS compatibility remain untested.                                                          |
+| Separate Node runner behind the browser UI | Example 2 GiB ARM compute plus one public IPv4: $15.91/month at 730 hours; 4 GiB: $28.18, excluding disk, traffic, logs, isolation/control services, taxes and burst-credit policy. | Static delivery and deployment conventions are reusable. Existing app hosting is not an approved per-learner execution boundary or measured spare capacity. Separate isolation, admission, preview origins, expiry and cleanup need review. |
+
+[StackBlitz Terms 1.5(c)](https://stackblitz.com/terms-of-service) requires a plan or written
+licence covering production/commercial API use and incorporates documented limits. Section
+2.3 restricts competing products/services; describe the optional workspace's actual scope
+when clarifying eligibility rather than assuming coverage. Separate written agreements govern
+conflicts. The [AUP](https://stackblitz.com/acceptable-use-policy) repeats the usage boundary.
+The [ordinary pricing FAQ](https://stackblitz.com/pricing) is not a verified API quote.
+These are recorded terms, not a conclusion about Academy's classification.
+
+BrowserPod's [pricing](https://browserpod.io/pricing/) and [FAQ](https://browserpod.io/faq/)
+exclude commercial work from Free and list the Pro allowance. Its
+[pricing policy](https://browserpod.io/pricing-policy/) spends ten tokens at boot and ten
+more at each hourly extension: short separate boots consume full units. For example,
+10,000 boots each lasting under one hour consume 100,000 tokens, costing $20 base plus $80
+above the included allowance at published top-up rates, before tax or any grant. The policy
+states a 1,000,000-token monthly Pro fair-use ceiling and reserves termination after ten
+continuous hours. These tokens meter runtime licensing, not model inference; no hard
+spending cap is assumed. Preserve one runtime through lessons rather than rebooting each one.
+
+The Node examples use public [US East Linux price data](<https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(N.%20Virginia)/Linux/index.json>):
+t4g.small $0.0168/hour and t4g.medium $0.0336/hour, plus one IPv4 at
+[$0.005/hour](https://aws.amazon.com/vpc/pricing/). These are illustrative components, not a
+complete service quote or session-capacity measurement. No existing app credentials, private
+state or unrelated host is available to visitor code under this comparison. Ordinary Lambda's
+[900-second ceiling](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html)
+and [environment reuse](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtime-environment.html)
+do not provide an existing persistent, isolated learner workspace.
+
+The owner subsequently excluded additional paid hosting and required paid runtime licensing.
+The prices above are comparison evidence, not selected options. No vendor inquiry is
+authorized; an OSS inquiry/grant route is not a confirmed free entitlement. Academy remains
+browser-based. Continue independent lesson/interface work and the free-route checks below.
+Every option still needs persistence, current-revision checks and verified external-agent access.
+
+## Free browser-delivery routes
+
+The [StackBlitz editor SDK](https://developer.stackblitz.com/platform/api/javascript-sdk)
+is different from directly embedding the WebContainer API. Its documented `embedProject`
+can create a supplied `node` project without a pre-created project ID; public GitHub
+projects can also be embedded. The [pricing FAQ](https://stackblitz.com/pricing) permits
+viewing/editing public projects without a GitHub account and lists unlimited public projects
+on Personal. [Terms 1.5(b)](https://stackblitz.com/terms-of-service) expressly permits SDK/editor
+embedding within the applicable plan/documentation limits, separately from 1.5(c)'s direct
+WebContainer API licence. The general restrictions still apply; this is not clearance of
+Academy's eventual workspace scope or a claim that paid embedding is always required.
+
+The [VM interface](https://developer.stackblitz.com/platform/api/javascript-sdk-vm) exposes
+file snapshots, full-content file diffs and editor/preview controls for Node projects.
+Its documented API has no process-spawn, command-exit or atomic compare-and-apply method.
+Those missing controls matter for real CLI/check evidence and preserving concurrent edits;
+a snapshot followed by `applyFsDiff` is not a demonstrated approval transaction. Generated
+projects are ephemeral unless forked to an account; Academy's own saved-state requirements
+remain. Exact AssembleJS execution, multi-server previews, current-revision checks, approval
+safety and live-agent access have not been tested through this SDK. It is a concrete free
+public-project candidate to evaluate, not an accepted replacement for the earlier API probe.
+
+[Vivari](https://vivari.run/docs/) is a self-hostable browser runtime with a first-party
+[MIT licence](https://github.com/maitrungduc1410/vivari/blob/master/LICENSE), rather than a
+metered hosted runtime requirement. Its [embedding guide](https://vivari.run/docs/embedding/)
+documents same-origin SDK/worker assets, a preview service worker and separately hosted
+package-manager deliveries. No vendor account or paid runtime API is specified by this route.
+The published `@vivari/core@1.0.0` archive was inspected without running it: registry metadata
+says MIT and no runtime dependencies; the archive omits a licence file, so redistribution
+must deliberately retain the upstream notice and audit bundled third-party notices.
+
+That archive's fetcher aliases native esbuild to esbuild-wasm, Rollup to its Wasm package
+and lightningcss to its Wasm package; its process worker patches esbuild's service path.
+This is a toolchain difference, not the exact previously proven WebContainer scenario.
+Its [deployment guide](https://vivari.run/docs/deployment/) requires isolation headers and a
+root-scoped preview service worker. Default previews share the editor origin and its storage;
+separate-origin preview modes need extra static-origin configuration. Do not register that
+worker at the shared company's origin or assume arbitrary preview code is isolated there.
+Published API docs describe spawn/exit, filesystem and teardown, but no AssembleJS proof has
+run. The inspected archive SHA-256 is
+`f3ccad6b04976bd1926c019acc92e2068d3dd2f4ce8f38300ab25c3978213bd5`.
+
+[Rifty's source](https://github.com/vanilla-wave/rifty) also publishes first-party code under
+MIT and documents self-hosted browser execution. Its own compatibility boundary is a Node
+API subset, changing 0.x APIs, explicit worker/service-worker bundling and package
+substitutions; its transitive licence audit is separately tracked upstream. It has not been
+tested with AssembleJS. [Nodebox's actual licence](https://github.com/Sandpack/nodebox-runtime/blob/main/LICENSE)
+limits external distribution/use to specified non-commercial cases; Sandpack's separate
+permissive licence does not establish blanket Nodebox coverage for this Academy.
+
+These source checks establish fee-free candidates and concrete gaps, not production
+compatibility or adoption. Next, use a bounded hosted probe of the real published framework
+before choosing one; keep paid services, new accounts and vendor submissions out of that work.
 
 ## Connecting the learner's agent
 
@@ -141,4 +244,13 @@ its last website change is `b23914a566ff54840ec28668b3a2ad6f0e97346e`.
 a split hero, large code window and install command. Treat these as visual references only.
 Do not port its hidden skip link or interaction that hides all content. Current repo history
 also has composition diagrams at `5830efc` and a framework/code arrangement at `14ee8c0`.
-The owner's current tagline is "Frameworks Assemble". No landing design has been changed.
+The restored "Frameworks Assemble" landing landed in PR20 as `d1f0d5b`, after all six normal
+CI jobs, strict hosted five-width/keyboard/repeated-navigation proof and independent visual
+QA passed at `46ebb89`. The shared frame pin is unchanged. Optional native cross-document
+transitions are disabled in the product stylesheet after the recorded navigation failures;
+the error assertions remain strict. Post-merge CI `41106297217`, landing proof `41106297250`
+and the existing next-site deployment `41106297243` passed at `d1f0d5b`. Live HTTP reads of
+all 18 declared pages, the product stylesheet and both model-readable text exports match
+the merged source byte-for-byte after the workflow's canonical metadata and error-page
+prefix transforms. This accepts the candidate landing, not Academy availability or a stable
+promotion.

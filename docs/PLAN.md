@@ -196,6 +196,9 @@ implement and verify it. The landing work first inspects older GitHub history an
 design reference, then improves that direction with the owner's tagline, "Frameworks Assemble".
 Each completed rung requires independent source review and the relevant hosted checks.
 No release tag, npm publication, shared router change or stable promotion is granted here.
+The owner further requires no additional paid hosting or required paid runtime licence.
+Continue independent curriculum/interface work and verify free browser-delivery options;
+no vendor submission, account, purchase or final runtime adoption is authorized.
 
 ## 5. Verification
 
