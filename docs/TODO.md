@@ -64,6 +64,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       independently reproduced. Preserve the two failed published next.2 preview attempts
       and exact counterexamples in `docs/studies/academy-static-reader-probe.md`; no framework
       compiler/dependency change or preview acceptance follows.
+- [x] Bound the async path through the existing compiler and config/view inspection callers,
+      with independently verified public API impact and nine local parser comparisons:
+      `docs/studies/academy-async-inspection-scope.md`. This selects neither an API migration nor
+      a runtime; full hosted browser compatibility remains open.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages
