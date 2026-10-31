@@ -8555,3 +8555,11 @@ personal review `5722323760`, all ten exact-head jobs, and green post-merge CI `
 modes `41192530590` and editor `41192530499`. Actual squash parent/tree/message/DCO/signature
 were verified. Its observation limits and PR33 runtime hold remain; this continuity change
 does not implement snapshots, durable progress, resume, certificate or runtime adoption.
+
+PR50 source head `abf7c89` passed all 2,511 tests on Node 24, then failed the actual packed-size
+gate: `@asmjs/check` was 46,054 bytes against the unchanged 46,000-byte budget. The docs-only
+`60f98be` head did not change that package. Preserve the failed job `124520067297` from run
+`41195261199`; no unchanged retry or budget increase. Shorten the generated source-tool
+guidance while retaining tool names, exact bases, absence semantics, approval, failure/retry,
+confinement, transaction/hostile-filesystem limits and post-write verification. Only hosted
+CI may build/pack the corrected source. Final-head review and every required gate remain.
