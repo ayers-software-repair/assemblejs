@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
 /** Source-only fixture uses canonical Market text; hosted acceptance supplies the actual MCP. */
@@ -36,6 +37,13 @@ export function calculatorFixture() {
     async callTool(request) {
       calls.push(request);
       const { name, arguments: args } = request;
+      if (name === "read_source_version")
+        return answer({
+          version: createHash("sha256")
+            .update(JSON.stringify([...files].sort()))
+            .digest("hex")
+            .slice(0, 12),
+        });
       if (name === "read_source")
         return files.has(args.path)
           ? answer({ path: args.path, contents: files.get(args.path) })

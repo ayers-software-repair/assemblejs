@@ -11,3 +11,4 @@ export { AssemblyReview } from "./assembly-review.js";
 export type { SourceChange } from "./source-change.js";
 export { readSource } from "./read-source.js";
 export { applySourceChanges } from "./apply-source-changes.js";
+export { readSourceVersion } from "./read-source-version.js";

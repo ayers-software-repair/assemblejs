@@ -107,6 +107,7 @@ export async function serveModes(kind = "modes") {
               "discard_assembly_plan",
               "check",
               "read_source",
+              "read_source_version",
               "apply_source_changes",
             ].includes(given?.name)
           )

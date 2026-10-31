@@ -3,6 +3,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { applySourceChanges } from "../author/apply-source-changes.js";
+import { readSourceVersion } from "../author/read-source-version.js";
 import { readSource } from "../author/read-source.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { answering } from "./answering.js";
@@ -15,6 +16,16 @@ export function registerSourceTools(server: McpServer, root: ProjectRoot): void 
     .min(1)
     .max(256)
     .describe("a regular file under src/ or assemblejs.config.ts");
+  server.registerTool(
+    "read_source_version",
+    {
+      title: "Read project source version",
+      description:
+        "Reads the build fingerprint of package.json, assemblejs.config.ts and src/ paths and bytes without building, executing project code or returning their contents. It excludes dependencies, environment and remote servers. An observed identity, not an atomic snapshot or proof of check/build/behavior success.",
+      inputSchema: {},
+    },
+    answering(() => readSourceVersion(root)),
+  );
   server.registerTool(
     "read_source",
     {
