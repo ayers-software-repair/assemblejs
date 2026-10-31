@@ -20,20 +20,8 @@ export async function serveEditor() {
     const bundled = await build({
       stdin: {
         contents: `import { createSourceEditor } from "./examples/academy/workspace/create-source-editor.js";
-const project = {
-  async readFile(path) {
-    const response = await fetch('/files/' + encodeURIComponent(path));
-    if (!response.ok) throw new Error(await response.text());
-    return response.text();
-  },
-  async writeFile(path, after, before) {
-    const response = await fetch('/files/' + encodeURIComponent(path), {
-      method: 'PUT', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ before, after })
-    });
-    if (!response.ok) throw new Error(await response.text());
-  }
-};
+import { createFileProvider } from "./browser/academy-editor/create-file-provider.js";
+const project = createFileProvider();
 createSourceEditor(document.querySelector('main'), project, ${JSON.stringify(paths)});`,
         resolveDir: process.cwd(),
         sourcefile: "academy-editor-entry.js",
@@ -73,7 +61,7 @@ createSourceEditor(document.querySelector('main'), project, ${JSON.stringify(pat
             if (readFileSync(file, "utf8") !== before)
               return send(409, "text/plain", "project changed; outside edit kept");
             writeFileSync(file, after);
-            send(204, "text/plain", "");
+            send(200, "text/plain", "saved");
           })
           .catch(() => send(400, "text/plain", "save refused"));
         return;

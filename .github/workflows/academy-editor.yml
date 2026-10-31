@@ -37,6 +37,7 @@ jobs:
           node examples/academy/workspace/workspace-files.test.mjs
           node examples/academy/workspace/create-source-editor.test.mjs
           node browser/academy-editor/read-save-body.test.mjs
+          node browser/academy-editor/create-file-provider.test.mjs
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm exec playwright test -c browser/academy-editor/playwright.config.ts
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

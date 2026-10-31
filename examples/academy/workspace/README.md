@@ -26,7 +26,7 @@ Failed saves retain the learner's draft and show the actual error. Saving does n
 or claim that a visible preview is current. The final workspace still needs the real provider,
 mode/diff controls, lesson checks, persistence and live-agent transport.
 
-Thirteen focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
+Sixteen focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
 refusal, in-flight edits, failed writes, retained tabs, late reads, markup escaping, disposal and split UTF-8 input.
 The hosted `academy source editor` job bundles the actual component and opens real copied
 Market calculator files through a bounded test-only HTTP provider. It verifies actual saved
@@ -37,3 +37,10 @@ Desktop/narrow screenshots and strict browser diagnostics are retained for visua
 Highlighting uses only the required grammars from Highlight.js. Its documented text API and
 modular imports are <https://highlightjs.readthedocs.io/en/latest/api.html#highlight> and
 <https://highlightjs.readthedocs.io/en/latest/readme.html#importing-the-library>.
+
+The first hosted editor run (`41161507063`, head `84de3c8`) reached saved bytes,
+keyboard exit, desktop/narrow captures and stale refusal, but its strict request check caught
+`net::ERR_ABORTED` for the successful 204 save response. The test provider now consumes and
+validates an explicit successful response body before resolving a save. Three focused
+transport cases enforce body completion, the real failure diagnostic and an acknowledgement;
+the strict browser failure assertion is unchanged. Hosted acceptance still governs.
