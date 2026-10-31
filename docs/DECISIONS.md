@@ -8681,3 +8681,22 @@ pass. The escaped-title literal used by the new hosted probe was independently d
 source-only assertion. Hosted browser/full CI and exact-head personal acceptance remain pending;
 no local product build, server or browser was run. Red logs and green source/static receipts are
 retained under `/tmp/academy-existing-practice-*`.
+
+PR52 source head `ef393ceb7cdab0a5614ec01acaaa7b56ab2ba4f0`, tree
+`2cefe338a7a8a08a07ea1d0a439306f8bb49cf4d`, passes all ten checks: full CI `41206140986`,
+modes `41206141286` and editor `41206141098`. Both Node versions pass 2,511 tests, 81 exports
+and fourteen package checks; check package remains 45,963 / 46,000 bytes. Modes passes 75
+focused cases and eleven browser cases. The new scenario records 32 calls / five writes
+(including three setup/manual writes), four successful real builds, empty diagnostics/HTTP
+errors and no active processes; its sole aborted request is the owned stock stream at Stop.
+The exercise writes only the revised title and presets, preserving the manual comment,
+page and other files. Both new screenshots and four changed prior screenshots read correctly;
+fourteen prior mode images are byte-identical. Native review and personal COMMENT
+`5722959137` are clear. The native reader caught an incorrect accessible request-name selector;
+it was corrected and linted before the accepted source head.
+
+Artifact `13043778730`, 2,049,666 bytes, SHA-256
+`4b06166f3d477b52f51210bdaa1499325a939934683353806f170d8f4e530f30`, is retained with
+metadata, raw logs and extracted evidence under `/tmp/academy-existing-practice-ef393ce-*`.
+This closing documentation commit still requires final-head checks and personal acceptance;
+actual squash identities and post-merge proof remain mandatory. No runtime or release adoption.

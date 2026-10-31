@@ -287,7 +287,10 @@ Active source: `/tmp/assemblejs-academy-existing-practice`, branch
 TODO records the finish line before edits: real Plan/reject/revised Approval/Auto on an
 already-added calculator, preserving current code without reset; meaningful preset changes,
 existing guards, hosted preview/quote/keyboard/narrow/cleanup and independent review.
-Source/DOM: 101 cases green; source/static gates green. Semantic no-op red controls retained.
-New hosted existing-practice probe and fresh native/personal acceptance remain pending.
+PR52 source head `ef393ce`: all ten checks green (CI `41206140986`, modes `41206141286`,
+editor `41206141098`); 101 source cases, 75 hosted focused / eleven browser cases. Native and
+personal source/visual reviews clear; real writes/four builds/quotes/keyboard/narrow/Stop proved.
+Semantic no-op red controls and hashed artifact `13043778730` retained. Final-head acceptance,
+actual squash identities and post-merge proof remain required.
 No historical progress is inferred from existing files. Full curriculum, durable progress,
 snapshots/certificates, verified external-agent access and runtime adoption remain open.

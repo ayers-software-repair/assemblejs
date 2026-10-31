@@ -86,8 +86,11 @@ builds, quotes/composition, narrow layout and owned cleanup pass. PR50 subsequen
 `41196768670`, modes `41196768709` and editor `41196768655` passed. Local source tests run no product build, application
 server or browser.
 
-The existing-calculator practice increment has source/DOM regression proof; its new hosted
-probe and exact-head personal acceptance remain pending.
+Existing-calculator practice source head `ef393ce` passes all ten checks, including modes
+`41206141286` (eleven browser cases) and full CI `41206140986`. The new scenario retains the
+manual comment, refuses unchanged requests, applies the exact revised title/presets and proves
+four real builds, live quotes, keyboard/narrow layout and Stop with no active processes.
+Native and personal source/visual reviews are clear; final-head acceptance remains required.
 
 Full lesson checks, snapshots, durable project/progress resume, certificate gating and a verified external
 agent connection remain open. Observed source-version checks refuse detected changes around

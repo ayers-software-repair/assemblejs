@@ -32,4 +32,6 @@ failed-check receipt bypass was watched failing before restoration. Actual hoste
 preview, keyboard and narrow assertions are extended in the existing workspace probe; its
 new existing-calculator probe additionally preserves a manual comment and equivalent title/
 preset representations across reload, refuses semantic no-ops, then exercises genuine changes.
-Exact-head hosted proof and independent/personal review remain required before delivery.
+At source head `ef393ce`, all ten checks pass: full CI `41206140986`, modes `41206141286`
+(75 focused and eleven browser cases) and editor `41206141098`. Native and personal source/visual
+review are clear. Final-head personal acceptance and post-merge checks remain required.
