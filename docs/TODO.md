@@ -24,10 +24,11 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       with the learner's agent teaching along the way; keep instructions short and clear.
       Support both the learner's agent and a scripted in-site guided tutor tied to real checks;
       no real inference connection or invented account requirement.
-- [ ] Add the supplied-project source editor: file navigation, retained tabs, highlighted
-      editing, real provider saves and conflict/error handling. Verify hosted keyboard/narrow
-      behavior and actual bytes before reporting this interface increment complete. This does
-      not select a runtime or establish the complete Academy.
+- [x] Add the supplied-project source editor component: file navigation, retained tabs,
+      highlighted editing and guarded provider saves. Seventeen focused cases, actual hosted
+      keyboard/narrow/EOF/selection proof (`41163039875`), independent visual/source review and
+      all six exact-head CI jobs (`41163039843`) passed at `2e7669a`. The actual runtime provider
+      and complete Academy remain open; this component does not select a runtime.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in
