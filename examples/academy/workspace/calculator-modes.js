@@ -74,7 +74,7 @@ export class CalculatorModes {
     // A lost or partial response consumes this permission; obtain fresh source before retrying.
     this.#pending = undefined;
     this.#check = undefined;
-    this.#phase = "Applying the exact reviewed files and placement.";
+    this.#phase = "Applying the exact reviewed source changes.";
     this.changed(this.state);
     this.#result = await callProjectTool(this.client, "apply_source_changes", {
       changes: pending.changes,
@@ -103,7 +103,7 @@ export class CalculatorModes {
     )
       throw new Error("invalid successful check result");
     this.#phase = this.#check.ok
-      ? "Files and placement applied; project check passed. Build and live preview still require verification."
+      ? "Source changes applied; project check passed. Build and live preview still require verification."
       : "Files applied; project check did not pass. Inspect its actual diagnostics.";
     if (this.#check.ok)
       this.#receipt = Object.freeze({ kind: "applied", mode: this.#mode, proposal: pending });

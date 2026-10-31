@@ -8644,3 +8644,59 @@ atomicity and administrative-closure holds remain unchanged.
 
 All ten corrected-source jobs at `ed2aa91` passed, including full CI `41199554443`, before
 this closing documentation change. The final-head and post-merge requirements remain.
+
+## 2026-10-31 — Replay mode practice on an existing calculator
+
+PR51 merged as `5de95e7`, reviewed tree `c51a3d20e2b9093f7a465c232e5ebfcf8a44d815`, sole
+parent `82c0272`, personal review `5722701180`, all ten exact-head jobs. Post-merge CI
+`41201236884`, modes `41201236963` and editor `41201236946` passed; actual squash identities,
+complete DCO/Conventional message, valid signature and source/artifacts were independently
+verified. This supersedes the preceding PR51 pending-delivery checkpoints.
+
+The owner directly approved both tracking closures after the earlier automatic-review hold.
+Issue 11 is closed completed (evidence comment `6543278711`); stale PR12 is closed unmerged as
+superseded (comment `6543280727`). Its branch remains at
+`04ba80232e41bce6581ebc03ad4a95ef9c47effd`. Final states and direct-approval receipt are retained
+in `/tmp/assemblejs-approved-tracking-closures-2026-10-31.json` and the manager's authoritative
+queue. This supersedes earlier no-reply/closure-hold notes, not source/release/runtime limits.
+
+The next learner-facing acceptance replays all three modes on current calculator code instead
+of requiring absent files or deleting an already-built feature. Record owner/done-when in TODO
+before source edits. Reuse actual calculator plans, exact reviewed changes and successful
+operation receipts: allow a title Plan followed by exact rejection and a revised title
+Approval, then Auto with genuinely different quantity presets. Preserve manual comments,
+page placement and other files. The add-calculator starter path remains valid. Do not infer
+old progress from existing source, cache mode completion or claim durable lesson resume.
+
+The initial expectation was that existing source comparison already rejected unchanged
+settings. Source probes found that preset spacing and equivalent decoded titles could instead
+produce representation-only proposals and advance practice. Both controls were watched red;
+a separate guide probe also caught default-title no-op Approval advancing the step. Shared
+readers now compare semantic values before transformation; body normalization is separate and
+still requires the complete authored executable body. No validation or ownership limit is relaxed.
+
+Source/DOM proof passes 101 cases across fourteen files. Lint, organization/mirror self-tests
+and gates, modules, unused, duplication, identity self-test/gate, headers and emoji self-test/gate
+pass. The escaped-title literal used by the new hosted probe was independently decoded with a
+source-only assertion. Hosted browser/full CI and exact-head personal acceptance remain pending;
+no local product build, server or browser was run. Red logs and green source/static receipts are
+retained under `/tmp/academy-existing-practice-*`.
+
+PR52 source head `ef393ceb7cdab0a5614ec01acaaa7b56ab2ba4f0`, tree
+`2cefe338a7a8a08a07ea1d0a439306f8bb49cf4d`, passes all ten checks: full CI `41206140986`,
+modes `41206141286` and editor `41206141098`. Both Node versions pass 2,511 tests, 81 exports
+and fourteen package checks; check package remains 45,963 / 46,000 bytes. Modes passes 75
+focused cases and eleven browser cases. The new scenario records 32 calls / five writes
+(including three setup/manual writes), four successful real builds, empty diagnostics/HTTP
+errors and no active processes; its sole aborted request is the owned stock stream at Stop.
+The exercise writes only the revised title and presets, preserving the manual comment,
+page and other files. Both new screenshots and four changed prior screenshots read correctly;
+fourteen prior mode images are byte-identical. Native review and personal COMMENT
+`5722959137` are clear. The native reader caught an incorrect accessible request-name selector;
+it was corrected and linted before the accepted source head.
+
+Artifact `13043778730`, 2,049,666 bytes, SHA-256
+`4b06166f3d477b52f51210bdaa1499325a939934683353806f170d8f4e530f30`, is retained with
+metadata, raw logs and extracted evidence under `/tmp/academy-existing-practice-ef393ce-*`.
+This closing documentation commit still requires final-head checks and personal acceptance;
+actual squash identities and post-merge proof remain mandatory. No runtime or release adoption.

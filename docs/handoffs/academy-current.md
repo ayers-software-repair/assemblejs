@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-31, after PR50 saved-page continuity merged and post-merge proof passed.
+Checkpoint: 2026-10-31, after PR51 draft recovery merged and post-merge proof passed; approved tracking closures complete.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -262,9 +262,9 @@ verified external-agent connection remain open. PR33's browser-runtime hold rema
 
 Delivery ledger PR48 merged as `782b65f` after personal review `5722213951`, all eight
 exact-head and all eight post-merge CI jobs (`41189911618`). Actual merge identities and
-signature were verified. Issue 11 / PR12 administrative closure remains pending the single
-direct-user approval request after automatic review rejected those tracking mutations.
-No closure retry or indirect action is authorized without that reply; delivered source stands.
+signature were verified. The subsequent direct owner approval completed both tracking closures:
+issue 11 is closed completed; PR12 is closed unmerged, branch retained at `04ba802`. The receipt
+is `/tmp/assemblejs-approved-tracking-closures-2026-10-31.json`; earlier no-reply holds are superseded.
 
 PR49 merged as `805ce56`, tree `95e569018b3b54083f94281ca6842f6a4bcd29c9`, personal review
 `5722323760`, all ten exact-head jobs. Post-merge CI `41192530493`, modes `41192530590` and
@@ -277,14 +277,20 @@ source/artifacts were independently verified. Saved page text survives all modes
 The initial 46,054-byte pack failure remains recorded; corrected size is 45,963 / 46,000.
 These receipts supersede older pending PR50 paragraphs, not the broader Academy holds.
 
-Active source: `/tmp/assemblejs-academy-draft-recovery`, branch `codex/academy-draft-recovery`,
-on that merge. Owner: this Academy chat. Tab-local unsaved-draft recovery implementation is
-verified at `ed2aa91`: nine recovery/all 92 component cases, independent source/visual review,
-modes `41199554446` (ten browser scenarios) and editor `41199554428` (34 focused cases) pass.
-Unread data offers Retry; known malformed/oversized data has a visible explicit discard action.
-No recovery writes the project or rebases a stale draft. Initial visually held images and all
-four red controls remain recorded. Corrected artifact `13042485671` has SHA-256
-`7b0c999f3e31a5d8b39cebdc7abb4e53bd1f6e2f3db8df832b51bfca3fb4a5a4`.
-PR51 remains gated on the closing docs-only head's CI and personal acceptance before merge.
-Durable project/lesson progress, snapshots, resume/certificate, verified external-agent
-connection and runtime adoption remain open.
+PR51 merged as `5de95e7`, tree `c51a3d20e2b9093f7a465c232e5ebfcf8a44d815`, parent `82c0272`,
+personal review `5722701180`, all ten exact-head jobs. Post-merge CI `41201236884`, modes
+`41201236963` and editor `41201236946` passed; actual squash/source/artifacts independently
+verified. Tab-local draft recovery is delivered; durable project/progress resume remains open.
+
+Active source: `/tmp/assemblejs-academy-existing-practice`, branch
+`codex/academy-existing-calculator-practice`, on that merge. Owner: this Academy chat.
+TODO records the finish line before edits: real Plan/reject/revised Approval/Auto on an
+already-added calculator, preserving current code without reset; meaningful preset changes,
+existing guards, hosted preview/quote/keyboard/narrow/cleanup and independent review.
+PR52 source head `ef393ce`: all ten checks green (CI `41206140986`, modes `41206141286`,
+editor `41206141098`); 101 source cases, 75 hosted focused / eleven browser cases. Native and
+personal source/visual reviews clear; real writes/four builds/quotes/keyboard/narrow/Stop proved.
+Semantic no-op red controls and hashed artifact `13043778730` retained. Final-head acceptance,
+actual squash identities and post-merge proof remain required.
+No historical progress is inferred from existing files. Full curriculum, durable progress,
+snapshots/certificates, verified external-agent access and runtime adoption remain open.

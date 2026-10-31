@@ -213,3 +213,35 @@ test("malformed or repeated placement acknowledgements never authorize writes", 
     assert.deepEqual([...f.files], before);
   }
 });
+
+test("preset formatting differences cannot turn an unchanged request into a source proposal", async () => {
+  const f = calculatorFixture();
+  const path = f.directory + "price-calculator.react.tsx";
+  f.files.set(path, f.recipe["price-calculator.react.tsx"].replace("[1, 3, 6]", "[2,4,8]"));
+  const before = [...f.files];
+  await assert.rejects(
+    calculatorPlan(f.client, f.recipe, "Use presets 2, 4, 8"),
+    /already matches/,
+  );
+  assert.deepEqual([...f.files], before);
+});
+
+for (const form of ["default", "escaped"]) {
+  test(`the ${form} title representation cannot turn the current title into a rename`, async () => {
+    const f = calculatorFixture();
+    const path = f.directory + "price-calculator.react.tsx";
+    const source =
+      form === "default"
+        ? f.recipe["price-calculator.react.tsx"]
+        : f.recipe["price-calculator.react.tsx"]
+            .replace('aria-label="Order estimate"', 'aria-label={"Coff\\u0065e total"}')
+            .replace("<h2>Order estimate</h2>", '<h2>{"Coff\\u0065e total"}</h2>');
+    f.files.set(path, source);
+    const title = form === "default" ? "Order estimate" : "Coffee total";
+    await assert.rejects(
+      calculatorPlan(f.client, f.recipe, `Rename calculator to "${title}"`),
+      /already matches/,
+    );
+    assert.equal(f.files.get(path), source);
+  });
+}

@@ -1,27 +1,21 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { calculatorTitle } from "./calculator-title.js";
+import { calculatorPresets } from "./calculator-presets.js";
+import { calculatorTitleParts } from "./calculator-title-parts.js";
 
 /** The guided writer owns only the authored body/settings; unfamiliar executable edits refuse. */
 export function calculatorShape(source, template) {
   if (typeof template !== "string" || template === "")
     throw new Error("missing authored calculator view");
-  const normalize = (text) => {
-    const presets = /\{(\[\d+(?:, ?\d+)*\])\.map\(\(value\) => \(/g;
-    const matches = [...text.matchAll(presets)];
-    if (matches.length !== 1) throw new Error("The calculator presets have changed shape.");
-    const values = JSON.parse(matches[0][1]);
-    if (
-      values.length < 1 ||
-      values.length > 6 ||
-      new Set(values).size !== values.length ||
-      !values.every((value) => Number.isInteger(value) && value >= 1 && value <= 99)
-    )
-      throw new Error("The current calculator presets are outside the supported shape.");
-    return calculatorTitle(text, "Order estimate").replace(presets, "{[1, 3, 6].map((value) => (");
-  };
-  const actual = normalize(source);
-  const authored = normalize(template);
+  const presets = calculatorPresets(source);
+  const title = calculatorTitleParts(source);
+  const authoredPresets = calculatorPresets(template);
+  const authoredTitle = calculatorTitleParts(template);
+  const actual = source
+    .replace(title.label.fragment, () => authoredTitle.label.fragment)
+    .replace(title.heading.fragment, () => authoredTitle.heading.fragment)
+    .replace(presets.fragment, () => authoredPresets.fragment);
+  const authored = template;
   const suffix = actual.slice(authored.length);
   if (
     !actual.startsWith(authored) ||

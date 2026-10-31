@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { callProjectTool } from "./call-project-tool.js";
+import { calculatorPresets } from "./calculator-presets.js";
 import { calculatorShape } from "./calculator-shape.js";
 import { calculatorRequest } from "./calculator-request.js";
 import { calculatorTitle } from "./calculator-title.js";
@@ -80,12 +81,13 @@ export async function calculatorPlan(client, recipe, text) {
     if (request.action === "title") {
       after = calculatorTitle(before, request.title);
     } else {
-      const presets = /\{\[\d+(?:, ?\d+)*\]\.map\(\(value\) => \(/g;
-      if ([...before.matchAll(presets)].length !== 1)
-        throw new Error(
-          "The calculator presets have changed shape; inspect the source or use your connected agent.",
-        );
-      after = before.replace(presets, () => `{[${request.values.join(", ")}].map((value) => (`);
+      const { values, fragment } = calculatorPresets(before);
+      if (
+        values.length === request.values.length &&
+        values.every((value, index) => value === request.values[index])
+      )
+        throw new Error("The calculator already matches this request. No changes proposed.");
+      after = before.replace(fragment, () => `{[${request.values.join(", ")}].map((value) => (`);
     }
     if (after === before)
       throw new Error("The calculator already matches this request. No changes proposed.");
