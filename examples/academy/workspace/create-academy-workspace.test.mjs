@@ -238,7 +238,12 @@ test("an outside source change during build refuses the frame and keeps stop ava
   try {
     assert.equal((await f.view.refresh()).ok, false);
     assert.equal(f.document.querySelector("iframe"), null);
-    assert.equal(f.document.querySelector("button").disabled, false);
+    assert.equal(
+      [...f.document.querySelectorAll("button")].find(
+        (button) => button.textContent === "Stop preview",
+      )?.disabled,
+      false,
+    );
     assert.equal((await f.view.stop()).ok, true);
     assert.deepEqual(f.runtimeCalls, ["stop"]);
     assert.match(f.files.get("src/pages/product/product.html"), /outside build/);
