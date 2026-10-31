@@ -16,7 +16,9 @@ must equal the preview's version and the evidence must name that exact preview U
 
 Writes, Stop and a new preview operation invalidate the visible result. Failed verification
 removes the stale/unverified frame and retains actual diagnostics and all source. Destroy
-aborts the browser inspection request and prevents later reads/results. Preview operations and
+aborts the browser inspection request and prevents later reads/results. Keyboard focus returns
+to the initiating Verify action on success, or opens/focuses its actual diagnostics on failure,
+unless the user has chosen another focus location; programmatic checks do not claim focus. Preview operations and
 source writes cannot overlap verification through this workspace. Outside edits are detected
 at observations, not atomically: edit-and-revert races and dependency/environment/remote
 changes are outside the source fingerprint. This is point-in-time evidence, not a snapshot.
@@ -45,7 +47,7 @@ validating its contents: a received bad price must still fail the browser compar
 
 ## Proof checkpoint
 
-All 116 source/DOM cases and six source-only backend cases pass. Deliberately bypassing title
+All 119 source/DOM cases and six source-only backend cases pass. Deliberately bypassing title
 comparison and source-version comparison produced genuine missing-refusal failures before
 restoration. Static gates and fresh native source/probe/docs review pass; personal acceptance and actual
 hosted proof remain pending.

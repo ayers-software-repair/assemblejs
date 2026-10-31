@@ -50,6 +50,7 @@ jobs:
           node examples/academy/workspace/calculator-evidence.test.mjs
           node examples/academy/workspace/read-project-version.test.mjs
           node examples/academy/workspace/verify-calculator.test.mjs
+          node examples/academy/workspace/restore-verification-focus.test.mjs
           node examples/academy/workspace/calculator-plan.test.mjs
           node examples/academy/workspace/calculator-modes.test.mjs
           node examples/academy/workspace/create-calculator-controls.test.mjs

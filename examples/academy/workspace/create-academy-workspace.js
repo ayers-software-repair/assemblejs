@@ -7,6 +7,7 @@ import { createProjectFiles } from "./create-project-files.js";
 import { createSourceEditor } from "./create-source-editor.js";
 import { projectToolResult } from "./project-tool-result.js";
 import { readProjectVersion } from "./read-project-version.js";
+import { restoreVerificationFocus } from "./restore-verification-focus.js";
 import { verifyCalculator } from "./verify-calculator.js";
 
 /** One supplied project: source and authored guidance beside a genuine completed-build URL. */
@@ -200,6 +201,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const checkCalculator = async () => {
     if (disposed || busy || pending)
       return { ok: false, error: "wait for the current project operation" };
+    const focused = document.activeElement === verify;
     busy = true;
     verificationController = new AbortController();
     sync();
@@ -227,6 +229,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       verificationController = undefined;
       busy = false;
       sync();
+      if (!disposed) restoreVerificationFocus(document, verify, diagnostics, focused);
     }
   };
   const stopPreview = async () => {

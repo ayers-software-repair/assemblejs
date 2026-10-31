@@ -10,6 +10,19 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `docs/studies/academy-research.md`, before Academy design or implementation.
 - [ ] Inspect current examples, docs generation, conformance and demo flow; research editor,
       runtime, hosting and licensing constraints before choosing infrastructure.
+- [ ] Restore the original AssembleJS identity across every current site family (owner,
+      2026-10-31). Owner: AssembleJS implementation chat; finish PR54's corrected checkpoint
+      first. Read-only reference: `/home/sparrow6/source/refs/assemblejs-legacy/websites/www.assemblejs.com/`.
+      Compare actual rendered original/current before implementation, including logo/header/
+      background composition; this is not a palette-only home edit or a framework rewrite.
+      Tracked inventory: `site/{404,downloads,index,install,release-notes,start,support}.html`
+      and `site/docs/{index,lit,outline,preact,react,solid,svelte,templates,tutorial,vue}.html`.
+      Also materialize/inventory generated API-reference pages and private Academy/example
+      views before declaring coverage. Done when all families share the intended original
+      identity, useful functionality remains, and full page/desktop/narrow/keyboard proof and
+      applicable QA pass. Replace architecture-count marketing and awkward Market CTA with
+      plain actual destinations (`docs/outline.html` is the composed-page inspection guide).
+      Coordinate shared component/theming changes with Platform; do not fork consumer CSS.
 - [x] Inspect historical landing designs and restore "Frameworks Assemble". PR20 merged as
       `d1f0d5b` after all six normal CI jobs, hosted five-width/keyboard/repeated-navigation
       proof and independent visual QA passed at `46ebb89`. Source generation and palette
@@ -141,7 +154,7 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       preserve source/diagnostics. Verify negative controls, hosted keyboard/narrow behavior
       and cleanup with independent/personal review. This is server-output/API proof, not
       browser-hydration attestation, durable progress or certificate completion.
-      Source proof: 116 component and six backend cases pass, with title/version bypasses
+      Source proof: 119 component and six backend cases pass, with title/version bypasses
       observed red before restoration. Static gates pass; native review clear; hosted/personal proof pending.
 - [x] Record and independently review the candidate learning/proof path in
       `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
@@ -1687,7 +1700,7 @@ The command line:
       into a project").
 - [x] `add assembly` writes through a symlinked src/assemblies out of the project, and crashes with
       a stack trace on a dangling link (workflow cli-verbs.5, major, disputed by one of its
-      refuters). Claimed at `packages/cli/src/run/run.ts:116`. PREMISE UNVERIFIED. REPRODUCED by the
+      refuters). Claimed at `packages/cli/src/run/run.ts:115`. PREMISE UNVERIFIED. REPRODUCED by the
       seat: the assembly written outside the project with exit 0, and a stack on a link to nothing.
       DONE 2026-10-12: `add assembly` asks the root guard before it writes, as the agent surface's
       does, and says either in a line (DECISIONS 2026-10-12, "check says what it passed over, and
@@ -2442,5 +2455,5 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       staged the four real landing modules and released badges, and verified the actual
       staged closure. It merged as `c8c3705` after personal
       review `5722144704` and all nine exact-head jobs. Post-merge CI `41188471147`, landing
-      `41188471169` and deployment `41188471177` passed; all 66 scoped live files match
+      `41188471159` and deployment `41188471177` passed; all 66 scoped live files match
       expected bytes. Durable receipts are in the manager's AUDIT safeguard-delivery folder.

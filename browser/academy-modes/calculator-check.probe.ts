@@ -106,7 +106,7 @@ test("saved calculator verification uses real output and quotes, refuses races a
     await expect(verify).toBeDisabled();
     expect(writes()).toBe(before.writes);
     expect(fixture.source("inspection-edit")).toBe("<p>Outside inspection edit stays.</p>");
-    await page.getByText("Build diagnostics", { exact: true }).click();
+    await expect(diagnostics).toBeVisible();
     await page.screenshot({ path: info.outputPath("calculator-check-stale.png"), fullPage: true });
     await page.unroute("**/preview-inspect");
     await build.click();

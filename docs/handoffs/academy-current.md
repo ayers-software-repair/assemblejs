@@ -231,7 +231,7 @@ PR47 corrected only the missing generated frame links and released-asset staging
 as `c8c370569536c68d868e4bbdd0c245215225ec74`, reviewed tree
 `d3da9958c350b98d8d5028b10ac8984a8c6f6d65`, parent `fe036a7`, after all nine exact-head
 checks and personal review `5722144704`. Actual squash tree/parent/full message/signature
-were verified. Normal deployment `41188471177` and landing `41188471169` passed.
+were verified. Normal deployment `41188471177` and landing `41188471159` passed.
 All eight post-merge CI jobs in `41188471147` passed. Source, post-merge and live-byte
 acceptance now support issue 11 delivery closure and retiring stale PR12 as superseded;
 do not merge its old branch.
@@ -295,6 +295,6 @@ native/personal actual-merge proof clear. Standalone three-mode summary is recon
 Active: `/tmp/assemblejs-academy-calculator-verification`, `codex/academy-calculator-verification`.
 Owner/done-when recorded in TODO before edits: read-only current saved-source/served-settings/
 quote check with version/stale guards, truthful diagnostics, invalidation, scoped hosted proof
-and independent review. Source: 116 component/six backend cases and static gates green;
+and independent review. Source: 119 component/six backend cases and static gates green;
 title/version bypasses observed red. Native review clear; hosted/personal acceptance pending.
-No hydration/certificate/durable progress claim or runtime adoption.
+Next: original-site branding queue in TODO/PLAN; PR33/publication/adoption holds remain.

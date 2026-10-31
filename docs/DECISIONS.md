@@ -7687,7 +7687,7 @@ read at the source, with one deviation of the lane's the seat took.
 - **One place.** `build/src/package/docs-address.ts`: `PRODUCT = "https://assemblejs.com/"`
   is the one string; `docsAddress(version)` answers `PRODUCT + "next/"` when the version has a
   prerelease part (semver 2.0.0, item 9: a hyphen after the patch) and the product's own
-  address otherwise. The deploy's canonicals (`deploy-site.yml:116-116`) are those two; the
+  address otherwise. The deploy's canonicals (`deploy-site.yml:115-116`) are those two; the
   domain answers the day the owner flips its DNS, which is before any channel's first publish
   (AJ.16, his). No `www`.
 - **Where it reaches.** The starter's hello page links `<address>docs/tutorial.html` from the
@@ -8346,7 +8346,7 @@ README and CONTRIBUTING now agree that hosted CI is required and a local full su
 PR prerequisite. Old README had appended that statement while CONTRIBUTING still required a
 local pnpm check. Seven source contracts pass, including invalid provenance/status/tree/API
 cases. Removing Node 24 from the adapter's required proof was watched failing before restoration.
-Existing predicate/copy mutation controls still run. Old CI 40903311627 and old helper hashes
+Existing predicate/copy mutation controls still run. Old CI 40903311527 and old helper hashes
 are retained as historical exact-tree/copy evidence, not acceptance of this new integrated head.
 
 Local Node 24.18.1's isolated --test output reported a passing file rather than six named
@@ -8469,7 +8469,7 @@ PR47 merged as `c8c370569536c68d868e4bbdd0c245215225ec74`, exact reviewed tree
 `d3da9958c350b98d8d5028b10ac8984a8c6f6d65`, parent `fe036a7`, after all nine checks
 and personal review `5722144704`. Actual tree, parent, complete DCO/Conventional message
 and valid GitHub signature match. All eight normal post-merge CI jobs (`41188471147`),
-landing (`41188471169`) and deployment (`41188471177`) passed. The previous failed deploy
+landing (`41188471159`) and deployment (`41188471177`) passed. The previous failed deploy
 remains part of the record rather than being replaced by an unchanged retry.
 
 Live verification compares all staged non-Markdown/non-JSON product and kit files plus this
@@ -8801,3 +8801,24 @@ seven controller cases pass. This is cancellation correctness, not an expanded a
 Fresh independent review confirms both corrections and the complete source/probe/docs with
 no further actionable findings. Actual hosted execution, visual review and personal acceptance
 remain required before this slice is delivered.
+
+Personal review caught an overly broad current-count replacement that changed historical run
+IDs and line references. Those unrelated hunks are restored from accepted `ede739b`; exact
+prefix/tail comparisons confirm historical decisions and backlog text are unchanged, apart
+from the explicit handoff checkpoint. The current slice's case-count text remains separate from historical numeric references. No source behavior
+changed in this correction; the original head's proof remains identified separately.
+
+Initial hosted modes `41215801109` at `1164422` passed its focused cases and eleven browser
+scenarios, then the new calculator-check scenario failed keyboard focus after its first real
+successful verification. Disabling the initiating button had dropped focus; re-enabling did
+not restore it. The race, bad-price, recovery and Stop portions after that assertion were not
+executed and are not accepted. Failed log, trace and artifact metadata are retained unchanged.
+
+The correction restores the initiating keyboard location after success, or opens/focuses
+actual diagnostics after failure, only while no later focus choice exists and the workspace
+is live. Programmatic checks do not claim focus. Three focus-policy cases pass; all 119
+component cases and six backend cases now pass. An attempted emulated
+button-blur test did not reproduce native disabled-button focus loss and is retained as
+inconclusive, not a red control. The unchanged hosted focus assertion remains required.
+Historical-document restoration and this functional focus fix require fresh exact-head proof;
+no unchanged workflow retry or weakened assertion is authorized.

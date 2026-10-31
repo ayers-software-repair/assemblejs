@@ -203,6 +203,16 @@ source, packed consumers and hosted checks. This does not select a runtime or au
 Continue independent curriculum/interface work and verify free browser-delivery options;
 no vendor submission, account, purchase or final runtime adoption is authorized.
 
+The owner's 2026-10-31 site correction restores the original AssembleJS identity across every
+existing page family, using the read-only original website under
+`/home/sparrow6/source/refs/assemblejs-legacy/websites/www.assemblejs.com/`. Finish PR54's
+bounded correction first. Inspect original/current rendered experiences and the complete page
+inventory before implementation; carry the actual mark, header and background composition
+through home, docs, Academy/examples and remaining families. Preserve useful functionality,
+use plain destination labels, and do not make architecture-count slogans the main pitch.
+Coordinate shared component/theming changes with Platform; no accidental consumer CSS fork.
+This is one coherent branding correction, not a framework rewrite or runtime/release adoption.
+
 ## 5. Verification
 
 - `pnpm check` runs, in order, what CI runs: the identity gate against its own red fixtures then
