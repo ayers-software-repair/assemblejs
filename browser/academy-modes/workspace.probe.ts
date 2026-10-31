@@ -126,12 +126,35 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await expect(calculator.getByRole("button", { name: "4 items", exact: true })).toBeVisible();
     await expect(calculator.getByRole("button", { name: "3 items", exact: true })).toHaveCount(0);
     await expect(preview.locator("assembly-root[data-failed]")).toHaveCount(0);
+    await input.press("Control+Home");
+    await input.press("Tab");
+    await expect(editor.getByRole("button", { name: "Reload file", exact: true })).toBeFocused();
+    await calculator.scrollIntoViewIfNeeded();
     await page.screenshot({ path: info.outputPath("workspace-desktop.png"), fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    await page.screenshot({ path: info.outputPath("workspace-narrow.png"), fullPage: true });
+    await calculator.scrollIntoViewIfNeeded();
+    const finalQuote = page.waitForResponse(
+      (response) => response.url() === `${fixture.runtime.origin}/api/quote`,
+    );
+    await calculator.getByRole("button", { name: "4 items", exact: true }).click();
+    const finalPriced = await finalQuote;
+    expect(finalPriced.status()).toBe(200);
+    expect(finalPriced.request().postDataJSON().lines[0].quantity).toBe(4);
+    await expect(calculator.getByRole("status")).toHaveText(
+      `Estimate for 4: $${(((await finalPriced.json()) as { cents: number }).cents / 100).toFixed(2)}`,
+    );
+    await expect(preview.getByRole("link", { name: "Basket, 0 in it" })).toBeVisible();
+    expect(
+      await preview
+        .locator("html")
+        .evaluate((element) => element.scrollWidth <= element.clientWidth),
+    ).toBe(true);
+    await calculator.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: info.outputPath("workspace-narrow.png") });
+    await page.screenshot({ path: info.outputPath("workspace-narrow-layout.png"), fullPage: true });
     phase = "stop";
     await page.getByRole("button", { name: "Stop preview", exact: true }).click();
     await expect(status).toHaveText("Preview stopped. Your source is kept.");

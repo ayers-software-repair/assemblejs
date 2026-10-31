@@ -8254,3 +8254,11 @@ open. Source controls were watched red for a bypassed check gate and enlarged fi
 Independent review caught HTTP cleanup waiting for an active build request before cancellation;
 shutdown now aborts the runtime before draining HTTP, and the hosted cancellation probe uses
 the actual HTTP endpoint. Its execution and full application acceptance remain pending.
+
+PR44's initial hosted run `41177734774` passed all five browser cases, actual six builds,
+composition, quotes, Stop and HTTP-build cancellation. All owned processes stopped; only the
+three expected stock-stream aborts occurred when removing live frames. Artifact `13033499322`
+retains this result. Its narrow full-page screenshot left an offscreen frame unpainted, so it
+is not accepted as narrow visual evidence. The corrected proof explicitly scrolls the actual
+calculator into view, captures a narrow viewport and checks its real changed-preset quote and
+keyboard exit. Corrected exact-head hosted and personal acceptance remain required.
