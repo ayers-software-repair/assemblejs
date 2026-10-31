@@ -8165,3 +8165,14 @@ runtime. The same single preview scenario also makes the config syntactically in
 requires the real check to refuse it with its file/read diagnostic, then restores the valid
 config before the existing repair check/build. This closes that named acceptance gap without
 another browser matrix or weakening diagnostics.
+
+## 2026-10-30: current-source preview reaches the server but fails Svelte
+
+The exact current-source browser experiment reaches real check/build/typecheck and a framed
+200 response, but Svelte server rendering returns a fallback. Retain run `41160120114` and
+artifact `13027075449`; the complete bounded outcome and source-supported import snapshot
+mechanism are in `browser/academy-open-preview-research/README.md`. No generated guest wrapper
+was captured, so the mechanism is an inference, not an isolated runtime reproduction.
+Keep the experiment draft and the integration task open. Do not repeat the unchanged run or
+weaken its assertions. Continue independent interface and curriculum work; no runtime
+adoption, vendor patch, paid alternative or production deployment follows.

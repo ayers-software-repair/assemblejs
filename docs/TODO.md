@@ -92,7 +92,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       packed packages and canonical scaffold files rather than the immutable registry release.
       Verify archive/readback/installed-code identity, real check/build, six mounts, five
       templates, input and Stop/cleanup with strict errors. Source-only unit evidence is not
-      browser compatibility or Academy workspace acceptance; the hosted outcome governs.
+      browser compatibility or Academy workspace acceptance. Run `41160120114` reached actual
+      check/build and preview but failed Svelte server rendering; retain artifact `13027075449`
+      and the bounded outcome in `browser/academy-open-preview-research/README.md`.
+      Do not retry unchanged or claim runtime acceptance.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages
