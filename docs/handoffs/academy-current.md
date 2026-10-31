@@ -290,6 +290,8 @@ full message/DCO/signature independently verified. Post-merge CI `41207836284`, 
 Active source: `/tmp/assemblejs-academy-authored-tutor`, branch `codex/academy-authored-tutor`.
 Owner/done-when recorded in TODO before source edits: authored Next/Why/Files/customization
 answers from actual step/proposal context, honest fallback, no writes/progress/false results.
-All 103 source cases/static gates and native review green; hosted keyboard/narrow and personal
-acceptance remain pending. Full curriculum, durable progress/certificates, verified external-agent access
+All 103 source cases/static gates and native review green. Source `2073328` has all ten jobs
+green: CI `41208824847`, modes `41208824820` (77 / eleven), editor `41208824836`. Tutor
+keyboard/context/no-call/narrow proof and all new/changed images pass. Personal source COMMENT
+`5723229865` is clear; final-head checks/acceptance and post-merge proof remain required. Full curriculum, durable progress/certificates, verified external-agent access
 and runtime adoption remain open.

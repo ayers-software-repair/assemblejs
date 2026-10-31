@@ -114,13 +114,18 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       PR52 merged as `d96e4cd` after final personal review `5723028258` and all ten final-head
       checks. Actual tree/parent/full message/signature independently verified; post-merge
       CI `41207836284`, modes `41207836288` and editor `41207836328` all pass at attempt 1.
-- [ ] Add short authored tutor questions to the actual mode-practice workspace.
+- [x] Add short authored tutor questions to the actual mode-practice workspace.
       Owner: Academy implementation chat. Done when Next/Why/Files and supported
       customization questions use the current task or real reviewed proposal, unknown questions
       receive an honest limitation, and no question writes files, advances practice or invents
       success. Keep guidance clearly labelled as authored, keyboard/narrow accessible and
       bounded in length. Verify current-step transitions, rejection and consumed stale approvals with
       source/DOM controls, hosted workspace behavior and independent/personal review.
+      Source head `2073328` passes all ten jobs: CI `41208824847`, modes `41208824820`
+      (77 focused / eleven browser cases), editor `41208824836`. All 103 component cases,
+      static gates and native source review pass. Real tutor questions add no tool calls;
+      actual proposal context, rejection clearing and desktop/narrow views pass. Personal
+      COMMENT `5723229865` accepts this source; final-head/post-merge proof remains required.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

@@ -46,7 +46,9 @@ At source head `ef393ce`, all ten checks pass: full CI `41206140986`, modes `412
 (75 focused and eleven browser cases) and editor `41206141098`. Native and personal source/visual
 review are clear. Final-head personal acceptance and post-merge checks remain required.
 
-The authored-question increment has source/DOM controls and extends the existing hosted probe
-with keyboard-submitted questions, actual single-file proposal lists, rejection clearing,
-unchanged tool-call counts and desktop/narrow tutor screenshots. Its exact-head hosted proof
-and independent/personal acceptance remain pending.
+At tutor source head `2073328`, all ten checks pass: CI `41208824847`, modes `41208824820`
+(77 focused / eleven browser cases) and editor `41208824836`. The hosted probe verifies Enter
+questions, actual single-file proposal lists, rejection clearing and unchanged tool-call counts.
+Both expanded tutor screenshots and all five changed prior screenshots read correctly; fifteen
+prior images are identical. Native review and personal COMMENT `5723229865` are clear. Final-head acceptance and
+post-merge proof remain required.
