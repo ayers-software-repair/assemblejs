@@ -291,10 +291,10 @@ PR53 merged as `ede739b`, tree `397881c47c0881ffcbccbb92c890e3380ced5d4c`, paren
 final personal `5723293269`, all ten final-head jobs and actual squash identities verified.
 Post-merge CI `41210602495`, modes `41210602511`, editor `41210602508` passed at attempt 1;
 native/personal actual-merge proof clear. Standalone three-mode summary is reconciled in TODO.
-
 Active: `/tmp/assemblejs-academy-calculator-verification`, `codex/academy-calculator-verification`.
-Owner/done-when recorded in TODO before edits: read-only current saved-source/served-settings/
-quote check with version/stale guards, truthful diagnostics, invalidation, scoped hosted proof
-and independent review. Source: 119 component/six backend cases and static gates green;
-title/version bypasses observed red. Native review clear; hosted/personal acceptance pending.
+PR54 corrected source `9eade76`: all ten jobs green, CI `41218069474`, modes `41218069557`
+(99 focused/twelve browser), editor `41218069466`; personal `5723724107`, artifact QA `6545926476`.
+119 component/six backend cases; real race/bad-price/recovery/focus/narrow/Stop proof clear.
+Failed `1164422` focus run/history correction retained. No live/screen-reader/certificate claim.
+Final-head checks/acceptance, actual squash identity and post-merge proof remain required.
 Next: original-site branding queue in TODO/PLAN; PR33/publication/adoption holds remain.

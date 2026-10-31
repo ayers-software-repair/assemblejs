@@ -146,7 +146,7 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       rejection and revised approval, with code view and readable diffs. The standalone
       supplied-project sequence is delivered by PR45/52/53 above; this summary row was stale.
       This does not close the full curriculum or current-revision lesson-proof requirement.
-- [ ] Verify the saved calculator against the current served preview and quote API.
+- [x] Verify the saved calculator against the current served preview and quote API.
       Owner: Academy implementation chat. Done when an explicit read-only check compares the
       actual served title/presets with current saved authored settings, exercises the real quote
       API, and reports truthful pass/failure bound to the observed source/preview revision.
@@ -155,7 +155,11 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       and cleanup with independent/personal review. This is server-output/API proof, not
       browser-hydration attestation, durable progress or certificate completion.
       Source proof: 119 component and six backend cases pass, with title/version bypasses
-      observed red before restoration. Static gates pass; native review clear; hosted/personal proof pending.
+      observed red before restoration. Corrected source `9eade76` passes all ten jobs: CI
+      `41218069474`, modes `41218069557` (99 focused / twelve browser), editor `41218069466`.
+      Personal `5723724107` and scoped artifact QA `6545926476` are clear. Real edit-race and
+      incorrect-price refusal/recovery, keyboard/narrow layout and Stop are verified. This is
+      source/server/API evidence; final-head checks/acceptance and post-merge proof remain.
 - [x] Record and independently review the candidate learning/proof path in
       `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
 - [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent

@@ -48,12 +48,21 @@ validating its contents: a received bad price must still fail the browser compar
 ## Proof checkpoint
 
 All 119 source/DOM cases and six source-only backend cases pass. Deliberately bypassing title
-comparison and source-version comparison produced genuine missing-refusal failures before
-restoration. Static gates and fresh native source/probe/docs review pass; personal acceptance and actual
-hosted proof remain pending.
-The new hosted scenario checks real quotes without rebuilding/writing, an actual outside edit
-during inspection, an API returning an incorrect price, source correction/recovery, keyboard,
-narrow layout and Stop. Unchanged runtime/framework matrices are not manually repeated.
+and source-version comparison produced genuine failures before restoration. Independent review
+also caught stream-lock and cancellation gaps; their red/green regressions are retained.
+
+The initial hosted `1164422` run failed the success-focus assertion before race/price/recovery
+steps, so those were not accepted. Corrected source `9eade76` passes all ten jobs: CI
+`41218069474`, modes `41218069557` (99 focused / twelve browser), editor `41218069466`.
+The unchanged focus assertion, real edit race, genuinely incorrect price, recovery and Stop now
+pass. Native/personal review `5723724107` and scoped artifact QA `6545926476` are clear.
+The new receipt records 47 calls, three setup/error/restore writes, seven builds and five
+inspections; verification itself adds no writes/checks/builds. Source is preserved and no runtime processes remain active.
+
+Artifact QA is not live interactive or screen-reader acceptance. Later-focus preservation is
+supported by focused source tests and personal code review, not by those screenshots alone.
+Final-head checks/personal acceptance and actual squash/post-merge proof remain required.
+Unchanged runtime/framework matrices are not manually repeated.
 
 PR33 remains held; this adapter is not a production sandbox or final browser-runtime choice.
 Full curriculum, durable progress/certificate checks and verified external-agent access remain

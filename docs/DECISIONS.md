@@ -8822,3 +8822,29 @@ button-blur test did not reproduce native disabled-button focus loss and is reta
 inconclusive, not a red control. The unchanged hosted focus assertion remains required.
 Historical-document restoration and this functional focus fix require fresh exact-head proof;
 no unchanged workflow retry or weakened assertion is authorized.
+
+Corrected source `9eade764e9e1bfcbcb1664452ce4798d681d73b9`, tree
+`3659fb4177cd62955205f9df6e4589cb9a81e71a`, passes all ten attempt-1 jobs: CI `41218069474`,
+modes `41218069557` and editor `41218069466`. Both Nodes pass 2,511 tests, 81 exports and
+fourteen package validations; check remains 45,963 / 46,000 bytes. Modes passes 99 focused
+and twelve browser cases. Personal COMMENT `5723724107` closes both initial findings and
+accepts this source/retained behavior. Independent QA comment `6545926476` passes the four
+new captured states within artifact scope; it is not live interactive/screen-reader acceptance.
+Later-focus preservation is supported by focused unit/source review rather than screenshot
+inference. No existing runtime/framework matrix was manually repeated.
+
+The new scenario records 47 tool calls, three setup/API-error/restore writes, seven good builds
+and five inspections. Success performs no new write/check/build. An actual edit during
+inspection is refused; an API producing totals 1/1/1 is refused, and restoring source recovers
+1600/4800/9600. Errors and HTTP failures are empty, active processes are empty at completion;
+exactly four aborted stock streams match the owned URL/error/phases. Root viewed all four new
+and seven changed prior images against accepted PR53 source; fifteen prior images are identical.
+
+Artifact `13048764248`, 3,083,159 bytes, SHA-256
+`ee5778b952f8957e2f2e5f0c0706250f000b638fa07e6509ffa94f8fbff73bb0`, is hash/size verified
+and retained under `/tmp/academy-calculator-verification-9eade76-*`. Initial failed artifact
+`13047862103`, 3,372,339 bytes, SHA-256
+`a85b69edbddcc698275f294be79f4b27aaec898318282d30ef8c14a842333c2a`, remains separate with
+its trace/log and pre-close snapshot; no interrupted steps are retroactively accepted there.
+Closing documentation still needs final-head checks/personal acceptance, followed by actual
+squash identities and post-merge proof. Runtime, publication and broader Academy holds remain.
