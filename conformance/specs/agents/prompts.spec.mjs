@@ -7,7 +7,7 @@
 // calls what the brief tells it to call, in the order it is told. The tests run in the order
 // written, each on the project as the one before it left it.
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { agentIn, calling, named, resourceOf } from "../agent.mjs";
@@ -195,6 +195,40 @@ test("an agent follows the prompt for what check finds from a finding to none", 
     assert.equal(added.ok, true, JSON.stringify(added.problems));
 
     assert.deepEqual(await call("check"), { ok: true, result: { findings: [] }, problems: [] });
+  } finally {
+    await client.close();
+  }
+});
+
+test("an installed agent reviews, rejects and applies exact assembly additions", async () => {
+  const client = await agent.startedFrom(".mcp.json", "mcpServers", root, {
+    CLAUDE_PROJECT_DIR: root,
+  });
+  const call = calling(client);
+  try {
+    const first = await call("plan_assembly", { name: "review-basket", renderer: "html" });
+    assert.equal(first.ok, true, JSON.stringify(first.problems));
+    assert.equal(existsSync(join(root, "src/assemblies/review-basket")), false);
+    assert.equal((await call("discard_assembly_plan", { id: first.result.id })).ok, true);
+    assert.equal((await call("apply_assembly_plan", { id: first.result.id })).ok, false);
+    assert.equal(existsSync(join(root, "src/assemblies/review-basket")), false);
+    const revised = await call("plan_assembly", { name: "review-cart", renderer: "html" });
+    assert.equal(revised.ok, true, JSON.stringify(revised.problems));
+    assert.equal((await call("apply_assembly_plan", { id: revised.result.id })).ok, true);
+    for (const change of revised.result.changes) {
+      assert.equal(change.before, null);
+      assert.equal(readFileSync(join(root, change.path), "utf8"), change.after);
+    }
+    assert.equal((await call("apply_assembly_plan", { id: revised.result.id })).ok, false);
+    assert.equal((await call("check")).ok, true);
+    const stale = await call("plan_assembly", { name: "manual-cart", renderer: "html" });
+    assert.equal(stale.ok, true, JSON.stringify(stale.problems));
+    write("src/assemblies/manual-cart/manual-cart.html", "<p>Manual work</p>");
+    assert.equal((await call("apply_assembly_plan", { id: stale.result.id })).ok, false);
+    assert.equal(
+      readFileSync(join(root, "src/assemblies/manual-cart/manual-cart.html"), "utf8"),
+      "<p>Manual work</p>",
+    );
   } finally {
     await client.close();
   }

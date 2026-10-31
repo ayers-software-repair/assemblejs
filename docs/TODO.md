@@ -75,6 +75,13 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       Corrected source `254c19f` passed all six jobs in `41147987372`, including packed
       conformance and browser proof; personal review `5719993516` cleared the source after
       independently reproducing the edit/revert regression red before the fix and green after.
+- [x] Add reviewable assembly proposals to the shared agent authoring surface: plan exact
+      additions without writes, discard without writes, apply retained contents once and refuse
+      occupied targets. Preserve immediate authoring and the read-only inspector. Source proof:
+      57 focused file/protocol tests across seven files, with independent partial-write and
+      notification regressions corrected. Required hosted CI, packed-consumer proof and personal
+      PR acceptance remain delivery gates tracked in the PR; this source increment alone does
+      not establish Academy UI or runtime acceptance.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages
