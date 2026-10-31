@@ -95,3 +95,20 @@ Use a fresh independent source review and the normal exact-source acceptance for
 candidate. A pin change also requires the existing site's usual deployment verification; it
 is not an npm publication. No old matrix was rerun, no pin/source/runtime was adopted, no
 stale branch was merged and no deployment/publication was triggered by this read-only pass.
+
+## Delivered follow-up, 2026-10-31
+
+The historical read-only checkpoint above is superseded for delivery status by PR46 and PR47.
+PR46 merged the independently reviewed safeguards at `fe036a7`; its normal CI, landing and
+modes passed, but deployment `41187302218` correctly failed the new shared-frame check.
+PR47 regenerated only the sixteen frame links and corrected released-asset staging, merged
+as `c8c3705` after personal review `5722144704` and all nine exact-head checks. Actual squash
+identities and signatures were verified for both merges.
+
+Post-merge CI `41188471147`, landing `41188471159` and normal deployment `41188471177` passed.
+All 66 checked files (product/kit files and the API index) match expected deployed bytes; other
+generated API pages were not crawled. The manager retains the unchanged raw receipts and
+checksums in AUDIT `evidence/2026-10-31-manager/assemblejs-safeguards-c8c3705/`.
+See `docs/handoffs/academy-current.md` and `docs/DECISIONS.md` for exact identities and limits.
+The optional verification plan and live eligible-next reuse path remain unexercised; main-merge
+reuse is disabled. No npm publication, runtime adoption or new public activation followed.
