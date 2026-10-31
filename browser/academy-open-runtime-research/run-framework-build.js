@@ -60,11 +60,11 @@ try {
   if (!crossOriginIsolated) throw new Error("isolated research origin required");
   report("booting");
   runtime = await boundedOperation(
-    Vivari.boot({
-      serviceWorkerUrl: preview ? "/sw.js" : false,
-      documentIsolationPolicy: "none",
-      devtools: false,
-    }),
+    Vivari.boot(
+      preview
+        ? { serviceWorkerUrl: "/sw.js", documentIsolationPolicy: "none", devtools: false }
+        : { serviceWorkerUrl: false },
+    ),
     "boot",
     30000,
   );
