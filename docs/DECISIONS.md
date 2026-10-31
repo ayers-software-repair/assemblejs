@@ -8520,3 +8520,29 @@ stable-source four-server recovery and Stop. Explicit Playwright/Knip entries se
 An optional local collection attempt lacked compiled MCP output; no local framework build,
 server or browser ran. Real hosted collection and behavior remain required. The normal hosted
 workflow builds current packages before probing; do not substitute source mocks for that proof.
+
+## 2026-10-31 — Preserve prior page lessons through a shared placement plan
+
+The canonical product-page restriction kept comment markers from masquerading as placements,
+but also refused harmless saved edits from an earlier lesson. The new manual-introduction
+regression was observed failing before correction. Reuse the CLI's actual `placeAssembly`
+and core placement parser in a confined, read-only `plan_page_placement` MCP tool; do not add
+an Academy HTML parser. Return exact before/after source and the resulting placement count.
+Refuse ambiguous named neighbours, invalid/linked/bounded source and malformed directives.
+A valid self-closing directive is accepted by the real parser; an initial test assumption to
+the contrary was corrected rather than changing framework grammar.
+
+The calculator requires one resulting placement, retains the four authored component files,
+and sends the existing reviewed five-file batch through unchanged expected-base writes.
+Plan and rejection still write nothing; Approval uses retained values; Auto plans afresh.
+Unknown component bodies still refuse customization. Earlier inert-comment regressions now
+exercise the actual backend parser, not a source-only fixture response. The hosted workspace
+probe must save a manual introduction plus inert anchor before building, then preserve them
+through all three modes without weakening real build, composition, quote or cleanup checks.
+Source proof passes; fresh hosted and personal acceptance remain required.
+
+PR49's identity increment merged as `805ce56` with accepted tree `95e569018b3b54083f94281ca6842f6a4bcd29c9`,
+personal review `5722323760`, all ten exact-head jobs, and green post-merge CI `41192530493`,
+modes `41192530590` and editor `41192530499`. Actual squash parent/tree/message/DCO/signature
+were verified. Its observation limits and PR33 runtime hold remain; this continuity change
+does not implement snapshots, durable progress, resume, certificate or runtime adoption.

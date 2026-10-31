@@ -16,7 +16,6 @@ export function calculatorFixture() {
       "request-estimate.ts",
     ].map((file) => [file, read(`assemblies/price-calculator/${file}`)]),
   );
-  recipe["product.html"] = read("pages/product/product.html");
   const page = read("pages/product/product.html").replace(
     '          <assembly name="price-calculator"></assembly>\n',
     "",
@@ -37,6 +36,24 @@ export function calculatorFixture() {
     async callTool(request) {
       calls.push(request);
       const { name, arguments: args } = request;
+      if (name === "plan_page_placement") {
+        const path = "src/pages/product/product.html";
+        const before = files.get(path);
+        const anchor = '          <assembly name="buy-box"></assembly>';
+        if (typeof before !== "string" || before.split(anchor).length !== 2)
+          return answer(null, false, ["fixture placement refused"]);
+        return answer({
+          change: {
+            path,
+            before,
+            after: before.replace(
+              anchor,
+              `${anchor}\n          <assembly name="price-calculator"></assembly>`,
+            ),
+          },
+          placed: before.split('<assembly name="price-calculator"').length,
+        });
+      }
       if (name === "read_source_version")
         return answer({
           version: createHash("sha256")

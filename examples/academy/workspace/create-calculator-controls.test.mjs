@@ -36,7 +36,7 @@ test("authored mode UI exposes exact escaped additions and page before/after", a
   assert.ok(f.document.body.textContent.includes("<script>unsafe()</script>"));
   assert.equal(f.button("Approve changes").disabled, true);
   f.mode("auto");
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   assert.equal(f.button("Apply request and check").disabled, false);
   f.view.destroy();
   f.window.close();
@@ -49,7 +49,7 @@ test("examples fill requests, rejection is read-only and revised approval applie
   await setImmediate();
   f.button("Reject proposal").click();
   await setImmediate();
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   f.button('Add a calculator called "Coffee total"').click();
   assert.equal(
     f.document.querySelector('[aria-label="Calculator request"]').value,
@@ -79,7 +79,7 @@ test("unsupported requests show a clear limit and cannot approve an old pending 
   await setImmediate();
   assert.equal(f.button("Approve changes").disabled, true);
   assert.match(f.document.querySelector('[role="status"]').textContent, /Guided requests/);
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   f.view.destroy();
   f.window.close();
 });
@@ -103,7 +103,7 @@ test("destroy removes UI while an already dispatched read is allowed to finish",
   release();
   await pending;
   assert.equal(window.document.body.children.length, 0);
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   window.close();
 });
 
@@ -121,7 +121,7 @@ test("the walkthrough observer receives actual settled operations without replac
   assert.equal(settled.receipt.kind, "planned");
   assert.equal(settled.receipt.proposal, f.view.modes.state.pending);
   assert.equal(f.document.querySelectorAll("ins").length, 5);
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   f.view.destroy();
   f.window.close();
 });

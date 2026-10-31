@@ -37,13 +37,21 @@ test("authored calculator plans, revised approval, Auto and manual edits share a
     await expect(guided.locator("del")).toHaveCount(1);
     for (const file of files.slice(0, 4)) expect(fixture.calculatorSource(file)).toBeNull();
     expect(fixture.calculatorSource("product.html")).toBe(beforePage);
-    expect(fixture.calls.every((call: { name: string }) => call.name === "read_source")).toBe(true);
+    expect(
+      fixture.calls.every((call: { name: string }) =>
+        ["read_source", "plan_page_placement"].includes(call.name),
+      ),
+    ).toBe(true);
     await mode.selectOption("auto");
     expect(fixture.calculatorSource("price-calculator.react.tsx")).toBeNull();
     await mode.selectOption("approval");
     await guided.getByRole("button", { name: "Reject proposal", exact: true }).click();
     await expect(status).toHaveText("Proposal rejected. No files were written.");
-    expect(fixture.calls.every((call: { name: string }) => call.name === "read_source")).toBe(true);
+    expect(
+      fixture.calls.every((call: { name: string }) =>
+        ["read_source", "plan_page_placement"].includes(call.name),
+      ),
+    ).toBe(true);
     await guided
       .getByRole("button", { name: 'Add a calculator called "Coffee total"', exact: true })
       .click();

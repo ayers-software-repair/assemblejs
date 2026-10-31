@@ -53,7 +53,6 @@ export function createCalculatorProject(root) {
   rmSync(join(root, "src/assemblies/price-calculator"), { recursive: true });
   const page = join(root, "src/pages/product/product.html");
   const before = readFileSync(page, "utf8");
-  recipe["product.html"] = before;
   const placement = '          <assembly name="price-calculator"></assembly>\n';
   if (before.split(placement).length !== 2)
     throw new Error("expected the canonical calculator placement");

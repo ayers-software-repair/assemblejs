@@ -76,6 +76,7 @@ describe("what an agent that opens a project is told", () => {
       "`compose_page`",
       "`check`",
       "`read_source_version`",
+      "`plan_page_placement`",
       "`explain`",
       "`npx assemblejs check`",
       "`npx assemblejs add assembly <name> --renderer <renderer>`",

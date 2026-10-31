@@ -266,9 +266,12 @@ signature were verified. Issue 11 / PR12 administrative closure remains pending 
 direct-user approval request after automatic review rejected those tracking mutations.
 No closure retry or indirect action is authorized without that reply; delivered source stands.
 
-Owned source: `/tmp/assemblejs-academy-source-version`, branch `codex/academy-source-version`,
-on that exact base. A read-only MCP observation reuses the existing build source fingerprint;
-preview refuses observed changes around checking/building. Source, protocol/guidance, component
-and static proof is green; new hosted collection/behavior and personal acceptance remain
-required. See `WORKSPACE_PREVIEW.md` and DECISIONS for boundaries. It does not implement atomic
-snapshots, future-change notification, full lesson progress, resume, certificate or runtime adoption.
+PR49 merged as `805ce56`, tree `95e569018b3b54083f94281ca6842f6a4bcd29c9`, personal review
+`5722323760`, all ten exact-head jobs. Post-merge CI `41192530493`, modes `41192530590` and
+editor `41192530499` passed; actual squash identities/DCO/signature were verified.
+
+Active source: `/tmp/assemblejs-academy-page-placement`, branch `codex/academy-page-placement`,
+based on that merge. Preserve saved prior page edits by reusing the CLI parser through a
+read-only MCP placement plan; retain exact bases and existing consent/check guards. Focused
+source/protocol/manual-edit cases pass. Hosted continuity and independent/personal acceptance
+remain required. No atomic snapshots, durable progress, resume, certificate or runtime adoption.

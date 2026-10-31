@@ -73,8 +73,14 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       and after build refuse observed changes without overwriting edits. Twenty-four focused
       MCP/guidance and 84 component cases pass; check/build races and numeric coercion were
       observed red before correction. Independent source review is clear. Fresh hosted
-      collection/behavior and personal acceptance remain required; this is not durable
-      curriculum progress, an atomic snapshot or certificate evidence.
+      collection/behavior and personal acceptance passed in PR49 (`805ce56`), with personal
+      review `5722323760`, all ten exact-head jobs and post-merge CI `41192530493`, modes
+      `41192530590` and editor `41192530499`. This is not durable curriculum progress,
+      an atomic snapshot or certificate evidence.
+- [ ] Preserve saved earlier page edits when adding the guided calculator: shared read-only
+      CLI-parser placement plan, exact expected bases and unchanged three-mode consent.
+      Focused source/parser/protocol cases pass; actual hosted continuity and independent
+      source/personal acceptance remain required before marking complete.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

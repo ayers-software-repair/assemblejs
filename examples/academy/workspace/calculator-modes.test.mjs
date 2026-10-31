@@ -27,7 +27,9 @@ test("Plan, mode changes and rejection never write; revised approval applies exa
   assert.equal(modes.state.check.ok, true);
   assert.match(modes.state.phase, /Build and live preview still require verification/);
   assert.deepEqual(
-    f.calls.filter((call) => call.name !== "read_source").map((call) => call.name),
+    f.calls
+      .filter((call) => !["read_source", "plan_page_placement"].includes(call.name))
+      .map((call) => call.name),
     ["apply_source_changes", "check"],
   );
 });
@@ -72,7 +74,7 @@ test("a failed new request invalidates an older plan instead of approving anothe
   await modes.request("Invent a checkout system");
   assert.equal(modes.state.pending, undefined);
   await modes.approve();
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
 });
 
 test("lost, partial and malformed acknowledgements consume permission and never claim check success", async () => {

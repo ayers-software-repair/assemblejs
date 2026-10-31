@@ -53,32 +53,25 @@ export async function calculatorPlan(client, recipe, text) {
           : recipe[file];
       changes.push({ path, before: null, after });
     }
-    const path = "src/pages/product/product.html";
-    const before = await read(path);
-    if (before === null) throw new Error("The supplied product page is missing.");
-    if (before.includes('name="price-calculator"'))
-      throw new Error("The calculator is already placed; inspect the page before planning.");
-    const originalPage = recipe?.["product.html"];
-    const placement = '          <assembly name="price-calculator"></assembly>\n';
+    const placement = await callProjectTool(client, "plan_page_placement", {
+      page: "product",
+      name: "price-calculator",
+      position: { after: "buy-box" },
+    });
+    if (!placement.ok || placement.problems.length) throw new Error(JSON.stringify(placement));
+    const change = placement.result?.change;
     if (
-      typeof originalPage !== "string" ||
-      originalPage.split(placement).length !== 2 ||
-      before !== originalPage.replace(placement, "")
+      !Number.isInteger(placement.result?.placed) ||
+      placement.result.placed < 1 ||
+      change?.path !== "src/pages/product/product.html" ||
+      typeof change.before !== "string" ||
+      typeof change.after !== "string" ||
+      change.before === change.after
     )
-      throw new Error(
-        "The product page differs from the supplied starter. Inspect it or use your agent; guided placement will not guess.",
-      );
-    const anchor = /^([ \t]*)<assembly name="buy-box"><\/assembly>[ \t]*$/gm;
-    const matches = [...before.matchAll(anchor)];
-    if (matches.length !== 1)
-      throw new Error(
-        "Expected one buy-box placement in the supplied product page; inspect the page before planning.",
-      );
-    const after = before.replace(
-      anchor,
-      (line, indent) => `${line}\n${indent}<assembly name="price-calculator"></assembly>`,
-    );
-    changes.push({ path, before, after });
+      throw new Error("invalid page placement plan acknowledgement");
+    if (placement.result.placed !== 1)
+      throw new Error("The calculator is already placed; inspect the page before planning.");
+    changes.push({ path: change.path, before: change.before, after: change.after });
   } else {
     const before = await read(view);
     if (before === null) throw new Error("Add the calculator before customizing it.");

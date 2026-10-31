@@ -64,6 +64,17 @@ are limited to 65536 bytes. An absent file is a failed read with `{ path, missin
 other failures do not imply absence. Linked paths, hidden path components, generated output and package
 metadata are outside this source-editing surface.
 
+`plan_page_placement` reads `src/pages/<page>/<page>.html` and returns
+`{ change: { path, before, after }, placed }` without writing. Supply lowercase page/assembly
+names and exactly one position: `{ at: "start" | "end" }`, `{ after: "name" }`, or
+`{ before: "name" }`; the default is the end. It reuses the CLI parser, preserving unrelated
+markup and ignoring inert markers. A named neighbour must occur exactly once. Confined regular
+UTF-8 reads and the planned output are limited to 65536 bytes; the source path to 256 characters.
+The assembly may be created in the same reviewed batch. `placed` counts its resulting live
+placements; a repeated placement is allowed by the framework and must be reviewed by the client.
+This plan is not project validation or server-retained consent. Apply its exact change with
+`apply_source_changes`, then check/build and verify the actual result.
+
 `apply_source_changes` accepts 1–32 exact additions/replacements as `{ path, before, after }`.
 Use `before: null` only when the reviewed target must be absent. Total before/after data is
 limited to 131072 bytes. Every expected base is checked before any write. Additions are created
