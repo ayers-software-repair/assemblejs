@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-30, after the editor's final source/visual/hosted acceptance.
+Checkpoint: 2026-10-30, after the editor merge and mode-controls base reconciliation.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -24,23 +24,25 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
 
 ## Delivery queue
 
-1. PR34, source editor: `https://github.com/ayers-software-repair/assemblejs/pull/34`.
-   Accepted source head `2e7669a95c1cde647dca18246b7592bf89e670f7`, tree
-   `d66f8b5aca295aa503f056d711436f0bc3285fa1`, base `f52e830` at the checkpoint.
-   All six normal jobs in `41163039843`, editor `41163039875`, normal runtime mechanics
-   `41163039904` and landing `41163039906` passed. Final personal review `5720847023` accepts
-   source and visuals. This final ledger/handoff commit leaves editor behavior unchanged;
-   allow its automatically required checks to finish before delivery. Merge with exact-head
-   and base guards, verify actual squash tree/message/signature, then post-merge CI.
+1. PR34, source editor, is merged:
+   `https://github.com/ayers-software-repair/assemblejs/pull/34`.
+   Accepted final head `aee77a88ba69c973e330b255c06e0b817ebf4f4b` passed all nine applicable
+   checks (normal CI `41164130606`) and final personal review `5720930646`.
+   Actual squash `bd61eaed086af1d19d1b53da68ea31e74a1a4d76` has the exact accepted tree
+   `29f918dff5ff4ef61785a4a658538d1502fa4618`, expected parent `f52e830`, valid message/DCO
+   and verified GitHub signature. Post-merge CI was still running at this checkpoint;
+   verify its actual result rather than repeating unchanged pre-merge proof.
 2. PR35, assembly mode controls: `https://github.com/ayers-software-repair/assemblejs/pull/35`.
-   Current head `54133150181ab545e1d640a432fcac55b87f239e`, base `f52e830` at checkpoint.
+   Accepted source head `54133150181ab545e1d640a432fcac55b87f239e` was based on `f52e830`.
+   Its branch now reconciles the merged editor through an owned merge commit; inspect the
+   current head/base and required checks before delivery.
    Final personal review `5720863010` accepts source, MCP behavior, visuals and all six
    normal CI jobs in `41163301977`, including Node24. Hosted real MCP/browser run
    `41163301978`, mechanics and landing also passed. Final receipt:
    `/home/sparrow6/source/AUDIT/evidence/2026-10-30-pr-reviewer/assemble35-5413315-review.json`.
-   Reconcile the small TODO/DECISIONS/knip/package/lock overlaps with merged PR34 in an owned
-   merge commit; do not force-push or erase either increment. Reuse unchanged proof and run
-   the actual required checks. The controls create assembly scaffolds, not the full calculator.
+   The TODO/DECISIONS/knip overlaps retain both increments; package and lock merged cleanly.
+   No force-push or source behavior change. Reuse unchanged proof and allow all actually
+   required integration checks to finish. The controls create assembly scaffolds, not the full calculator.
 3. PR33 stays draft: `https://github.com/ayers-software-repair/assemblejs/pull/33`, head
    `2126810` (negative outcome recorded). Do not merge, adopt the runtime, retry unchanged,
    weaken assertions or patch vendor internals to conceal its Svelte failure.
@@ -104,12 +106,12 @@ was found. Full retained outcome is in the draft branch's
 external-agent transport and final runtime selection remain unresolved. Prior WebContainer
 proof worked but production licensing is not approved; do not silently switch to it.
 
-## Owned worktrees and parallel ownership
+## Owned worktrees and outside audit
 
 - `/tmp/assemblejs-academy-workspace-editor`: PR34 branch `codex/academy-workspace-editor`.
   Own the final ledger/handoff and delivery here; do not edit it concurrently without notice.
 - `/tmp/assemblejs-academy-agent-controls`: PR35 branch `codex/academy-agent-controls`, clean
-  after `5413315` at checkpoint. Preserve its independent changes when reconciling PR34.
+  after its accepted source `5413315`; its integration commit also completes its ledger row.
 - `/tmp/assemblejs-academy-current-source-preview`: PR33 draft branch, clean at `2126810`.
 - `/tmp/assemblejs-academy-source-changes`: branch `codex/academy-source-changes`, base
   `f52e830`, with five untracked TypeScript prototypes under `packages/mcp/src/author/`:
@@ -121,9 +123,16 @@ proof worked but production licensing is not approved; do not silently switch to
   stash, clean, add-all, history rewrite or broad process kill. Unrelated main checkout edits
   are not this task's changes.
 
-For Claude: read AGENTS/CLAUDE, PLAN, TODO, DECISIONS and this file; verify current PR34/35 heads
-and gates. Coordinate which isolated worktree you own before edits. Deliver the reviewed
-increments under the standing source-merge exception only when every applicable gate passes.
-Keep PR33 held. Next implementation is shared guarded source changes and the complete authored
-calculator workflow, then real workspace/lesson/progress/certificate wiring. Report actual
-source/runtime limits; do not advertise the Academy as available yet.
+Claude is the outside auditor only, not an implementation worker. Read pushed source,
+completed runs/artifacts and installed builds. Do not edit code, create checkouts/branches,
+run builds/CI, change household servers or settings, or perform release actions. File issues
+labelled `audit` for source-proved defects or `owner` for verified owner-reported findings,
+with where, the recorded ruling, evidence and done-when. If a finding is unclear, the
+maintainer asks for correction on that issue rather than reinterpreting it.
+
+Maintainers own these isolated worktrees and the delivery gates. Audit follows delivery and
+may reopen unsupported closures; do not wait for outside audit as a new pre-delivery gate.
+Every issue closure needs a closing comment linking the exact commit/run/artifact proving its
+done-when. Keep PR33 held and the full Academy open. Next implementation remains shared guarded
+source changes and the complete authored calculator workflow, then actual workspace, lesson,
+progress and certificate wiring. Do not advertise the Academy as available yet.

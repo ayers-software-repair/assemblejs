@@ -8147,3 +8147,19 @@ and base checks, inspect the actual squash tree/message/signature and verify pos
 Do not bypass failed checks or unresolved findings, change rulesets, or infer release, tag,
 publication, deployment, spending or final runtime-adoption authority. Do not ask the owner
 again for this same already granted source-merge exception.
+
+## 2026-10-30: mode controls call the shared authoring tools
+
+The independent interface increment wraps the existing MCP plan/apply/discard/check tools;
+it does not introduce another file authoring engine. Plan remains read-only, Approval requires
+an explicit action and Auto obtains a fresh proposal. Changing mode never approves a pending
+proposal. Tool-specific acknowledgements must agree with retained file paths and actual check
+findings before the interface reports success. Malformed and ambiguous replies retain their
+diagnostics and cannot become lesson completion. Hosted proof uses the real MCP client/server
+and a disposable canonical project; it is not an external-agent connection or runtime choice.
+
+The proof declares the existing MCP SDK pin directly rather than reaching through another
+package's installation. A stale installation caused pnpm to select an unrelated Vite/esbuild
+peer variant while adding the dependency. Regenerating from the original machine-written
+lock without that installation metadata preserves the test toolchain; only the new root SDK
+importer is added. No compiler, dependency version or published package source changes.

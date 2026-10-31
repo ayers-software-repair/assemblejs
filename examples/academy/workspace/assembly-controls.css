@@ -1,0 +1,59 @@
+.academy-review {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 1rem;
+  color: #e6edf3;
+  background: #161b22;
+  border: 1px solid #444c56;
+  border-radius: 0.75rem;
+  font: 14px/1.5 system-ui;
+}
+.academy-review label {
+  display: block;
+  margin-block: 0.75rem;
+}
+.academy-review input,
+.academy-review select {
+  display: block;
+  width: min(100%, 24rem);
+  box-sizing: border-box;
+}
+.academy-review button,
+.academy-review input,
+.academy-review select {
+  padding: 0.65rem;
+  border: 1px solid #57606a;
+  border-radius: 0.35rem;
+  color: inherit;
+  background: #21262d;
+  font: inherit;
+}
+.academy-review button {
+  margin: 0 0.5rem 0.5rem 0;
+  cursor: pointer;
+}
+.academy-review button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.academy-review :focus-visible {
+  outline: 3px solid #80c7ff;
+  outline-offset: 3px;
+}
+.academy-review pre {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre;
+  padding: 0.75rem;
+  background: #0d1117;
+}
+.academy-review ins {
+  display: block;
+  color: #b2f5bc;
+  background: #12311e;
+  text-decoration: none;
+}
+.academy-review summary,
+.academy-review [role="status"] {
+  overflow-wrap: anywhere;
+}
