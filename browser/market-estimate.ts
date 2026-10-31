@@ -38,6 +38,7 @@ export async function exerciseMarketEstimate(
   const basketLink = page.locator("basket-count").getByRole("link", { name: "Basket, 0 in it" });
   await expect(basketLink).toBeVisible();
   const calculator = page.locator('assembly-root[data-name="price-calculator"]');
+  await calculator.scrollIntoViewIfNeeded();
   await expect(calculator).toHaveAttribute("data-mounted", "");
   await expect(calculator.getByRole("heading", { name: "Order estimate" })).toBeVisible();
   const quantity = calculator.getByLabel("Quantity to estimate");

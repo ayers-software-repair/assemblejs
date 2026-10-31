@@ -94,14 +94,7 @@ test("a product page is thirteen assemblies from three servers, each hydrated by
   for (const name of ["buy-box", "price-calculator", "site-header", "basket-count"]) {
     await expect(envelope(page, name), name).not.toHaveAttribute("data-remote");
   }
-  for (const live of [
-    "search-box",
-    "basket-count",
-    "product-detail",
-    "roast-meter",
-    "buy-box",
-    "price-calculator",
-  ]) {
+  for (const live of ["search-box", "basket-count", "product-detail", "roast-meter", "buy-box"]) {
     await expect(envelope(page, live), live).toHaveAttribute("data-mounted", "");
   }
   // A Lit element whose steps are a property its view sets: drawn once, the right one lit.
