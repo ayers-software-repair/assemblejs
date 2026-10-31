@@ -8432,3 +8432,35 @@ threshold, negative control and exact-buffer retention. Retain full-height layou
 after the primary paint capture, clearly named `-layout.png`; they are not weave paint proof.
 Keep native telemetry for independent review of the corrected path. New exact-head hosted proof
 and personal review remain required, including all five viewport images and layout images.
+
+## 2026-10-31: complete the approved kit's site delivery
+
+PR46 merged as `fe036a78e35afa60bc8d3ee58a222b5d92b58ad9`, exact reviewed tree
+`abbb716bce88cef8336cc979a71a58940f744bb7`, after all twelve checks and personal review
+`5722099073`. Actual parent, complete DCO/Conventional message and valid GitHub signature
+match. Normal post-merge deployment `41187302218` built its API reference but failed the
+static frame check: `index.html differs from its source; run build-pages.mjs site --write`.
+No delivered acceptance follows that source merge.
+
+Expected the approved pin to preserve frame/staging compatibility; the released v0.90.0
+frame adds `install.css` and `store-badges.css`, removes `landing-stores.js` and documents
+staging `badges/`. The unchanged deployment still named the removed module. The small
+forward correction regenerates the sixteen existing product pages with the exact released
+builder and matching Prettier 3.9.6, then stages the four real landing modules and badges.
+Authored page content, platform pin, channel, AWS roles, permissions and invalidations stay
+unchanged. No runtime adoption or new public activation is involved.
+
+A focused filesystem contract executes the actual staging commands against a disposable
+released-inventory fixture, compares every copied file and verifies old staged files are
+removed. Before correction it fails on the missing retired module. The real pinned frame
+check and released-inventory staging must pass, followed by fresh independent/personal
+review, normal hosted checks and normal next-site delivery/live-byte verification.
+Issue 11 and superseded PR12 remain open until delivery is proven. This is changed source,
+not an unchanged retry of the failed deployment. No local framework build, app server or
+browser is used; the static page generator is the repository's source-generation operation.
+
+The corrected pinned frame check matches all sixteen pages; all nine focused site-frame
+cases and `pnpm check:site` pass. Executing the corrected staging block against the actual
+released kit copies all 39 selected CSS/module/icon/badge files byte for byte. The synthetic
+fixture is a regression contract, while this separate released-source comparison proves
+current asset closure. Independent full-source/generated-diff review found no blocker.

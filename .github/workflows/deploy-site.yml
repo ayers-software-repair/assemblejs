@@ -149,8 +149,9 @@ jobs:
         run: |
           rm -rf site/kit && mkdir -p site/kit
           cp _platform/sitekit/*.css site/kit/
-          cp _platform/sitekit/landing-{background,worker,renderers,shaders,stores}.js _platform/sitekit/product-downloads.js site/kit/
+          cp _platform/sitekit/landing-{background,worker,renderers,shaders}.js _platform/sitekit/product-downloads.js site/kit/
           cp -R _platform/sitekit/icons site/kit/icons
+          cp -R _platform/sitekit/badges site/kit/badges
 
       # What the job above generated, put where the site links it.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
