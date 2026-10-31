@@ -2,8 +2,18 @@
 
 The supplied-project workspace adds one short task above its existing calculator controls.
 Plan, exact rejection, revised Approval and fresh Auto use those same controls and tools.
-The optional Why disclosure explains the current step. No model inference, alternate file
+The optional Guided tutor answers short questions about the current step. No model inference, alternate file
 store, automatic write or click-based completion is introduced.
+
+The tutor is explicitly labelled authored guidance with no AI inference. Ask Next (also Help,
+Hint or What should I do), Why, Files or Customize. Next/Why use the current task, including
+its revised title/presets. Files names only actual pending proposal paths and explains that
+bases are checked when applying; no proposal means no invented files. Customize explains the
+supported title/preset requests. Questions are limited to 200 characters; unknown questions
+receive an honest limitation. Asking never calls tools, writes, approves or advances practice.
+Answers clear on controller updates so an old response is not presented as current. Busy
+operations request a wait; rejected or consumed proposals (including refused stale applies) provide no pending file list.
+This is optional contextual help, not general reasoning, a connected agent or saved chat.
 
 CalculatorModes publishes frozen operation receipts only after an actual proposal, rejection
 or fully acknowledged apply with a passing real project check. Auto clears its intermediate
@@ -27,7 +37,7 @@ calculator. It does not assert that a later edit is checked or that a frame load
 Full revision-bound lesson checks, snapshots, resume, certificate, verified external-agent
 connection and production/browser-runtime selection remain open.
 
-Focused source/DOM proof includes ten practice cases and a controls observer case. A deliberate
+Focused source/DOM proof includes twelve practice cases and a controls observer case. A deliberate
 failed-check receipt bypass was watched failing before restoration. Actual hosted MCP/source,
 preview, keyboard and narrow assertions are extended in the existing workspace probe; its
 new existing-calculator probe additionally preserves a manual comment and equivalent title/
@@ -35,3 +45,8 @@ preset representations across reload, refuses semantic no-ops, then exercises ge
 At source head `ef393ce`, all ten checks pass: full CI `41206140986`, modes `41206141286`
 (75 focused and eleven browser cases) and editor `41206141098`. Native and personal source/visual
 review are clear. Final-head personal acceptance and post-merge checks remain required.
+
+The authored-question increment has source/DOM controls and extends the existing hosted probe
+with keyboard-submitted questions, actual single-file proposal lists, rejection clearing,
+unchanged tool-call counts and desktop/narrow tutor screenshots. Its exact-head hosted proof
+and independent/personal acceptance remain pending.

@@ -13,11 +13,28 @@ export function createModeWalkthrough(container) {
   const heading = document.createElement("h2");
   const task = document.createElement("p");
   task.setAttribute("role", "status");
+  task.setAttribute("aria-label", "Practice task");
   const hint = document.createElement("details");
   const summary = document.createElement("summary");
-  summary.textContent = "Why this step?";
+  summary.textContent = "Guided tutor";
   const explanation = document.createElement("p");
-  hint.append(summary, explanation);
+  const authored = document.createElement("p");
+  authored.textContent = "Authored guidance, no AI inference. Try Next, Why, Files or Customize.";
+  const form = document.createElement("form");
+  const label = document.createElement("label");
+  label.textContent = "Ask guided tutor";
+  const question = document.createElement("input");
+  question.setAttribute("aria-label", "Ask guided tutor");
+  question.maxLength = 200;
+  label.append(question);
+  const send = document.createElement("button");
+  send.type = "submit";
+  send.textContent = "Ask tutor";
+  const answer = document.createElement("p");
+  answer.setAttribute("role", "status");
+  answer.setAttribute("aria-label", "Tutor answer");
+  form.append(label, send, answer);
+  hint.append(summary, authored, explanation, form);
   const notice = document.createElement("p");
   const steps = [
     [
@@ -49,6 +66,32 @@ export function createModeWalkthrough(container) {
   let step = 0;
   let planned;
   let disposed = false;
+  let pendingProposal;
+  let working = false;
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (disposed) return;
+    const text = question.value
+      .trim()
+      .toLowerCase()
+      .replace(/[?.!]+$/, "");
+    if (question.value.length > 200) answer.textContent = "Keep questions to 200 characters.";
+    else if (working)
+      answer.textContent = "Wait for the current operation; inspect its actual diagnostics.";
+    else if (["next", "help", "hint", "what should i do"].includes(text))
+      answer.textContent = steps[step][1];
+    else if (["why", "why this step"].includes(text)) answer.textContent = steps[step][2];
+    else if (["files", "which files", "show files"].includes(text))
+      answer.textContent = pendingProposal
+        ? `Files in the pending proposal (bases are checked when applying): ${pendingProposal.changes.map((change) => change.path).join(", ")}`
+        : "No pending proposal. Plan a supported change to inspect its actual files.";
+    else if (["customize", "what can i customize"].includes(text))
+      answer.textContent =
+        'Use Rename calculator to "Your title" or Use presets 1, 3, 6 in the Request field. Titles: up to 60 characters. Presets: one to six unique integers, 1–99. Other executable edits need manual work or your own agent.';
+    else
+      answer.textContent =
+        "I have authored answers for Next, Why, Files and Customize. I cannot diagnose an unknown question or make changes here. Keep actual tool diagnostics visible; use your own agent for broader help.";
+  });
   const render = () => {
     [heading.textContent, task.textContent, explanation.textContent] = steps[step];
     hint.open = false;
@@ -58,8 +101,12 @@ export function createModeWalkthrough(container) {
   render();
   return {
     update(state) {
+      if (disposed) return;
+      working = state.busy;
+      pendingProposal = state.busy ? undefined : state.pending;
+      answer.textContent = "";
       const receipt = state.receipt;
-      if (disposed || state.busy || step === 4 || !receipt) return;
+      if (state.busy || step === 4 || !receipt) return;
       let intent;
       try {
         intent = calculatorRequest(receipt.proposal.request);

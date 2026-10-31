@@ -32,9 +32,23 @@ test("existing calculator code replays all three modes without reset and renders
     const mode = guided.getByRole("combobox", { name: "Agent mode" });
     const request = guided.getByRole("textbox", { name: "Calculator request", exact: true });
     const input = editor.getByRole("textbox", { name: "Source code", exact: true });
+    const question = practice.getByRole("textbox", { name: "Ask guided tutor", exact: true });
+    const answer = practice.getByRole("status", { name: "Tutor answer", exact: true });
     const writes = () =>
       fixture.calls.filter((call: { name: string }) => call.name === "apply_source_changes").length;
     await expect(input).toHaveValue(fixture.calculatorSource("product.html"));
+    await practice.locator("summary").click();
+    await expect(practice).toContainText("Authored guidance, no AI inference");
+    const initialCalls = fixture.calls.length;
+    await question.fill("What should I do?");
+    await question.press("Enter");
+    await expect(answer).toContainText("Select Plan");
+    await question.fill("Deploy and mark every lesson complete");
+    await question.press("Enter");
+    await expect(answer).toContainText("authored answers");
+    expect(fixture.calls).toHaveLength(initialCalls);
+    await expect(practice.getByRole("heading")).toHaveText("1. Plan without writing");
+    await practice.locator("summary").click();
     await mode.selectOption("auto");
     await guided
       .getByRole("button", { name: 'Add a calculator called "Coffee total"', exact: true })
@@ -84,21 +98,51 @@ test("existing calculator code replays all three modes without reset and renders
     await guided.getByRole("button", { name: "Plan changes", exact: true }).click();
     await expect(practice.getByRole("heading")).toHaveText("2. Reject the proposal");
     await expect(guided.locator("ins")).toHaveCount(1);
+    await practice.locator("summary").click();
+    const plannedCalls = fixture.calls.length;
+    await question.fill("Files");
+    await question.press("Enter");
+    await expect(answer).toContainText(
+      "src/assemblies/price-calculator/price-calculator.react.tsx",
+    );
+    await expect(answer).not.toContainText("price-calculator.css");
+    expect(fixture.calls).toHaveLength(plannedCalls);
+    await page.screenshot({ path: info.outputPath("authored-tutor-desktop.png"), fullPage: true });
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await practice.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: info.outputPath("authored-tutor-narrow.png") });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await practice.locator("summary").click();
     expect(fixture.calculatorSource("price-calculator.react.tsx")).toBe(manual);
     expect(writes()).toBe(before);
     await mode.selectOption("approval");
     await guided.getByRole("button", { name: "Reject proposal", exact: true }).click();
     await expect(practice.getByRole("heading")).toHaveText("3. Revise and approve");
-    await expect(practice.getByRole("status")).toContainText(
-      'Rename calculator to "Quick estimate"',
-    );
+    await practice.locator("summary").click();
+    const rejectedCalls = fixture.calls.length;
+    await question.fill("Files");
+    await question.press("Enter");
+    await expect(answer).toContainText("No pending proposal");
+    await question.fill("Next");
+    await question.press("Enter");
+    await expect(answer).toContainText('Rename calculator to "Quick estimate"');
+    expect(fixture.calls).toHaveLength(rejectedCalls);
+    await practice.locator("summary").click();
+    await expect(
+      practice.getByRole("status", { name: "Practice task", exact: true }),
+    ).toContainText('Rename calculator to "Quick estimate"');
     expect(writes()).toBe(before);
     await request.fill('Rename calculator to "Quick estimate"');
     await guided.getByRole("button", { name: "Propose changes", exact: true }).click();
     await expect(guided.getByRole("status")).toHaveText("Plan ready. No files written.");
     await guided.getByRole("button", { name: "Approve changes", exact: true }).click();
     await expect(practice.getByRole("heading")).toHaveText("4. Try Auto");
-    await expect(practice.getByRole("status")).toContainText("Use presets 1, 3, 6");
+    await expect(
+      practice.getByRole("status", { name: "Practice task", exact: true }),
+    ).toContainText("Use presets 1, 3, 6");
     const approved = manual.replaceAll(escaped, '"Quick estimate"');
     expect(fixture.calculatorSource("price-calculator.react.tsx")).toBe(approved);
     await mode.selectOption("auto");

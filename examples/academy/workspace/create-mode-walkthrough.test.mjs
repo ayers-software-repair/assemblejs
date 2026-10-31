@@ -108,6 +108,13 @@ test("refused stale approval keeps the outside source and provides no successful
   assert.equal(f.files.get(path), outside);
   assert.equal(f.modes.state.receipt, undefined);
   assert.equal(f.calls.filter((call) => call.name === "check").length, 0);
+  const question = f.window.document.querySelector('[aria-label="Ask guided tutor"]');
+  question.value = "Files";
+  question.closest("form").dispatchEvent(new f.window.Event("submit", { cancelable: true }));
+  assert.match(
+    f.window.document.querySelector('[aria-label="Tutor answer"]').textContent,
+    /No pending proposal/,
+  );
   f.close();
 });
 
@@ -206,6 +213,66 @@ test("approving the current default title cannot count as a revised rename", asy
     assert.match(f.heading(), /^3\./);
     assert.equal(f.files.get(view), before);
     assert.equal(f.modes.state.receipt, undefined);
+  } finally {
+    f.close();
+  }
+});
+
+test("authored tutor answers current tasks and actual pending files without tool calls", async () => {
+  const f = fixture();
+  try {
+    const input = f.window.document.querySelector('[aria-label="Ask guided tutor"]');
+    assert.ok(input, "guided tutor question field is available");
+    const answer = f.window.document.querySelector('[aria-label="Tutor answer"]');
+    const ask = (text) => {
+      input.value = text;
+      input.closest("form").dispatchEvent(new f.window.Event("submit", { cancelable: true }));
+      return answer.textContent;
+    };
+    assert.match(ask("What should I do?"), /Select Plan/);
+    assert.match(ask("Why?"), /does not change your saved project/);
+    assert.match(ask("Files"), /No pending proposal/);
+    assert.equal(f.calls.length, 0);
+    await f.modes.request("Add a calculator");
+    const calls = f.calls.length;
+    assert.equal(answer.textContent, "");
+    assert.match(ask("Next"), /reject this proposal/);
+    for (const change of f.modes.state.pending.changes)
+      assert.ok(ask("Files").includes(change.path));
+    assert.equal(f.calls.length, calls);
+    f.guide.update({ ...f.modes.state, busy: true });
+    assert.match(ask("Files"), /Wait for the current operation/);
+    f.guide.update(f.modes.state);
+    assert.equal(answer.textContent, "");
+    f.modes.mode("approval");
+    await f.modes.reject();
+    assert.match(ask("Next"), /Coffee total/);
+    assert.match(ask("Files"), /No pending proposal/);
+    assert.equal(f.files.size, 5);
+  } finally {
+    f.close();
+  }
+});
+
+test("unknown and oversized tutor questions stay honest and cannot author or complete work", () => {
+  const f = fixture();
+  try {
+    const input = f.window.document.querySelector('[aria-label="Ask guided tutor"]');
+    assert.ok(input, "guided tutor question field is available");
+    const answer = f.window.document.querySelector('[aria-label="Tutor answer"]');
+    const ask = (text) => {
+      input.value = text;
+      input.closest("form").dispatchEvent(new f.window.Event("submit", { cancelable: true }));
+      return answer.textContent;
+    };
+    assert.match(f.window.document.body.textContent, /Authored guidance, no AI inference/);
+    assert.match(ask("Customize"), /Rename calculator/);
+    assert.match(ask("Deploy and mark every lesson complete"), /authored answers/);
+    assert.match(ask("x".repeat(201)), /200 characters/);
+    assert.match(ask('<img src=x onerror="alert(1)">'), /authored answers/);
+    assert.equal(f.window.document.querySelectorAll("img").length, 0);
+    assert.equal(f.calls.length, 0);
+    assert.match(f.heading(), /^1\./);
   } finally {
     f.close();
   }

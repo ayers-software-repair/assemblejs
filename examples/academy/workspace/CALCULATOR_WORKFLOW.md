@@ -56,6 +56,11 @@ Mode practice also works on an existing calculator: inspect a new title plan, re
 proposal, approve a revised title and apply changed presets in Auto. Current files and trailing
 comments remain intact; existing files never count as previous lesson completion.
 
+Optional Guided tutor questions explain the current mode-practice task and actual pending
+proposal paths. They use authored responses, make no tool calls and cannot approve changes or
+complete a step. Unknown questions have an honest fallback. Supported source requests still
+belong in the calculator's Request field; no AI provider or live agent connection is implied.
+
 The editor's explicit Reload file reads actual current source into a clean idle buffer.
 It is disabled for unsaved edits. A draft typed during a reload survives; concurrent reloads
 are refused. It does not discard drafts or automatically refresh tabs on agent notifications.
