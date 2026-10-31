@@ -91,3 +91,26 @@ it("aborts outstanding quote work when its assembly unmounts", async () => {
   });
   expect(host.textContent).toBe("");
 });
+
+it.each([200, 503])(
+  "does not abort a settled %s quote when the learner asks again",
+  async (status) => {
+    const signals: AbortSignal[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((_url: string, options: RequestInit) => {
+        signals.push(options.signal as AbortSignal);
+        return Promise.resolve(
+          signals.length === 1 && status === 503
+            ? new Response("unavailable", { status: 503 })
+            : quote(signals.length === 1 ? 1 : 3),
+        );
+      }),
+    );
+    await act(async () => button("1 item").click());
+    expect(host.textContent).toContain(status === 503 ? "503" : "Estimate for 1");
+    await act(async () => button("3 items").click());
+    expect(signals[0]?.aborted).toBe(false);
+    expect(host.textContent).toContain("Estimate for 3");
+  },
+);

@@ -8129,3 +8129,10 @@ keyboard and narrow/dark captures. Source unit tests compile only their imported
 the existing compiler, without requiring generated application TypeScript projects or builds.
 This is a working supplied-project feature, not delivered Academy lessons or guided changes;
 progressive snapshots and the workspace still need wiring. No runtime selection or release.
+
+The first hosted calculator walkthrough reached the actual quote, failure/recovery and all
+three captures, then failed its strict network assertion on an aborted quote request. The
+source retained cancellation handles after settlement, so later edits/retries could abort an
+already-settled response. Two source regressions (successful and failed HTTP replies) were
+watched red before clearing the matching handle in finally. Pending-request cancellation and
+late-response protection remain; no network error filter or browser assertion is relaxed.

@@ -17,8 +17,7 @@ export default function PriceCalculator({ data }: AssemblyProps<Offer>) {
 
   const request = async (value: number): Promise<void> => {
     active.current?.abort();
-    const controller = new AbortController();
-    active.current = controller;
+    active.current = undefined;
     setEstimate(undefined);
     setProblem("");
     if (!Number.isInteger(value) || value < 1 || value > 99) {
@@ -26,6 +25,8 @@ export default function PriceCalculator({ data }: AssemblyProps<Offer>) {
       setPhase("failed");
       return;
     }
+    const controller = new AbortController();
+    active.current = controller;
     setPhase("loading");
     try {
       const result = await requestEstimate(data.sku, value, data.grind, controller.signal);
@@ -36,6 +37,8 @@ export default function PriceCalculator({ data }: AssemblyProps<Offer>) {
       if (controller.signal.aborted || active.current !== controller) return;
       setProblem(error instanceof Error ? error.message : String(error));
       setPhase("failed");
+    } finally {
+      if (active.current === controller) active.current = undefined;
     }
   };
   const edit = (value: string): void => {
