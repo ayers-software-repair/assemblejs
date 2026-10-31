@@ -72,8 +72,12 @@ Auto, keyboard/narrow layout, Stop and in-flight build cleanup before merge `d11
 
 The continuity increment extends that same hosted workflow: save a page introduction and an
 inert buy-box example before the first build, then retain them through Plan, reject/revised
-approval and Auto. Fresh hosted/personal acceptance is required for this increment. Local
-source tests run no product build, application server or browser.
+approval and Auto. At PR50 source head `abf7c89`, modes `41195261111` passed all six browser
+scenarios and personal source/artifact review found no implementation finding. The actual
+approved page edit adds only the calculator directive to the saved manual page. Six real
+builds, quotes/composition, narrow layout and owned cleanup pass. Final-head CI and personal
+acceptance remain required before merge. Local source tests run no product build, application
+server or browser.
 
 Full lesson checks, snapshots, persistence/resume, certificate gating and a verified external
 agent connection remain open. Observed source-version checks refuse detected changes around

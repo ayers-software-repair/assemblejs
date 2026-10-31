@@ -77,10 +77,14 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       review `5722323760`, all ten exact-head jobs and post-merge CI `41192530493`, modes
       `41192530590` and editor `41192530499`. This is not durable curriculum progress,
       an atomic snapshot or certificate evidence.
-- [ ] Preserve saved earlier page edits when adding the guided calculator: shared read-only
-      CLI-parser placement plan, exact expected bases and unchanged three-mode consent.
-      Focused source/parser/protocol cases pass; actual hosted continuity and independent
-      source/personal acceptance remain required before marking complete.
+- [x] Implement saved earlier-page edit preservation when adding the guided calculator:
+      shared read-only CLI-parser placement plan, exact bases and unchanged three-mode consent.
+      Twenty-eight focused MCP/parser/protocol/guidance cases, source component/static checks
+      and native review pass. At source head `abf7c89`, hosted modes `41195261111` passes all
+      six cases and editor `41195261108` passes; personal source/artifact review is clear.
+      The actual page payload preserves the manual paragraph and inert comment exactly.
+      PR50 remains gated on final-head CI and personal acceptance before merge; full lesson
+      snapshots/progress remain open.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in
