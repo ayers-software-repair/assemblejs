@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { writeFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
+import { captureLandingPaint } from "./capture-landing-paint.js";
 import { serveLanding } from "./serve-landing.js";
 
 test("the landing keeps composition, links and keyboard access at desktop and narrow widths", async ({
@@ -13,23 +14,11 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     width: number;
     renderer: string;
     thread: string;
-    draws: number;
-    ready: boolean;
+    edges: number;
+    maxDelta: number;
+    paintWidth: number;
+    paintHeight: number;
   }> = [];
-  const rendererState = () =>
-    page.evaluate(() => {
-      const canvas = document.querySelector<HTMLCanvasElement>("[data-landing-background]");
-      const renderer = canvas?.dataset.renderer ?? "pending";
-      const thread = canvas?.dataset.thread ?? "none";
-      const draws = Number(document.documentElement.dataset.landingProofDraws ?? "0");
-      const ready =
-        renderer === "css"
-          ? canvas?.hidden === true
-          : canvas?.hidden === false &&
-            ["webgpu", "webgl"].includes(renderer) &&
-            (thread === "main" || (thread === "worker" && draws > 0));
-      return { renderer, thread, draws, ready };
-    });
   const fits = () =>
     page.evaluate(() => {
       const heading = document.querySelector("h1");
@@ -50,31 +39,6 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     if (response.status() >= 400) failures.push(`${String(response.status())} ${response.url()}`);
   });
   try {
-    await page.addInitScript(() => {
-      const NativeWorker = window.Worker;
-      if (typeof NativeWorker === "undefined") return;
-      window.Worker = class extends NativeWorker {
-        constructor(...args: ConstructorParameters<typeof NativeWorker>) {
-          super(...args);
-          if (new URL(String(args[0]), location.href).pathname === "/kit/landing-worker.js") {
-            const root = document.documentElement;
-            this.addEventListener("message", (event: MessageEvent<unknown>) => {
-              const data = event.data;
-              if (
-                data !== null &&
-                typeof data === "object" &&
-                "type" in data &&
-                data.type === "drawn"
-              ) {
-                root.dataset.landingProofDraws = String(
-                  Number(root.dataset.landingProofDraws ?? "0") + 1,
-                );
-              }
-            });
-          }
-        }
-      };
-    });
     for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`${fixture.origin}/?width=${String(width)}`);
@@ -92,29 +56,65 @@ test("the landing keeps composition, links and keyboard access at desktop and na
         });
       }
       expect(await fits()).toBe(true);
-      await expect.poll(async () => (await rendererState()).ready, { timeout: 15000 }).toBe(true);
-      const rendered = await rendererState();
-      if (width === 1440) {
-        await page.locator("[data-landing-background]").evaluate((canvas) => {
-          (canvas as HTMLElement).dataset.renderer = "pending";
-        });
-        expect((await rendererState()).ready).toBe(false);
-        await page.locator("[data-landing-background]").evaluate((canvas, renderer) => {
-          (canvas as HTMLElement).dataset.renderer = renderer;
-        }, rendered.renderer);
-        if (rendered.thread === "worker" && rendered.renderer !== "css") {
-          await page.evaluate(() => {
-            document.documentElement.dataset.landingProofDraws = "0";
-          });
-          expect((await rendererState()).ready).toBe(false);
-          await page.evaluate((draws) => {
-            document.documentElement.dataset.landingProofDraws = String(draws);
-          }, rendered.draws);
-        }
-      }
-      renderers.push({ width, ...(await rendererState()) });
+      const measured = {
+        width,
+        renderer: "pending",
+        thread: "none",
+        edges: 0,
+        maxDelta: 0,
+        paintWidth: 0,
+        paintHeight: 0,
+      };
+      renderers.push(measured);
       const screenshot = info.outputPath(`landing-${String(width)}.png`);
-      await page.screenshot({ path: screenshot, fullPage: true });
+      const capture = async () => {
+        const { image, ...pixels } = await captureLandingPaint(page);
+        const native = await page.locator("[data-landing-background]").evaluate((canvas) => ({
+          renderer: (canvas as HTMLElement).dataset.renderer ?? "pending",
+          thread: (canvas as HTMLElement).dataset.thread ?? "none",
+        }));
+        Object.assign(measured, pixels, native);
+        await writeFile(screenshot, image);
+        return ["webgpu", "webgl"].includes(native.renderer) ? pixels.edges : 0;
+      };
+      await expect.poll(capture, { timeout: 15000 }).toBeGreaterThanOrEqual(12);
+      if (width === 1440) {
+        const canvas = page.locator("[data-landing-background]");
+        const original = await canvas.evaluate((element) => {
+          const style = (element as HTMLElement).style;
+          const saved = {
+            value: style.getPropertyValue("opacity"),
+            priority: style.getPropertyPriority("opacity"),
+          };
+          style.setProperty("opacity", "0", "important");
+          return saved;
+        });
+        try {
+          await expect
+            .poll(
+              async () => {
+                const blank = await captureLandingPaint(page);
+                await writeFile(info.outputPath("landing-unpainted-control.png"), blank.image);
+                const { image: _image, ...pixels } = blank;
+                await writeFile(
+                  info.outputPath("landing-unpainted-control.json"),
+                  JSON.stringify(pixels, null, 2),
+                );
+                return blank.edges;
+              },
+              { timeout: 5000 },
+            )
+            .toBeLessThan(12);
+        } finally {
+          await canvas.evaluate((element, saved) => {
+            const style = (element as HTMLElement).style;
+            if (saved.value) style.setProperty("opacity", saved.value, saved.priority);
+            else style.removeProperty("opacity");
+          }, original);
+        }
+        await expect.poll(capture, { timeout: 15000 }).toBeGreaterThanOrEqual(12);
+      }
+      expect(measured.paintWidth).toBe(width);
       await info.attach(`landing-${String(width)}`, { path: screenshot, contentType: "image/png" });
       await page.keyboard.press("Tab");
       await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();

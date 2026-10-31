@@ -8378,3 +8378,28 @@ draws are known-bad controls. Do not modify vendor rendering, inject substitute 
 an arbitrary delay. Root viewed all five new images and the old 1024 image; corrected hosted
 capture and personal visual acceptance remain required before merge. A draw acknowledgement
 records submitted work, not correct visible pixels; the images must still be reviewed.
+
+PR46 correction `991a45c` again passed all twelve jobs, but personal review `5721968539`
+found the 390px PNG still unpainted despite webgl/worker/draws=1/ready=true. Artifact
+`13036081362`, SHA-256 `86184bf3f99dc4063c82a40a317a3a8752792ee6e7a347fe967c27ecfd6d2893`,
+retains that decisive limit: submitted work is not composited pixels. No acceptance is inferred.
+
+The next capture-only correction measures the actual compositor PNG using native browser image
+decoding into a separate analysis canvas that never enters the page. Six unobstructed gutters
+between y110 and y850 distinguish the authored weave's edges from the smooth CSS gradient.
+Measured retained blank images had zero adjacent-channel deltas of at least 3; painted images
+had 182 to 438 such edges. Require at least twelve edges, retain the measured values and save
+that exact validated PNG. Poll actual captures with a bounded timeout, not an arbitrary delay.
+After the first normal capture passes, a live opacity-zero capture is a known-bad control;
+restore its exact original style and require the actual weave again. Remove the superseded
+worker-constructor observer; retain only native renderer labels and measured pixels. No vendor changes, substitute pixels or product-renderer modifications.
+Corrected hosted images and personal acceptance remain required.
+
+The pixel measurement uses the documented
+[Playwright screenshot buffer](https://playwright.dev/docs/api/class-page#page-screenshot),
+[native image decoding](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap)
+and [pixel readback](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getImageData).
+The decoder copies only the captured PNG into an analysis surface; it does not read a claimed
+renderer result or draw anything into the product. The normal first image passes before the
+opacity-zero control, and the restored normal image must pass again. Preserve the negative
+PNG/metrics alongside the exact positive PNGs and per-width metrics.
