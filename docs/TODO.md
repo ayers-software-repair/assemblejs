@@ -83,8 +83,18 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       and native review pass. At source head `abf7c89`, hosted modes `41195261111` passes all
       six cases and editor `41195261108` passes; personal source/artifact review is clear.
       The actual page payload preserves the manual paragraph and inert comment exactly.
-      PR50 remains gated on final-head CI and personal acceptance before merge; full lesson
-      snapshots/progress remain open.
+      PR50 merged as `82c0272` after personal review `5722513812` and all ten exact-head jobs.
+      Post-merge CI `41196768670`, modes `41196768709` and editor `41196768655` passed;
+      actual tree/parent/full DCO message/signature were independently verified. The initial
+      size failure was corrected without changing the 46,000-byte budget (actual: 45,963).
+      Full lesson snapshots/progress remain open.
+- [ ] Recover unsaved editor drafts on reload in the same tab. Owner: Academy implementation
+      chat. Done when exact-base recovery writes no project file, conflicts preserve both
+      current source and recovered draft, denied/quota/malformed storage reports actual failure,
+      and explicit Save keeps existing expected-base guards. Prove actual reload, conflict,
+      keyboard/narrow layout and shared-provider behavior in hosted CI, with independent review.
+      This is tab-local draft recovery, not project snapshots, durable lesson progress or
+      completion/certificate evidence. No account, runtime adoption or new paid service.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

@@ -24,7 +24,9 @@ checks beyond that acknowledgement.
 Confirmed written paths join the code tree. Source writes through either control invalidate the displayed preview and reload only clean,
 already opened changed files. Dirty drafts remain intact. Preview/check operations serialize
 this workspace's writes; external agent/CLI notifications are not yet implemented. The preview
-uses saved project files, not unsaved buffers. Destroy removes UI and guards late results;
+uses saved project files, not unsaved buffers. The editor's tab-local draft recovery restores
+only a matching-base buffer and exposes conflicts separately; it does not rebuild or write
+project files. See [the editor contract](README.md#recover-an-unsaved-draft-after-reload). Destroy removes UI and guards late results;
 the caller still owns runtime shutdown and any already dispatched project operation.
 
 The embedding server must enforce CSP frame-src at the pinned origin, including redirects

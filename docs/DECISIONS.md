@@ -8563,3 +8563,38 @@ gate: `@asmjs/check` was 46,054 bytes against the unchanged 46,000-byte budget. 
 guidance while retaining tool names, exact bases, absence semantics, approval, failure/retry,
 confinement, transaction/hostile-filesystem limits and post-write verification. Only hosted
 CI may build/pack the corrected source. Final-head review and every required gate remain.
+
+## 2026-10-31 — Recover drafts on reload without writing the project
+
+PR50 merged as `82c0272`, actual reviewed tree `126e7d97329d66b14c624141ee9ffecbe1ed08c4`,
+sole parent `805ce56`, personal review `5722513812`, all ten exact-head jobs. Both Node versions
+passed 2,511 tests and all fourteen package pack/publish checks; the corrected check package
+measures 45,963 bytes under the unchanged 46,000-byte limit. Actual squash identities, full
+DCO/Conventional message and valid signature were independently verified. Automatic post-merge
+CI `41196768670`, modes `41196768709` and editor `41196768655` passed; personal post-merge
+source/log/artifact review is clear. This supersedes earlier pending PR50 checkpoints above.
+
+The next bounded resume item is unsaved editor draft recovery after reload in the same tab.
+Owner and done-when are recorded in TODO before source edits. Reuse existing editor buffers
+and expected-base provider saves. Cache only bounded draft/base text; matching-base recovery
+changes the editor buffer, not project files. A changed file keeps its actual current source
+and exposes the recovered draft separately for review. Failed or malformed storage must not
+claim recovery or silently discard its data. No recovery path writes the project; explicit
+Save retains its existing compare-and-write requirement.
+
+Use tab-local [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)
+for this reload-only scope. Its getter can be denied and data ends with the page session;
+[Web Storage](https://html.spec.whatwg.org/multipage/webstorage.html#the-storage-interface)
+also specifies failed writes and no localStorage locking guarantee. Do not imply cross-session
+project/progress persistence, source snapshots or verified lesson completion. Those remain
+separate open tasks, alongside the existing browser-runtime and external-agent holds.
+
+The matching-base recreation regression was observed losing the learner's text before recovery
+was added. A second regression caught storage-denial details disappearing after typing; the
+correction retains the actual error while blocking overwrite of unread recovery data. Eight
+focused recovery cases and all 91 workspace component cases pass, plus three path-boundary
+cases. Source lint/format, organization/mirror self-tests, modules, unused, duplication (3.23%),
+identity/headers and emoji pass. Independent complete source review is clear. Three new
+hosted real-MCP scenarios cover reload, exact writes, conflict review, keyboard/narrow layout,
+denied reads and quota failures; all retain strict console/page/network diagnostics. Fresh
+hosted and personal acceptance remain required. No local product build, app server or browser.

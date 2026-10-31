@@ -36,6 +36,7 @@ jobs:
       - run: |
           node examples/academy/workspace/workspace-files.test.mjs
           node examples/academy/workspace/create-source-editor.test.mjs
+          node examples/academy/workspace/create-draft-recovery.test.mjs
           node browser/academy-editor/read-save-body.test.mjs
           node browser/academy-editor/create-file-provider.test.mjs
       - run: pnpm exec playwright install --with-deps chromium
