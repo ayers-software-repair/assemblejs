@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-31, after guarded source tools and the editor adapter merged.
+Checkpoint: 2026-10-31, after safeguard source and its site-delivery correction merged.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -217,3 +217,43 @@ scoped guards pass; new-head hosted/source/personal/site acceptance remains requ
 `docs/studies/verification-guardrails-reconciliation.md` and DECISIONS for the exact scope.
 This source refresh does not replace Academy lesson/connection/runtime/progress work or the
 PR33 hold. No local product build/server/browser or old-matrix rerun was used.
+
+## Safeguard delivery checkpoint
+
+PR46 merged as `fe036a78e35afa60bc8d3ee58a222b5d92b58ad9`, exact reviewed tree
+`abbb716bce88cef8336cc979a71a58940f744bb7`, parent `76eaaaf`, after personal review
+`5722099073` and all twelve exact-head checks. Actual squash identities, complete DCO message
+and valid GitHub signature were verified. Post-merge CI `41187302225`, landing `41187302254`
+and modes `41187302161` passed. Its deployment `41187302218` failed the new pinned frame
+check before cloud upload; that failure is preserved, not treated as delivered acceptance.
+
+PR47 corrected only the missing generated frame links and released-asset staging. It merged
+as `c8c370569536c68d868e4bbdd0c245215225ec74`, reviewed tree
+`d3da9958c350b98d8d5028b10ac8984a8c6f6d65`, parent `fe036a7`, after all nine exact-head
+checks and personal review `5722144704`. Actual squash tree/parent/full message/signature
+were verified. Normal deployment `41188471177` and landing `41188471159` passed.
+All eight post-merge CI jobs in `41188471147` passed. Source, post-merge and live-byte
+acceptance now support issue 11 delivery closure and retiring stale PR12 as superseded;
+do not merge its old branch.
+
+Requests to `https://ayers.repair/assemblejs/next/` redirected to the corresponding
+`https://assemblejs.com/next/` URLs. All 66 final HTTP-200 responses match byte for byte:
+all staged product/kit files except Markdown/JSON, plus the current hosted API index. Other
+generated API pages were not crawled. Expected bytes use the exact released metadata builder,
+normal noindex/error-prefix transforms and this deployment's actual API artifact. Raw receipt:
+`/tmp/assemblejs-site-delivery-live-c8c3705.json`, SHA-256
+`a85438e5b840a317059fce525345079d1f15ef15a58249117f6d0530b3b70e73`.
+The manager retained this JSON and raw deployment log unchanged in AUDIT
+`evidence/2026-10-31-manager/assemblejs-safeguards-c8c3705/` with checksums and independently
+confirmed the 66 HTTP-200/hash matches and the exact deployment outcome.
+
+Preserve `/tmp/assemblejs-verification-guardrails-reconciliation`,
+`/tmp/assemblejs-verification-site-delivery` and their retained logs/artifacts. Personal review
+evidence is under AUDIT `evidence/2026-10-31-pr-reviewer/assemble46-1f1530e/` and
+`assemble47-4c1148c/`; actual merge receipts are beside them. The manager owns authoritative
+AUDIT board/evidence updates. This supersedes earlier pending safeguard-source notes above.
+
+The live eligible-next reuse branch and optional local verification plan were not exercised.
+Main-merge reuse remains disabled. No npm publication, release, runtime adoption or new public
+activation occurred. Full Academy lessons, revision-bound progress/resume, certificate and
+verified external-agent connection remain open. PR33's browser-runtime hold remains unchanged.

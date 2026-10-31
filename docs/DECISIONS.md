@@ -8464,3 +8464,25 @@ cases and `pnpm check:site` pass. Executing the corrected staging block against 
 released kit copies all 39 selected CSS/module/icon/badge files byte for byte. The synthetic
 fixture is a regression contract, while this separate released-source comparison proves
 current asset closure. Independent full-source/generated-diff review found no blocker.
+
+PR47 merged as `c8c370569536c68d868e4bbdd0c245215225ec74`, exact reviewed tree
+`d3da9958c350b98d8d5028b10ac8984a8c6f6d65`, parent `fe036a7`, after all nine checks
+and personal review `5722144704`. Actual tree, parent, complete DCO/Conventional message
+and valid GitHub signature match. All eight normal post-merge CI jobs (`41188471147`),
+landing (`41188471159`) and deployment (`41188471177`) passed. The previous failed deploy
+remains part of the record rather than being replaced by an unchanged retry.
+
+Live verification compares all staged non-Markdown/non-JSON product and kit files plus this
+deployment's generated API index: 66 HTTP-200 responses, all exactly equal to expected bytes.
+Requests through the existing ayers.repair next path redirected to corresponding
+assemblejs.com/next URLs; the receipt records those final URLs. Other generated API pages
+were not crawled. Expected bytes use the exact approved metadata
+builder, normal next-channel/noindex/error-prefix transforms and the current hosted API
+artifact. The manager independently confirmed all 66 status/hash pairs and retained raw JSON
+and deployment log under AUDIT `evidence/2026-10-31-manager/assemblejs-safeguards-c8c3705/`.
+The live JSON SHA-256 is
+`a85438e5b840a317059fce525345079d1f15ef15a58249117f6d0530b3b70e73`.
+These receipts support issue 11 delivery closure and stale PR12's retirement as superseded.
+No live eligible-next reuse exercise, optional local verification-plan run, npm publication,
+release, runtime adoption or new public activation is claimed. Full Academy and PR33 holds
+remain open. The source ledger and handoff record this completed delivery separately.
