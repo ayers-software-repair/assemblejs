@@ -33,8 +33,9 @@ framework composition examples and supported commands. Replace the example capti
 The maintained site has 17 HTML pages: home; install; start; downloads; support;
 release-notes; 404; docs/index; docs/tutorial; docs/outline; docs/react; docs/vue;
 docs/svelte; docs/preact; docs/solid; docs/lit; docs/templates. Their generation owner is
-`site-source/pages.json` plus the exact pinned Platform generator; 404 is the shared
-error-page path. Inspect all 17 at desktop and narrow widths, not only their families.
+`site-source/pages.json` plus the exact pinned Platform generator for 16 pages. The 404
+is the existing manually maintained product-frame page, with absolute product-prefix
+assets/navigation, noindex and no canonical; it is not in the source generator. Inspect all 17 at desktop and narrow widths, not only their families.
 
 The retained generated reference under `/tmp/assemblejs-landing-live-expected/docs/api/`
 has 701 HTML pages: root 2, modules 32, classes 9, interfaces 121, functions 419,
