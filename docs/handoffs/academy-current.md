@@ -278,8 +278,13 @@ The initial 46,054-byte pack failure remains recorded; corrected size is 45,963 
 These receipts supersede older pending PR50 paragraphs, not the broader Academy holds.
 
 Active source: `/tmp/assemblejs-academy-draft-recovery`, branch `codex/academy-draft-recovery`,
-on that merge. Next bounded item: tab-local unsaved-draft recovery on reload. Owner: this
-Academy chat. TODO records done-when before source edits: exact bases, no automatic project
-write, preserved conflict text, honest storage errors, hosted reload/keyboard/narrow/provider
-proof and independent review. Durable project/lesson progress, snapshots, resume/certificate,
-verified external-agent connection and runtime adoption remain open.
+on that merge. Owner: this Academy chat. Tab-local unsaved-draft recovery implementation is
+verified at `ed2aa91`: nine recovery/all 92 component cases, independent source/visual review,
+modes `41199554446` (ten browser scenarios) and editor `41199554428` (34 focused cases) pass.
+Unread data offers Retry; known malformed/oversized data has a visible explicit discard action.
+No recovery writes the project or rebases a stale draft. Initial visually held images and all
+four red controls remain recorded. Corrected artifact `13042485671` has SHA-256
+`7b0c999f3e31a5d8b39cebdc7abb4e53bd1f6e2f3db8df832b51bfca3fb4a5a4`.
+PR51 remains gated on the closing docs-only head's CI and personal acceptance before merge.
+Durable project/lesson progress, snapshots, resume/certificate, verified external-agent
+connection and runtime adoption remain open.

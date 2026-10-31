@@ -8622,3 +8622,25 @@ above remained. Corrected source passes all 92 component cases and scoped lint/f
 organization/mirror self-tests, modules, unused, identity/headers and duplication (3.28%).
 Independent complete source review is clear. The corrected four-case hosted proof and
 personal visual acceptance remain required; the initial successful images do not replace them.
+
+Corrected source `ed2aa91`, tree `f3d1909d15cd6b018999f20f1876e4ade5233988`, passes hosted
+modes `41199554446` (66 focused cases and ten browser scenarios) and editor `41199554428`
+(34 focused cases and one browser scenario). All four recovery scenarios retain empty
+console/page/network diagnostics. Actual payloads show no automatic provider writes: the
+oversized case has three reads and exactly one explicit Save. The existing genuine workspace
+still completes six successful builds, quotes/composition and empty owned cleanup.
+
+Root and personal source/artifact/visual review are clear. The corrected denied views show
+Retry without claiming recovered text. The 390px oversized view exposes a keyboard-accessible
+Discard stored draft without rendering its 800001-character raw value; normal reload recovery
+works afterward. New and changed screenshots were personally viewed; original held images
+remain separate. Modes artifact `13042485671`, 1,783,789 bytes, has verified SHA-256
+`7b0c999f3e31a5d8b39cebdc7abb4e53bd1f6e2f3db8df832b51bfca3fb4a5a4`.
+
+This closes the bounded implementation/proof task in TODO, not full Academy persistence or
+completion. The closing docs-only head must receive its own exact-head CI and personal
+acceptance before the standing source-merge exception applies. Existing account/runtime,
+atomicity and administrative-closure holds remain unchanged.
+
+All ten corrected-source jobs at `ed2aa91` passed, including full CI `41199554443`, before
+this closing documentation change. The final-head and post-merge requirements remain.

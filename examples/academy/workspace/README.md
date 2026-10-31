@@ -98,14 +98,19 @@ rebases a stale draft or applies it automatically. Denied reads and malformed re
 blocked rather than being overwritten by subsequent typing. Quota/storage errors keep useful
 text in memory and display the actual error without claiming the latest draft was persisted.
 When storage could not be read, Retry draft recovery checks it again without writing the
-project. Read but malformed/oversized data instead exposes an explicit Discard stored draft
-action, even when its raw value is too large to display. It keeps newer in-memory edits separate from an older recovered draft. No unread
-text is presented as a recovered draft. A successful project Save remains valid even if draft
-storage is unavailable.
+project and keeps newer in-memory edits separate from an older recovered draft. No unread
+text is presented as a recovered draft. Read but malformed/oversized data instead exposes an
+explicit Discard stored draft action, even when its raw value is too large to display.
+A successful project Save remains valid even if draft storage is unavailable.
 
 Nine focused recovery cases cover matching/conflicting bases, malformed/bounded storage,
-denial, quota, late edits during Save and redundant cached text. The matching-recovery and
-error-message regressions were watched failing before correction. Four hosted actual-MCP
-scenarios must prove real page reload, no writes before Save, conflict selection/review and manual
-merge, keyboard/narrow layout and denied/quota handling. Fresh hosted and independent/personal acceptance
-remain required for this source increment. No local product build, server or browser ran.
+denial/retry, quota, late edits during Save and redundant cached text. Four controls were
+observed failing before correction: lost drafts, lost error detail, a false empty-recovery
+panel and an inaccessible oversized-data discard action.
+
+At corrected source `ed2aa91`, modes `41199554446` passes all ten browser scenarios, including
+four recovery cases. Editor `41199554428` passes 34 focused cases and its real-browser proof.
+Actual reload writes nothing before Save; conflict selection/manual merge, denied/quota
+handling and visible keyboard discard of oversized data are verified. Root and independent
+personal source/artifact/visual review are clear. Final-head CI/personal acceptance remains
+required before merge. No local product build, server or browser ran.
