@@ -24,10 +24,17 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       with the learner's agent teaching along the way; keep instructions short and clear.
       Support both the learner's agent and a scripted in-site guided tutor tied to real checks;
       no real inference connection or invented account requirement.
-- [ ] Add mode controls over the real shared assembly review/check tools, verifying no-write
-      planning, rejection/revision/exact approval, Auto/check and outside-edit refusal through
-      the actual hosted MCP session. This is scaffold authoring, not the completed calculator
-      workflow or full Academy lesson acceptance.
+- [x] Add the supplied-project source editor component: file navigation, retained tabs,
+      highlighted editing and guarded provider saves. Seventeen focused cases, actual hosted
+      keyboard/narrow/EOF/selection proof (`41163039875`), independent visual/source review and
+      all six exact-head CI jobs (`41163039843`) passed at `2e7669a`. The actual runtime provider
+      and complete Academy remain open; this component does not select a runtime.
+
+- [x] Add mode controls over the real shared assembly review/check tools. Sixteen focused
+      cases, hosted actual MCP/file/browser proof (`41163301978`), independent source/visual
+      review and all six exact-head CI jobs (`41163301977`) passed at `5413315`. Plan writes
+      nothing; rejection/revision/exact approval, Auto/check and outside-edit refusal are real.
+      This is scaffold authoring, not the completed calculator or full lesson acceptance.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in
