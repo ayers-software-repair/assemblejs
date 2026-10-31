@@ -50,7 +50,7 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [x] Add authored Market calculator source planning/controls over shared reads/writes/checks:
       the real four files plus product-page placement, bounded own-word title/preset requests,
       reject/revised approval/Auto, manual edits and clean editor reload. Twenty-one focused
-      feature cases and seven buffer/eight editor cases pass; comment-marker regressions and
+      feature cases and seven buffer/eleven editor cases pass; comment-marker regressions and
       mode/reload controls were watched red. Hosted/personal delivery acceptance remains
       required. Unknown source/page shapes refuse; full lesson/preview integration remains open.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including

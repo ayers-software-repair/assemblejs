@@ -125,17 +125,16 @@ export function createSourceEditor(container, project, paths) {
   reload.addEventListener("click", async () => {
     const path = active;
     if (!path) return;
-    const ticket = ++opening;
     reloading = true;
     refresh();
     try {
       const buffer = await files.reload(path);
-      if (!disposed && ticket === opening) {
+      if (!disposed && active === path) {
         input.value = buffer.text;
         status.textContent = `Reloaded ${path} from the project. Run checks to verify it.`;
       }
     } catch (error) {
-      if (!disposed && ticket === opening) status.textContent = `Not reloaded: ${String(error)}.`;
+      if (!disposed && active === path) status.textContent = `Not reloaded: ${String(error)}.`;
     } finally {
       reloading = false;
       refresh();

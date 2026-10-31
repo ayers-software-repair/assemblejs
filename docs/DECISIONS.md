@@ -8217,3 +8217,16 @@ An explicit clean editor Reload follows other writers without discarding a draft
 buffer changes refuse the reload. Hosted-only proof uses actual copied Market source and its
 installed dependencies, the real MCP and actual check; no app server or framework preview is
 simulated. Full browser runtime/lesson/connection/progress/certificate acceptance stays open.
+
+The initial PR43 review additionally reproduced a Reload/reselection data-loss race: a same-file
+or away-and-back tab selection invalidated only the textarea update while the retained base
+advanced. A later guarded Save then overwrote an agent edit. Both actual-file regressions were
+watched red; reload now updates the currently active file regardless of navigation generations,
+while another selected file remains untouched. All eleven editor cases pass after correction.
+
+Initial hosted run 41170315559 applied the five reviewed calculator files, then the actual
+agent-instructions-are-current check refused a registered MCP without a declared dependency.
+Copying Market metadata had dropped create_project's MCP declaration. The fixture now merges
+the generated declarations with Market metadata and links the actual installed dependencies,
+including MCP, into an isolated directory. No check is removed or treated as success; the
+remaining Auto/manual/stale/Reload browser sequence still needs corrected hosted acceptance.

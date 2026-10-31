@@ -26,7 +26,7 @@ Failed saves retain the learner's draft and show the actual error. Saving does n
 or claim that a visible preview is current. The final workspace still needs a production connection, combined feature/mode exercises,
 lesson checks, persistence and live-agent transport.
 
-Twenty focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
+Twenty-three focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
 refusal, in-flight edits, failed writes, retained tabs, late reads, markup escaping, disposal and split UTF-8 input.
 The hosted `academy source editor` job bundles the actual component and opens real copied
 Market calculator files through a bounded test-only HTTP provider. It verifies actual saved

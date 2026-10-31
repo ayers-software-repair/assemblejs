@@ -57,14 +57,21 @@ serialization, escaped source and supported customization. Independent review fo
 markers mistaken for live code; three exact regressions were red before the authored-shape
 restriction and pass afterward. Mode-switch auto-apply and reload-overwrite controls were
 also observed red before restoring the guards. Existing buffer/editor cases include clean
-reload and in-flight draft retention.
+reload and in-flight draft retention. Three selection regressions also cover same-file reselect,
+away-and-back and another-file selection; the first two were watched reverting an agent edit
+on a subsequent guarded Save before the active-file projection was corrected.
 
 The hosted-only modes fixture copies the actual Market source/config/package metadata into
-its disposable project, removes the calculator and placement, and links the existing installed
-Market dependencies. Its bounded localhost transport exposes only the existing permitted MCP
+its disposable project, removes the calculator and placement, preserves generated agent-tool
+metadata, and links the already installed Market/source-tooling dependencies into its own
+dependency directory. Its bounded localhost transport exposes only the existing permitted MCP
 tools. The new browser scenario exercises real planning, rejection, revised approval, Auto,
 manual Save, stale approval refusal, refreshed review and clean Reload, with actual file bytes,
-real project checks, screenshots and strict diagnostics. Hosted/personal acceptance is pending.
+real project checks, screenshots and strict diagnostics. The first hosted run (`41170315559`,
+`09b80fe`) applied all five reviewed files, then the real check refused a retained MCP registration whose dependency was dropped by the fixture's Market
+manifest copy. The fixture now merges the generated declarations and installs real links,
+including MCP, without changing that check. Auto/manual/stale/final Reload were not reached
+in that failed run. Corrected hosted/personal acceptance is pending.
 No local framework/product build, app server or browser runs on this seat. This source proof
 starts no Market application server and substitutes no iframe for a framework preview.
 

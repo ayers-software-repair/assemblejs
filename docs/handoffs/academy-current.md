@@ -50,9 +50,13 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
 6. Authored calculator workflow is in `/tmp/assemblejs-academy-calculator-workflow`.
    Source prepares the actual four Market files and product-page placement, supports bounded
    title/preset requests, teaches reject/revise/approve and Auto, and adds clean editor Reload.
-   Twenty-one feature cases plus seven buffer/eight editor cases pass. Independent review
+   Twenty-one feature cases plus seven buffer/eleven editor cases pass. Independent review
    found three comment-marker errors; observed-red regressions and authored-shape restriction
-   correct them. Native verification is clear; hosted/personal acceptance still gates delivery.
+   correct them. Initial PR43 head `09b80fe` exposed a Reload/reselection overwrite and a fixture
+   MCP-metadata inconsistency; two selection regressions were red, then all eleven editor cases
+   passed after correction. Hosted run `41170315559` applied the five files but correctly refused
+   stale registration metadata. The fixture retains generated declarations and real dependency
+   links; corrected native/hosted/personal acceptance still gates delivery.
    See `examples/academy/workspace/CALCULATOR_WORKFLOW.md` for the strict source/page baseline.
 7. Full supplied-project workspace, actual runtime/build/preview wiring and lesson exercises
    remain open. Earlier exercises need a reviewed authored page baseline before calculator
