@@ -8186,3 +8186,13 @@ verified separately from the 39 passing runtime cases.
 Filesystem behavior was checked against the Node22 filesystem documentation:
 https://nodejs.org/docs/latest-v22.x/api/fs.html. A prepared rename replaces a path; it is not
 a conditional compare-and-swap primitive. Source guards therefore state their actual limits.
+
+## 2026-10-31: editor saves use the shared source tools
+
+Adapt the editor's existing provider contract to read_source/apply_source_changes over an
+already connected MCP client. Keep the reviewed base in the editor, validate exact written
+paths before advancing it, and preserve actual failure/partial diagnostics with the draft.
+Manual Save is explicit; this adapter neither chooses an agent mode nor creates a connection.
+The hosted-only modes fixture provides an isolated editor route with the real MCP server and
+canonical project, leaving the original mode scenario intact. No production HTTP bridge,
+preview, runtime adoption, full calculator or complete Academy is implied.

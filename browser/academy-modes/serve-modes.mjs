@@ -38,7 +38,9 @@ export async function serveModes() {
     if (!JSON.parse(seed.content[0].text).ok) throw new Error("actual project creation failed");
     const bundle = await build({
       stdin: {
-        contents: `import { createAssemblyControls } from "./examples/academy/workspace/create-assembly-controls.js";
+        contents: `import { createSourceEditor } from "./examples/academy/workspace/create-source-editor.js";
+import { createProjectFiles } from "./examples/academy/workspace/create-project-files.js";
+import { createAssemblyControls } from "./examples/academy/workspace/create-assembly-controls.js";
 const client = {
   async callTool(request) {
     const response = await fetch('/call-tool', {
@@ -50,7 +52,11 @@ const client = {
     return result;
   }
 };
-createAssemblyControls(document.querySelector('main'), client);`,
+if (location.search === '?editor') {
+  createSourceEditor(document.querySelector('main'), createProjectFiles(client), ['src/assemblies/hello/hello.html']);
+} else {
+  createAssemblyControls(document.querySelector('main'), client);
+}`,
         resolveDir: process.cwd(),
         sourcefile: "academy-mode-entry.js",
       },
@@ -59,7 +65,13 @@ createAssemblyControls(document.querySelector('main'), client);`,
       platform: "browser",
       write: false,
     });
-    const css = await readFile("examples/academy/workspace/assembly-controls.css", "utf8");
+    const css = (
+      await Promise.all(
+        ["assembly-controls.css", "source-editor.css"].map((file) =>
+          readFile(`examples/academy/workspace/${file}`, "utf8"),
+        ),
+      )
+    ).join("\n");
     let origin;
     const calls = [];
     server = createServer(async (request, response) => {
@@ -86,9 +98,14 @@ createAssemblyControls(document.querySelector('main'), client);`,
           }
           const given = JSON.parse(Buffer.concat(chunks).toString("utf8"));
           if (
-            !["plan_assembly", "apply_assembly_plan", "discard_assembly_plan", "check"].includes(
-              given?.name,
-            )
+            ![
+              "plan_assembly",
+              "apply_assembly_plan",
+              "discard_assembly_plan",
+              "check",
+              "read_source",
+              "apply_source_changes",
+            ].includes(given?.name)
           )
             throw new Error("tool refused");
           calls.push(given);
