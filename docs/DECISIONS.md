@@ -8319,3 +8319,116 @@ That exact regression was watched failing before normalizing the original reques
 title to the canonical Market default. Eight practice cases pass. Rejection must occur in
 Approval mode against the inspected Plan proposal; a mistaken Plan-mode rejection can recover
 with a fresh Plan without source writes. These task guards do not parse diagnostic prose.
+
+## 2026-10-31: refresh the existing approved verification adoption on current next
+
+Reconciliation of accepted issue 11 found that old PR12 was never merged: next remained at
+v0.70.0 with four house commit tools and no shared CI reuse closure or optional plan. The
+manager clarified that the stale object is PR12's branch/tree; v0.90.0 remains the issue's
+approved forward target. No newer target is selected. Start from verified PR45 merge
+`76eaaafb0b01b3e79eb917ec1238dbc13a452030`, not the old candidate tree. PR45's actual
+squash tree/parent/DCO/message/signature and all post-merge runs passed (`41180973269`,
+`41180973382`, `41180973339`); its final personal acceptance is `5721816042`.
+
+One package.json pin governs HOUSE and EditorConfig copy metadata. The fourteen CI helpers
+are generated through the supplied sync command from the actual released v0.90.0 blobs at
+`858fee6f6aae7cad8fac9679272d192866e7bd83`; their bytes equal the release and recorded
+manifest. The four commit tools and EditorConfig bytes are unchanged. Ordinary public CI
+checks vendored files, not a private checkout or credential. Keep the existing public matrix,
+current browser-artifact retention and separate Academy workflows. Add only PR reuse of a
+complete successful same-repository next push at an identical source tree, and revalidate its
+original run in the final gate. Missing, failed, unfinished, mismatched or unavailable proof
+falls back to full CI. Main-merge reuse remains disabled; exact-commit push release eligibility
+is unchanged. Exports are ignored only for the hash-held shared closure, not project code.
+
+The optional guarded verification plan is data, not permission to run a product suite locally.
+README and CONTRIBUTING now agree that hosted CI is required and a local full suite is not a
+PR prerequisite. Old README had appended that statement while CONTRIBUTING still required a
+local pnpm check. Seven source contracts pass, including invalid provenance/status/tree/API
+cases. Removing Node 24 from the adapter's required proof was watched failing before restoration.
+Existing predicate/copy mutation controls still run. Old CI 40903311527 and old helper hashes
+are retained as historical exact-tree/copy evidence, not acceptance of this new integrated head.
+
+Local Node 24.18.1's isolated --test output reported a passing file rather than six named
+contracts. A two-case probe reproduced that reporting shape and failed when one case was
+made wrong; restoring it passed. Direct execution records the seven named contracts. No
+product code was changed for this observation; exact-version
+[Node test-runner documentation](https://raw.githubusercontent.com/nodejs/node/v24.18.1/doc/api/test.md)
+and the negative probe distinguish file-level reporting from a synthetic case count.
+
+This is an atomic source/configuration transition with no persistent-data migration or package
+version change. In-flight runs keep their original commit's inputs. A rollback is an ordinary
+reviewed revert of the pin/copy/adapter commit, retaining required hosted checks and the normal
+site verification, not a reset or history rewrite. Fresh integrated independent/personal review,
+all applicable exact-head hosted jobs and the pin-triggered existing next-site verification
+remain delivery gates. No npm publication, new production infrastructure or Academy runtime
+adoption is inferred. PR12 remains reference material until the fresh delivery is accepted.
+
+Initial PR46 head `4842b04` passed all twelve hosted jobs, including landing proof at the actual
+v0.90.0 checkout. Root artifact review found a capture gap: its 1024px PNG lacked the weave,
+while the other four widths were byte-identical to accepted PR20 images. Artifact `13035563149`,
+SHA-256 `516b7eec04073977f56ddf34f6f6861dd7e6cae8bd9027b95a1ad8943cd6cc3b`, retains
+that result. The bootstrap is byte-identical between v0.70.0 and v0.90.0 and initializes its
+worker asynchronously. The existing test waited for page content/layout, not rendering startup.
+
+Strengthen only hosted capture readiness: observe the real native worker's drawn messages,
+wait for an initialized renderer and its worker draw acknowledgement (or declared main-thread/CSS
+fallback state), and retain per-width renderer diagnostics. Pending renderer and zero observed
+draws are known-bad controls. Do not modify vendor rendering, inject substitute pixels or add
+an arbitrary delay. Root viewed all five new images and the old 1024 image; corrected hosted
+capture and personal visual acceptance remain required before merge. A draw acknowledgement
+records submitted work, not correct visible pixels; the images must still be reviewed.
+
+PR46 correction `991a45c` again passed all twelve jobs, but personal review `5721968539`
+found the 390px PNG still unpainted despite webgl/worker/draws=1/ready=true. Artifact
+`13036081362`, SHA-256 `86184bf3f99dc4063c82a40a317a3a8752792ee6e7a347fe967c27ecfd6d2893`,
+retains that decisive limit: submitted work is not composited pixels. No acceptance is inferred.
+
+The next capture-only correction measures the actual compositor PNG using native browser image
+decoding into a separate analysis canvas that never enters the page. Six unobstructed gutters
+between y110 and y850 distinguish the authored weave's edges from the smooth CSS gradient.
+Measured retained blank images had zero adjacent-channel deltas of at least 3; painted images
+had 182 to 438 such edges. Require at least twelve edges, retain the measured values and save
+that exact validated PNG. Poll actual captures with a bounded timeout, not an arbitrary delay.
+After the first normal capture passes, a live opacity-zero capture is a known-bad control;
+restore its exact original style and require the actual weave again. Remove the superseded
+worker-constructor observer; retain only native renderer labels and measured pixels. No vendor changes, substitute pixels or product-renderer modifications.
+Corrected hosted images and personal acceptance remain required.
+
+The pixel measurement uses the documented
+[Playwright screenshot buffer](https://playwright.dev/docs/api/class-page#page-screenshot),
+[native image decoding](https://developer.mozilla.org/en-US/docs/Web/API/Window/createImageBitmap)
+and [pixel readback](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getImageData).
+The decoder copies only the captured PNG into an analysis surface; it does not read a claimed
+renderer result or draw anything into the product. The normal first image passes before the
+opacity-zero control, and the restored normal image must pass again. Preserve the negative
+PNG/metrics alongside the exact positive PNGs and per-width metrics.
+
+At `652b538`, hosted landing run `41185794305` correctly failed the actual pixel gate:
+1440px passed with 438 edges, its opacity-zero control returned zero, and restoration passed.
+The next 1024px image remained genuinely blank with zero edges despite native webgl/worker
+labels throughout the 15-second bound. Narrower widths were not reached. Retained artifact
+`13036139887` has SHA-256
+`19ce2da926b435cebdc88e7b4c86418df0af0ca0ae8eb86e2faf4e34545fff30`.
+No acceptance, unchanged retry or threshold reduction follows. Add bounded observational page
+lifecycle, canvas size/style and native worker-reply telemetry to the same failing hosted probe.
+It requests no draws and changes no renderer or input. This separates missing worker completion,
+page visibility/size and navigation-transition hypotheses before choosing a correction.
+
+Diagnostic head `bd2d85f`, landing run `41186056619`, passed 1440/1024/768 with 438/412/376
+edges, then failed 390 with zero. Artifact `13037095378`, SHA-256
+`e0bda33378a097287375db1587e796eee1abc1ec7477a96241a25790d59297c6`, records repeated native
+resize events during screenshot polling: the fixed canvas bounds temporarily become 1x1,
+its buffer toggles between 1x1 and 390x900, and worker draw replies continue. Visibility stays
+visible, opacity one, document hidden false and native transition false.
+
+Installed Playwright 1.62.1 sends `captureBeyondViewport: !fitsViewport` for screenshots
+(`coreBundle.js`, `takeScreenshot`). Its bundled browser metadata selects Chromium 151.0.7922.34.
+The [exact Chromium source](https://raw.githubusercontent.com/chromium/chromium/refs/tags/151.0.7922.34/content/browser/devtools/protocol/page_handler.cc)
+sets temporary emulation dimensions to 1x1 when capture goes beyond the viewport, then restores
+the dimensions. This binds the observed resize to the capture path; no product-renderer defect
+or fix is inferred. Capture actual 900px viewport PNGs for paint proof, using the same gutters,
+threshold, negative control and exact-buffer retention. Retain full-height layout images only
+after the primary paint capture, clearly named `-layout.png`; they are not weave paint proof.
+Keep native telemetry for independent review of the corrected path. New exact-head hosted proof
+and personal review remain required, including all five viewport images and layout images.

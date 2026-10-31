@@ -193,3 +193,27 @@ actual Plan/reject/revised-Approval/Auto receipts through the existing controls.
 proof is `/tmp/academy-mode-walkthrough-*.log`; hosted/native/personal acceptance is still
 required. See `examples/academy/workspace/MODE_WALKTHROUGH.md`. This is not durable curriculum
 progress or certificate evidence; keep full lessons, recovery/resume and transport work open.
+
+## Verified mode-practice delivery and recovered safeguard refresh
+
+PR45 merged as `76eaaafb0b01b3e79eb917ec1238dbc13a452030`, exact accepted tree
+`90644f0f00805c3b167db88468ee74921dacb5cd`, parent `d11c4b3`. All eight exact-head jobs
+and personal final review `5721816042` passed. Actual squash tree/parent/message/DCO/GitHub
+signature were verified. Post-merge CI `41180973269`, modes `41180973382` and editor
+`41180973339` passed. Artifact `13035090434`, SHA-256
+`d74e091678f3c59478435ecd64346712f0986bd469eb5b76cafbc3a77398f780`, proves real guide
+transitions, six builds/31 tool calls, quotes, 324/324 layout and empty process cleanup. Root
+and personal reviewer inspected changed desktop/narrow images. Preserve
+`/tmp/assemblejs-academy-mode-walkthrough` and `/tmp/academy-mode-walkthrough-*.log`.
+
+The manager recovered accepted issue 11 / old PR12 after this checkpoint. Its new safeguard
+source was absent from current next. Read-only reconciliation was independently checked,
+including old exact-tree CI and all fourteen released-source/old-copy/manifest hashes. The
+manager reaffirmed the existing v0.90.0 target, a forward change from current v0.70.0; do not
+merge the stale PR12 branch. The fresh source is owned in
+`/tmp/assemblejs-verification-guardrails-reconciliation`, branch
+`codex/verification-guardrails-reconciliation`, based on exact PR45 merge. Seven contracts and
+scoped guards pass; new-head hosted/source/personal/site acceptance remains required. See
+`docs/studies/verification-guardrails-reconciliation.md` and DECISIONS for the exact scope.
+This source refresh does not replace Academy lesson/connection/runtime/progress work or the
+PR33 hold. No local product build/server/browser or old-matrix rerun was used.

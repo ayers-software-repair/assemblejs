@@ -1,6 +1,9 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { writeFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
+import { captureLandingPaint } from "./capture-landing-paint.js";
+import { observeLandingLifecycle } from "./observe-landing-lifecycle.js";
 import { serveLanding } from "./serve-landing.js";
 
 test("the landing keeps composition, links and keyboard access at desktop and narrow widths", async ({
@@ -8,6 +11,16 @@ test("the landing keeps composition, links and keyboard access at desktop and na
 }, info) => {
   const fixture = await serveLanding();
   const failures: string[] = [];
+  const renderers: Array<{
+    width: number;
+    renderer: string;
+    thread: string;
+    edges: number;
+    maxDelta: number;
+    paintWidth: number;
+    paintHeight: number;
+    lifecycle: string;
+  }> = [];
   const fits = () =>
     page.evaluate(() => {
       const heading = document.querySelector("h1");
@@ -28,6 +41,7 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     if (response.status() >= 400) failures.push(`${String(response.status())} ${response.url()}`);
   });
   try {
+    await observeLandingLifecycle(page);
     for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`${fixture.origin}/?width=${String(width)}`);
@@ -45,9 +59,75 @@ test("the landing keeps composition, links and keyboard access at desktop and na
         });
       }
       expect(await fits()).toBe(true);
+      const measured = {
+        width,
+        renderer: "pending",
+        thread: "none",
+        edges: 0,
+        maxDelta: 0,
+        paintWidth: 0,
+        paintHeight: 0,
+        lifecycle: "[]",
+      };
+      renderers.push(measured);
       const screenshot = info.outputPath(`landing-${String(width)}.png`);
-      await page.screenshot({ path: screenshot, fullPage: true });
+      const capture = async () => {
+        const { image, ...pixels } = await captureLandingPaint(page);
+        const native = await page.locator("[data-landing-background]").evaluate((canvas) => ({
+          renderer: (canvas as HTMLElement).dataset.renderer ?? "pending",
+          thread: (canvas as HTMLElement).dataset.thread ?? "none",
+          lifecycle: document.documentElement.dataset.landingLifecycle ?? "[]",
+        }));
+        Object.assign(measured, pixels, native);
+        await writeFile(screenshot, image);
+        return ["webgpu", "webgl"].includes(native.renderer) ? pixels.edges : 0;
+      };
+      await expect.poll(capture, { timeout: 15000 }).toBeGreaterThanOrEqual(12);
+      if (width === 1440) {
+        const canvas = page.locator("[data-landing-background]");
+        const original = await canvas.evaluate((element) => {
+          const style = (element as HTMLElement).style;
+          const saved = {
+            value: style.getPropertyValue("opacity"),
+            priority: style.getPropertyPriority("opacity"),
+          };
+          style.setProperty("opacity", "0", "important");
+          return saved;
+        });
+        try {
+          await expect
+            .poll(
+              async () => {
+                const blank = await captureLandingPaint(page);
+                await writeFile(info.outputPath("landing-unpainted-control.png"), blank.image);
+                const { image: _image, ...pixels } = blank;
+                await writeFile(
+                  info.outputPath("landing-unpainted-control.json"),
+                  JSON.stringify(pixels, null, 2),
+                );
+                return blank.edges;
+              },
+              { timeout: 5000 },
+            )
+            .toBeLessThan(12);
+        } finally {
+          await canvas.evaluate((element, saved) => {
+            const style = (element as HTMLElement).style;
+            if (saved.value) style.setProperty("opacity", saved.value, saved.priority);
+            else style.removeProperty("opacity");
+          }, original);
+        }
+        await expect.poll(capture, { timeout: 15000 }).toBeGreaterThanOrEqual(12);
+      }
+      expect(measured.paintWidth).toBe(width);
+      expect(measured.paintHeight).toBe(900);
       await info.attach(`landing-${String(width)}`, { path: screenshot, contentType: "image/png" });
+      // Full-height images document layout only; the exact viewport PNG above proves paint.
+      await page.screenshot({
+        path: info.outputPath(`landing-${String(width)}-layout.png`),
+        fullPage: true,
+        scale: "css",
+      });
       await page.keyboard.press("Tab");
       await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
       await page.keyboard.press("Enter");
@@ -67,9 +147,16 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     expect(failures).toEqual([]);
   } finally {
     try {
-      await page.close();
+      await writeFile(
+        info.outputPath("landing-renderers.json"),
+        JSON.stringify(renderers, null, 2),
+      );
     } finally {
-      await fixture.close();
+      try {
+        await page.close();
+      } finally {
+        await fixture.close();
+      }
     }
   }
 });

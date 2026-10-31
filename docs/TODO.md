@@ -66,6 +66,8 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       was watched red. Mode-only/replayed actions, stale approval and failed checks cannot
       advance practice. New hosted/native/personal acceptance remains required; this is
       session-only practice, not current-revision lesson completion or saved progress.
+      PR45 merged as `76eaaaf` after personal review `5721816042` and all eight exact-head
+      jobs. Post-merge CI `41180973269`, modes `41180973382` and editor `41180973339` passed.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in
@@ -2349,3 +2351,16 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       `317a2e3`), so assemblejs.com shows nothing until his word; `/assemblejs/next/` on the
       ayers.repair address keeps serving for this seat's proofs (DECISIONS 2026-10-11, "the
       domain's 404 page", amended)
+
+## Recovered verification safeguard queue (2026-10-31)
+
+- [x] Independently verify the read-only issue 11 / PR12 reconciliation against current next
+      and retained exact-source receipts. Findings and smallest residual scope are in
+      `docs/studies/verification-guardrails-reconciliation.md`; do not merge the stale PR12 branch,
+      rerun old matrices or treat PR body text as independent review.
+- [x] Implement the missing safeguard source on current next using the already authorized
+      v0.90.0 Platform target. Seven focused contracts, missing-Node-24 red/green control,
+      released-source copy hashes and scoped pin/commit/editor gates pass. Fresh integrated
+      hosted/native/personal acceptance and the normal next-site verification remain required.
+      Preserve the ordinary and applicable Academy checks,
+      generated-copy integrity, invalid-proof fallback and separate release/deployment gates.

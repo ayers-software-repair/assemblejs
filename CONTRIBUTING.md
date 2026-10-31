@@ -38,15 +38,16 @@ automatically on outside pull requests. Maintainers review those by hand.
 ## Local setup
 
     pnpm install
-    pnpm check
 
-Node 22 or newer. pnpm only; `.npmrc` sets `engine-strict`. The `check` script runs the same
-commands CI runs, in the same order; a red `check` is not pushed.
+Node 22 or newer. pnpm only; `.npmrc` sets `engine-strict`. Use focused checks for a change;
+the complete `pnpm check` chain runs in hosted CI. A local full suite is optional for an
+explicit diagnosis, not a pull-request prerequisite. Fix any failed check before pushing.
 
 ## Making a change
 
 1. `pnpm changeset` for any change under `packages/*/src`. Docs and CI changes never need one.
-2. `pnpm check` green locally.
+2. Run focused checks for your change; complete hosted CI must pass. A local full suite is
+   not a pull-request prerequisite.
 3. Conventional commit messages (`feat:`, `fix:`, `docs:`, `chore:`), enforced on commit. The
    header is at most 100 characters and a scope is never empty; a line after the header runs
    past 100 only when it holds a URL. `commitlint.config.mjs` is the whole rule. No

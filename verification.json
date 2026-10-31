@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "tools": [
+    {
+      "name": "node",
+      "command": "node",
+      "versionArgs": ["--version"],
+      "versionPattern": "^v24\\."
+    },
+    {
+      "name": "pnpm",
+      "command": "pnpm",
+      "versionArgs": ["--version"],
+      "versionPrefix": "11.4.0"
+    },
+    {
+      "name": "bash",
+      "command": "bash",
+      "versionArgs": ["--version"],
+      "versionPattern": "GNU bash"
+    }
+  ],
+  "resources": {
+    "memoryMaxBytes": 34359738368,
+    "swapMaxBytes": 0,
+    "minAvailableBytes": 40802189312,
+    "minScopeAvailableBytes": 25769803776,
+    "cpuQuotaPercent": 200,
+    "minDiskBytes": 8589934592
+  },
+  "phases": [
+    {
+      "id": "headers",
+      "kind": "check",
+      "argv": ["node", "scripts/check-headers.mjs"],
+      "outputs": []
+    },
+    {
+      "id": "pnpm-check",
+      "kind": "test",
+      "argv": ["pnpm", "check"],
+      "outputs": [
+        "packages/build/dist",
+        "packages/check/dist",
+        "packages/cli/dist",
+        "packages/core/dist",
+        "packages/create/dist",
+        "packages/devtools/dist",
+        "packages/mcp/dist",
+        "packages/renderer-lit/dist",
+        "packages/renderer-preact/dist",
+        "packages/renderer-react/dist",
+        "packages/renderer-solid/dist",
+        "packages/renderer-svelte/dist",
+        "packages/renderer-templates/dist",
+        "packages/renderer-vue/dist",
+        "site/docs/api"
+      ]
+    }
+  ]
+}
