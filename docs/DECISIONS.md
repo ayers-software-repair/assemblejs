@@ -8272,3 +8272,11 @@ SHA-256 `0237b9ff6ab8db7b8f85f3736f11c64e36649e96ff1627fe1e83160efc3c82d9`, reta
 that outcome. The proof now scrolls the parent frame into the viewport and asserts its visible
 coverage before scrolling the child, with a ten-second scroll bound. No product diagnostic is
 filtered and the original behavioral assertions remain. New hosted acceptance is required.
+
+The parent-frame correction at `df657ad` resolved the scroll stall. Hosted run `41178389185`
+then reached the real narrow preset-four quote and unchanged basket, but the new application
+layout check found horizontal overflow at a 324px iframe viewport. Narrow screenshot/UI Stop
+acceptance remains open; the other four browser cases passed. Artifact `13033799520` retains
+this failure. Before changing project CSS, the proof now records the actual overflowing element
+rectangles, owning assemblies and computed minimum widths, plus a pre-check narrow image.
+The overflow assertion remains mandatory. This diagnostic increment changes no product CSS.

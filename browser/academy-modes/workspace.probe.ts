@@ -159,11 +159,34 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
       `Estimate for 4: $${(((await finalPriced.json()) as { cents: number }).cents / 100).toFixed(2)}`,
     );
     await expect(preview.getByRole("link", { name: "Basket, 0 in it" })).toBeVisible();
-    expect(
-      await preview
-        .locator("html")
-        .evaluate((element) => element.scrollWidth <= element.clientWidth),
-    ).toBe(true);
+    const layout = await preview.locator("html").evaluate((element) => ({
+      width: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      outside: [...element.querySelectorAll("body *")].flatMap((node) => {
+        const box = node.getBoundingClientRect();
+        if (!box.width || box.right <= element.clientWidth + 1) return [];
+        const style = getComputedStyle(node);
+        return [
+          {
+            tag: node.tagName,
+            class: node.getAttribute("class"),
+            assembly: node.closest("assembly-root")?.getAttribute("data-name"),
+            left: box.left,
+            right: box.right,
+            width: box.width,
+            minWidth: style.minWidth,
+            display: style.display,
+            text: node.textContent?.slice(0, 80),
+          },
+        ];
+      }),
+    }));
+    await writeFile(
+      info.outputPath("workspace-narrow-layout.json"),
+      JSON.stringify(layout, null, 2),
+    );
+    await page.screenshot({ path: info.outputPath("workspace-narrow-before-layout-check.png") });
+    expect(layout.scrollWidth).toBeLessThanOrEqual(layout.width);
     await page
       .locator('iframe[title="Application preview"]')
       .scrollIntoViewIfNeeded({ timeout: 10000 });
