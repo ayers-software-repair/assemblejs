@@ -8414,3 +8414,21 @@ No acceptance, unchanged retry or threshold reduction follows. Add bounded obser
 lifecycle, canvas size/style and native worker-reply telemetry to the same failing hosted probe.
 It requests no draws and changes no renderer or input. This separates missing worker completion,
 page visibility/size and navigation-transition hypotheses before choosing a correction.
+
+Diagnostic head `bd2d85f`, landing run `41186056619`, passed 1440/1024/768 with 438/412/376
+edges, then failed 390 with zero. Artifact `13037095378`, SHA-256
+`e0bda33378a097287375db1587e796eee1abc1ec7477a96241a25790d59297c6`, records repeated native
+resize events during screenshot polling: the fixed canvas bounds temporarily become 1x1,
+its buffer toggles between 1x1 and 390x900, and worker draw replies continue. Visibility stays
+visible, opacity one, document hidden false and native transition false.
+
+Installed Playwright 1.62.1 sends `captureBeyondViewport: !fitsViewport` for screenshots
+(`coreBundle.js`, `takeScreenshot`). Its bundled browser metadata selects Chromium 151.0.7922.34.
+The [exact Chromium source](https://raw.githubusercontent.com/chromium/chromium/refs/tags/151.0.7922.34/content/browser/devtools/protocol/page_handler.cc)
+sets temporary emulation dimensions to 1x1 when capture goes beyond the viewport, then restores
+the dimensions. This binds the observed resize to the capture path; no product-renderer defect
+or fix is inferred. Capture actual 900px viewport PNGs for paint proof, using the same gutters,
+threshold, negative control and exact-buffer retention. Retain full-height layout images only
+after the primary paint capture, clearly named `-layout.png`; they are not weave paint proof.
+Keep native telemetry for independent review of the corrected path. New exact-head hosted proof
+and personal review remain required, including all five viewport images and layout images.

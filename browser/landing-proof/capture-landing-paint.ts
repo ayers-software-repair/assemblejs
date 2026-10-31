@@ -4,7 +4,8 @@ import type { Page } from "@playwright/test";
 
 /** Measure the compositor's actual PNG; the analysis canvas never enters the product DOM. */
 export async function captureLandingPaint(page: Page) {
-  const image = await page.screenshot({ fullPage: true, scale: "css" });
+  // Beyond-viewport capture transiently resizes Chromium to 1x1 and disrupts the worker canvas.
+  const image = await page.screenshot({ scale: "css" });
   const pixels = await page.evaluate(async (encoded) => {
     const bytes = Uint8Array.from(atob(encoded), (character) => character.charCodeAt(0));
     const bitmap = await createImageBitmap(new Blob([bytes], { type: "image/png" }));

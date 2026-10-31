@@ -120,7 +120,14 @@ test("the landing keeps composition, links and keyboard access at desktop and na
         await expect.poll(capture, { timeout: 15000 }).toBeGreaterThanOrEqual(12);
       }
       expect(measured.paintWidth).toBe(width);
+      expect(measured.paintHeight).toBe(900);
       await info.attach(`landing-${String(width)}`, { path: screenshot, contentType: "image/png" });
+      // Full-height images document layout only; the exact viewport PNG above proves paint.
+      await page.screenshot({
+        path: info.outputPath(`landing-${String(width)}-layout.png`),
+        fullPage: true,
+        scale: "css",
+      });
       await page.keyboard.press("Tab");
       await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
       await page.keyboard.press("Enter");
