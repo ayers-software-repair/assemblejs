@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { isWorkspacePath } from "./is-workspace-path.js";
 
 /** Unsaved buffers belong to the editor; compare-and-write belongs to the shared project. */
 export class WorkspaceFiles {
@@ -8,20 +9,20 @@ export class WorkspaceFiles {
   #reloading = new Set();
 
   constructor(project, paths) {
-    if (
-      paths.some(
-        (path) =>
-          typeof path !== "string" ||
-          path.includes("\\") ||
-          path.includes("\0") ||
-          /^[a-z]:/i.test(path) ||
-          path.split("/").some((part) => ["", ".", ".."].includes(part)),
-      )
-    )
+    if (paths.some((path) => !isWorkspacePath(path)))
       throw new Error("workspace paths must be confined project files");
     if (new Set(paths).size !== paths.length) throw new Error("duplicate workspace path");
     this.project = project;
     this.paths = Object.freeze([...paths].sort());
+  }
+
+  addPaths(paths) {
+    if (paths.some((path) => !isWorkspacePath(path)))
+      throw new Error("workspace paths must be confined project files");
+    const next = [...new Set([...this.paths, ...paths])].sort();
+    if (next.length === this.paths.length) return false;
+    this.paths = Object.freeze(next);
+    return true;
   }
 
   async open(path) {

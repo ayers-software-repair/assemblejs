@@ -92,12 +92,23 @@ export function createSourceEditor(container, project, paths) {
       if (!disposed && ticket === opening) status.textContent = String(error);
     }
   };
-  for (const path of files.paths) {
-    const button = element("button", path);
-    button.type = "button";
-    button.addEventListener("click", () => void open(path));
-    tree.append(button);
-  }
+  const renderTree = () => {
+    const focused = tree.contains(document.activeElement)
+      ? document.activeElement?.textContent
+      : undefined;
+    tree.replaceChildren();
+    for (const path of files.paths) {
+      const button = element("button", path);
+      button.type = "button";
+      button.addEventListener("click", () => void open(path));
+      tree.append(button);
+    }
+    if (focused)
+      [...tree.querySelectorAll("button")]
+        .find((button) => button.textContent === focused)
+        ?.focus();
+  };
+  renderTree();
   input.disabled = true;
   save.disabled = true;
   input.addEventListener("input", () => {
@@ -122,8 +133,7 @@ export function createSourceEditor(container, project, paths) {
       refresh();
     }
   });
-  reload.addEventListener("click", async () => {
-    const path = active;
+  const reloadFile = async (path = active) => {
     if (!path) return;
     reloading = true;
     refresh();
@@ -139,11 +149,16 @@ export function createSourceEditor(container, project, paths) {
       reloading = false;
       refresh();
     }
-  });
+  };
+  reload.addEventListener("click", () => void reloadFile());
   panel.append(tree, tabs, heading, label, save, reload, status);
   container.append(panel);
   return {
     open,
+    reload: reloadFile,
+    addPaths(paths) {
+      if (files.addPaths(paths)) renderTree();
+    },
     files,
     destroy() {
       disposed = true;

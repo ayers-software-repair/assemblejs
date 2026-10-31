@@ -46,6 +46,8 @@ jobs:
           node examples/academy/workspace/calculator-plan.test.mjs
           node examples/academy/workspace/calculator-modes.test.mjs
           node examples/academy/workspace/create-calculator-controls.test.mjs
+          node examples/academy/workspace/create-academy-workspace.test.mjs
+          node browser/academy-modes/source-paths.test.mjs
           node examples/academy/workspace/create-assembly-controls.test.mjs
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium

@@ -7,7 +7,7 @@ import { serveModes } from "./serve-modes.mjs";
 test("authored calculator plans, revised approval, Auto and manual edits share actual Market source", async ({
   page,
 }, info) => {
-  const fixture = await serveModes(true);
+  const fixture = await serveModes("calculator");
   const errors: string[] = [];
   const failures: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));

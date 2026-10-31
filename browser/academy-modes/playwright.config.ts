@@ -4,7 +4,12 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   testDir: ".",
-  testMatch: ["modes.probe.ts", "source-provider.probe.ts", "calculator.probe.ts"],
+  testMatch: [
+    "modes.probe.ts",
+    "source-provider.probe.ts",
+    "calculator.probe.ts",
+    "workspace.probe.ts",
+  ],
   timeout: 60000,
   workers: 1,
   retries: 0,

@@ -51,8 +51,14 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       the real four files plus product-page placement, bounded own-word title/preset requests,
       reject/revised approval/Auto, manual edits and clean editor reload. Twenty-one focused
       feature cases and seven buffer/eleven editor cases pass; comment-marker regressions and
-      mode/reload controls were watched red. Hosted/personal delivery acceptance remains
-      required. Unknown source/page shapes refuse; full lesson/preview integration remains open.
+      mode/reload controls were watched red. PR43 merged as `5325ca1` after all eight
+      exact-head jobs and independent/personal source/browser/visual review; post-merge CI
+      `41172060171`, modes `41172060144` and editor `41172060126` passed. Unknown shapes
+      refuse; full lesson/preview integration remains open.
+- [ ] Combine supplied-project guided controls and editable code with a genuine application
+      preview. Source/DOM and bounded file-list proofs pass, including observed-red failed-check
+      and entry-limit controls. Actual hosted four-server composition, quotes, Stop and
+      shutdown-during-HTTP-build proof plus independent/personal review remain required.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

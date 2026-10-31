@@ -8230,3 +8230,27 @@ Copying Market metadata had dropped create_project's MCP declaration. The fixtur
 the generated declarations with Market metadata and links the actual installed dependencies,
 including MCP, into an isolated directory. No check is removed or treated as success; the
 remaining Auto/manual/stale/Reload browser sequence still needs corrected hosted acceptance.
+
+## 2026-10-31: supplied-project workspace uses a genuine saved-project preview
+
+Continue the existing Academy integration queue after accepted PR43, merged as `5325ca1`.
+All eight exact-head jobs and independent/personal source/browser/visual review passed;
+post-merge CI `41172060171`, modes `41172060144` and editor `41172060126` passed.
+
+The combined private workspace reuses the accepted editor, authored calculator controls and
+shared source tools. Confirmed written paths join the code tree; clean opened files reload,
+while dirty drafts remain untouched. Writes invalidate the displayed preview. An actual check
+must pass before a supplied runtime builds saved source and returns its real application URL.
+The iframe is restricted to a distinct pinned origin; neither srcdoc nor its load event supplies
+successful rendering evidence. The existing public contentSecurityPolicy option allows only
+the exact workspace to frame the copied project, retaining all other default directives.
+
+The hosted-only proof adapter builds and runs the actual four Market servers with owned child
+processes, bounded startup/build/shutdown, exact HTTP Origin checks and explicit Stop. This is
+an integration fixture, not public untrusted execution, production connection or final browser
+runtime selection. PR33 remains held; no vendor patch, unchanged retry or runtime adoption is
+inferred. Full lessons, external-agent connection, revision-bound progress and certificate remain
+open. Source controls were watched red for a bypassed check gate and enlarged file-entry bound.
+Independent review caught HTTP cleanup waiting for an active build request before cancellation;
+shutdown now aborts the runtime before draining HTTP, and the hosted cancellation probe uses
+the actual HTTP endpoint. Its execution and full application acceptance remain pending.

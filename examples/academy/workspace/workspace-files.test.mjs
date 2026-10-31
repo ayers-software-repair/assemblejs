@@ -132,3 +132,17 @@ test("a draft typed during reload survives and concurrent reloads are refused", 
   await assert.rejects(reading, /buffer changed/);
   assert.deepEqual(files.buffer("view.tsx"), { base: "original", text: "new draft", dirty: true });
 });
+
+test("confirmed new paths extend the file list without changing drafts or admitting partial invalid lists", async () => {
+  const { files, root } = fixture();
+  await files.open("view.tsx");
+  files.edit("view.tsx", "draft");
+  writeFileSync(join(root, "added.html"), "<p>New source</p>");
+  assert.equal(files.addPaths(["added.html", "view.tsx"]), true);
+  assert.deepEqual(files.paths, ["added.html", "view.tsx"]);
+  assert.equal(files.addPaths(["added.html"]), false);
+  assert.equal((await files.open("added.html")).text, "<p>New source</p>");
+  assert.equal(files.buffer("view.tsx").text, "draft");
+  assert.throws(() => files.addPaths(["not-added.ts", "../outside.ts"]), /confined/);
+  assert.equal(files.paths.includes("not-added.ts"), false);
+});
