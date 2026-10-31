@@ -50,6 +50,14 @@ No model, account or inference connection is required by these operations.
 
 ## Edit actual source
 
+`read_source_version` returns the build's 12-character source fingerprint without building
+or executing project code. It reads paths and bytes under `src/`, `package.json` and the
+optional `assemblejs.config.ts`, returning only `{ version }`. The same root-confinement
+policy as the build applies. Dependencies, environment and remote servers are not included.
+It is an observed identity, not an atomic snapshot or proof of successful checks/builds/behavior.
+Compare observations around operations to refuse an observed source change; concurrent changes
+and changes that revert between observations are not a filesystem transaction.
+
 `read_source` returns the current UTF-8 contents of a regular file under `src/`, or
 `assemblejs.config.ts`. It never executes the source. Reads and individual before/after values
 are limited to 65536 bytes. An absent file is a failed read with `{ path, missing: true }`;

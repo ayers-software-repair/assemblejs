@@ -75,6 +75,9 @@ one framework or in none, and each hydrated in the browser by its own framework.
   Reject with \`discard_assembly_plan\`. Applying refuses an occupied target and consumes the
   plan; after a conflict, request and review a fresh plan. These tools add an assembly only;
   they do not approve later edits or placement. The client controls whether a person approved.
+- Use \`read_source_version\` to observe the build fingerprint of source, config and package
+  metadata. It is not an atomic snapshot or proof that checks, builds or behavior passed;
+  dependencies, environment and remote servers are outside its scope.
 - Read actual source with \`read_source\`. For reviewed additions or replacements, call
   \`apply_source_changes\` with exact before/after text; null before requires an absent file.
   Show those changes and obtain the person's approval in approval mode. A stale base is refused;

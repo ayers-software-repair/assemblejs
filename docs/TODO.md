@@ -68,6 +68,13 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       session-only practice, not current-revision lesson completion or saved progress.
       PR45 merged as `76eaaaf` after personal review `5721816042` and all eight exact-head
       jobs. Post-merge CI `41180973269`, modes `41180973382` and editor `41180973339` passed.
+- [x] Implement observed saved-source identity checks around workspace preview requests.
+      The read-only MCP tool reuses the build fingerprint; observations before/after check
+      and after build refuse observed changes without overwriting edits. Twenty-four focused
+      MCP/guidance and 84 component cases pass; check/build races and numeric coercion were
+      observed red before correction. Independent source review is clear. Fresh hosted
+      collection/behavior and personal acceptance remain required; this is not durable
+      curriculum progress, an atomic snapshot or certificate evidence.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

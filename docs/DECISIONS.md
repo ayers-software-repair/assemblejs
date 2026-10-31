@@ -8486,3 +8486,37 @@ These receipts support issue 11 delivery closure and stale PR12's retirement as 
 No live eligible-next reuse exercise, optional local verification-plan run, npm publication,
 release, runtime adoption or new public activation is claimed. Full Academy and PR33 holds
 remain open. The source ledger and handoff record this completed delivery separately.
+
+## 2026-10-31: observe saved source around preview checks and builds
+
+PR48's delivery ledger merged as `782b65f5ccdcd3355ee1825962bf65f8d5f67ec4` after personal
+review `5722213951` and all eight exact-head jobs. Actual squash tree/parent/full message and
+valid GitHub signature match; all eight post-merge CI jobs (`41189911618`) passed. GitHub
+issue 11 / PR12 tracking closure remains separate: automatic approval review rejected those
+mutations without explicit direct human permission. A single approval request is pending;
+no tracking write, alternate-tool closure or duplicate question followed.
+
+The next Academy increment reuses `@asmjs/build`'s existing `sourceVersion` through a read-only
+`read_source_version` MCP tool. It observes package/config/src paths and bytes without returning
+contents, building or executing project code. Keep its existing root confinement and hash
+algorithm. Agent guidance names its limits: dependencies, environment and remote servers are
+outside it, and an observation is not an atomic snapshot or successful check/build/behavior.
+
+Workspace refresh observes that identity before checking, after checking and after the real
+build, refusing an observed change or unavailable/malformed identity before mounting a frame.
+It retains edits, diagnostics and ownership of any already started runtime; Stop remains
+available. Destroy during an identity read starts no later check/build. Successful refresh
+returns its observed version with the pinned URL, not a lesson-completion or certificate claim.
+Edit-and-revert races between reads and changes after the final observation remain outside
+this contract; snapshots/current-source lesson behavior checks are still future work.
+
+Both original outside-edit regressions failed with true preview success before correction.
+Removing the strict string guard also failed the numeric-coercion case; exact source was
+restored before the passing run. All 24 focused MCP/guidance and 84 component cases, source
+MCP typecheck, scoped lint, organization/mirror self-tests, unused and duplication (3.23%) pass.
+Independent complete source review is clear. The new hosted probe genuinely changes a file
+outside the editor after the actual check response, requires no build/frame, then must demonstrate
+stable-source four-server recovery and Stop. Explicit Playwright/Knip entries select it.
+An optional local collection attempt lacked compiled MCP output; no local framework build,
+server or browser ran. Real hosted collection and behavior remain required. The normal hosted
+workflow builds current packages before probing; do not substitute source mocks for that proof.

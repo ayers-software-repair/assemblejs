@@ -47,7 +47,11 @@ test("check precedes the real runtime request, with a pinned framed URL and expl
   assert.equal(f.document.querySelector("iframe"), null);
   const result = await f.view.refresh();
   assert.equal(result.ok, true);
-  assert.equal(f.calls.at(-1).name, "check");
+  assert.deepEqual(
+    f.calls.slice(1).map((call) => call.name),
+    ["read_source_version", "check", "read_source_version", "read_source_version"],
+  );
+  assert.match(result.version, /^[a-f0-9]{12}$/);
   assert.deepEqual(f.runtimeCalls, ["build"]);
   const frame = f.document.querySelector("iframe");
   assert.equal(frame.src, "https://preview.example/p/kb-guji-250");
@@ -201,6 +205,94 @@ test("destroy prevents a late runtime result from mounting a frame and leaves sh
   release("https://preview.example/p/product");
   await building;
   assert.equal(f.document.body.children.length, 0);
+  assert.deepEqual(f.runtimeCalls, []);
+  f.window.close();
+});
+
+test("an outside source change during check refuses preview before building and keeps the edit", async () => {
+  const path = "src/pages/product/product.html";
+  const f = await fixture((data) => ({
+    async callTool(request) {
+      const answer = await data.client.callTool(request);
+      if (request.name === "check") data.files.set(path, data.files.get(path) + "<!-- outside -->");
+      return answer;
+    },
+  }));
+  try {
+    assert.equal((await f.view.refresh()).ok, false);
+    assert.deepEqual(f.runtimeCalls, []);
+    assert.equal(f.document.querySelector("iframe"), null);
+    assert.match(f.files.get(path), /outside/);
+  } finally {
+    f.close();
+  }
+});
+
+test("an outside source change during build refuses the frame and keeps stop available", async () => {
+  const f = await fixture();
+  f.runtime.rebuild = async () => {
+    const path = "src/pages/product/product.html";
+    f.files.set(path, f.files.get(path) + "<!-- outside build -->");
+    return "https://preview.example/p/product";
+  };
+  try {
+    assert.equal((await f.view.refresh()).ok, false);
+    assert.equal(f.document.querySelector("iframe"), null);
+    assert.equal(
+      [...f.document.querySelectorAll("button")].find(
+        (button) => button.textContent === "Stop preview",
+      )?.disabled,
+      false,
+    );
+    assert.equal((await f.view.stop()).ok, true);
+    assert.deepEqual(f.runtimeCalls, ["stop"]);
+    assert.match(f.files.get("src/pages/product/product.html"), /outside build/);
+  } finally {
+    f.close();
+  }
+});
+
+test("failed or malformed source identities never claim preview readiness", async () => {
+  for (const version of [null, 123456789012, "ABCDEF123456", "", "too-short"]) {
+    const f = await fixture((data) => ({
+      callTool: (request) =>
+        request.name === "read_source_version"
+          ? data.answer({ version })
+          : data.client.callTool(request),
+    }));
+    try {
+      assert.equal((await f.view.refresh()).ok, false);
+      assert.deepEqual(f.runtimeCalls, []);
+      assert.equal(f.document.querySelector("iframe"), null);
+      assert.match(
+        f.document.querySelector(".academy-application-preview details pre").textContent,
+        /source version unavailable/,
+      );
+    } finally {
+      f.close();
+    }
+  }
+});
+
+test("destroy during source identity reading dispatches no later check or build", async () => {
+  let release;
+  const f = await fixture((data) => ({
+    callTool: (request) =>
+      request.name === "read_source_version"
+        ? new Promise((resolve) => {
+            release = () => resolve(data.answer({ version: "abcdef123456" }));
+          })
+        : data.client.callTool(request),
+  }));
+  const pending = f.view.refresh();
+  await setImmediate();
+  f.view.destroy();
+  release();
+  assert.equal((await pending).ok, false);
+  assert.equal(
+    f.calls.some((call) => call.name === "check"),
+    false,
+  );
   assert.deepEqual(f.runtimeCalls, []);
   f.window.close();
 });

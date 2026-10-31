@@ -32,7 +32,7 @@ const call = async (name: string, args: Record<string, unknown>) => {
 it("reads actual source and applies exact guarded edits through the existing protocol", async () => {
   writeFileSync(join(dir, "src/view.html"), "<p>Before</p>\n");
   expect((await client.listTools()).tools.map((tool) => tool.name)).toEqual(
-    expect.arrayContaining(["read_source", "apply_source_changes"]),
+    expect.arrayContaining(["read_source", "read_source_version", "apply_source_changes"]),
   );
   expect(await call("read_source", { path: "src/view.html" })).toEqual({
     ok: true,
@@ -79,4 +79,19 @@ it("rejects malformed source payloads in the tool schema", async () => {
   });
   expect(result.isError).toBe(true);
   expect(existsSync(join(dir, "src/new.ts"))).toBe(false);
+});
+
+it("reads current source identity through the actual protocol without returning metadata", async () => {
+  writeFileSync(join(dir, "package.json"), '{"name":"identity-not-contents"}');
+  writeFileSync(join(dir, "src/view.html"), "before");
+  const before = await call("read_source_version", {});
+  expect(before).toEqual({
+    ok: true,
+    result: { version: expect.stringMatching(/^[a-f0-9]{12}$/) },
+    problems: [],
+  });
+  expect(JSON.stringify(before)).not.toContain("identity-not-contents");
+  writeFileSync(join(dir, "src/view.html"), "outside edit");
+  expect(await call("read_source_version", {})).not.toEqual(before);
+  expect(readFileSync(join(dir, "src/view.html"), "utf8")).toBe("outside edit");
 });

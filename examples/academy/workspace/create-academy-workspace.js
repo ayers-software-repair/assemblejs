@@ -135,8 +135,28 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     sync();
     clear("Checking saved project files.");
     try {
+      const sourceVersion = async () => {
+        const answer = await callProjectTool(observed, "read_source_version");
+        if (
+          !answer.ok ||
+          answer.problems.length ||
+          typeof answer.result?.version !== "string" ||
+          !/^[a-f0-9]{12}$/.test(answer.result?.version ?? "")
+        )
+          throw new Error(`Project source version unavailable: ${JSON.stringify(answer)}`);
+        return answer.result.version;
+      };
+      const version = await sourceVersion();
+      if (disposed) return { ok: false, error: "workspace closed" };
+      // shortcut: observations miss edit-and-revert races; use snapshots for atomic proof.
+      const unchanged = async () => {
+        if ((await sourceVersion()) !== version)
+          throw new Error(
+            "Project source changed during checking or building. Check and preview again.",
+          );
+      };
       const check = await callProjectTool(observed, "check");
-      output.textContent = JSON.stringify({ check }, null, 2);
+      output.textContent = JSON.stringify({ version, check }, null, 2);
       if (
         !check.ok ||
         check.problems.length ||
@@ -147,6 +167,8 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
           status.textContent = "Project check refused. Inspect its actual diagnostics.";
         return { ok: false, check };
       }
+      if (disposed) return { ok: false, error: "workspace closed" };
+      await unchanged();
       if (disposed) return { ok: false, error: "workspace closed" };
       touched = true;
       status.textContent = "Building the saved project.";
@@ -160,11 +182,13 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       )
         throw new Error("runtime returned a URL outside the pinned preview origin");
       if (disposed) return { ok: false, error: "workspace closed" };
+      await unchanged();
+      if (disposed) return { ok: false, error: "workspace closed" };
       frame.src = url.href;
       empty.hidden = true;
       preview.insertBefore(frame, diagnostics);
       status.textContent = "Build completed. Preview requested; check the application.";
-      return { ok: true, url: url.href };
+      return { ok: true, url: url.href, version };
     } catch (error) {
       if (!disposed) {
         status.textContent = "Preview could not start. Inspect the build diagnostics.";

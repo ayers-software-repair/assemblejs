@@ -27,6 +27,7 @@
         "browser/academy-modes/source-provider.probe.ts",
         "browser/academy-modes/calculator.probe.ts",
         "browser/academy-modes/workspace.probe.ts",
+        "browser/academy-modes/workspace-version.probe.ts",
         "browser/academy-modes/modes-entry.mjs",
         "browser/academy-modes/source-paths.test.mjs"
       ],

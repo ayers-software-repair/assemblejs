@@ -257,3 +257,18 @@ The live eligible-next reuse branch and optional local verification plan were no
 Main-merge reuse remains disabled. No npm publication, release, runtime adoption or new public
 activation occurred. Full Academy lessons, revision-bound progress/resume, certificate and
 verified external-agent connection remain open. PR33's browser-runtime hold remains unchanged.
+
+## Active source-identity increment
+
+Delivery ledger PR48 merged as `782b65f` after personal review `5722213951`, all eight
+exact-head and all eight post-merge CI jobs (`41189911618`). Actual merge identities and
+signature were verified. Issue 11 / PR12 administrative closure remains pending the single
+direct-user approval request after automatic review rejected those tracking mutations.
+No closure retry or indirect action is authorized without that reply; delivered source stands.
+
+Owned source: `/tmp/assemblejs-academy-source-version`, branch `codex/academy-source-version`,
+on that exact base. A read-only MCP observation reuses the existing build source fingerprint;
+preview refuses observed changes around checking/building. Source, protocol/guidance, component
+and static proof is green; new hosted collection/behavior and personal acceptance remain
+required. See `WORKSPACE_PREVIEW.md` and DECISIONS for boundaries. It does not implement atomic
+snapshots, future-change notification, full lesson progress, resume, certificate or runtime adoption.

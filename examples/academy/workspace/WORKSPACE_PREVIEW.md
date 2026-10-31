@@ -49,3 +49,15 @@ Current proof: seven source/DOM workspace cases and existing editor cases pass. 
 application/quote/composition behavior, Stop and shutdown-during-build proof, independent source
 review and personal visual review are still pending. Full curriculum, progress/resume,
 certificate and verified external-agent connection remain open.
+
+Preview refresh now observes the actual build fingerprint through `read_source_version`
+before checking, after checking and after the real build. A changed or unavailable identity
+refuses the preview request, keeps saved edits and retains diagnostics; an already started
+runtime remains owned and can be stopped. Destroy during a pending identity read dispatches
+no later check/build. Successful refresh returns the observed `version` with its URL.
+
+This covers the connected project's source paths/bytes, config and package metadata, using
+the build's existing identity function. Dependencies, environment and remote servers are outside
+that fingerprint; no atomic snapshot, edit-and-revert detection or future-change notification
+is claimed. These observations support later revision-bound checks; they are not themselves
+lesson behavior evidence, durable progress, runtime adoption or certificate completion.

@@ -9,6 +9,7 @@ export default defineConfig({
     "source-provider.probe.ts",
     "calculator.probe.ts",
     "workspace.probe.ts",
+    "workspace-version.probe.ts",
   ],
   timeout: 60000,
   workers: 1,
