@@ -19,7 +19,8 @@
         "browser/academy-editor/editor.probe.ts",
         "examples/academy/workspace/*.test.mjs",
         "browser/academy-editor/read-save-body.test.mjs",
-        "browser/academy-editor/create-file-provider.test.mjs"
+        "browser/academy-editor/create-file-provider.test.mjs",
+        "browser/academy-modes/modes.probe.ts"
       ],
       "project": [
         "scripts/**/*.mjs",

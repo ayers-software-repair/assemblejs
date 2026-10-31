@@ -29,6 +29,13 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       keyboard/narrow/EOF/selection proof (`41163039875`), independent visual/source review and
       all six exact-head CI jobs (`41163039843`) passed at `2e7669a`. The actual runtime provider
       and complete Academy remain open; this component does not select a runtime.
+
+- [x] Add mode controls over the real shared assembly review/check tools. Sixteen focused
+      cases, hosted actual MCP/file/browser proof (`41163301978`), independent source/visual
+      review and all six exact-head CI jobs (`41163301977`) passed at `5413315`. Plan writes
+      nothing; rejection/revision/exact approval, Auto/check and outside-edit refusal are real.
+      This is scaffold authoring, not the completed calculator or full lesson acceptance.
+
 - [x] Add shared confined source reads and expected-base additions/replacements for editor
       and prepared-feature clients. Thirty-nine focused file/protocol cases and red controls
       cover stale preflight and owned temporary cleanup; source type/lint proof is green.
