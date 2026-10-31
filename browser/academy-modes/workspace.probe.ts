@@ -129,13 +129,25 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await input.press("Control+Home");
     await input.press("Tab");
     await expect(editor.getByRole("button", { name: "Reload file", exact: true })).toBeFocused();
-    await calculator.scrollIntoViewIfNeeded();
+    await page
+      .locator('iframe[title="Application preview"]')
+      .scrollIntoViewIfNeeded({ timeout: 10000 });
+    await expect(page.locator('iframe[title="Application preview"]')).toBeInViewport({
+      ratio: 0.9,
+    });
+    await calculator.scrollIntoViewIfNeeded({ timeout: 10000 });
     await page.screenshot({ path: info.outputPath("workspace-desktop.png"), fullPage: true });
     await page.setViewportSize({ width: 390, height: 844 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
-    await calculator.scrollIntoViewIfNeeded();
+    await page
+      .locator('iframe[title="Application preview"]')
+      .scrollIntoViewIfNeeded({ timeout: 10000 });
+    await expect(page.locator('iframe[title="Application preview"]')).toBeInViewport({
+      ratio: 0.9,
+    });
+    await calculator.scrollIntoViewIfNeeded({ timeout: 10000 });
     const finalQuote = page.waitForResponse(
       (response) => response.url() === `${fixture.runtime.origin}/api/quote`,
     );
@@ -152,7 +164,13 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
         .locator("html")
         .evaluate((element) => element.scrollWidth <= element.clientWidth),
     ).toBe(true);
-    await calculator.scrollIntoViewIfNeeded();
+    await page
+      .locator('iframe[title="Application preview"]')
+      .scrollIntoViewIfNeeded({ timeout: 10000 });
+    await expect(page.locator('iframe[title="Application preview"]')).toBeInViewport({
+      ratio: 0.9,
+    });
+    await calculator.scrollIntoViewIfNeeded({ timeout: 10000 });
     await page.screenshot({ path: info.outputPath("workspace-narrow.png") });
     await page.screenshot({ path: info.outputPath("workspace-narrow-layout.png"), fullPage: true });
     phase = "stop";

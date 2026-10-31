@@ -8262,3 +8262,13 @@ retains this result. Its narrow full-page screenshot left an offscreen frame unp
 is not accepted as narrow visual evidence. The corrected proof explicitly scrolls the actual
 calculator into view, captures a narrow viewport and checks its real changed-preset quote and
 keyboard exit. Corrected exact-head hosted and personal acceptance remain required.
+
+Corrected narrow run `41178028675` retained a second failure at `b6d5d2c`: after resizing,
+scrolling only the calculator inside its now-offscreen iframe waited for stability until the
+150-second test limit. The trace resolves the live mounted calculator but never completes the
+child stability action. Narrow quote/screenshots/UI Stop were not reached; the separate actual
+HTTP-build cancellation and the other three browser cases passed. Artifact `13034360111`,
+SHA-256 `0237b9ff6ab8db7b8f85f3736f11c64e36649e96ff1627fe1e83160efc3c82d9`, retains
+that outcome. The proof now scrolls the parent frame into the viewport and asserts its visible
+coverage before scrolling the child, with a ten-second scroll bound. No product diagnostic is
+filtered and the original behavioral assertions remain. New hosted acceptance is required.
