@@ -33,7 +33,7 @@ infers historical completion from files. General curriculum recovery remains ope
 
 This is session-only mode practice, not persisted curriculum progress or certificate evidence.
 Its final text records the three modes used and asks the learner to build and try the actual
-calculator. It does not assert that a later edit is checked or that a frame load proves behavior.
+calculator, including the separate saved-output verification action. It does not assert that a later edit is checked or that a frame load proves behavior.
 Full revision-bound lesson checks, snapshots, resume, certificate, verified external-agent
 connection and production/browser-runtime selection remain open.
 
@@ -50,5 +50,6 @@ At tutor source head `2073328`, all ten checks pass: CI `41208824847`, modes `41
 (77 focused / eleven browser cases) and editor `41208824836`. The hosted probe verifies Enter
 questions, actual single-file proposal lists, rejection clearing and unchanged tool-call counts.
 Both expanded tutor screenshots and all five changed prior screenshots read correctly; fifteen
-prior images are identical. Native review and personal COMMENT `5723229865` are clear. Final-head acceptance and
-post-merge proof remain required.
+prior images are identical. Native review and personal COMMENT `5723229865` were clear. PR53 merged as `ede739b` after
+final review `5723293269`; post-merge CI `41210602495`, modes `41210602511` and editor
+`41210602508` passed. The separate saved-output check is tracked in CALCULATOR_CHECK.md.

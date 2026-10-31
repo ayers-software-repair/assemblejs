@@ -6,41 +6,7 @@ import { test } from "node:test";
 import { Window } from "happy-dom";
 import { calculatorFixture } from "./calculator-fixture.mjs";
 import { createAcademyWorkspace } from "./create-academy-workspace.js";
-
-const fixture = async (clientOf = (f) => f.client) => {
-  const f = calculatorFixture();
-  const window = new Window({
-    url: "https://academy.example/",
-    settings: { navigation: { disableChildFrameNavigation: true } },
-  });
-  const document = window.document;
-  const calls = [];
-  const runtime = {
-    origin: "https://preview.example",
-    async rebuild() {
-      calls.push("build");
-      return "https://preview.example/p/kb-guji-250";
-    },
-    async stop() {
-      calls.push("stop");
-    },
-  };
-  const paths = [...f.files.keys()];
-  const view = createAcademyWorkspace(document.body, clientOf(f), f.recipe, paths, runtime);
-  await setImmediate();
-  return {
-    ...f,
-    window,
-    document,
-    view,
-    runtime,
-    runtimeCalls: calls,
-    close() {
-      view.destroy();
-      window.close();
-    },
-  };
-};
+import { academyWorkspaceFixture as fixture } from "./academy-workspace-fixture.mjs";
 
 test("check precedes the real runtime request, with a pinned framed URL and explicit stop", async () => {
   const f = await fixture();
@@ -295,4 +261,32 @@ test("destroy during source identity reading dispatches no later check or build"
   );
   assert.deepEqual(f.runtimeCalls, []);
   f.window.close();
+});
+
+test("calculator verification is current-preview-only and writes or Stop invalidate it", async () => {
+  const f = await fixture();
+  try {
+    f.files.set(f.directory + "price-calculator.react.tsx", f.recipe["price-calculator.react.tsx"]);
+    const button = [...f.document.querySelectorAll("button")].find(
+      (node) => node.textContent === "Verify calculator",
+    );
+    assert.equal(button.disabled, true);
+    await f.view.refresh();
+    assert.equal(button.disabled, false);
+    assert.equal((await f.view.verify()).ok, true);
+    assert.deepEqual(f.runtimeCalls, ["build", "inspect"]);
+    const status = f.document.querySelector('[aria-label="Workspace status"]');
+    assert.match(status.textContent, /verified for revision/);
+    f.view.tutor.modes.mode("auto");
+    await f.view.tutor.modes.request("Use presets 2, 4, 8");
+    assert.equal(button.disabled, true);
+    assert.doesNotMatch(status.textContent, /verified for revision/);
+    await f.view.refresh();
+    assert.equal((await f.view.verify()).ok, true);
+    await f.view.stop();
+    assert.equal(button.disabled, true);
+    assert.doesNotMatch(status.textContent, /verified for revision/);
+  } finally {
+    f.close();
+  }
 });

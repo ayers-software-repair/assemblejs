@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-31, after PR52 existing-code practice merged and post-merge proof passed.
+Checkpoint: 2026-10-31, after PR53 authored tutor merged and post-merge proof passed.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -287,11 +287,14 @@ final personal COMMENT `5723028258` and all ten final-head checks. Actual squash
 full message/DCO/signature independently verified. Post-merge CI `41207836284`, editor
 `41207836328` and modes `41207836288` all passed, attempt 1.
 
-Active source: `/tmp/assemblejs-academy-authored-tutor`, branch `codex/academy-authored-tutor`.
-Owner/done-when recorded in TODO before source edits: authored Next/Why/Files/customization
-answers from actual step/proposal context, honest fallback, no writes/progress/false results.
-All 103 source cases/static gates and native review green. Source `2073328` has all ten jobs
-green: CI `41208824847`, modes `41208824820` (77 / eleven), editor `41208824836`. Tutor
-keyboard/context/no-call/narrow proof and all new/changed images pass. Personal source COMMENT
-`5723229865` is clear; final-head checks/acceptance and post-merge proof remain required. Full curriculum, durable progress/certificates, verified external-agent access
-and runtime adoption remain open.
+PR53 merged as `ede739b`, tree `397881c47c0881ffcbccbb92c890e3380ced5d4c`, parent `d96e4cd`,
+final personal `5723293269`, all ten final-head jobs and actual squash identities verified.
+Post-merge CI `41210602495`, modes `41210602511`, editor `41210602508` passed at attempt 1;
+native/personal actual-merge proof clear. Standalone three-mode summary is reconciled in TODO.
+Active: `/tmp/assemblejs-academy-calculator-verification`, `codex/academy-calculator-verification`.
+PR54 corrected source `9eade76`: all ten jobs green, CI `41218069474`, modes `41218069557`
+(99 focused/twelve browser), editor `41218069466`; personal `5723724107`, artifact QA `6545926476`.
+119 component/six backend cases; real race/bad-price/recovery/focus/narrow/Stop proof clear.
+Failed `1164422` focus run/history correction retained. No live/screen-reader/certificate claim.
+Final-head checks/acceptance, actual squash identity and post-merge proof remain required.
+Next: original-site branding queue in TODO/PLAN; PR33/publication/adoption holds remain.

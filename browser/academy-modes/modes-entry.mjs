@@ -6,12 +6,13 @@ import { createCalculatorControls } from "../../examples/academy/workspace/creat
 import { createProjectFiles } from "../../examples/academy/workspace/create-project-files.js";
 import { createSourceEditor } from "../../examples/academy/workspace/create-source-editor.js";
 
-const json = async (path, body) => {
+const json = async (path, body, signal) => {
   const response = await fetch(
     path,
     body === undefined
-      ? {}
+      ? { signal }
       : {
+          signal,
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
@@ -38,6 +39,9 @@ if (globalThis.location.search === "?workspace") {
       const result = await json("/preview", {});
       if (typeof result.url !== "string") throw new Error("missing actual preview URL");
       return result.url;
+    },
+    inspect(values, signal) {
+      return json("/preview-inspect", { values }, signal);
     },
     async stop() {
       const result = await json("/preview-stop", {});

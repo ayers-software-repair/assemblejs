@@ -30,8 +30,11 @@
         "browser/academy-modes/workspace-version.probe.ts",
         "browser/academy-modes/draft-recovery.probe.ts",
         "browser/academy-modes/existing-practice.probe.ts",
+        "browser/academy-modes/calculator-check.probe.ts",
         "browser/academy-modes/modes-entry.mjs",
-        "browser/academy-modes/source-paths.test.mjs"
+        "browser/academy-modes/source-paths.test.mjs",
+        "browser/academy-modes/read-preview-response.test.mjs",
+        "browser/academy-modes/inspect-market-calculator.test.mjs"
       ],
       "project": [
         "scripts/**/*.mjs",

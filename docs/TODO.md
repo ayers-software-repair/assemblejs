@@ -10,6 +10,19 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `docs/studies/academy-research.md`, before Academy design or implementation.
 - [ ] Inspect current examples, docs generation, conformance and demo flow; research editor,
       runtime, hosting and licensing constraints before choosing infrastructure.
+- [ ] Restore the original AssembleJS identity across every current site family (owner,
+      2026-10-31). Owner: AssembleJS implementation chat; finish PR54's corrected checkpoint
+      first. Read-only reference: `/home/sparrow6/source/refs/assemblejs-legacy/websites/www.assemblejs.com/`.
+      Compare actual rendered original/current before implementation, including logo/header/
+      background composition; this is not a palette-only home edit or a framework rewrite.
+      Tracked inventory: `site/{404,downloads,index,install,release-notes,start,support}.html`
+      and `site/docs/{index,lit,outline,preact,react,solid,svelte,templates,tutorial,vue}.html`.
+      Also materialize/inventory generated API-reference pages and private Academy/example
+      views before declaring coverage. Done when all families share the intended original
+      identity, useful functionality remains, and full page/desktop/narrow/keyboard proof and
+      applicable QA pass. Replace architecture-count marketing and awkward Market CTA with
+      plain actual destinations (`docs/outline.html` is the composed-page inspection guide).
+      Coordinate shared component/theming changes with Platform; do not fork consumer CSS.
 - [x] Inspect historical landing designs and restore "Frameworks Assemble". PR20 merged as
       `d1f0d5b` after all six normal CI jobs, hosted five-width/keyboard/repeated-navigation
       proof and independent visual QA passed at `46ebb89`. Source generation and palette
@@ -125,9 +138,28 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       (77 focused / eleven browser cases), editor `41208824836`. All 103 component cases,
       static gates and native source review pass. Real tutor questions add no tool calls;
       actual proposal context, rejection clearing and desktop/narrow views pass. Personal
-      COMMENT `5723229865` accepts this source; final-head/post-merge proof remains required.
-- [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
-      rejection and revised approval, with code view and readable diffs.
+      COMMENT `5723229865` accepts this source. PR53 merged as `ede739b` after final review
+      `5723293269` and all ten final-head jobs. Actual tree/parent/full message/signature were
+      independently verified; post-merge CI `41210602495`, modes `41210602511` and editor
+      `41210602508` all passed at attempt 1, with independent native/personal verification.
+- [x] Teach Plan, Approval and Auto modes through actual file/preview changes, including
+      rejection and revised approval, with code view and readable diffs. The standalone
+      supplied-project sequence is delivered by PR45/52/53 above; this summary row was stale.
+      This does not close the full curriculum or current-revision lesson-proof requirement.
+- [x] Verify the saved calculator against the current served preview and quote API.
+      Owner: Academy implementation chat. Done when an explicit read-only check compares the
+      actual served title/presets with current saved authored settings, exercises the real quote
+      API, and reports truthful pass/failure bound to the observed source/preview revision.
+      Refuse stale, unavailable, failed or malformed evidence; invalidate on writes/Stop and
+      preserve source/diagnostics. Verify negative controls, hosted keyboard/narrow behavior
+      and cleanup with independent/personal review. This is server-output/API proof, not
+      browser-hydration attestation, durable progress or certificate completion.
+      Source proof: 119 component and six backend cases pass, with title/version bypasses
+      observed red before restoration. Corrected source `9eade76` passes all ten jobs: CI
+      `41218069474`, modes `41218069557` (99 focused / twelve browser), editor `41218069466`.
+      Personal `5723724107` and scoped artifact QA `6545926476` are clear. Real edit-race and
+      incorrect-price refusal/recovery, keyboard/narrow layout and Stop are verified. This is
+      source/server/API evidence; final-head checks/acceptance and post-merge proof remain.
 - [x] Record and independently review the candidate learning/proof path in
       `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
 - [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent

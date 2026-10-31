@@ -59,7 +59,7 @@ export function createModeWalkthrough(container) {
     ],
     [
       "You used all three modes",
-      "Check & preview, then try the calculator's quantity buttons.",
+      "Check & preview, verify the calculator, then try its quantity buttons.",
       "These were real file operations and checks. Preview builds use saved files; quotes come from the shop.",
     ],
   ];

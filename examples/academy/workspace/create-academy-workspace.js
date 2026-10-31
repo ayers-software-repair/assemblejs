@@ -6,6 +6,9 @@ import { createModeWalkthrough } from "./create-mode-walkthrough.js";
 import { createProjectFiles } from "./create-project-files.js";
 import { createSourceEditor } from "./create-source-editor.js";
 import { projectToolResult } from "./project-tool-result.js";
+import { readProjectVersion } from "./read-project-version.js";
+import { restoreVerificationFocus } from "./restore-verification-focus.js";
+import { verifyCalculator } from "./verify-calculator.js";
 
 /** One supplied project: source and authored guidance beside a genuine completed-build URL. */
 export function createAcademyWorkspace(container, client, recipe, paths, runtime) {
@@ -43,8 +46,9 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const actions = node("div");
   const build = node("button", "Check & preview");
   const stop = node("button", "Stop preview");
-  build.type = stop.type = "button";
-  actions.append(build, stop);
+  const verify = node("button", "Verify calculator");
+  build.type = stop.type = verify.type = "button";
+  actions.append(build, stop, verify);
   header.append(heading, actions);
   const status = node("p", "Check and preview to start the application.");
   status.setAttribute("role", "status");
@@ -72,13 +76,17 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   let touched = false;
   let disposed = false;
   let editor;
+  let previewState;
+  let verificationController;
   const sync = () => {
     if (disposed) return;
     build.disabled = busy || pending > 0;
+    verify.disabled = busy || pending > 0 || !previewState || typeof runtime.inspect !== "function";
     stop.disabled = busy || pending > 0 || !touched;
     guide.disabled = code.disabled = busy;
   };
   const clear = (message) => {
+    previewState = undefined;
     frame.remove();
     empty.hidden = false;
     status.textContent = message;
@@ -135,22 +143,11 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     sync();
     clear("Checking saved project files.");
     try {
-      const sourceVersion = async () => {
-        const answer = await callProjectTool(observed, "read_source_version");
-        if (
-          !answer.ok ||
-          answer.problems.length ||
-          typeof answer.result?.version !== "string" ||
-          !/^[a-f0-9]{12}$/.test(answer.result?.version ?? "")
-        )
-          throw new Error(`Project source version unavailable: ${JSON.stringify(answer)}`);
-        return answer.result.version;
-      };
-      const version = await sourceVersion();
+      const version = await readProjectVersion(observed);
       if (disposed) return { ok: false, error: "workspace closed" };
       // shortcut: observations miss edit-and-revert races; use snapshots for atomic proof.
       const unchanged = async () => {
-        if ((await sourceVersion()) !== version)
+        if ((await readProjectVersion(observed)) !== version)
           throw new Error(
             "Project source changed during checking or building. Check and preview again.",
           );
@@ -184,6 +181,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       if (disposed) return { ok: false, error: "workspace closed" };
       await unchanged();
       if (disposed) return { ok: false, error: "workspace closed" };
+      previewState = Object.freeze({ url: url.href, version });
       frame.src = url.href;
       empty.hidden = true;
       preview.insertBefore(frame, diagnostics);
@@ -198,6 +196,40 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     } finally {
       busy = false;
       sync();
+    }
+  };
+  const checkCalculator = async () => {
+    if (disposed || busy || pending)
+      return { ok: false, error: "wait for the current project operation" };
+    const focused = document.activeElement === verify;
+    busy = true;
+    verificationController = new AbortController();
+    sync();
+    status.textContent = "Checking saved calculator output and quote responses.";
+    try {
+      const evidence = await verifyCalculator(
+        document,
+        observed,
+        recipe,
+        runtime,
+        previewState,
+        verificationController.signal,
+      );
+      if (disposed) return { ok: false, error: "workspace closed" };
+      output.textContent = JSON.stringify(evidence, null, 2);
+      status.textContent = `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
+      return { ok: true, evidence };
+    } catch (error) {
+      if (!disposed) {
+        clear("Calculator check failed. Inspect its diagnostics, then check and preview again.");
+        output.textContent = String(error);
+      }
+      return { ok: false, error: String(error) };
+    } finally {
+      verificationController = undefined;
+      busy = false;
+      sync();
+      if (!disposed) restoreVerificationFocus(document, verify, diagnostics, focused);
     }
   };
   const stopPreview = async () => {
@@ -224,6 +256,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   };
   build.addEventListener("click", () => void refresh());
   stop.addEventListener("click", () => void stopPreview());
+  verify.addEventListener("click", () => void checkCalculator());
   preview.append(diagnostics);
   layout.append(guide, code, preview);
   root.append(header, status, layout);
@@ -234,9 +267,11 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     editor,
     tutor,
     refresh,
+    verify: checkCalculator,
     stop: stopPreview,
     destroy() {
       disposed = true;
+      verificationController?.abort();
       practice.destroy();
       tutor.destroy();
       editor.destroy();

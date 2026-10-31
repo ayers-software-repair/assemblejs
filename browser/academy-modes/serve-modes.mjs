@@ -120,6 +120,34 @@ export async function serveModes(kind = "modes") {
           return send(400, "application/json", JSON.stringify({ error: String(error) }));
         }
       }
+      if (request.method === "POST" && path === "/preview-inspect" && previewRuntime) {
+        if (request.headers.origin !== origin)
+          return send(403, "application/json", '{"error":"origin refused"}');
+        try {
+          let body = "";
+          let bytes = 0;
+          for await (const chunk of request) {
+            bytes += chunk.length;
+            if (bytes > 256) throw new Error("inspection request is too large");
+            body += chunk.toString("utf8");
+          }
+          const given = JSON.parse(body);
+          if (
+            !given ||
+            typeof given !== "object" ||
+            Object.keys(given).length !== 1 ||
+            !Object.hasOwn(given, "values")
+          )
+            throw new Error("inspection takes only quantity values");
+          return send(
+            200,
+            "application/json",
+            JSON.stringify(await previewRuntime.inspect(given.values)),
+          );
+        } catch (error) {
+          return send(400, "application/json", JSON.stringify({ error: String(error) }));
+        }
+      }
       if (
         request.method === "POST" &&
         ["/preview", "/preview-stop"].includes(path) &&

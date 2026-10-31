@@ -8747,3 +8747,104 @@ and retained with metadata, ZIP, screenshots, source-write receipts and raw logs
 independently read connected paths, all ten logs, both hashed artifacts and actual-merge image
 deltas. Closing documentation still requires exact-final-head acceptance and checks; actual
 squash identities and post-merge proof remain mandatory.
+
+## 2026-10-31 — Current saved-calculator output check
+
+PR53 merged as `ede739bd1b59d7dfda61baed63b8a82a27eb09d1`, reviewed tree
+`397881c47c0881ffcbccbb92c890e3380ced5d4c`, sole parent `d96e4cd`, after final personal
+COMMENT `5723293269` and all ten exact-head jobs. The actual complete message/DCO/signature
+were independently verified. Post-merge CI `41210602495`, modes `41210602511` and editor
+`41210602508` all passed at attempt 1; native and personal actual-merge/post-proof verification
+are clear. This supersedes preceding pending-delivery notes, not broader Academy/runtime holds.
+The standalone three-mode teaching summary in TODO is reconciled to PR45/52/53's delivered
+sequence; full curriculum/current-revision lesson checks remain unfinished.
+
+Take the existing real-lesson-check item next, with owner/done-when recorded before edits.
+An explicit saved-calculator check must compare actual served title/presets against current
+saved authored source and exercise the real quote API. Use the existing preview runtime's
+owned server and source-version observations. Refuse stale/unavailable/failed/malformed proof;
+show actual diagnostics and invalidate the visible result when writes or Stop are observed.
+The inspector is read-only and bounded; it cannot write project files, mutate stock/basket,
+choose arbitrary network targets or turn frame load/operation receipts into success.
+This slice proves saved source, server output and the quote API, not browser hydration or a
+complete lesson/certificate. Existing hosted browser interactions remain separate proof.
+PR33, publication, final runtime adoption and verified external-agent access remain held.
+No local product build, app server or browser and no repeated unchanged runtime matrix.
+
+Implementation keeps the output checker separate from historical mode receipts: it reuses the
+successful check/build only while both source observations still match that preview. Shared
+source-version reading retains the existing strict acknowledgement semantics. Detached template
+parsing follows the HTML Standard's inert template-content document; returned nodes are never
+adopted into the authoring UI. The fixed owned-server inspector bounds targets, quantities,
+redirects, types, response sizes and total time, and runtime close aborts/awaits inspection.
+Observed versions are not atomic snapshots; no hydration or certificate claim is introduced.
+
+All 116 source/DOM cases and six backend source-only cases pass, as do lint, organization/
+mirror self-tests/gates, modules, unused, duplication, identity self-test/gate, headers and emoji
+self-test/gate. Title and source-version bypass controls were observed red with missing-refusal
+assertions before exact restoration. An initial test mock used the wrong restore API and a
+shape case initially hit the earlier stale-version guard; these fixture errors were corrected
+and are not counted as negative-control proof. No local product execution occurred. The new
+hosted scenario and independent/personal acceptance remain pending.
+
+Fresh independent review found that an errored response stream could reject cancellation
+before releasing its reader lock. A focused errored-stream regression was watched red, then
+the reader cleanup was nested in a finally so release always occurs. All six backend cases
+pass after the fix. This corrects error-path cleanup without changing the proof boundary.
+
+The independent reader also reproduced cancellation in the microtask gap after a version-check
+helper finished but before its caller resumed. It could dispatch a source read after abort, or
+return successful evidence at the final gap. Both failures were watched red in the new await-
+boundary regression. Immediate signal checks after both helper awaits close those gaps; all
+seven controller cases pass. This is cancellation correctness, not an expanded acceptance claim.
+
+Fresh independent review confirms both corrections and the complete source/probe/docs with
+no further actionable findings. Actual hosted execution, visual review and personal acceptance
+remain required before this slice is delivered.
+
+Personal review caught an overly broad current-count replacement that changed historical run
+IDs and line references. Those unrelated hunks are restored from accepted `ede739b`; exact
+prefix/tail comparisons confirm historical decisions and backlog text are unchanged, apart
+from the explicit handoff checkpoint. The current slice's case-count text remains separate from historical numeric references. No source behavior
+changed in this correction; the original head's proof remains identified separately.
+
+Initial hosted modes `41215801109` at `1164422` passed its focused cases and eleven browser
+scenarios, then the new calculator-check scenario failed keyboard focus after its first real
+successful verification. Disabling the initiating button had dropped focus; re-enabling did
+not restore it. The race, bad-price, recovery and Stop portions after that assertion were not
+executed and are not accepted. Failed log, trace and artifact metadata are retained unchanged.
+
+The correction restores the initiating keyboard location after success, or opens/focuses
+actual diagnostics after failure, only while no later focus choice exists and the workspace
+is live. Programmatic checks do not claim focus. Three focus-policy cases pass; all 119
+component cases and six backend cases now pass. An attempted emulated
+button-blur test did not reproduce native disabled-button focus loss and is retained as
+inconclusive, not a red control. The unchanged hosted focus assertion remains required.
+Historical-document restoration and this functional focus fix require fresh exact-head proof;
+no unchanged workflow retry or weakened assertion is authorized.
+
+Corrected source `9eade764e9e1bfcbcb1664452ce4798d681d73b9`, tree
+`3659fb4177cd62955205f9df6e4589cb9a81e71a`, passes all ten attempt-1 jobs: CI `41218069474`,
+modes `41218069557` and editor `41218069466`. Both Nodes pass 2,511 tests, 81 exports and
+fourteen package validations; check remains 45,963 / 46,000 bytes. Modes passes 99 focused
+and twelve browser cases. Personal COMMENT `5723724107` closes both initial findings and
+accepts this source/retained behavior. Independent QA comment `6545926476` passes the four
+new captured states within artifact scope; it is not live interactive/screen-reader acceptance.
+Later-focus preservation is supported by focused unit/source review rather than screenshot
+inference. No existing runtime/framework matrix was manually repeated.
+
+The new scenario records 47 tool calls, three setup/API-error/restore writes, seven good builds
+and five inspections. Success performs no new write/check/build. An actual edit during
+inspection is refused; an API producing totals 1/1/1 is refused, and restoring source recovers
+1600/4800/9600. Errors and HTTP failures are empty, active processes are empty at completion;
+exactly four aborted stock streams match the owned URL/error/phases. Root viewed all four new
+and seven changed prior images against accepted PR53 source; fifteen prior images are identical.
+
+Artifact `13048764248`, 3,083,159 bytes, SHA-256
+`ee5778b952f8957e2f2e5f0c0706250f000b638fa07e6509ffa94f8fbff73bb0`, is hash/size verified
+and retained under `/tmp/academy-calculator-verification-9eade76-*`. Initial failed artifact
+`13047862103`, 3,372,339 bytes, SHA-256
+`a85b69edbddcc698275f294be79f4b27aaec898318282d30ef8c14a842333c2a`, remains separate with
+its trace/log and pre-close snapshot; no interrupted steps are retroactively accepted there.
+Closing documentation still needs final-head checks/personal acceptance, followed by actual
+squash identities and post-merge proof. Runtime, publication and broader Academy holds remain.
