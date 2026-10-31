@@ -1,0 +1,60 @@
+name: academy current-source preview integration
+on:
+  pull_request:
+    branches: [next]
+    paths:
+      [
+        "browser/academy-open-preview-research/**",
+        "browser/academy-open-runtime-research/**",
+        ".github/workflows/academy-open-preview-research.yml",
+        "package.json",
+        "pnpm-lock.yaml",
+      ]
+  push:
+    branches: [next]
+    paths:
+      [
+        "browser/academy-open-preview-research/**",
+        "browser/academy-open-runtime-research/**",
+        ".github/workflows/academy-open-preview-research.yml",
+      ]
+permissions:
+  contents: read
+concurrency:
+  group: academy-open-preview-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: node --test browser/academy-open-preview-research/*.test.mjs
+      - name: Prepare the real pinned npm delivery
+        run: |
+          npm install --prefix "$RUNNER_TEMP/academy-pm" --ignore-scripts --bin-links=false --no-save --no-audit --no-fund --fetch-retries=0 --fetch-timeout=20000 npm@10.9.2
+          node browser/academy-open-runtime-research/pack-npm.mjs "$RUNNER_TEMP/academy-pm/node_modules/npm" "$RUNNER_TEMP/academy-npm-pack.bin"
+      - name: Prepare current-source framework tarballs and canonical starter
+        run: node browser/academy-open-preview-research/prepare-framework.mjs "$RUNNER_TEMP/academy-framework"
+      - run: pnpm exec playwright test -c browser/academy-open-preview-research/playwright.config.ts
+        env:
+          FRAMEWORK_PROBE_ASSETS: ${{ runner.temp }}/academy-framework
+          NPM_PROBE_ASSET: ${{ runner.temp }}/academy-npm-pack.bin
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: academy-open-preview-research
+          path: |
+            test-results/academy-open-preview
+            ${{ runner.temp }}/academy-framework
+          if-no-files-found: error
+          retention-days: 7

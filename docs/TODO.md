@@ -88,6 +88,14 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       interaction. Source review, 21 source/DOM tests and the quantity-guard negative control
       passed. Hosted interaction/screenshots and final personal/CI acceptance remain delivery
       gates tracked in the PR. This supplies the feature, not lesson snapshots or Academy UI.
+- [ ] Integrate the current-source framework into the isolated browser preview, using actual
+      packed packages and canonical scaffold files rather than the immutable registry release.
+      Verify archive/readback/installed-code identity, real check/build, six mounts, five
+      templates, input and Stop/cleanup with strict errors. Source-only unit evidence is not
+      browser compatibility or Academy workspace acceptance. Run `41160120114` reached actual
+      check/build and preview but failed Svelte server rendering; retain artifact `13027075449`
+      and the bounded outcome in `browser/academy-open-preview-research/README.md`.
+      Do not retry unchanged or claim runtime acceptance.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages
