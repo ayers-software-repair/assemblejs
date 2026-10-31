@@ -151,3 +151,19 @@ Every issue closure needs a closing comment linking the exact commit/run/artifac
 done-when. Keep PR33 held and the full Academy open. Next deliver the reviewed calculator
 source workflow, then complete actual workspace/runtime/lesson integration, revision-bound
 progress and certificate wiring. Do not advertise the Academy as available yet.
+
+## Current continuation: real workspace preview source
+
+PR43 is merged as `5325ca127d9ed5ba2686decbb2b1b389f6a7394d`, accepted tree
+`8aa41b931ac90ba650f496e98fa2e6716659bb6c`, parent `4218dca`. Actual squash tree,
+parent, DCO/Conventional message and GitHub signature were verified. All eight exact-head jobs
+and personal final review `5721423768` passed. Post-merge CI `41172060171`, modes `41172060144`
+and editor `41172060126` passed. Earlier references above to its pending delivery are superseded.
+
+Next owned worktree: `/tmp/assemblejs-academy-workspace-preview`, branch
+`codex/academy-workspace-preview`, based on that exact merge. Combined guided controls, code
+and genuine saved-project preview source is implemented. Source/DOM/editor/file-list checks
+pass; failed-check and entry-limit controls were observed red. Hosted proof and final personal
+acceptance are pending. The Node runtime adapter is hosted QA only, not final browser runtime
+or a publicly deployed backend. No local app build/server/browser was used. See
+`examples/academy/workspace/WORKSPACE_PREVIEW.md` for ownership and isolation limits.

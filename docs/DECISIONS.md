@@ -8230,3 +8230,63 @@ Copying Market metadata had dropped create_project's MCP declaration. The fixtur
 the generated declarations with Market metadata and links the actual installed dependencies,
 including MCP, into an isolated directory. No check is removed or treated as success; the
 remaining Auto/manual/stale/Reload browser sequence still needs corrected hosted acceptance.
+
+## 2026-10-31: supplied-project workspace uses a genuine saved-project preview
+
+Continue the existing Academy integration queue after accepted PR43, merged as `5325ca1`.
+All eight exact-head jobs and independent/personal source/browser/visual review passed;
+post-merge CI `41172060171`, modes `41172060144` and editor `41172060126` passed.
+
+The combined private workspace reuses the accepted editor, authored calculator controls and
+shared source tools. Confirmed written paths join the code tree; clean opened files reload,
+while dirty drafts remain untouched. Writes invalidate the displayed preview. An actual check
+must pass before a supplied runtime builds saved source and returns its real application URL.
+The iframe is restricted to a distinct pinned origin; neither srcdoc nor its load event supplies
+successful rendering evidence. The existing public contentSecurityPolicy option allows only
+the exact workspace to frame the copied project, retaining all other default directives.
+
+The hosted-only proof adapter builds and runs the actual four Market servers with owned child
+processes, bounded startup/build/shutdown, exact HTTP Origin checks and explicit Stop. This is
+an integration fixture, not public untrusted execution, production connection or final browser
+runtime selection. PR33 remains held; no vendor patch, unchanged retry or runtime adoption is
+inferred. Full lessons, external-agent connection, revision-bound progress and certificate remain
+open. Source controls were watched red for a bypassed check gate and enlarged file-entry bound.
+Independent review caught HTTP cleanup waiting for an active build request before cancellation;
+shutdown now aborts the runtime before draining HTTP, and the hosted cancellation probe uses
+the actual HTTP endpoint. Its execution and full application acceptance remain pending.
+
+PR44's initial hosted run `41177734774` passed all five browser cases, actual six builds,
+composition, quotes, Stop and HTTP-build cancellation. All owned processes stopped; only the
+three expected stock-stream aborts occurred when removing live frames. Artifact `13033499322`
+retains this result. Its narrow full-page screenshot left an offscreen frame unpainted, so it
+is not accepted as narrow visual evidence. The corrected proof explicitly scrolls the actual
+calculator into view, captures a narrow viewport and checks its real changed-preset quote and
+keyboard exit. Corrected exact-head hosted and personal acceptance remain required.
+
+Corrected narrow run `41178028675` retained a second failure at `b6d5d2c`: after resizing,
+scrolling only the calculator inside its now-offscreen iframe waited for stability until the
+150-second test limit. The trace resolves the live mounted calculator but never completes the
+child stability action. Narrow quote/screenshots/UI Stop were not reached; the separate actual
+HTTP-build cancellation and the other three browser cases passed. Artifact `13034360111`,
+SHA-256 `0237b9ff6ab8db7b8f85f3736f11c64e36649e96ff1627fe1e83160efc3c82d9`, retains
+that outcome. The proof now scrolls the parent frame into the viewport and asserts its visible
+coverage before scrolling the child, with a ten-second scroll bound. No product diagnostic is
+filtered and the original behavioral assertions remain. New hosted acceptance is required.
+
+The parent-frame correction at `df657ad` resolved the scroll stall. Hosted run `41178389185`
+then reached the real narrow preset-four quote and unchanged basket, but the new application
+layout check found horizontal overflow at a 324px iframe viewport. Narrow screenshot/UI Stop
+acceptance remains open; the other four browser cases passed. Artifact `13033799520` retains
+this failure. Before changing project CSS, the proof now records the actual overflowing element
+rectangles, owning assemblies and computed minimum widths, plus a pre-check narrow image.
+The overflow assertion remains mandatory. This diagnostic increment changes no product CSS.
+
+The diagnostic run `41178637741` at `bf19488` measured a 324px viewport and 353px document.
+Only the search-box envelope, its search form and Search button crossed the right edge: the
+form was 320.96875px wide, from x32 to x352.96875. Artifact `13033927151`, SHA-256
+`65e432470c0aa26b582d2f2ea2f1ce15c21b0eb5ab205e288d150cb18e45028f`, retains the geometry.
+The existing search form used non-wrapping flex layout. Add flex-wrap to that form so its
+input and button can use separate rows within the actual available space. Do not widen or
+clip the preview or remove its layout assertion. Record left-edge geometry and horizontal
+scroll offsets too, so future clicks cannot hide diagnostic evidence. PR44 is draft until
+this concrete layout correction and its relevant checks pass, then returns for personal review.

@@ -198,3 +198,18 @@ for (const selection of ["same tab", "away and back", "another file"]) {
     window.close();
   });
 }
+
+test("new actual files join the navigation while existing source, drafts and file-list focus survive", async () => {
+  const { document, editor, input, edit, root } = fixture();
+  await editor.open("a.tsx");
+  edit("retained draft");
+  const tree = document.querySelector('nav[aria-label="Project files"]');
+  [...tree.querySelectorAll("button")].find((button) => button.textContent === "a.tsx").focus();
+  writeFileSync(join(root, "created.tsx"), "new actual source");
+  editor.addPaths(["created.tsx"]);
+  assert.equal(document.activeElement.textContent, "a.tsx");
+  assert.equal(input.value, "retained draft");
+  await editor.open("created.tsx");
+  assert.equal(input.value, "new actual source");
+  assert.equal(editor.files.buffer("a.tsx").text, "retained draft");
+});
