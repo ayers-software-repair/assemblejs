@@ -83,7 +83,25 @@ test("actual source saves, unsaved tabs, stale refusal and keyboard editing", as
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
+    const narrow = await input.evaluate((node) => {
+      const textarea = node as HTMLTextAreaElement;
+      const painted = textarea.previousElementSibling as HTMLElement;
+      const first = painted.querySelector("span") as HTMLElement;
+      return {
+        caret: textarea.selectionEnd,
+        textareaTop: textarea.scrollTop,
+        paintedTop: painted.scrollTop,
+        textareaHeight: textarea.scrollHeight,
+        paintedHeight: painted.scrollHeight,
+        paintedViewportTop: painted.getBoundingClientRect().top,
+        firstPaintedTop: first.getBoundingClientRect().top,
+      };
+    });
+    await writeFile(info.outputPath("editor-narrow-metrics.json"), JSON.stringify(narrow, null, 2));
     await page.screenshot({ path: info.outputPath("editor-narrow.png"), fullPage: true });
+    expect(narrow.caret).toBe(0);
+    expect(Math.abs(narrow.textareaTop - narrow.paintedTop)).toBeLessThanOrEqual(1);
+    expect(narrow.firstPaintedTop).toBeGreaterThan(narrow.paintedViewportTop);
     await input.fill(edited + "\n// unsaved draft\n");
     fixture.editFile("price-calculator.react.tsx", "outside edit\n");
     const refusal = page.waitForResponse((response) => response.request().method() === "PUT");
