@@ -1,0 +1,14 @@
+<!-- Copyright Ayers Electronics Inc. All rights reserved. -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900">
+  <g opacity=".05">
+    <path fill="#ff5a00" transform="translate(144 135)" d="M40 0 80 30.4 65.6 80 14.4 80 0 30.4Z" />
+    <path fill="#2b67f8" transform="translate(1164 225)" d="M30 0 48 18 60 30 48 42 30 60 12 42 0 30 12 18Z" />
+    <path fill="#62b245" transform="translate(288 695)" d="M14 0 56 0 70 14 70 56 56 70 14 70 0 56 0 14Z" />
+    <path fill="#fee440" transform="translate(1152 450)" d="M25 0 50 25 25 50 0 25Z" />
+    <path fill="#9b5de5" transform="translate(576 675)" d="M32.5 0 65 65 0 65Z" />
+    <path fill="#00bbf9" transform="translate(720 270)" d="M13.75 0 41.25 0 55 27.5 41.25 55 13.75 55 0 27.5Z" />
+    <circle fill="#ff5a00" cx="973" cy="125" r="35" />
+    <path fill="#2b67f8" transform="translate(1077 645)" d="M37.5 0 75 18.75 75 56.25 37.5 75 0 56.25 0 18.75Z" />
+  </g>
+</svg>

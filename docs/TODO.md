@@ -13,6 +13,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [ ] Restore the original AssembleJS identity across every current site family (owner,
       2026-10-31). Owner: AssembleJS implementation chat; finish PR54's corrected checkpoint
       first. Read-only reference: `/home/sparrow6/source/refs/assemblejs-legacy/websites/www.assemblejs.com/`.
+      Checkpoint: `docs/studies/assemblejs-original-branding.md` records original/current
+      rendered comparison, 17 maintained pages, 701 retained reference pages/seven families
+      and private fixtures. Mark/font/token candidate is unaccepted; shared static/off hook
+      is coordinated through manager before final background/proof. No consumer frame fork.
       Compare actual rendered original/current before implementation, including logo/header/
       background composition; this is not a palette-only home edit or a framework rewrite.
       Tracked inventory: `site/{404,downloads,index,install,release-notes,start,support}.html`
@@ -159,7 +163,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `41218069474`, modes `41218069557` (99 focused / twelve browser), editor `41218069466`.
       Personal `5723724107` and scoped artifact QA `6545926476` are clear. Real edit-race and
       incorrect-price refusal/recovery, keyboard/narrow layout and Stop are verified. This is
-      source/server/API evidence; final-head checks/acceptance and post-merge proof remain.
+      source/server/API evidence. Final `3610559` passed all ten checks/personal `5723784579`,
+      QA continuity `6546151942`; merge `4a5ad61` has the reviewed tree/parent/message/signature.
+      All ten post-merge attempt-1 jobs pass: CI `41220420134`, modes `41220420100`, editor
+      `41220420102`. Independent actual-merge review is clear; broader holds remain.
 - [x] Record and independently review the candidate learning/proof path in
       `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
 - [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent
