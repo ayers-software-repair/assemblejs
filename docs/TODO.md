@@ -59,6 +59,9 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       preview. Source/DOM and bounded file-list proofs pass, including observed-red failed-check
       and entry-limit controls. Actual hosted four-server composition, quotes, Stop and
       shutdown-during-HTTP-build proof plus independent/personal review remain required.
+      Hosted geometry identified the search form overflowing a 324px frame (321px form,
+      353px document); it now wraps at available width. Corrected runtime/visual proof remains
+      required, with the original viewport and no-overflow assertion retained.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

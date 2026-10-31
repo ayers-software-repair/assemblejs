@@ -162,9 +162,11 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     const layout = await preview.locator("html").evaluate((element) => ({
       width: element.clientWidth,
       scrollWidth: element.scrollWidth,
+      scrollLeft: element.scrollLeft,
+      windowScrollX: window.scrollX,
       outside: [...element.querySelectorAll("body *")].flatMap((node) => {
         const box = node.getBoundingClientRect();
-        if (!box.width || box.right <= element.clientWidth + 1) return [];
+        if (!box.width || (box.left >= -1 && box.right <= element.clientWidth + 1)) return [];
         const style = getComputedStyle(node);
         return [
           {

@@ -8280,3 +8280,13 @@ acceptance remains open; the other four browser cases passed. Artifact `13033799
 this failure. Before changing project CSS, the proof now records the actual overflowing element
 rectangles, owning assemblies and computed minimum widths, plus a pre-check narrow image.
 The overflow assertion remains mandatory. This diagnostic increment changes no product CSS.
+
+The diagnostic run `41178637741` at `bf19488` measured a 324px viewport and 353px document.
+Only the search-box envelope, its search form and Search button crossed the right edge: the
+form was 320.96875px wide, from x32 to x352.96875. Artifact `13033927151`, SHA-256
+`65e432470c0aa26b582d2f2ea2f1ce15c21b0eb5ab205e288d150cb18e45028f`, retains the geometry.
+The existing search form used non-wrapping flex layout. Add flex-wrap to that form so its
+input and button can use separate rows within the actual available space. Do not widen or
+clip the preview or remove its layout assertion. Record left-edge geometry and horizontal
+scroll offsets too, so future clicks cannot hide diagnostic evidence. PR44 is draft until
+this concrete layout correction and its relevant checks pass, then returns for personal review.
