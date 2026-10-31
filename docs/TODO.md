@@ -2364,3 +2364,8 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       hosted/native/personal acceptance and the normal next-site verification remain required.
       Preserve the ordinary and applicable Academy checks,
       generated-copy integrity, invalid-proof fallback and separate release/deployment gates.
+- [ ] Complete the approved v0.90.0 kit's site delivery after PR46. Normal deployment
+      `41187302218` failed the shared-frame check; regenerate the sixteen product pages,
+      stage the actual four landing modules and released badges, and verify the real
+      staged closure. Fresh review/checks, normal deployment and live bytes must pass
+      before issue 11 or superseded PR12 closure.

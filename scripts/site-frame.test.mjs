@@ -1,8 +1,10 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { posix } from "node:path";
+import { execFileSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, posix } from "node:path";
 import { test } from "node:test";
 import { Window } from "happy-dom";
 import { JSX } from "typedoc";
@@ -158,5 +160,45 @@ test("TypeDoc keeps the real product header and active navigation at every refer
       ),
     );
     assert.match(html, /href="#tsd-content"/);
+  }
+});
+
+test("site staging copies the released kit closure without a retired module", () => {
+  const workflow = readFileSync(
+    new URL("../.github/workflows/deploy-site.yml", import.meta.url),
+    "utf8",
+  );
+  const commands = /^ {6}- name: Stage the kit into the site\n {8}run: \|\n((?: {10}.+\n)+)/m.exec(
+    workflow,
+  )?.[1];
+  assert.ok(commands, "actual kit staging commands");
+  const root = mkdtempSync(join(tmpdir(), "assemblejs-kit-staging-"));
+  const files = [
+    "product.css",
+    "install.css",
+    "store-badges.css",
+    "landing-background.js",
+    "landing-worker.js",
+    "landing-renderers.js",
+    "landing-shaders.js",
+    "product-downloads.js",
+    "icons/check.svg",
+    "badges/app-store.svg",
+    "badges/amazon-appstore.png",
+  ];
+  try {
+    mkdirSync(join(root, "site/kit"), { recursive: true });
+    writeFileSync(join(root, "site/kit/old.txt"), "old");
+    for (const file of files) {
+      const path = join(root, "_platform/sitekit", file);
+      mkdirSync(dirname(path), { recursive: true });
+      writeFileSync(path, `fixture:${file}`);
+    }
+    execFileSync("bash", ["-e", "-c", commands], { cwd: root, stdio: "pipe" });
+    for (const file of files)
+      assert.equal(readFileSync(join(root, "site/kit", file), "utf8"), `fixture:${file}`);
+    assert.throws(() => readFileSync(join(root, "site/kit/old.txt")), { code: "ENOENT" });
+  } finally {
+    rmSync(root, { recursive: true, force: true });
   }
 });
