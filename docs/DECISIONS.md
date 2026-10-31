@@ -8403,3 +8403,14 @@ The decoder copies only the captured PNG into an analysis surface; it does not r
 renderer result or draw anything into the product. The normal first image passes before the
 opacity-zero control, and the restored normal image must pass again. Preserve the negative
 PNG/metrics alongside the exact positive PNGs and per-width metrics.
+
+At `652b538`, hosted landing run `41185794305` correctly failed the actual pixel gate:
+1440px passed with 438 edges, its opacity-zero control returned zero, and restoration passed.
+The next 1024px image remained genuinely blank with zero edges despite native webgl/worker
+labels throughout the 15-second bound. Narrower widths were not reached. Retained artifact
+`13036139887` has SHA-256
+`19ce2da926b435cebdc88e7b4c86418df0af0ca0ae8eb86e2faf4e34545fff30`.
+No acceptance, unchanged retry or threshold reduction follows. Add bounded observational page
+lifecycle, canvas size/style and native worker-reply telemetry to the same failing hosted probe.
+It requests no draws and changes no renderer or input. This separates missing worker completion,
+page visibility/size and navigation-transition hypotheses before choosing a correction.

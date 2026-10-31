@@ -3,6 +3,7 @@
 import { writeFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { captureLandingPaint } from "./capture-landing-paint.js";
+import { observeLandingLifecycle } from "./observe-landing-lifecycle.js";
 import { serveLanding } from "./serve-landing.js";
 
 test("the landing keeps composition, links and keyboard access at desktop and narrow widths", async ({
@@ -18,6 +19,7 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     maxDelta: number;
     paintWidth: number;
     paintHeight: number;
+    lifecycle: string;
   }> = [];
   const fits = () =>
     page.evaluate(() => {
@@ -39,6 +41,7 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     if (response.status() >= 400) failures.push(`${String(response.status())} ${response.url()}`);
   });
   try {
+    await observeLandingLifecycle(page);
     for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`${fixture.origin}/?width=${String(width)}`);
@@ -64,6 +67,7 @@ test("the landing keeps composition, links and keyboard access at desktop and na
         maxDelta: 0,
         paintWidth: 0,
         paintHeight: 0,
+        lifecycle: "[]",
       };
       renderers.push(measured);
       const screenshot = info.outputPath(`landing-${String(width)}.png`);
@@ -72,6 +76,7 @@ test("the landing keeps composition, links and keyboard access at desktop and na
         const native = await page.locator("[data-landing-background]").evaluate((canvas) => ({
           renderer: (canvas as HTMLElement).dataset.renderer ?? "pending",
           thread: (canvas as HTMLElement).dataset.thread ?? "none",
+          lifecycle: document.documentElement.dataset.landingLifecycle ?? "[]",
         }));
         Object.assign(measured, pixels, native);
         await writeFile(screenshot, image);
