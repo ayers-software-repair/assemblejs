@@ -69,7 +69,7 @@ test("changed project source and its recovered draft remain separate until expli
   const stored = f.window.sessionStorage.getItem(key);
   resumed.edit(outside + "<p>Manually merged learner work</p>\n");
   assert.equal(f.window.sessionStorage.getItem(key), stored);
-  resumed.button("Discard recovered draft").click();
+  resumed.button("Discard stored draft").click();
   const reviewed = JSON.parse(f.window.sessionStorage.getItem(key));
   assert.equal(reviewed.base, outside);
   assert.equal(reviewed.text, resumed.input.value);
@@ -123,7 +123,12 @@ test("malformed or oversized cached values are preserved and never restored into
     resumed.edit("new in-memory edit");
     assert.equal(f.window.sessionStorage.getItem(key), malformed);
     assert.equal(f.writes.length, 0);
-    resumed.button("Discard recovered draft").click();
+    assert.equal(
+      resumed.button("Discard stored draft").closest("details").hidden,
+      false,
+      "a read corrupt record must expose its discard action",
+    );
+    resumed.button("Discard stored draft").click();
     assert.equal(JSON.parse(f.window.sessionStorage.getItem(key)).text, "new in-memory edit");
   }
 });
@@ -144,6 +149,8 @@ test("a denied storage read cannot later overwrite an unread older draft", async
     },
   });
   const resumed = await f.open();
+  assert.equal(f.window.document.querySelector(".academy-draft-recovery details").hidden, true);
+  assert.equal(resumed.button("Retry draft recovery").hidden, false);
   resumed.edit("newer in-memory draft");
   assert.match(
     f.window.document.querySelector(".academy-draft-recovery").textContent,
@@ -156,7 +163,14 @@ test("a denied storage read cannot later overwrite an unread older draft", async
   denied = false;
   resumed.edit("newest in-memory draft");
   assert.equal(storage.getItem(key), stored);
-  resumed.button("Discard recovered draft").click();
+  resumed.button("Retry draft recovery").click();
+  assert.equal(storage.getItem(key), stored);
+  assert.equal(resumed.input.value, "newest in-memory draft");
+  assert.equal(
+    f.window.document.querySelector('[aria-label="Recovered draft"]').value,
+    "older stored draft",
+  );
+  resumed.button("Discard stored draft").click();
   assert.equal(JSON.parse(storage.getItem(key)).text, "newest in-memory draft");
   assert.equal(f.writes.length, 0);
 });
@@ -225,5 +239,29 @@ test("a stale cached draft already identical to saved source is removed without 
   assert.equal(resumed.input.value, "already saved elsewhere");
   assert.equal(resumed.button("Save file").disabled, true);
   assert.equal(f.window.sessionStorage.length, 0);
+  assert.equal(f.writes.length, 0);
+});
+
+test("retry restores a newly readable matching draft into the visible editor without writing", async () => {
+  const f = fixture();
+  const first = await f.open();
+  first.edit("draft recovered after storage is allowed");
+  first.editor.destroy();
+  const storage = f.window.sessionStorage;
+  let denied = true;
+  Object.defineProperty(f.window, "sessionStorage", {
+    get() {
+      if (denied) throw new Error("storage denied");
+      return storage;
+    },
+  });
+  const resumed = await f.open();
+  assert.equal(resumed.input.value, "<p>Original</p>\n");
+  denied = false;
+  resumed.button("Retry draft recovery").click();
+  assert.equal(resumed.input.value, "draft recovered after storage is allowed");
+  assert.equal(resumed.button("Save file").disabled, false);
+  assert.equal(resumed.editor.files.buffer("src/page.html").base, "<p>Original</p>\n");
+  assert.equal(f.files.get("src/page.html"), "<p>Original</p>\n");
   assert.equal(f.writes.length, 0);
 });

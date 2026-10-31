@@ -92,16 +92,20 @@ Opening a matching-base draft restores the editor buffer without writing a proje
 Save remains explicit and uses the original expected base; a later outside change still refuses.
 
 If the actual source changed, the current file stays in the editor and the recovered draft
-appears separately as read-only text. Copy/review it and merge manually. Discard recovered draft
+appears separately as read-only text. Copy/review it and merge manually. Discard stored draft
 removes that stored copy only; any current edits can then be kept for reload. No recovery path
 rebases a stale draft or applies it automatically. Denied reads and malformed records stay
 blocked rather than being overwritten by subsequent typing. Quota/storage errors keep useful
 text in memory and display the actual error without claiming the latest draft was persisted.
-A successful project Save remains valid even if draft storage is unavailable.
+When storage could not be read, Retry draft recovery checks it again without writing the
+project. Read but malformed/oversized data instead exposes an explicit Discard stored draft
+action, even when its raw value is too large to display. It keeps newer in-memory edits separate from an older recovered draft. No unread
+text is presented as a recovered draft. A successful project Save remains valid even if draft
+storage is unavailable.
 
-Eight focused recovery cases cover matching/conflicting bases, malformed/bounded storage,
+Nine focused recovery cases cover matching/conflicting bases, malformed/bounded storage,
 denial, quota, late edits during Save and redundant cached text. The matching-recovery and
-error-message regressions were watched failing before correction. Three hosted actual-MCP
+error-message regressions were watched failing before correction. Four hosted actual-MCP
 scenarios must prove real page reload, no writes before Save, conflict selection/review and manual
 merge, keyboard/narrow layout and denied/quota handling. Fresh hosted and independent/personal acceptance
 remain required for this source increment. No local product build, server or browser ran.

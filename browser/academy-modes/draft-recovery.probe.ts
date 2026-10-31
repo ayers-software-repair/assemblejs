@@ -66,7 +66,7 @@ test("a real reload recovers unsaved source and preserves a conflicting writer's
       ]),
     ).toEqual([0, conflicting.length]);
     await recovered.press("Tab");
-    const discard = recovery.getByRole("button", { name: "Discard recovered draft", exact: true });
+    const discard = recovery.getByRole("button", { name: "Discard stored draft", exact: true });
     await expect(discard).toBeFocused();
     await page.screenshot({ path: info.outputPath("draft-conflict-narrow.png"), fullPage: true });
     const merged = outside + conflicting;
@@ -160,6 +160,13 @@ for (const failure of ["denied", "quota"] as const) {
         failure === "denied" ? "SecurityError" : "QuotaExceededError",
       );
       expect(fixture.source("hello")).toBe(original);
+      if (failure === "denied") {
+        await expect(
+          recovery.getByRole("textbox", { name: "Recovered draft", exact: true }),
+        ).toHaveCount(0);
+        await recovery.getByRole("button", { name: "Retry draft recovery", exact: true }).click();
+        await expect(recovery).toContainText("SecurityError");
+      }
       await page.screenshot({
         path: info.outputPath(`draft-storage-${failure}.png`),
         fullPage: true,
@@ -191,3 +198,82 @@ for (const failure of ["denied", "quota"] as const) {
     }
   });
 }
+
+test("oversized stored recovery data can be discarded without changing the project", async ({
+  page,
+}, info) => {
+  const fixture = await serveModes();
+  const errors: string[] = [];
+  const failures: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("requestfailed", (request) => failures.push(request.url()));
+  page.on("console", (message) => {
+    if (["error", "warning"].includes(message.type())) errors.push(message.text());
+  });
+  try {
+    const original = fixture.source("hello");
+    await page.goto(`${fixture.origin}/?editor`);
+    const panel = page.getByRole("region", { name: "Project code", exact: true });
+    const tree = panel.getByRole("navigation", { name: "Project files" });
+    const source = panel.getByRole("textbox", { name: "Source code", exact: true });
+    const recovery = panel.getByRole("region", { name: "Draft recovery", exact: true });
+    await tree.getByRole("button").click();
+    await source.fill("a draft to seed recovery storage");
+    await page.evaluate(() => {
+      const key = sessionStorage.key(0);
+      if (key === null) throw new Error("missing actual recovery key");
+      sessionStorage.setItem(key, "x".repeat(800001));
+    });
+    await page.reload();
+    await tree.getByRole("button").click();
+    await expect(source).toHaveValue(original);
+    await expect(recovery).toContainText("stored draft is too large or malformed");
+    await expect(recovery.locator("summary")).toHaveText("Stored recovery data");
+    const discard = recovery.getByRole("button", { name: "Discard stored draft", exact: true });
+    await expect(discard).toBeVisible();
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await discard.focus();
+    await page.screenshot({ path: info.outputPath("draft-oversized-narrow.png"), fullPage: true });
+    expect(
+      await page.evaluate(() => sessionStorage.getItem(sessionStorage.key(0) ?? "")?.length),
+    ).toBe(800001);
+    expect(fixture.source("hello")).toBe(original);
+    await discard.press("Enter");
+    await expect(recovery).toBeHidden();
+    const draft = "<p>Draft recovery works again</p>\n";
+    await source.fill(draft);
+    await expect(recovery).toContainText("Draft kept for reload");
+    await page.reload();
+    await tree.getByRole("button").click();
+    await expect(source).toHaveValue(draft);
+    expect(fixture.source("hello")).toBe(original);
+    expect(
+      fixture.calls.filter((call: { name: string }) => call.name === "apply_source_changes"),
+    ).toEqual([]);
+    await panel.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(panel.getByRole("status")).toContainText("Saved");
+    expect(fixture.source("hello")).toBe(draft);
+    expect(errors).toEqual([]);
+    expect(failures).toEqual([]);
+  } finally {
+    try {
+      await writeFile(
+        info.outputPath("draft-oversized-evidence.json"),
+        JSON.stringify(
+          { errors, failures, calls: fixture.calls, source: fixture.source("hello") },
+          null,
+          2,
+        ),
+      );
+    } finally {
+      try {
+        await page.close();
+      } finally {
+        await fixture.close();
+      }
+    }
+  }
+});

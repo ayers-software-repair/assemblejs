@@ -54,7 +54,6 @@ export function createSourceEditor(container, project, paths) {
   reload.disabled = true;
   const status = element("p", "Choose a file to edit.");
   status.setAttribute("role", "status");
-  const drafts = createDraftRecovery(document, files);
   const buttons = new Map();
   let active;
   let opening = 0;
@@ -72,6 +71,12 @@ export function createSourceEditor(container, project, paths) {
       button.setAttribute("aria-current", String(path === active));
     }
   };
+  const drafts = createDraftRecovery(document, files, (path) => {
+    if (disposed || active !== path) return;
+    input.value = files.buffer(path).text;
+    status.textContent = "Recovered unsaved changes.";
+    refresh();
+  });
   const open = async (path) => {
     const ticket = ++opening;
     try {

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 /** Reload-only draft recovery never changes the project or rebases a draft onto changed source. */
-export function createDraftRecovery(document, files) {
+export function createDraftRecovery(document, files, onRestored) {
   const panel = document.createElement("section");
   panel.className = "academy-draft-recovery";
   panel.setAttribute("aria-label", "Draft recovery");
@@ -14,11 +14,14 @@ export function createDraftRecovery(document, files) {
   const recovered = document.createElement("textarea");
   recovered.readOnly = true;
   recovered.setAttribute("aria-label", "Recovered draft");
+  const retry = document.createElement("button");
+  retry.type = "button";
+  retry.textContent = "Retry draft recovery";
   const discard = document.createElement("button");
   discard.type = "button";
-  discard.textContent = "Discard recovered draft";
+  discard.textContent = "Discard stored draft";
   details.append(summary, recovered, discard);
-  panel.append(message, details);
+  panel.append(message, retry, details);
   const opened = new Set();
   const conflicts = new Map();
   const messages = new Map();
@@ -40,11 +43,15 @@ export function createDraftRecovery(document, files) {
     message.textContent = messages.get(active) ?? "";
     message.hidden = !message.textContent;
     const conflict = conflicts.get(active);
-    details.hidden = !conflicts.has(active);
+    details.hidden = !conflict || conflict.kind === "unread";
+    retry.hidden = !conflict || conflict.kind !== "unread";
+    summary.textContent =
+      conflict?.kind === "malformed" ? "Stored recovery data" : "Recovered draft";
+    recovered.setAttribute("aria-label", summary.textContent);
     recovered.hidden = !conflict || conflict.text === null;
     recovered.value = conflict?.text ?? "";
     details.open = !details.hidden;
-    panel.hidden = message.hidden && details.hidden;
+    panel.hidden = message.hidden && details.hidden && retry.hidden;
   };
   const unavailable = (path, error) => {
     const notice = `Draft recovery unavailable: ${String(error)}. Your buffer is kept.`;
@@ -88,45 +95,58 @@ export function createDraftRecovery(document, files) {
       unavailable(active, error);
     }
   });
+  const open = (path) => {
+    if (disposed) return;
+    active = path;
+    if (opened.has(path)) {
+      render();
+      return;
+    }
+    opened.add(path);
+    let raw;
+    let read = false;
+    try {
+      raw = storage().getItem(key(path));
+      read = true;
+      conflicts.delete(path);
+      messages.delete(path);
+      if (raw === null && files.buffer(path).dirty) changed(path);
+      if (raw !== null) {
+        if (typeof raw !== "string" || raw.length > 800000)
+          throw new Error("stored draft is too large or malformed");
+        const draft = JSON.parse(raw);
+        if (!valid(draft)) throw new Error("stored draft is malformed");
+        const current = files.buffer(path);
+        if (draft.text === current.base && !current.dirty) {
+          storage().removeItem(key(path));
+        } else if (draft.base !== current.base || current.dirty) {
+          const notice = "Current source differs. The recovered draft was not restored.";
+          conflicts.set(path, { kind: "draft", text: draft.text, notice });
+          messages.set(path, notice);
+        } else {
+          files.edit(path, draft.text);
+          messages.set(path, "Recovered unsaved draft. Save file to update the project.");
+          onRestored(path);
+        }
+      }
+      render();
+    } catch (error) {
+      conflicts.set(path, {
+        kind: read ? "malformed" : "unread",
+        text: typeof raw === "string" && raw.length <= 800000 ? raw : null,
+      });
+      unavailable(path, error);
+    }
+  };
+  retry.addEventListener("click", () => {
+    if (disposed || !active) return;
+    opened.delete(active);
+    open(active);
+  });
   render();
   return {
     element: panel,
-    open(path) {
-      if (disposed) return;
-      active = path;
-      if (opened.has(path)) {
-        render();
-        return;
-      }
-      opened.add(path);
-      let raw;
-      try {
-        raw = storage().getItem(key(path));
-        if (raw !== null) {
-          if (typeof raw !== "string" || raw.length > 800000)
-            throw new Error("stored draft is too large or malformed");
-          const draft = JSON.parse(raw);
-          if (!valid(draft)) throw new Error("stored draft is malformed");
-          const current = files.buffer(path);
-          if (draft.text === current.base && !current.dirty) {
-            storage().removeItem(key(path));
-          } else if (draft.base !== current.base || current.dirty) {
-            const notice = "Current source differs. The recovered draft was not restored.";
-            conflicts.set(path, { text: draft.text, notice });
-            messages.set(path, notice);
-          } else {
-            files.edit(path, draft.text);
-            messages.set(path, "Recovered unsaved draft. Save file to update the project.");
-          }
-        }
-        render();
-      } catch (error) {
-        conflicts.set(path, {
-          text: typeof raw === "string" && raw.length <= 800000 ? raw : null,
-        });
-        unavailable(path, error);
-      }
-    },
+    open,
     changed,
     destroy() {
       disposed = true;

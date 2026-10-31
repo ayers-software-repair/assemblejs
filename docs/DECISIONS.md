@@ -8598,3 +8598,27 @@ identity/headers and emoji pass. Independent complete source review is clear. Th
 hosted real-MCP scenarios cover reload, exact writes, conflict review, keyboard/narrow layout,
 denied reads and quota failures; all retain strict console/page/network diagnostics. Fresh
 hosted and personal acceptance remain required. No local product build, app server or browser.
+
+Initial PR51 source head `e94b1b3` passed hosted modes `41198570202` (nine browser cases) and
+editor `41198570167`. Visual QA nevertheless found an empty Recovered draft/discard section
+when storage reads were denied: no cached text had been read. Preserve those successful
+initial receipts separately; they do not accept that UI state. A new visibility/retry control
+was observed red. Show Retry draft recovery for unread data instead. Retry rechecks storage,
+keeps newer in-memory edits separate, and restores a newly readable matching-base draft into
+the visible editor without writing the project. The existing expected-base Save is unchanged.
+Nine focused recovery cases pass; fresh complete source/hosted/personal acceptance remains.
+
+Independent source review then caught a distinct dead end: a fully read oversized record was
+also hidden behind Retry, which could only reject it again. The old source test clicked a
+hidden discard button programmatically. A visibility assertion was watched failing before
+correction. Distinguish unread storage, malformed read data and a valid recovered draft.
+Only unread storage offers Retry; read malformed/oversized data exposes an honest explicit
+Discard stored draft action, without rendering unbounded raw text. A fourth hosted case must
+prove that action is visible/keyboard-accessible and restores ordinary draft recovery without
+writing the project before Save. No cache or source is silently discarded.
+
+All ten initial `e94b1b3` jobs passed, including full CI `41198570173`, but the visual hold
+above remained. Corrected source passes all 92 component cases and scoped lint/format,
+organization/mirror self-tests, modules, unused, identity/headers and duplication (3.28%).
+Independent complete source review is clear. The corrected four-case hosted proof and
+personal visual acceptance remain required; the initial successful images do not replace them.
