@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { writeFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { serveLanding } from "./serve-landing.js";
 
@@ -8,6 +9,27 @@ test("the landing keeps composition, links and keyboard access at desktop and na
 }, info) => {
   const fixture = await serveLanding();
   const failures: string[] = [];
+  const renderers: Array<{
+    width: number;
+    renderer: string;
+    thread: string;
+    draws: number;
+    ready: boolean;
+  }> = [];
+  const rendererState = () =>
+    page.evaluate(() => {
+      const canvas = document.querySelector<HTMLCanvasElement>("[data-landing-background]");
+      const renderer = canvas?.dataset.renderer ?? "pending";
+      const thread = canvas?.dataset.thread ?? "none";
+      const draws = Number(document.documentElement.dataset.landingProofDraws ?? "0");
+      const ready =
+        renderer === "css"
+          ? canvas?.hidden === true
+          : canvas?.hidden === false &&
+            ["webgpu", "webgl"].includes(renderer) &&
+            (thread === "main" || (thread === "worker" && draws > 0));
+      return { renderer, thread, draws, ready };
+    });
   const fits = () =>
     page.evaluate(() => {
       const heading = document.querySelector("h1");
@@ -28,6 +50,31 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     if (response.status() >= 400) failures.push(`${String(response.status())} ${response.url()}`);
   });
   try {
+    await page.addInitScript(() => {
+      const NativeWorker = window.Worker;
+      if (typeof NativeWorker === "undefined") return;
+      window.Worker = class extends NativeWorker {
+        constructor(...args: ConstructorParameters<typeof NativeWorker>) {
+          super(...args);
+          if (new URL(String(args[0]), location.href).pathname === "/kit/landing-worker.js") {
+            const root = document.documentElement;
+            this.addEventListener("message", (event: MessageEvent<unknown>) => {
+              const data = event.data;
+              if (
+                data !== null &&
+                typeof data === "object" &&
+                "type" in data &&
+                data.type === "drawn"
+              ) {
+                root.dataset.landingProofDraws = String(
+                  Number(root.dataset.landingProofDraws ?? "0") + 1,
+                );
+              }
+            });
+          }
+        }
+      };
+    });
     for (const width of [1440, 1024, 768, 390, 320]) {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`${fixture.origin}/?width=${String(width)}`);
@@ -45,6 +92,27 @@ test("the landing keeps composition, links and keyboard access at desktop and na
         });
       }
       expect(await fits()).toBe(true);
+      await expect.poll(async () => (await rendererState()).ready, { timeout: 15000 }).toBe(true);
+      const rendered = await rendererState();
+      if (width === 1440) {
+        await page.locator("[data-landing-background]").evaluate((canvas) => {
+          (canvas as HTMLElement).dataset.renderer = "pending";
+        });
+        expect((await rendererState()).ready).toBe(false);
+        await page.locator("[data-landing-background]").evaluate((canvas, renderer) => {
+          (canvas as HTMLElement).dataset.renderer = renderer;
+        }, rendered.renderer);
+        if (rendered.thread === "worker" && rendered.renderer !== "css") {
+          await page.evaluate(() => {
+            document.documentElement.dataset.landingProofDraws = "0";
+          });
+          expect((await rendererState()).ready).toBe(false);
+          await page.evaluate((draws) => {
+            document.documentElement.dataset.landingProofDraws = String(draws);
+          }, rendered.draws);
+        }
+      }
+      renderers.push({ width, ...(await rendererState()) });
       const screenshot = info.outputPath(`landing-${String(width)}.png`);
       await page.screenshot({ path: screenshot, fullPage: true });
       await info.attach(`landing-${String(width)}`, { path: screenshot, contentType: "image/png" });
@@ -67,9 +135,16 @@ test("the landing keeps composition, links and keyboard access at desktop and na
     expect(failures).toEqual([]);
   } finally {
     try {
-      await page.close();
+      await writeFile(
+        info.outputPath("landing-renderers.json"),
+        JSON.stringify(renderers, null, 2),
+      );
     } finally {
-      await fixture.close();
+      try {
+        await page.close();
+      } finally {
+        await fixture.close();
+      }
     }
   }
 });

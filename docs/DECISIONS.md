@@ -8363,3 +8363,18 @@ site verification, not a reset or history rewrite. Fresh integrated independent/
 all applicable exact-head hosted jobs and the pin-triggered existing next-site verification
 remain delivery gates. No npm publication, new production infrastructure or Academy runtime
 adoption is inferred. PR12 remains reference material until the fresh delivery is accepted.
+
+Initial PR46 head `4842b04` passed all twelve hosted jobs, including landing proof at the actual
+v0.90.0 checkout. Root artifact review found a capture gap: its 1024px PNG lacked the weave,
+while the other four widths were byte-identical to accepted PR20 images. Artifact `13035563149`,
+SHA-256 `516b7eec04073977f56ddf34f6f6861dd7e6cae8bd9027b95a1ad8943cd6cc3b`, retains
+that result. The bootstrap is byte-identical between v0.70.0 and v0.90.0 and initializes its
+worker asynchronously. The existing test waited for page content/layout, not rendering startup.
+
+Strengthen only hosted capture readiness: observe the real native worker's drawn messages,
+wait for an initialized renderer and its worker draw acknowledgement (or declared main-thread/CSS
+fallback state), and retain per-width renderer diagnostics. Pending renderer and zero observed
+draws are known-bad controls. Do not modify vendor rendering, inject substitute pixels or add
+an arbitrary delay. Root viewed all five new images and the old 1024 image; corrected hosted
+capture and personal visual acceptance remain required before merge. A draw acknowledgement
+records submitted work, not correct visible pixels; the images must still be reviewed.
