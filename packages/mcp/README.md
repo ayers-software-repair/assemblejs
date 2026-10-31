@@ -31,6 +31,23 @@ node node_modules/@asmjs/mcp/dist/bin.js
 Alternatively, pass the absolute project directory as its argument. Keep stdout reserved for the MCP protocol.
 The generated registrations cover Claude Code, Cursor, VS Code, Gemini CLI, and opencode.
 
+## Review before writing
+
+`plan_assembly` returns the exact new-file contents and a session-local id without writing.
+Review those additions, then call `apply_assembly_plan` with the id, or reject with
+`discard_assembly_plan`. A new valid plan replaces the previous pending plan. An id belongs
+to this server session, is used once, and is lost when the server restarts.
+
+Applying uses the retained contents and refuses an assembly target created since planning.
+It creates new files exclusively; it does not overwrite existing work. Run `check`, place the
+assembly and inspect the result afterward. A write failure reports completed writes and attempted paths that may contain partial files;
+this is not a multi-file transaction or protection against hostile filesystem replacement.
+
+The client must obtain the person's approval in approval mode. Possession of an id is not
+proof of human consent, and direct `add_assembly` still writes immediately. These tools are
+an authoring foundation; they do not implement the Academy UI or enforce a global agent mode.
+No model, account or inference connection is required by these operations.
+
 ## Rendering and prompts
 
 With the project's development server running, the tools request rendered assemblies and composed pages from it, including service data and correlated failures.

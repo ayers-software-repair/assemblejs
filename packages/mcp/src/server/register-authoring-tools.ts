@@ -10,6 +10,7 @@ import { placeInView } from "../author/place-in-view.js";
 import { placeOnPage } from "../author/place-on-page.js";
 import type { ProjectRoot } from "../root/project-root.js";
 import { answering } from "./answering.js";
+import { notifyAuthoring } from "./notify-authoring.js";
 import type { ToolResult } from "./tool-result.js";
 
 /**
@@ -20,10 +21,7 @@ import type { ToolResult } from "./tool-result.js";
 export function registerAuthoringTools(server: McpServer, root: ProjectRoot): void {
   // Each assembly is a resource of its own, so a tool that wrote one tells a client that listed
   // them to list again.
-  const listedAgain = (result: ToolResult): ToolResult => {
-    if (result.ok) server.sendResourceListChanged();
-    return result;
-  };
+  const listedAgain = (result: ToolResult): ToolResult => notifyAuthoring(server, result);
 
   server.registerTool(
     "create_project",

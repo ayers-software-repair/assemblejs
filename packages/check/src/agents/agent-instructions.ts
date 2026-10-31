@@ -69,6 +69,12 @@ one framework or in none, and each hydrated in the browser by its own framework.
   \`assemblejs://assembly/<name>\` for one assembly and where it is placed,
   \`assemblejs://rules\` for every rule with its reason, and \`assemblejs://contract\` for the
   three endpoints, their headers and the envelope, when an assembly is served from another server.
+- For a reviewable addition, \`plan_assembly\` returns exact proposed files without writing.
+  A new valid plan replaces this session's pending plan. In approval mode, show those changes
+  and obtain the person's approval before calling \`apply_assembly_plan\` with its id.
+  Reject with \`discard_assembly_plan\`. Applying refuses an occupied target and consumes the
+  plan; after a conflict, request and review a fresh plan. These tools add an assembly only;
+  they do not approve later edits or placement. The client controls whether a person approved.
 - Change the project with its tools: \`add_assembly\`, then \`place_assembly\` on a page or in
   another assembly's view. Then see what you made: \`render_assembly\` renders an assembly and
   \`compose_page\` composes a page by its name, under the policy its declaration writes, each

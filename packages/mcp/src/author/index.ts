@@ -6,3 +6,5 @@ export { placeInView } from "./place-in-view.js";
 export { addAssembly } from "./add-assembly.js";
 export { placeOnPage } from "./place-on-page.js";
 export { checkRoot } from "./check-root.js";
+export type { AssemblyProposal } from "./assembly-proposal.js";
+export { AssemblyReview } from "./assembly-review.js";
