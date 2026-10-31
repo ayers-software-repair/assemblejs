@@ -8115,3 +8115,24 @@ review found partial-write reporting and resource invalidation gaps; both were r
 failing and corrected, and the independent two-probe recheck passed. Type/lint and structural
 checks are recorded with the PR. Required hosted CI, packed consumers and personal PR review
 remain delivery gates; unchanged source evidence is reused rather than starting extra probes.
+
+## 2026-10-30: Academy's calculator runs in the supplied Market
+
+The supplied final project gains a React price-calculator assembly beside the buy box.
+It reuses the installed renderer, the buy box's server offer service and the shop's existing
+quote api. No client-supplied price is trusted. Quantity presets and ordinary input request a
+real server total and preserve stock warnings; estimating does not alter stock or the basket.
+Invalid or mismatched replies never become prices. An unavailable quote retains useful input
+and allows retry. Superseding a request or unmounting cancels it, and a late response cannot
+replace the newer result. Browser proof is hosted only, including real quote failure/recovery,
+keyboard and narrow/dark captures. Source unit tests compile only their imported TS/TSX with
+the existing compiler, without requiring generated application TypeScript projects or builds.
+This is a working supplied-project feature, not delivered Academy lessons or guided changes;
+progressive snapshots and the workspace still need wiring. No runtime selection or release.
+
+The first hosted calculator walkthrough reached the actual quote, failure/recovery and all
+three captures, then failed its strict network assertion on an aborted quote request. The
+source retained cancellation handles after settlement, so later edits/retries could abort an
+already-settled response. Two source regressions (successful and failed HTTP replies) were
+watched red before clearing the matching handle in finally. Pending-request cancellation and
+late-response protection remain; no network error filter or browser assertion is relaxed.

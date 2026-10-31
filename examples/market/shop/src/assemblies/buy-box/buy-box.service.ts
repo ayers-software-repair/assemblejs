@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { NotFound, defineService } from "@asmjs/core";
 import { listed } from "../../shop/catalogue.js";
+import type { Offer } from "../../shop/offer.js";
 import { stock } from "../../shop/stock.js";
 
 // What it costs and how many are left, for the product the page's route names. The price is
@@ -10,7 +11,7 @@ import { stock } from "../../shop/stock.js";
 // the same place that assembly reads it: the page's query. A sku the catalogue says it does
 // not hold is not a product page at all, so the shop answers its not-found page. A catalogue
 // that cannot be asked is not the same thing, and is never answered as one.
-export default defineService({
+export default defineService<Offer>({
   name: "offer",
   run: async ({ params, query }) => {
     const sku = params["sku"] ?? "";

@@ -38,7 +38,7 @@ its work without the shop: <http://127.0.0.1:4701/c/beans>, <http://127.0.0.1:47
 
 Every project here sets `outline: true` in its `assemblejs.config.ts`. Press **Outline** at the
 corner of any page: each assembly gets a box that says what it is, which server answered it, how
-long that took, and when the browser brought it to life. A product page is twelve assemblies from
+long that took, and when the browser brought it to life. A product page is thirteen assemblies from
 three servers.
 
 ## What to try
@@ -49,6 +49,9 @@ three servers.
 - **A product.** <http://127.0.0.1:4700/p/kb-guji-250>. The product is the catalogue's, the
   reviews are the reviews team's, the buy box is the shop's. Choose a grind: the catalogue's
   control reloads the page with `?grind=`, and the shop's buy box reads it from the address.
+- **Estimate a quantity.** On a product, use Order estimate's presets or enter a quantity.
+  The shop's existing quote api supplies the price and stock warnings. Estimating changes
+  neither the basket nor stock; an unavailable quote keeps the input and offers a retry.
 - **Buy something.** Add to the basket, check out, and land on the order's own address, where
   the parcel's progress comes from the fulfilment server and moves on every twenty seconds.
 - **Break something.** Stop the showcase and start it without the reviews team:

@@ -3,7 +3,8 @@
 Original candidate learner/tutor text for the 20-stage proposal. No lesson below is wired
 into a delivered Academy. Supplied project snapshots, check implementations and workspace
 controls remain work to build. Paths refer to existing `examples/market` as source anchors;
-the calculator is a proposed addition, not an existing Market feature.
+the finished Market now includes the calculator. Progressive lesson snapshots and guided
+feature application remain unimplemented.
 
 ## Teaching loop
 

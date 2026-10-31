@@ -6,11 +6,12 @@ import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import { freePort, saidBy } from "./child-server.js";
+import { exerciseMarketEstimate } from "./market-estimate.js";
 import { clickMounted } from "./mounted.js";
 
 // THE SHOWCASE, WALKED AS A VISITOR WALKS IT. Four servers from four builds, each a team's own
 // project, and one shop whose every page is composed from them. What only a browser and four
-// real servers can say: that a page of twelve assemblies from three origins hydrates whole,
+// real servers can say: that a page of thirteen assemblies from three origins hydrates whole,
 // that two servers' assemblies agree through the address, that an order crosses three servers,
 // and that a page says so, or fails whole, when a server is down.
 const market = (team: string): string =>
@@ -75,12 +76,12 @@ const problemsOf = (page: Page): string[] => {
 };
 const envelope = (page: Page, name: string) => page.locator(`assembly-root[data-name="${name}"]`);
 
-test("a product page is twelve assemblies from three servers, each hydrated by its own", async ({
+test("a product page is thirteen assemblies from three servers, each hydrated by its own", async ({
   page,
 }) => {
   const problems = problemsOf(page);
   await page.goto(`${shop}/p/kb-guji-250`);
-  await expect(page.locator("assembly-root")).toHaveCount(12);
+  await expect(page.locator("assembly-root")).toHaveCount(13);
   for (const [name, origin] of [
     ["product-detail", teams.CATALOG_ORIGIN],
     ["roast-meter", teams.CATALOG_ORIGIN],
@@ -90,7 +91,7 @@ test("a product page is twelve assemblies from three servers, each hydrated by i
   ] as const) {
     await expect(envelope(page, name), name).toHaveAttribute("data-remote", origin);
   }
-  for (const name of ["buy-box", "site-header", "basket-count"]) {
+  for (const name of ["buy-box", "price-calculator", "site-header", "basket-count"]) {
     await expect(envelope(page, name), name).not.toHaveAttribute("data-remote");
   }
   for (const live of ["search-box", "basket-count", "product-detail", "roast-meter", "buy-box"]) {
@@ -138,6 +139,12 @@ test("a product page is twelve assemblies from three servers, each hydrated by i
       { view: 2, element: 2 },
     ]);
   expect(problems).toEqual([]);
+});
+
+test("the calculator uses real quotes, preserves errors and fits a narrow page", async ({
+  page,
+}, info) => {
+  await exerciseMarketEstimate(page, shop, info);
 });
 
 test("a view that renders nothing is placed from another server like any other", async ({
@@ -263,12 +270,12 @@ test("the outline boxes every assembly of a page from three servers, each by wha
   await page.goto(`${shop}/p/kb-guji-250`);
   const outline = page.locator("assemblejs-outline");
   await outline.getByRole("button", { name: "Outline" }).click();
-  await expect(outline.locator(".frame")).toHaveCount(12);
+  await expect(outline.locator(".frame")).toHaveCount(13);
   const tone = (name: string) =>
     outline.locator(".note").filter({ has: page.locator(".chip b", { hasText: name }) });
   await expect(tone("buy-box")).toHaveAttribute("data-tone", "local");
   await expect(tone("product-detail")).toHaveAttribute("data-tone", "remote");
   await expect(tone("review-list")).toHaveAttribute("data-tone", "remote");
   await expect(tone("recently-viewed")).toHaveAttribute("data-tone", "deferred");
-  await expect(outline.locator(".sum")).toContainText("/p/:sku: 12 assemblies, composed in");
+  await expect(outline.locator(".sum")).toContainText("/p/:sku: 13 assemblies, composed in");
 });

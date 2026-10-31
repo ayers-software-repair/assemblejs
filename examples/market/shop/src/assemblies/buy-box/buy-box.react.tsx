@@ -5,15 +5,7 @@ import { useEvents } from "@asmjs/renderer-react/client";
 import { useEffect, useState } from "react";
 import { basket, price } from "../../browser/basket.js";
 import { viewed } from "../../browser/viewed.js";
-
-type Offer = {
-  found: boolean;
-  sku: string;
-  name: string;
-  cents: number;
-  left: number;
-  grind: string;
-};
+import type { Offer } from "../../shop/offer.js";
 
 // The part of a product page that sells: the price, what is left, and the button. The product
 // beside it is the catalogue team's, from their server; this is the shop's own, so it can keep

@@ -82,6 +82,12 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       notification regressions corrected. Required hosted CI, packed-consumer proof and personal
       PR acceptance remain delivery gates tracked in the PR; this source increment alone does
       not establish Academy UI or runtime acceptance.
+- [x] Supply the Academy calculator as a real Market React assembly using the existing quote
+      api, shared offer data, quantity presets and actual failure/recovery. Verify malformed
+      replies, cancellation/stale-response protection and real hosted desktop/narrow/dark
+      interaction. Source review, 21 source/DOM tests and the quantity-guard negative control
+      passed. Hosted interaction/screenshots and final personal/CI acceptance remain delivery
+      gates tracked in the PR. This supplies the feature, not lesson snapshots or Academy UI.
 - [ ] Complete the exact runtime's bundled third-party notice/source inventory before product
       redistribution; concrete gaps are `docs/studies/academy-open-runtime-notices.md`.
 - [x] Author and independently review short learner/tutor copy for all 20 proposed stages
