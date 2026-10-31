@@ -42,6 +42,7 @@ jobs:
       - run: |
           node examples/academy/workspace/assembly-modes.test.mjs
           node examples/academy/workspace/call-project-tool.test.mjs
+          node examples/academy/workspace/create-project-files.test.mjs
           node examples/academy/workspace/create-assembly-controls.test.mjs
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium

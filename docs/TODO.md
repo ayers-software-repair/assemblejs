@@ -41,6 +41,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       cover stale preflight and owned temporary cleanup; source type/lint proof is green.
       Partial batches and cross-process limits are explicit. Required hosted/package checks
       and personal review remain delivery gates; the calculator workflow is not complete.
+- [x] Add the editor provider over shared MCP source reads and guarded saves. Four focused
+      cases and an observed-red acknowledgement control pass; independent source review is
+      clear. Actual saved-byte/concurrent-writer hosted browser proof and personal acceptance
+      remain delivery gates. Production connection and full Academy acceptance remain open.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

@@ -23,8 +23,8 @@ The project provider owns the real shared filesystem:
 The editor retains per-file buffers through navigation. Opening/editing does not write.
 A successful save advances only that buffer's base; edits typed while saving remain dirty.
 Failed saves retain the learner's draft and show the actual error. Saving does not run checks
-or claim that a visible preview is current. The final workspace still needs the real provider,
-mode/diff controls, lesson checks, persistence and live-agent transport.
+or claim that a visible preview is current. The final workspace still needs a production connection, combined feature/mode exercises,
+lesson checks, persistence and live-agent transport.
 
 Seventeen focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
 refusal, in-flight edits, failed writes, retained tabs, late reads, markup escaping, disposal and split UTF-8 input.
@@ -50,3 +50,26 @@ the caret was at zero but both aligned layers retained scrollTop 19; the first p
 started above its viewport. The source editor normalizes Home at the first character to
 scrollTop/Left zero without changing the buffer. The actual first-line visibility assertion
 remains strict; the small keyboard regression was watched failing before this correction.
+
+## Shared source-tool provider
+
+`createProjectFiles(client)` adapts an already connected MCP client to this editor contract:
+
+```js
+const project = createProjectFiles(client);
+createSourceEditor(container, project, suppliedSourcePaths);
+```
+
+It reads through `read_source` and sends each explicit Save as one `apply_source_changes`
+request containing the retained before/after values. Only a matching successful acknowledgement
+advances the editor base. Missing/failed reads never become empty writable buffers. Storage
+refusals and partial-result details reach the editor while the draft is kept. This adapter
+adds no transport, credentials, runtime or inferred mode/approval: manual Save is explicit.
+The shared tools guard observed stale bases, not hostile filesystem races or a global atomic
+transaction. The caller still owns its confined path list and actual connection.
+
+Four focused provider cases cover the exact protocol requests, invalid/missing reads, retained
+drafts and malformed write acknowledgements. The acknowledgement control is red when validation
+is removed and green when restored. The existing hosted modes fixture adds an isolated editor
+route over the actual MCP server and canonical project. Its browser proof checks actual saved
+bytes and an outside edit through the real tools; hosted acceptance is still pending.
