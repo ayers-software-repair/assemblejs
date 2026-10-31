@@ -8700,3 +8700,50 @@ Artifact `13043778730`, 2,049,666 bytes, SHA-256
 metadata, raw logs and extracted evidence under `/tmp/academy-existing-practice-ef393ce-*`.
 This closing documentation commit still requires final-head checks and personal acceptance;
 actual squash identities and post-merge proof remain mandatory. No runtime or release adoption.
+
+## 2026-10-31 — Short authored tutor questions in mode practice
+
+PR52 merged as `d96e4cd`, reviewed tree `3059e08f8b1247686c255560450b872a4d9f4b70`, sole
+parent `5de95e7`, after final personal COMMENT `5723028258` and all ten exact-head checks.
+Actual complete squash message/DCO/signature were independently verified. Normal post-merge
+editor `41207836328`, modes `41207836288` and full CI `41207836284` all passed at attempt 1.
+Both Node versions pass 2,511 tests. Exact merged head/all job outcomes and raw proof were read
+and retained under `/tmp/academy-existing-practice-d96e4cd-*`. This supersedes the preceding
+pending-merge/post-merge notes, not the broader Academy holds.
+
+The next bounded step implements the owner's hardcoded tutor preference over the existing
+mode-practice state. Offer short questions about what to do, why and which files are actually
+proposed, plus authored supported-customization guidance. Display its authored nature and
+honest unknown-question fallback. Reuse current steps/proposal receipts; questions never
+write, approve, run checks, advance practice or invent diagnoses/results. Keep the initial
+task short and optional help available. Record owner/done-when in TODO before code changes.
+No model inference, provider connection, account or runtime selection is introduced.
+
+Tutor source/DOM proof passes all 103 cases across fourteen files, including two new authored
+question cases. The new fields were first watched missing/red; questions then pass current-step,
+actual pending paths, busy, rejection/refused stale approval, unsupported/oversized input and
+no-write/no-progress controls. Existing CSS supplies wrapping, input sizing and focus styling.
+Lint, organization/mirror self-tests and gates, modules, unused, duplication, identity self-test
+and gate, headers and emoji self-test/gate pass. The existing hosted probe is extended with
+Enter submission, unchanged tool-call counts and visible desktop/narrow tutor evidence; actual
+hosted proof and personal acceptance remain pending. Fresh native source/docs/probe review
+is clear, including accessible names, Enter submission, current context and unchanged guards. No local product execution.
+
+PR53 source head `2073328995a860759c3512bb6ef62ad77104eee3`, tree
+`ef2e3b3705bc870f4e8ea1dc4bf421cd4ecea752`, passes all ten attempt-1 checks: full CI
+`41208824847`, modes `41208824820` and editor `41208824836`. Both Node versions pass 2,511
+tests, 81 exports and fourteen package validations; check remains 45,963 / 46,000 bytes.
+Modes passes 77 focused cases and eleven browser cases. Actual Enter-submitted questions
+leave tool-call counts unchanged, Files shows only the pending rename's real source path,
+and rejection replaces that answer with no pending proposal and the revised next task.
+The existing scenarios retain 32/41/9 calls, 4/6/4 successful builds and empty error/HTTP/active
+process arrays; only the expected owned stock-stream aborts remain. Root viewed both new tutor
+screenshots and all five changed prior images; fifteen prior images are byte-identical.
+
+Artifact `13045732689`, 2,420,888 bytes, SHA-256
+`21418e9802b17550a414455474b9f3648b5387b8a63bbebf1f19006655fb1ab9`, is hash/size verified
+and retained with metadata, ZIP, screenshots, source-write receipts and raw logs under
+`/tmp/academy-authored-tutor-2073328-*`. Personal COMMENT `5723229865` accepts this source and affected behavior. The reviewer
+independently read connected paths, all ten logs, both hashed artifacts and actual-merge image
+deltas. Closing documentation still requires exact-final-head acceptance and checks; actual
+squash identities and post-merge proof remain mandatory.

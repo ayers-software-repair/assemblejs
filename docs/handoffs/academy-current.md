@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-31, after PR51 draft recovery merged and post-merge proof passed; approved tracking closures complete.
+Checkpoint: 2026-10-31, after PR52 existing-code practice merged and post-merge proof passed.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -282,15 +282,16 @@ personal review `5722701180`, all ten exact-head jobs. Post-merge CI `4120123688
 `41201236963` and editor `41201236946` passed; actual squash/source/artifacts independently
 verified. Tab-local draft recovery is delivered; durable project/progress resume remains open.
 
-Active source: `/tmp/assemblejs-academy-existing-practice`, branch
-`codex/academy-existing-calculator-practice`, on that merge. Owner: this Academy chat.
-TODO records the finish line before edits: real Plan/reject/revised Approval/Auto on an
-already-added calculator, preserving current code without reset; meaningful preset changes,
-existing guards, hosted preview/quote/keyboard/narrow/cleanup and independent review.
-PR52 source head `ef393ce`: all ten checks green (CI `41206140986`, modes `41206141286`,
-editor `41206141098`); 101 source cases, 75 hosted focused / eleven browser cases. Native and
-personal source/visual reviews clear; real writes/four builds/quotes/keyboard/narrow/Stop proved.
-Semantic no-op red controls and hashed artifact `13043778730` retained. Final-head acceptance,
-actual squash identities and post-merge proof remain required.
-No historical progress is inferred from existing files. Full curriculum, durable progress,
-snapshots/certificates, verified external-agent access and runtime adoption remain open.
+PR52 merged as `d96e4cd`, tree `3059e08f8b1247686c255560450b872a4d9f4b70`, parent `5de95e7`,
+final personal COMMENT `5723028258` and all ten final-head checks. Actual squash identities,
+full message/DCO/signature independently verified. Post-merge CI `41207836284`, editor
+`41207836328` and modes `41207836288` all passed, attempt 1.
+
+Active source: `/tmp/assemblejs-academy-authored-tutor`, branch `codex/academy-authored-tutor`.
+Owner/done-when recorded in TODO before source edits: authored Next/Why/Files/customization
+answers from actual step/proposal context, honest fallback, no writes/progress/false results.
+All 103 source cases/static gates and native review green. Source `2073328` has all ten jobs
+green: CI `41208824847`, modes `41208824820` (77 / eleven), editor `41208824836`. Tutor
+keyboard/context/no-call/narrow proof and all new/changed images pass. Personal source COMMENT
+`5723229865` is clear; final-head checks/acceptance and post-merge proof remain required. Full curriculum, durable progress/certificates, verified external-agent access
+and runtime adoption remain open.
