@@ -106,7 +106,7 @@ was found. Full retained outcome is in the draft branch's
 external-agent transport and final runtime selection remain unresolved. Prior WebContainer
 proof worked but production licensing is not approved; do not silently switch to it.
 
-## Owned worktrees and parallel ownership
+## Owned worktrees and outside audit
 
 - `/tmp/assemblejs-academy-workspace-editor`: PR34 branch `codex/academy-workspace-editor`.
   Own the final ledger/handoff and delivery here; do not edit it concurrently without notice.
@@ -123,9 +123,16 @@ proof worked but production licensing is not approved; do not silently switch to
   stash, clean, add-all, history rewrite or broad process kill. Unrelated main checkout edits
   are not this task's changes.
 
-For Claude: read AGENTS/CLAUDE, PLAN, TODO, DECISIONS and this file; verify current PR34/35 heads
-and gates. Coordinate which isolated worktree you own before edits. Deliver the reviewed
-increments under the standing source-merge exception only when every applicable gate passes.
-Keep PR33 held. Next implementation is shared guarded source changes and the complete authored
-calculator workflow, then real workspace/lesson/progress/certificate wiring. Report actual
-source/runtime limits; do not advertise the Academy as available yet.
+Claude is the outside auditor only, not an implementation worker. Read pushed source,
+completed runs/artifacts and installed builds. Do not edit code, create checkouts/branches,
+run builds/CI, change household servers or settings, or perform release actions. File issues
+labelled `audit` for source-proved defects or `owner` for verified owner-reported findings,
+with where, the recorded ruling, evidence and done-when. If a finding is unclear, the
+maintainer asks for correction on that issue rather than reinterpreting it.
+
+Maintainers own these isolated worktrees and the delivery gates. Audit follows delivery and
+may reopen unsupported closures; do not wait for outside audit as a new pre-delivery gate.
+Every issue closure needs a closing comment linking the exact commit/run/artifact proving its
+done-when. Keep PR33 held and the full Academy open. Next implementation remains shared guarded
+source changes and the complete authored calculator workflow, then actual workspace, lesson,
+progress and certificate wiring. Do not advertise the Academy as available yet.
