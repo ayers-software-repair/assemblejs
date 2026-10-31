@@ -8093,3 +8093,25 @@ reproducing the edit/revert cycle refusal; the superseded source was not merged 
 CI. The migration task is complete at this source checkpoint. Final ledger-only changes still
 require their own exact-head CI and review before merge. No browser-runtime retry or adoption,
 notice completion, release or Academy completion is implied.
+
+## 2026-10-30: Academy reuses reviewable assembly authoring
+
+The next workspace increment adds plan/apply/discard to the existing agent authoring surface,
+using the command line's assembly planner. One pending proposal per server session retains
+immutable exact additions; a new valid plan supersedes it. Applying consumes the id, checks
+root confinement again and exclusively creates the absent assembly directory and files.
+Rejecting or planning writes no project files. An occupied target refuses application and
+preserves outside work; a failed write reports completed files and attempted paths that may
+contain partial content, and does not recursively clean them. This is not a multi-file transaction or protection from hostile filesystem races.
+Direct agent additions use the same planning/writing path. Resource clients are told to refresh
+after successful additions or failed write attempts that may have left a partial assembly. The client still controls its mode
+and human consent; an id alone proves neither. Existing inspector routes stay read-only.
+This foundation does not claim a delivered Academy UI, live browser-agent bridge, runtime
+adoption, licence/notice completion or release authority. Required hosted checks and independent
+review, rather than another runtime study, are the finish line for this increment.
+
+Source verification passed 57 focused file/protocol tests across seven files. Independent
+review found partial-write reporting and resource invalidation gaps; both were reproduced
+failing and corrected, and the independent two-probe recheck passed. Type/lint and structural
+checks are recorded with the PR. Required hosted CI, packed consumers and personal PR review
+remain delivery gates; unchanged source evidence is reused rather than starting extra probes.

@@ -15,3 +15,4 @@ export { registerSeeingTools } from "./register-seeing-tools.js";
 export { createMcpServer } from "./create-mcp-server.js";
 export { registerAuthoringTools } from "./register-authoring-tools.js";
 export { registerPrompts } from "./register-prompts.js";
+export { registerAssemblyReviewTools } from "./register-assembly-review-tools.js";

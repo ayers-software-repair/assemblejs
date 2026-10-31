@@ -4,6 +4,7 @@ import { ownVersion } from "@asmjs/build";
 import { AGENT_SERVER } from "@asmjs/check";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { ProjectRoot } from "../root/project-root.js";
+import { registerAssemblyReviewTools } from "./register-assembly-review-tools.js";
 import { registerAuthoringTools } from "./register-authoring-tools.js";
 import { registerPrompts } from "./register-prompts.js";
 import { registerResources } from "./register-resources.js";
@@ -23,6 +24,7 @@ export function createMcpServer(root: ProjectRoot): McpServer {
 
   registerSeeingTools(server, root);
   registerAuthoringTools(server, root);
+  registerAssemblyReviewTools(server, root);
   registerPrompts(server);
   return server;
 }
