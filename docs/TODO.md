@@ -29,6 +29,11 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       keyboard/narrow/EOF/selection proof (`41163039875`), independent visual/source review and
       all six exact-head CI jobs (`41163039843`) passed at `2e7669a`. The actual runtime provider
       and complete Academy remain open; this component does not select a runtime.
+- [x] Add shared confined source reads and expected-base additions/replacements for editor
+      and prepared-feature clients. Thirty-nine focused file/protocol cases and red controls
+      cover stale preflight and owned temporary cleanup; source type/lint proof is green.
+      Partial batches and cross-process limits are explicit. Required hosted/package checks
+      and personal review remain delivery gates; the calculator workflow is not complete.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

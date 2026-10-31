@@ -75,6 +75,13 @@ one framework or in none, and each hydrated in the browser by its own framework.
   Reject with \`discard_assembly_plan\`. Applying refuses an occupied target and consumes the
   plan; after a conflict, request and review a fresh plan. These tools add an assembly only;
   they do not approve later edits or placement. The client controls whether a person approved.
+- Read actual source with \`read_source\`. For reviewed additions or replacements, call
+  \`apply_source_changes\` with exact before/after text; null before requires an absent file.
+  Show those changes and obtain the person's approval in approval mode. A stale base is refused;
+  inspect completed/attempted paths after a write failure and review fresh changes before retrying.
+  These operations edit source under src/ and assemblejs.config.ts, not generated files or host
+  metadata. They do not enforce a global mode, guarantee a multi-file transaction or protect
+  against hostile filesystem replacement. Run check and verify the actual preview afterward.
 - Change the project with its tools: \`add_assembly\`, then \`place_assembly\` on a page or in
   another assembly's view. Then see what you made: \`render_assembly\` renders an assembly and
   \`compose_page\` composes a page by its name, under the policy its declaration writes, each

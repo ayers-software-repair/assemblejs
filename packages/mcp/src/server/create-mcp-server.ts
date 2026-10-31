@@ -9,6 +9,7 @@ import { registerAuthoringTools } from "./register-authoring-tools.js";
 import { registerPrompts } from "./register-prompts.js";
 import { registerResources } from "./register-resources.js";
 import { registerSeeingTools } from "./register-seeing-tools.js";
+import { registerSourceTools } from "./register-source-tools.js";
 
 /**
  * The agent surface, wired to the protocol.
@@ -25,6 +26,7 @@ export function createMcpServer(root: ProjectRoot): McpServer {
   registerSeeingTools(server, root);
   registerAuthoringTools(server, root);
   registerAssemblyReviewTools(server, root);
+  registerSourceTools(server, root);
   registerPrompts(server);
   return server;
 }
