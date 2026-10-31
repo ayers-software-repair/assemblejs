@@ -15,6 +15,7 @@ export async function serveLanding() {
     ".js": "text/javascript",
     ".svg": "image/svg+xml",
     ".png": "image/png",
+    ".ttf": "font/ttf",
   };
   const server = createServer(async (request, response) => {
     if (request.method !== "GET") {
@@ -22,7 +23,9 @@ export async function serveLanding() {
       return;
     }
     try {
-      const path = decodeURIComponent(new URL(request.url ?? "/", "http://localhost").pathname);
+      const path = decodeURIComponent(
+        new URL(request.url ?? "/", "http://localhost").pathname,
+      ).replace(/^\/assemblejs(?:\/next)?\//, "/");
       const root = resolve(path.startsWith("/kit/") ? kit : site);
       const suffix = path.startsWith("/kit/") ? path.slice(5) : path.slice(1);
       const file = resolve(root, suffix || "index.html");

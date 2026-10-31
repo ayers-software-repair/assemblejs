@@ -24,6 +24,20 @@ test("actual source saves, unsaved tabs, stale refusal and keyboard editing", as
     const input = page.getByRole("textbox", { name: "Source code" });
     const original = fixture.readFile("price-calculator.react.tsx");
     await expect(input).toHaveValue(original);
+    await page.evaluate(() => document.fonts.ready);
+    const typography = await page.evaluate(() => ({
+      loaded: [...document.fonts]
+        .filter((font) => font.status === "loaded")
+        .map((font) => font.family),
+      code: getComputedStyle(document.querySelector("textarea")!).fontFamily,
+    }));
+    expect(typography.loaded).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/^"?Poppins"?$/),
+        expect.stringMatching(/^"?Fira Code"?$/),
+      ]),
+    );
+    expect(typography.code).toContain("Fira Code");
     const edited = original.replaceAll("Order estimate", "My estimate");
     await input.fill(edited);
     await tree.getByRole("button", { name: "request-estimate.ts", exact: true }).click();

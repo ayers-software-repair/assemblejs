@@ -6,30 +6,35 @@
 }
 .product-site {
   color-scheme: dark;
-  --surface: #0b1715;
-  --surface-panel: #112520;
-  --border: #2c4940;
-  --ink: #fbfaf7;
-  --ink-muted: #b4c4bb;
-  --accent: #89c9af;
-  --accent-strong: #b9e1cd;
-  --accent-alt: #a4400f;
-  --accent-wash: #183b30;
-  --face-display: var(--face-text);
 }
-.page-overview {
-  --surface: #0b1425;
-  --surface-panel: #14223a;
-  --border: #34445c;
-  --ink: #f5f7fc;
-  --ink-muted: #b8c5da;
-  --accent: #ffc96b;
-  --accent-strong: #ffe0a6;
-  --accent-alt: #92bfff;
-  --accent-wash: #26354b;
+.product-brand,
+.assembly-wordmark {
+  font-family: var(--face-display);
+  font-weight: 600;
 }
-.page-overview .product-world {
-  opacity: 0.4;
+.product-site .product-brand,
+.assembly-wordmark {
+  color: var(--accent);
+  background: linear-gradient(110deg, #ff5a00, #f495b5 50%, #9bb9ff);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.product-brand img {
+  width: 36px;
+  height: 36px;
+}
+.product-world,
+.page-reference {
+  background:
+    url("geometry.svg") center / cover no-repeat,
+    radial-gradient(circle at 100px 100px, #ff5a0008 30px, transparent 30px),
+    radial-gradient(circle at 200px 300px, #2b67f808 60px, transparent 60px),
+    radial-gradient(circle at 600px 500px, #62b24505 100px, transparent 100px),
+    radial-gradient(circle at 300px 200px, #fee44005 80px, transparent 80px),
+    radial-gradient(circle at 800px 100px, #9b5de505 50px, transparent 50px),
+    radial-gradient(circle at 400px 600px, #00bbf908 70px, transparent 70px),
+    var(--surface);
+  background-attachment: fixed;
 }
 .landing-hero {
   display: grid;
@@ -63,6 +68,17 @@
 }
 .assembly-intro h1 span {
   color: var(--accent);
+  background: linear-gradient(110deg, #ff5a00, #f495b5 50%, #9bb9ff);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@media (forced-colors: active) {
+  .assembly-intro h1 span,
+  .product-site .product-brand,
+  .assembly-wordmark {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
 }
 .landing-hero .description {
   max-width: 40ch;

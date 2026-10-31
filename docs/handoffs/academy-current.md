@@ -291,10 +291,10 @@ PR53 merged as `ede739b`, tree `397881c47c0881ffcbccbb92c890e3380ced5d4c`, paren
 final personal `5723293269`, all ten final-head jobs and actual squash identities verified.
 Post-merge CI `41210602495`, modes `41210602511`, editor `41210602508` passed at attempt 1;
 native/personal actual-merge proof clear. Standalone three-mode summary is reconciled in TODO.
-Active: `/tmp/assemblejs-academy-calculator-verification`, `codex/academy-calculator-verification`.
-PR54 corrected source `9eade76`: all ten jobs green, CI `41218069474`, modes `41218069557`
-(99 focused/twelve browser), editor `41218069466`; personal `5723724107`, artifact QA `6545926476`.
-119 component/six backend cases; real race/bad-price/recovery/focus/narrow/Stop proof clear.
-Failed `1164422` focus run/history correction retained. No live/screen-reader/certificate claim.
-Final-head checks/acceptance, actual squash identity and post-merge proof remain required.
-Next: original-site branding queue in TODO/PLAN; PR33/publication/adoption holds remain.
+PR54 delivered: final `3610559`, personal `5723784579`, QA continuity `6546151942` clear.
+Merge `4a5ad61969bfb11005d3d658951b2a936e8a7c3c`: reviewed tree `89dfea9`, parent `ede739b`;
+full DCO message/valid signature independently clear. All ten post-merge attempt-1 jobs pass:
+CI `41220420134`, modes `41220420100`, editor `41220420102`. Initial failed proof retained.
+Active: `/tmp/assemblejs-original-branding`, `codex/original-branding`, unaccepted candidate.
+Comparison/inventory: `docs/studies/assemblejs-original-branding.md`; manager coordinates static
+hook. No consumer fork or live/screen-reader/certificate claim; PR33/publication holds remain.

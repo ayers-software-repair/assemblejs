@@ -4,6 +4,10 @@ on:
     branches: [next]
     paths:
       - "examples/academy/workspace/**"
+      - "site/skin.css"
+      - "site/fonts.css"
+      - "site/fonts/**"
+      - "site/mark.svg"
       - "browser/academy-editor/**"
       - ".github/workflows/academy-editor.yml"
       - "package.json"
@@ -12,6 +16,10 @@ on:
     branches: [next]
     paths:
       - "examples/academy/workspace/**"
+      - "site/skin.css"
+      - "site/fonts.css"
+      - "site/fonts/**"
+      - "site/mark.svg"
       - "browser/academy-editor/**"
       - ".github/workflows/academy-editor.yml"
 permissions:

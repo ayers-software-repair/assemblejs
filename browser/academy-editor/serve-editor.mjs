@@ -32,6 +32,20 @@ createSourceEditor(document.querySelector('main'), project, ${JSON.stringify(pat
       write: false,
     });
     const css = await readFile("examples/academy/workspace/source-editor.css", "utf8");
+    const brand = new Map(
+      await Promise.all(
+        [
+          "skin.css",
+          "fonts.css",
+          "mark.svg",
+          "fonts/poppins-regular.ttf",
+          "fonts/poppins-medium.ttf",
+          "fonts/poppins-semibold.ttf",
+          "fonts/poppins-bold.ttf",
+          "fonts/fira-code.ttf",
+        ].map(async (file) => ["/brand/" + file, await readFile("site/" + file)]),
+      ),
+    );
     let origin;
     server = createServer((request, response) => {
       response.setHeader("Cache-Control", "no-store");
@@ -51,6 +65,16 @@ createSourceEditor(document.querySelector('main'), project, ${JSON.stringify(pat
         response.writeHead(status, { "Content-Type": type });
         response.end(body);
       };
+      if (request.method === "GET" && brand.has(url.pathname))
+        return send(
+          200,
+          url.pathname.endsWith(".ttf")
+            ? "font/ttf"
+            : url.pathname.endsWith(".svg")
+              ? "image/svg+xml"
+              : "text/css",
+          brand.get(url.pathname),
+        );
       if (url.pathname.startsWith("/files/") && paths.includes(path)) {
         const file = join(root, "files", path);
         if (request.method === "GET") return send(200, "text/plain", readFileSync(file, "utf8"));
@@ -74,7 +98,7 @@ createSourceEditor(document.querySelector('main'), project, ${JSON.stringify(pat
       send(
         200,
         "text/html",
-        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Academy source editor proof</title><link rel="stylesheet" href="/editor.css"><main><h1>Academy source editor</h1><p>Editor proof only. Runtime and preview acceptance remain open.</p></main><script type="module" src="/editor.js"></script></html>',
+        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Academy source editor proof</title><link rel="stylesheet" href="/brand/skin.css"><link rel="stylesheet" href="/editor.css"><body class="academy-fixture"><main><h1>Academy source editor</h1><p>Editor proof only. Runtime and preview acceptance remain open.</p></main><script type="module" src="/editor.js"></script></html>',
       );
     });
     await new Promise((resolve, reject) => {

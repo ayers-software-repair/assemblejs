@@ -14,19 +14,57 @@ body.product-site {
   --code-text: var(--ink);
   font-size: 1rem;
 }
-.page-reference .container { max-width: 1400px; padding-inline: 40px; }
-.page-reference .tsd-page-toolbar { border-color: var(--hairline); background: var(--surface); }
-.page-reference .tsd-toolbar-contents { min-height: 52px; }
-.page-reference .tsd-page-title h1 { font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.15; }
-.page-reference .tsd-page-title .tsd-tag { display: inline-block; white-space: nowrap; }
-.page-reference .col-content { min-width: 0; }
-.page-reference .tsd-theme-toggle { display: none; }
-.page-reference .tsd-signature { background: var(--surface-panel); border-color: var(--hairline); }
-.page-reference pre { background: var(--surface-panel); }
-.page-reference footer:not(.product-footer) { display: none; }
-.page-reference .product-footer { margin-top: 60px; }
-.page-reference .product-footer p { margin: 0; }
+.page-reference .container {
+  max-width: 1400px;
+  padding-inline: 40px;
+}
+.page-reference .tsd-page-toolbar {
+  border-color: var(--hairline);
+  background: var(--surface);
+}
+.page-reference .tsd-toolbar-contents {
+  min-height: 52px;
+}
+.page-reference .tsd-page-title h1 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.15;
+}
+.page-reference .tsd-page-title .tsd-tag {
+  display: inline-block;
+  white-space: nowrap;
+}
+.page-reference .col-content {
+  min-width: 0;
+}
+.page-reference .tsd-theme-toggle {
+  display: none;
+}
+.page-reference .tsd-signature {
+  background: var(--surface-panel);
+  border-color: var(--hairline);
+}
+.page-reference pre {
+  background: var(--surface-panel);
+}
+.page-reference code,
+.page-reference pre,
+.page-reference .tsd-signature {
+  font-family: var(--face-mono);
+}
+.page-reference footer:not(.product-footer) {
+  display: none;
+}
+.page-reference .product-footer {
+  margin-top: 60px;
+}
+.page-reference .product-footer p {
+  margin: 0;
+}
 @media (max-width: 600px) {
-  .page-reference .container { padding-inline: 20px; }
-  .page-reference .tsd-page-title h1 { overflow-wrap: anywhere; }
+  .page-reference .container {
+    padding-inline: 20px;
+  }
+  .page-reference .tsd-page-title h1 {
+    overflow-wrap: anywhere;
+  }
 }

@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -9,6 +10,7 @@ import { test } from "node:test";
 import { Window } from "happy-dom";
 import { JSX } from "typedoc";
 import { load } from "./site-api-theme.mjs";
+import { frameAssetProblems } from "./site-frame-assets.mjs";
 import { pageText } from "./site-page-text.mjs";
 import { renderLinks, sharedLinksMatch } from "./site-links.mjs";
 
@@ -198,6 +200,88 @@ test("site staging copies the released kit closure without a retired module", ()
     for (const file of files)
       assert.equal(readFileSync(join(root, "site/kit", file), "utf8"), `fixture:${file}`);
     assert.throws(() => readFileSync(join(root, "site/kit/old.txt")), { code: "ENOENT" });
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("original product mark and font bytes agree with their retained provenance", () => {
+  const site = new URL("../site/", import.meta.url);
+  const window = new Window();
+  try {
+    for (const file of ["mark.svg", "favicon.svg"]) {
+      window.document.body.innerHTML = readFileSync(new URL(file, site), "utf8");
+      const blocks = [...window.document.querySelectorAll("svg polygon")];
+      assert.deepEqual(
+        blocks.map((block) => block.getAttribute("fill")),
+        ["#ff5a00", "#2b67f8", "#62b245", "#fee440", "#9b5de5", "#00bbf9"],
+      );
+      for (const block of blocks) {
+        const points = block.getAttribute("points").trim().split(/\s+/);
+        assert.equal(points.length, 6);
+        for (const point of points) {
+          for (const value of point.split(",").map(Number)) {
+            assert.ok(value >= 0 && value <= 64, "hexagon stays within its viewBox");
+          }
+        }
+      }
+    }
+    const sources = JSON.parse(readFileSync(new URL("fonts/sources.json", site), "utf8"));
+    assert.equal(sources.repository, "https://github.com/google/fonts");
+    assert.match(sources.commit, /^[a-f0-9]{40}$/);
+    for (const [file, source] of Object.entries(sources.files)) {
+      assert.match(source.source, /^ofl\/(?:poppins|firacode)\//);
+      assert.equal(
+        createHash("sha256")
+          .update(readFileSync(new URL("fonts/" + file, site)))
+          .digest("hex"),
+        source.sha256,
+      );
+    }
+    for (const family of ["poppins", "fira-code"]) {
+      assert.match(
+        readFileSync(new URL("fonts/" + family + "-OFL.txt", site), "utf8"),
+        /SIL OPEN FONT LICENSE Version 1.1/,
+      );
+    }
+  } finally {
+    window.happyDOM.abort();
+  }
+});
+
+test("generated asset checks refuse a wrong relative URL on an uncaptured reference page", () => {
+  const root = mkdtempSync(join(tmpdir(), "frame-assets-"));
+  const targets = [
+    "skin.css",
+    "landing-brand.css",
+    "api-theme.css",
+    "favicon.svg",
+    "mark.svg",
+    "index.html",
+    "downloads.html",
+    "docs/index.html",
+    "support.html",
+  ];
+  try {
+    for (const file of targets) {
+      mkdirSync(dirname(join(root, file)), { recursive: true });
+      writeFileSync(join(root, file), "fixture");
+    }
+    const head = targets
+      .slice(0, 3)
+      .map((file) => `<link rel="stylesheet" href="../../../${file}">`)
+      .join("");
+    const nav = targets
+      .slice(6)
+      .map((file) => `<a href="../../../${file}">Link</a>`)
+      .join("");
+    const html = `<head>${head}<link rel="icon" href="../../../favicon.svg"></head><body><header class="product-header"><a class="product-brand" href="../../../index.html"><img src="../../../mark.svg"></a><nav class="product-nav">${nav}</nav></header></body>`;
+    const file = "docs/api/functions/uncaptured.html";
+    assert.deepEqual(frameAssetProblems(html, file, root), []);
+    const bad = html.replace('href="../../../skin.css"', 'href="../../skin.css"');
+    assert.match(frameAssetProblems(bad, file, root).join("\n"), /does not resolve to skin.css/);
+    rmSync(join(root, "mark.svg"));
+    assert.match(frameAssetProblems(html, file, root).join("\n"), /missing local mark.svg/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
