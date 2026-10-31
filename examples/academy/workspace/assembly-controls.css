@@ -57,3 +57,14 @@
 .academy-review [role="status"] {
   overflow-wrap: anywhere;
 }
+
+.academy-calculator h3,
+.academy-calculator h4 {
+  overflow-wrap: anywhere;
+}
+.academy-calculator del {
+  display: block;
+  color: #ffd0cf;
+  background: #421b21;
+  text-decoration: none;
+}

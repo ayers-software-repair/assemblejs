@@ -9,9 +9,10 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { build } from "esbuild";
 import { createMcpServer, resolveRoot } from "../../packages/mcp/dist/index.js";
+import { createCalculatorProject } from "./create-calculator-project.mjs";
 
 /** Hosted proof only: the actual MCP server and client share a disposable real project. */
-export async function serveModes() {
+export async function serveModes(calculator = false) {
   const client = new Client({ name: "academy-mode-proof", version: "0.0.0" });
   const root = await mkdtemp(join(tmpdir(), "academy-modes-"));
   let server;
@@ -36,9 +37,17 @@ export async function serveModes() {
       arguments: { name: "academy-shop" },
     });
     if (!JSON.parse(seed.content[0].text).ok) throw new Error("actual project creation failed");
+    const calculatorFiles = [
+      "price-calculator.react.tsx",
+      "price-calculator.css",
+      "price-calculator.service.ts",
+      "request-estimate.ts",
+    ];
+    const recipe = calculator ? createCalculatorProject(root) : undefined;
     const bundle = await build({
       stdin: {
-        contents: `import { createSourceEditor } from "./examples/academy/workspace/create-source-editor.js";
+        contents: `import { createCalculatorControls } from "./examples/academy/workspace/create-calculator-controls.js";
+import { createSourceEditor } from "./examples/academy/workspace/create-source-editor.js";
 import { createProjectFiles } from "./examples/academy/workspace/create-project-files.js";
 import { createAssemblyControls } from "./examples/academy/workspace/create-assembly-controls.js";
 const client = {
@@ -52,7 +61,12 @@ const client = {
     return result;
   }
 };
-if (location.search === '?editor') {
+if (location.search === '?calculator') {
+  const response = await fetch('/calculator-recipe');
+  if (!response.ok) throw new Error('authored recipe unavailable');
+  createCalculatorControls(document.querySelector('main'), client, await response.json());
+  createSourceEditor(document.querySelector('main'), createProjectFiles(client), ['price-calculator.react.tsx', 'price-calculator.css', 'price-calculator.service.ts', 'request-estimate.ts'].map(file => 'src/assemblies/price-calculator/' + file).concat('src/pages/product/product.html'));
+} else if (location.search === '?editor') {
   createSourceEditor(document.querySelector('main'), createProjectFiles(client), ['src/assemblies/hello/hello.html']);
 } else {
   createAssemblyControls(document.querySelector('main'), client);
@@ -116,13 +130,17 @@ if (location.search === '?editor') {
         }
       }
       if (request.method !== "GET") return send(405, "text/plain", "method refused");
+      if (path === "/calculator-recipe" && calculator)
+        return send(200, "application/json", JSON.stringify(recipe));
       if (path === "/modes.js") return send(200, "text/javascript", bundle.outputFiles[0].text);
       if (path === "/modes.css") return send(200, "text/css", css);
       if (path !== "/") return send(404, "text/plain", "not found");
       send(
         200,
         "text/html",
-        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Academy mode controls proof</title><link rel="stylesheet" href="/modes.css"><main><h1>Assembly mode controls</h1><p>Real project tools. Preview and calculator workflow acceptance remain open.</p></main><script type="module" src="/modes.js"></script></html>',
+        calculator
+          ? '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Market calculator authoring proof</title><link rel="stylesheet" href="/modes.css"><main><h1>Market calculator authoring</h1><p>Actual source changes. Build and live preview still require runtime verification.</p></main><script type="module" src="/modes.js"></script></html>'
+          : '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Academy mode controls proof</title><link rel="stylesheet" href="/modes.css"><main><h1>Assembly mode controls</h1><p>Real project tools. Preview and calculator workflow acceptance remain open.</p></main><script type="module" src="/modes.js"></script></html>',
       );
     });
     await new Promise((resolve, reject) => {
@@ -143,6 +161,15 @@ if (location.search === '?editor') {
       outside(name, text) {
         mkdirSync(join(root, "src", "assemblies", name), { recursive: true });
         writeFileSync(file(name), text);
+      },
+      calculatorSource(file) {
+        if (!calculator || ![...calculatorFiles, "product.html"].includes(file))
+          throw new Error("invalid calculator fixture file");
+        const path =
+          file === "product.html"
+            ? join(root, "src/pages/product/product.html")
+            : join(root, "src/assemblies/price-calculator", file);
+        return existsSync(path) ? readFileSync(path, "utf8") : null;
       },
       async close() {
         try {

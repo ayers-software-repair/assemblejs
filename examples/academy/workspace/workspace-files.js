@@ -5,6 +5,7 @@
 export class WorkspaceFiles {
   #buffers = new Map();
   #saving = new Set();
+  #reloading = new Set();
 
   constructor(project, paths) {
     if (
@@ -45,6 +46,28 @@ export class WorkspaceFiles {
     const value = this.#buffers.get(path);
     if (!value) throw new Error("file has not been opened");
     value.text = text;
+  }
+
+  async reload(path) {
+    const previous = this.buffer(path);
+    if (previous.dirty || this.#saving.has(path) || this.#reloading.has(path))
+      throw new Error("keep your draft; reload requires a clean idle file");
+    this.#reloading.add(path);
+    try {
+      const contents = await this.project.readFile(path);
+      if (typeof contents !== "string") throw new Error("source must be text");
+      const current = this.buffer(path);
+      if (
+        current.base !== previous.base ||
+        current.text !== previous.text ||
+        this.#saving.has(path)
+      )
+        throw new Error("the buffer changed while reloading; your draft is kept");
+      this.#buffers.set(path, { base: contents, text: contents });
+      return this.buffer(path);
+    } finally {
+      this.#reloading.delete(path);
+    }
   }
 
   async save(path) {

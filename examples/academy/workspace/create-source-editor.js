@@ -48,18 +48,23 @@ export function createSourceEditor(container, project, paths) {
   });
   const save = element("button", "Save file");
   save.type = "button";
+  const reload = element("button", "Reload file");
+  reload.type = "button";
+  reload.disabled = true;
   const status = element("p", "Choose a file to edit.");
   status.setAttribute("role", "status");
   const buttons = new Map();
   let active;
   let opening = 0;
   let disposed = false;
+  let reloading = false;
   const refresh = () => {
     if (!active || disposed) return;
     const buffer = files.buffer(active);
     // A pre does not paint the final empty line that a textarea retains.
     code.innerHTML = highlightSource(active, buffer.text) + "\n";
-    save.disabled = !buffer.dirty;
+    save.disabled = reloading || !buffer.dirty;
+    reload.disabled = reloading || buffer.dirty;
     for (const [path, button] of buttons) {
       button.textContent = path + (files.buffer(path).dirty ? " *" : "");
       button.setAttribute("aria-current", String(path === active));
@@ -117,7 +122,25 @@ export function createSourceEditor(container, project, paths) {
       refresh();
     }
   });
-  panel.append(tree, tabs, heading, label, save, status);
+  reload.addEventListener("click", async () => {
+    const path = active;
+    if (!path) return;
+    reloading = true;
+    refresh();
+    try {
+      const buffer = await files.reload(path);
+      if (!disposed && active === path) {
+        input.value = buffer.text;
+        status.textContent = `Reloaded ${path} from the project. Run checks to verify it.`;
+      }
+    } catch (error) {
+      if (!disposed && active === path) status.textContent = `Not reloaded: ${String(error)}.`;
+    } finally {
+      reloading = false;
+      refresh();
+    }
+  });
+  panel.append(tree, tabs, heading, label, save, reload, status);
   container.append(panel);
   return {
     open,

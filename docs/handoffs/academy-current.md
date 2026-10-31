@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-30, after the editor merge and mode-controls base reconciliation.
+Checkpoint: 2026-10-31, after guarded source tools and the editor adapter merged.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -24,24 +24,44 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
 
 ## Delivery queue
 
-1. PR34, source editor: merged as `bd61eaed086af1d19d1b53da68ea31e74a1a4d76`.
-   Accepted final head `aee77a8`, tree `29f918dff5ff4ef61785a4a658538d1502fa4618`.
-   Exact-head checks and personal review passed; actual squash tree, parent, DCO message
-   and GitHub signature were verified. Post-merge CI `41164827502`, editor `41164827661`
-   and landing `41164827498` all passed.
-2. PR35, assembly mode controls: merged as `9cecaf0f7b4ef0149d874fa5df27fadcd8e178ad`.
-   Accepted final head `05c77c0`, tree `ef401ad120ba64130208090ea75a6ef3f39e1633`.
-   All ten applicable exact-head jobs passed, including CI `41166237821`; final personal
-   review `5721105681` accepts the same tree. Actual squash parent/tree, DCO message and
-   GitHub signature were verified. Post-merge checks remain pending at this checkpoint.
-   The controls create assembly scaffolds, not the full calculator workflow.
-3. PR33 stays draft: `https://github.com/ayers-software-repair/assemblejs/pull/33`, head
-   `2126810` (negative outcome recorded). Do not merge, adopt the runtime, retry unchanged,
-   weaken assertions or patch vendor internals to conceal its Svelte failure.
-4. Complete the guarded source-edit operation, then connect the real editor provider and
-   authored calculator/customization workflow to those shared operations. Continue the actual
-   supplied-project workspace, real build/preview/check wiring and lesson exercises. Finish
-   persistence/resume and certificate gating only against current-source lesson evidence.
+1. PR34 source editor merged as `bd61eaed086af1d19d1b53da68ea31e74a1a4d76`.
+   Accepted tree `29f918dff5ff4ef61785a4a658538d1502fa4618`; exact-head review/checks,
+   actual squash parent/message/signature and post-merge CI/editor/landing all passed.
+2. PR35 assembly scaffold modes merged as `9cecaf0f7b4ef0149d874fa5df27fadcd8e178ad`.
+   Accepted head `05c77c0`, tree `ef401ad120ba64130208090ea75a6ef3f39e1633`, personal
+   `5721105681`, all ten exact-head jobs. Post-merge CI `41167466395`, editor, modes,
+   landing and the existing deployment workflow all passed. This is scaffold authoring.
+3. PR41 guarded source tools merged as `a9902ceee65f8f8f16dec8cdcf540945ea2f8fef`.
+   Accepted head `6e2ea54`, tree `9cff06abe63b819295afd05353d9247c5f873308`; 39 focused
+   source/protocol cases, independent source review and personal `5721195526` passed.
+   All seven exact-head checks passed (`41167623186`, `41167623200`). Actual parent/tree,
+   DCO message and GitHub signature were verified. Post-merge CI `41168122294` and
+   modes `41168122328` passed. No filesystem transaction or hostile-race guarantee.
+4. PR42 editor-to-MCP provider merged as `4218dca7d6479755de2a4822645a7e089f4df9f3`.
+   Accepted head `71888f6`, tree `e340d9b5df4ca9e191145285a9e221a4a484f29a`; four adapter
+   cases, observed-red acknowledgement control, real MCP/browser saved-byte/stale/draft
+   proof and personal source/visual review `5721235945` passed. All eight exact-head jobs
+   passed (`41168165624`, `41168165677`, `41168165706`). Actual squash parent/tree/message/
+   signature and post-merge CI `41168543145`, modes `41168543163`, editor `41168543180`
+   passed. This adapts an already connected client, not a production transport.
+5. PR33 remains draft at `2126810` (negative outcome recorded). Do not merge, adopt the
+   runtime, retry unchanged, weaken assertions or patch vendor internals to conceal the
+   Svelte failure. Its retained runtime outcome is below.
+6. Authored calculator workflow is in `/tmp/assemblejs-academy-calculator-workflow`.
+   Source prepares the actual four Market files and product-page placement, supports bounded
+   title/preset requests, teaches reject/revise/approve and Auto, and adds clean editor Reload.
+   Twenty-one feature cases plus seven buffer/eleven editor cases pass. Independent review
+   found three comment-marker errors; observed-red regressions and authored-shape restriction
+   correct them. Initial PR43 head `09b80fe` exposed a Reload/reselection overwrite and a fixture
+   MCP-metadata inconsistency; two selection regressions were red, then all eleven editor cases
+   passed after correction. Hosted run `41170315559` applied the five files but correctly refused
+   stale registration metadata. The fixture retains generated declarations and real dependency
+   links; corrected native/hosted/personal acceptance still gates delivery.
+   See `examples/academy/workspace/CALCULATOR_WORKFLOW.md` for the strict source/page baseline.
+7. Full supplied-project workspace, actual runtime/build/preview wiring and lesson exercises
+   remain open. Earlier exercises need a reviewed authored page baseline before calculator
+   integration. Finish revision-bound progress/resume and certificate gating against actual
+   current-source lesson evidence; do not advertise the Academy as available.
 
 ## Verified editor details
 
@@ -102,16 +122,18 @@ proof worked but production licensing is not approved; do not silently switch to
 
 - `/tmp/assemblejs-academy-workspace-editor`: PR34 branch `codex/academy-workspace-editor`.
   Merged source editor; preserve its retained source and evidence.
-- `/tmp/assemblejs-academy-agent-controls`: PR35 branch `codex/academy-agent-controls`, clean
-  after its accepted source `5413315`; its integration commit also completes its ledger row.
+- `/tmp/assemblejs-academy-agent-controls`: merged PR35 branch `codex/academy-agent-controls`.
+  Preserve its accepted component and retained MCP/browser evidence.
 - `/tmp/assemblejs-academy-current-source-preview`: PR33 draft branch, clean at `2126810`.
-- `/tmp/assemblejs-academy-source-changes`: branch `codex/academy-source-changes`.
-  Adds shared bounded `read_source` and expected-base `apply_source_changes`, mirrored tests,
-  actual MCP registration, generated agent guidance and a minor MCP/check changeset.
-  All 39 focused source/protocol cases pass; stale preflight and temporary cleanup controls
-  were observed red before restoration. Source types/lint/organization/mirror/modules pass.
-  Independent verification, personal review and full hosted acceptance still gate delivery.
-  This is not a production editor bridge, transactional filesystem or runtime adoption.
+- `/tmp/assemblejs-academy-source-changes`: merged PR41 branch `codex/academy-source-changes`.
+  Preserve its source/gate logs `/tmp/academy-source-changes-*.log` and personal receipt
+  `/home/sparrow6/source/AUDIT/evidence/2026-10-31-pr-reviewer/assemble41-6e2ea54/`.
+- `/tmp/assemblejs-academy-source-provider`: merged PR42 branch `codex/academy-source-provider`.
+  Preserve `/tmp/academy-source-provider-*.log`, `71888f6` artifacts and personal receipt
+  `/home/sparrow6/source/AUDIT/evidence/2026-10-31-pr-reviewer/assemble42-71888f6/`.
+- `/tmp/assemblejs-academy-calculator-workflow`: branch `codex/academy-calculator-workflow`.
+  Contains the next owned source increment; its normal integration retains the exact accepted
+  PR42 tree. Source proof is `/tmp/academy-calculator-*.log`; required hosted gates are pending.
 - Preserve all older `/tmp/assemblejs-*` worktrees and the original Academy checkout. No reset,
   stash, clean, add-all, history rewrite or broad process kill. Unrelated main checkout edits
   are not this task's changes.
@@ -126,6 +148,6 @@ maintainer asks for correction on that issue rather than reinterpreting it.
 Maintainers own these isolated worktrees and the delivery gates. Audit follows delivery and
 may reopen unsupported closures; do not wait for outside audit as a new pre-delivery gate.
 Every issue closure needs a closing comment linking the exact commit/run/artifact proving its
-done-when. Keep PR33 held and the full Academy open. Next implementation remains shared guarded
-source changes and the complete authored calculator workflow, then actual workspace, lesson,
+done-when. Keep PR33 held and the full Academy open. Next deliver the reviewed calculator
+source workflow, then complete actual workspace/runtime/lesson integration, revision-bound
 progress and certificate wiring. Do not advertise the Academy as available yet.

@@ -39,12 +39,20 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
 - [x] Add shared confined source reads and expected-base additions/replacements for editor
       and prepared-feature clients. Thirty-nine focused file/protocol cases and red controls
       cover stale preflight and owned temporary cleanup; source type/lint proof is green.
-      Partial batches and cross-process limits are explicit. Required hosted/package checks
-      and personal review remain delivery gates; the calculator workflow is not complete.
+      Partial batches and cross-process limits are explicit. PR41 merged as `a9902ce` after
+      all seven exact-head jobs, independent source/personal review and actual squash checks;
+      post-merge CI `41168122294` and modes `41168122328` passed. Calculator work remains open.
 - [x] Add the editor provider over shared MCP source reads and guarded saves. Four focused
       cases and an observed-red acknowledgement control pass; independent source review is
-      clear. Actual saved-byte/concurrent-writer hosted browser proof and personal acceptance
-      remain delivery gates. Production connection and full Academy acceptance remain open.
+      clear. PR42 merged as `4218dca` after actual saved-byte/concurrent-writer browser proof,
+      personal visual review and all eight exact-head jobs; post-merge CI/editor/modes passed.
+      Production connection and full Academy acceptance remain open.
+- [x] Add authored Market calculator source planning/controls over shared reads/writes/checks:
+      the real four files plus product-page placement, bounded own-word title/preset requests,
+      reject/revised approval/Auto, manual edits and clean editor reload. Twenty-one focused
+      feature cases and seven buffer/eleven editor cases pass; comment-marker regressions and
+      mode/reload controls were watched red. Hosted/personal delivery acceptance remains
+      required. Unknown source/page shapes refuse; full lesson/preview integration remains open.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

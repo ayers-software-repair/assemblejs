@@ -133,3 +133,68 @@ test("Home at the first character clears retained scroll without changing the bu
   assert.equal(input.value, "original a.tsx");
   assert.equal(editor.files.buffer("a.tsx").dirty, false);
 });
+
+test("explicit clean reload follows an agent change and is disabled for unsaved edits", async () => {
+  const { document, editor, input, edit, root } = fixture();
+  await editor.open("a.tsx");
+  const reload = [...document.querySelectorAll("button")].find(
+    (button) => button.textContent === "Reload file",
+  );
+  writeFileSync(join(root, "a.tsx"), "agent edit");
+  reload.click();
+  await setImmediate();
+  assert.equal(input.value, "agent edit");
+  assert.equal(editor.files.buffer("a.tsx").base, "agent edit");
+  edit("learner draft");
+  assert.equal(reload.disabled, true);
+  assert.equal(input.value, "learner draft");
+});
+
+for (const selection of ["same tab", "away and back", "another file"]) {
+  test(`reload keeps visible text and guarded save consistent after selecting ${selection}`, async () => {
+    const { document, editor, input, edit, root, project, window } = fixture();
+    writeFileSync(join(root, "a.tsx"), "export const count = 1;\n");
+    await editor.open("b.html");
+    await editor.open("a.tsx");
+    const agent = "export const count = 200;\n";
+    writeFileSync(join(root, "a.tsx"), agent);
+    let release;
+    const gate = new Promise((resolve) => {
+      release = resolve;
+    });
+    const read = project.readFile;
+    project.readFile = async (path) => {
+      await gate;
+      return read(path);
+    };
+    const button = (name) =>
+      [...document.querySelectorAll("section > button")].find((node) => node.textContent === name);
+    const select = async (path) => {
+      [...document.querySelectorAll('nav[aria-label="Open files"] button')]
+        .find((node) => node.textContent === path)
+        .click();
+      await setImmediate();
+    };
+    button("Reload file").click();
+    if (selection === "same tab") await select("a.tsx");
+    else {
+      await select("b.html");
+      if (selection === "away and back") await select("a.tsx");
+    }
+    release();
+    await setImmediate();
+    if (selection === "another file") {
+      assert.equal(input.value, "original b.html");
+      await editor.open("a.tsx");
+    }
+    const visible = input.value;
+    assert.equal(editor.files.buffer("a.tsx").base, agent);
+    edit(visible + "// Learner note.\n");
+    button("Save file").click();
+    await setImmediate();
+    assert.equal(readFileSync(join(root, "a.tsx"), "utf8"), agent + "// Learner note.\n");
+    assert.equal(visible, agent);
+    editor.destroy();
+    window.close();
+  });
+}
