@@ -88,7 +88,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       if (writing && busy) throw new Error("wait for the preview operation before changing source");
       pending++;
       sync();
-      if (writing && !disposed) clear("Saved project changed. Check and preview again.");
+      if (writing && !disposed) clear("Source change requested. Check and preview again.");
       try {
         const reply = await client.callTool(request);
         if (writing && editor && !disposed && Array.isArray(request.arguments?.changes)) {
