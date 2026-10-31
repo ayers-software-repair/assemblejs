@@ -4,15 +4,18 @@ import { execFile, spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { createServer } from "node:net";
 import { join, resolve } from "node:path";
+import { inspectMarketCalculator } from "./inspect-market-calculator.mjs";
 
 /** Hosted proof only: real CLI builds and owned Market servers, not a production sandbox. */
 export async function createMarketPreviewRuntime(root, parentOrigin) {
   const children = new Set();
   const controller = new AbortController();
   const builds = [];
+  const inspections = [];
   const stopping = new Map();
   let closed = false;
   let inFlight;
+  let inspecting;
   let teams;
   let shop;
   const port = () =>
@@ -162,7 +165,7 @@ export async function createMarketPreviewRuntime(root, parentOrigin) {
     });
   };
   const rebuild = async () => {
-    if (closed || inFlight) throw new Error("preview runtime is closed or building");
+    if (closed || inFlight || inspecting) throw new Error("preview runtime is closed or busy");
     const operation = (async () => {
       if (!teams) {
         const origins = {};
@@ -206,6 +209,39 @@ export async function createMarketPreviewRuntime(root, parentOrigin) {
   return {
     origin,
     rebuild,
+    async inspect(values) {
+      if (closed || inFlight || inspecting || !shop || !children.has(shop))
+        throw new Error("Build a preview before inspecting it; wait for any current operation.");
+      const operation = (async () => {
+        try {
+          const result = await inspectMarketCalculator(
+            origin,
+            values,
+            AbortSignal.any([controller.signal, AbortSignal.timeout(10000)]),
+          );
+          inspections.push({
+            values: [...values],
+            received: true,
+            url: result.url,
+            htmlBytes: Buffer.byteLength(result.html),
+            quotes: result.quotes,
+          });
+          return result;
+        } catch (error) {
+          inspections.push({ values, received: false, error: String(error) });
+          throw error;
+        }
+      })();
+      inspecting = operation;
+      try {
+        return await operation;
+      } finally {
+        inspecting = undefined;
+      }
+    },
+    inspections() {
+      return [...inspections];
+    },
     active() {
       return [...children].map((child) => child.pid);
     },
@@ -213,14 +249,17 @@ export async function createMarketPreviewRuntime(root, parentOrigin) {
       return [...builds];
     },
     async stop() {
-      if (inFlight) throw new Error("wait for the current build before stopping");
+      if (inFlight || inspecting)
+        throw new Error("wait for the current preview operation before stopping");
       await stopAll();
     },
     async close() {
+      const inspection = inspecting;
       closed = true;
       controller.abort();
       await stopAll();
       await inFlight?.catch(() => {});
+      await inspection?.catch(() => {});
     },
   };
 }

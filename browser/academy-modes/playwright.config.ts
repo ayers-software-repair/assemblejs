@@ -12,6 +12,7 @@ export default defineConfig({
     "workspace-version.probe.ts",
     "draft-recovery.probe.ts",
     "existing-practice.probe.ts",
+    "calculator-check.probe.ts",
   ],
   timeout: 60000,
   workers: 1,

@@ -47,12 +47,17 @@ jobs:
           node examples/academy/workspace/create-project-files.test.mjs
           node examples/academy/workspace/calculator-title-parts.test.mjs
           node examples/academy/workspace/calculator-presets.test.mjs
+          node examples/academy/workspace/calculator-evidence.test.mjs
+          node examples/academy/workspace/read-project-version.test.mjs
+          node examples/academy/workspace/verify-calculator.test.mjs
           node examples/academy/workspace/calculator-plan.test.mjs
           node examples/academy/workspace/calculator-modes.test.mjs
           node examples/academy/workspace/create-calculator-controls.test.mjs
           node examples/academy/workspace/create-mode-walkthrough.test.mjs
           node examples/academy/workspace/create-academy-workspace.test.mjs
           node browser/academy-modes/source-paths.test.mjs
+          node browser/academy-modes/read-preview-response.test.mjs
+          node browser/academy-modes/inspect-market-calculator.test.mjs
           node examples/academy/workspace/create-assembly-controls.test.mjs
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium

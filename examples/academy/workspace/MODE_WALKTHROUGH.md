@@ -33,7 +33,7 @@ infers historical completion from files. General curriculum recovery remains ope
 
 This is session-only mode practice, not persisted curriculum progress or certificate evidence.
 Its final text records the three modes used and asks the learner to build and try the actual
-calculator. It does not assert that a later edit is checked or that a frame load proves behavior.
+calculator, including the separate saved-output verification action. It does not assert that a later edit is checked or that a frame load proves behavior.
 Full revision-bound lesson checks, snapshots, resume, certificate, verified external-agent
 connection and production/browser-runtime selection remain open.
 

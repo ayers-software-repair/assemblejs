@@ -125,9 +125,24 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       (77 focused / eleven browser cases), editor `41208824836`. All 103 component cases,
       static gates and native source review pass. Real tutor questions add no tool calls;
       actual proposal context, rejection clearing and desktop/narrow views pass. Personal
-      COMMENT `5723229865` accepts this source; final-head/post-merge proof remains required.
-- [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
-      rejection and revised approval, with code view and readable diffs.
+      COMMENT `5723229865` accepts this source. PR53 merged as `ede739b` after final review
+      `5723293269` and all ten final-head jobs. Actual tree/parent/full message/signature were
+      independently verified; post-merge CI `41210602495`, modes `41210602511` and editor
+      `41210602508` all passed at attempt 1, with independent native/personal verification.
+- [x] Teach Plan, Approval and Auto modes through actual file/preview changes, including
+      rejection and revised approval, with code view and readable diffs. The standalone
+      supplied-project sequence is delivered by PR45/52/53 above; this summary row was stale.
+      This does not close the full curriculum or current-revision lesson-proof requirement.
+- [ ] Verify the saved calculator against the current served preview and quote API.
+      Owner: Academy implementation chat. Done when an explicit read-only check compares the
+      actual served title/presets with current saved authored settings, exercises the real quote
+      API, and reports truthful pass/failure bound to the observed source/preview revision.
+      Refuse stale, unavailable, failed or malformed evidence; invalidate on writes/Stop and
+      preserve source/diagnostics. Verify negative controls, hosted keyboard/narrow behavior
+      and cleanup with independent/personal review. This is server-output/API proof, not
+      browser-hydration attestation, durable progress or certificate completion.
+      Source proof: 116 component and six backend cases pass, with title/version bypasses
+      observed red before restoration. Static gates pass; native review clear; hosted/personal proof pending.
 - [x] Record and independently review the candidate learning/proof path in
       `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
 - [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent
@@ -1672,7 +1687,7 @@ The command line:
       into a project").
 - [x] `add assembly` writes through a symlinked src/assemblies out of the project, and crashes with
       a stack trace on a dangling link (workflow cli-verbs.5, major, disputed by one of its
-      refuters). Claimed at `packages/cli/src/run/run.ts:115`. PREMISE UNVERIFIED. REPRODUCED by the
+      refuters). Claimed at `packages/cli/src/run/run.ts:116`. PREMISE UNVERIFIED. REPRODUCED by the
       seat: the assembly written outside the project with exit 0, and a stack on a link to nothing.
       DONE 2026-10-12: `add assembly` asks the root guard before it writes, as the agent surface's
       does, and says either in a line (DECISIONS 2026-10-12, "check says what it passed over, and
@@ -2427,5 +2442,5 @@ placements }` in `assemblejs.config.ts` (`LimitsConfig`), spread into `createSer
       staged the four real landing modules and released badges, and verified the actual
       staged closure. It merged as `c8c3705` after personal
       review `5722144704` and all nine exact-head jobs. Post-merge CI `41188471147`, landing
-      `41188471159` and deployment `41188471177` passed; all 66 scoped live files match
+      `41188471169` and deployment `41188471177` passed; all 66 scoped live files match
       expected bytes. Durable receipts are in the manager's AUDIT safeguard-delivery folder.

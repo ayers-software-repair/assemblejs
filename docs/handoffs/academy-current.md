@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-31, after PR52 existing-code practice merged and post-merge proof passed.
+Checkpoint: 2026-10-31, after PR53 authored tutor merged and post-merge proof passed.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -231,7 +231,7 @@ PR47 corrected only the missing generated frame links and released-asset staging
 as `c8c370569536c68d868e4bbdd0c245215225ec74`, reviewed tree
 `d3da9958c350b98d8d5028b10ac8984a8c6f6d65`, parent `fe036a7`, after all nine exact-head
 checks and personal review `5722144704`. Actual squash tree/parent/full message/signature
-were verified. Normal deployment `41188471177` and landing `41188471159` passed.
+were verified. Normal deployment `41188471177` and landing `41188471169` passed.
 All eight post-merge CI jobs in `41188471147` passed. Source, post-merge and live-byte
 acceptance now support issue 11 delivery closure and retiring stale PR12 as superseded;
 do not merge its old branch.
@@ -287,11 +287,14 @@ final personal COMMENT `5723028258` and all ten final-head checks. Actual squash
 full message/DCO/signature independently verified. Post-merge CI `41207836284`, editor
 `41207836328` and modes `41207836288` all passed, attempt 1.
 
-Active source: `/tmp/assemblejs-academy-authored-tutor`, branch `codex/academy-authored-tutor`.
-Owner/done-when recorded in TODO before source edits: authored Next/Why/Files/customization
-answers from actual step/proposal context, honest fallback, no writes/progress/false results.
-All 103 source cases/static gates and native review green. Source `2073328` has all ten jobs
-green: CI `41208824847`, modes `41208824820` (77 / eleven), editor `41208824836`. Tutor
-keyboard/context/no-call/narrow proof and all new/changed images pass. Personal source COMMENT
-`5723229865` is clear; final-head checks/acceptance and post-merge proof remain required. Full curriculum, durable progress/certificates, verified external-agent access
-and runtime adoption remain open.
+PR53 merged as `ede739b`, tree `397881c47c0881ffcbccbb92c890e3380ced5d4c`, parent `d96e4cd`,
+final personal `5723293269`, all ten final-head jobs and actual squash identities verified.
+Post-merge CI `41210602495`, modes `41210602511`, editor `41210602508` passed at attempt 1;
+native/personal actual-merge proof clear. Standalone three-mode summary is reconciled in TODO.
+
+Active: `/tmp/assemblejs-academy-calculator-verification`, `codex/academy-calculator-verification`.
+Owner/done-when recorded in TODO before edits: read-only current saved-source/served-settings/
+quote check with version/stale guards, truthful diagnostics, invalidation, scoped hosted proof
+and independent review. Source: 116 component/six backend cases and static gates green;
+title/version bypasses observed red. Native review clear; hosted/personal acceptance pending.
+No hydration/certificate/durable progress claim or runtime adoption.

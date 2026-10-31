@@ -66,6 +66,11 @@ It is disabled for unsaved edits. A draft typed during a reload survives; concur
 are refused. It does not discard drafts or automatically refresh tabs on agent notifications.
 Saving/reloading does not claim that checks or a visible preview are current.
 
+After a successful saved-project preview, the explicit read-only calculator output check
+compares current saved settings, actual server HTML and real quote replies. It reuses the
+successful build and refuses observed source changes. See [the check contract](CALCULATOR_CHECK.md)
+for bounds, failure/cleanup behavior and the separate browser-interaction/progress boundary.
+
 ## Proof boundary
 
 Source-only cases cover proposals without writes, manual-page continuity, malformed tool
