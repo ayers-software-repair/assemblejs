@@ -102,6 +102,6 @@ A successful project Save remains valid even if draft storage is unavailable.
 Eight focused recovery cases cover matching/conflicting bases, malformed/bounded storage,
 denial, quota, late edits during Save and redundant cached text. The matching-recovery and
 error-message regressions were watched failing before correction. Three hosted actual-MCP
-scenarios must prove real page reload, no writes before Save, conflict copy/review, keyboard,
-narrow layout and denied/quota handling. Fresh hosted and independent/personal acceptance
+scenarios must prove real page reload, no writes before Save, conflict selection/review and manual
+merge, keyboard/narrow layout and denied/quota handling. Fresh hosted and independent/personal acceptance
 remain required for this source increment. No local product build, server or browser ran.
