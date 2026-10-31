@@ -101,3 +101,34 @@ test("duplicate or unconfined files and unopened edits are refused", async () =>
   await assert.rejects(files.open("outside"), /outside/);
   assert.throws(() => files.edit("view.tsx", "lost"), /not been opened/);
 });
+
+test("reload reads current project bytes only for an existing clean buffer", async () => {
+  const { files, root } = fixture();
+  await assert.rejects(files.reload("outside.ts"), /not been opened/);
+  await files.open("view.tsx");
+  writeFileSync(join(root, "view.tsx"), "agent edit");
+  assert.deepEqual(await files.reload("view.tsx"), {
+    base: "agent edit",
+    text: "agent edit",
+    dirty: false,
+  });
+  files.edit("view.tsx", "learner draft");
+  await assert.rejects(files.reload("view.tsx"), /clean idle/);
+  assert.equal(files.buffer("view.tsx").text, "learner draft");
+});
+
+test("a draft typed during reload survives and concurrent reloads are refused", async () => {
+  const { files, project } = fixture();
+  await files.open("view.tsx");
+  let release;
+  project.readFile = () =>
+    new Promise((resolve) => {
+      release = resolve;
+    });
+  const reading = files.reload("view.tsx");
+  await assert.rejects(files.reload("view.tsx"), /clean idle/);
+  files.edit("view.tsx", "new draft");
+  release("agent edit");
+  await assert.rejects(reading, /buffer changed/);
+  assert.deepEqual(files.buffer("view.tsx"), { base: "original", text: "new draft", dirty: true });
+});

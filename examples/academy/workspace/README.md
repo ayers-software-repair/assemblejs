@@ -26,7 +26,7 @@ Failed saves retain the learner's draft and show the actual error. Saving does n
 or claim that a visible preview is current. The final workspace still needs a production connection, combined feature/mode exercises,
 lesson checks, persistence and live-agent transport.
 
-Seventeen focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
+Twenty focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
 refusal, in-flight edits, failed writes, retained tabs, late reads, markup escaping, disposal and split UTF-8 input.
 The hosted `academy source editor` job bundles the actual component and opens real copied
 Market calculator files through a bounded test-only HTTP provider. It verifies actual saved
@@ -73,3 +73,10 @@ drafts and malformed write acknowledgements. The acknowledgement control is red 
 is removed and green when restored. The existing hosted modes fixture adds an isolated editor
 route over the actual MCP server and canonical project. Its browser proof checks actual saved
 bytes and an outside edit through the real tools; hosted acceptance is still pending.
+
+
+The authored Market calculator controls and their bounded request grammar are described in
+[CALCULATOR_WORKFLOW.md](CALCULATOR_WORKFLOW.md). The editor also provides an explicit clean
+Reload file action for changes made through those shared tools. Unsaved drafts cannot be
+reloaded away; edits typed during the read are retained. This is an explicit refresh, not an
+automatic agent-notification subscription or a verified production connection.

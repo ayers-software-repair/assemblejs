@@ -133,3 +133,19 @@ test("Home at the first character clears retained scroll without changing the bu
   assert.equal(input.value, "original a.tsx");
   assert.equal(editor.files.buffer("a.tsx").dirty, false);
 });
+
+test("explicit clean reload follows an agent change and is disabled for unsaved edits", async () => {
+  const { document, editor, input, edit, root } = fixture();
+  await editor.open("a.tsx");
+  const reload = [...document.querySelectorAll("button")].find(
+    (button) => button.textContent === "Reload file",
+  );
+  writeFileSync(join(root, "a.tsx"), "agent edit");
+  reload.click();
+  await setImmediate();
+  assert.equal(input.value, "agent edit");
+  assert.equal(editor.files.buffer("a.tsx").base, "agent edit");
+  edit("learner draft");
+  assert.equal(reload.disabled, true);
+  assert.equal(input.value, "learner draft");
+});

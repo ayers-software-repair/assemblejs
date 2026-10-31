@@ -21,7 +21,8 @@
         "browser/academy-editor/read-save-body.test.mjs",
         "browser/academy-editor/create-file-provider.test.mjs",
         "browser/academy-modes/modes.probe.ts",
-        "browser/academy-modes/source-provider.probe.ts"
+        "browser/academy-modes/source-provider.probe.ts",
+        "browser/academy-modes/calculator.probe.ts"
       ],
       "project": [
         "scripts/**/*.mjs",

@@ -8196,3 +8196,24 @@ Manual Save is explicit; this adapter neither chooses an agent mode nor creates 
 The hosted-only modes fixture provides an isolated editor route with the real MCP server and
 canonical project, leaving the original mode scenario intact. No production HTTP bridge,
 preview, runtime adoption, full calculator or complete Academy is implied.
+
+## 2026-10-31: guided calculator requests own an authored source shape
+
+The next source increment adds the actual Market calculator files and existing-page placement
+through read_source/apply_source_changes/check, with authored React/service/quote choices.
+Supported own-word forms add/name the feature or change its title/presets; unknown requests
+stop without tools. Client-held reviewed before/after values implement Plan, rejection,
+revised Approval and fresh-request Auto; ambiguous application consumes permission.
+
+Independent source review reproduced three raw-text matching errors: title/preset markers in
+manual comments could replace real code, and a commented buy-box could receive an inactive
+placement. Exact regressions were watched failing. Guided placement now requires the exact
+supplied starter page; customization requires the canonical body normalized only at supported
+settings, plus trailing single-line manual comments. Other source/page shapes refuse to the
+learner's agent rather than being guessed at. This does not claim a general JSX/HTML parser.
+Prior lesson edits will need a reviewed authored page baseline before full integration.
+
+An explicit clean editor Reload follows other writers without discarding a draft. In-flight
+buffer changes refuse the reload. Hosted-only proof uses actual copied Market source and its
+installed dependencies, the real MCP and actual check; no app server or framework preview is
+simulated. Full browser runtime/lesson/connection/progress/certificate acceptance stays open.
