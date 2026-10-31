@@ -48,6 +48,33 @@ proof of human consent, and direct `add_assembly` still writes immediately. Thes
 an authoring foundation; they do not implement the Academy UI or enforce a global agent mode.
 No model, account or inference connection is required by these operations.
 
+## Edit actual source
+
+`read_source` returns the current UTF-8 contents of a regular file under `src/`, or
+`assemblejs.config.ts`. It never executes the source. Reads and individual before/after values
+are limited to 65536 bytes. An absent file is a failed read with `{ path, missing: true }`;
+other failures do not imply absence. Linked paths, hidden path components, generated output and package
+metadata are outside this source-editing surface.
+
+`apply_source_changes` accepts 1–32 exact additions/replacements as `{ path, before, after }`.
+Use `before: null` only when the reviewed target must be absent. Total before/after data is
+limited to 131072 bytes. Every expected base is checked before any write. Additions are created
+exclusively; replacements are prepared beside the original and checked again before renaming,
+so failed preparation keeps the original. Regular read/write/execute mode bits are retained.
+
+This is a writing tool, not a server-retained proposal or proof of human consent. In Approval
+mode, the client must retain the exact reviewed values and obtain approval before calling.
+Plan does not call it; rejecting a client-held proposal does not call it. A manual save is an
+explicit write, and Auto may call it for the person's supported request. The server does not
+infer or enforce the client's global mode.
+
+A stale base fails before the batch starts. Later I/O failures report `written` and `attempted`
+paths: a new file may contain partial bytes, while an existing replacement's preparation keeps
+its original. Inspect actual files and review fresh values before retrying. No rollback or
+cross-process atomic compare-and-swap is promised; this is not protection against hostile
+filesystem replacement. Run `check`, build and verify the actual preview before reporting a
+lesson or feature complete. The read-only devtools inspector remains unchanged.
+
 ## Rendering and prompts
 
 With the project's development server running, the tools request rendered assemblies and composed pages from it, including service data and correlated failures.

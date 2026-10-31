@@ -35,6 +35,12 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       review and all six exact-head CI jobs (`41163301977`) passed at `5413315`. Plan writes
       nothing; rejection/revision/exact approval, Auto/check and outside-edit refusal are real.
       This is scaffold authoring, not the completed calculator or full lesson acceptance.
+
+- [x] Add shared confined source reads and expected-base additions/replacements for editor
+      and prepared-feature clients. Thirty-nine focused file/protocol cases and red controls
+      cover stale preflight and owned temporary cleanup; source type/lint proof is green.
+      Partial batches and cross-process limits are explicit. Required hosted/package checks
+      and personal review remain delivery gates; the calculator workflow is not complete.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

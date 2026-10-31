@@ -24,25 +24,17 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
 
 ## Delivery queue
 
-1. PR34, source editor, is merged:
-   `https://github.com/ayers-software-repair/assemblejs/pull/34`.
-   Accepted final head `aee77a88ba69c973e330b255c06e0b817ebf4f4b` passed all nine applicable
-   checks (normal CI `41164130606`) and final personal review `5720930646`.
-   Actual squash `bd61eaed086af1d19d1b53da68ea31e74a1a4d76` has the exact accepted tree
-   `29f918dff5ff4ef61785a4a658538d1502fa4618`, expected parent `f52e830`, valid message/DCO
-   and verified GitHub signature. Post-merge CI was still running at this checkpoint;
-   verify its actual result rather than repeating unchanged pre-merge proof.
-2. PR35, assembly mode controls: `https://github.com/ayers-software-repair/assemblejs/pull/35`.
-   Accepted source head `54133150181ab545e1d640a432fcac55b87f239e` was based on `f52e830`.
-   Its branch now reconciles the merged editor through an owned merge commit; inspect the
-   current head/base and required checks before delivery.
-   Final personal review `5720863010` accepts source, MCP behavior, visuals and all six
-   normal CI jobs in `41163301977`, including Node24. Hosted real MCP/browser run
-   `41163301978`, mechanics and landing also passed. Final receipt:
-   `/home/sparrow6/source/AUDIT/evidence/2026-10-30-pr-reviewer/assemble35-5413315-review.json`.
-   The TODO/DECISIONS/knip overlaps retain both increments; package and lock merged cleanly.
-   No force-push or source behavior change. Reuse unchanged proof and allow all actually
-   required integration checks to finish. The controls create assembly scaffolds, not the full calculator.
+1. PR34, source editor: merged as `bd61eaed086af1d19d1b53da68ea31e74a1a4d76`.
+   Accepted final head `aee77a8`, tree `29f918dff5ff4ef61785a4a658538d1502fa4618`.
+   Exact-head checks and personal review passed; actual squash tree, parent, DCO message
+   and GitHub signature were verified. Post-merge CI `41164827502`, editor `41164827661`
+   and landing `41164827498` all passed.
+2. PR35, assembly mode controls: merged as `9cecaf0f7b4ef0149d874fa5df27fadcd8e178ad`.
+   Accepted final head `05c77c0`, tree `ef401ad120ba64130208090ea75a6ef3f39e1633`.
+   All ten applicable exact-head jobs passed, including CI `41166237821`; final personal
+   review `5721105681` accepts the same tree. Actual squash parent/tree, DCO message and
+   GitHub signature were verified. Post-merge checks remain pending at this checkpoint.
+   The controls create assembly scaffolds, not the full calculator workflow.
 3. PR33 stays draft: `https://github.com/ayers-software-repair/assemblejs/pull/33`, head
    `2126810` (negative outcome recorded). Do not merge, adopt the runtime, retry unchanged,
    weaken assertions or patch vendor internals to conceal its Svelte failure.
@@ -109,16 +101,17 @@ proof worked but production licensing is not approved; do not silently switch to
 ## Owned worktrees and outside audit
 
 - `/tmp/assemblejs-academy-workspace-editor`: PR34 branch `codex/academy-workspace-editor`.
-  Own the final ledger/handoff and delivery here; do not edit it concurrently without notice.
+  Merged source editor; preserve its retained source and evidence.
 - `/tmp/assemblejs-academy-agent-controls`: PR35 branch `codex/academy-agent-controls`, clean
   after its accepted source `5413315`; its integration commit also completes its ledger row.
 - `/tmp/assemblejs-academy-current-source-preview`: PR33 draft branch, clean at `2126810`.
-- `/tmp/assemblejs-academy-source-changes`: branch `codex/academy-source-changes`, base
-  `f52e830`, with five untracked TypeScript prototypes under `packages/mcp/src/author/`:
-  source-change, source-file-path, read-source, write-source-change, apply-source-changes.
-  These are unfinished, untested and not integrated/exported; no PR exists. Temporary cleanup
-  after a partial write, raw-byte comparisons and ancestor-path conflicts still need correction
-  before testing. Do not treat them as a working API or overwrite them during parallel work.
+- `/tmp/assemblejs-academy-source-changes`: branch `codex/academy-source-changes`.
+  Adds shared bounded `read_source` and expected-base `apply_source_changes`, mirrored tests,
+  actual MCP registration, generated agent guidance and a minor MCP/check changeset.
+  All 39 focused source/protocol cases pass; stale preflight and temporary cleanup controls
+  were observed red before restoration. Source types/lint/organization/mirror/modules pass.
+  Independent verification, personal review and full hosted acceptance still gate delivery.
+  This is not a production editor bridge, transactional filesystem or runtime adoption.
 - Preserve all older `/tmp/assemblejs-*` worktrees and the original Academy checkout. No reset,
   stash, clean, add-all, history rewrite or broad process kill. Unrelated main checkout edits
   are not this task's changes.

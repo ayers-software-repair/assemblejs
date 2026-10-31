@@ -3,7 +3,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { ToolResult } from "./tool-result.js";
 
-/** A failed write may still leave a partial assembly, so clients must refresh after attempts. */
+/** A failed write may still leave a partial project change, so clients must refresh after attempts. */
 export function notifyAuthoring(
   server: Pick<McpServer, "sendResourceListChanged">,
   result: ToolResult,

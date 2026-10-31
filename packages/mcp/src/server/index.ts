@@ -16,3 +16,4 @@ export { createMcpServer } from "./create-mcp-server.js";
 export { registerAuthoringTools } from "./register-authoring-tools.js";
 export { registerPrompts } from "./register-prompts.js";
 export { registerAssemblyReviewTools } from "./register-assembly-review-tools.js";
+export { registerSourceTools } from "./register-source-tools.js";

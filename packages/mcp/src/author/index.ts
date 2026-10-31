@@ -8,3 +8,6 @@ export { placeOnPage } from "./place-on-page.js";
 export { checkRoot } from "./check-root.js";
 export type { AssemblyProposal } from "./assembly-proposal.js";
 export { AssemblyReview } from "./assembly-review.js";
+export type { SourceChange } from "./source-change.js";
+export { readSource } from "./read-source.js";
+export { applySourceChanges } from "./apply-source-changes.js";

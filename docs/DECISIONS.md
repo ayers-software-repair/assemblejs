@@ -8163,3 +8163,26 @@ package's installation. A stale installation caused pnpm to select an unrelated 
 peer variant while adding the dependency. Regenerating from the original machine-written
 lock without that installation metadata preserves the test toolchain; only the new root SDK
 importer is added. No compiler, dependency version or published package source changes.
+
+## 2026-10-30: editor and prepared features share guarded source writes
+
+The source editor and authored calculator need actual existing-file edits, not another
+tutorial filesystem. Add bounded read_source/apply_source_changes operations to the existing
+MCP authoring surface. The client retains reviewed before/after content and owns consent; the
+writing tool does not infer Plan/Approval/Auto or human approval. Validate all bases before
+writing, refuse linked/metadata paths, use exclusive additions and prepare replacements
+without truncating originals. Report completed and attempted paths after an I/O failure.
+No multi-file rollback, hostile-filesystem protection or cross-process atomic compare-and-swap
+is claimed. Actual check/build/preview still govern completion. The read-only inspector stays
+separate. This additive source increment selects no browser runtime or external-agent transport.
+
+Focused proof uses source aliases and the normal temporary-root cleanup with the automatic
+build-when-stale setup explicitly removed; no framework build, app server or browser runs on
+this seat. Whole package, packed-consumer and browser acceptance remain hosted gates. A
+readSync overload made the first test-type assertion invalid; a full call matcher now checks
+the actual five-argument read without indexing beyond the inferred mock tuple. Type/lint are
+verified separately from the 39 passing runtime cases.
+
+Filesystem behavior was checked against the Node22 filesystem documentation:
+https://nodejs.org/docs/latest-v22.x/api/fs.html. A prepared rename replaces a path; it is not
+a conditional compare-and-swap primitive. Source guards therefore state their actual limits.
