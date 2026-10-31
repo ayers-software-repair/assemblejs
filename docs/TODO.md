@@ -83,8 +83,21 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       and native review pass. At source head `abf7c89`, hosted modes `41195261111` passes all
       six cases and editor `41195261108` passes; personal source/artifact review is clear.
       The actual page payload preserves the manual paragraph and inert comment exactly.
-      PR50 remains gated on final-head CI and personal acceptance before merge; full lesson
-      snapshots/progress remain open.
+      PR50 merged as `82c0272` after personal review `5722513812` and all ten exact-head jobs.
+      Post-merge CI `41196768670`, modes `41196768709` and editor `41196768655` passed;
+      actual tree/parent/full DCO message/signature were independently verified. The initial
+      size failure was corrected without changing the 46,000-byte budget (actual: 45,963).
+      Full lesson snapshots/progress remain open.
+- [x] Implement unsaved-draft recovery on reload in the same tab. Owner: Academy
+      implementation chat. Exact-base recovery changes only buffers; conflicts preserve current
+      source and separate cached text. Unread storage offers Retry; malformed/oversized read
+      data exposes visible Discard stored draft. Explicit Save retains the provider's guards.
+      Nine recovery/all 92 component cases pass; four meaningful red controls were observed.
+      Corrected source `ed2aa91` passes modes `41199554446` (ten browser cases, four recovery)
+      and editor `41199554428` (34 focused cases and real browser proof). Independent source
+      and visual review is clear; final-head CI/personal acceptance still gates PR51 merge.
+      This is tab-local draft recovery, not snapshots, durable project/lesson progress or
+      completion/certificate evidence. No account or runtime adoption.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

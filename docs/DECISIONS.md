@@ -8563,3 +8563,84 @@ gate: `@asmjs/check` was 46,054 bytes against the unchanged 46,000-byte budget. 
 guidance while retaining tool names, exact bases, absence semantics, approval, failure/retry,
 confinement, transaction/hostile-filesystem limits and post-write verification. Only hosted
 CI may build/pack the corrected source. Final-head review and every required gate remain.
+
+## 2026-10-31 — Recover drafts on reload without writing the project
+
+PR50 merged as `82c0272`, actual reviewed tree `126e7d97329d66b14c624141ee9ffecbe1ed08c4`,
+sole parent `805ce56`, personal review `5722513812`, all ten exact-head jobs. Both Node versions
+passed 2,511 tests and all fourteen package pack/publish checks; the corrected check package
+measures 45,963 bytes under the unchanged 46,000-byte limit. Actual squash identities, full
+DCO/Conventional message and valid signature were independently verified. Automatic post-merge
+CI `41196768670`, modes `41196768709` and editor `41196768655` passed; personal post-merge
+source/log/artifact review is clear. This supersedes earlier pending PR50 checkpoints above.
+
+The next bounded resume item is unsaved editor draft recovery after reload in the same tab.
+Owner and done-when are recorded in TODO before source edits. Reuse existing editor buffers
+and expected-base provider saves. Cache only bounded draft/base text; matching-base recovery
+changes the editor buffer, not project files. A changed file keeps its actual current source
+and exposes the recovered draft separately for review. Failed or malformed storage must not
+claim recovery or silently discard its data. No recovery path writes the project; explicit
+Save retains its existing compare-and-write requirement.
+
+Use tab-local [sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage)
+for this reload-only scope. Its getter can be denied and data ends with the page session;
+[Web Storage](https://html.spec.whatwg.org/multipage/webstorage.html#the-storage-interface)
+also specifies failed writes and no localStorage locking guarantee. Do not imply cross-session
+project/progress persistence, source snapshots or verified lesson completion. Those remain
+separate open tasks, alongside the existing browser-runtime and external-agent holds.
+
+The matching-base recreation regression was observed losing the learner's text before recovery
+was added. A second regression caught storage-denial details disappearing after typing; the
+correction retains the actual error while blocking overwrite of unread recovery data. Eight
+focused recovery cases and all 91 workspace component cases pass, plus three path-boundary
+cases. Source lint/format, organization/mirror self-tests, modules, unused, duplication (3.23%),
+identity/headers and emoji pass. Independent complete source review is clear. Three new
+hosted real-MCP scenarios cover reload, exact writes, conflict review, keyboard/narrow layout,
+denied reads and quota failures; all retain strict console/page/network diagnostics. Fresh
+hosted and personal acceptance remain required. No local product build, app server or browser.
+
+Initial PR51 source head `e94b1b3` passed hosted modes `41198570202` (nine browser cases) and
+editor `41198570167`. Visual QA nevertheless found an empty Recovered draft/discard section
+when storage reads were denied: no cached text had been read. Preserve those successful
+initial receipts separately; they do not accept that UI state. A new visibility/retry control
+was observed red. Show Retry draft recovery for unread data instead. Retry rechecks storage,
+keeps newer in-memory edits separate, and restores a newly readable matching-base draft into
+the visible editor without writing the project. The existing expected-base Save is unchanged.
+Nine focused recovery cases pass; fresh complete source/hosted/personal acceptance remains.
+
+Independent source review then caught a distinct dead end: a fully read oversized record was
+also hidden behind Retry, which could only reject it again. The old source test clicked a
+hidden discard button programmatically. A visibility assertion was watched failing before
+correction. Distinguish unread storage, malformed read data and a valid recovered draft.
+Only unread storage offers Retry; read malformed/oversized data exposes an honest explicit
+Discard stored draft action, without rendering unbounded raw text. A fourth hosted case must
+prove that action is visible/keyboard-accessible and restores ordinary draft recovery without
+writing the project before Save. No cache or source is silently discarded.
+
+All ten initial `e94b1b3` jobs passed, including full CI `41198570173`, but the visual hold
+above remained. Corrected source passes all 92 component cases and scoped lint/format,
+organization/mirror self-tests, modules, unused, identity/headers and duplication (3.28%).
+Independent complete source review is clear. The corrected four-case hosted proof and
+personal visual acceptance remain required; the initial successful images do not replace them.
+
+Corrected source `ed2aa91`, tree `f3d1909d15cd6b018999f20f1876e4ade5233988`, passes hosted
+modes `41199554446` (66 focused cases and ten browser scenarios) and editor `41199554428`
+(34 focused cases and one browser scenario). All four recovery scenarios retain empty
+console/page/network diagnostics. Actual payloads show no automatic provider writes: the
+oversized case has three reads and exactly one explicit Save. The existing genuine workspace
+still completes six successful builds, quotes/composition and empty owned cleanup.
+
+Root and personal source/artifact/visual review are clear. The corrected denied views show
+Retry without claiming recovered text. The 390px oversized view exposes a keyboard-accessible
+Discard stored draft without rendering its 800001-character raw value; normal reload recovery
+works afterward. New and changed screenshots were personally viewed; original held images
+remain separate. Modes artifact `13042485671`, 1,783,789 bytes, has verified SHA-256
+`7b0c999f3e31a5d8b39cebdc7abb4e53bd1f6e2f3db8df832b51bfca3fb4a5a4`.
+
+This closes the bounded implementation/proof task in TODO, not full Academy persistence or
+completion. The closing docs-only head must receive its own exact-head CI and personal
+acceptance before the standing source-merge exception applies. Existing account/runtime,
+atomicity and administrative-closure holds remain unchanged.
+
+All ten corrected-source jobs at `ed2aa91` passed, including full CI `41199554443`, before
+this closing documentation change. The final-head and post-merge requirements remain.

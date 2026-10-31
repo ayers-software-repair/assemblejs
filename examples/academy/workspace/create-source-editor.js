@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { createDraftRecovery } from "./create-draft-recovery.js";
 import { highlightSource } from "./highlight-source.js";
 import { WorkspaceFiles } from "./workspace-files.js";
 
@@ -70,11 +71,18 @@ export function createSourceEditor(container, project, paths) {
       button.setAttribute("aria-current", String(path === active));
     }
   };
+  const drafts = createDraftRecovery(document, files, (path) => {
+    if (disposed || active !== path) return;
+    input.value = files.buffer(path).text;
+    status.textContent = "Recovered unsaved changes.";
+    refresh();
+  });
   const open = async (path) => {
     const ticket = ++opening;
     try {
       await files.open(path);
       if (disposed || ticket !== opening) return;
+      drafts.open(path);
       if (!buttons.has(path)) {
         const button = element("button", path);
         button.type = "button";
@@ -114,6 +122,7 @@ export function createSourceEditor(container, project, paths) {
   input.addEventListener("input", () => {
     if (!active) return;
     files.edit(active, input.value);
+    drafts.changed(active);
     refresh();
     status.textContent = files.buffer(active).dirty ? "Unsaved changes." : "No changes.";
   });
@@ -123,6 +132,7 @@ export function createSourceEditor(container, project, paths) {
     save.disabled = true;
     try {
       const result = await files.save(path);
+      drafts.changed(path);
       if (!disposed)
         status.textContent = result.dirty
           ? `Saved ${path}; newer edits remain unsaved.`
@@ -139,6 +149,7 @@ export function createSourceEditor(container, project, paths) {
     refresh();
     try {
       const buffer = await files.reload(path);
+      drafts.changed(path);
       if (!disposed && active === path) {
         input.value = buffer.text;
         status.textContent = `Reloaded ${path} from the project. Run checks to verify it.`;
@@ -151,7 +162,7 @@ export function createSourceEditor(container, project, paths) {
     }
   };
   reload.addEventListener("click", () => void reloadFile());
-  panel.append(tree, tabs, heading, label, save, reload, status);
+  panel.append(tree, tabs, heading, label, save, reload, status, drafts.element);
   container.append(panel);
   return {
     open,
@@ -163,6 +174,7 @@ export function createSourceEditor(container, project, paths) {
     destroy() {
       disposed = true;
       opening++;
+      drafts.destroy();
       panel.remove();
     },
   };

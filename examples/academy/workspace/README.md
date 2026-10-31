@@ -23,10 +23,11 @@ The project provider owns the real shared filesystem:
 The editor retains per-file buffers through navigation. Opening/editing does not write.
 A successful save advances only that buffer's base; edits typed while saving remain dirty.
 Failed saves retain the learner's draft and show the actual error. Saving does not run checks
-or claim that a visible preview is current. The final workspace still needs a production connection, combined feature/mode exercises,
-lesson checks, persistence and live-agent transport.
+or claim that a visible preview is current. The combined code/guidance/preview is described in
+[WORKSPACE_PREVIEW.md](WORKSPACE_PREVIEW.md). Full curriculum checks, durable project/progress
+persistence and a verified external-agent connection remain open.
 
-Twenty-three focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
+Focused Node/DOM/request cases cover actual temporary files. They cover saved bytes, stale-save
 refusal, in-flight edits, failed writes, retained tabs, late reads, markup escaping, disposal and split UTF-8 input.
 The hosted `academy source editor` job bundles the actual component and opens real copied
 Market calculator files through a bounded test-only HTTP provider. It verifies actual saved
@@ -72,11 +73,44 @@ Four focused provider cases cover the exact protocol requests, invalid/missing r
 drafts and malformed write acknowledgements. The acknowledgement control is red when validation
 is removed and green when restored. The existing hosted modes fixture adds an isolated editor
 route over the actual MCP server and canonical project. Its browser proof checks actual saved
-bytes and an outside edit through the real tools; hosted acceptance is still pending.
-
+bytes and an outside edit through the real tools. The provider was accepted in PR42 and
+later source increments retain that real-filesystem proof.
 
 The authored Market calculator controls and their bounded request grammar are described in
 [CALCULATOR_WORKFLOW.md](CALCULATOR_WORKFLOW.md). The editor also provides an explicit clean
 Reload file action for changes made through those shared tools. Unsaved drafts cannot be
 reloaded away; edits typed during the read are retained. This is an explicit refresh, not an
 automatic agent-notification subscription or a verified production connection.
+
+## Recover an unsaved draft after reload
+
+The editor keeps bounded draft/base text for reload in this tab and workspace URL using
+[sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage).
+Closing the tab ends that storage; this is not durable project or lesson-progress saving.
+Only the supplied paths are used, with at most 65536 UTF-8 bytes per base or draft value.
+Opening a matching-base draft restores the editor buffer without writing a project file.
+Save remains explicit and uses the original expected base; a later outside change still refuses.
+
+If the actual source changed, the current file stays in the editor and the recovered draft
+appears separately as read-only text. Copy/review it and merge manually. Discard stored draft
+removes that stored copy only; any current edits can then be kept for reload. No recovery path
+rebases a stale draft or applies it automatically. Denied reads and malformed records stay
+blocked rather than being overwritten by subsequent typing. Quota/storage errors keep useful
+text in memory and display the actual error without claiming the latest draft was persisted.
+When storage could not be read, Retry draft recovery checks it again without writing the
+project and keeps newer in-memory edits separate from an older recovered draft. No unread
+text is presented as a recovered draft. Read but malformed/oversized data instead exposes an
+explicit Discard stored draft action, even when its raw value is too large to display.
+A successful project Save remains valid even if draft storage is unavailable.
+
+Nine focused recovery cases cover matching/conflicting bases, malformed/bounded storage,
+denial/retry, quota, late edits during Save and redundant cached text. Four controls were
+observed failing before correction: lost drafts, lost error detail, a false empty-recovery
+panel and an inaccessible oversized-data discard action.
+
+At corrected source `ed2aa91`, modes `41199554446` passes all ten browser scenarios, including
+four recovery cases. Editor `41199554428` passes 34 focused cases and its real-browser proof.
+Actual reload writes nothing before Save; conflict selection/manual merge, denied/quota
+handling and visible keyboard discard of oversized data are verified. Root and independent
+personal source/artifact/visual review are clear. Final-head CI/personal acceptance remains
+required before merge. No local product build, server or browser ran.

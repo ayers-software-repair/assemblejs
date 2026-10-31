@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-10-31, after safeguard source and its site-delivery correction merged.
+Checkpoint: 2026-10-31, after PR50 saved-page continuity merged and post-merge proof passed.
 This file is a checkpoint, not a live claim about later GitHub state. Read current PR heads
 and jobs before merging. Accepted execution issue: #16, still open and labelled accepted.
 `docs/PLAN.md` section 4.3 and the unchecked `docs/TODO.md` rows govern remaining work.
@@ -270,13 +270,21 @@ PR49 merged as `805ce56`, tree `95e569018b3b54083f94281ca6842f6a4bcd29c9`, perso
 `5722323760`, all ten exact-head jobs. Post-merge CI `41192530493`, modes `41192530590` and
 editor `41192530499` passed; actual squash identities/DCO/signature were verified.
 
-Active source: `/tmp/assemblejs-academy-page-placement`, branch `codex/academy-page-placement`,
-based on that merge. Preserve saved prior page edits by reusing the CLI parser through a
-read-only MCP placement plan; retain exact bases and existing consent/check guards. Focused
-source/protocol/manual-edit cases and native review pass. Initial source head `abf7c89` passes
-hosted modes `41195261111` (all six cases) and editor `41195261108`; personal source/artifact
-review finds no implementation issue. The exact approved page change retains the saved manual
-paragraph and inert comment; six real builds/quotes/composition/324px layout/owned cleanup hold.
-Artifact `13040227130` has SHA-256 `188636ef89c7c2816985b3076636737169fdeca7983e0833a72820e2854782dd`.
-PR50 remains pending final-head checks/personal acceptance. No atomic snapshots, durable
-progress, resume, certificate or runtime adoption.
+PR50 merged as `82c0272`, tree `126e7d97329d66b14c624141ee9ffecbe1ed08c4`, parent `805ce56`,
+personal review `5722513812`, all ten exact-head jobs. Post-merge CI `41196768670`, modes
+`41196768709` and editor `41196768655` passed; actual squash message/DCO/signature and
+source/artifacts were independently verified. Saved page text survives all modes exactly.
+The initial 46,054-byte pack failure remains recorded; corrected size is 45,963 / 46,000.
+These receipts supersede older pending PR50 paragraphs, not the broader Academy holds.
+
+Active source: `/tmp/assemblejs-academy-draft-recovery`, branch `codex/academy-draft-recovery`,
+on that merge. Owner: this Academy chat. Tab-local unsaved-draft recovery implementation is
+verified at `ed2aa91`: nine recovery/all 92 component cases, independent source/visual review,
+modes `41199554446` (ten browser scenarios) and editor `41199554428` (34 focused cases) pass.
+Unread data offers Retry; known malformed/oversized data has a visible explicit discard action.
+No recovery writes the project or rebases a stale draft. Initial visually held images and all
+four red controls remain recorded. Corrected artifact `13042485671` has SHA-256
+`7b0c999f3e31a5d8b39cebdc7abb4e53bd1f6e2f3db8df832b51bfca3fb4a5a4`.
+PR51 remains gated on the closing docs-only head's CI and personal acceptance before merge.
+Durable project/lesson progress, snapshots, resume/certificate, verified external-agent
+connection and runtime adoption remain open.
