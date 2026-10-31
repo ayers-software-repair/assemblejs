@@ -69,22 +69,22 @@ one framework or in none, and each hydrated in the browser by its own framework.
   \`assemblejs://assembly/<name>\` for one assembly and where it is placed,
   \`assemblejs://rules\` for every rule with its reason, and \`assemblejs://contract\` for the
   three endpoints, their headers and the envelope, when an assembly is served from another server.
-- For a reviewable addition, \`plan_assembly\` returns exact proposed files without writing.
-  A new valid plan replaces this session's pending plan. In approval mode, show those changes
-  and obtain the person's approval before calling \`apply_assembly_plan\` with its id.
-  Reject with \`discard_assembly_plan\`. Applying refuses an occupied target and consumes the
-  plan; after a conflict, request and review a fresh plan. These tools add an assembly only;
-  they do not approve later edits or placement. The client controls whether a person approved.
+- \`plan_assembly\` returns exact new files without writing; a valid plan replaces this session's
+  pending plan. Show changes and obtain approval in approval mode before \`apply_assembly_plan\`
+  with its id. Reject with \`discard_assembly_plan\`. Applying refuses occupied targets and consumes
+  the plan; after conflict review a fresh plan. These tools add assemblies only, not later edits
+  or placement. The client obtains consent.
+- \`plan_page_placement\`: exact page before/after via the CLI parser; no writes, ambiguous neighbours refuse.
+  New assembly files may share its reviewed \`apply_source_changes\` batch. Run check.
 - Use \`read_source_version\` to observe the build fingerprint of source, config and package
   metadata. It is not an atomic snapshot or proof that checks, builds or behavior passed;
   dependencies, environment and remote servers are outside its scope.
-- Read actual source with \`read_source\`. For reviewed additions or replacements, call
-  \`apply_source_changes\` with exact before/after text; null before requires an absent file.
-  Show those changes and obtain the person's approval in approval mode. A stale base is refused;
-  inspect completed/attempted paths after a write failure and review fresh changes before retrying.
-  These operations edit source under src/ and assemblejs.config.ts, not generated files or host
-  metadata. They do not enforce a global mode, guarantee a multi-file transaction or protect
-  against hostile filesystem replacement. Run check and verify the actual preview afterward.
+- \`read_source\` and \`apply_source_changes\` cover only src/ and assemblejs.config.ts,
+  excluding generated/host metadata. Writes require exact reviewed before/after; null before
+  requires absence.
+  Show changes and obtain the person's approval in approval mode. Stale bases refuse; inspect
+  completed/attempted paths after failure and review fresh changes before retrying. No global mode enforcement,
+  multi-file transaction or hostile-filesystem protection. Run check and verify the actual preview.
 - Change the project with its tools: \`add_assembly\`, then \`place_assembly\` on a page or in
   another assembly's view. Then see what you made: \`render_assembly\` renders an assembly and
   \`compose_page\` composes a page by its name, under the policy its declaration writes, each

@@ -8520,3 +8520,46 @@ stable-source four-server recovery and Stop. Explicit Playwright/Knip entries se
 An optional local collection attempt lacked compiled MCP output; no local framework build,
 server or browser ran. Real hosted collection and behavior remain required. The normal hosted
 workflow builds current packages before probing; do not substitute source mocks for that proof.
+
+## 2026-10-31 — Preserve prior page lessons through a shared placement plan
+
+The canonical product-page restriction kept comment markers from masquerading as placements,
+but also refused harmless saved edits from an earlier lesson. The new manual-introduction
+regression was observed failing before correction. Reuse the CLI's actual `placeAssembly`
+and core placement parser in a confined, read-only `plan_page_placement` MCP tool; do not add
+an Academy HTML parser. Return exact before/after source and the resulting placement count.
+Refuse ambiguous named neighbours, invalid/linked/bounded source and malformed directives.
+A valid self-closing directive is accepted by the real parser; an initial test assumption to
+the contrary was corrected rather than changing framework grammar.
+
+The calculator requires one resulting placement, retains the four authored component files,
+and sends the existing reviewed five-file batch through unchanged expected-base writes.
+Plan and rejection still write nothing; Approval uses retained values; Auto plans afresh.
+Unknown component bodies still refuse customization. Earlier inert-comment regressions now
+exercise the actual backend parser, not a source-only fixture response. The hosted workspace
+probe must save a manual introduction plus inert anchor before building, then preserve them
+through all three modes without weakening real build, composition, quote or cleanup checks.
+At source head `abf7c89`, 28 focused MCP/parser/protocol/guidance cases and all source component
+suites pass. Source typecheck, scoped format/lint, organization/mirror self-tests, modules,
+unused, identity/headers/emoji and duplication (3.22%) pass. Native review is clear. Hosted
+modes `41195261111` passes all six browser cases; editor `41195261108` passes. Personal
+source/artifact review finds no actionable implementation finding: manual page save 910 to
+1001 bytes, then exactly one insertion to 1057 bytes; paragraph and complete inert comment
+remain byte-for-byte intact. Six real builds, actual quotes/composition, 324px layout and
+empty cleanup hold; only three expected owned stock-stream aborts occur. Artifact
+`13040227130` has SHA-256 `188636ef89c7c2816985b3076636737169fdeca7983e0833a72820e2854782dd`.
+Final-head CI and personal acceptance remain required before merge.
+
+PR49's identity increment merged as `805ce56` with accepted tree `95e569018b3b54083f94281ca6842f6a4bcd29c9`,
+personal review `5722323760`, all ten exact-head jobs, and green post-merge CI `41192530493`,
+modes `41192530590` and editor `41192530499`. Actual squash parent/tree/message/DCO/signature
+were verified. Its observation limits and PR33 runtime hold remain; this continuity change
+does not implement snapshots, durable progress, resume, certificate or runtime adoption.
+
+PR50 source head `abf7c89` passed all 2,511 tests on Node 24, then failed the actual packed-size
+gate: `@asmjs/check` was 46,054 bytes against the unchanged 46,000-byte budget. The docs-only
+`60f98be` head did not change that package. Preserve the failed job `124520067297` from run
+`41195261199`; no unchanged retry or budget increase. Shorten the generated source-tool
+guidance while retaining tool names, exact bases, absence semantics, approval, failure/retry,
+confinement, transaction/hostile-filesystem limits and post-write verification. Only hosted
+CI may build/pack the corrected source. Final-head review and every required gate remain.

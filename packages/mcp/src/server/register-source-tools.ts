@@ -3,6 +3,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { applySourceChanges } from "../author/apply-source-changes.js";
+import { planPagePlacement } from "../author/plan-page-placement.js";
 import { readSourceVersion } from "../author/read-source-version.js";
 import { readSource } from "../author/read-source.js";
 import type { ProjectRoot } from "../root/project-root.js";
@@ -16,6 +17,26 @@ export function registerSourceTools(server: McpServer, root: ProjectRoot): void 
     .min(1)
     .max(256)
     .describe("a regular file under src/ or assemblejs.config.ts");
+  server.registerTool(
+    "plan_page_placement",
+    {
+      title: "Plan a page placement without writing",
+      description:
+        "Returns one exact before/after page-source change using the CLI placement parser. Preserves other markup and ignores inert markers. Refuses missing or ambiguous neighbours and bounded/linked-source violations. The assembly may be planned alongside new files; this does not create it or prove the project valid. Review the change, apply exact bases with apply_source_changes and run check.",
+      inputSchema: {
+        page: z.string().min(1).max(256),
+        name: z.string().min(1).max(256),
+        position: z
+          .union([
+            z.strictObject({ at: z.enum(["start", "end"]) }),
+            z.strictObject({ after: z.string().min(1).max(256) }),
+            z.strictObject({ before: z.string().min(1).max(256) }),
+          ])
+          .default({ at: "end" }),
+      },
+    },
+    answering(({ page, name, position }) => planPagePlacement(root, page, name, position)),
+  );
   server.registerTool(
     "read_source_version",
     {

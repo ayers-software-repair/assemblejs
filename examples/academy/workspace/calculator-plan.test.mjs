@@ -51,7 +51,9 @@ test("add proposes the four real calculator files and exact existing-page placem
     ),
   );
   assert.deepEqual([...fixture.files], before);
-  assert.ok(fixture.calls.every((call) => call.name === "read_source"));
+  assert.ok(
+    fixture.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)),
+  );
   assert.ok(Object.isFrozen(plan.changes) && plan.changes.every(Object.isFrozen));
 });
 
@@ -75,7 +77,7 @@ test("existing files, missing dependencies and ambiguous placement stop before w
     const before = [...f.files];
     await assert.rejects(calculatorPlan(f.client, f.recipe, "Add a calculator"));
     assert.deepEqual([...f.files], before);
-    assert.ok(f.calls.every((call) => call.name === "read_source"));
+    assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   }
 });
 
@@ -150,13 +152,16 @@ test("a title marker in a manual comment cannot stand in for the actual heading"
   await assert.rejects(calculatorPlan(f.client, f.recipe, 'Call calculator "New title"'));
 });
 
-test("a buy-box line inside an HTML comment cannot receive a live placement", async () => {
+test("a shared placement refusal is reported without writing", async () => {
   const f = calculatorFixture();
-  f.files.set(
-    "src/pages/product/product.html",
-    '<!--\n          <assembly name="buy-box"></assembly>\n-->\n',
-  );
-  await assert.rejects(calculatorPlan(f.client, f.recipe, "Add a calculator"));
+  const before = [...f.files];
+  const call = f.client.callTool.bind(f.client);
+  f.client.callTool = (request) =>
+    request.name === "plan_page_placement"
+      ? f.answer(null, false, ["no live buy-box placement"])
+      : call(request);
+  await assert.rejects(calculatorPlan(f.client, f.recipe, "Add a calculator"), /no live buy-box/);
+  assert.deepEqual([...f.files], before);
 });
 
 test("a preset marker in a comment cannot replace an unrelated manual expression", async () => {
@@ -169,4 +174,42 @@ test("a preset marker in a comment cannot replace an unrelated manual expression
     ) + "\n// {[1, 3, 6].map((value) => (\n",
   );
   await assert.rejects(calculatorPlan(f.client, f.recipe, "Use presets 2, 4, 8"));
+});
+
+test("a manual page edit survives the proposed calculator placement", async () => {
+  const f = calculatorFixture();
+  const path = "src/pages/product/product.html";
+  const manual = f.page.replace(
+    '<main class="page">',
+    '<main class="page">\n      <p>My shop introduction.</p>',
+  );
+  f.files.set(path, manual);
+  const before = [...f.files];
+  const plan = await calculatorPlan(f.client, f.recipe, "Add a calculator");
+  assert.equal(plan.changes[4].before, manual);
+  assert.match(plan.changes[4].after, /My shop introduction/);
+  assert.match(plan.changes[4].after, /name="price-calculator"/);
+  assert.deepEqual([...f.files], before);
+});
+
+test("malformed or repeated placement acknowledgements never authorize writes", async () => {
+  for (const result of [
+    null,
+    { placed: "1" },
+    { placed: 0 },
+    {
+      placed: 2,
+      change: { path: "src/pages/product/product.html", before: "a", after: "b" },
+    },
+    { placed: 1, change: { path: "wrong", before: "a", after: "b" } },
+    { placed: 1, change: { path: "src/pages/product/product.html", before: "a", after: "a" } },
+  ]) {
+    const f = calculatorFixture();
+    const before = [...f.files];
+    const call = f.client.callTool.bind(f.client);
+    f.client.callTool = (request) =>
+      request.name === "plan_page_placement" ? f.answer(result) : call(request);
+    await assert.rejects(calculatorPlan(f.client, f.recipe, "Add a calculator"));
+    assert.deepEqual([...f.files], before);
+  }
 });

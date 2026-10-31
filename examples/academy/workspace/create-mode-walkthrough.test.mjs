@@ -40,7 +40,7 @@ test("short practice follows actual Plan, exact rejection, revised approval and 
   assert.match(f.heading(), /^1\./);
   f.modes.mode("plan");
   await rejectFirst(f);
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   await f.modes.request('Add a calculator called "Coffee total"');
   assert.match(f.heading(), /^3\./);
   await f.modes.approve();
@@ -75,7 +75,7 @@ test("mode changes and replayed receipts cannot complete another practice step",
   await f.modes.request('Add a calculator called "Different proposal"');
   await f.modes.reject();
   assert.match(f.heading(), /^2\./);
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   f.close();
 });
 
@@ -143,7 +143,7 @@ test("rejecting in Plan does not teach Approval; a fresh Plan recovers without c
   f.modes.mode("approval");
   await f.modes.reject();
   assert.match(f.heading(), /^3\./);
-  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  assert.ok(f.calls.every((call) => ["read_source", "plan_page_placement"].includes(call.name)));
   f.close();
 });
 

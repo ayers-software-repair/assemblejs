@@ -38,8 +38,19 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     const preview = page.frameLocator('iframe[title="Application preview"]');
     const calculator = preview.locator('assembly-root[data-name="price-calculator"]');
     await expect(input).toHaveValue(fixture.calculatorSource("product.html"));
+    const introduction = "My shop introduction.";
+    const editedPage = fixture
+      .calculatorSource("product.html")
+      .replace(
+        '<main class="page">',
+        `<main class="page">\n      <p>${introduction}</p>\n<!--\n          <assembly name="buy-box"></assembly>\n-->`,
+      );
+    await input.fill(editedPage);
+    await editor.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(editor.getByRole("status")).toContainText("Saved");
     await build.click();
     await expect(status).toContainText("Build completed", { timeout: 60000 });
+    await expect(preview.getByText(introduction, { exact: true })).toBeVisible();
     await expect(preview.locator("assembly-root")).toHaveCount(12);
     await expect(preview.locator("assembly-root[data-failed]")).toHaveCount(0);
     await expect(preview.locator("assembly-root[data-remote]")).toHaveCount(6);
@@ -130,6 +141,7 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await expect(status).toContainText("Build completed", { timeout: 45000 });
     await expect(calculator).toHaveAttribute("data-mounted", "");
     await expect(calculator.getByRole("heading", { name: "Manual estimate" })).toBeVisible();
+    await expect(preview.getByText(introduction, { exact: true })).toBeVisible();
     await expect(calculator.getByRole("button", { name: "4 items", exact: true })).toBeVisible();
     await expect(calculator.getByRole("button", { name: "3 items", exact: true })).toHaveCount(0);
     await expect(preview.locator("assembly-root[data-failed]")).toHaveCount(0);

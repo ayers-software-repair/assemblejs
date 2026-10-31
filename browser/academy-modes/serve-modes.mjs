@@ -108,6 +108,7 @@ export async function serveModes(kind = "modes") {
               "check",
               "read_source",
               "read_source_version",
+              "plan_page_placement",
               "apply_source_changes",
             ].includes(given?.name)
           )

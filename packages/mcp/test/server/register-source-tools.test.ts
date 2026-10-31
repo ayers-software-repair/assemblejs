@@ -32,7 +32,12 @@ const call = async (name: string, args: Record<string, unknown>) => {
 it("reads actual source and applies exact guarded edits through the existing protocol", async () => {
   writeFileSync(join(dir, "src/view.html"), "<p>Before</p>\n");
   expect((await client.listTools()).tools.map((tool) => tool.name)).toEqual(
-    expect.arrayContaining(["read_source", "read_source_version", "apply_source_changes"]),
+    expect.arrayContaining([
+      "read_source",
+      "read_source_version",
+      "plan_page_placement",
+      "apply_source_changes",
+    ]),
   );
   expect(await call("read_source", { path: "src/view.html" })).toEqual({
     ok: true,
@@ -94,4 +99,45 @@ it("reads current source identity through the actual protocol without returning 
   writeFileSync(join(dir, "src/view.html"), "outside edit");
   expect(await call("read_source_version", {})).not.toEqual(before);
   expect(readFileSync(join(dir, "src/view.html"), "utf8")).toBe("outside edit");
+});
+
+it("plans a page edit through the real protocol without writes or notifications", async () => {
+  mkdirSync(join(dir, "src/pages/product"), { recursive: true });
+  const path = join(dir, "src/pages/product/product.html");
+  const before = '<p>My introduction.</p>\n<assembly name="buy-box"></assembly>';
+  writeFileSync(path, before);
+  let notices = 0;
+  client.setNotificationHandler(ResourceListChangedNotificationSchema, () => {
+    notices++;
+  });
+  await client.listResources();
+  expect(
+    await call("plan_page_placement", {
+      page: "product",
+      name: "price-calculator",
+      position: { after: "buy-box" },
+    }),
+  ).toMatchObject({
+    ok: true,
+    result: {
+      placed: 1,
+      change: {
+        path: "src/pages/product/product.html",
+        before,
+        after: expect.stringContaining('name="price-calculator"'),
+      },
+    },
+  });
+  const malformed = await client.callTool({
+    name: "plan_page_placement",
+    arguments: {
+      page: "product",
+      name: "price-calculator",
+      position: { after: "buy-box", before: "buy-box" },
+    },
+  });
+  expect(malformed.isError).toBe(true);
+  await client.listResources();
+  expect(notices).toBe(0);
+  expect(readFileSync(path, "utf8")).toBe(before);
 });

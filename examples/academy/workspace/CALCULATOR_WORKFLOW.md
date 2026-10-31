@@ -2,12 +2,13 @@
 
 This private Academy increment changes actual supplied Market source through the same MCP
 source tools as the editor and agents. It is guided authoring, not a real AI model, selected
-browser runtime, production connection or completed lesson/preview.
+browser runtime, production connection or completed curriculum. The combined workspace has
+a genuine saved-source preview backed by the hosted four-server proof.
 
 `createCalculatorControls(container, client, recipe)` shows a request field, supported examples,
 Plan/Approval/Auto, complete before/after source and actual tool diagnostics. Load
 `assembly-controls.css`. The client must already be connected. The recipe contains the four
-canonical Market calculator files and its canonical `product.html`, read from the repository;
+canonical Market calculator files, read from the repository;
 it is authored application content, not arbitrary learner-uploaded code.
 
 Supported requests include:
@@ -35,14 +36,18 @@ consumes local permission; lost/partial/malformed replies cannot authorize a rep
 checks every base before writing and reports actual partial outcomes without promising rollback
 or cross-process atomic compare-and-swap. Consent remains the client's responsibility.
 
-Guided placement requires the exact supplied starter page: the canonical product page with
-its one calculator placement removed. An altered page is refused. Customization requires the
-canonical calculator body after normalizing only the supported title/preset settings; trailing
-single-line comments are preserved. Unknown executable edits, changed layout or fake markers in
-comments are refused. This bounded ownership avoids guessing at arbitrary JSX/HTML. Other
-manual files remain untouched. Broader edits belong to manual work or the learner's agent.
-Earlier curriculum exercises that change this page will need their own reviewed authored
-baseline before this workflow can be counted as integrated lesson acceptance.
+Guided placement reads the current product page through `plan_page_placement`, which reuses
+the CLI placement parser. The exact proposed before/after values preserve existing markup,
+line endings and indentation. Inert comment/script examples are not live anchors. The
+buy-box must occur exactly once, and the calculator must not already be placed. Missing,
+malformed, linked, oversized or ambiguous pages refuse without writes. Earlier saved page
+edits therefore remain part of the reviewed expected base; a later outside edit still causes
+the existing apply preflight to refuse the stale proposal.
+
+Customization requires the canonical calculator body after normalizing only supported
+title/preset settings; trailing single-line comments are preserved. Unknown executable edits,
+changed layout or fake markers in comments are refused. Broader component changes belong to
+manual work or the learner's agent. No arbitrary JSX transformation is inferred.
 
 The editor's explicit Reload file reads actual current source into a clean idle buffer.
 It is disabled for unsaved edits. A draft typed during a reload survives; concurrent reloads
@@ -51,30 +56,30 @@ Saving/reloading does not claim that checks or a visible preview are current.
 
 ## Proof boundary
 
-Twenty-one focused request/plan/controller/DOM cases cover canonical file/placement proposals,
-reject/revise/exact approval, fresh Auto requests, actual refusal/partial diagnostics, busy
-serialization, escaped source and supported customization. Independent review found comment
-markers mistaken for live code; three exact regressions were red before the authored-shape
-restriction and pass afterward. Mode-switch auto-apply and reload-overwrite controls were
-also observed red before restoring the guards. Existing buffer/editor cases include clean
-reload and in-flight draft retention. Three selection regressions also cover same-file reselect,
-away-and-back and another-file selection; the first two were watched reverting an agent edit
-on a subsequent guarded Save before the active-file projection was corrected.
+Source-only cases cover proposals without writes, manual-page continuity, malformed tool
+acknowledgements, exact approval, rejection/revision, Auto and stale expected bases. Actual
+backend/protocol cases exercise the shared parser with inert markers, CRLF, ambiguous anchors,
+confinement and size limits. The earlier manual-page continuity regression was observed red
+under the canonical-page restriction. Source-only fixture responses are not parser proof.
 
-The hosted-only modes fixture copies the actual Market source/config/package metadata into
-its disposable project, removes the calculator and placement, preserves generated agent-tool
-metadata, and links the already installed Market/source-tooling dependencies into its own
-dependency directory. Its bounded localhost transport exposes only the existing permitted MCP
-tools. The new browser scenario exercises real planning, rejection, revised approval, Auto,
-manual Save, stale approval refusal, refreshed review and clean Reload, with actual file bytes,
-real project checks, screenshots and strict diagnostics. The first hosted run (`41170315559`,
-`09b80fe`) applied all five reviewed files, then the real check refused a retained MCP registration whose dependency was dropped by the fixture's Market
-manifest copy. The fixture now merges the generated declarations and installs real links,
-including MCP, without changing that check. Auto/manual/stale/final Reload were not reached
-in that failed run. Corrected hosted/personal acceptance is pending.
-No local framework/product build, app server or browser runs on this seat. This source proof
-starts no Market application server and substitutes no iframe for a framework preview.
+The hosted-only modes fixture copies actual Market source/config/package metadata and removes
+the feature being taught. It preserves generated agent-tool declarations and links actual
+installed dependencies. Its bounded localhost transport exposes only permitted MCP tools.
+PR43's initial run `41170315559` failed the real check because the fixture dropped a retained
+MCP dependency; the correction and all later source/browser/visual gates passed before merge
+`5325ca1`. PR44 then proved genuine saved-source preview, composition, quotes, manual edits,
+Auto, keyboard/narrow layout, Stop and in-flight build cleanup before merge `d11c4b3`.
 
-Full lesson integration, live preview/build acceptance, runtime isolation/notices, verified
-external-agent connection, persistence/resume and certificate gating remain open. PR33's
-recorded current-source Svelte runtime failure remains held.
+The continuity increment extends that same hosted workflow: save a page introduction and an
+inert buy-box example before the first build, then retain them through Plan, reject/revised
+approval and Auto. At PR50 source head `abf7c89`, modes `41195261111` passed all six browser
+scenarios and personal source/artifact review found no implementation finding. The actual
+approved page edit adds only the calculator directive to the saved manual page. Six real
+builds, quotes/composition, narrow layout and owned cleanup pass. Final-head CI and personal
+acceptance remain required before merge. Local source tests run no product build, application
+server or browser.
+
+Full lesson checks, snapshots, persistence/resume, certificate gating and a verified external
+agent connection remain open. Observed source-version checks refuse detected changes around
+preview operations; they are not atomic snapshots or durable lesson evidence. PR33's recorded
+current-source Svelte runtime failure remains held; no runtime selection follows from this work.

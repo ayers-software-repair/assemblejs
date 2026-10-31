@@ -1,6 +1,6 @@
 # Supplied-project workspace and genuine preview
 
-Source increment in progress after merged PR43. This combines the accepted guided calculator
+Accepted workspace foundation from PR44, extended by PR49 source-identity checks. It combines the guided calculator
 and source editor beside an actual application URL. It is not a selected browser runtime,
 publicly delivered Academy, production MCP bridge or safe multi-tenant execution service.
 PR33's browser-runtime failure and final adoption hold remain unchanged.
@@ -35,7 +35,7 @@ its own application and forms. It receives no top-navigation, popup or download 
 explains why script permission plus same-origin permission must not share the parent's origin.
 These browser boundaries do not sandbox a Node process or authorize public untrusted execution.
 
-The hosted-only adapter is being added to the existing modes fixture. It uses real CLI builds
+The hosted-only adapter runs in the existing modes fixture. It uses real CLI builds
 and owned Node processes for the four actual Market servers. Abort and readiness deadlines
 use the documented [Node 22 cancellation APIs](https://raw.githubusercontent.com/nodejs/node/v22.x/doc/api/globals.md)
 and [child-process lifecycle](https://raw.githubusercontent.com/nodejs/node/v22.x/doc/api/child_process.md). Its copied project opts into
@@ -45,10 +45,13 @@ frame-src restriction, exact Origin check on writing/build endpoints, actual res
 checks, bounded process startup/build/shutdown and cleanup evidence. No blanket CSP removal,
 fake successful preview, local app server/browser or new vendor-runtime experiment is permitted.
 
-Current proof: seven source/DOM workspace cases and existing editor cases pass. Actual hosted
-application/quote/composition behavior, Stop and shutdown-during-build proof, independent source
-review and personal visual review are still pending. Full curriculum, progress/resume,
-certificate and verified external-agent connection remain open.
+PR44 merged as `d11c4b3` after independent/personal source and visual review plus all eight
+exact-head jobs. Its hosted proof verifies real application/quote/composition behavior, six
+builds, keyboard/narrow layout, Stop and shutdown during an actual in-flight CLI build.
+PR49 merged as `805ce56` after all ten exact-head jobs and personal review; its additional
+hosted scenario proves an outside source change refuses preview before building, followed by
+stable-source recovery and cleanup. Post-merge CI/modes/editor also passed for both increments.
+Full curriculum, progress/resume, certificate and verified external-agent connection remain open.
 
 Preview refresh now observes the actual build fingerprint through `read_source_version`
 before checking, after checking and after the real build. A changed or unavailable identity
