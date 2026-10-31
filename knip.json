@@ -15,9 +15,15 @@
         "browser/landing-proof/landing.probe.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",
-        "browser/build-examples.mjs"
+        "browser/build-examples.mjs",
+        "browser/academy-modes/modes.probe.ts",
+        "examples/academy/workspace/*.test.mjs"
       ],
-      "project": ["scripts/**/*.mjs", "browser/**/*.{ts,tsx,mjs}"],
+      "project": [
+        "scripts/**/*.mjs",
+        "browser/**/*.{ts,tsx,mjs}",
+        "examples/academy/workspace/*.{js,mjs}"
+      ],
       "ignoreDependencies": [
         "@arethetypeswrong/cli",
         "publint",
