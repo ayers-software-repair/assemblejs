@@ -3,9 +3,13 @@
 /* global document, crossOriginIsolated */
 import { Vivari } from "@vivari/core";
 import { boundedOperation } from "./bounded-operation.js";
+import { runBuiltPreview } from "./run-built-preview.js";
+import { installFrameworkSource } from "../academy-open-preview-research/install-framework-source.js";
+import { verifyFrameworkSource } from "../academy-open-preview-research/verify-framework-source.js";
 
 const status = document.querySelector("#status");
 const result = document.querySelector("#result");
+const preview = document.querySelector("#preview");
 if (!status || !result) throw new Error("incomplete framework-build fixture");
 const records = [];
 const renderers = ["preact", "react", "vue", "svelte", "solid", "lit"];
@@ -22,8 +26,9 @@ const report = (phase) => {
   terminal = phase === "passed" || phase === "failed";
 };
 async function command(program, args, options = {}, expected = 0) {
-  const child = await boundedOperation(runtime.spawn(program, args, options), "spawn");
-  const record = { program, args, output: "", exit: null };
+  const configured = options;
+  const child = await boundedOperation(runtime.spawn(program, args, configured), "spawn");
+  const record = { program, args, environment: configured.env, output: "", exit: null };
   records.push(record);
   report("running");
   const reading = child.output.pipeTo(
@@ -54,7 +59,15 @@ const write = (path, text) => boundedOperation(runtime.fs.writeFile(path, text),
 try {
   if (!crossOriginIsolated) throw new Error("isolated research origin required");
   report("booting");
-  runtime = await boundedOperation(Vivari.boot({ serviceWorkerUrl: false }), "boot", 30000);
+  runtime = await boundedOperation(
+    Vivari.boot({
+      serviceWorkerUrl: preview ? "/sw.js" : false,
+      documentIsolationPolicy: "none",
+      devtools: false,
+    }),
+    "boot",
+    30000,
+  );
   const npm = await command("npm", ["--version"]);
   if (npm.trim() !== "10.9.2") throw new Error(`unexpected npm: ${npm}`);
   const node = await command("node", ["--version"]);
@@ -66,20 +79,35 @@ try {
     npmVersion: npm.trim(),
     nativeBuildNotVerified: true,
   });
-  await command("npm", [
-    "exec",
-    "--yes",
-    `--package=@asmjs/cli@${version}`,
-    "--",
-    "assemblejs",
-    "new",
-    root,
-  ]);
+  const delivery = preview ? await installFrameworkSource(runtime, root) : undefined;
+  if (!delivery) {
+    await command("npm", [
+      "exec",
+      "--yes",
+      `--package=@asmjs/cli@${version}`,
+      "--",
+      "assemblejs",
+      "new",
+      root,
+    ]);
+  }
   const packagePath = `${root}/package.json`;
   const pkg = JSON.parse(await read(packagePath));
   for (const dependencies of [pkg.dependencies, pkg.devDependencies]) {
     for (const name of Object.keys(dependencies))
       if (name.startsWith("@asmjs/")) dependencies[name] = version;
+  }
+  if (delivery) {
+    for (const [name, reference] of Object.entries(delivery.references)) {
+      if (Object.hasOwn(pkg.dependencies, name) || name.startsWith("@asmjs/renderer-"))
+        pkg.dependencies[name] = reference;
+      else pkg.devDependencies[name] = reference;
+    }
+    records.push({
+      sourceCommit: delivery.inventory.sourceCommit,
+      sourceTree: delivery.inventory.sourceTree,
+      sourcePackages: delivery.inventory.packages,
+    });
   }
   pkg.devDependencies.typescript = "6.0.3";
   pkg.devDependencies["@types/node"] = "26.4.1";
@@ -94,7 +122,9 @@ try {
       "--save-exact",
       "--fetch-retries=0",
       "--fetch-timeout=20000",
-      ...[...renderers, "templates"].map((name) => `@asmjs/renderer-${name}@${version}`),
+      ...(delivery
+        ? []
+        : [...renderers, "templates"].map((name) => `@asmjs/renderer-${name}@${version}`)),
       "preact@11.0.0",
       "react@19.2.8",
       "react-dom@19.2.8",
@@ -107,6 +137,10 @@ try {
     ],
     { cwd: root },
   );
+  if (delivery)
+    records.push({
+      installedSource: await verifyFrameworkSource(runtime, delivery.inventory, root),
+    });
   const effectivePackages = {};
   for (const name of ["@asmjs/core", "@asmjs/cli", "esbuild", "typescript"]) {
     const data = JSON.parse(await read(`${root}/node_modules/${name}/package.json`));
@@ -123,6 +157,25 @@ try {
     throw new Error("compiler missed the deliberate type error");
   await write(typePath, "export const quantity: number = 1;\n");
   await command("node", typeArgs, { cwd: root });
+  if (preview) {
+    const response = await boundedOperation(fetch("/preview-shims.json"), "preview CSP hashes");
+    if (!response.ok) throw new Error("preview CSP inventory unavailable");
+    const hashes = await boundedOperation(response.json(), "preview CSP inventory");
+    if (
+      !Array.isArray(hashes) ||
+      hashes.length !== 4 ||
+      !hashes.every((hash) => /^'sha256-[A-Za-z0-9+/]{43}='$/.test(hash))
+    )
+      throw new Error("invalid preview CSP inventory");
+    records.push({ previewShimHashes: hashes });
+    await write(
+      `${root}/assemblejs.config.ts`,
+      'import { contentSecurityPolicy, defineConfig } from "@asmjs/core";\n' +
+        "const policy = contentSecurityPolicy([]);\nconst script = \"script-src 'self'\";\n" +
+        'if (!policy.includes(script)) throw new Error("default script policy changed");\n' +
+        `export default defineConfig({ contentSecurityPolicy: policy.replace(script, script + ${JSON.stringify(" " + hashes.join(" "))}) });\n`,
+    );
+  }
   const cli = ["node_modules/@asmjs/cli/dist/bin.js"];
   for (const renderer of [...renderers, ...templates]) {
     await command(
@@ -130,6 +183,25 @@ try {
       [...cli, "add", "assembly", `${renderer}-probe`, "--renderer", renderer],
       { cwd: root },
     );
+  }
+  if (preview)
+    await write(
+      `${root}/src/assemblies/react-probe/react-probe.react.tsx`,
+      'import { useState } from "react";\nexport default function ReactProbe() {\n' +
+        "const [count, setCount] = useState(0);\nreturn <section><h2>react-probe</h2>" +
+        '<button type="button" onClick={() => setCount(count + 1)}>Preview count {count}</button></section>;\n}\n',
+    );
+  if (preview) {
+    const configPath = `${root}/assemblejs.config.ts`;
+    const config = await read(configPath);
+    try {
+      await write(configPath, "export default {\n");
+      const invalid = await command("node", [...cli, "check"], { cwd: root }, 1);
+      if (!invalid.includes("assemblejs.config.ts") || !invalid.includes("could not be read"))
+        throw new Error("static configuration inspection missed the deliberate syntax error");
+    } finally {
+      await write(configPath, config);
+    }
   }
   const pagePath = `${root}/src/pages/home/home.html`;
   const original = await read(pagePath);
@@ -154,6 +226,15 @@ try {
     throw new Error("build did not report all assemblies");
   const output = await read(`${root}/dist/server.js`);
   if (output.length === 0) throw new Error("built server is empty");
+  if (preview)
+    await runBuiltPreview(
+      runtime,
+      root,
+      records,
+      report,
+      preview,
+      document.querySelector("#stop-preview"),
+    );
   runtime.teardown();
   runtime = undefined;
   records.push({

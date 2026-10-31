@@ -15,7 +15,8 @@
         "browser/landing-proof/landing.probe.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",
-        "browser/build-examples.mjs"
+        "browser/build-examples.mjs",
+        "browser/academy-open-preview-research/built-preview.probe.ts"
       ],
       "project": ["scripts/**/*.mjs", "browser/**/*.{ts,tsx,mjs}"],
       "ignoreDependencies": [

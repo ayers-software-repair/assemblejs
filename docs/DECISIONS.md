@@ -8136,3 +8136,32 @@ source retained cancellation handles after settlement, so later edits/retries co
 already-settled response. Two source regressions (successful and failed HTTP replies) were
 watched red before clearing the matching handle in finally. Pending-request cancellation and
 late-response protection remain; no network error filter or browser assertion is relaxed.
+
+## 2026-10-30: checked AssembleJS merges use the reviewer-account exception
+
+The owner explicitly authorizes administrative source merges when independent source review,
+applicable QA and all required exact-head CI pass but GitHub's separate-account formal approval
+and last-push approval cannot be satisfied. No distinct reviewer account is available.
+Keep expected-head/base guards and verify the actual merged tree, message, signature and
+post-merge checks. This is not permission to bypass failed checks or unresolved findings,
+change the ruleset, publish a release or adopt/deploy a runtime. Do not re-request this same
+reviewer-identity exception. PR32 was merged as f52e830 after the direct owner ruling, all six
+CI jobs and personal final review 5720397701; its signed tree matches reviewed 2a0d161 exactly.
+
+## 2026-10-30: workspace preview tests current source, not an older registry package
+
+The async inspection correction does not change published next.2. The next integration uses
+actual current-source tarballs and the CLI's own canonical scaffold operation, with clean
+commit/tree identity, archive download/readback hashes, and installed metadata/all JavaScript
+module hashes. Refuse hidden nested framework copies; matching the shared numeric version
+alone cannot establish which code is running. No old sync-worker environment workaround is
+applied. Reuse the isolated preview lifecycle, static CSP shim inventory and cleanup path.
+The named question is actual current-source check/build/preview compatibility, not another
+runtime selection study. Existing distribution-notice and production-isolation limits remain;
+this grants no adoption, account, vendor contact, paid hosting or release.
+
+The TypeScript command-line probe alone cannot verify the migrated static reader in this
+runtime. The same single preview scenario also makes the config syntactically invalid,
+requires the real check to refuse it with its file/read diagnostic, then restores the valid
+config before the existing repair check/build. This closes that named acceptance gap without
+another browser matrix or weakening diagnostics.
