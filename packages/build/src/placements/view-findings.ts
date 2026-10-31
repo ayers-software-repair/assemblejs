@@ -46,19 +46,31 @@ export async function viewFindings(
   let pug: { readonly loaded: PugCompiler | undefined } | undefined;
   const pugFor = (renderer: string): PugCompiler | undefined =>
     renderer === "pug" ? (pug ??= { loaded: loadPug(root) }).loaded : undefined;
-  for (const assembly of assemblies) {
+  // Capture every input before yielding: an edit reverted during compilation is still an edit.
+  const inputs = assemblies.map((assembly) => {
     const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
+    const found = leadsOut(root, file)
+      ? undefined
+      : isStaticView(assembly.renderer)
+        ? { modules: [file], outside: [] }
+        : viewModules(root, file);
+    const sources = (found?.modules ?? []).map((module) => {
+      try {
+        return { module, source: readInside(root, module) };
+      } catch (error) {
+        return { module, error };
+      }
+    });
+    return { assembly, found, sources };
+  });
+  for (const { assembly, found, sources } of inputs) {
     const wrong = (rule: ProjectProblem["rule"], message: string, fix: string): void => {
       problems.push({ path: assembly.view, rule, message: `"${assembly.name}" ${message}`, fix });
     };
-    // A view that leads out of the project is not opened. Where the project names it says so.
-    if (leadsOut(root, file)) {
+    if (found === undefined) {
       unread.add(assembly.name);
       continue;
     }
-    const found = isStaticView(assembly.renderer)
-      ? { modules: [file], outside: [] }
-      : viewModules(root, file);
     for (const written of found.outside) {
       wrong(
         "a-project-stays-inside-its-root",
@@ -69,13 +81,15 @@ export async function viewFindings(
     let read: ViewPlacements;
     try {
       const modules: ViewPlacements[] = [];
-      for (const module of found.modules) {
+      for (const input of sources) {
+        const { module } = input;
         try {
+          if ("error" in input) throw input.error;
           modules.push(
             await readViewPlacements(
               module,
               assembly.renderer,
-              readInside(root, module),
+              input.source,
               pugFor(assembly.renderer),
             ),
           );

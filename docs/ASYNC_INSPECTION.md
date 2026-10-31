@@ -25,6 +25,9 @@ the result. Resolve collections before consuming them; the framework retains dia
 `registerResources`, `registerAuthoringTools` and `createMcpServer` retain synchronous signatures;
 the resource callbacks await descriptions before serializing them.
 
+Placement inspection captures confined module lists and source text before its first compiler
+await, so a transient edit reverted during compilation cannot change the validated graph.
+
 Compiler syntax diagnostics retain their text and source positions. Existing wrappers continue
 to turn the same specified failures into unread markers or findings. Source inspection remains
 static: declarations are not imported or evaluated. Application bundling still uses esbuild.

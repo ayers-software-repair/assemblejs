@@ -8079,3 +8079,9 @@ synchronous helper contracts are replaced together; no compatibility compiler or
 parser is added. Rollback is a source revert of the coordinated change before any publication;
 there is no stored-data migration. This approval grants no runtime adoption, spending, vendor
 contact, release tag, npm publication, shared-router change or stable promotion.
+
+The preservation probe found that comparing files before/after async validation was insufficient:
+a child view could change for one compiler read and revert before the final comparison, leaving
+a transient graph. Capture all confined module lists and text/errors before the first await,
+then process those inputs in their original order. The regression was watched failing before
+this correction and passing after it; this is not a global filesystem transaction claim.

@@ -1,12 +1,29 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import type * as Esbuild from "esbuild";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import { discoverAssemblies, unreadPlacements, viewFindings } from "@asmjs/build";
 import { linkedProject } from "../fixtures/linked-project.js";
 import { templatedProject } from "../fixtures/templated-project.js";
+
+const afterTransform = vi.hoisted(() => ({ run: undefined as (() => void) | undefined }));
+vi.mock("esbuild", async (original) => {
+  const actual = await original<typeof Esbuild>();
+  return {
+    ...actual,
+    transform: async (...args: Parameters<typeof Esbuild.transform>) => {
+      const result = await actual.transform(...args);
+      afterTransform.run?.();
+      return result;
+    },
+  };
+});
+afterEach(() => {
+  afterTransform.run = undefined;
+});
 
 const findings = async (files: Record<string, string>) => {
   const root = mkdtempSync(join(tmpdir(), "view-findings-"));
@@ -31,6 +48,29 @@ const templated = async (files: Record<string, string>) => {
   );
   return await viewFindings(root, discoverAssemblies(root).assemblies);
 };
+
+it("freezes placement sources before compiler awaits, including an edit reverted during validation", async () => {
+  const root = mkdtempSync(join(tmpdir(), "placement-reverted-"));
+  const child = join(root, "src/assemblies/b/b.react.tsx");
+  const source =
+    'import { Slot } from "@asmjs/renderer-react/client"; export default () => <Slot name="a" />;';
+  for (const name of ["a", "b"]) mkdirSync(join(root, "src/assemblies", name), { recursive: true });
+  writeFileSync(join(root, "src/assemblies/a/a.react.tsx"), "export default () => null;");
+  writeFileSync(child, source);
+  let transformed = 0;
+  afterTransform.run = () => {
+    transformed += 1;
+    writeFileSync(child, transformed === 1 ? "export default () => null;" : source);
+  };
+  try {
+    const read = await viewFindings(root, discoverAssemblies(root).assemblies);
+    expect(transformed).toBe(2);
+    expect(readFileSync(child, "utf8")).toBe(source);
+    expect(read.placements.get("b")).toEqual([{ name: "a", view: "default" }]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
 
 describe("what every view in a project says it places", () => {
   it("is each view's placements by its assembly's name, a view only its render knows left out", async () => {
