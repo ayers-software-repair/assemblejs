@@ -92,3 +92,7 @@
     grid-column: auto;
   }
 }
+
+.academy-mode-walkthrough {
+  margin-block-end: 1rem;
+}

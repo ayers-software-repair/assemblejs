@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { callProjectTool } from "./call-project-tool.js";
 import { createCalculatorControls } from "./create-calculator-controls.js";
+import { createModeWalkthrough } from "./create-mode-walkthrough.js";
 import { createProjectFiles } from "./create-project-files.js";
 import { createSourceEditor } from "./create-source-editor.js";
 import { projectToolResult } from "./project-tool-result.js";
@@ -122,7 +123,10 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       }
     },
   };
-  const tutor = createCalculatorControls(guide, observed, recipe);
+  const practice = createModeWalkthrough(guide);
+  const tutor = createCalculatorControls(guide, observed, recipe, (state) =>
+    practice.update(state),
+  );
   editor = createSourceEditor(code, createProjectFiles(observed), paths);
   const refresh = async () => {
     if (disposed || busy || pending)
@@ -209,6 +213,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     stop: stopPreview,
     destroy() {
       disposed = true;
+      practice.destroy();
       tutor.destroy();
       editor.destroy();
       root.remove();

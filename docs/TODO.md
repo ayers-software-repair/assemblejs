@@ -55,13 +55,17 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       exact-head jobs and independent/personal source/browser/visual review; post-merge CI
       `41172060171`, modes `41172060144` and editor `41172060126` passed. Unknown shapes
       refuse; full lesson/preview integration remains open.
-- [ ] Combine supplied-project guided controls and editable code with a genuine application
-      preview. Source/DOM and bounded file-list proofs pass, including observed-red failed-check
-      and entry-limit controls. Actual hosted four-server composition, quotes, Stop and
-      shutdown-during-HTTP-build proof plus independent/personal review remain required.
-      Hosted geometry identified the search form overflowing a 324px frame (321px form,
-      353px document); it now wraps at available width. Corrected runtime/visual proof remains
-      required, with the original viewport and no-overflow assertion retained.
+- [x] Combine supplied-project controls/code with a genuine saved-project preview. PR44
+      merged as `d11c4b3` after native and personal review `5721755265` and all eight
+      exact-head jobs. Hosted modes `41178867226` verifies four actual servers, six builds,
+      composition, quotes, keyboard, 324px layout, Stop and HTTP-build cancellation. The
+      measured search-form overflow was corrected without widening/clipping the frame.
+      Post-merge CI `41179567297`, modes `41179567305` and editor `41179567296` passed.
+- [x] Implement short authored mode-practice tasks over actual controller operation receipts.
+      Eight practice cases and a controls observer case pass; a failed-check receipt bypass
+      was watched red. Mode-only/replayed actions, stale approval and failed checks cannot
+      advance practice. New hosted/native/personal acceptance remains required; this is
+      session-only practice, not current-revision lesson completion or saved progress.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in

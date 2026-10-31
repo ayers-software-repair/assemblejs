@@ -8290,3 +8290,32 @@ input and button can use separate rows within the actual available space. Do not
 clip the preview or remove its layout assertion. Record left-edge geometry and horizontal
 scroll offsets too, so future clicks cannot hide diagnostic evidence. PR44 is draft until
 this concrete layout correction and its relevant checks pass, then returns for personal review.
+
+## 2026-10-31: short mode practice observes actual operation results
+
+PR44 merged as `d11c4b39ed0d6076b1eb4f668bf96be4b3bc8f21` after all eight exact-head
+checks and final personal review `5721755265`. Actual squash tree `123f207`, parent `5325ca1`,
+DCO/Conventional message and valid GitHub signature were verified. Post-merge CI `41179567297`,
+modes `41179567305` and editor `41179567296` passed. Corrected artifact `13033004609` proves
+324/324 width, real quotes and cleanup; earlier failed artifacts remain retained.
+
+Continue the required mode-teaching queue with a short authored practice panel over the same
+calculator controls. Each task advances from an actual settled operation receipt, not a click,
+mode choice or parsed status text. Plan/reject must refer to the same proposal; revised approval
+must actually change its requested title; Auto must apply a fresh presets request. Only fully
+acknowledged writes and a valid passing check produce successful apply receipts. A deliberately
+bypassed failed-check condition advanced the guide incorrectly and its regression failed before
+restoration. Out-of-order work remains saved; no hidden reset or overwrite is introduced.
+
+This records session-only source-operation practice. It does not claim persisted/current-revision
+curriculum completion, successful application behavior from frame load, a certificate or an
+external-agent connection. Existing genuine application/quote/keyboard/layout/cleanup hosted
+proof is extended to assert the visible guide steps. Full lesson baselines, recovery/resume and
+completion gating remain open. The optional connection/runtime holds and PR33 are unchanged.
+
+Independent source review caught an effective-default edge: planning Add a calculator and
+then explicitly requesting its unchanged supplied title Order estimate counted as a revision.
+That exact regression was watched failing before normalizing the original request's absent
+title to the canonical Market default. Eight practice cases pass. Rejection must occur in
+Approval mode against the inspected Plan proposal; a mistaken Plan-mode rejection can recover
+with a fresh Plan without source writes. These task guards do not parse diagnostic prose.

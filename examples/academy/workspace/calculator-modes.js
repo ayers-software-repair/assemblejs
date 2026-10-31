@@ -11,6 +11,7 @@ export class CalculatorModes {
   #phase = "Ask for a supported calculator change.";
   #result;
   #check;
+  #receipt;
 
   constructor(client, recipe, changed = () => {}) {
     this.client = client;
@@ -26,6 +27,7 @@ export class CalculatorModes {
       phase: this.#phase,
       result: this.#result,
       check: this.#check,
+      receipt: this.#receipt,
     });
   }
 
@@ -45,6 +47,7 @@ export class CalculatorModes {
       this.changed(this.state);
       this.#pending = await calculatorPlan(this.client, this.recipe, text);
       this.#phase = "Plan ready. No files written.";
+      this.#receipt = Object.freeze({ kind: "planned", mode: this.#mode, proposal: this.#pending });
       if (this.#mode === "auto") await this.#apply();
     });
   }
@@ -57,12 +60,15 @@ export class CalculatorModes {
   async reject() {
     return this.#run(async () => {
       if (!this.#pending) throw new Error("request a new plan first");
+      const proposal = this.#pending;
       this.#pending = undefined;
+      this.#receipt = Object.freeze({ kind: "rejected", mode: this.#mode, proposal });
       this.#phase = "Proposal rejected. No files were written.";
     });
   }
 
   async #apply() {
+    this.#receipt = undefined;
     const pending = this.#pending;
     if (!pending) throw new Error("request and review a new plan first");
     // A lost or partial response consumes this permission; obtain fresh source before retrying.
@@ -99,10 +105,13 @@ export class CalculatorModes {
     this.#phase = this.#check.ok
       ? "Files and placement applied; project check passed. Build and live preview still require verification."
       : "Files applied; project check did not pass. Inspect its actual diagnostics.";
+    if (this.#check.ok)
+      this.#receipt = Object.freeze({ kind: "applied", mode: this.#mode, proposal: pending });
   }
 
   async #run(operation) {
     if (this.#busy) throw new Error("wait for the current operation");
+    this.#receipt = undefined;
     this.#busy = true;
     this.changed(this.state);
     try {

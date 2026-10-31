@@ -30,6 +30,8 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     const status = page.getByRole("status", { name: "Workspace status", exact: true });
     const editor = page.getByRole("region", { name: "Project code", exact: true });
     const guided = page.getByRole("region", { name: "Guided calculator", exact: true });
+    const practice = page.getByRole("region", { name: "Mode practice", exact: true });
+    await expect(practice.getByRole("heading")).toHaveText("1. Plan without writing");
     const mode = guided.getByRole("combobox", { name: "Agent mode" });
     const input = editor.getByRole("textbox", { name: "Source code" });
     const build = page.getByRole("button", { name: "Check & preview", exact: true });
@@ -64,11 +66,14 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     const before = fixture.calculatorSource("product.html");
     await guided.getByRole("button", { name: "Plan changes", exact: true }).click();
     await expect(guided.getByRole("status")).toHaveText("Plan ready. No files written.");
+    await expect(practice.getByRole("heading")).toHaveText("2. Reject the proposal");
     expect(fixture.calculatorSource("product.html")).toBe(before);
     expect(fixture.runtime.builds()).toHaveLength(4);
     await expect(page.locator("iframe")).toHaveCount(1);
     await mode.selectOption("approval");
+    await expect(practice.getByRole("heading")).toHaveText("2. Reject the proposal");
     await guided.getByRole("button", { name: "Reject proposal", exact: true }).click();
+    await expect(practice.getByRole("heading")).toHaveText("3. Revise and approve");
     await guided
       .getByRole("button", { name: 'Add a calculator called "Coffee total"', exact: true })
       .click();
@@ -77,6 +82,7 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     phase = "approved-source-change";
     await guided.getByRole("button", { name: "Approve changes", exact: true }).click();
     await expect(guided.getByRole("status")).toContainText("project check passed");
+    await expect(practice.getByRole("heading")).toHaveText("4. Try Auto");
     await expect(page.locator("iframe")).toHaveCount(0);
     await expect(input).toHaveValue(fixture.calculatorSource("product.html"));
     await build.click();
@@ -117,6 +123,7 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await guided.getByRole("button", { name: "Apply request and check", exact: true }).click();
     await expect(guided.getByRole("status")).toContainText("project check passed");
     await expect(input).toHaveValue(fixture.calculatorSource("price-calculator.react.tsx"));
+    await expect(practice.getByRole("heading")).toHaveText("You used all three modes");
     expect(await input.inputValue()).toContain("Manual estimate");
     expect(await input.inputValue()).toContain("[2, 4, 8].map");
     await build.click();
