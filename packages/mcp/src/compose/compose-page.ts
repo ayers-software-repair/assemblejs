@@ -46,10 +46,10 @@ export async function composePage(
   let route: string | undefined;
   try {
     template = inside(page.template);
-    policy = page.declaration === undefined ? NONE : readPagePolicy(inside(page.declaration));
+    policy = page.declaration === undefined ? NONE : await readPagePolicy(inside(page.declaration));
     // The route the page's own file declares, where it declares one: its parameters are what a
     // visitor arrives with. One the file computes is not known here, and nothing is held to it.
-    route = pageRoute(root.path, page);
+    route = await pageRoute(root.path, page);
   } catch (error) {
     return {
       html: "",

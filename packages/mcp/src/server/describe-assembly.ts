@@ -10,8 +10,11 @@ import type { DescribedAssembly } from "./described-assembly.js";
  * renderer, what its view places, and every placement of it with the policy its page declares
  * for it. Read from the same shape the whole project is, so the two cannot disagree.
  */
-export function describeAssembly(root: ProjectRoot, name: string): DescribedAssembly | undefined {
-  const project = describeProject(root);
+export async function describeAssembly(
+  root: ProjectRoot,
+  name: string,
+): Promise<DescribedAssembly | undefined> {
+  const project = await describeProject(root);
   const found = project.assemblies.find((assembly) => assembly.name === name);
   if (found === undefined) return undefined;
   // A page's policy is keyed by the placement's name where it is written as an object; a mark,

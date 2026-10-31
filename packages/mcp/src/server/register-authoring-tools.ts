@@ -70,7 +70,7 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
         before: z.string().optional().describe("place it before this assembly's placement"),
       },
     },
-    answering(({ page, in: parent, name, at, after, before }) => {
+    answering(async ({ page, in: parent, name, at, after, before }) => {
       const position =
         after !== undefined ? { after } : before !== undefined ? { before } : { at: at ?? "end" };
       if ((page === undefined) === (parent === undefined)) {
@@ -82,7 +82,7 @@ export function registerAuthoringTools(server: McpServer, root: ProjectRoot): vo
       }
       return parent === undefined
         ? placeOnPage(root, page ?? "", name, position)
-        : placeInView(root, parent, name, position);
+        : await placeInView(root, parent, name, position);
     }),
   );
 

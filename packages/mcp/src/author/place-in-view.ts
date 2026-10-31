@@ -9,6 +9,7 @@ import type { ProjectRoot } from "../root/project-root.js";
 import { withinRoot } from "../root/within-root.js";
 import type { ToolResult } from "../server/tool-result.js";
 import { leadsTo } from "./leads-to.js";
+import { placementSources } from "./placement-sources.js";
 
 // The views that hold the directive as markup, which this tool can write it into.
 const HOLDS_THE_DIRECTIVE: readonly string[] = ["html", "ejs", "handlebars", "nunjucks"];
@@ -38,12 +39,12 @@ const byHand = (renderer: string, name: string): string => {
  * never an edit that guesses where in a component a child belongs. A child that already leads
  * to the parent, at any depth, is refused before anything is written.
  */
-export function placeInView(
+export async function placeInView(
   root: ProjectRoot,
   parent: string,
   name: string,
   position: PlacementPosition,
-): ToolResult {
+): Promise<ToolResult> {
   const assemblies = discoverAssemblies(root.path).assemblies;
   const names = assemblies.map((assembly) => assembly.name).join(", ") || "none yet";
   const refused = (problem: ProjectProblem): ToolResult => ({
@@ -83,7 +84,18 @@ export function placeInView(
   }
   // At any depth: a child that already leads to the parent would make the parent its own
   // ancestor, which every render refuses and a tool should not write and call done.
-  const chain = leadsTo(viewFindings(root.path, assemblies).placements, name, parent);
+  const before = HOLDS_THE_DIRECTIVE.includes(renderer) ? placementSources(root) : undefined;
+  const findings = await viewFindings(root.path, assemblies);
+  if (before !== undefined && placementSources(root) !== before) {
+    return {
+      ok: false,
+      result: null,
+      problems: [
+        "project sources changed while validating the placement; retry with the current files",
+      ],
+    };
+  }
+  const chain = leadsTo(findings.placements, name, parent);
   if (chain !== undefined) {
     return refused({
       path: file,

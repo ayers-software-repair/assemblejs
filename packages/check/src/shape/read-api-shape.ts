@@ -16,11 +16,11 @@ import { UNREAD } from "./unread.js";
  * computes is marked, and so is all of it for a file that cannot be read, or that leads out of
  * the project and is not opened.
  */
-export function readApiShape(root: string, file: string): ApiShape {
+export async function readApiShape(root: string, file: string): Promise<ApiShape> {
   const shown = { file: fromRoot(root, file) };
   let declared;
   try {
-    declared = fieldsOf(readDefaultExport(readInside(root, file)));
+    declared = fieldsOf(await readDefaultExport(readInside(root, file)));
   } catch {
     return { ...shown, path: UNREAD, method: UNREAD, streams: UNREAD };
   }

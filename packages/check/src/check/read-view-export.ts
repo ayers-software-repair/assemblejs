@@ -11,7 +11,11 @@ import { viewScript } from "./view-script.js";
  * the view declares none, computes it, or cannot be read, one that leads out of the project
  * included, which the registry resolves at run time.
  */
-export function readViewExport(root: string, file: string, name: string): LiteralValue {
+export async function readViewExport(
+  root: string,
+  file: string,
+  name: string,
+): Promise<LiteralValue> {
   let source: string;
   try {
     source = readInside(root, file);
@@ -21,7 +25,7 @@ export function readViewExport(root: string, file: string, name: string): Litera
   const script = viewScript(file, source);
   if (script === undefined) return undefined;
   try {
-    return readNamedExport(script.code, name, script.loader);
+    return await readNamedExport(script.code, name, script.loader);
   } catch {
     return undefined;
   }

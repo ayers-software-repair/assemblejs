@@ -51,7 +51,7 @@ export function registerResources(server: McpServer, root: ProjectRoot): void {
       description: `Every page, assembly and api, what the config declares, and how they are wired: what each page and each view places, under what policy, and where each assembly is placed. Read from the sources, so it needs no build. A value a source computes reads "${COMPUTED}", and what a file that cannot be read would have said reads "${UNREAD}". One read, so an agent does not spend its first turns asking what exists.`,
       mimeType: TYPE,
     },
-    () => answer(PROJECT, describeProject(root)),
+    async () => answer(PROJECT, await describeProject(root)),
   );
 
   server.registerResource(
@@ -72,9 +72,9 @@ export function registerResources(server: McpServer, root: ProjectRoot): void {
         "One assembly by its name: its files, its renderer, what its view places, and every placement of it, on a page with that page's policy for it or in another assembly's view. Read from the sources.",
       mimeType: TYPE,
     },
-    (uri, variables) => {
+    async (uri, variables) => {
       const name = variables["name"];
-      const found = typeof name === "string" ? describeAssembly(root, name) : undefined;
+      const found = typeof name === "string" ? await describeAssembly(root, name) : undefined;
       if (found === undefined) {
         throw new McpError(RESOURCE_NOT_FOUND, "Resource not found", { uri: uri.href });
       }

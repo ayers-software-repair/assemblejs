@@ -14,14 +14,14 @@ import { PAGE_PARTS } from "./page-parts.js";
  * such as `Infinity`) included, since a budget `perf`
  * cannot read is one it cannot hold a page to. A config written as one literal object that
  * declares none has none; one that is not (computed, or with a spread or a computed key) is
- * refused unless it writes budgets beside what it brings in. Throws for a config that cannot be
+ * refused unless it writes budgets beside what it brings in. Rejects for a config that cannot be
  * compiled.
  */
-export function readBudgets(source: string): {
+export async function readBudgets(source: string): Promise<{
   readonly budgets: PageBudgets;
   readonly problems: readonly string[];
-} {
-  const config = readDefaultExport(source);
+}> {
+  const config = await readDefaultExport(source);
   const fields =
     config !== null && typeof config === "object" && !Array.isArray(config)
       ? (config as Record<string, LiteralValue>)

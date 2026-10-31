@@ -22,7 +22,7 @@ import { UNREAD } from "./unread.js";
  * one that leads out of the project included, which is not opened: neither is left out, and
  * neither stops the rest of the page from being told.
  */
-export function readPageShape(root: string, page: DiscoveredPage): PageShape {
+export async function readPageShape(root: string, page: DiscoveredPage): Promise<PageShape> {
   const file = (path: string): string => (isAbsolute(path) ? path : join(root, path));
   let places: PageShape["places"];
   try {
@@ -44,7 +44,7 @@ export function readPageShape(root: string, page: DiscoveredPage): PageShape {
   const declaration = fromRoot(root, file(page.declaration));
   try {
     // Read once, and the route, the policy and the stream all told from that one reading.
-    const read = readDefaultExport(readInside(root, file(page.declaration)));
+    const read = await readDefaultExport(readInside(root, file(page.declaration)));
     const declared = fieldsOf(read);
     return {
       name,

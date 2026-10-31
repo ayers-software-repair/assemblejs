@@ -11,19 +11,19 @@ import { linkedProject } from "../../../build/test/fixtures/linked-project.js";
 const TEMPLATE =
   '<main><assembly name="header"></assembly><assembly name="cart" view="compact"></assembly></main>';
 
-const page = (files: Record<string, string>) => {
+const page = async (files: Record<string, string>) => {
   const root = mkdtempSync(join(tmpdir(), "page-shape-"));
   for (const [path, contents] of Object.entries(files)) {
     realIo.write(join(root, "src/pages", path), contents);
   }
   const [found] = discoverPages(root).pages;
   if (found === undefined) throw new Error("no page was written");
-  return readPageShape(root, found);
+  return await readPageShape(root, found);
 };
 
 describe("one page, read from its sources", () => {
-  it("is its route and what its template places, in the template's order", () => {
-    expect(page({ "shop/shop.html": TEMPLATE })).toEqual({
+  it("is its route and what its template places, in the template's order", async () => {
+    expect(await page({ "shop/shop.html": TEMPLATE })).toEqual({
       name: "shop",
       route: "/shop",
       template: "src/pages/shop/shop.html",
@@ -36,8 +36,8 @@ describe("one page, read from its sources", () => {
     });
   });
 
-  it("is what its declaration writes: the route, each placement's policy and the stream", () => {
-    const shape = page({
+  it("is what its declaration writes: the route, each placement's policy and the stream", async () => {
+    const shape = await page({
       "shop/shop.html": TEMPLATE,
       "shop/shop.page.ts":
         'import { definePage } from "@asmjs/core";\nexport default definePage({ route: "/store", place: { cart: { defer: true, timeout: 800 } }, stream: "/api/prices" });',
@@ -50,8 +50,8 @@ describe("one page, read from its sources", () => {
     });
   });
 
-  it("marks what the declaration computes where it stands, and leaves none of it out", () => {
-    const shape = page({
+  it("marks what the declaration computes where it stands, and leaves none of it out", async () => {
+    const shape = await page({
       "shop/shop.html": TEMPLATE,
       "shop/shop.page.ts":
         'const ms = 400 * 2;\nconst at = routeFor("store");\nexport default { route: at, place: { cart: { timeout: ms, url: remote("cart"), required: true }, ...more } };',
@@ -64,16 +64,16 @@ describe("one page, read from its sources", () => {
     expect(shape.stream).toBeNull();
   });
 
-  it("marks the policy and the stream of a declaration that is computed whole", () => {
-    const shape = page({
+  it("marks the policy and the stream of a declaration that is computed whole", async () => {
+    const shape = await page({
       "shop/shop.html": TEMPLATE,
       "shop/shop.page.ts": "export default pageFor(process.env);",
     });
     expect(shape).toMatchObject({ policy: COMPUTED, stream: COMPUTED });
   });
 
-  it("says a declaration could not be read, and still tells the rest of the page", () => {
-    const shape = page({
+  it("says a declaration could not be read, and still tells the rest of the page", async () => {
+    const shape = await page({
       "shop/shop.html": TEMPLATE,
       "shop/shop.page.ts": "export default { route: ",
     });
@@ -82,8 +82,8 @@ describe("one page, read from its sources", () => {
     expect(shape.declaration).toBe("src/pages/shop/shop.page.ts");
   });
 
-  it("says a template's placements could not be read, and still tells the rest of the page", () => {
-    const shape = page({
+  it("says a template's placements could not be read, and still tells the rest of the page", async () => {
+    const shape = await page({
       "shop/shop.html": '<main><assembly name="cart" timeout="5"></assembly></main>',
       "shop/shop.page.ts": 'export default { route: "/store" };',
     });
@@ -91,7 +91,7 @@ describe("one page, read from its sources", () => {
     expect(shape.route).toBe("/store");
   });
 
-  it("marks what a declaration or a template that leads out would have said, unopened", () => {
+  it("marks what a declaration or a template that leads out would have said, unopened", async () => {
     const { root } = linkedProject(
       { "src/pages/shop/shop.html": TEMPLATE, "src/pages/out/out.page.ts": "export default {};" },
       {
@@ -99,16 +99,18 @@ describe("one page, read from its sources", () => {
         "src/pages/out/out.html": "outside:pagedir/landing.html",
       },
     );
-    const [out, shop] = discoverPages(root).pages.map((found) => readPageShape(root, found));
+    const [out, shop] = await Promise.all(
+      discoverPages(root).pages.map(async (found) => await readPageShape(root, found)),
+    );
     expect(shop).toMatchObject({ route: UNREAD, policy: UNREAD, stream: UNREAD });
     expect(shop?.places).toHaveLength(2);
     expect(out).toMatchObject({ route: "/out", places: UNREAD, policy: {} });
     expect(JSON.stringify([out, shop])).not.toMatch(/SECRET|secret-/);
   });
 
-  it("marks the not-found page as having no route, whatever its declaration writes", () => {
-    expect(page({ "not-found/not-found.html": TEMPLATE }).route).toBe(NO_ROUTE);
-    const declared = page({
+  it("marks the not-found page as having no route, whatever its declaration writes", async () => {
+    expect((await page({ "not-found/not-found.html": TEMPLATE })).route).toBe(NO_ROUTE);
+    const declared = await page({
       "not-found/not-found.html": TEMPLATE,
       "not-found/not-found.page.ts": 'export default { route: "/oops" };',
     });

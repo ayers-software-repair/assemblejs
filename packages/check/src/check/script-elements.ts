@@ -3,7 +3,7 @@
 import { COMPUTED_MARKER } from "@asmjs/build";
 import { parse } from "acorn";
 import type { AnyNode, Expression, SpreadElement } from "acorn";
-import { transformSync } from "esbuild";
+import { transform } from "esbuild";
 import { readElements } from "./read-elements.js";
 import type { ViewElement } from "./view-element.js";
 
@@ -39,10 +39,13 @@ const written = (node: Expression | SpreadElement | undefined): string | true | 
  * is not a string, is not an element the browser sees here, and is passed over. `at` is where
  * the element is in the compiled module, near enough to find the tag by.
  *
- * Throws for a module that cannot be compiled or parsed.
+ * Rejects for a module that cannot be compiled or parsed.
  */
-export function scriptElements(source: string, loader: "ts" | "tsx"): readonly ViewElement[] {
-  const code = transformSync(source, { loader, format: "esm", jsx: "automatic" }).code;
+export async function scriptElements(
+  source: string,
+  loader: "ts" | "tsx",
+): Promise<readonly ViewElement[]> {
+  const code = (await transform(source, { loader, format: "esm", jsx: "automatic" })).code;
   const program = parse(code, { ecmaVersion: "latest", sourceType: "module" });
   const factories = new Set<string>();
   const templates = new Set<string>();

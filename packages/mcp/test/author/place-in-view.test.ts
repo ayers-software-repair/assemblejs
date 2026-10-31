@@ -3,8 +3,25 @@
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import type * as Build from "@asmjs/build";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { placeInView, resolveRoot } from "@asmjs/mcp";
+
+const duringValidation = vi.hoisted(() => ({ run: undefined as (() => void) | undefined }));
+vi.mock("@asmjs/build", async (original) => {
+  const actual = await original<typeof Build>();
+  return {
+    ...actual,
+    viewFindings: async (...args: Parameters<typeof Build.viewFindings>) => {
+      const findings = await actual.viewFindings(...args);
+      duringValidation.run?.();
+      return findings;
+    },
+  };
+});
+afterEach(() => {
+  duringValidation.run = undefined;
+});
 
 const project = (files: Record<string, string>): string => {
   const dir = mkdtempSync(join(tmpdir(), "mcp-place-in-"));
@@ -25,9 +42,35 @@ const FILES = {
 };
 
 describe("placing one assembly in another's view through the agent surface", () => {
-  it("writes the directive into a view that holds it as markup, at the named position", () => {
+  it("refuses a parent edit made while asynchronous validation is running", async () => {
     const dir = project(FILES);
-    const answer = placeInView(resolveRoot(dir), "shell", "cart", { after: "nav" });
+    const file = join(dir, "src/assemblies/shell/shell.html");
+    const edit = "<section>another editor changed this</section>";
+    duringValidation.run = () => writeFileSync(file, edit);
+    const answer = await placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
+    expect(answer).toMatchObject({
+      ok: false,
+      problems: [expect.stringContaining("sources changed")],
+    });
+    expect(readFileSync(file, "utf8")).toBe(edit);
+  });
+
+  it("refuses a changed child graph rather than introducing a cycle from stale validation", async () => {
+    const dir = project(FILES);
+    const parent = join(dir, "src/assemblies/shell/shell.html");
+    const child = join(dir, "src/assemblies/cart/cart.html");
+    const original = readFileSync(parent, "utf8");
+    const edit = '<assembly name="shell"></assembly>';
+    duringValidation.run = () => writeFileSync(child, edit);
+    const answer = await placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
+    expect(answer.ok).toBe(false);
+    expect(readFileSync(parent, "utf8")).toBe(original);
+    expect(readFileSync(child, "utf8")).toBe(edit);
+  });
+
+  it("writes the directive into a view that holds it as markup, at the named position", async () => {
+    const dir = project(FILES);
+    const answer = await placeInView(resolveRoot(dir), "shell", "cart", { after: "nav" });
     expect(answer).toMatchObject({
       ok: true,
       result: {
@@ -40,27 +83,27 @@ describe("placing one assembly in another's view through the agent surface", () 
       '<section>\n<assembly name="nav"></assembly>\n<assembly name="cart"></assembly>\n</section>',
     );
     // A template in a language that holds the directive as markup is written the same way.
-    expect(placeInView(resolveRoot(dir), "card", "cart", { at: "end" }).ok).toBe(true);
+    expect((await placeInView(resolveRoot(dir), "card", "cart", { at: "end" })).ok).toBe(true);
     expect(readFileSync(join(dir, "src/assemblies/card/card.ejs"), "utf8")).toBe(
       '<article><%= data.title %></article>\n<assembly name="cart"></assembly>',
     );
   });
 
-  it("says a second placing of the same child, which is allowed and may not be meant", () => {
+  it("says a second placing of the same child, which is allowed and may not be meant", async () => {
     const dir = project(FILES);
-    const once = placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
+    const once = await placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
     expect(once.result).toMatchObject({ placed: 1 });
     expect(once.next?.join()).not.toContain("times");
-    const again = placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
+    const again = await placeInView(resolveRoot(dir), "shell", "cart", { at: "end" });
     expect(again).toMatchObject({ ok: true, result: { placed: 2 } });
     expect(again.next?.[0]).toBe(
       '"cart" is placed 2 times in this view now: take one out if another was not meant',
     );
   });
 
-  it("answers the line to write for a view its author writes, and edits nothing", () => {
+  it("answers the line to write for a view its author writes, and edits nothing", async () => {
     const dir = project(FILES);
-    const react = placeInView(resolveRoot(dir), "panel", "cart", { at: "end" });
+    const react = await placeInView(resolveRoot(dir), "panel", "cart", { at: "end" });
     expect(react).toMatchObject({
       ok: false,
       problems: [
@@ -74,24 +117,27 @@ describe("placing one assembly in another's view through the agent surface", () 
     expect(readFileSync(join(dir, "src/assemblies/panel/panel.react.tsx"), "utf8")).toBe(
       "export default () => null;",
     );
-    const fix = (parent: string) =>
-      (placeInView(resolveRoot(dir), parent, "cart", { at: "end" }).problems[0] as { fix: string })
-        .fix;
-    expect(fix("board")).toContain('{@html slot("cart")}');
-    expect(fix("notes")).toContain("a Markdown view is prose and places nothing");
+    const fix = async (parent: string) =>
+      (
+        (await placeInView(resolveRoot(dir), parent, "cart", { at: "end" })).problems[0] as {
+          fix: string;
+        }
+      ).fix;
+    expect(await fix("board")).toContain('{@html slot("cart")}');
+    expect(await fix("notes")).toContain("a Markdown view is prose and places nothing");
   });
 
-  it("refuses a name with no assembly, and an assembly inside itself", () => {
+  it("refuses a name with no assembly, and an assembly inside itself", async () => {
     const dir = project(FILES);
     expect(
-      placeInView(resolveRoot(dir), "shell", "footer", { at: "end" }).problems[0],
+      (await placeInView(resolveRoot(dir), "shell", "footer", { at: "end" })).problems[0],
     ).toMatchObject({
       rule: "a-placement-names-an-assembly",
       message: 'there is no assembly "footer"',
     });
-    expect(placeInView(resolveRoot(dir), "nowhere", "cart", { at: "end" }).ok).toBe(false);
+    expect((await placeInView(resolveRoot(dir), "nowhere", "cart", { at: "end" })).ok).toBe(false);
     expect(
-      placeInView(resolveRoot(dir), "shell", "shell", { at: "end" }).problems[0],
+      (await placeInView(resolveRoot(dir), "shell", "shell", { at: "end" })).problems[0],
     ).toMatchObject({ rule: "an-assembly-is-never-its-own-ancestor" });
     expect(readFileSync(join(dir, "src/assemblies/shell/shell.html"), "utf8")).toBe(
       FILES["shell/shell.html"],
@@ -100,7 +146,7 @@ describe("placing one assembly in another's view through the agent surface", () 
 
   // Only an assembly placed in itself was refused. One placed in what it already holds, at any
   // depth, was written and answered as done, and every render of either then refused it.
-  it("refuses an assembly inside one it already leads to, at any depth, and writes nothing", () => {
+  it("refuses an assembly inside one it already leads to, at any depth, and writes nothing", async () => {
     const dir = project({
       ...FILES,
       "nav/nav.html": '<nav><assembly name="menu"></assembly></nav>',
@@ -113,30 +159,30 @@ describe("placing one assembly in another's view through the agent surface", () 
       ["menu", "nav", "nav, menu"],
     ] as const) {
       const before = readFileSync(join(dir, `src/assemblies/${parent}/${parent}.html`), "utf8");
-      expect(placeInView(resolveRoot(dir), parent, child, { at: "end" }).problems[0]).toMatchObject(
-        {
-          rule: "an-assembly-is-never-its-own-ancestor",
-          message: `"${child}" already holds "${parent}" (${chain}), so it cannot be placed inside it`,
-        },
-      );
+      expect(
+        (await placeInView(resolveRoot(dir), parent, child, { at: "end" })).problems[0],
+      ).toMatchObject({
+        rule: "an-assembly-is-never-its-own-ancestor",
+        message: `"${child}" already holds "${parent}" (${chain}), so it cannot be placed inside it`,
+      });
       expect(readFileSync(join(dir, `src/assemblies/${parent}/${parent}.html`), "utf8")).toBe(
         before,
       );
     }
     // The other way round is no circle.
-    expect(placeInView(resolveRoot(dir), "cart", "menu", { at: "end" }).ok).toBe(true);
+    expect((await placeInView(resolveRoot(dir), "cart", "menu", { at: "end" })).ok).toBe(true);
   });
 
   // Told to add an assembly whose directory is there, and add refusing the name as taken, an
   // agent went round between the two.
-  it("says to mend a directory that is there and is not an assembly, not to add it", () => {
+  it("says to mend a directory that is there and is not an assembly, not to add it", async () => {
     const dir = project({ ...FILES, "twin/twin.html": "<p>a</p>", "twin/twin.svelte": "<p>b</p>" });
-    expect(placeInView(resolveRoot(dir), "shell", "twin", { at: "end" }).problems[0]).toMatchObject(
-      {
-        rule: "a-placement-names-an-assembly",
-        message: 'there is no assembly "twin"',
-        fix: "src/assemblies/twin is there and is not an assembly yet: mend what is said of that directory",
-      },
-    );
+    expect(
+      (await placeInView(resolveRoot(dir), "shell", "twin", { at: "end" })).problems[0],
+    ).toMatchObject({
+      rule: "a-placement-names-an-assembly",
+      message: 'there is no assembly "twin"',
+      fix: "src/assemblies/twin is there and is not an assembly yet: mend what is said of that directory",
+    });
   });
 });

@@ -24,14 +24,16 @@ import { UNREAD } from "./unread.js";
  * config declares. One read, so whoever asks does not spend its first turns finding out what
  * exists, and nothing here needs a build.
  */
-export function readShape(root: string): ProjectShape {
+export async function readShape(root: string): Promise<ProjectShape> {
   const at = resolve(root);
   const found = discoverAssemblies(at);
   const pages = discoverPages(at);
   const apis = discoverApis(at);
   const shown = (path: string): string => fromRoot(at, isAbsolute(path) ? path : join(at, path));
-  const views = viewFindings(at, found.assemblies);
-  const pageShapes = pages.pages.map((page) => readPageShape(at, page));
+  const views = await viewFindings(at, found.assemblies);
+  const pageShapes = await Promise.all(
+    pages.pages.map(async (page) => await readPageShape(at, page)),
+  );
   // Whether a list of placements, where it is one and not a mark, names this assembly.
   const placing = (name: string, places: readonly { readonly name: string }[] | string): boolean =>
     typeof places !== "string" && places.some((placed) => placed.name === name);
@@ -47,25 +49,27 @@ export function readShape(root: string): ProjectShape {
   );
   return {
     pages: pageShapes,
-    assemblies: found.assemblies.map((assembly) => ({
-      name: assembly.name,
-      directory: shown(assembly.directory),
-      view: shown(assembly.view),
-      renderer: assembly.renderer,
-      ...(assembly.client === undefined ? {} : { client: shown(assembly.client) }),
-      ...(assembly.service === undefined ? {} : { service: shown(assembly.service) }),
-      styles: assembly.styles.map(shown),
-      browserHalf: hasBrowserHalf(at, assembly),
-      places: placesOf.get(assembly.name) ?? COMPUTED,
-      placedOn: pageShapes
-        .filter((page) => placing(assembly.name, page.places))
-        .map((page) => page.name),
-      placedIn: found.assemblies
-        .filter((other) => placing(assembly.name, placesOf.get(other.name) ?? COMPUTED))
-        .map((other) => other.name),
-    })),
-    apis: apis.apis.map((file) => readApiShape(at, file)),
-    settings: readSettingsShape(at),
+    assemblies: await Promise.all(
+      found.assemblies.map(async (assembly) => ({
+        name: assembly.name,
+        directory: shown(assembly.directory),
+        view: shown(assembly.view),
+        renderer: assembly.renderer,
+        ...(assembly.client === undefined ? {} : { client: shown(assembly.client) }),
+        ...(assembly.service === undefined ? {} : { service: shown(assembly.service) }),
+        styles: assembly.styles.map(shown),
+        browserHalf: await hasBrowserHalf(at, assembly),
+        places: placesOf.get(assembly.name) ?? COMPUTED,
+        placedOn: pageShapes
+          .filter((page) => placing(assembly.name, page.places))
+          .map((page) => page.name),
+        placedIn: found.assemblies
+          .filter((other) => placing(assembly.name, placesOf.get(other.name) ?? COMPUTED))
+          .map((other) => other.name),
+      })),
+    ),
+    apis: await Promise.all(apis.apis.map(async (file) => await readApiShape(at, file))),
+    settings: await readSettingsShape(at),
     renderers: [...new Set(found.assemblies.map((assembly) => assembly.renderer))].sort(),
     // The tree's own problems, and everything that leads out of it: a file or a directory
     // discovery met, the config, an import a view climbs out by.

@@ -56,19 +56,19 @@ const page = (name: string, declaration?: string) => {
 };
 
 describe("a route the not-found page declares", () => {
-  it("is a problem, where the declaration is", () => {
+  it("is a problem, where the declaration is", async () => {
     const { root, page: found } = page("not-found", 'export default { route: "/oops" };');
-    expect(notFoundRouteProblems(root, found)).toEqual([
+    expect(await notFoundRouteProblems(root, found)).toEqual([
       expect.objectContaining({ path: found.declaration, rule: "the-not-found-page-has-no-route" }),
     ]);
   });
 
-  it("is none where it declares no route, has no declaration, or is another page", () => {
+  it("is none where it declares no route, has no declaration, or is another page", async () => {
     const placed = page("not-found", "export default { place: { hello: { deadline: 50 } } };");
-    expect(notFoundRouteProblems(placed.root, placed.page)).toEqual([]);
+    expect(await notFoundRouteProblems(placed.root, placed.page)).toEqual([]);
     const bare = page("not-found");
-    expect(notFoundRouteProblems(bare.root, bare.page)).toEqual([]);
+    expect(await notFoundRouteProblems(bare.root, bare.page)).toEqual([]);
     const other = page("about", 'export default { route: "/us" };');
-    expect(notFoundRouteProblems(other.root, other.page)).toEqual([]);
+    expect(await notFoundRouteProblems(other.root, other.page)).toEqual([]);
   });
 });

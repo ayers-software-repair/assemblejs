@@ -19,14 +19,14 @@ const project = (files: Readonly<Record<string, string>>): string => {
 };
 
 describe("the elements each assembly's view writes", () => {
-  it("reads each view by its kind, a framework view with the components it is split into", () => {
+  it("reads each view by its kind, a framework view with the components it is split into", async () => {
     project({
       "src/assemblies/card/card.html": '<section><img alt=""></section>',
       "src/assemblies/counter/counter.react.tsx":
         'import { Face } from "./face.js";\nexport default () => <button><Face /></button>;',
       "src/assemblies/counter/face.tsx": "export const Face = () => <span />;",
     });
-    const found = viewElements(root, discoverAssemblies(root).assemblies);
+    const found = await viewElements(root, discoverAssemblies(root).assemblies);
     expect([...found.keys()].sort()).toEqual(["card", "counter"]);
     expect(found.get("card")?.map(({ element }) => element.tag)).toEqual(["section", "img"]);
     expect(
@@ -37,8 +37,8 @@ describe("the elements each assembly's view writes", () => {
     ]);
   });
 
-  it("leaves out a view it cannot read for its elements", () => {
+  it("leaves out a view it cannot read for its elements", async () => {
     project({ "src/assemblies/broken/broken.react.tsx": "export default (" });
-    expect(viewElements(root, discoverAssemblies(root).assemblies).size).toBe(0);
+    expect((await viewElements(root, discoverAssemblies(root).assemblies)).size).toBe(0);
   });
 });

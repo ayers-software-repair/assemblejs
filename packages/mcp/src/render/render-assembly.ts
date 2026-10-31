@@ -45,7 +45,7 @@ export async function renderAssembly(
   deadline = RENDER_DEADLINE,
   arrived: ArrivedWith = {},
 ): Promise<RenderedAssembly> {
-  const assemblies = projectAssemblies(root);
+  const assemblies = await projectAssemblies(root);
   const names = [...assemblies.keys()];
   const renderer = assemblies.get(name)?.views["default"]?.renderer;
   const refused = (problem: string): RenderedAssembly => ({

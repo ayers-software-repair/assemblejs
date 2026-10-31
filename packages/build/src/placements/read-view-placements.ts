@@ -19,17 +19,17 @@ const UNREAD: ViewPlacements = { placements: undefined, unnamed: [] };
  * Pug with the project's own Pug; a Markdown view places nothing; a framework view by the slots
  * it writes.
  *
- * Throws for a plain html view or a template whose directive cannot be read, as its render
+ * Rejects for a plain html view or a template whose directive cannot be read, as its render
  * would, and for a view written as a module that does not compile, with what the compiler said.
  * A view that cannot be read for its placements for any other reason answers none known, and
  * the render reads it.
  */
-export function readViewPlacements(
+export async function readViewPlacements(
   file: string,
   renderer: string,
   source: string,
   pug?: PugCompiler,
-): ViewPlacements {
+): Promise<ViewPlacements> {
   if (renderer === "html") {
     return collectPlacements(
       findPlacements(source).map(({ name, view }) => ({ name, view, shown: name })),
@@ -41,7 +41,7 @@ export function readViewPlacements(
   if (file.endsWith(".vue")) return vuePlacements(source);
   if (!/\.[jt]sx?$/.test(file)) return UNREAD;
   try {
-    return scriptPlacements(source, file.endsWith("x") ? "tsx" : "ts");
+    return await scriptPlacements(source, file.endsWith("x") ? "tsx" : "ts");
   } catch (error) {
     // A module that does not compile is its caller's to report; any other is the render's.
     if (uncompiled(error) !== undefined) throw error;

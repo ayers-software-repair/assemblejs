@@ -12,8 +12,8 @@ import { readDefaultExport } from "./read-default-export.js";
  * computes, which only running the project could tell. A file that leads out of the project
  * throws, unopened.
  */
-export function readApi(root: string, file: string): ApiDefinition | undefined {
-  const declared: LiteralValue = readDefaultExport(readInside(root, file));
+export async function readApi(root: string, file: string): Promise<ApiDefinition | undefined> {
+  const declared: LiteralValue = await readDefaultExport(readInside(root, file));
   if (declared === null || typeof declared !== "object" || Array.isArray(declared)) {
     return undefined;
   }

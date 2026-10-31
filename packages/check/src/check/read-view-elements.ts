@@ -16,12 +16,12 @@ import { vueElements } from "./vue-elements.js";
  * leaves it to the render: a Pug view with no Pug, a module that does not compile, a file of no
  * kind the readers know.
  */
-export function readViewElements(
+export async function readViewElements(
   file: string,
   renderer: string,
   source: string,
   pug?: PugCompiler,
-): readonly ViewElement[] | undefined {
+): Promise<readonly ViewElement[] | undefined> {
   if (renderer === "html" || renderer === "markdown" || TEMPLATE_RENDERERS.includes(renderer)) {
     return templateElements(renderer, source, pug);
   }
@@ -29,7 +29,7 @@ export function readViewElements(
   if (file.endsWith(".vue")) return vueElements(source);
   if (!/\.[jt]sx?$/.test(file)) return undefined;
   try {
-    return scriptElements(source, file.endsWith("x") ? "tsx" : "ts");
+    return await scriptElements(source, file.endsWith("x") ? "tsx" : "ts");
   } catch {
     return undefined;
   }

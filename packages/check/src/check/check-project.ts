@@ -75,20 +75,16 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   const names = assemblies.assemblies.map((assembly) => assembly.name);
   // What the placement rules read of each assembly: in a project, one view, whether it has a
   // browser half, and what its view's source is known to place.
-  const views = viewFindings(root, assemblies.assemblies);
-  const placeable = new Map<string, PlacedAssembly>(
-    assemblies.assemblies.map((assembly) => {
-      const placed = views.placements.get(assembly.name);
-      return [
-        assembly.name,
-        {
-          views: ["default"],
-          browserHalf: hasBrowserHalf(root, assembly),
-          ...(placed === undefined ? {} : { placements: { default: placed } }),
-        },
-      ];
-    }),
-  );
+  const views = await viewFindings(root, assemblies.assemblies);
+  const placeable = new Map<string, PlacedAssembly>();
+  for (const assembly of assemblies.assemblies) {
+    const placed = views.placements.get(assembly.name);
+    placeable.set(assembly.name, {
+      views: ["default"],
+      browserHalf: await hasBrowserHalf(root, assembly),
+      ...(placed === undefined ? {} : { placements: { default: placed } }),
+    });
+  }
   const problems: ProjectProblem[] = [
     ...assemblies.problems,
     ...pages.problems,
@@ -98,18 +94,22 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     ...(await templateProblems(root, assemblies.assemblies)),
     ...(await componentProblems(root, assemblies.assemblies)),
     ...views.problems,
-    ...viewProblems(root, assemblies.assemblies, placeable),
+    ...(await viewProblems(root, assemblies.assemblies, placeable)),
     ...tokenProblems(root),
     ...colourProblems(root, assemblies.assemblies),
-    ...elementProblems(root, assemblies.assemblies),
+    ...(await elementProblems(root, assemblies.assemblies)),
     ...agentProblems(root),
   ];
 
   // A file that cannot be read is a finding against it, never a throw out of check. One that
   // leads out of the project is not opened, and is a finding already, where the project names it.
-  const readOr = <T>(file: string, read: (source: string) => T, otherwise: T): T => {
+  const readOr = async <T>(
+    file: string,
+    read: (source: string) => T | Promise<T>,
+    otherwise: T,
+  ): Promise<T> => {
     try {
-      return read(readInside(root, file));
+      return await read(readInside(root, file));
     } catch (error) {
       if (error instanceof OutsideRootError) return otherwise;
       problems.push({
@@ -125,14 +125,14 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   // hold each page to and weigh it at, refused here as `perf` refuses them, before a build.
   const configFile = join(root, CONFIG_FILE);
   problems.push(...outsideProblems(root, [configFile]));
-  const none = { remotes: NO_REMOTES, budgets: [], addresses: readAddresses("") };
+  const none = { remotes: NO_REMOTES, budgets: [], addresses: await readAddresses("") };
   const config = existsSync(configFile)
-    ? readOr(
+    ? await readOr(
         configFile,
-        (source) => ({
-          remotes: declaredOrigins(source),
-          budgets: readBudgets(source).problems,
-          addresses: readAddresses(source),
+        async (source) => ({
+          remotes: await declaredOrigins(source),
+          budgets: (await readBudgets(source)).problems,
+          addresses: await readAddresses(source),
         }),
         // A config that could not be read is a finding already: no address is known missing.
         { ...none, addresses: { ...none.addresses, whole: false } },
@@ -150,7 +150,7 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
   for (const file of apis.apis) {
     let api;
     try {
-      api = readApi(root, file);
+      api = await readApi(root, file);
     } catch (error) {
       // One that leads out of the project is not opened, and is a finding where it is named.
       if (!(error instanceof OutsideRootError)) problems.push(unreadableSource(file, error));
@@ -176,17 +176,17 @@ export async function checkProject(root: string): Promise<readonly ProjectProble
     const policy =
       page.declaration === undefined
         ? NO_POLICY
-        : readOr(page.declaration, readPagePolicy, NO_POLICY);
+        : await readOr(page.declaration, readPagePolicy, NO_POLICY);
     // Every rule the server refuses a route by at boot, from the same function. The not-found
     // page has no route, so none of its is held to them; one it declares is its own problem.
     const routed = page.name !== NOT_FOUND_PAGE;
     let route: string | undefined = routed ? page.route : undefined;
     try {
-      if (routed) route = pageRoute(root, page);
+      if (routed) route = await pageRoute(root, page);
     } catch {
       // A declaration that cannot be read is reported once, by the reading of its placements.
     }
-    problems.push(...notFoundRouteProblems(root, page));
+    problems.push(...(await notFoundRouteProblems(root, page)));
     const at = page.declaration ?? page.template;
     if (routed) pageRoutes.push({ name: page.name, route, at });
     for (const problem of route === undefined ? [] : pageRouteProblems(route)) {

@@ -31,14 +31,14 @@ const DIRECTIVE_FIX = 'write each placement as <assembly name="..."></assembly>'
  * placement that cannot be read, which is a problem here and no render's secret, or lead out of
  * the project, where nothing is read. An import that leads out is a problem, and is not followed.
  */
-export function viewFindings(
+export async function viewFindings(
   root: string,
   assemblies: readonly DiscoveredAssembly[],
-): {
+): Promise<{
   readonly placements: ReadonlyMap<string, readonly ViewPlacement[]>;
   readonly problems: readonly ProjectProblem[];
   readonly unread: ReadonlySet<string>;
-} {
+}> {
   const placements = new Map<string, readonly ViewPlacement[]>();
   const problems: ProjectProblem[] = [];
   const unread = new Set<string>();
@@ -46,19 +46,31 @@ export function viewFindings(
   let pug: { readonly loaded: PugCompiler | undefined } | undefined;
   const pugFor = (renderer: string): PugCompiler | undefined =>
     renderer === "pug" ? (pug ??= { loaded: loadPug(root) }).loaded : undefined;
-  for (const assembly of assemblies) {
+  // Capture every input before yielding: an edit reverted during compilation is still an edit.
+  const inputs = assemblies.map((assembly) => {
     const file = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
+    const found = leadsOut(root, file)
+      ? undefined
+      : isStaticView(assembly.renderer)
+        ? { modules: [file], outside: [] }
+        : viewModules(root, file);
+    const sources = (found?.modules ?? []).map((module) => {
+      try {
+        return { module, source: readInside(root, module) };
+      } catch (error) {
+        return { module, error };
+      }
+    });
+    return { assembly, found, sources };
+  });
+  for (const { assembly, found, sources } of inputs) {
     const wrong = (rule: ProjectProblem["rule"], message: string, fix: string): void => {
       problems.push({ path: assembly.view, rule, message: `"${assembly.name}" ${message}`, fix });
     };
-    // A view that leads out of the project is not opened. Where the project names it says so.
-    if (leadsOut(root, file)) {
+    if (found === undefined) {
       unread.add(assembly.name);
       continue;
     }
-    const found = isStaticView(assembly.renderer)
-      ? { modules: [file], outside: [] }
-      : viewModules(root, file);
     for (const written of found.outside) {
       wrong(
         "a-project-stays-inside-its-root",
@@ -68,22 +80,28 @@ export function viewFindings(
     }
     let read: ViewPlacements;
     try {
-      const [own, ...parts] = found.modules.map((module): ViewPlacements => {
+      const modules: ViewPlacements[] = [];
+      for (const input of sources) {
+        const { module } = input;
         try {
-          return readViewPlacements(
-            module,
-            assembly.renderer,
-            readInside(root, module),
-            pugFor(assembly.renderer),
+          if ("error" in input) throw input.error;
+          modules.push(
+            await readViewPlacements(
+              module,
+              assembly.renderer,
+              input.source,
+              pugFor(assembly.renderer),
+            ),
           );
         } catch (error) {
           // A module that does not compile is a finding against it, and what it places unknown.
           if (uncompiled(error) === undefined) throw error;
           problems.push(unreadableSource(module, error));
           unread.add(assembly.name);
-          return { placements: undefined, unnamed: [] };
+          modules.push({ placements: undefined, unnamed: [] });
         }
-      });
+      }
+      const [own, ...parts] = modules;
       // A view that cannot be read places nothing known, and its render reads it.
       if (own?.placements === undefined) continue;
       const all = [own, ...parts];

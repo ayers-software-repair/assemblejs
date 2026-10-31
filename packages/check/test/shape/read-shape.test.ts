@@ -32,8 +32,8 @@ const SHOP = {
 };
 
 describe("a project's whole shape, read from its sources", () => {
-  it("is every page, assembly and api, and what the config declares, in one read", () => {
-    const shape = readShape(project(SHOP));
+  it("is every page, assembly and api, and what the config declares, in one read", async () => {
+    const shape = await readShape(project(SHOP));
     expect(shape.pages.map((page) => [page.name, page.route])).toEqual([
       ["about", "/about"],
       ["home", "/"],
@@ -47,8 +47,8 @@ describe("a project's whole shape, read from its sources", () => {
     expect(shape.problems).toEqual([]);
   });
 
-  it("is each assembly's files from the root, and whether it has a browser half", () => {
-    const [cart, price, shell] = readShape(project(SHOP)).assemblies;
+  it("is each assembly's files from the root, and whether it has a browser half", async () => {
+    const [cart, price, shell] = (await readShape(project(SHOP))).assemblies;
     expect(cart).toMatchObject({
       directory: "src/assemblies/cart",
       view: "src/assemblies/cart/cart.react.tsx",
@@ -66,8 +66,8 @@ describe("a project's whole shape, read from its sources", () => {
     expect(shell?.service).toBeUndefined();
   });
 
-  it("is how they are wired: what each view places, and where each assembly is placed", () => {
-    const [cart, price, shell] = readShape(project(SHOP)).assemblies;
+  it("is how they are wired: what each view places, and where each assembly is placed", async () => {
+    const [cart, price, shell] = (await readShape(project(SHOP))).assemblies;
     expect(shell).toMatchObject({
       places: [{ name: "cart", view: "default" }],
       placedOn: ["about", "home"],
@@ -81,9 +81,9 @@ describe("a project's whole shape, read from its sources", () => {
     expect(price).toMatchObject({ places: [], placedOn: [], placedIn: ["cart"] });
   });
 
-  it("marks a view only its render can tell of, and one that cannot be read, differently", () => {
+  it("marks a view only its render can tell of, and one that cannot be read, differently", async () => {
     // This project has no templates renderer installed, so nothing here can read its Pug view.
-    const shape = readShape(
+    const shape = await readShape(
       project({
         "src/assemblies/card/card.pug": 'assembly(name="cart")',
         "src/assemblies/torn/torn.html": '<assembly name="cart" timeout="5"></assembly>',
@@ -102,18 +102,18 @@ describe("a project's whole shape, read from its sources", () => {
     expect(shape.assemblies.find((one) => one.name === "cart")?.placedIn).toEqual(["row"]);
   });
 
-  it("carries what is wrong with the tree, each path from the root", () => {
+  it("carries what is wrong with the tree, each path from the root", async () => {
     const root = project({ "src/api/Prices.ts": "export default {};" });
     mkdirSync(join(root, "src/assemblies/Broken"), { recursive: true });
     mkdirSync(join(root, "src/pages/Lost"), { recursive: true });
-    const paths = readShape(root).problems.map((problem) => problem.path);
+    const paths = (await readShape(root)).problems.map((problem) => problem.path);
     expect(paths).toContain("src/assemblies/Broken");
     expect(paths.every((path) => path.startsWith("src/"))).toBe(true);
     expect(paths.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("is an empty project, not a broken one, where nothing has been written yet", () => {
-    expect(readShape(mkdtempSync(join(tmpdir(), "shape-empty-")))).toEqual({
+  it("is an empty project, not a broken one, where nothing has been written yet", async () => {
+    expect(await readShape(mkdtempSync(join(tmpdir(), "shape-empty-")))).toEqual({
       pages: [],
       assemblies: [],
       apis: [],
@@ -133,7 +133,7 @@ describe("a project's whole shape, read from its sources", () => {
 
   // Written beneath the directory it is asked from: there, a root that is not resolved before
   // anything is read is joined to itself, and every file is looked for in the wrong place.
-  it("is the same from a root given as a path from where it is asked", () => {
+  it("is the same from a root given as a path from where it is asked", async () => {
     const beneath = mkdtempSync(join(process.cwd(), "node_modules", ".shape-"));
     try {
       for (const [path, contents] of Object.entries(SHOP)) {
@@ -141,8 +141,8 @@ describe("a project's whole shape, read from its sources", () => {
       }
       const given = relative(process.cwd(), beneath);
       expect(given.startsWith("..") || isAbsolute(given)).toBe(false);
-      expect(readShape(given)).toEqual(readShape(beneath));
-      expect(readShape(given).pages.map((page) => page.template)).toEqual([
+      expect(await readShape(given)).toEqual(await readShape(beneath));
+      expect((await readShape(given)).pages.map((page) => page.template)).toEqual([
         "src/pages/about/about.html",
         "src/pages/home/home.html",
       ]);
@@ -151,8 +151,8 @@ describe("a project's whole shape, read from its sources", () => {
     }
   });
 
-  it("is what JSON carries whole", () => {
-    const shape = readShape(project(SHOP));
+  it("is what JSON carries whole", async () => {
+    const shape = await readShape(project(SHOP));
     expect(JSON.parse(JSON.stringify(shape))).toEqual(shape);
   });
 });
@@ -180,13 +180,13 @@ describe("a project with links that lead out of it", () => {
     return root;
   };
 
-  it("tells nothing of what a link or an import leads out to", () => {
-    const told = JSON.stringify(readShape(everywhere()));
+  it("tells nothing of what a link or an import leads out to", async () => {
+    const told = JSON.stringify(await readShape(everywhere()));
     expect(told).not.toMatch(/SECRET|secret-/);
   });
 
-  it("marks each as unread, lists no directory that is one, and says which rule each breaks", () => {
-    const shape = readShape(everywhere());
+  it("marks each as unread, lists no directory that is one, and says which rule each breaks", async () => {
+    const shape = await readShape(everywhere());
     expect(shape.pages.map((page) => [page.name, page.route, page.policy])).toEqual([
       ["about", "/about", {}],
       ["home", UNREAD, UNREAD],
@@ -213,7 +213,7 @@ describe("a project with links that lead out of it", () => {
     ]);
   });
 
-  it("still reads a link that stays inside the project, and a link to a link that does", () => {
+  it("still reads a link that stays inside the project, and a link to a link that does", async () => {
     const { root } = linkedProject(
       { ...SHOP, "src/shared/second.ts": 'export default { route: "/store" };' },
       {
@@ -221,17 +221,17 @@ describe("a project with links that lead out of it", () => {
         "src/pages/home/home.page.ts": "../../shared/first.ts",
       },
     );
-    const shape = readShape(root);
+    const shape = await readShape(root);
     expect(shape.pages.find((page) => page.name === "home")?.route).toBe("/store");
     expect(shape.problems).toEqual([]);
   });
 
-  it("follows a link to a link that leads out, and refuses it where the project names it", () => {
+  it("follows a link to a link that leads out, and refuses it where the project names it", async () => {
     const { root } = linkedProject(SHOP, {
       "src/shared/first.ts": "outside:secret.page.ts",
       "src/pages/home/home.page.ts": "../../shared/first.ts",
     });
-    const shape = readShape(root);
+    const shape = await readShape(root);
     expect(shape.pages.find((page) => page.name === "home")?.route).toBe(UNREAD);
     expect(shape.problems.map((problem) => [problem.path, problem.rule])).toEqual([
       ["src/pages/home/home.page.ts", RULE],

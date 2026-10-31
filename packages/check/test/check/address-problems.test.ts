@@ -10,18 +10,19 @@ const pages = [
   { name: "home", route: "/", at: "/p/src/pages/home/home.html" },
   { name: "product", route: "/p/:sku", at: "/p/src/pages/product/product.page.ts" },
 ];
-const given = (addresses: string) => readAddresses(`export default { addresses: ${addresses} };`);
+const given = async (addresses: string) =>
+  await readAddresses(`export default { addresses: ${addresses} };`);
 
 describe("the findings the addresses of a project earn", () => {
-  it("is none for a project whose every page with a parameter has an address its route answers", () => {
-    expect(addressProblems(pages, given('{ "/p/:sku": "/p/kettle-1" }'), "/p/config.ts")).toEqual(
-      [],
-    );
-    expect(addressProblems(pages.slice(0, 1), given("{}"), undefined)).toEqual([]);
+  it("is none for a project whose every page with a parameter has an address its route answers", async () => {
+    expect(
+      addressProblems(pages, await given('{ "/p/:sku": "/p/kettle-1" }'), "/p/config.ts"),
+    ).toEqual([]);
+    expect(addressProblems(pages.slice(0, 1), await given("{}"), undefined)).toEqual([]);
   });
 
-  it("names the key to add for a page with a parameter that has no address, at the config", () => {
-    expect(addressProblems(pages, given("{}"), "/p/config.ts")).toEqual([
+  it("names the key to add for a page with a parameter that has no address, at the config", async () => {
+    expect(addressProblems(pages, await given("{}"), "/p/config.ts")).toEqual([
       {
         path: "/p/config.ts",
         rule: "a-page-with-a-parameter-names-an-address",
@@ -32,15 +33,19 @@ describe("the findings the addresses of a project earn", () => {
     ]);
   });
 
-  it("puts it at the page's own declaration when there is no config file to put it in", () => {
-    const [found] = addressProblems(pages, readAddresses(""), undefined);
+  it("puts it at the page's own declaration when there is no config file to put it in", async () => {
+    const [found] = addressProblems(pages, await readAddresses(""), undefined);
     expect(found?.path).toBe("/p/src/pages/product/product.page.ts");
     expect(found?.fix).toBe('add "/p/:sku": "/p/example" to addresses in assemblejs.config.ts');
   });
 
-  it("refuses an address its route does not answer, and one that is not a path on this server", () => {
-    const found = (address: string) =>
-      addressProblems(pages, given(`{ "/p/:sku": ${JSON.stringify(address)} }`), "/p/config.ts");
+  it("refuses an address its route does not answer, and one that is not a path on this server", async () => {
+    const found = async (address: string) =>
+      addressProblems(
+        pages,
+        await given(`{ "/p/:sku": ${JSON.stringify(address)} }`),
+        "/p/config.ts",
+      );
     for (const address of [
       "/product/kettle-1",
       "p/kettle-1",
@@ -48,7 +53,7 @@ describe("the findings the addresses of a project earn", () => {
       "https://elsewhere.example/p/a",
       "/p/\\elsewhere.example",
     ]) {
-      expect(found(address)).toEqual([
+      expect(await found(address)).toEqual([
         {
           path: "/p/config.ts",
           rule: "a-page-with-a-parameter-names-an-address",
@@ -59,10 +64,10 @@ describe("the findings the addresses of a project earn", () => {
     }
   });
 
-  it("names an address for a route no page with a parameter has", () => {
+  it("names an address for a route no page with a parameter has", async () => {
     const found = addressProblems(
       pages,
-      given('{ "/p/:sku": "/p/a", "/gone/:id": "/gone/1", "/": "/" }'),
+      await given('{ "/p/:sku": "/p/a", "/gone/:id": "/gone/1", "/": "/" }'),
       "/p/config.ts",
     );
     expect(found.map((problem) => problem.message)).toEqual([
@@ -71,16 +76,18 @@ describe("the findings the addresses of a project earn", () => {
     ]);
   });
 
-  it("says nothing of a stray address while a page's route is computed, or of a missing one it cannot read", () => {
+  it("says nothing of a stray address while a page's route is computed, or of a missing one it cannot read", async () => {
     const computed = [...pages, { name: "odd", route: undefined, at: "/p/odd.page.ts" }];
     expect(
-      addressProblems(computed, given('{ "/p/:sku": "/p/a", "/x/:y": "/x/1" }'), "/c"),
+      addressProblems(computed, await given('{ "/p/:sku": "/p/a", "/x/:y": "/x/1" }'), "/c"),
     ).toEqual([]);
-    expect(addressProblems(pages, readAddresses("export default { ...base };"), "/c")).toEqual([]);
+    expect(
+      addressProblems(pages, await readAddresses("export default { ...base };"), "/c"),
+    ).toEqual([]);
   });
 
-  it("passes on what reading the addresses found wrong, at the config, and asks for nothing more", () => {
-    const found = addressProblems(pages, given("{ '/p/:sku': 5 }"), "/p/config.ts");
+  it("passes on what reading the addresses found wrong, at the config, and asks for nothing more", async () => {
+    const found = addressProblems(pages, await given("{ '/p/:sku': 5 }"), "/p/config.ts");
     expect(found.map((problem) => [problem.path, problem.rule, problem.message])).toEqual([
       [
         "/p/config.ts",

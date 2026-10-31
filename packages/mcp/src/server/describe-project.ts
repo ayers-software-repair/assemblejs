@@ -13,6 +13,6 @@ import type { DescribedProject } from "./described-project.js";
  * A resource rather than a command, because an agent that has to ask what exists spends its
  * first three turns finding out.
  */
-export function describeProject(root: ProjectRoot): DescribedProject {
-  return { root: root.path, ...readShape(root.path) };
+export async function describeProject(root: ProjectRoot): Promise<DescribedProject> {
+  return { root: root.path, ...(await readShape(root.path)) };
 }

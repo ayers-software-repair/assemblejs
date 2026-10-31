@@ -11,8 +11,8 @@ import { readViewMount } from "./read-view-mount.js";
  * `mount = "none"` for itself. A mount the view computes, or one in a view that cannot be read,
  * is taken as one that mounts, which is how the placement rules take it.
  */
-export function hasBrowserHalf(root: string, assembly: DiscoveredAssembly): boolean {
+export async function hasBrowserHalf(root: string, assembly: DiscoveredAssembly): Promise<boolean> {
   if (isStaticView(assembly.renderer)) return assembly.client !== undefined;
   const view = isAbsolute(assembly.view) ? assembly.view : join(root, assembly.view);
-  return readViewMount(root, view) !== "none";
+  return (await readViewMount(root, view)) !== "none";
 }
