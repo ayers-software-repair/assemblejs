@@ -15,9 +15,18 @@
         "browser/landing-proof/landing.probe.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",
-        "browser/build-examples.mjs"
+        "browser/build-examples.mjs",
+        "browser/academy-editor/editor.probe.ts",
+        "examples/academy/workspace/*.test.mjs",
+        "browser/academy-editor/read-save-body.test.mjs",
+        "browser/academy-editor/create-file-provider.test.mjs"
       ],
-      "project": ["scripts/**/*.mjs", "browser/**/*.{ts,tsx,mjs}"],
+      "project": [
+        "scripts/**/*.mjs",
+        "browser/**/*.{ts,tsx,mjs}",
+        "examples/academy/workspace/*.{js,mjs}",
+        "browser/academy-editor/*.js"
+      ],
       "ignoreDependencies": [
         "@arethetypeswrong/cli",
         "publint",

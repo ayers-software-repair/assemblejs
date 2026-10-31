@@ -8136,3 +8136,14 @@ source retained cancellation handles after settlement, so later edits/retries co
 already-settled response. Two source regressions (successful and failed HTTP replies) were
 watched red before clearing the matching handle in finally. Pending-request cancellation and
 late-response protection remain; no network error filter or browser assertion is relaxed.
+
+## 2026-10-30: source merge exception for the sole reviewer account
+
+The owner explicitly grants standing administrative source merges for AssembleJS because
+there is no separate GitHub reviewer account. Use this only after independent source review,
+applicable QA and every required exact-head CI check pass, where the remaining obstacle is
+the formal approving-review or last-push-approval account requirement. Keep expected-head
+and base checks, inspect the actual squash tree/message/signature and verify post-merge CI.
+Do not bypass failed checks or unresolved findings, change rulesets, or infer release, tag,
+publication, deployment, spending or final runtime-adoption authority. Do not ask the owner
+again for this same already granted source-merge exception.

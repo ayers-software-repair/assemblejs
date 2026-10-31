@@ -56,6 +56,9 @@ importers:
       happy-dom:
         specifier: 20.13.0
         version: 20.13.0
+      highlight.js:
+        specifier: 11.11.1
+        version: 11.11.1
       husky:
         specifier: 9.1.7
         version: 9.1.7
@@ -3394,6 +3397,10 @@ packages:
 
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
+
+  highlight.js@11.11.1:
+    resolution: {integrity: sha512-Xwwo44whKBVCYoliBQwaPvtd/2tYFkRQtXDWj1nackaV2JPXx3L0+Jvd8/qCJ2p+ML0/XVkJ2q+Mr+UVdpJK5w==}
+    engines: {node: '>=12.0.0'}
 
   hono@4.13.5:
     resolution: {integrity: sha512-O6+/eCYRkzzzy0rPWwKLiGBR1nFuUPZynnwjxN1MBA62NNqbT0wQEzQyK2gSO5yDIDB336sXQleAhOHrzlYyKw==}
@@ -7277,6 +7284,8 @@ snapshots:
       function-bind: 1.1.2
 
   highlight.js@10.7.3: {}
+
+  highlight.js@11.11.1: {}
 
   hono@4.13.5: {}
 
