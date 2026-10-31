@@ -17,6 +17,7 @@ export function frameAssetProblems(html, file, site) {
   try {
     window.document.documentElement.innerHTML = html;
     const document = window.document;
+    if (document.querySelector("base")) problems.push(`${file}: unexpected base element`);
     const base = new URL(file, "https://frame.invalid/");
     const matches = (selector, attribute, target) => {
       const nodes = [...document.querySelectorAll(selector)];

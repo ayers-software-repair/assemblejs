@@ -278,6 +278,14 @@ test("generated asset checks refuse a wrong relative URL on an uncaptured refere
     const html = `<head>${head}<link rel="icon" href="../../../favicon.svg"></head><body><header class="product-header"><a class="product-brand" href="../../../index.html"><img src="../../../mark.svg"></a><nav class="product-nav">${nav}</nav></header></body>`;
     const file = "docs/api/functions/uncaptured.html";
     assert.deepEqual(frameAssetProblems(html, file, root), []);
+    assert.match(
+      frameAssetProblems(
+        html.replace("<head>", '<head><base href="https://unrelated.invalid/">'),
+        file,
+        root,
+      ).join("\n"),
+      /unexpected base element/,
+    );
     const bad = html.replace('href="../../../skin.css"', 'href="../../skin.css"');
     assert.match(frameAssetProblems(bad, file, root).join("\n"), /does not resolve to skin.css/);
     rmSync(join(root, "mark.svg"));

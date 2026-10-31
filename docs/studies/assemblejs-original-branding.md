@@ -126,3 +126,40 @@ are local tooling setup only and are excluded from the commit.
 The two upstream OFL files retain their exact licensed bytes, including an upstream trailing
 space on line 21. The only `git diff --check` notices are those two retained licence lines;
 source-code whitespace is clean. Font/provenance hash checks cover the exact licence bytes.
+
+First changed-source hosted result: draft PR55 head
+`9f17a72cc14be180ff52a42a3ff9f31cd98498c8` editor run `41222747553`, attempt 1, passes
+34 focused cases and its real browser case, including naturally loaded local Poppins/Fira
+Code, source scrolling/selection, keyboard/narrow editing and deliberate save conflict.
+Artifact `13050024538`, 355,264 bytes, SHA-256
+`086743c15e071eb2237619b0a99d3d7a8f0e40594eebe251bd38e7bc86177462`, is size/hash verified;
+root viewed all four PNGs. This supports the captured editor state only, not all-page branding
+or static runtime acceptance. Other first-head jobs and supported static hook are separate.
+
+Prepared static-proof follow-on replaces obsolete weave/GPU assertions with the actual new
+contract: no DOM canvas, background module or worker; five widths; real compositor PNG
+comparison against temporarily removed decoration, an identical-image zero control and exact
+restoration; reduced motion and real outline navigation. Both bitmaps, temporary styles and
+fixture are cleaned up on failure. Fresh independent source review is clear and no-emit probe
+types/lint/unused pass; no static browser execution or stability acceptance is claimed yet.
+
+First all-page landing run `41222747628` fails at head `9f17a72`: the real 390px
+`docs/api/classes/_asmjs_build.DeadLinkError.html` has document-level horizontal overflow.
+Poppins is actually loaded. Existing homepage proof passes; all 17 maintained pages pass at
+both widths and all eight reference representatives pass desktop. Later narrow API captures
+and forced-colours focus are unexecuted, not accepted. The exact current generation has
+710 API pages, distinct from the explicitly retained 701-page baseline inventory.
+Artifact `13050793009`, 25,521,855 bytes, SHA-256
+`e2f9f3d9afab2108dc69b566bdbaf231b47ba89744cdb94f192c73d6eccb2db2`, is verified and retained
+with log, trace, actual failing HTML and trace JPEG under `/tmp/assemblejs-original-branding-9f17a72-*`.
+The first probe retained only a fit boolean, so the overflowing element is not yet established;
+no CSS clipping, tolerance relaxation, unchanged retry or speculative layout fix is made.
+The next changed-source checkpoint records viewport/document dimensions, bounded element
+bounds/styles and a full-height failure image while preserving the containment assertion.
+
+Modes run `41222747555` passes at the same head/attempt 1. Artifact `13049934886`,
+2,672,584 bytes, SHA-256 `116860a9074ed4d25c301f3bd51ee9aef530511117357b913ad48c532ee5a573`,
+is verified; root viewed all 26 PNGs, including private mode/tutor/draft/error/workspace states.
+Calculator evidence remains 47 calls, seven successful builds, five inspections and empty
+error/HTTP/active-process arrays. The example shop keeps its independent identity.
+This is retained captured-state scope, not final all-page/static/hydration acceptance.

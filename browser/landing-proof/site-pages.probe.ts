@@ -15,6 +15,7 @@ test("original identity covers maintained pages and every generated reference fa
   let maintained: string[] = [];
   let references: string[] = [];
   let captures: string[] = [];
+  const layout: object[] = [];
   const families = new Map<string, string>();
   try {
     const inventory = JSON.parse(await readFile("site/pages.json", "utf8")) as {
@@ -86,10 +87,46 @@ test("original identity covers maintained pages and every generated reference fa
             (font) => /^"?Poppins"?$/.test(font.family) && font.status === "loaded",
           ),
           fits: document.documentElement.scrollWidth <= innerWidth,
+          scrollWidth: document.documentElement.scrollWidth,
+          viewport: innerWidth,
+          overflow: [...document.body.querySelectorAll("*")]
+            .map((element) => {
+              const box = element.getBoundingClientRect();
+              const style = getComputedStyle(element);
+              return {
+                tag: element.tagName,
+                class: element.getAttribute("class"),
+                left: box.left,
+                right: box.right,
+                top: box.top,
+                width: box.width,
+                scrollWidth: element.scrollWidth,
+                clientWidth: element.clientWidth,
+                visibility: style.visibility,
+                display: style.display,
+                position: style.position,
+                overflowX: style.overflowX,
+                whiteSpace: style.whiteSpace,
+                minWidth: style.minWidth,
+              };
+            })
+            .filter(
+              (box) =>
+                box.right > innerWidth + 0.5 ||
+                box.left < -0.5 ||
+                (box.overflowX === "visible" && box.scrollWidth > box.clientWidth + 1),
+            )
+            .slice(0, 40),
         }));
         expect(type.family).toContain("Poppins");
         expect(type.loaded).toBe(true);
-        expect(type.fits).toBe(true);
+        layout.push({ file, width, ...type });
+        if (!type.fits)
+          await page.screenshot({
+            path: info.outputPath(`overflow-${String(index)}-${String(width)}.png`),
+            fullPage: true,
+          });
+        expect(type.fits, `${file} at ${String(width)}px`).toBe(true);
         await page.screenshot({
           path: info.outputPath(`page-${String(index)}-${String(width)}.png`),
           fullPage: true,
@@ -109,7 +146,14 @@ test("original identity covers maintained pages and every generated reference fa
       await writeFile(
         info.outputPath("site-pages-evidence.json"),
         JSON.stringify(
-          { maintained, references, families: Object.fromEntries(families), captures, failures },
+          {
+            maintained,
+            references,
+            families: Object.fromEntries(families),
+            captures,
+            layout,
+            failures,
+          },
           null,
           2,
         ),
