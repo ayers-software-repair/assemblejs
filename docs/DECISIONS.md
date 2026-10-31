@@ -8093,3 +8093,17 @@ reproducing the edit/revert cycle refusal; the superseded source was not merged 
 CI. The migration task is complete at this source checkpoint. Final ledger-only changes still
 require their own exact-head CI and review before merge. No browser-runtime retry or adoption,
 notice completion, release or Academy completion is implied.
+
+## 2026-10-30: Academy's calculator runs in the supplied Market
+
+The supplied final project gains a React price-calculator assembly beside the buy box.
+It reuses the installed renderer, the buy box's server offer service and the shop's existing
+quote api. No client-supplied price is trusted. Quantity presets and ordinary input request a
+real server total and preserve stock warnings; estimating does not alter stock or the basket.
+Invalid or mismatched replies never become prices. An unavailable quote retains useful input
+and allows retry. Superseding a request or unmounting cancels it, and a late response cannot
+replace the newer result. Browser proof is hosted only, including real quote failure/recovery,
+keyboard and narrow/dark captures. Source unit tests compile only their imported TS/TSX with
+the existing compiler, without requiring generated application TypeScript projects or builds.
+This is a working supplied-project feature, not delivered Academy lessons or guided changes;
+progressive snapshots and the workspace still need wiring. No runtime selection or release.
