@@ -80,6 +80,7 @@
 }
 .academy-source-surface textarea::selection {
   background: #264f78;
+  color: #ffffff;
 }
 .academy-code .hljs-keyword,
 .academy-code .hljs-selector-tag {
@@ -101,6 +102,10 @@
   color: #79c0ff;
 }
 @media (forced-colors: active) {
+  .academy-source-surface textarea::selection {
+    color: HighlightText;
+    background: Highlight;
+  }
   .academy-source-surface pre {
     display: none;
   }

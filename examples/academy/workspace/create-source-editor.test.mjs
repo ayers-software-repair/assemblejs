@@ -83,7 +83,7 @@ test("source markup is escaped in the highlighted layer", async () => {
   await editor.open("b.html");
   const source = '<img src="x" onerror="bad()"><script>bad()</script>';
   edit(source);
-  assert.equal(document.querySelector("pre").textContent, source);
+  assert.equal(document.querySelector("pre").textContent, source + "\n");
   assert.equal(document.querySelectorAll("img, script").length, 0);
   assert.equal(document.querySelector("pre").getAttribute("aria-hidden"), "true");
 });

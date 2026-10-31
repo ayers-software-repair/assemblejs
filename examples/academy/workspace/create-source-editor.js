@@ -48,7 +48,8 @@ export function createSourceEditor(container, project, paths) {
   const refresh = () => {
     if (!active || disposed) return;
     const buffer = files.buffer(active);
-    code.innerHTML = highlightSource(active, buffer.text);
+    // A pre does not paint the final empty line that a textarea retains.
+    code.innerHTML = highlightSource(active, buffer.text) + "\n";
     save.disabled = !buffer.dirty;
     for (const [path, button] of buttons) {
       button.textContent = path + (files.buffer(path).dirty ? " *" : "");

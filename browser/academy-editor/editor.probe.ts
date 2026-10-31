@@ -1,5 +1,6 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { writeFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 import { serveEditor } from "./serve-editor.mjs";
 
@@ -42,6 +43,41 @@ test("actual source saves, unsaved tabs, stale refusal and keyboard editing", as
     );
     expect(fixture.readFile("price-calculator.react.tsx")).toBe(edited);
     await page.screenshot({ path: info.outputPath("editor-desktop.png"), fullPage: true });
+    await input.press("Control+End");
+    await expect
+      .poll(async () =>
+        input.evaluate((node) => {
+          const textarea = node as HTMLTextAreaElement;
+          const painted = textarea.previousElementSibling as HTMLElement;
+          return Math.abs(textarea.scrollTop - painted.scrollTop);
+        }),
+      )
+      .toBeLessThanOrEqual(1);
+    const metrics = await input.evaluate((node) => {
+      const textarea = node as HTMLTextAreaElement;
+      const painted = textarea.previousElementSibling as HTMLElement;
+      return {
+        sourceEndsWithNewline: textarea.value.endsWith("\n"),
+        caret: textarea.selectionEnd,
+        sourceLength: textarea.value.length,
+        textareaTop: textarea.scrollTop,
+        paintedTop: painted.scrollTop,
+        textareaHeight: textarea.scrollHeight,
+        paintedHeight: painted.scrollHeight,
+      };
+    });
+    expect(metrics.sourceEndsWithNewline).toBe(true);
+    expect(metrics.caret).toBe(metrics.sourceLength);
+    expect(metrics.textareaTop).toBeGreaterThan(0);
+    expect(Math.abs(metrics.textareaHeight - metrics.paintedHeight)).toBeLessThanOrEqual(1);
+    await writeFile(info.outputPath("editor-metrics.json"), JSON.stringify(metrics, null, 2));
+    await page.screenshot({ path: info.outputPath("editor-bottom.png"), fullPage: true });
+    await input.evaluate((node) => {
+      const textarea = node as HTMLTextAreaElement;
+      textarea.setSelectionRange(textarea.value.length - 160, textarea.value.length);
+    });
+    await page.screenshot({ path: info.outputPath("editor-selection.png"), fullPage: true });
+    await input.press("Control+Home");
     await page.setViewportSize({ width: 390, height: 844 });
     await expect(input).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
