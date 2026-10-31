@@ -119,3 +119,17 @@ test("read errors remain visible and disposal cannot repopulate the container", 
   await editor.open("b.html");
   assert.equal(document.body.children.length, 0);
 });
+
+test("Home at the first character clears retained scroll without changing the buffer", async () => {
+  const { window, document, editor, input } = fixture();
+  await editor.open("a.tsx");
+  const painted = document.querySelector("pre");
+  input.setSelectionRange(0, 0);
+  input.scrollTop = 19;
+  painted.scrollTop = 19;
+  input.dispatchEvent(new window.KeyboardEvent("keyup", { key: "Home", ctrlKey: true }));
+  assert.equal(input.scrollTop, 0);
+  assert.equal(painted.scrollTop, 0);
+  assert.equal(input.value, "original a.tsx");
+  assert.equal(editor.files.buffer("a.tsx").dirty, false);
+});

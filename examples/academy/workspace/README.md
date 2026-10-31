@@ -26,7 +26,7 @@ Failed saves retain the learner's draft and show the actual error. Saving does n
 or claim that a visible preview is current. The final workspace still needs the real provider,
 mode/diff controls, lesson checks, persistence and live-agent transport.
 
-Sixteen focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
+Seventeen focused Node/DOM/request cases use actual temporary files. They cover saved bytes, stale-save
 refusal, in-flight edits, failed writes, retained tabs, late reads, markup escaping, disposal and split UTF-8 input.
 The hosted `academy source editor` job bundles the actual component and opens real copied
 Market calculator files through a bounded test-only HTTP provider. It verifies actual saved
@@ -44,3 +44,9 @@ keyboard exit, desktop/narrow captures and stale refusal, but its strict request
 validates an explicit successful response body before resolving a save. Three focused
 transport cases enforce body completion, the real failure diagnostic and an acknowledgement;
 the strict browser failure assertion is unchanged. Hosted acceptance still governs.
+
+Targeted narrow metrics then reproduced a clipped first line (`41162669536`, `9b64b49`):
+the caret was at zero but both aligned layers retained scrollTop 19; the first painted span
+started above its viewport. The source editor normalizes Home at the first character to
+scrollTop/Left zero without changing the buffer. The actual first-line visibility assertion
+remains strict; the small keyboard regression was watched failing before this correction.

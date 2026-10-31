@@ -33,9 +33,18 @@ export function createSourceEditor(container, project, paths) {
   const code = element("code");
   formatted.append(code);
   surface.append(formatted, input);
-  input.addEventListener("scroll", () => {
+  const syncScroll = () => {
     formatted.scrollTop = input.scrollTop;
     formatted.scrollLeft = input.scrollLeft;
+  };
+  input.addEventListener("scroll", syncScroll);
+  input.addEventListener("keyup", (event) => {
+    if (event.key === "Home" && input.selectionStart === 0 && input.selectionEnd === 0) {
+      // Native Home can retain a positive scroll offset and clip the first source line.
+      input.scrollTop = 0;
+      input.scrollLeft = 0;
+      syncScroll();
+    }
   });
   const save = element("button", "Save file");
   save.type = "button";
