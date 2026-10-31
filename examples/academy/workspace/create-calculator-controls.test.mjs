@@ -106,3 +106,22 @@ test("destroy removes UI while an already dispatched read is allowed to finish",
   assert.ok(f.calls.every((call) => call.name === "read_source"));
   window.close();
 });
+
+test("the walkthrough observer receives actual settled operations without replacing UI rendering", async () => {
+  const f = fixture();
+  f.view.destroy();
+  const observed = [];
+  f.view = createCalculatorControls(f.document.body, f.client, f.recipe, (state) =>
+    observed.push(state),
+  );
+  f.button("Plan changes").click();
+  await setImmediate();
+  const settled = observed.at(-1);
+  assert.equal(settled.busy, false);
+  assert.equal(settled.receipt.kind, "planned");
+  assert.equal(settled.receipt.proposal, f.view.modes.state.pending);
+  assert.equal(f.document.querySelectorAll("ins").length, 5);
+  assert.ok(f.calls.every((call) => call.name === "read_source"));
+  f.view.destroy();
+  f.window.close();
+});

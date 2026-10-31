@@ -167,3 +167,29 @@ pass; failed-check and entry-limit controls were observed red. Hosted proof and 
 acceptance are pending. The Node runtime adapter is hosted QA only, not final browser runtime
 or a publicly deployed backend. No local app build/server/browser was used. See
 `examples/academy/workspace/WORKSPACE_PREVIEW.md` for ownership and isolation limits.
+
+## Verified PR44 delivery and next mode practice
+
+PR44 merged as `d11c4b39ed0d6076b1eb4f668bf96be4b3bc8f21`, exact accepted tree
+`123f20705d8d1ef72e5b35c83a2fcefd30444faa`, parent `5325ca1`. Personal final review
+`5721755265` accepted all eight exact-head jobs (`41178867199`, `41178867226`, `41178867193`)
+and actual source/runtime/artifact/visual evidence. The actual squash tree/parent/message/
+DCO/GitHub signature were verified. All post-merge runs passed: CI `41179567297`, modes
+`41179567305`, editor `41179567296`. Workspace work described above as pending is delivered
+as a private source increment, not a publicly available Academy or final runtime choice.
+
+Retain `/tmp/assemblejs-academy-workspace-preview`, all `/tmp/academy-workspace-*.log` and
+source/artifact directories. Corrected source `86af04a` artifact `13033004609`, SHA-256
+`401bd26e544a9e83cd88d48609fc26f5fb9f7fe1c4fd54c46a47b7ebde06c855`, proves six builds,
+31 tool calls, actual quotes, width=scrollWidth=324, no outliers, Stop and HTTP-build cancel
+with no active processes. Only the three expected stock EventSource aborts occur on frame
+removal. Root and personal reviewer inspected desktop/narrow/full-layout images. Earlier
+blank offscreen screenshot, child-scroll timeout and actual search-form overflow failures
+remain in DECISIONS and retained artifacts; none was suppressed or rerun unchanged.
+
+Next owned source worktree is `/tmp/assemblejs-academy-mode-walkthrough`, branch
+`codex/academy-mode-walkthrough`, based on exact PR44 merge. Short authored tasks observe
+actual Plan/reject/revised-Approval/Auto receipts through the existing controls. Focused source
+proof is `/tmp/academy-mode-walkthrough-*.log`; hosted/native/personal acceptance is still
+required. See `examples/academy/workspace/MODE_WALKTHROUGH.md`. This is not durable curriculum
+progress or certificate evidence; keep full lessons, recovery/resume and transport work open.

@@ -3,7 +3,7 @@
 import { CalculatorModes } from "./calculator-modes.js";
 
 /** Authored guidance and exact source review over the same tools as manual/agent changes. */
-export function createCalculatorControls(container, client, recipe) {
+export function createCalculatorControls(container, client, recipe, onState = () => {}) {
   const document = container.ownerDocument;
   const node = (tag, text) => {
     const element = document.createElement(tag);
@@ -102,6 +102,7 @@ export function createCalculatorControls(container, client, recipe) {
         review.append(node("p", "After"), after);
       }
     }
+    onState(state);
   });
   mode.addEventListener("change", () => modes.mode(mode.value));
   request.addEventListener("click", () => void modes.request(input.value));

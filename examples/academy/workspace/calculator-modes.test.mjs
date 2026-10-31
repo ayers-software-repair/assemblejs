@@ -96,6 +96,7 @@ test("lost, partial and malformed acknowledgements consume permission and never 
     await modes.approve();
     assert.equal(modes.state.pending, undefined);
     assert.equal(modes.state.check, undefined);
+    assert.equal(modes.state.receipt, undefined);
     assert.doesNotMatch(modes.state.phase, /check passed/);
     if (modes.state.result?.ok === false)
       assert.match(JSON.stringify(modes.state.result), /partial disk failure/);
@@ -121,6 +122,7 @@ test("failed or malformed checks report actual diagnostics without rolling back 
     assert.ok(f.files.has(f.directory + "price-calculator.react.tsx"));
     assert.doesNotMatch(modes.state.phase, /check passed/);
     assert.deepEqual(modes.state.check, result);
+    assert.equal(modes.state.receipt, undefined);
   }
 });
 
