@@ -156,3 +156,57 @@ test("spelling out the supplied default title is not a revised requirement", asy
   assert.match(f.window.document.body.textContent, /outside this practice step/);
   f.close();
 });
+
+test("existing calculator work can replay all modes through revised titles and fresh presets", async () => {
+  const f = fixture();
+  try {
+    f.modes.mode("auto");
+    await f.modes.request('Add a calculator called "Coffee total"');
+    await f.modes.request("Use presets 2, 4, 8");
+    const view = f.directory + "price-calculator.react.tsx";
+    f.files.set(view, f.files.get(view) + "\n// Manual learner note stays.\n");
+    const before = new Map(f.files);
+    f.modes.mode("plan");
+    await f.modes.request('Rename calculator to "Order total"');
+    assert.match(f.heading(), /^2\./);
+    assert.deepEqual([...f.files], [...before]);
+    f.modes.mode("approval");
+    await f.modes.reject();
+    assert.match(f.heading(), /^3\./);
+    assert.match(f.window.document.body.textContent, /Rename calculator to "Quick estimate"/);
+    assert.deepEqual([...f.files], [...before]);
+    await f.modes.request('Rename calculator to "Quick estimate"');
+    await f.modes.approve();
+    assert.match(f.heading(), /^4\./);
+    assert.match(f.window.document.body.textContent, /Use presets 1, 3, 6/);
+    f.modes.mode("auto");
+    await f.modes.request("Use presets 1, 3, 6");
+    assert.equal(f.heading(), "You used all three modes");
+    assert.match(f.files.get(view), /Quick estimate/);
+    assert.match(f.files.get(view), /\[1, 3, 6\]/);
+    assert.ok(f.files.get(view).endsWith("// Manual learner note stays.\n"));
+    for (const [path, contents] of before)
+      if (path !== view) assert.equal(f.files.get(path), contents);
+  } finally {
+    f.close();
+  }
+});
+
+test("approving the current default title cannot count as a revised rename", async () => {
+  const f = fixture();
+  try {
+    f.modes.mode("auto");
+    await f.modes.request("Add a calculator");
+    const view = f.directory + "price-calculator.react.tsx";
+    const before = f.files.get(view);
+    f.modes.mode("plan");
+    await rejectFirst(f, 'Rename calculator to "Coffee total"');
+    await f.modes.request('Rename calculator to "Order estimate"');
+    await f.modes.approve();
+    assert.match(f.heading(), /^3\./);
+    assert.equal(f.files.get(view), before);
+    assert.equal(f.modes.state.receipt, undefined);
+  } finally {
+    f.close();
+  }
+});

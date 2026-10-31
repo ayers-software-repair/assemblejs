@@ -29,6 +29,7 @@
         "browser/academy-modes/workspace.probe.ts",
         "browser/academy-modes/workspace-version.probe.ts",
         "browser/academy-modes/draft-recovery.probe.ts",
+        "browser/academy-modes/existing-practice.probe.ts",
         "browser/academy-modes/modes-entry.mjs",
         "browser/academy-modes/source-paths.test.mjs"
       ],

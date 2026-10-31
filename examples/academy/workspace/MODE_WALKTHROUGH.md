@@ -11,13 +11,15 @@ plan receipt before applying; failed/partial/stale writes and failed/malformed c
 no successful apply receipt. Mode selection does not create a receipt. The guide follows
 receipt kinds, original proposal identity and authored request intent, not status prose.
 
-The rejected proposal must be the one inspected in Plan. Revised Approval must add a title
-that differs from that plan; the suggested title changes when necessary. Auto must actually
-apply a presets request. Replaying the same receipt cannot satisfy a differently typed next
+The rejected proposal must be the one inspected in Plan. The first Plan may add the calculator or rename an existing one. Revised Approval must use
+the same action with a different title; its suggestion also differs from the actual source.
+Auto must apply genuinely different ordered preset values. Equivalent title escapes or preset
+spacing do not create proposals or advance practice. Replaying the same receipt cannot satisfy a differently typed next
 step. Unsupported requests and actual diagnostics remain in the editing controls. Out-of-order
 writes retain source and explain that this practice step was not followed; no reset overwrites
-learner work. Replaying from a fresh project and general curriculum recovery remain work for
-the versioned lesson/snapshot system.
+learner work. Reloading starts fresh practice on the current calculator without resetting its source.
+The guide chooses a changed title and presets from the actual reviewed source. It never
+infers historical completion from files. General curriculum recovery remains open.
 
 This is session-only mode practice, not persisted curriculum progress or certificate evidence.
 Its final text records the three modes used and asks the learner to build and try the actual
@@ -25,7 +27,9 @@ calculator. It does not assert that a later edit is checked or that a frame load
 Full revision-bound lesson checks, snapshots, resume, certificate, verified external-agent
 connection and production/browser-runtime selection remain open.
 
-Focused source/DOM proof includes eight practice cases and a controls observer case. A deliberate
+Focused source/DOM proof includes ten practice cases and a controls observer case. A deliberate
 failed-check receipt bypass was watched failing before restoration. Actual hosted MCP/source,
 preview, keyboard and narrow assertions are extended in the existing workspace probe; its
-new exact-head proof and independent/personal review remain required before delivery.
+new existing-calculator probe additionally preserves a manual comment and equivalent title/
+preset representations across reload, refuses semantic no-ops, then exercises genuine changes.
+Exact-head hosted proof and independent/personal review remain required before delivery.

@@ -1,5 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
+import { calculatorPresets } from "./calculator-presets.js";
+import { calculatorTitle } from "./calculator-title.js";
 import { calculatorRequest } from "./calculator-request.js";
 
 /** Short authored practice follows actual controller receipts, never clicks or status prose. */
@@ -20,7 +22,7 @@ export function createModeWalkthrough(container) {
   const steps = [
     [
       "1. Plan without writing",
-      "Select Plan. Ask Add a calculator, then inspect its files.",
+      "Select Plan. Add a calculator or plan a new title, then inspect its files.",
       "A plan is a proposal. It does not change your saved project or rebuild the preview.",
     ],
     [
@@ -69,11 +71,28 @@ export function createModeWalkthrough(container) {
         step <= 1 &&
         receipt.kind === "planned" &&
         receipt.mode === "plan" &&
-        intent.action === "add"
+        ["add", "title"].includes(intent.action)
       ) {
+        let revisedTitle;
+        try {
+          const before = receipt.proposal.changes.find(
+            (change) =>
+              change.path === "src/assemblies/price-calculator/price-calculator.react.tsx",
+          )?.before;
+          revisedTitle = ["Coffee total", "Order total", "Quick estimate"].find(
+            (title) =>
+              title !== (intent.title ?? "Order estimate") &&
+              (intent.action === "add" ||
+                (typeof before === "string" && calculatorTitle(before, title) !== before)),
+          );
+        } catch (error) {
+          notice.textContent = `Practice needs source inspection: ${String(error)}. Your files are kept.`;
+          return;
+        }
+        if (!revisedTitle) return;
         planned = receipt.proposal;
-        const revisedTitle = intent.title === "Coffee total" ? "Order total" : "Coffee total";
-        steps[2][1] = `Use Add a calculator called "${revisedTitle}". Propose, review, then approve.`;
+        const action = intent.action === "add" ? "Add a calculator called" : "Rename calculator to";
+        steps[2][1] = `${action} "${revisedTitle}". Propose, review, then approve.`;
         advance = step === 0;
         notice.textContent = "";
         render();
@@ -88,11 +107,26 @@ export function createModeWalkthrough(container) {
         step === 2 &&
         receipt.kind === "applied" &&
         receipt.mode === "approval" &&
-        intent.action === "add" &&
+        intent.action === calculatorRequest(planned.request).action &&
         intent.title &&
         receipt.proposal !== planned &&
         intent.title !== (calculatorRequest(planned.request).title ?? "Order estimate")
       ) {
+        try {
+          const after = receipt.proposal.changes.find(
+            (change) =>
+              change.path === "src/assemblies/price-calculator/price-calculator.react.tsx",
+          )?.after;
+          const { values } = calculatorPresets(after);
+          const next =
+            values.length === 3 && values.every((value, index) => value === [2, 4, 8][index])
+              ? [1, 3, 6]
+              : [2, 4, 8];
+          steps[3][1] = `Select Auto. Use presets ${next.join(", ")}, then apply the request.`;
+        } catch (error) {
+          notice.textContent = `Practice needs source inspection: ${String(error)}. Your files are kept.`;
+          return;
+        }
         advance = true;
       } else if (
         step === 3 &&

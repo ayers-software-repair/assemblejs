@@ -47,7 +47,14 @@ the existing apply preflight to refuse the stale proposal.
 Customization requires the canonical calculator body after normalizing only supported
 title/preset settings; trailing single-line comments are preserved. Unknown executable edits,
 changed layout or fake markers in comments are refused. Broader component changes belong to
-manual work or the learner's agent. No arbitrary JSX transformation is inferred.
+manual work or the learner's agent. No arbitrary JSX transformation is inferred. Shared readers
+decode supported title strings and ordered presets before planning. Requests that already
+match those values refuse without rewriting their representation. Shape normalization compares
+the complete body separately, retaining the same executable-source ownership boundary.
+
+Mode practice also works on an existing calculator: inspect a new title plan, reject that exact
+proposal, approve a revised title and apply changed presets in Auto. Current files and trailing
+comments remain intact; existing files never count as previous lesson completion.
 
 The editor's explicit Reload file reads actual current source into a clean idle buffer.
 It is disabled for unsaved edits. A draft typed during a reload survives; concurrent reloads
@@ -75,11 +82,14 @@ inert buy-box example before the first build, then retain them through Plan, rej
 approval and Auto. At PR50 source head `abf7c89`, modes `41195261111` passed all six browser
 scenarios and personal source/artifact review found no implementation finding. The actual
 approved page edit adds only the calculator directive to the saved manual page. Six real
-builds, quotes/composition, narrow layout and owned cleanup pass. Final-head CI and personal
-acceptance remain required before merge. Local source tests run no product build, application
+builds, quotes/composition, narrow layout and owned cleanup pass. PR50 subsequently merged as `82c0272` after final-head acceptance; post-merge CI
+`41196768670`, modes `41196768709` and editor `41196768655` passed. Local source tests run no product build, application
 server or browser.
 
-Full lesson checks, snapshots, persistence/resume, certificate gating and a verified external
+The existing-calculator practice increment has source/DOM regression proof; its new hosted
+probe and exact-head personal acceptance remain pending.
+
+Full lesson checks, snapshots, durable project/progress resume, certificate gating and a verified external
 agent connection remain open. Observed source-version checks refuse detected changes around
 preview operations; they are not atomic snapshots or durable lesson evidence. PR33's recorded
 current-source Svelte runtime failure remains held; no runtime selection follows from this work.

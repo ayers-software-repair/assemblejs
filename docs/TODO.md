@@ -95,9 +95,18 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       Nine recovery/all 92 component cases pass; four meaningful red controls were observed.
       Corrected source `ed2aa91` passes modes `41199554446` (ten browser cases, four recovery)
       and editor `41199554428` (34 focused cases and real browser proof). Independent source
-      and visual review is clear; final-head CI/personal acceptance still gates PR51 merge.
+      and visual review is clear. PR51 merged as `5de95e7` after personal review `5722701180`
+      and all ten final-head jobs. Post-merge CI `41201236884`, modes `41201236963` and editor
+      `41201236946` passed; actual tree/parent/message/signature were independently verified.
       This is tab-local draft recovery, not snapshots, durable project/lesson progress or
       completion/certificate evidence. No account or runtime adoption.
+- [ ] Practice all three modes on an already-added calculator without resetting current work.
+      Owner: Academy implementation chat. Done when a fresh title Plan, exact rejection,
+      revised title Approval and genuinely changed quantity presets in Auto preserve manual
+      comments/pages/other files, with stale/no-op/failed-check guards intact. Keep the existing
+      add-calculator path. Prove real MCP writes plus saved-project preview/quote, keyboard,
+      narrow layout and cleanup in hosted CI with independent source/personal review. This
+      replays practice on current code; it does not restore or certify historical progress.
 - [ ] Teach Plan, Approval and Auto modes through actual file/preview changes, including
       rejection and revised approval, with code view and readable diffs.
 - [x] Record and independently review the candidate learning/proof path in
