@@ -12,10 +12,10 @@
 // written down as a difference, with its reason, and is then held as well: one that closes or
 // turns around is a red too.
 //
-// The house's script, the two files it sources and its commitlint config are byte-copies of
+// The house's commit tools and shared CI proof helpers are byte-copies of
 // platform/codestyle at a named tag, held to their hashes: this repository is public and its CI
 // checks nothing out with a credential. The root commitlint.config.mjs re-exports the copied
-// config, so the hook and CI judge by it. Re-syncing is copying the four files and recording
+// config, so the hook and CI judge by it. Re-syncing copies the files and records
 // their hashes and the tag, which is the product's one platform pin: a tag that is not the pin
 // is refused.
 import { spawn } from "node:child_process";
@@ -27,13 +27,32 @@ import { pathToFileURL } from "node:url";
 import { offThePin } from "./platform-pin.mjs";
 
 export const HOUSE = {
-  tag: "v0.70.0",
+  tag: "v0.90.0",
   directory: "scripts/house",
   files: {
     "check-conventional.sh": "e5a1139167d832dc8eecc00a50732f252c21a14799f77618c6160a0d8cee1258",
     "commitlint.config.mjs": "8fda08245d3460ba40bbf9cf22a9bc6a46d020dbc6784580232127e3cc303848",
     "gates_range.sh": "c49e18b2b53fe1bb7fe0924954d40dd1dc422f9e082480681b90ffd224262dae",
     "codestyle_key.sh": "43dfa71cc806bcbab4d6200b627f52c8d6c9b10fdf77f58b1a527825bfdb0c93",
+    "ci-reuse.mjs": "8a33bd2b75f7cc11e860b203427f6c6cc1a4837971fa995994cfb226903d9ac7",
+    "workflow-jobs.mjs": "dee9e0101764797d8f37eb006e444a4fa21f4ef24829d9329f1f4fa110cab153",
+    "ci-merge-proof.mjs": "cb8f66f8ce362f77aa1daec0f48a7a06c32f94e294701699e7843aa68645fb64",
+    "ci-merge-inputs.mjs": "54026c82333de8b982bb0693e9fe654d7c6d3addc0022f8454499f0454ac1525",
+    "ci-pr-proof.mjs": "07d8023a1b16151eae1bdb447d102614adc5512570ed356316f569764a23510d",
+    "ci-execution-inputs.mjs": "916ac26a5b1a02dbb422be92c65453ce453315594bbd1e67f2efd17e77780fc8",
+    "ci-execution-inputs-schema.mjs":
+      "6ebdf63630c634bd548126ae4fc0e8ca85c35b17e89d2ba62b508e88b7960d5d",
+    "ci-execution-inputs-filesystem.mjs":
+      "355cdc11a4afb5e6e887e78db0b17aa23ff08897a14c6e19b1bb054b5a6775e1",
+    "ci-execution-inputs-checkout.mjs":
+      "af1c3ad550a3670ba68c350e06d4e3e12f8c0ed5c5996c2102e57926535706d6",
+    "ci-execution-inputs-resolver.mjs":
+      "d752992565f0a59b9dfd780ab8698b8a465e0d69635c773507caa30d612050f6",
+    "ci-job-bootstrap.mjs": "2548fd818cb6b86b6cd96bc3eae22fbb41ebc4dd32163586e6a98cfda72560e8",
+    "ci-main-topology.mjs": "f33b4f40fd8e893b617d859e42cf70eecda14877ca027ded3898eab505a65589",
+    "ci-witness-slots.mjs": "fd6b92ffcc3e271f746d02eab7bd4b827edd37b1d688cc304c1af68b20d9ef78",
+    "ci-exact-candidate-proof.mjs":
+      "a6764241a880e90a01e5cc73c4cdbb61a0243e220f7134fba04643e6c28fd173",
   },
 };
 

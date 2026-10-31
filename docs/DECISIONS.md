@@ -8319,3 +8319,47 @@ That exact regression was watched failing before normalizing the original reques
 title to the canonical Market default. Eight practice cases pass. Rejection must occur in
 Approval mode against the inspected Plan proposal; a mistaken Plan-mode rejection can recover
 with a fresh Plan without source writes. These task guards do not parse diagnostic prose.
+
+## 2026-10-31: refresh the existing approved verification adoption on current next
+
+Reconciliation of accepted issue 11 found that old PR12 was never merged: next remained at
+v0.70.0 with four house commit tools and no shared CI reuse closure or optional plan. The
+manager clarified that the stale object is PR12's branch/tree; v0.90.0 remains the issue's
+approved forward target. No newer target is selected. Start from verified PR45 merge
+`76eaaafb0b01b3e79eb917ec1238dbc13a452030`, not the old candidate tree. PR45's actual
+squash tree/parent/DCO/message/signature and all post-merge runs passed (`41180973269`,
+`41180973382`, `41180973339`); its final personal acceptance is `5721816042`.
+
+One package.json pin governs HOUSE and EditorConfig copy metadata. The fourteen CI helpers
+are generated through the supplied sync command from the actual released v0.90.0 blobs at
+`858fee6f6aae7cad8fac9679272d192866e7bd83`; their bytes equal the release and recorded
+manifest. The four commit tools and EditorConfig bytes are unchanged. Ordinary public CI
+checks vendored files, not a private checkout or credential. Keep the existing public matrix,
+current browser-artifact retention and separate Academy workflows. Add only PR reuse of a
+complete successful same-repository next push at an identical source tree, and revalidate its
+original run in the final gate. Missing, failed, unfinished, mismatched or unavailable proof
+falls back to full CI. Main-merge reuse remains disabled; exact-commit push release eligibility
+is unchanged. Exports are ignored only for the hash-held shared closure, not project code.
+
+The optional guarded verification plan is data, not permission to run a product suite locally.
+README and CONTRIBUTING now agree that hosted CI is required and a local full suite is not a
+PR prerequisite. Old README had appended that statement while CONTRIBUTING still required a
+local pnpm check. Seven source contracts pass, including invalid provenance/status/tree/API
+cases. Removing Node 24 from the adapter's required proof was watched failing before restoration.
+Existing predicate/copy mutation controls still run. Old CI 40903311527 and old helper hashes
+are retained as historical exact-tree/copy evidence, not acceptance of this new integrated head.
+
+Local Node 24.18.1's isolated --test output reported a passing file rather than six named
+contracts. A two-case probe reproduced that reporting shape and failed when one case was
+made wrong; restoring it passed. Direct execution records the seven named contracts. No
+product code was changed for this observation; exact-version
+[Node test-runner documentation](https://raw.githubusercontent.com/nodejs/node/v24.18.1/doc/api/test.md)
+and the negative probe distinguish file-level reporting from a synthetic case count.
+
+This is an atomic source/configuration transition with no persistent-data migration or package
+version change. In-flight runs keep their original commit's inputs. A rollback is an ordinary
+reviewed revert of the pin/copy/adapter commit, retaining required hosted checks and the normal
+site verification, not a reset or history rewrite. Fresh integrated independent/personal review,
+all applicable exact-head hosted jobs and the pin-triggered existing next-site verification
+remain delivery gates. No npm publication, new production infrastructure or Academy runtime
+adoption is inferred. PR12 remains reference material until the fresh delivery is accepted.
