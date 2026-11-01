@@ -4,6 +4,7 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { expect, test } from "@playwright/test";
 import { frameAssetProblems } from "../../scripts/site-frame-assets.mjs";
+import { inspectApiPalette } from "./inspect-api-palette.js";
 import { serveLanding } from "./serve-landing.js";
 
 test("original identity covers maintained pages and every generated reference family", async ({
@@ -17,6 +18,7 @@ test("original identity covers maintained pages and every generated reference fa
   let references: string[] = [];
   let captures: string[] = [];
   const layout: object[] = [];
+  const palettes: object[] = [];
   const families = new Map<string, string>();
   try {
     const inventory = JSON.parse(await readFile("site/pages.json", "utf8")) as {
@@ -64,6 +66,7 @@ test("original identity covers maintained pages and every generated reference fa
     page.on("response", (response) => {
       if (response.status() >= 400) failures.push(String(response.status()) + " " + response.url());
     });
+    await page.emulateMedia({ colorScheme: "light" });
     for (const width of [1440, 390]) {
       await page.setViewportSize({ width, height: 900 });
       for (const [index, file] of captures.entries()) {
@@ -127,6 +130,13 @@ test("original identity covers maintained pages and every generated reference fa
         expect(type.family).toContain("Poppins");
         expect(type.loaded).toBe(true);
         layout.push({ file, width, ...type });
+        if (file.startsWith("docs/api/"))
+          palettes.push({
+            file,
+            width,
+            scenario: "light OS/default preference",
+            ...(await inspectApiPalette(page)),
+          });
         if (!type.fits)
           await page.screenshot({
             path: info.outputPath(`overflow-${String(index)}-${String(width)}.png`),
@@ -139,7 +149,32 @@ test("original identity covers maintained pages and every generated reference fa
         });
       }
     }
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.addInitScript(() => localStorage.setItem("tsd-theme", "light"));
+    await page.goto(fixture.origin + "/docs/api/" + families.get("classes"));
+    await page.evaluate(() => document.fonts.ready);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    const saved = await inspectApiPalette(page);
+    expect(saved.savedTheme).toBe("light");
+    palettes.push({ scenario: "dark OS/saved light preference", ...saved });
+    await page.screenshot({ path: info.outputPath("api-saved-light.png"), fullPage: true });
+    await page.getByRole("button", { name: "Search", exact: true }).click();
+    await expect(page.locator("#tsd-search-input")).toBeFocused();
+    await page.screenshot({ path: info.outputPath("api-search-focus.png") });
+    await page.keyboard.press("Escape");
+    await expect(page.locator("#tsd-search")).not.toBeVisible();
+    await page.getByRole("link", { name: "Menu", exact: true }).click();
+    await expect(page.locator(".col-sidebar")).toBeVisible();
+    await page.screenshot({ path: info.outputPath("api-menu.png") });
+    await page.locator(".overlay").click({ position: { x: 10, y: 200 } });
+    await expect(page.locator(".col-sidebar")).not.toBeVisible();
     await page.emulateMedia({ reducedMotion: "reduce", forcedColors: "active" });
+    await page.getByRole("button", { name: "Search", exact: true }).focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#tsd-search-input")).toBeFocused();
+    await page.screenshot({ path: info.outputPath("api-forced-colors-focus.png") });
+    await page.keyboard.press("Escape");
+    await expect(page.locator("#tsd-search")).not.toBeVisible();
     await page.goto(fixture.origin + "/index.html");
     await page.keyboard.press("Tab");
     await expect(page.getByRole("link", { name: "Skip to content", exact: true })).toBeFocused();
@@ -159,6 +194,7 @@ test("original identity covers maintained pages and every generated reference fa
             families: Object.fromEntries(families),
             captures,
             layout,
+            palettes,
             backgroundRuntime,
             failures,
           },

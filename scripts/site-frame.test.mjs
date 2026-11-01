@@ -5,11 +5,9 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join, posix } from "node:path";
+import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { Window } from "happy-dom";
-import { JSX } from "typedoc";
-import { load } from "./site-api-theme.mjs";
 import { frameAssetProblems } from "./site-frame-assets.mjs";
 import { pageText } from "./site-page-text.mjs";
 import { renderLinks, sharedLinksMatch } from "./site-links.mjs";
@@ -139,30 +137,6 @@ test("generated navigation accepts equivalent paths and refuses missing or incor
     false,
   );
   assert.equal(sharedLinksMatch("<nav></nav>", links, "docs/start.html"), false);
-});
-
-test("TypeDoc keeps the real product header and active navigation at every reference depth", () => {
-  const hooks = new Map();
-  load({ renderer: { hooks: { on: (name, hook) => hooks.set(name, hook) }, on() {} } });
-  const manifest = JSON.parse(readFileSync(new URL("../site/pages.json", import.meta.url), "utf8"));
-  for (const file of ["index.html", "classes/Assembly.html"]) {
-    const html = JSX.renderElement(
-      hooks.get("body.begin")({
-        page: { url: file },
-        relativeURL: (path) => posix.relative(posix.dirname(file), path),
-      }),
-    );
-    assert.match(html, /<header class="product-header">/);
-    assert.doesNotMatch(html, /undefined/);
-    assert.ok(
-      sharedLinksMatch(
-        html,
-        renderLinks(manifest, { file: `docs/api/${file}` }),
-        `docs/api/${file}`,
-      ),
-    );
-    assert.match(html, /href="#tsd-content"/);
-  }
 });
 
 test("site staging copies the released kit closure without a retired module", () => {

@@ -197,3 +197,19 @@ Ayers Electronics, including the manual404 for consistency. No source copied fro
 The prepared static comparator and all-page checks now require no product background
 canvas/module, actual local typography/containment and real decoration-removal controls.
 Source preparation and successful local gates do not establish hosted paint or final QA.
+
+
+### 2026-11-01: inherited API palette acceptance gap (issue57)
+
+PR56 head `3a7d2e8` passes all normal hosted jobs, including landing `41336039962`.
+Independent QA inspected all66 landing images and found unreadable API toolbar/disclosure
+icons and syntax colours. This also exists at base `4a5ad61`; it is an inherited acceptance
+failure, not a branding regression. TypeDoc0.28.20 selects light roles from OS/saved preference,
+while the product sets fixed navy/slate surfaces and hides the vendor theme toggle.
+The missing icon binding measures about1.12:1; dark keyword/interface colours about2.84/2.88:1.
+Bind the missing foreground roles to the existing product palette and upstream dark syntax
+roles. Do not write the user's preference, change vendor files or add a second theme engine.
+The focused source assertion fails before the CSS correction and passes after it; all12 frame/
+API source cases pass. Hosted proof now measures actual computed roles under light OS and
+saved-light/dark OS, retains saved preference, and exercises API search/menu/keyboard and
+forced colours. These new hosted states and final independent acceptance remain pending.

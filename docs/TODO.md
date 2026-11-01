@@ -20,7 +20,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       narrow gutter to1.5rem without clipping or tolerance changes. Hosted proof remains.
       Verified signed Platform v0.100.0 is adopted with its exact house-copy closure; sixteen
       pages regenerated and manual404 omits optional runtime. Hosted proof/review/QA remain;
-      candidate is unaccepted. No consumer frame fork.
+      candidate is unaccepted. No consumer frame fork. PR56 `3a7d2e8` passes all normal jobs;
+      independent QA's issue57 identifies inherited API contrast gaps. Focused source red/green
+      and all12 frame/API cases pass after role bindings; hosted theme/keyboard/forced-colours
+      proof and final personal review remain pending.
       Compare actual rendered original/current before implementation, including logo/header/
       background composition; this is not a palette-only home edit or a framework rewrite.
       Tracked inventory: `site/{404,downloads,index,install,release-notes,start,support}.html`
