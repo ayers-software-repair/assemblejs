@@ -295,6 +295,6 @@ PR54 delivered: final `3610559`, personal `5723784579`, QA continuity `654615194
 Merge `4a5ad61969bfb11005d3d658951b2a936e8a7c3c`: reviewed tree `89dfea9`, parent `ede739b`;
 full DCO message/valid signature independently clear. All ten post-merge attempt-1 jobs pass:
 CI `41220420134`, modes `41220420100`, editor `41220420102`. Initial failed proof retained.
-Active: `~/source/.worktrees/assemblejs/assemblejs-original-branding-corrected` (same branch).
-Diagnostic inspected; gutter1.5rem and verified static pinv0.100.0 adopted; hosted proof pending.
-Current study supersedes hold-note pending entries. No consumer fork; PR33/publication holds remain.
+PR56 source `1f7f3e5` passes all twelve normal jobs; personal `5729800969`, QA `6562589527` clear.
+Original identity/static pinv0.100.0, gutter and API contrast/settled controls accepted in scope.
+Final record-head checks, squash/site delivery and PR58 notes remain; PR33/publication holds stay.

@@ -226,3 +226,28 @@ captured during TypeDoc's own search fade-in/menu slide-in, so they remain unacc
 Wait for dialog opacity1 and sidebar identity transform; also assert settled sidebar bounds.
 Do not change animation behavior, product CSS or use a timing sleep. Source lint/noEmit pass;
 fresh hosted captures, exact-head CI and personal/QA acceptance still gate delivery.
+
+
+### 2026-11-01: PR56 source acceptance before delivery
+
+Source `1f7f3e56c35fc09ef168bf8add04c7fcb31d4483`, tree
+`4a287f342c0e43783d03437ebafda5de97d8d96c`, passes all twelve normal jobs at attempt1.
+Runs: CI `41340127694`, landing `41340127687`, modes `41340127581`, editor `41340127614`,
+mechanics `41340127650`. Personal COMMENT `5729800969` and artifact QA `6562589527` find
+no remaining source/visual issue in the assigned branding/API scope. QA leaves issue57 open
+until delivery. Current PR-run checkout is synthetic merge `664fc464`, not a direct-head run.
+
+Artifact `13097256491`: 15,635,054 bytes; SHA-256
+`7c42e8194c14e1fbdf6791f3ba8c301a8cd8bc7e4413c05ab7aecd1dc2b81691`.
+Size/hash/ZIP CRCs and all72 extracted files verify. Seventy PNGs cover the five-width paint
+controls, fifty maintained/API layouts, homepage focus and four API preference/control states.
+All710 generated API pages retain asset/navigation invariants. Seventeen computed API palettes
+pass; lowest syntax contrast is4.6225997162:1. Savedlight stayslight, failures/runtime arrays empty.
+The three final interactive captures wait for actual animation endpoints: menu fits390px,
+normal/forced-colours Search is opaque with visible focus and no underlying toolbar bleed.
+Personal review views the changed captures and carries byte-identical accepted images forward.
+Durable QA archive: AUDIT/evidence/2026-11-01-independent-qa/assemblejs-pr56/retest-1f7f3e5/.
+
+The TODO source rung is checked in this record commit. Final record-head normal checks and
+personal review, actual squash identities and normal deployment/post-merge evidence still gate
+final delivery. No npm publication, runtime adoption or full Academy/curriculum acceptance.

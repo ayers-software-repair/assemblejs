@@ -10,20 +10,15 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `docs/studies/academy-research.md`, before Academy design or implementation.
 - [ ] Inspect current examples, docs generation, conformance and demo flow; research editor,
       runtime, hosting and licensing constraints before choosing infrastructure.
-- [ ] Restore the original AssembleJS identity across every current site family (owner,
+- [x] Restore the original AssembleJS identity across every current site family (owner,
       2026-10-31). Owner: AssembleJS implementation chat; finish PR54's corrected checkpoint
       first. Read-only reference: `/home/sparrow6/source/refs/assemblejs-legacy/websites/www.assemblejs.com/`.
-      Checkpoint: `docs/studies/assemblejs-original-branding.md` records original/current
-      rendered comparison, 17 maintained pages, 701 retained reference pages/seven families
-      and private fixtures (701 baseline API pages; 710 in exact failed candidate). Nov1 resume
-      verifies diagnostic artifact: 24px TypeDoc heading bleed exceeds the 20px gutter; fix
-      narrow gutter to1.5rem without clipping or tolerance changes. Hosted proof remains.
-      Verified signed Platform v0.100.0 is adopted with its exact house-copy closure; sixteen
-      pages regenerated and manual404 omits optional runtime. Hosted proof/review/QA remain;
-      candidate is unaccepted. No consumer frame fork. PR56 `3a7d2e8` passes all normal jobs;
-      independent QA's issue57 identifies inherited API contrast gaps. Focused source red/green
-      and all12 frame/API cases pass after role bindings; hosted theme/keyboard/forced-colours
-      proof and final personal review remain pending.
+      Source acceptance: PR56 `1f7f3e56c35fc09ef168bf8add04c7fcb31d4483` passes all twelve
+      normal jobs at attempt1, including CI `41340127694` and landing `41340127687`.
+      Personal `5729800969` and QA `6562589527` clear the original identity, measured gutter,
+      inherited API contrast correction and settled control captures. The study retains failed
+      runs, signed Platform v0.100.0 copy proof, exact artifact receipts and scope limits.
+      Final record-head checks/personal acceptance, squash and site delivery remain separate.
       Compare actual rendered original/current before implementation, including logo/header/
       background composition; this is not a palette-only home edit or a framework rewrite.
       Tracked inventory: `site/{404,downloads,index,install,release-notes,start,support}.html`
