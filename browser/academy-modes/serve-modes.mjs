@@ -120,6 +120,7 @@ export async function serveModes(kind = "modes") {
               "apply_assembly_plan",
               "discard_assembly_plan",
               "check",
+              "explain",
               "read_source",
               "read_source_version",
               "plan_page_placement",

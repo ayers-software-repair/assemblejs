@@ -8961,3 +8961,21 @@ branches, held draft PR22/27/33 and dirty PR27 remain. The independent historica
 receipt is AUDIT `beb4463647d08de879dc4a6e475612183076bb0e`. Rebase onto actual next preserves
 all four reviewed patches; final record-head checks/personal review and actual notes squash
 remain required. Broader curriculum, runtime selection and npm issues36/37/38/40 stay open.
+
+
+### 2026-11-01: explicit authored check explanation, not a new Studio
+
+Manager assigns the committed issue16/PLAN4.3 Check-and-explain slice on delivered next d7df01f.
+The four existing questions remain authored/no-tool. The explicit new question uses only the
+existing connected client's read_source_version, check and explain, summarizing one actual
+finding/fix with the matching catalogue reason. Version observations, malformed/unknown reply
+checks, answer generations and a30-second UI deadline prevent invented or superseded results.
+It cannot write, build or advance practice; source observations are not atomic/certificate proof.
+Independent review found that borrowing the workspace pending wrapper retained a preview lock
+when a read never settled. The composed timeout probe failed before correction: read-only tutor
+calls now use the same raw client outside that mutation/preview counter. Write guards stay put.
+All150 selected source/DOM/boundary cases, targeted lint/noEmit and four witnessed negative
+controls pass. Only the existing real-MCP workspace proof is extended; hosted/personal/QA and
+actual delivery remain pending. No browser-runtime experiment, model/transport/layout change,
+publication or wider Academy completion is inferred. The current queue is reconciled above
+historical handoff snapshots; all seven retained source dispositions and receipt refs remain.

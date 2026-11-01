@@ -3,9 +3,10 @@
 import { calculatorPresets } from "./calculator-presets.js";
 import { calculatorTitle } from "./calculator-title.js";
 import { calculatorRequest } from "./calculator-request.js";
+import { explainProjectCheck } from "./explain-project-check.js";
 
 /** Short authored practice follows actual controller receipts, never clicks or status prose. */
-export function createModeWalkthrough(container) {
+export function createModeWalkthrough(container, client) {
   const document = container.ownerDocument;
   const panel = document.createElement("section");
   panel.className = "academy-review academy-mode-walkthrough";
@@ -19,7 +20,8 @@ export function createModeWalkthrough(container) {
   summary.textContent = "Guided tutor";
   const explanation = document.createElement("p");
   const authored = document.createElement("p");
-  authored.textContent = "Authored guidance, no AI inference. Try Next, Why, Files or Customize.";
+  authored.textContent =
+    "Authored guidance, no AI inference. Try Next, Why, Files, Customize or Check and explain.";
   const form = document.createElement("form");
   const label = document.createElement("label");
   label.textContent = "Ask guided tutor";
@@ -68,6 +70,9 @@ export function createModeWalkthrough(container) {
   let disposed = false;
   let pendingProposal;
   let working = false;
+  let answerVersion = 0;
+  let activeCheck;
+  let checkTimer;
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (disposed) return;
@@ -75,10 +80,37 @@ export function createModeWalkthrough(container) {
       .trim()
       .toLowerCase()
       .replace(/[?.!]+$/, "");
+    const checking = ["check and explain", "explain check"].includes(text);
+    if (checking && activeCheck !== undefined) {
+      answer.textContent = "Check guidance is still pending.";
+      return;
+    }
+    const ticket = ++answerVersion;
     if (question.value.length > 200) answer.textContent = "Keep questions to 200 characters.";
     else if (working)
       answer.textContent = "Wait for the current operation; inspect its actual diagnostics.";
-    else if (["next", "help", "hint", "what should i do"].includes(text))
+    else if (checking) {
+      activeCheck = ticket;
+      answer.textContent = "Checking the saved project and reading authored rule guidance.";
+      const current = () => !disposed && ticket === answerVersion && !working;
+      const timer = globalThis.setTimeout(() => {
+        if (current()) {
+          answerVersion++;
+          answer.textContent = "Check guidance timed out. Inspect the actual project diagnostics.";
+        }
+        if (activeCheck === ticket) activeCheck = undefined;
+      }, 30000);
+      checkTimer = timer;
+      void explainProjectCheck(client, current)
+        .then((text) => {
+          if (current()) answer.textContent = text;
+        })
+        .finally(() => {
+          globalThis.clearTimeout(timer);
+          if (checkTimer === timer) checkTimer = undefined;
+          if (activeCheck === ticket) activeCheck = undefined;
+        });
+    } else if (["next", "help", "hint", "what should i do"].includes(text))
       answer.textContent = steps[step][1];
     else if (["why", "why this step"].includes(text)) answer.textContent = steps[step][2];
     else if (["files", "which files", "show files"].includes(text))
@@ -90,7 +122,7 @@ export function createModeWalkthrough(container) {
         'Use Rename calculator to "Your title" or Use presets 1, 3, 6 in the Request field. Titles: up to 60 characters. Presets: one to six unique integers, 1–99. Other executable edits need manual work or your own agent.';
     else
       answer.textContent =
-        "I have authored answers for Next, Why, Files and Customize. I cannot diagnose an unknown question or make changes here. Keep actual tool diagnostics visible; use your own agent for broader help.";
+        "I have authored answers for Next, Why, Files, Customize and Check and explain. I cannot diagnose an unknown question or make changes here. Keep actual tool diagnostics visible; use your own agent for broader help.";
   });
   const render = () => {
     [heading.textContent, task.textContent, explanation.textContent] = steps[step];
@@ -104,6 +136,7 @@ export function createModeWalkthrough(container) {
       if (disposed) return;
       working = state.busy;
       pendingProposal = state.busy ? undefined : state.pending;
+      answerVersion++;
       answer.textContent = "";
       const receipt = state.receipt;
       if (state.busy || step === 4 || !receipt) return;
@@ -197,6 +230,8 @@ export function createModeWalkthrough(container) {
     },
     destroy() {
       disposed = true;
+      answerVersion++;
+      globalThis.clearTimeout(checkTimer);
       panel.remove();
     },
   };

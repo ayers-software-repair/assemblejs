@@ -131,7 +131,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       }
     },
   };
-  const practice = createModeWalkthrough(guide);
+  const practice = createModeWalkthrough(guide, client);
   const tutor = createCalculatorControls(guide, observed, recipe, (state) =>
     practice.update(state),
   );

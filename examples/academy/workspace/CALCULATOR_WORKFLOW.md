@@ -57,8 +57,10 @@ proposal, approve a revised title and apply changed presets in Auto. Current fil
 comments remain intact; existing files never count as previous lesson completion.
 
 Optional Guided tutor questions explain the current mode-practice task and actual pending
-proposal paths. They use authored responses, make no tool calls and cannot approve changes or
-complete a step. Unknown questions have an honest fallback. Supported source requests still
+proposal paths. Next/Why/Files/Customize use authored responses without tool calls and cannot
+approve changes or complete a step. Check and explain explicitly calls the existing read-only
+check/rule tools with source-version guards; it cannot write, build or advance practice.
+See [check guidance](CHECK_GUIDANCE.md). Unknown questions have an honest fallback. Supported source requests still
 belong in the calculator's Request field; no AI provider or live agent connection is implied.
 
 The editor's explicit Reload file reads actual current source into a clean idle buffer.

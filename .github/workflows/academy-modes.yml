@@ -63,6 +63,8 @@ jobs:
           node examples/academy/workspace/calculator-modes.test.mjs
           node examples/academy/workspace/create-calculator-controls.test.mjs
           node examples/academy/workspace/create-mode-walkthrough.test.mjs
+          node examples/academy/workspace/explain-project-check.test.mjs
+          node examples/academy/workspace/workspace-check-guidance.test.mjs
           node examples/academy/workspace/create-academy-workspace.test.mjs
           node browser/academy-modes/source-paths.test.mjs
           node browser/academy-modes/read-preview-response.test.mjs

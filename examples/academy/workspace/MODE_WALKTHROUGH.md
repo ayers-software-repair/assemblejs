@@ -10,7 +10,9 @@ Hint or What should I do), Why, Files or Customize. Next/Why use the current tas
 its revised title/presets. Files names only actual pending proposal paths and explains that
 bases are checked when applying; no proposal means no invented files. Customize explains the
 supported title/preset requests. Questions are limited to 200 characters; unknown questions
-receive an honest limitation. Asking never calls tools, writes, approves or advances practice.
+receive an honest limitation. These four questions never call tools, write, approve or advance practice.
+The separate Check and explain question performs actual read-only project checks; see
+[the check-guidance contract](CHECK_GUIDANCE.md). It cannot author or advance practice.
 Answers clear on controller updates so an old response is not presented as current. Busy
 operations request a wait; rejected or consumed proposals (including refused stale applies) provide no pending file list.
 This is optional contextual help, not general reasoning, a connected agent or saved chat.
