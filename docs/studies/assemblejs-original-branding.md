@@ -213,3 +213,16 @@ The focused source assertion fails before the CSS correction and passes after it
 API source cases pass. Hosted proof now measures actual computed roles under light OS and
 saved-light/dark OS, retains saved preference, and exercises API search/menu/keyboard and
 forced colours. These new hosted states and final independent acceptance remain pending.
+
+
+### API contrast proof and settled capture correction
+
+Head `36acdd8` landing run `41339123325` passes at attempt1. Artifact `13096157827`
+is15,651,774 bytes, SHA-256 `48a2c26120539c8d9ba1d5af3c26b11dd18048a3d7c594bb2dd0c3809fb51465`;
+ZIP CRCs verify. All50 layout records fit, all710 API asset/navigation records pass, and17
+computed API palettes pass (lowest syntax4.6225997162:1); savedlight remainslight.
+QA comment `6562470743` independently confirms contrast. Three interactive screenshots were
+captured during TypeDoc's own search fade-in/menu slide-in, so they remain unaccepted evidence.
+Wait for dialog opacity1 and sidebar identity transform; also assert settled sidebar bounds.
+Do not change animation behavior, product CSS or use a timing sleep. Source lint/noEmit pass;
+fresh hosted captures, exact-head CI and personal/QA acceptance still gate delivery.

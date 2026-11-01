@@ -160,11 +160,19 @@ test("original identity covers maintained pages and every generated reference fa
     await page.screenshot({ path: info.outputPath("api-saved-light.png"), fullPage: true });
     await page.getByRole("button", { name: "Search", exact: true }).click();
     await expect(page.locator("#tsd-search-input")).toBeFocused();
+    await expect(page.locator("#tsd-search")).toHaveCSS("opacity", "1");
     await page.screenshot({ path: info.outputPath("api-search-focus.png") });
     await page.keyboard.press("Escape");
     await expect(page.locator("#tsd-search")).not.toBeVisible();
     await page.getByRole("link", { name: "Menu", exact: true }).click();
     await expect(page.locator(".col-sidebar")).toBeVisible();
+    await expect(page.locator(".col-sidebar")).toHaveCSS("transform", "matrix(1, 0, 0, 1, 0, 0)");
+    expect(
+      await page.locator(".col-sidebar").evaluate((sidebar) => {
+        const box = sidebar.getBoundingClientRect();
+        return box.left >= 0 && box.right <= innerWidth;
+      }),
+    ).toBe(true);
     await page.screenshot({ path: info.outputPath("api-menu.png") });
     await page.locator(".overlay").click({ position: { x: 10, y: 200 } });
     await expect(page.locator(".col-sidebar")).not.toBeVisible();
@@ -172,6 +180,7 @@ test("original identity covers maintained pages and every generated reference fa
     await page.getByRole("button", { name: "Search", exact: true }).focus();
     await page.keyboard.press("Enter");
     await expect(page.locator("#tsd-search-input")).toBeFocused();
+    await expect(page.locator("#tsd-search")).toHaveCSS("opacity", "1");
     await page.screenshot({ path: info.outputPath("api-forced-colors-focus.png") });
     await page.keyboard.press("Escape");
     await expect(page.locator("#tsd-search")).not.toBeVisible();
