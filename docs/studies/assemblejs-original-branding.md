@@ -251,3 +251,28 @@ Durable QA archive: AUDIT/evidence/2026-11-01-independent-qa/assemblejs-pr56/ret
 The TODO source rung is checked in this record commit. Final record-head normal checks and
 personal review, actual squash identities and normal deployment/post-merge evidence still gate
 final delivery. No npm publication, runtime adoption or full Academy/curriculum acceptance.
+
+
+### 2026-11-01: original-brand delivery and retained research integration
+
+PR56 squash `577c64bdcf87c1988ae984b3bc086303abf269d0` has reviewed tree
+`decc109139700d0387848628ab6edba187cf10cc`, sole parent `4a5ad61` and valid GitHub signature.
+The complete reviewed97-column DCO message matches except GitHub omitted its terminal LF.
+All five normal push workflows pass at attempt1: CI `41341961765`, landing `41341961746`,
+modes `41341961773`, editor `41341961758`, deployment `41341961754`.
+
+The exact deployment's API artifact `13097971231` verifies at2,184,047 bytes, SHA-256
+`052cb0a9e1c1bd239fbb98ea1157da1c550ddbf6e93828a298ba7ac4a47ab4ce`.
+Static expectations reproduce the actual source, released kit, 404 prefix and noindex metadata.
+One ordinary public GET per file at `https://ayers.repair/assemblejs/next/` matches all792 files
+byte-for-byte, including710 API pages, total10,191,750 bytes. No retry or live browser was used.
+Durable receipt: AUDIT/evidence/2026-11-01-assemblejs-branding-delivery/, committed `f5b7d0687`.
+Its summary binds the complete private readback SHA-256
+`47d28c25de9e73f53bd74ddc689e3bec6dcde9dc8113d6500aa1e72c8b46a72a`.
+
+PR58 preserves the manually observed handle exercise, verified durable screenshot and compact
+research/ref/cleanup dispositions. Sixteen redundant merged worktrees are removed; all receipt
+branches, held draft PR22/27/33 and dirty PR27 remain. The independent historical pre-removal
+receipt is AUDIT `beb4463647d08de879dc4a6e475612183076bb0e`. Rebase onto actual next preserves
+all four reviewed patches; final record-head checks/personal review and actual notes squash
+remain required. Broader curriculum, runtime selection and npm issues36/37/38/40 stay open.
