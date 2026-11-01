@@ -1,0 +1,115 @@
+[
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-agent-controls",
+    "branch": "codex/academy-agent-controls",
+    "head": "05c77c090ced85eca2621bb9608377a0ff0a6df0",
+    "merge": "9cecaf0f7b4ef0149d874fa5df27fadcd8e178ad",
+    "tree": "ef401ad120ba64130208090ea75a6ef3f39e1633"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-authored-tutor",
+    "branch": "codex/academy-authored-tutor",
+    "head": "9dbfa9c895dbf05880ef5c02eb224dbe2d2e2f36",
+    "merge": "ede739bd1b59d7dfda61baed63b8a82a27eb09d1",
+    "tree": "397881c47c0881ffcbccbb92c890e3380ced5d4c"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-calculator-workflow",
+    "branch": "codex/academy-calculator-workflow",
+    "head": "6a382b96e58277903e7fd0a9c39aa7e1e9363ea3",
+    "merge": "5325ca127d9ed5ba2686decbb2b1b389f6a7394d",
+    "tree": "8aa41b931ac90ba650f496e98fa2e6716659bb6c"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-draft-recovery",
+    "branch": "codex/academy-draft-recovery",
+    "head": "5d4c6ca028f7c0ad72133f997d699bb90c9bbd12",
+    "merge": "5de95e74f5235aefe32abe5ac9d0eecb5af27870",
+    "tree": "c51a3d20e2b9093f7a465c232e5ebfcf8a44d815"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-existing-practice",
+    "branch": "codex/academy-existing-calculator-practice",
+    "head": "c8ea3a9867c1154449470ff2510ff2024187d3ab",
+    "merge": "d96e4cd2c977be4ac67d20fc10a8ac956adccfcd",
+    "tree": "3059e08f8b1247686c255560450b872a4d9f4b70"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-market-calculator",
+    "branch": "codex/academy-market-calculator",
+    "head": "2a0d161e4db2d1c4d43197bb9fe0346ea36617ef",
+    "merge": "f52e83059091fe269739cd5df674414a235d5fd8",
+    "tree": "5d594c17ab9d3c6d1b81281f6273756e64709366"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-open-package",
+    "branch": "codex/academy-open-package-proof",
+    "head": "6e59ea208baa31da19bf8cf32862e154be501de0",
+    "merge": "2e1d0cf97986e03b37862109639bf2c6f1f2803f",
+    "tree": "b07a898113ff43260b58962d300f05106431be88"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-page-placement",
+    "branch": "codex/academy-page-placement",
+    "head": "484d5e994b29d2e334ce90d9c716e7301a4bdfea",
+    "merge": "82c0272ce9aca48adc4ef6dab4f0addcd4e1ef10",
+    "tree": "126e7d97329d66b14c624141ee9ffecbe1ed08c4"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-source-changes",
+    "branch": "codex/academy-source-changes",
+    "head": "6e2ea5425824b743dde76720ee46186b99c1575a",
+    "merge": "a9902ceee65f8f8f16dec8cdcf540945ea2f8fef",
+    "tree": "9cff06abe63b819295afd05353d9247c5f873308"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-source-provider",
+    "branch": "codex/academy-source-provider",
+    "head": "71888f6a559dd2c2bf6f2303b906998ef98d4524",
+    "merge": "4218dca7d6479755de2a4822645a7e089f4df9f3",
+    "tree": "e340d9b5df4ca9e191145285a9e221a4a484f29a"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-source-version",
+    "branch": "codex/academy-source-version",
+    "head": "6e97d694441128c3e75c50146a9e50bcc470a6e5",
+    "merge": "805ce560feb5c7fda7f956b6c3f370bb5c0f67f0",
+    "tree": "95e569018b3b54083f94281ca6842f6a4bcd29c9"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-workspace-editor",
+    "branch": "codex/academy-workspace-editor",
+    "head": "aee77a88ba69c973e330b255c06e0b817ebf4f4b",
+    "merge": "bd61eaed086af1d19d1b53da68ea31e74a1a4d76",
+    "tree": "29f918dff5ff4ef61785a4a658538d1502fa4618"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-workspace-preview",
+    "branch": "codex/academy-workspace-preview",
+    "head": "86af04a4427bbd9cc4f226f6e52183cc916a977f",
+    "merge": "d11c4b39ed0d6076b1eb4f668bf96be4b3bc8f21",
+    "tree": "123f20705d8d1ef72e5b35c83a2fcefd30444faa"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-async-source-inspection",
+    "branch": "codex/async-source-inspection",
+    "head": "3035c43046f8d05db78d9775bb4e3e76282dbd3e",
+    "merge": "0b6cbf868a3aeedc8b4ad0eb0a31e58a39dafbd9",
+    "tree": "f7a6fd1e1cb5b2e6bb38b577e3dcc56a35d7609d"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-verification-guardrails-reconciliation",
+    "branch": "codex/verification-guardrails-reconciliation",
+    "head": "1f1530eb7a488221260b2bb042765c0805bde8f0",
+    "merge": "fe036a78e35afa60bc8d3ee58a222b5d92b58ad9",
+    "tree": "abbb716bce88cef8336cc979a71a58940f744bb7"
+  },
+  {
+    "path": "/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-landing",
+    "branch": "codex/academy-acceptance-record",
+    "head": "2628af101ca37047183c0ec54f10aa5d30bb69de",
+    "merge": "d074ad850d86a19ebe71882eefef68567cd7e7fe",
+    "tree": "14d8e8355b49b25c2381900970e8c1eb2850d2be",
+    "localDependencySymlink": "explicitly unlinked itself before ordinary worktree removal; target retained"
+  }
+]

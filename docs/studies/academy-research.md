@@ -105,7 +105,9 @@ Coverage below is partial; visiting a course is not completing it.
 
 The follow-up in `academy-sveltekit-walkthrough.md` records actual manual custom-error hooks,
 unknown-message output, guarded redirect, document versus data responses and Solve/Reset
-recovery. Those observations cover two more exercises; hooks and advanced loading remain open.
+recovery. Those observations cover two more exercises. A later manual handle-hook exercise verifies
+response interception, HTML transformation and Reset recovery; the remaining hook exercises
+and advanced loading remain open.
 
 ### React: observed 30 October
 

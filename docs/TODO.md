@@ -1,5 +1,15 @@
 # Todo
 
+## Resume reconciliation (2026-11-01)
+
+- [x] Independently verify and remove sixteen redundant merged worktrees while retaining every
+      receipt-backed branch; exact identities are in `docs/handoffs/academy-removed-worktrees.json`.
+      Protected draft PRs22/27/33, dirty PR27 and active dependency/source trees remain.
+- [x] Prepare the preserved manual handle notes and research/cleanup records for integration.
+      Personal source review `5729848808` and prior exact-head CI pass; rebasing onto delivered
+      next preserves all four patches. Final record-head checks/personal review and actual
+      squash still gate this notes PR58. Owner npm decisions and runtime adoption stay open.
+
 ## Academy and landing research (owner, 2026-10-30)
 
 Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/issues/16>.
@@ -18,7 +28,9 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       Personal `5729800969` and QA `6562589527` clear the original identity, measured gutter,
       inherited API contrast correction and settled control captures. The study retains failed
       runs, signed Platform v0.100.0 copy proof, exact artifact receipts and scope limits.
-      Final record-head checks/personal acceptance, squash and site delivery remain separate.
+      Delivered as `577c64bdcf87c1988ae984b3bc086303abf269d0`; all five normal post-merge
+      workflows pass, including deployment `41341961754`. All792 public files match expected
+      bytes, including710 generated API pages. No live browser or wider Academy acceptance.
       Compare actual rendered original/current before implementation, including logo/header/
       background composition; this is not a palette-only home edit or a framework rewrite.
       Tracked inventory: `site/{404,downloads,index,install,release-notes,start,support}.html`
