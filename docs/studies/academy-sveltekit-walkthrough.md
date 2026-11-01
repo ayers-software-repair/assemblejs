@@ -73,8 +73,13 @@ At [handle](https://svelte.dev/tutorial/kit/handle), manually edited the existin
 before using Solve. The variant intercepted `/ping` with a plain response and changed the home
 heading through an HTML-response transform, rather than copying the lesson's inline-color
 example. Preview reload showed the changed heading and a 200 GET; following Ping returned
-`pong` with a 200 GET. The screenshot `/tmp/assemblejs-academy-kit-handle.png` shows the manual
-hook and intercepted response. Solve replaced the text transform with the provided body-color
+`pong` with a 200 GET. The retained screenshot shows the manual hook and intercepted response.
+Its durable private path is
+`/home/sparrow6/source/AUDIT/evidence/2026-11-01-codex-leftovers/assemblejs--assemblejs-academy-kit-handle.png`
+(88,522 bytes; SHA-256
+`efd0eeffef2c720e27c26e184c7945b0d9bc83e5caec674eeb7d31fa5b866b62`).
+The original `/tmp/assemblejs-academy-kit-handle.png` name is historical.
+On 1 November the retained image was reopened and its bytes verified; the exercise was not rerun. Solve replaced the text transform with the provided body-color
 solution; its styling was not independently asserted. Reset restored the resolve-only hook.
 Reloading Ping then produced 404 Not Found with a matching GET; navigating home restored its
 original heading and a 200 GET. The temporary reference tab was closed. This exercises one
@@ -85,5 +90,5 @@ does not by itself prove the preview has rebuilt successfully. Record recoverabl
 and recovery steps rather than silently counting Solve as success.
 
 The walkthrough is in progress. RequestEvent and the remaining hook exercises, advanced loading
-and the rest of the course have not yet been exercised here. Earlier rows do not imply that every interaction, language variant or
-keyboard/mobile path was tested.
+and the rest of the course have not yet been exercised here. Earlier rows do not imply that every
+interaction, language variant or keyboard/mobile path was tested.
