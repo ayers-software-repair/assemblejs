@@ -1,7 +1,7 @@
 {
   "name": "AssembleJS",
   "mark": "mark.svg",
-  "background": "weave",
+  "background": "static",
   "navigation": [
     {
       "file": "downloads.html",

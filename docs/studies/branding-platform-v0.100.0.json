@@ -1,0 +1,100 @@
+{
+  "tag": "v0.100.0",
+  "tagObject": "d184dd67ede5fdb02ab3c0a868784238e0687f3b",
+  "commit": "ee9c950744b702379b3dfcef84a63fdb7bc93f4f",
+  "remoteSignatureVerified": true,
+  "finalMainCI": 41224365765,
+  "editorconfigSHA256": "d0bf9fa73b59194d7c67bb90b0ab3e2c33563e1e9f9f67e836f5640af3f133d9",
+  "houseFiles": [
+    {
+      "name": "check-conventional.sh",
+      "before": "e5a1139167d832dc8eecc00a50732f252c21a14799f77618c6160a0d8cee1258",
+      "after": "e5a1139167d832dc8eecc00a50732f252c21a14799f77618c6160a0d8cee1258"
+    },
+    {
+      "name": "commitlint.config.mjs",
+      "before": "8fda08245d3460ba40bbf9cf22a9bc6a46d020dbc6784580232127e3cc303848",
+      "after": "8fda08245d3460ba40bbf9cf22a9bc6a46d020dbc6784580232127e3cc303848"
+    },
+    {
+      "name": "gates_range.sh",
+      "before": "c49e18b2b53fe1bb7fe0924954d40dd1dc422f9e082480681b90ffd224262dae",
+      "after": "c49e18b2b53fe1bb7fe0924954d40dd1dc422f9e082480681b90ffd224262dae"
+    },
+    {
+      "name": "codestyle_key.sh",
+      "before": "43dfa71cc806bcbab4d6200b627f52c8d6c9b10fdf77f58b1a527825bfdb0c93",
+      "after": "43dfa71cc806bcbab4d6200b627f52c8d6c9b10fdf77f58b1a527825bfdb0c93"
+    },
+    {
+      "name": "ci-reuse.mjs",
+      "before": "8a33bd2b75f7cc11e860b203427f6c6cc1a4837971fa995994cfb226903d9ac7",
+      "after": "8a33bd2b75f7cc11e860b203427f6c6cc1a4837971fa995994cfb226903d9ac7"
+    },
+    {
+      "name": "workflow-jobs.mjs",
+      "before": "dee9e0101764797d8f37eb006e444a4fa21f4ef24829d9329f1f4fa110cab153",
+      "after": "dee9e0101764797d8f37eb006e444a4fa21f4ef24829d9329f1f4fa110cab153"
+    },
+    {
+      "name": "ci-merge-proof.mjs",
+      "before": "cb8f66f8ce362f77aa1daec0f48a7a06c32f94e294701699e7843aa68645fb64",
+      "after": "cb8f66f8ce362f77aa1daec0f48a7a06c32f94e294701699e7843aa68645fb64"
+    },
+    {
+      "name": "ci-merge-inputs.mjs",
+      "before": "54026c82333de8b982bb0693e9fe654d7c6d3addc0022f8454499f0454ac1525",
+      "after": "54026c82333de8b982bb0693e9fe654d7c6d3addc0022f8454499f0454ac1525"
+    },
+    {
+      "name": "ci-pr-proof.mjs",
+      "before": "07d8023a1b16151eae1bdb447d102614adc5512570ed356316f569764a23510d",
+      "after": "07d8023a1b16151eae1bdb447d102614adc5512570ed356316f569764a23510d"
+    },
+    {
+      "name": "ci-execution-inputs.mjs",
+      "before": "916ac26a5b1a02dbb422be92c65453ce453315594bbd1e67f2efd17e77780fc8",
+      "after": "916ac26a5b1a02dbb422be92c65453ce453315594bbd1e67f2efd17e77780fc8"
+    },
+    {
+      "name": "ci-execution-inputs-schema.mjs",
+      "before": "6ebdf63630c634bd548126ae4fc0e8ca85c35b17e89d2ba62b508e88b7960d5d",
+      "after": "6ebdf63630c634bd548126ae4fc0e8ca85c35b17e89d2ba62b508e88b7960d5d"
+    },
+    {
+      "name": "ci-execution-inputs-filesystem.mjs",
+      "before": "355cdc11a4afb5e6e887e78db0b17aa23ff08897a14c6e19b1bb054b5a6775e1",
+      "after": "355cdc11a4afb5e6e887e78db0b17aa23ff08897a14c6e19b1bb054b5a6775e1"
+    },
+    {
+      "name": "ci-execution-inputs-checkout.mjs",
+      "before": "af1c3ad550a3670ba68c350e06d4e3e12f8c0ed5c5996c2102e57926535706d6",
+      "after": "af1c3ad550a3670ba68c350e06d4e3e12f8c0ed5c5996c2102e57926535706d6"
+    },
+    {
+      "name": "ci-execution-inputs-resolver.mjs",
+      "before": "d752992565f0a59b9dfd780ab8698b8a465e0d69635c773507caa30d612050f6",
+      "after": "d752992565f0a59b9dfd780ab8698b8a465e0d69635c773507caa30d612050f6"
+    },
+    {
+      "name": "ci-job-bootstrap.mjs",
+      "before": "2548fd818cb6b86b6cd96bc3eae22fbb41ebc4dd32163586e6a98cfda72560e8",
+      "after": "2548fd818cb6b86b6cd96bc3eae22fbb41ebc4dd32163586e6a98cfda72560e8"
+    },
+    {
+      "name": "ci-main-topology.mjs",
+      "before": "f33b4f40fd8e893b617d859e42cf70eecda14877ca027ded3898eab505a65589",
+      "after": "f33b4f40fd8e893b617d859e42cf70eecda14877ca027ded3898eab505a65589"
+    },
+    {
+      "name": "ci-witness-slots.mjs",
+      "before": "fd6b92ffcc3e271f746d02eab7bd4b827edd37b1d688cc304c1af68b20d9ef78",
+      "after": "fd6b92ffcc3e271f746d02eab7bd4b827edd37b1d688cc304c1af68b20d9ef78"
+    },
+    {
+      "name": "ci-exact-candidate-proof.mjs",
+      "before": "a6764241a880e90a01e5cc73c4cdbb61a0243e220f7134fba04643e6c28fd173",
+      "after": "a6764241a880e90a01e5cc73c4cdbb61a0243e220f7134fba04643e6c28fd173"
+    }
+  ]
+}

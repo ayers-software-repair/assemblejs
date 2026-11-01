@@ -2,11 +2,11 @@
   box-sizing: border-box;
   max-width: 100%;
   padding: 1rem;
-  color: #e6edf3;
-  background: #161b22;
-  border: 1px solid #444c56;
+  color: var(--ink, #f1f5f9);
+  background: var(--surface-panel, #1e293b);
+  border: 1px solid var(--border, #475569);
   border-radius: 0.75rem;
-  font: 14px/1.5 system-ui;
+  font: 14px/1.5 var(--face-text, system-ui);
 }
 .academy-review label {
   display: block;
@@ -22,10 +22,10 @@
 .academy-review input,
 .academy-review select {
   padding: 0.65rem;
-  border: 1px solid #57606a;
+  border: 1px solid var(--border, #475569);
   border-radius: 0.35rem;
   color: inherit;
-  background: #21262d;
+  background: var(--surface-panel, #1e293b);
   font: inherit;
 }
 .academy-review button {
@@ -37,7 +37,7 @@
   cursor: default;
 }
 .academy-review :focus-visible {
-  outline: 3px solid #80c7ff;
+  outline: 3px solid var(--accent, #ff8a4c);
   outline-offset: 3px;
 }
 .academy-review pre {
@@ -45,7 +45,7 @@
   overflow: auto;
   white-space: pre;
   padding: 0.75rem;
-  background: #0d1117;
+  background: var(--surface, #0f172a);
 }
 .academy-review ins {
   display: block;

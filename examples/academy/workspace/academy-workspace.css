@@ -2,9 +2,9 @@
   box-sizing: border-box;
   min-height: 100vh;
   padding: 1rem;
-  color: #e6edf3;
-  background: #0d1117;
-  font: 14px/1.5 system-ui;
+  color: var(--ink, #f1f5f9);
+  background: var(--surface, #0f172a);
+  font: 14px/1.5 var(--face-text, system-ui);
 }
 .academy-workspace > header {
   display: flex;
@@ -23,10 +23,10 @@
 .academy-workspace > header button {
   padding: 0.7rem 1rem;
   margin: 0.3rem;
-  border: 1px solid #57606a;
+  border: 1px solid var(--border, #475569);
   border-radius: 0.4rem;
   color: inherit;
-  background: #21262d;
+  background: var(--surface-panel, #1e293b);
   font: inherit;
   cursor: pointer;
 }
@@ -35,7 +35,7 @@
   cursor: default;
 }
 .academy-workspace > header button:focus-visible {
-  outline: 3px solid #80c7ff;
+  outline: 3px solid var(--accent, #ff8a4c);
   outline-offset: 3px;
 }
 .academy-workspace-layout {
@@ -53,9 +53,9 @@
 .academy-application-preview {
   min-width: 0;
   padding: 1rem;
-  border: 1px solid #444c56;
+  border: 1px solid var(--border, #475569);
   border-radius: 0.75rem;
-  background: #161b22;
+  background: var(--surface-panel, #1e293b);
 }
 .academy-application-preview h2 {
   margin-block-start: 0;

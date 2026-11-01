@@ -74,6 +74,20 @@ export async function serveModes(kind = "modes") {
           ),
         )
       ).join("\n") + (workspace ? "\nbody { margin: 0; }" : "");
+    const brand = new Map(
+      await Promise.all(
+        [
+          "skin.css",
+          "fonts.css",
+          "mark.svg",
+          "fonts/poppins-regular.ttf",
+          "fonts/poppins-medium.ttf",
+          "fonts/poppins-semibold.ttf",
+          "fonts/poppins-bold.ttf",
+          "fonts/fira-code.ttf",
+        ].map(async (file) => ["/brand/" + file, await readFile("site/" + file)]),
+      ),
+    );
     let origin;
     const calls = [];
     server = createServer(async (request, response) => {
@@ -195,16 +209,22 @@ export async function serveModes(kind = "modes") {
       if (path === "/calculator-recipe" && calculator)
         return send(200, "application/json", JSON.stringify(recipe));
       if (path === "/modes.js") return send(200, "text/javascript", bundle.outputFiles[0].text);
+      if (brand.has(path))
+        return send(
+          200,
+          path.endsWith(".ttf") ? "font/ttf" : path.endsWith(".svg") ? "image/svg+xml" : "text/css",
+          brand.get(path),
+        );
       if (path === "/modes.css") return send(200, "text/css", css);
       if (path !== "/") return send(404, "text/plain", "not found");
       send(
         200,
         "text/html",
         workspace
-          ? '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AssembleJS Academy workspace proof</title><link rel="stylesheet" href="/modes.css"><main></main><script type="module" src="/modes.js"></script></html>'
+          ? '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>AssembleJS Academy workspace proof</title><link rel="stylesheet" href="/brand/skin.css"><link rel="stylesheet" href="/modes.css"><body class="academy-fixture"><main></main><script type="module" src="/modes.js"></script></html>'
           : calculator
-            ? '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Market calculator authoring proof</title><link rel="stylesheet" href="/modes.css"><main><h1>Market calculator authoring</h1><p>Actual source changes. Build and live preview still require runtime verification.</p></main><script type="module" src="/modes.js"></script></html>'
-            : '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Academy mode controls proof</title><link rel="stylesheet" href="/modes.css"><main><h1>Assembly mode controls</h1><p>Real project tools. Preview and calculator workflow acceptance remain open.</p></main><script type="module" src="/modes.js"></script></html>',
+            ? '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Market calculator authoring proof</title><link rel="stylesheet" href="/brand/skin.css"><link rel="stylesheet" href="/modes.css"><body class="academy-fixture"><main><h1>Market calculator authoring</h1><p>Actual source changes. Build and live preview still require runtime verification.</p></main><script type="module" src="/modes.js"></script></html>'
+            : '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Academy mode controls proof</title><link rel="stylesheet" href="/brand/skin.css"><link rel="stylesheet" href="/modes.css"><body class="academy-fixture"><main><h1>Assembly mode controls</h1><p>Real project tools. Preview and calculator workflow acceptance remain open.</p></main><script type="module" src="/modes.js"></script></html>',
       );
     });
     await new Promise((resolve, reject) => {

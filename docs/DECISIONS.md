@@ -8848,3 +8848,50 @@ and retained under `/tmp/academy-calculator-verification-9eade76-*`. Initial fai
 its trace/log and pre-close snapshot; no interrupted steps are retroactively accepted there.
 Closing documentation still needs final-head checks/personal acceptance, followed by actual
 squash identities and post-merge proof. Runtime, publication and broader Academy holds remain.
+
+
+### 2026-10-31: PR54 delivery and original-brand source checkpoint
+
+Final PR54 head `3610559b099b0375ca56b372a63c91fd93989c54` passes all ten checks and
+personal COMMENT `5723784579`; final artifact QA continuity is comment `6546151942`.
+Actual squash `4a5ad61969bfb11005d3d658951b2a936e8a7c3c` has reviewed tree
+`89dfea950662f206d362de2ee42e1b3495c210b1`, sole parent `ede739b`, exact prepared full DCO
+message and GitHub valid signature, independently verified. All ten normal push jobs pass
+on the merge at attempt 1: CI `41220420134`, modes `41220420100`, editor `41220420102`.
+Both Nodes pass 2,511 tests, 81 exports and fourteen package validations; check remains
+45,963 / 46,000 bytes. Modes passes 99 focused/twelve browser cases; editor 34/one.
+Personal actual-merge evidence is retained under AUDIT's `assemble54-4a5ad61/REVIEW.md`.
+Initial failed proof and scope limits remain unchanged.
+
+The next owner-assigned correction restores original branding across existing page families.
+Its before-implementation original/current rendered comparison, inventory and finish line
+are recorded in `docs/studies/assemblejs-original-branding.md`. No original application run
+is claimed. The candidate uses original six-hexagon geometry/colours, locally served official
+Poppins/Fira Code bytes with pinned provenance/OFL files, and common product skin roles.
+Current commands, composition examples and Academy behavior remain authoritative.
+Platform confirms the existing release lacks a static/off background hook: CSS hiding leaves
+its worker active. Manager coordinates a narrow shared hook; no consumer template fork,
+background runtime-disable claim or pin upgrade is inferred. Branding remains unaccepted
+until complete hosted page-family proof, independent review/QA and authorized delivery.
+
+
+### 2026-11-01: resume preserved branding and correct the measured API gutter
+
+Read the manager resume brief and MOVED.tsv. The corrected candidate and its index moved to
+`/home/sparrow6/source/.worktrees/assemblejs/assemblejs-original-branding-corrected` without
+loss; next remains `4a5ad61`, while draft PR55 preserves failed source `5587462`.
+The exact diagnostic artifact is verified and its bounded receipt is committed with the
+candidate as `docs/studies/branding-overflow-5587462.json`.
+Expected: a 390px API page stays within its viewport. Found: document width 394px; three
+visible TypeDoc member headings span x=-4 to394 while their content spans20 to370.
+TypeDoc's own heading margin is -1.5rem (24px), but the product narrowed the gutter to20px.
+Match the mobile gutter to1.5rem. Preserve TypeDoc's heading behavior, code scrolling and
+strict viewport assertion; do not hide overflow or attribute it to the static background.
+This source correction still requires fresh hosted visual/functional proof and independent
+review. The verified signed static pin v0.100.0 is now adopted: tag object
+`d184dd67ede5fdb02ab3c0a868784238e0687f3b`, target `ee9c950744b702379b3dfcef84a63fdb7bc93f4f`.
+All eighteen house files and editorconfig match; sixteen source pages and the manual404
+retain their common frame without the background runtime. The latest study supersedes the
+historical hold note's uninspected/pin-pending entries. The replacement PR, hosted proof,
+kit-handle notes and issue/tree reconciliation remain in progress. No npm publication or
+runtime adoption is authorized.

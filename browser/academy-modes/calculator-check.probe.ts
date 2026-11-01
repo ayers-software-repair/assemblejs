@@ -9,6 +9,11 @@ test("saved calculator verification uses real output and quotes, refuses races a
 }, info) => {
   test.setTimeout(150000);
   const fixture = await serveModes("workspace");
+  const runtime = fixture.runtime;
+  if (!runtime) {
+    await fixture.close();
+    throw new Error("workspace fixture did not provide its real runtime");
+  }
   const errors: string[] = [];
   const failures: Array<{ url: string; error: string; phase: string }> = [];
   const responses: Array<{ url: string; status: number }> = [];
@@ -39,12 +44,28 @@ test("saved calculator verification uses real output and quotes, refuses races a
     const editor = page.getByRole("region", { name: "Project code", exact: true });
     const input = editor.getByRole("textbox", { name: "Source code", exact: true });
     const diagnostics = page.locator(".academy-application-preview details pre");
-    await expect(input).toHaveValue(fixture.calculatorSource("product.html"));
+    const originalPage = fixture.calculatorSource("product.html");
+    if (originalPage === null) throw new Error("workspace fixture did not supply its product page");
+    await expect(input).toHaveValue(originalPage);
+    await page.evaluate(() => document.fonts.ready);
+    const typography = await page.evaluate(() => ({
+      loaded: [...document.fonts]
+        .filter((font) => font.status === "loaded")
+        .map((font) => font.family),
+      code: getComputedStyle(document.querySelector("textarea")!).fontFamily,
+    }));
+    expect(typography.loaded).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/^"?Poppins"?$/),
+        expect.stringMatching(/^"?Fira Code"?$/),
+      ]),
+    );
+    expect(typography.code).toContain("Fira Code");
     await expect(verify).toBeDisabled();
-    expect((await post({ values: [1] }, fixture.runtime.origin)).status).toBe(403);
+    expect((await post({ values: [1] }, runtime.origin)).status).toBe(403);
     expect((await post({ values: [1], url: "https://unrelated.example" })).status).toBe(400);
     expect((await post({ values: [1] })).status).toBe(400);
-    expect(fixture.runtime.inspections()).toEqual([]);
+    expect(runtime.inspections()).toEqual([]);
     await guided.getByRole("combobox", { name: "Agent mode" }).selectOption("auto");
     await guided
       .getByRole("textbox", { name: "Calculator request", exact: true })
@@ -59,13 +80,13 @@ test("saved calculator verification uses real output and quotes, refuses races a
       fixture.calls.filter((call: { name: string }) => call.name === "apply_source_changes").length;
     const checks = () =>
       fixture.calls.filter((call: { name: string }) => call.name === "check").length;
-    const before = { writes: writes(), checks: checks(), builds: fixture.runtime.builds().length };
+    const before = { writes: writes(), checks: checks(), builds: runtime.builds().length };
     await verify.focus();
     await verify.press("Enter");
     await expect(status).toContainText("Saved calculator output and quotes verified for revision");
     expect(writes()).toBe(before.writes);
     expect(checks()).toBe(before.checks);
-    expect(fixture.runtime.builds()).toHaveLength(before.builds);
+    expect(runtime.builds()).toHaveLength(before.builds);
     const evidence = JSON.parse((await diagnostics.textContent()) ?? "{}");
     expect(evidence.version).toMatch(/^[a-f0-9]{12}$/);
     expect(evidence.title).toBe("Check total");
@@ -79,7 +100,7 @@ test("saved calculator verification uses real output and quotes, refuses races a
       [3, 4800],
       [6, 9600],
     ]);
-    expect(fixture.runtime.inspections()).toHaveLength(1);
+    expect(runtime.inspections()).toHaveLength(1);
     await expect(verify).toBeFocused();
     await page.screenshot({
       path: info.outputPath("calculator-verified-desktop.png"),
@@ -149,21 +170,21 @@ test("saved calculator verification uses real output and quotes, refuses races a
     await verify.click();
     await expect(status).toContainText("Saved calculator output and quotes verified");
     expect(writes()).toBe(before.writes + 2);
-    expect(fixture.runtime.inspections()).toHaveLength(5);
-    expect(fixture.runtime.builds()).toHaveLength(7);
-    expect(fixture.runtime.builds().every((record: { ok: boolean }) => record.ok)).toBe(true);
+    expect(runtime.inspections()).toHaveLength(5);
+    expect(runtime.builds()).toHaveLength(7);
+    expect(runtime.builds().every((record: { ok: boolean }) => record.ok)).toBe(true);
     expect(fixture.source("inspection-edit")).toBe("<p>Outside inspection edit stays.</p>");
     phase = "stop";
     await page.getByRole("button", { name: "Stop preview", exact: true }).click();
     await expect(status).toHaveText("Preview stopped. Your source is kept.");
     await expect(verify).toBeDisabled();
-    expect(fixture.runtime.active()).toEqual([]);
+    expect(runtime.active()).toEqual([]);
     expect((await post({ values: [1] })).status).toBe(400);
     expect(errors).toEqual([]);
     expect(responses).toEqual([]);
     expect(failures.length).toBeLessThanOrEqual(4);
     for (const failure of failures) {
-      expect(failure.url).toBe(`${fixture.runtime.origin}/api/stock`);
+      expect(failure.url).toBe(`${runtime.origin}/api/stock`);
       expect(failure.error).toBe("net::ERR_ABORTED");
       expect(["inspection-race", "bad-api", "recovery", "stop"]).toContain(failure.phase);
     }
@@ -177,9 +198,9 @@ test("saved calculator verification uses real output and quotes, refuses races a
             failures,
             responses,
             calls: fixture.calls,
-            builds: fixture.runtime.builds(),
-            inspections: fixture.runtime.inspections(),
-            active: fixture.runtime.active(),
+            builds: runtime.builds(),
+            inspections: runtime.inspections(),
+            active: runtime.active(),
           },
           null,
           2,
@@ -192,6 +213,6 @@ test("saved calculator verification uses real output and quotes, refuses races a
         await fixture.close();
       }
     }
-    expect(fixture.runtime.active()).toEqual([]);
+    expect(runtime.active()).toEqual([]);
   }
 });
