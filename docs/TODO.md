@@ -10,9 +10,15 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `docs/studies/academy-research.md`, before Academy design or implementation.
 - [ ] Inspect current examples, docs generation, conformance and demo flow; research editor,
       runtime, hosting and licensing constraints before choosing infrastructure.
-- [ ] Restore the original AssembleJS identity across every current site family (owner,
+- [x] Restore the original AssembleJS identity across every current site family (owner,
       2026-10-31). Owner: AssembleJS implementation chat; finish PR54's corrected checkpoint
       first. Read-only reference: `/home/sparrow6/source/refs/assemblejs-legacy/websites/www.assemblejs.com/`.
+      Source acceptance: PR56 `1f7f3e56c35fc09ef168bf8add04c7fcb31d4483` passes all twelve
+      normal jobs at attempt1, including CI `41340127694` and landing `41340127687`.
+      Personal `5729800969` and QA `6562589527` clear the original identity, measured gutter,
+      inherited API contrast correction and settled control captures. The study retains failed
+      runs, signed Platform v0.100.0 copy proof, exact artifact receipts and scope limits.
+      Final record-head checks/personal acceptance, squash and site delivery remain separate.
       Compare actual rendered original/current before implementation, including logo/header/
       background composition; this is not a palette-only home edit or a framework rewrite.
       Tracked inventory: `site/{404,downloads,index,install,release-notes,start,support}.html`
@@ -159,7 +165,10 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       `41218069474`, modes `41218069557` (99 focused / twelve browser), editor `41218069466`.
       Personal `5723724107` and scoped artifact QA `6545926476` are clear. Real edit-race and
       incorrect-price refusal/recovery, keyboard/narrow layout and Stop are verified. This is
-      source/server/API evidence; final-head checks/acceptance and post-merge proof remain.
+      source/server/API evidence. Final `3610559` passed all ten checks/personal `5723784579`,
+      QA continuity `6546151942`; merge `4a5ad61` has the reviewed tree/parent/message/signature.
+      All ten post-merge attempt-1 jobs pass: CI `41220420134`, modes `41220420100`, editor
+      `41220420102`. Independent actual-merge review is clear; broader holds remain.
 - [x] Record and independently review the candidate learning/proof path in
       `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
 - [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent

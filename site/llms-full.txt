@@ -13,11 +13,11 @@ Source: [index.html](index.html)
 Build one application from the frameworks you know. Compose its pages from assemblies on your server or another team's.
 
 - [Build your first page](install.html)
-- [Explore the market example](docs/outline.html)
+- [Inspect a composed page](docs/outline.html)
 
 Use your editor, the CLI or your coding agent. AssembleJS includes the MCP tools to add, check and preview assemblies.
 
-One page. Three servers.
+See how assemblies make a page
 
 src/pages/product/product.html excerpt
 

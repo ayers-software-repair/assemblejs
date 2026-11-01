@@ -27,14 +27,11 @@
     <link rel="stylesheet" href="kit/store-badges.css" />
     <link rel="stylesheet" href="kit/docs.css" media="print" />
     <link rel="stylesheet" href="landing-brand.css" />
-    <script type="module" src="kit/landing-background.js"></script>
   </head>
   <body class="product-site page-overview">
     <a class="product-skip" href="#main">Skip to content</a>
     <div class="product-frame">
-      <div class="product-world" aria-hidden="true">
-        <canvas id="bg" data-landing-background="weave"></canvas>
-      </div>
+      <div class="product-world" aria-hidden="true"></div>
       <header class="product-header">
         <div class="product-header-inner">
           <a class="product-brand" href="index.html" aria-label="AssembleJS home"
@@ -61,7 +58,7 @@
             </p>
             <div class="product-actions" id="downloads">
               <a class="product-button primary" href="install.html">Build your first page</a>
-              <a class="product-button" href="docs/outline.html">Explore the market example</a>
+              <a class="product-button" href="docs/outline.html">Inspect a composed page</a>
             </div>
             <p class="assembly-agent">
               Use your editor, the CLI or your coding agent. AssembleJS includes the MCP tools to
@@ -69,7 +66,7 @@
             </p>
           </div>
           <figure class="assembly-example">
-            <figcaption>One page. Three servers.</figcaption>
+            <figcaption>See how assemblies make a page</figcaption>
             <p class="assembly-file">src/pages/product/product.html <span>excerpt</span></p>
             <pre><code>&lt;main&gt;
   &lt;assembly name="product-detail"&gt;
@@ -141,8 +138,7 @@
         <div class="product-footer-inner">
           <div class="product-footer-credit">
             <a class="company-link" id="back" href="https://ayers.repair/"
-              >Ayers Software Repair
-              <span class="action-icon arrow-up-right" aria-hidden="true"></span
+              >Ayers Electronics <span class="action-icon arrow-up-right" aria-hidden="true"></span
             ></a>
             <p>Copyright Ayers Electronics Inc. All rights reserved.</p>
           </div>

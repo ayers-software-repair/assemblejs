@@ -4,6 +4,10 @@ on:
     branches: [next]
     paths:
       - "examples/academy/workspace/**"
+      - "site/skin.css"
+      - "site/fonts.css"
+      - "site/fonts/**"
+      - "site/mark.svg"
       - "examples/market/**"
       - "browser/academy-modes/**"
       - "packages/*/src/**"
@@ -15,6 +19,10 @@ on:
     branches: [next]
     paths:
       - "examples/academy/workspace/**"
+      - "site/skin.css"
+      - "site/fonts.css"
+      - "site/fonts/**"
+      - "site/mark.svg"
       - "examples/market/**"
       - "browser/academy-modes/**"
       - "packages/*/src/**"

@@ -16,6 +16,7 @@
         "browser/academy-open-runtime-research/pack-npm.test.mjs",
         "browser/academy-open-runtime-research/framework-diagnostics.test.mjs",
         "browser/landing-proof/landing.probe.ts",
+        "browser/landing-proof/site-pages.probe.ts",
         "browser/build-fixture.mjs",
         "browser/fixtures/*.{ts,tsx}",
         "browser/build-examples.mjs",
