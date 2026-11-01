@@ -9,6 +9,11 @@ test("workspace refuses observed outside edits before building, then recovers on
 }, info) => {
   test.setTimeout(150000);
   const fixture = await serveModes("workspace");
+  const runtime = fixture.runtime;
+  if (!runtime) {
+    await fixture.close();
+    throw new Error("workspace proof requires the actual preview runtime");
+  }
   const errors: string[] = [];
   const responses: number[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
@@ -33,7 +38,7 @@ test("workspace refuses observed outside edits before building, then recovers on
     await expect(status).toContainText("Preview could not start");
     await expect(diagnostics).toContainText("Project source changed");
     expect(changed).toBe(true);
-    expect(fixture.runtime.builds()).toEqual([]);
+    expect(runtime.builds()).toEqual([]);
     await expect(page.locator("iframe")).toHaveCount(0);
     expect(fixture.source("source-guard")).toBe("<p>Outside edit is kept.</p>");
     await page.getByText("Build diagnostics", { exact: true }).click();
@@ -64,11 +69,11 @@ test("workspace refuses observed outside edits before building, then recovers on
     expect(JSON.parse((await diagnostics.textContent()) ?? "{}").version).toBe(
       answer.result.version,
     );
-    expect(fixture.runtime.builds()).toHaveLength(4);
-    expect(fixture.runtime.builds().every((record: { ok: boolean }) => record.ok)).toBe(true);
+    expect(runtime.builds()).toHaveLength(4);
+    expect(runtime.builds().every((record: { ok: boolean }) => record.ok)).toBe(true);
     await page.getByRole("button", { name: "Stop preview", exact: true }).click();
     await expect(status).toHaveText("Preview stopped. Your source is kept.");
-    expect(fixture.runtime.active()).toEqual([]);
+    expect(runtime.active()).toEqual([]);
     expect(fixture.source("source-guard")).toBe("<p>Outside edit is kept.</p>");
     expect(errors).toEqual([]);
     expect(responses).toEqual([]);
@@ -87,14 +92,124 @@ test("workspace refuses observed outside edits before building, then recovers on
             errors,
             responses,
             calls: fixture.calls,
-            builds: fixture.runtime.builds(),
-            active: fixture.runtime.active(),
+            builds: runtime.builds(),
+            active: runtime.active(),
           },
           null,
           2,
         ),
       );
-      expect(fixture.runtime.active()).toEqual([]);
+      expect(runtime.active()).toEqual([]);
     }
+  }
+});
+
+test("authored check guidance explains a real MCP finding and recovery without writes or builds", async ({
+  page,
+}, info) => {
+  const fixture = await serveModes("workspace");
+  const runtime = fixture.runtime;
+  if (!runtime) {
+    await fixture.close();
+    throw new Error("workspace proof requires the actual preview runtime");
+  }
+  const errors: string[] = [];
+  const responses: number[] = [];
+  let evidence: object = {};
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("response", (response) => {
+    if (response.status() >= 400) responses.push(response.status());
+  });
+  try {
+    await page.goto(`${fixture.origin}/?workspace`);
+    const product = fixture.calculatorSource("product.html");
+    if (product === null) throw new Error("supplied product page is missing");
+    await expect(page.getByRole("textbox", { name: "Source code", exact: true })).toHaveValue(
+      product,
+    );
+    const practice = page.getByRole("region", { name: "Mode practice", exact: true });
+    await practice.getByText("Guided tutor", { exact: true }).click();
+    const question = practice.getByRole("textbox", { name: "Ask guided tutor", exact: true });
+    const answer = practice.getByRole("status", { name: "Tutor answer", exact: true });
+    fixture.outside("source-guard", "<img>");
+    const before = fixture.calls.length;
+    await question.fill("Check and explain");
+    await question.press("Enter");
+    await expect(answer).toContainText("an-image-has-an-alternative");
+    await expect(answer).toContainText("Why: WCAG 2.2");
+    await expect(question).toBeFocused();
+    const failed = await answer.textContent();
+    const reads = fixture.calls.slice(before);
+    expect(reads.map((call: { name: string }) => call.name)).toEqual([
+      "read_source_version",
+      "check",
+      "explain",
+      "read_source_version",
+    ]);
+    expect(reads[2].arguments).toEqual({ id: "an-image-has-an-alternative" });
+    expect(fixture.source("source-guard")).toBe("<img>");
+    expect(fixture.calculatorSource("product.html")).toBe(product);
+    expect(runtime.builds()).toEqual([]);
+    expect(runtime.active()).toEqual([]);
+    await expect(page.locator("iframe")).toHaveCount(0);
+    await expect(practice.getByRole("heading")).toHaveText("1. Plan without writing");
+    await page.screenshot({
+      path: info.outputPath("tutor-real-check-explained.png"),
+      fullPage: true,
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await question.scrollIntoViewIfNeeded();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await page.screenshot({ path: info.outputPath("tutor-real-check-narrow.png"), fullPage: true });
+    const unchangedCalls = fixture.calls.length;
+    await question.fill("Why");
+    await question.press("Enter");
+    await expect(answer).toContainText("A plan is a proposal");
+    expect(fixture.calls).toHaveLength(unchangedCalls);
+    fixture.outside("source-guard", '<img alt="">');
+    await question.fill("Explain check");
+    await question.press("Enter");
+    await expect(answer).toContainText("Project check passed at observed revision");
+    await expect(answer).toContainText("Preview and lesson completion are not verified");
+    const recovered = await answer.textContent();
+    expect(recovered?.match(/[a-f0-9]{12}/)?.[0]).not.toBe(failed?.match(/[a-f0-9]{12}/)?.[0]);
+    expect(fixture.calls.slice(unchangedCalls).map((call: { name: string }) => call.name)).toEqual([
+      "read_source_version",
+      "check",
+      "read_source_version",
+    ]);
+    expect(fixture.source("source-guard")).toBe('<img alt="">');
+    expect(fixture.calculatorSource("product.html")).toBe(product);
+    expect(runtime.builds()).toEqual([]);
+    await expect(practice.getByRole("heading")).toHaveText("1. Plan without writing");
+    await page.screenshot({
+      path: info.outputPath("tutor-real-check-recovered.png"),
+      fullPage: true,
+    });
+    evidence = {
+      failed,
+      recovered,
+      calls: fixture.calls,
+      builds: runtime.builds(),
+      active: runtime.active(),
+    };
+    expect(errors).toEqual([]);
+    expect(responses).toEqual([]);
+  } finally {
+    try {
+      await page.close();
+    } finally {
+      try {
+        await fixture.close();
+      } finally {
+        await writeFile(
+          info.outputPath("tutor-real-check-evidence.json"),
+          JSON.stringify({ ...evidence, errors, responses }, null, 2),
+        );
+      }
+    }
+    expect(runtime.active()).toEqual([]);
   }
 });
