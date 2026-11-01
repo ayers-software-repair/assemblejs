@@ -48,3 +48,14 @@ reported deprecation. The `create-assemblejs` request returned404; this does not
 
 No release, publisher setting, credential, spending, infrastructure or runtime adoption is
 inferred. These remaining issues are not marked complete by retaining their records.
+
+
+## Verified worktree cleanup
+
+Sixteen redundant merged worktrees were removed on 1 November after independent review and
+fresh exact-head/squash-tree/clean-status checks. `academy-removed-worktrees.json` records each
+path, retained branch and immutable identities. Ordinary `git worktree remove` was used without
+force. The landing tree's only untracked item was a dependency symlink; only that link itself
+was unlinked first, preserving its target. Every receipt-backed branch still resolves to its
+recorded head. This is partial cleanup: protected drafts, dirty PR27, the active calculator
+verification dependency tree, original runtime checkout and current delivery/notes trees remain.

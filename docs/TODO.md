@@ -1,5 +1,13 @@
 # Todo
 
+## Resume reconciliation (2026-11-01)
+
+- [x] Independently verify and remove sixteen redundant merged worktrees while retaining every
+      receipt-backed branch; exact identities are in `docs/handoffs/academy-removed-worktrees.json`.
+      Protected draft PRs22/27/33, dirty PR27 and active dependency/source trees remain.
+- [ ] Complete current branding delivery and integrate the preserved manual handle notes; keep
+      owner npm decisions and runtime adoption explicitly open.
+
 ## Academy and landing research (owner, 2026-10-30)
 
 Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/issues/16>.
