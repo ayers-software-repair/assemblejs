@@ -37,9 +37,11 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
    retained dispositions are in AUDIT's branding-delivery `retained-final-inventory.json`.
 5. Active: `~/source/.worktrees/assemblejs/assemblejs-academy-check-explain`, branch
    `codex/academy-check-explain`. Add only explicit read-only Check and explain over existing
-   check/explain/source-version contracts.150 source cases and lint/noEmit pass; four guards
-   were watched failing. The composed pending-lock finding is corrected. Hosted existing-MCP
-   proof, personal/QA acceptance and delivery remain pending. See CHECK_GUIDANCE.md and TODO.
+   check/explain/source-version contracts. Source564f4d9 passes all ten normal jobs and150
+   source cases; personal5730246112/QA6563795013 clear.121 focused/thirteen browser cases
+   verify real explanation/repair and no writes/build/progress. Four negative controls and
+   the composed-lock correction are retained. Final record-head checks/review, actual squash
+   and post-merge remain. See CHECK_GUIDANCE.md and TODO; broader holds are unchanged.
 6. Keep negative-result drafts22/27/33, dirty27 and archived dirty55 source and every receipt
    ref intact. No runtime retry, vendor patch, new model/transport/layout, npm mutation or
    new broad build. The shared Node preview adapter remains hosted proof, not runtime adoption.

@@ -33,4 +33,12 @@ pending-lock defect; its composed regression failed before the raw read-only wir
 All150 selected source/DOM/filesystem/mock cases now pass, with focused lint/noEmit green.
 The existing hosted real-MCP workspace proof is extended with a missing-alt finding, actual
 rule explanation, manual repair, keyboard/narrow captures and no-write/no-build assertions.
-That hosted proof and final independent/personal/artifact acceptance remain pending.
+At source `564f4d9`, all ten normal jobs pass: CI `41349046327`, modes `41349046238`
+(121 focused/thirteen browser cases) and editor `41349046196`. Personal review `5730246112`
+and artifact QA `6563795013` accept the source and captured slice. Artifact `13100323502`
+is3,150,728 bytes, SHA-256
+`542f3dde299703b39add2e7ec1196bff57e545dacba11e9a91514c3e188b5127`.
+Its actual missing-alt finding, matched explanation and manual repair use different observed
+revisions; all eight calls are reads, builds/active/errors/HTTP failures are empty and practice
+stays at step1. Three new captures and seven changed prior images pass; nineteen prior images
+are byte-identical. Final record-head checks/review, actual merge and post-merge remain required.

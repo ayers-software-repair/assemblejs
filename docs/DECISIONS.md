@@ -8979,3 +8979,25 @@ controls pass. Only the existing real-MCP workspace proof is extended; hosted/pe
 actual delivery remain pending. No browser-runtime experiment, model/transport/layout change,
 publication or wider Academy completion is inferred. The current queue is reconciled above
 historical handoff snapshots; all seven retained source dispositions and receipt refs remain.
+
+
+### 2026-11-01: Check-and-explain source acceptance before delivery
+
+PR59 source `564f4d914e2ee45f294c6333ff1b18d34279f885`, tree
+`7fb3842a200ef18b5b8c800eea7ae806abd5ba89`, passes all ten normal jobs at attempt1: CI
+`41349046327`, modes `41349046238`, editor `41349046196`. Personal `5730246112` traces
+all callers/contracts, guards and retained negative controls; artifact QA `6563795013` agrees.
+The tested PR synthetic merge is `f71a75ab75d4def35094d86c3b596ae7001e3898`, not direct-head
+execution. Its tree/expected parents are independently verified.
+
+Artifact `13100323502`:3,150,728 bytes, SHA-256
+`542f3dde299703b39add2e7ec1196bff57e545dacba11e9a91514c3e188b5127`; size/digest/CRC/all44
+files verify. Modes passes121 focused/thirteen browser cases. The actual missing-alt finding,
+fix and matching catalogue reason precede manual repair from revision53874372aedb to2747356794f6.
+Eight calls are reads only; no writes/builds/active processes/browser errors/failedHTTPresponses.
+Practice remains at step1. Three new and seven changed prior images pass; nineteen are identical.
+Source150 and independent46 cases plus four observed-red controls are retained privately under
+AUDIT/evidence/2026-11-01-assemblejs-check-guidance/ (source receipt912cdbfe8, native768b4a970).
+The scoped TODO source rung is checked in this record commit. Final record-head checks/personal
+continuity, actual squash and normal post-merge proof still gate delivery. No runtime, model,
+transport, publication or full Academy/lesson-progress acceptance is inferred.

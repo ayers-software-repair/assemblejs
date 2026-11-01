@@ -183,15 +183,17 @@ Accepted execution issue: <https://github.com/ayers-software-repair/assemblejs/i
       QA continuity `6546151942`; merge `4a5ad61` has the reviewed tree/parent/message/signature.
       All ten post-merge attempt-1 jobs pass: CI `41220420134`, modes `41220420100`, editor
       `41220420102`. Independent actual-merge review is clear; broader holds remain.
-- [ ] Add explicit read-only Check and explain to the existing authored tutor (issue16/PLAN4.3).
+- [x] Add explicit read-only Check and explain to the existing authored tutor (issue16/PLAN4.3).
       Use actual check findings and existing rule explanations with source-version observations;
       bounded unknown/malformed/stale/late handling must preserve diagnostics. No writes, build
       or practice advancement; the four existing questions keep their no-tool behavior.
       Source150 selected cases/lint/noEmit and four witnessed negative controls pass. Independent
       review's composed timeout lock was reproduced red and fixed without changing write guards.
-      Extend only the existing real-MCP workspace proof for failed-rule explanation/recovery,
-      keyboard/narrow and no-write/no-build evidence. Hosted/current-head/personal/QA acceptance
-      and delivery remain pending; no runtime experiment, transport/model or curriculum claim.
+      Source `564f4d9` passes all ten normal jobs: CI `41349046327`, modes `41349046238`
+      (121 focused/thirteen browser) and editor `41349046196`. Personal `5730246112` and QA
+      `6563795013` accept actual failed-rule explanation/manual repair, keyboard/narrow and
+      zero-write/build/progress evidence. Final record-head checks/review and actual delivery
+      remain separate; no runtime experiment, transport/model or curriculum claim.
 - [x] Record and independently review the candidate learning/proof path in
       `docs/studies/academy-lesson-proof-ladder.md`, without selecting a runtime.
 - [ ] Prove the exact browser runtime with bounded installation/build diagnostics and verify live external-agent
