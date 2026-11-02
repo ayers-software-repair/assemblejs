@@ -33,6 +33,8 @@ jobs:
           node-version: 22
       - name: CI proof contracts
         run: node --test scripts/ci-reuse.test.mjs
+      - name: Dist-tag guard fixture contracts
+        run: node scripts/check-dist-tags.mjs --self-test
       - name: Reuse complete next push proof for an unchanged PR tree
         id: proof
         env:
@@ -268,3 +270,5 @@ jobs:
           else
             test "$RESULTS" = success,success,success,success,success
           fi
+      - name: Read current public npm installation tags
+        run: node scripts/check-dist-tags.mjs --self-test && node scripts/check-dist-tags.mjs

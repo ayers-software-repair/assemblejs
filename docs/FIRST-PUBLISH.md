@@ -54,9 +54,12 @@ repository; do not switch or discard another session's working changes.
 4. **Publish only the unseen names printed by the guard.** The owner runs each exact command
    and completes npm authentication. Never republish an existing version.
 
-5. **Read back the new package's dist-tags.** A first prerelease may also acquire `latest`;
-   do not infer that the stable release has shipped. `npm create @asmjs` without a version
-   resolves the `latest` tag of `@asmjs/create`.
+5. **Read back the new package's dist-tags.** Do not assume what `latest` became from the
+   requested `--tag`, or infer that a stable release shipped. The current npm CLI sends the
+   requested tag in its publish metadata; that source does not prove an undocumented registry
+   first-publication override. This procedure does not assert that every first publish takes
+   `latest` regardless of `--tag`. Inspect the actual registry result. `npm create @asmjs`
+   without a version resolves the `latest` tag of `@asmjs/create`.
 
 6. **Confirm every name is on npm:**
 
@@ -72,6 +75,53 @@ repository; do not switch or discard another session's working changes.
        git push origin v<version>
 
    Verify the run and the public artifacts before considering publication complete.
+
+## Installation tags and staged placeholders
+
+The issue37 guard runs read-only in CI, including when source CI proof is reused:
+
+    node scripts/check-dist-tags.mjs --self-test && node scripts/check-dist-tags.mjs
+
+For each public package it reads public npm `dist-tags` and `versions`. Before any stable
+release, both `next` and `latest` must identify the highest published `X.Y.Z-next.N`.
+Once any stable `X.Y.Z` exists, `latest` must identify the highest stable version;
+`next`, when next versions exist, must identify their highest version. The `0.0.0-stage`
+placeholder is not stable. Valid build metadata does not change precedence; an already tagged
+equal-highest build variant is retained. Version ordering is numeric, not lexical. This follows this
+repository's release-channel format; other prerelease channels do not choose these tags.
+
+After the existing authorized publish step, release.yml uses npm11.21+ and explicitly permits
+only pre-stable `latest` repair. It validates the local tagged version was published, refuses
+repair if `next` is wrong, re-observes before writing and reads the result back afterward.
+It never automatically moves `latest` once stable exists. Reads are observations, not an
+atomic registry lock. A failed/ambiguous write or failed readback fails the release, prints
+the operator command derived from the final observed policy and prevents the dependent site
+job. If readback is unavailable or already correct under a changed policy, guidance requires
+fresh read-only inspection before any further write. It never recommends the old prerelease
+move after observing stable. No automatic write retry.
+
+OIDC dist-tag operations require npm11.21+ (or12.2+) and the trusted publisher's separate
+**Allow npm dist-tag** permission, disabled by default. Direct publish permission does not
+imply it. The guard attempts the actual operation only in the existing tagged release
+workflow; if unsupported or refused, it fails with the operator command. No token is added.
+The owner decides and changes publisher permissions; this document does not authorize that.
+The commands are supported by current npm docs, not proof that this account is configured.
+
+For a new name, `npm stage publish` creates a publicly available `0.0.0-stage` placeholder;
+the staged version's contents remain unavailable until explicit approval. Staged publishing
+requires npm11.15+ and Node22.14+. It is not used by this release workflow and is not a
+name-reservation-only dry run. Do not stage a package to probe ownership or remove/deprecate
+existing placeholders without the separate issue38 owner decision. E404 from a public read
+is neither ownership nor publication authorization; the issue40 new-name boundary remains.
+
+Issue36's registry mismatch was verified red, then corrected by the owner on 2 November.
+Fresh reads confirm all 14 packages have latest=next=`1.0.0-next.2`, and the default scoped
+starter resolves that version and generates matching project pins. CI `41386333457` retains
+the original failure; only failed ci-ready was rerun after the registry changed, and passes.
+Evidence is retained in AUDIT `925c9c200`. No new version was published or publisher setting
+changed. A red live gate still blocks delivery; it never authorizes bypassing the invariant.
+Fixture success and a manual correction do not prove an actual OIDC repair. That requires a
+separately authorized release and its readback.
 
 ## Hand over to trusted publishing
 
@@ -141,3 +191,17 @@ Re-read the current npm settings before changing them. The npm-trust CLI page an
 trusted-publisher page describe different limits on the number of connections; neither is
 permission to revoke an existing connection. Read-back, provenance and the successful workflow
 are required evidence. The 29 October registry check above does not establish those settings.
+
+Additional source reads for issue37 (1 November 2026):
+
+- OIDC dist-tags, minimum CLI and default-off permission:
+  https://docs.npmjs.com/trusted-publishers/#managing-dist-tags-with-trusted-publishing
+- The CLI exchanges OIDC credentials for dist-tag operations:
+  https://github.com/npm/cli/blob/latest/lib/commands/dist-tag.js
+- The publish library writes the requested tag into metadata; it does not establish a universal
+  server-side first-publication override:
+  https://github.com/npm/cli/blob/latest/workspaces/libnpmpublish/lib/publish.js
+- New-name public placeholder and approval boundary:
+  https://docs.npmjs.com/staged-publishing/
+
+- Version precedence and ignored build metadata: https://semver.org/#spec-item-10
