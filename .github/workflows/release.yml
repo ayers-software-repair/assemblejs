@@ -72,7 +72,7 @@ jobs:
       - name: Check packed packages
         run: node scripts/check-pack.mjs
       - name: Set up npm trusted publishing
-        run: npm install -g npm@^11.5.1 && npm --version
+        run: npm install -g npm@^11.21.0 && npm --version
       - name: Refuse a name npm has never seen
         env:
           NPM_TAG: ${{ steps.channel.outputs.npm-tag }}
@@ -82,6 +82,8 @@ jobs:
           NPM_CONFIG_PROVENANCE: "true"
         # The checked prerelease state selects next; stable publication defaults to latest.
         run: pnpm changeset publish --no-git-tag
+      - name: Verify published installation tags and repair prerelease latest
+        run: node scripts/check-dist-tags.mjs --self-test && node scripts/check-dist-tags.mjs --repair-prerelease
 
   site:
     needs: publish

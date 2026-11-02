@@ -8849,7 +8849,6 @@ its trace/log and pre-close snapshot; no interrupted steps are retroactively acc
 Closing documentation still needs final-head checks/personal acceptance, followed by actual
 squash identities and post-merge proof. Runtime, publication and broader Academy holds remain.
 
-
 ### 2026-10-31: PR54 delivery and original-brand source checkpoint
 
 Final PR54 head `3610559b099b0375ca56b372a63c91fd93989c54` passes all ten checks and
@@ -8874,7 +8873,6 @@ its worker active. Manager coordinates a narrow shared hook; no consumer templat
 background runtime-disable claim or pin upgrade is inferred. Branding remains unaccepted
 until complete hosted page-family proof, independent review/QA and authorized delivery.
 
-
 ### 2026-11-01: resume preserved branding and correct the measured API gutter
 
 Read the manager resume brief and MOVED.tsv. The corrected candidate and its index moved to
@@ -8896,7 +8894,6 @@ historical hold note's uninspected/pin-pending entries. The replacement PR, host
 kit-handle notes and issue/tree reconciliation remain in progress. No npm publication or
 runtime adoption is authorized.
 
-
 ### 2026-11-01: inherited API palette acceptance gap (issue57)
 
 PR56 head `3a7d2e8` passes all normal hosted jobs, including landing `41336039962`.
@@ -8911,7 +8908,6 @@ The focused source assertion fails before the CSS correction and passes after it
 API source cases pass. Hosted proof now measures actual computed roles under light OS and
 saved-light/dark OS, retains saved preference, and exercises API search/menu/keyboard and
 forced colours. These new hosted states and final independent acceptance remain pending.
-
 
 ### 2026-11-01: PR56 source acceptance before delivery
 
@@ -8937,7 +8933,6 @@ The TODO source rung is checked in this record commit. Final record-head normal 
 personal review, actual squash identities and normal deployment/post-merge evidence still gate
 final delivery. No npm publication, runtime adoption or full Academy/curriculum acceptance.
 
-
 ### 2026-11-01: original-brand delivery and retained research integration
 
 PR56 squash `577c64bdcf87c1988ae984b3bc086303abf269d0` has reviewed tree
@@ -8962,7 +8957,6 @@ receipt is AUDIT `beb4463647d08de879dc4a6e475612183076bb0e`. Rebase onto actual 
 all four reviewed patches; final record-head checks/personal review and actual notes squash
 remain required. Broader curriculum, runtime selection and npm issues36/37/38/40 stay open.
 
-
 ### 2026-11-01: explicit authored check explanation, not a new Studio
 
 Manager assigns the committed issue16/PLAN4.3 Check-and-explain slice on delivered next d7df01f.
@@ -8979,7 +8973,6 @@ controls pass. Only the existing real-MCP workspace proof is extended; hosted/pe
 actual delivery remain pending. No browser-runtime experiment, model/transport/layout change,
 publication or wider Academy completion is inferred. The current queue is reconciled above
 historical handoff snapshots; all seven retained source dispositions and receipt refs remain.
-
 
 ### 2026-11-01: Check-and-explain source acceptance before delivery
 
@@ -9001,3 +8994,25 @@ AUDIT/evidence/2026-11-01-assemblejs-check-guidance/ (source receipt912cdbfe8, n
 The scoped TODO source rung is checked in this record commit. Final record-head checks/personal
 continuity, actual squash and normal post-merge proof still gate delivery. No runtime, model,
 transport, publication or full Academy/lesson-progress acceptance is inferred.
+
+### 2026-11-01: issue37 source guard, separate from registry authority
+
+Manager explicitly assigns the existing issue37 requirements under the original resume.
+Use public-package discovery and standard Node tooling, deterministic fixture tests and the
+existing CI/release workflows. Read-only CI checks live registry state even when source proof
+is reused. Future authorized publication may repair latest only before any stable release,
+with numeric next precedence, re-observation, readback and exact operator commands on failure.
+Stable latest must remain the highest stable version; the guard does not automatically move it.
+Current official npm docs support OIDC dist-tags with11.21+/12.2+ and separate default-off
+permission; no actual account permission is inferred. Stage documentation proves new-name
+public0.0.0-stage placeholders, while client publish source does not prove that every first
+publication overrides the requested tag with latest. Do not encode that unsupported universal
+claim. Sources are linked in FIRST-PUBLISH. No live mutation, publish, publisher-setting or
+credential change is authorized here. Unresolved36 may keep live PR CI red; never bypass it
+or equate fixture/source review with delivered registry invariants. Browser/runtime and retained
+ref holds remain intact. Current implementation tree is persistent codex/dist-tag-guard-37.
+
+Independent review found a stable+build metadata version could be ignored and permit a false
+prerelease success. Two fixture regressions were watched red before accepting optional build
+suffixes and comparing only numeric release precedence. Already-tagged equal-highest variants
+are retained; lexical build identifiers do not invent version order. SemVer source is linked.

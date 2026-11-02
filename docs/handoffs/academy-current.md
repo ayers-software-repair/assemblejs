@@ -1,6 +1,6 @@
 # Academy work queue and handoff
 
-Checkpoint: 2026-11-01, delivered next `d7df01f` after PR54/56/58 and post-merge proof.
+Checkpoint: 2026-11-01, delivered next `f525acf` after PR59 and post-merge proof.
 Accepted issue16 remains open. PLAN4.3 and unchecked TODO rows govern remaining work.
 The current queue below supersedes older pending notices. Historical sections retain dated
 source/artifact evidence; their /tmp worktree names are historical, not current locations.
@@ -35,13 +35,17 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
    passes all eight jobs at attempt1; actual merge/message/signature and personal `5729972859`
    are clear. Twenty redundant checkouts are removed; receipt refs remain. Current seven
    retained dispositions are in AUDIT's branding-delivery `retained-final-inventory.json`.
-5. Active: `~/source/.worktrees/assemblejs/assemblejs-academy-check-explain`, branch
-   `codex/academy-check-explain`. Add only explicit read-only Check and explain over existing
-   check/explain/source-version contracts. Source564f4d9 passes all ten normal jobs and150
-   source cases; personal5730246112/QA6563795013 clear.121 focused/thirteen browser cases
-   verify real explanation/repair and no writes/build/progress. Four negative controls and
-   the composed-lock correction are retained. Final record-head checks/review, actual squash
-   and post-merge remain. See CHECK_GUIDANCE.md and TODO; broader holds are unchanged.
+5. PR59 delivers Check and explain as `f525acf`; all ten post-merge jobs pass at attempt1
+   (CI41350916772/modes41350916759/editor41350916790), personal5730330878 clear. The owned
+   completed checkout was removed;21 total removals, seven retained. Exact current dispositions
+   are in AUDIT's check-guidance/delivery/retained-inventory.json; receipt branches remain.
+   Active independent source task: accepted issue37 in persistent `assemblejs-dist-tag-guard`,
+   branch `codex/dist-tag-guard-37`. Add only dist-tag policy/self-test, existing CI/release
+   wiring and source-grounded publication docs.16 fixture cases/native467fb4140 pass; normal
+   hosted/personal acceptance remains. Issue36 live mismatch can keep CI red; no
+   registry mutation, publication or settings change is authorized by implementation.
+   The assigned SvelteKit universal-load-functions manual exercise remains pending its named
+   browser-venue decision; no exemption inferred. See AUDIT loading-research preparation.
 6. Keep negative-result drafts22/27/33, dirty27 and archived dirty55 source and every receipt
    ref intact. No runtime retry, vendor patch, new model/transport/layout, npm mutation or
    new broad build. The shared Node preview adapter remains hosted proof, not runtime adoption.

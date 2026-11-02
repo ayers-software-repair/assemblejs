@@ -4,13 +4,13 @@ Observed 1 November 2026; parent issue16 remains open. This records retention, n
 acceptance or completed cleanup. Manager resume brief section5 explicitly keeps branches
 backing PRs/receipts and negative-result drafts22/27/33. Archives do not lift those holds.
 
-| PR | Retained branch | Exact head | Disposition |
-| --- | --- | --- | --- |
-| 22 | `codex/academy-sdk-proof` | `e27e11a2919d5cdff892f3d867c7d7d12025afa0` | Failed editor SDK experiment; draft/source retained, no adoption or unchanged retry. |
-| 27 | `codex/academy-open-preview-proof` | `15172907d02293e21dbfdaaaacf164f98a881d18` | Failed preview experiment; draft/source and unique dirty diagnostic test retained. |
-| 33 | `codex/academy-current-source-preview` | `212681036cce4838c657e96e442d7a71a2b97b79` | Svelte SSR failure; draft/source retained, remaining mounts and Stop unaccepted. |
-| 12 | `codex/verification-guardrails` | `04ba80232e41bce6581ebc03ad4a95ef9c47effd` | Closed, superseded by merged PR46; receipt-backed ref retained. |
-| 55 | `codex/original-branding` | `55874621454418316d75026e7cda74e6a827e4fb` | Closed, superseded by PR56; failed-source ref and working draft retained. |
+| PR  | Retained branch                        | Exact head                                 | Disposition                                                                          |
+| --- | -------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------ |
+| 22  | `codex/academy-sdk-proof`              | `e27e11a2919d5cdff892f3d867c7d7d12025afa0` | Failed editor SDK experiment; draft/source retained, no adoption or unchanged retry. |
+| 27  | `codex/academy-open-preview-proof`     | `15172907d02293e21dbfdaaaacf164f98a881d18` | Failed preview experiment; draft/source and unique dirty diagnostic test retained.   |
+| 33  | `codex/academy-current-source-preview` | `212681036cce4838c657e96e442d7a71a2b97b79` | Svelte SSR failure; draft/source retained, remaining mounts and Stop unaccepted.     |
+| 12  | `codex/verification-guardrails`        | `04ba80232e41bce6581ebc03ad4a95ef9c47effd` | Closed, superseded by merged PR46; receipt-backed ref retained.                      |
+| 55  | `codex/original-branding`              | `55874621454418316d75026e7cda74e6a827e4fb` | Closed, superseded by PR56; failed-source ref and working draft retained.            |
 
 PR27's dirty file remains unchanged at
 `/home/sparrow6/source/.worktrees/assemblejs/assemblejs-academy-open-preview/browser/academy-open-runtime-research/framework-diagnostics.test.mjs`.
@@ -39,16 +39,15 @@ Read-only registry inspection on 1 November: all fourteen packages have `latest`
 `1.0.0-next.0`, `next` at `1.0.0-next.2`, and a public `0.0.0-stage` version without a
 reported deprecation. The `create-assemblejs` request returned404; this does not reserve it.
 
-| Issue | Remaining work |
-| --- | --- |
-| 36 | Owner explicitly owns existing dist-tag moves. No registry mutation performed. |
-| 37 | Requested release/PR dist-tag guard is not implemented; current registry violates its intended invariant and issue36 remains open. |
-| 38 | Owner choice on staged-placeholder retention/deprecation remains open; none performed. |
-| 40 | Unscoped wrapper and new-name first publication remain open; no reservation or publication performed. |
+| Issue | Remaining work                                                                                                                                                           |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 36    | Owner explicitly owns existing dist-tag moves. No registry mutation performed.                                                                                           |
+| 37    | Explicitly assigned source guard is in progress on codex/dist-tag-guard-37; fixture/source acceptance and live delivery remain separate. Issue36 mismatch is not waived. |
+| 38    | Owner choice on staged-placeholder retention/deprecation remains open; none performed.                                                                                   |
+| 40    | Unscoped wrapper and new-name first publication remain open; no reservation or publication performed.                                                                    |
 
 No release, publisher setting, credential, spending, infrastructure or runtime adoption is
 inferred. These remaining issues are not marked complete by retaining their records.
-
 
 ## Verified worktree cleanup
 

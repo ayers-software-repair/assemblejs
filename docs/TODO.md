@@ -2,6 +2,15 @@
 
 ## Resume reconciliation (2026-11-01)
 
+- [ ] Implement accepted issue37 dist-tag source guard in the owned persistent
+      `assemblejs-dist-tag-guard` checkout. Fixture/self-test, existing CI/release wiring and
+      source-grounded FIRST-PUBLISH corrections pass16 fixture cases and independent source review
+      (AUDIT467fb4140). The stable+build false green was reproduced red before correction.
+      Normal hosted checks/personal review remain required. CI is read-only; only the
+      existing tagged release can request pre-stable latest repair, with readback and exact
+      operator failures. Issue36 live mismatch remains an explicit delivery blocker. No current
+      registry write, publication, credential/publisher-setting change or browser is authorized.
+
 - [x] Independently verify and remove sixteen redundant merged worktrees while retaining every
       receipt-backed branch; exact identities are in `docs/handoffs/academy-removed-worktrees.json`.
       Protected draft PRs22/27/33, dirty PR27 and active dependency/source trees remain.
