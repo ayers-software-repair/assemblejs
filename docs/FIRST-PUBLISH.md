@@ -114,10 +114,14 @@ name-reservation-only dry run. Do not stage a package to probe ownership or remo
 existing placeholders without the separate issue38 owner decision. E404 from a public read
 is neither ownership nor publication authorization; the issue40 new-name boundary remains.
 
-Issue36's last recorded registry mismatch is unresolved. A red live-registry CI gate is an
-actual blocker, not permission for this checkout to move tags, skip the check or claim issue37
-delivered. Fixture success proves policy behavior; a real trusted repair requires a separately
-authorized release and its readback. Neither is asserted from tests.
+Issue36's registry mismatch was verified red, then corrected by the owner on 2 November.
+Fresh reads confirm all 14 packages have latest=next=`1.0.0-next.2`, and the default scoped
+starter resolves that version and generates matching project pins. CI `41386333457` retains
+the original failure; only failed ci-ready was rerun after the registry changed, and passes.
+Evidence is retained in AUDIT `925c9c200`. No new version was published or publisher setting
+changed. A red live gate still blocks delivery; it never authorizes bypassing the invariant.
+Fixture success and a manual correction do not prove an actual OIDC repair. That requires a
+separately authorized release and its readback.
 
 ## Hand over to trusted publishing
 

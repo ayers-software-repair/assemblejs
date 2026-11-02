@@ -39,19 +39,21 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
    (CI41350916772/modes41350916759/editor41350916790), personal5730330878 clear. The owned
    completed checkout was removed;21 total removals, seven retained. Exact current dispositions
    are in AUDIT's check-guidance/delivery/retained-inventory.json; receipt branches remain.
-   Active independent source task: accepted issue37 in persistent `assemblejs-dist-tag-guard`,
-   branch `codex/dist-tag-guard-37`. Add only dist-tag policy/self-test, existing CI/release
-   wiring and source-grounded publication docs.21 fixtures pass after native/personal findings
-   were reproduced and corrected; renewed hosted/personal acceptance remains. Issue36 live mismatch can keep CI red; no
-   registry mutation, publication or settings change is authorized by implementation.
+   Active issue37 source is prepared in persistent `assemblejs-dist-tag-guard`, branch
+   `codex/dist-tag-guard-37`. Source17c4d17 passes 21 fixtures, native77df2e109 and personal 5732009773. All eight checks in CI41386333457 are clear after the owner registry correction:
+   seven source jobs passed attempt1; only failed ci-ready reran at attempt2 against changed
+   public tags. Fresh all14 readback and default scoped starter resolve next.2; AUDIT925c9c200.
+   Final record-head CI/personal review, actual merge and post-merge remain required. Future
+   actual OIDC release operation is not proven by the fixtures or the owner's manual correction.
    The assigned SvelteKit universal-load-functions manual exercise remains pending its named
    browser-venue decision; no exemption inferred. See AUDIT loading-research preparation.
 6. Keep negative-result drafts22/27/33, dirty27 and archived dirty55 source and every receipt
-   ref intact. No runtime retry, vendor patch, new model/transport/layout, npm mutation or
+   ref intact. No runtime retry, vendor patch, new model/transport/layout, further npm mutation or
    new broad build. The shared Node preview adapter remains hosted proof, not runtime adoption.
 7. Full tutorial research, reviewed earlier lesson baselines, current-revision lesson checks,
    saved project/progress/resume, certificate and verified external-agent connection remain
-   open. Npm36/37/38/40 remain open; the dist-tag guard is not implemented. Do not advertise
+   open. Npm36 correction is verified; issue37 source guard awaits final delivery, and38/40
+   remain separate owner decisions. Do not advertise
    full Academy availability or infer completion from components, notes or a served frame.
 
 ## Verified editor details

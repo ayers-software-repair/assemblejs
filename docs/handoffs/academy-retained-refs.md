@@ -39,12 +39,17 @@ Read-only registry inspection on 1 November: all fourteen packages have `latest`
 `1.0.0-next.0`, `next` at `1.0.0-next.2`, and a public `0.0.0-stage` version without a
 reported deprecation. The `create-assemblejs` request returned404; this does not reserve it.
 
-| Issue | Remaining work                                                                                                                                                           |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 36    | Owner explicitly owns existing dist-tag moves. No registry mutation performed.                                                                                           |
-| 37    | Explicitly assigned source guard is in progress on codex/dist-tag-guard-37; fixture/source acceptance and live delivery remain separate. Issue36 mismatch is not waived. |
-| 38    | Owner choice on staged-placeholder retention/deprecation remains open; none performed.                                                                                   |
-| 40    | Unscoped wrapper and new-name first publication remain open; no reservation or publication performed.                                                                    |
+On 2 November the owner completed the approved tag corrections. Fresh independent all14 reads
+verify latest=next=next.2 and target publication; the default scoped starter resolves next.2.
+AUDIT925c9c200 retains values, actual starter files/resolution and changed-state CI. This
+supersedes the earlier tag snapshot only; placeholder and unscoped-name decisions are unchanged.
+
+| Issue | Remaining work                                                                                                                                         |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 36    | Owner-completed correction is verified for all 14 tags and the default scoped starter; tracking closure follows receipt review.                        |
+| 37    | Source17c4d17 is independently clear; all eight current CI checks pass after the owner registry change. Final record-head and merge/post-merge remain. |
+| 38    | Owner choice on staged-placeholder retention/deprecation remains open; none performed.                                                                 |
+| 40    | Unscoped wrapper and new-name first publication remain open; no reservation or publication performed.                                                  |
 
 No release, publisher setting, credential, spending, infrastructure or runtime adoption is
 inferred. These remaining issues are not marked complete by retaining their records.

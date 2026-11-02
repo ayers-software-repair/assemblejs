@@ -9023,3 +9023,20 @@ recovery regressions were watched red; recovery now derives commands from the fi
 policy. Unavailable or already-correct changed-policy readback gives a read-only inspection
 command instead of a guessed write. Denied writes also re-observe without retrying. No live
 write or new publication authority follows; issue36 remains the delivery blocker.
+
+
+### 2026-11-02: owner tag correction unblocks the issue37 source guard
+
+The owner completed the exact approved latest moves to the already published next.2. Initial
+E401 and subsequent EOTP attempts remain recorded; no alternate auth, token or publisher-setting
+change was used. Fresh independent all14 reads verify latest=next=1.0.0-next.2. Actual unversioned
+npm create @asmjs resolves published next.2 and writes matching project pins without installing
+or building that project. AUDIT925c9c200 retains sanitized readback and starter evidence.
+
+Source17c4d17 has 21 passing cases, native77df2e109 and personal5732009773. CI41386333457
+preserves its real attempt1 live-registry failure. Only failed ci-ready reran at attempt2 after
+that external state changed; it passes all14 live invariants and21 fixtures. The seven original
+source jobs, including both Node full chains, were not repeated. Final records/message/CI,
+actual squash and normal post-merge still gate source delivery. A manual tag correction and
+fixture proofs do not establish a real OIDC release operation, authorize further tag writes or
+lift publication, credential/settings, runtime, browser or retained-ref boundaries.

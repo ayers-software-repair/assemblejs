@@ -2,15 +2,17 @@
 
 ## Resume reconciliation (2026-11-01)
 
-- [ ] Implement accepted issue37 dist-tag source guard in the owned persistent
-      `assemblejs-dist-tag-guard` checkout. Fixture/self-test, existing CI/release wiring and
-      source-grounded FIRST-PUBLISH corrections pass21 fixture cases. Initial native review
-      AUDIT467fb4140 found the stable+build omission; personal5731955683 then found stale
-      recovery advice. Both were reproduced red before correction; fresh review is pending.
-      Normal hosted checks/personal review remain required. CI is read-only; only the
-      existing tagged release can request pre-stable latest repair, with readback and exact
-      operator failures. Issue36 live mismatch remains an explicit delivery blocker. No current
-      registry write, publication, credential/publisher-setting change or browser is authorized.
+- [x] Implement accepted issue37 dist-tag source guard in the owned persistent
+      `assemblejs-dist-tag-guard` checkout. All 21 fixtures pass; native `77df2e109` and personal
+      `5732009773` clear both reproduced/corrected findings. Source `17c4d17` passes all eight
+      current checks in CI `41386333457`: attempt1 retained the actual live failure; after the
+      owner corrected tags, only failed ci-ready was rerun at attempt2 and passes all 14 live
+      package invariants. Both Node full check chains and other source jobs were not rerun.
+      Independent fresh reads verify latest=next=`1.0.0-next.2` for all 14; actual unversioned
+      `npm create @asmjs` resolves next.2 and writes matching pins without a project install/build.
+      Evidence: AUDIT `925c9c200`. Final record-head checks/personal review and actual merge/
+      post-merge remain. This is source/check evidence, not an actual OIDC release operation.
+      No new publication, publisher-setting, credential change or browser action is inferred.
 
 - [x] Independently verify and remove sixteen redundant merged worktrees while retaining every
       receipt-backed branch; exact identities are in `docs/handoffs/academy-removed-worktrees.json`.
