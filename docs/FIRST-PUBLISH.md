@@ -95,7 +95,10 @@ only pre-stable `latest` repair. It validates the local tagged version was publi
 repair if `next` is wrong, re-observes before writing and reads the result back afterward.
 It never automatically moves `latest` once stable exists. Reads are observations, not an
 atomic registry lock. A failed/ambiguous write or failed readback fails the release, prints
-the exact operator command and prevents the dependent site job. No automatic write retry.
+the operator command derived from the final observed policy and prevents the dependent site
+job. If readback is unavailable or already correct under a changed policy, guidance requires
+fresh read-only inspection before any further write. It never recommends the old prerelease
+move after observing stable. No automatic write retry.
 
 OIDC dist-tag operations require npm11.21+ (or12.2+) and the trusted publisher's separate
 **Allow npm dist-tag** permission, disabled by default. Direct publish permission does not

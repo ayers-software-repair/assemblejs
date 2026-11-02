@@ -41,8 +41,8 @@ use isolated worktrees, explicit staging, DCO-only Conventional commits and squa
    are in AUDIT's check-guidance/delivery/retained-inventory.json; receipt branches remain.
    Active independent source task: accepted issue37 in persistent `assemblejs-dist-tag-guard`,
    branch `codex/dist-tag-guard-37`. Add only dist-tag policy/self-test, existing CI/release
-   wiring and source-grounded publication docs.16 fixture cases/native467fb4140 pass; normal
-   hosted/personal acceptance remains. Issue36 live mismatch can keep CI red; no
+   wiring and source-grounded publication docs.21 fixtures pass after native/personal findings
+   were reproduced and corrected; renewed hosted/personal acceptance remains. Issue36 live mismatch can keep CI red; no
    registry mutation, publication or settings change is authorized by implementation.
    The assigned SvelteKit universal-load-functions manual exercise remains pending its named
    browser-venue decision; no exemption inferred. See AUDIT loading-research preparation.

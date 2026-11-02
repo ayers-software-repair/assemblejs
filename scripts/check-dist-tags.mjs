@@ -92,6 +92,15 @@ function supportsOidcTags(run) {
   return (major === 11 && minor >= 21) || (major === 12 && minor >= 2) || major > 12;
 }
 
+function recovery(name, policy) {
+  if (policy?.problems.length) {
+    return policy.problems
+      .map(({ tag, version }) => `operator: npm dist-tag add ${name}@${version} ${tag} ${registry}`)
+      .join("; ");
+  }
+  return `inspect current state before any further write: npm view ${name} dist-tags versions --json --prefer-online ${registry}`;
+}
+
 /** Read-only by default; the release caller alone opts into pre-stable latest repair. */
 export function checkDistTags({ packages, run = npmRun, repair = false, say = console.log }) {
   if (packages.length === 0) throw new Error("no public packages to check");
@@ -130,27 +139,28 @@ export function checkDistTags({ packages, run = npmRun, repair = false, say = co
           policy.expected.latest !== problem.version ||
           metadata.tags.next !== problem.version
         ) {
-          failures.push(
-            `${name}: registry changed before repair; recheck before operator: ${command}`,
-          );
+          failures.push(`${name}: registry changed before repair; ${recovery(name, policy)}`);
           continue;
         }
         const result = run(args);
+        let after;
+        try {
+          after = tagPolicy(readMetadata(name, run));
+        } catch {
+          failures.push(`${name}: repair readback failed; ${recovery(name)}`);
+          continue;
+        }
         if (result.status !== 0) {
           failures.push(
-            `${name}: dist-tag repair failed; verify OIDC Allow npm dist-tag; operator: ${command}`,
+            `${name}: dist-tag repair failed; verify OIDC Allow npm dist-tag; ${recovery(name, after)}`,
           );
           continue;
         }
-        try {
-          const after = tagPolicy(readMetadata(name, run));
-          if (after.problems.length > 0 || after.expected.latest !== problem.version) {
-            throw new Error("readback mismatch");
-          }
-          say(`${name}: latest repair read back at ${problem.version}`);
-        } catch {
-          failures.push(`${name}: repair readback failed; operator: ${command}`);
+        if (after.problems.length > 0 || after.expected.latest !== problem.version) {
+          failures.push(`${name}: repair readback failed; ${recovery(name, after)}`);
+          continue;
         }
+        say(`${name}: latest repair read back at ${problem.version}`);
       }
       if (policy.problems.length === 0) say(`${name}: dist-tags match published releases`);
     } catch (error) {
@@ -164,9 +174,13 @@ export function checkDistTags({ packages, run = npmRun, repair = false, say = co
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const args = process.argv.slice(2);
   if (args.length === 1 && args[0] === "--self-test") {
-    const result = spawnSync(process.execPath, ["--test", "scripts/check-dist-tags.test.mjs"], {
-      stdio: "inherit",
-    });
+    const result = spawnSync(
+      process.execPath,
+      ["--test", "scripts/check-dist-tags.test.mjs", "scripts/check-dist-tags-recovery.test.mjs"],
+      {
+        stdio: "inherit",
+      },
+    );
     process.exitCode = result.status ?? 1;
   } else {
     try {

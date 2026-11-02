@@ -4,8 +4,9 @@
 
 - [ ] Implement accepted issue37 dist-tag source guard in the owned persistent
       `assemblejs-dist-tag-guard` checkout. Fixture/self-test, existing CI/release wiring and
-      source-grounded FIRST-PUBLISH corrections pass16 fixture cases and independent source review
-      (AUDIT467fb4140). The stable+build false green was reproduced red before correction.
+      source-grounded FIRST-PUBLISH corrections pass21 fixture cases. Initial native review
+      AUDIT467fb4140 found the stable+build omission; personal5731955683 then found stale
+      recovery advice. Both were reproduced red before correction; fresh review is pending.
       Normal hosted checks/personal review remain required. CI is read-only; only the
       existing tagged release can request pre-stable latest repair, with readback and exact
       operator failures. Issue36 live mismatch remains an explicit delivery blocker. No current

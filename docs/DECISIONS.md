@@ -9016,3 +9016,10 @@ Independent review found a stable+build metadata version could be ignored and pe
 prerelease success. Two fixture regressions were watched red before accepting optional build
 suffixes and comparing only numeric release precedence. Already-tagged equal-highest variants
 are retained; lexical build identifiers do not invent version order. SemVer source is linked.
+
+Personal source review5731955683 found that post-write stable publication could leave failure
+advice prescribing the old prerelease move, despite observing correct stable latest. Five
+recovery regressions were watched red; recovery now derives commands from the final observed
+policy. Unavailable or already-correct changed-policy readback gives a read-only inspection
+command instead of a guessed write. Denied writes also re-observe without retrying. No live
+write or new publication authority follows; issue36 remains the delivery blocker.
