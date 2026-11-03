@@ -9024,7 +9024,6 @@ policy. Unavailable or already-correct changed-policy readback gives a read-only
 command instead of a guessed write. Denied writes also re-observe without retrying. No live
 write or new publication authority follows; issue36 remains the delivery blocker.
 
-
 ### 2026-11-02: owner tag correction unblocks the issue37 source guard
 
 The owner completed the exact approved latest moves to the already published next.2. Initial
@@ -9040,3 +9039,16 @@ source jobs, including both Node full chains, were not repeated. Final records/m
 actual squash and normal post-merge still gate source delivery. A manual tag correction and
 fixture proofs do not establish a real OIDC release operation, authorize further tag writes or
 lift publication, credential/settings, runtime, browser or retained-ref boundaries.
+
+### 2026-11-03: selected interlocking mark on the existing landing
+
+The owner rejected the separate six-hexagon mark and selected the retained editable
+interlocking master for the current Frameworks Assemble landing. The source is
+`assemble-brand-master.svg` from the retained 31 October brand study. Its six named paths
+are preserved as `site/mark.svg`; the favicon carries identical bytes, held by the existing
+site-frame test. This supersedes the previous mark assertion, not the accepted landing
+layout, fonts, static background or framework behavior. No new renderer or design system.
+The approved public destination is https://assemblejs.com/next/. Direct readback found
+root and slashless next404; those remain issue64, not authority for DNS/hosting changes.
+The app and OpenWork/OpenCode base directions remain held. This bounded asset change uses
+the existing source checks, independent review and next-site deployment; no npm release.

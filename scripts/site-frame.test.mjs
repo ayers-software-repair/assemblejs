@@ -179,27 +179,24 @@ test("site staging copies the released kit closure without a retired module", ()
   }
 });
 
-test("original product mark and font bytes agree with their retained provenance", () => {
+test("selected interlocking mark and original font bytes agree with their retained provenance", () => {
   const site = new URL("../site/", import.meta.url);
   const window = new Window();
   try {
-    for (const file of ["mark.svg", "favicon.svg"]) {
-      window.document.body.innerHTML = readFileSync(new URL(file, site), "utf8");
-      const blocks = [...window.document.querySelectorAll("svg polygon")];
-      assert.deepEqual(
-        blocks.map((block) => block.getAttribute("fill")),
-        ["#ff5a00", "#2b67f8", "#62b245", "#fee440", "#9b5de5", "#00bbf9"],
-      );
-      for (const block of blocks) {
-        const points = block.getAttribute("points").trim().split(/\s+/);
-        assert.equal(points.length, 6);
-        for (const point of points) {
-          for (const value of point.split(",").map(Number)) {
-            assert.ok(value >= 0 && value <= 64, "hexagon stays within its viewBox");
-          }
-        }
-      }
-    }
+    const mark = readFileSync(new URL("mark.svg", site), "utf8");
+    assert.equal(
+      createHash("sha256").update(mark).digest("hex"),
+      "f098c3c09f8850c5eca70efb079e7d1d9bc9fe81b7a1f53d4c59bbeb9cc21fcf",
+      "owner-selected interlocking master bytes",
+    );
+    assert.equal(readFileSync(new URL("favicon.svg", site), "utf8"), mark);
+    window.document.body.innerHTML = mark;
+    assert.equal(window.document.querySelector("svg").getAttribute("viewBox"), "0 0 322 364");
+    assert.equal(window.document.querySelectorAll("polygon").length, 0);
+    assert.deepEqual(
+      [...window.document.querySelectorAll("svg path")].map((path) => path.id),
+      ["orange", "blue", "green", "yellow", "purple", "cyan"],
+    );
     const sources = JSON.parse(readFileSync(new URL("fonts/sources.json", site), "utf8"));
     assert.equal(sources.repository, "https://github.com/google/fonts");
     assert.match(sources.commit, /^[a-f0-9]{40}$/);
