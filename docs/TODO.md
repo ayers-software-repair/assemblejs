@@ -1,5 +1,13 @@
 # Todo
 
+## Selected interlocking logo (owner, 2026-11-03)
+
+- [x] Replace the rejected hexagon mark and favicon with the selected editable interlocking
+      master while retaining the current landing. All12 focused site tests, site/link/text
+      gates, identity/headers, formatting/lint and independent source review pass.
+- [ ] Verify hosted landing proof and the existing next deployment at
+      https://assemblejs.com/next/. Root/slashless routing remains issue64; no DNS or app/base work.
+
 ## Resume reconciliation (2026-11-01)
 
 - [x] Implement accepted issue37 dist-tag source guard in the owned persistent
