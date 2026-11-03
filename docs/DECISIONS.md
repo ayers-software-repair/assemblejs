@@ -9052,3 +9052,17 @@ The approved public destination is https://assemblejs.com/next/. Direct readback
 root and slashless next404; those remain issue64, not authority for DNS/hosting changes.
 The app and OpenWork/OpenCode base directions remain held. This bounded asset change uses
 the existing source checks, independent review and next-site deployment; no npm release.
+
+### 2026-11-03: exact rounded image and rendered-logo acceptance
+
+The owner supplied the original rounded-gradient PNG directly after reporting that the
+landing still showed the wrong logo. The flat traced SVG is not an exact copy of that image.
+The supplied 1330 by1182 RGBA image is retained unchanged as
+`mark-bc2a8e621dba.png`; its SHA256 is
+`bc2a8e621dba657c8358b7f34a3a00a8bdc8a5d70cb6eda04dce545490dff008`.
+The shared frame configuration, hero and generated reference now point to that versioned
+asset for both the mark and favicon. Old unversioned files are retained for existing URLs.
+A real browser reproduced old cached shapes at both page locations despite fresh direct
+asset bytes. Therefore warm-cache browser proof and actual rendered header/hero inspection
+are required, in addition to source/delivery byte checks. No redraw or browser-cache purge
+is the product fix. The current landing and app/base holds are otherwise unchanged.

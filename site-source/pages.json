@@ -1,6 +1,6 @@
 {
   "name": "AssembleJS",
-  "mark": "mark.svg",
+  "mark": "mark-bc2a8e621dba.png",
   "background": "static",
   "navigation": [
     {
@@ -185,5 +185,5 @@
       "section": "docs/index.html"
     }
   ],
-  "favicon": "favicon.svg"
+  "favicon": "mark-bc2a8e621dba.png"
 }

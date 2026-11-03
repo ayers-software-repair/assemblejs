@@ -8,6 +8,9 @@ import { renderLinks, rewrite } from "./site-links.mjs";
 
 export function load(app) {
   const home = readFileSync(new URL("../site/index.html", import.meta.url), "utf8");
+  const brand = JSON.parse(
+    readFileSync(new URL("../site-source/pages.json", import.meta.url), "utf8"),
+  );
   const manifest = JSON.parse(readFileSync(new URL("../site/pages.json", import.meta.url), "utf8"));
   const header = /<header class="product-header">[\s\S]*?<\/header>/.exec(home)?.[0];
   const footer = /<footer class="product-footer">[\s\S]*?<\/footer>/.exec(home)?.[0];
@@ -29,7 +32,10 @@ export function load(app) {
           href: context.relativeURL("../../" + file),
         }),
       ),
-      JSX.createElement("link", { rel: "icon", href: context.relativeURL("../../favicon.svg") }),
+      JSX.createElement("link", {
+        rel: "icon",
+        href: context.relativeURL("../../" + brand.favicon),
+      }),
     ),
   );
   app.renderer.hooks.on("body.begin", (context) =>

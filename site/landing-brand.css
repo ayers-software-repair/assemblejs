@@ -20,6 +20,7 @@
   -webkit-text-fill-color: transparent;
 }
 .product-brand img {
+  object-fit: contain;
   width: 36px;
   height: 36px;
 }

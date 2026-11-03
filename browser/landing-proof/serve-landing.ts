@@ -17,15 +17,26 @@ export async function serveLanding() {
     ".png": "image/png",
     ".ttf": "font/ttf",
   };
+  const brand = JSON.parse(
+    await readFile(new URL("../../site-source/pages.json", import.meta.url), "utf8"),
+  ) as { mark: string };
+  const requests: string[] = [];
   const server = createServer(async (request, response) => {
     if (request.method !== "GET") {
       response.writeHead(405).end();
       return;
     }
     try {
+      requests.push(request.url ?? "/");
       const path = decodeURIComponent(
         new URL(request.url ?? "/", "http://localhost").pathname,
       ).replace(/^\/assemblejs(?:\/next)?\//, "/");
+      if (path === "/previous-logo.html") {
+        const html = await readFile(resolve(site, "index.html"), "utf8");
+        response.writeHead(200, { "Content-Type": "text/html" });
+        response.end(html.replaceAll(brand.mark, "mark.svg"));
+        return;
+      }
       const root = resolve(path.startsWith("/kit/") ? kit : site);
       const suffix = path.startsWith("/kit/") ? path.slice(5) : path.slice(1);
       const file = resolve(root, suffix || "index.html");
@@ -35,7 +46,12 @@ export async function serveLanding() {
         return;
       }
       const contents = await readFile(file);
-      response.writeHead(200, { "Content-Type": type });
+      response.writeHead(200, {
+        "Content-Type": type,
+        ...([".svg", ".png"].includes(extname(file))
+          ? { "Cache-Control": "public, max-age=604800" }
+          : {}),
+      });
       response.end(contents);
     } catch {
       response.writeHead(404).end();
@@ -50,6 +66,7 @@ export async function serveLanding() {
     throw new Error("landing server has no port");
   return {
     origin: `http://127.0.0.1:${String(address.port)}`,
+    requests,
     close: () =>
       new Promise<void>((done, reject) =>
         server.close((error) => (error ? reject(error) : done())),

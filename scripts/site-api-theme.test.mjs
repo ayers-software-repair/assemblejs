@@ -20,6 +20,14 @@ test("TypeDoc keeps the real product header and active navigation at every refer
         relativeURL: (path) => posix.relative(posix.dirname(file), path),
       }),
     );
+    const icon = JSX.renderElement(
+      hooks.get("head.end")({
+        relativeURL: (path) => posix.relative(posix.dirname(file), path),
+      }),
+    );
+    assert.ok(html.includes("mark-bc2a8e621dba.png"));
+    assert.ok(icon.includes("mark-bc2a8e621dba.png"));
+    assert.doesNotMatch(html + icon, /(?:mark|favicon)\.svg/);
     assert.match(html, /<header class="product-header">/);
     assert.doesNotMatch(html, /undefined/);
     assert.ok(

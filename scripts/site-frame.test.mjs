@@ -179,23 +179,26 @@ test("site staging copies the released kit closure without a retired module", ()
   }
 });
 
-test("selected interlocking mark and original font bytes agree with their retained provenance", () => {
+test("owner-selected rounded image and original font bytes agree with their retained provenance", () => {
   const site = new URL("../site/", import.meta.url);
   const window = new Window();
   try {
-    const mark = readFileSync(new URL("mark.svg", site), "utf8");
+    const config = JSON.parse(readFileSync(new URL("../site-source/pages.json", import.meta.url)));
+    assert.equal(config.mark, "mark-bc2a8e621dba.png");
+    assert.equal(config.favicon, config.mark);
+    const mark = readFileSync(new URL(config.mark, site));
     assert.equal(
       createHash("sha256").update(mark).digest("hex"),
-      "f098c3c09f8850c5eca70efb079e7d1d9bc9fe81b7a1f53d4c59bbeb9cc21fcf",
-      "owner-selected interlocking master bytes",
+      "bc2a8e621dba657c8358b7f34a3a00a8bdc8a5d70cb6eda04dce545490dff008",
+      "exact owner-supplied rounded gradient image",
     );
-    assert.equal(readFileSync(new URL("favicon.svg", site), "utf8"), mark);
-    window.document.body.innerHTML = mark;
-    assert.equal(window.document.querySelector("svg").getAttribute("viewBox"), "0 0 322 364");
-    assert.equal(window.document.querySelectorAll("polygon").length, 0);
+    assert.equal(mark.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
+    window.document.body.innerHTML = readFileSync(new URL("index.html", site), "utf8");
     assert.deepEqual(
-      [...window.document.querySelectorAll("svg path")].map((path) => path.id),
-      ["orange", "blue", "green", "yellow", "purple", "cyan"],
+      [...window.document.querySelectorAll(".product-brand img, .assembly-wordmark img")].map(
+        (image) => image.getAttribute("src"),
+      ),
+      [config.mark, config.mark],
     );
     const sources = JSON.parse(readFileSync(new URL("fonts/sources.json", site), "utf8"));
     assert.equal(sources.repository, "https://github.com/google/fonts");
@@ -226,8 +229,7 @@ test("generated asset checks refuse a wrong relative URL on an uncaptured refere
     "skin.css",
     "landing-brand.css",
     "api-theme.css",
-    "favicon.svg",
-    "mark.svg",
+    "mark-bc2a8e621dba.png",
     "index.html",
     "downloads.html",
     "docs/index.html",
@@ -243,10 +245,10 @@ test("generated asset checks refuse a wrong relative URL on an uncaptured refere
       .map((file) => `<link rel="stylesheet" href="../../../${file}">`)
       .join("");
     const nav = targets
-      .slice(6)
+      .slice(5)
       .map((file) => `<a href="../../../${file}">Link</a>`)
       .join("");
-    const html = `<head>${head}<link rel="icon" href="../../../favicon.svg"></head><body><header class="product-header"><a class="product-brand" href="../../../index.html"><img src="../../../mark.svg"></a><nav class="product-nav">${nav}</nav></header></body>`;
+    const html = `<head>${head}<link rel="icon" href="../../../mark-bc2a8e621dba.png"></head><body><header class="product-header"><a class="product-brand" href="../../../index.html"><img src="../../../mark-bc2a8e621dba.png"></a><nav class="product-nav">${nav}</nav></header></body>`;
     const file = "docs/api/functions/uncaptured.html";
     assert.deepEqual(frameAssetProblems(html, file, root), []);
     assert.match(
@@ -259,8 +261,10 @@ test("generated asset checks refuse a wrong relative URL on an uncaptured refere
     );
     const bad = html.replace('href="../../../skin.css"', 'href="../../skin.css"');
     assert.match(frameAssetProblems(bad, file, root).join("\n"), /does not resolve to skin.css/);
-    rmSync(join(root, "mark.svg"));
-    assert.match(frameAssetProblems(html, file, root).join("\n"), /missing local mark.svg/);
+    const stale = html.replaceAll("mark-bc2a8e621dba.png", "mark.svg");
+    assert.match(frameAssetProblems(stale, file, root).join("\n"), /does not resolve/);
+    rmSync(join(root, "mark-bc2a8e621dba.png"));
+    assert.match(frameAssetProblems(html, file, root).join("\n"), /missing local mark-/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
