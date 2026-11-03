@@ -8,6 +8,14 @@
 - [ ] Verify hosted landing proof and the existing next deployment at
       https://assemblejs.com/next/. Root/slashless routing remains issue64; no DNS or app/base work.
 
+## Rounded-logo correction (owner, 2026-11-03)
+
+- [ ] Publish the exact owner-supplied rounded-gradient PNG under its content-versioned name.
+      Update header, hero, favicon and generated API references through their producers;
+      preserve its proportions. Prove a cached legacy image cannot replace it, then verify
+      the actual rendered live header/hero before accepting delivery. PR74's earlier byte
+      proof does not settle this reopened visual acceptance. App/base holds remain.
+
 ## Resume reconciliation (2026-11-01)
 
 - [x] Implement accepted issue37 dist-tag source guard in the owned persistent

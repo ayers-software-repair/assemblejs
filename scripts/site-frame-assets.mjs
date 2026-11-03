@@ -1,8 +1,12 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Window } from "happy-dom";
+
+const brand = JSON.parse(
+  readFileSync(new URL("../site-source/pages.json", import.meta.url), "utf8"),
+);
 
 /** Check resolved product assets and shared navigation in each generated reference page. */
 export function frameAssetProblems(html, file, site) {
@@ -34,8 +38,9 @@ export function frameAssetProblems(html, file, site) {
     for (const target of ["skin.css", "landing-brand.css", "api-theme.css"]) {
       matches('head link[rel="stylesheet"]', "href", target);
     }
-    matches('head link[rel="icon"]', "href", "favicon.svg");
-    matches("header.product-header .product-brand img", "src", "mark.svg");
+    matches('head link[rel="icon"]', "href", brand.favicon);
+    matches("header.product-header .product-brand img", "src", brand.mark);
+    if (file === "index.html") matches(".assembly-wordmark img", "src", brand.mark);
     matches("header.product-header .product-brand", "href", "index.html");
     for (const target of ["downloads.html", "docs/index.html", "support.html"]) {
       matches("header.product-header .product-nav a", "href", target);
