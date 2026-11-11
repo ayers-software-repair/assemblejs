@@ -60,7 +60,10 @@ for (const scenario of ["bounded before teardown", "outside the cache", "unreada
       },
     };
     await runInNewContext(`(async () => {${source}})()`, {
-      document: { querySelector: (selector) => (selector === "#status" ? status : result) },
+      document: {
+        querySelector: (selector) =>
+          selector === "#status" ? status : selector === "#result" ? result : null,
+      },
       crossOriginIsolated: true,
       Vivari: { boot: async () => runtime },
       boundedOperation,

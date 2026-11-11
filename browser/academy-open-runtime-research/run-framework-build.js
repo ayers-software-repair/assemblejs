@@ -3,9 +3,11 @@
 /* global document, crossOriginIsolated */
 import { Vivari } from "@vivari/core";
 import { boundedOperation } from "./bounded-operation.js";
+import { runBuiltPreview } from "./run-built-preview.js";
 
 const status = document.querySelector("#status");
 const result = document.querySelector("#result");
+const preview = document.querySelector("#preview");
 if (!status || !result) throw new Error("incomplete framework-build fixture");
 const records = [];
 const renderers = ["preact", "react", "vue", "svelte", "solid", "lit"];
@@ -22,8 +24,11 @@ const report = (phase) => {
   terminal = phase === "passed" || phase === "failed";
 };
 async function command(program, args, options = {}, expected = 0) {
-  const child = await boundedOperation(runtime.spawn(program, args, options), "spawn");
-  const record = { program, args, output: "", exit: null };
+  const configured = preview
+    ? { ...options, env: { ...options.env, ESBUILD_WORKER_THREADS: "0" } }
+    : options;
+  const child = await boundedOperation(runtime.spawn(program, args, configured), "spawn");
+  const record = { program, args, environment: configured.env, output: "", exit: null };
   records.push(record);
   report("running");
   const reading = child.output.pipeTo(
@@ -54,7 +59,15 @@ const write = (path, text) => boundedOperation(runtime.fs.writeFile(path, text),
 try {
   if (!crossOriginIsolated) throw new Error("isolated research origin required");
   report("booting");
-  runtime = await boundedOperation(Vivari.boot({ serviceWorkerUrl: false }), "boot", 30000);
+  runtime = await boundedOperation(
+    Vivari.boot({
+      serviceWorkerUrl: preview ? "/sw.js" : false,
+      documentIsolationPolicy: "none",
+      devtools: false,
+    }),
+    "boot",
+    30000,
+  );
   const npm = await command("npm", ["--version"]);
   if (npm.trim() !== "10.9.2") throw new Error(`unexpected npm: ${npm}`);
   const node = await command("node", ["--version"]);
@@ -123,6 +136,25 @@ try {
     throw new Error("compiler missed the deliberate type error");
   await write(typePath, "export const quantity: number = 1;\n");
   await command("node", typeArgs, { cwd: root });
+  if (preview) {
+    const response = await boundedOperation(fetch("/preview-shims.json"), "preview CSP hashes");
+    if (!response.ok) throw new Error("preview CSP inventory unavailable");
+    const hashes = await boundedOperation(response.json(), "preview CSP inventory");
+    if (
+      !Array.isArray(hashes) ||
+      hashes.length !== 4 ||
+      !hashes.every((hash) => /^'sha256-[A-Za-z0-9+/]{43}='$/.test(hash))
+    )
+      throw new Error("invalid preview CSP inventory");
+    records.push({ previewShimHashes: hashes });
+    await write(
+      `${root}/assemblejs.config.ts`,
+      'import { contentSecurityPolicy, defineConfig } from "@asmjs/core";\n' +
+        "const policy = contentSecurityPolicy([]);\nconst script = \"script-src 'self'\";\n" +
+        'if (!policy.includes(script)) throw new Error("default script policy changed");\n' +
+        `export default defineConfig({ contentSecurityPolicy: policy.replace(script, script + ${JSON.stringify(" " + hashes.join(" "))}) });\n`,
+    );
+  }
   const cli = ["node_modules/@asmjs/cli/dist/bin.js"];
   for (const renderer of [...renderers, ...templates]) {
     await command(
@@ -131,6 +163,13 @@ try {
       { cwd: root },
     );
   }
+  if (preview)
+    await write(
+      `${root}/src/assemblies/react-probe/react-probe.react.tsx`,
+      'import { useState } from "react";\nexport default function ReactProbe() {\n' +
+        "const [count, setCount] = useState(0);\nreturn <section><h2>react-probe</h2>" +
+        '<button type="button" onClick={() => setCount(count + 1)}>Preview count {count}</button></section>;\n}\n',
+    );
   const pagePath = `${root}/src/pages/home/home.html`;
   const original = await read(pagePath);
   const page = original.replace(
@@ -154,6 +193,15 @@ try {
     throw new Error("build did not report all assemblies");
   const output = await read(`${root}/dist/server.js`);
   if (output.length === 0) throw new Error("built server is empty");
+  if (preview)
+    await runBuiltPreview(
+      runtime,
+      root,
+      records,
+      report,
+      preview,
+      document.querySelector("#stop-preview"),
+    );
   runtime.teardown();
   runtime = undefined;
   records.push({
