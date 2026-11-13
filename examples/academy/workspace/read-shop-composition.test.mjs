@@ -30,6 +30,26 @@ test("composition requires real local and remote envelopes at the preview revisi
       { name: "buy-box", origin: null },
       { name: "product-detail", origin: "https://catalog.example" },
     ]);
+    const calculator = '<assembly-root data-name="price-calculator"></assembly-root>';
+    assert.equal((await read(async () => ({ url, html }))).calculatorBesideBuyBox, false);
+    assert.equal(
+      (await read(async () => ({ url, html: html + calculator }))).calculatorBesideBuyBox,
+      false,
+    );
+    const adjacent = html.replace(
+      '<assembly-root data-name="product-detail"',
+      calculator + '<assembly-root data-name="product-detail"',
+    );
+    assert.equal((await read(async () => ({ url, html: adjacent }))).calculatorBesideBuyBox, false);
+    const rendered = calculator.replace(
+      "</assembly-root>",
+      '<section aria-label="Order estimate"><h2>Order estimate</h2><div aria-label="Quantity presets"><button type="button">1 item</button></div></section></assembly-root>',
+    );
+    assert.equal(
+      (await read(async () => ({ url, html: adjacent.replace(calculator, rendered) })))
+        .calculatorBesideBuyBox,
+      true,
+    );
     await assert.rejects(
       read(async () => ({ url, html: html.replace(' data-remote="https://catalog.example"', "") })),
       /unexpected composition/,

@@ -29,6 +29,27 @@ export async function readShopComposition(document, client, preview, readPage, s
       throw new Error(`The preview has unexpected composition for ${name}.`);
     assemblies.push({ name, origin });
   }
+  const buyBox = template.content.querySelector('assembly-root[data-name="buy-box"]');
+  const calculator = template.content.querySelectorAll(
+    'assembly-root[data-name="price-calculator"]',
+  );
+  const calculatorBesideBuyBox =
+    calculator.length === 1 &&
+    buyBox.nextElementSibling === calculator[0] &&
+    !calculator[0].hasAttribute("data-failed") &&
+    !calculator[0].hasAttribute("data-remote") &&
+    Boolean(calculator[0].querySelector("section[aria-label] h2")?.textContent.trim()) &&
+    Boolean(
+      calculator[0]
+        .querySelector('[aria-label="Quantity presets"] button[type="button"]')
+        ?.textContent.trim(),
+    );
   await checkRevision();
-  return { lesson: "explore-shop", revision: 1, version: preview.version, assemblies };
+  return {
+    calculatorBesideBuyBox,
+    lesson: "explore-shop",
+    revision: 1,
+    version: preview.version,
+    assemblies,
+  };
 }

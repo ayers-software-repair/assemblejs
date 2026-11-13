@@ -32,7 +32,7 @@ export const academyLessons = [
     id: "place-assembly",
     revision: 1,
     title: "Put it on the page",
-    task: "Place your assembly beside the buy box on the product page.",
+    task: "Place the price calculator immediately after the buy box. Rebuild and select Inspect shop composition.",
     hint: "The page template controls placement. Open `shop/src/pages/product/product.html`.",
     evidence: "Composition includes that placement and the running page shows it there.",
   },

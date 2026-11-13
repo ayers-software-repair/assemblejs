@@ -272,6 +272,8 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       if (disposed) return { ok: false, error: "workspace closed" };
       if (manual || exploring || (placement && evidence.kind === "recovered"))
         lessons.recordProof(evidence);
+      if (exploring && evidence.calculatorBesideBuyBox)
+        lessons.recordProof({ lesson: "place-assembly", revision: 1, version: evidence.version });
       output.textContent = JSON.stringify(evidence, null, 2);
       status.textContent = exploring
         ? "Buy-box is local. Product-detail comes from another server. Open diagnostics for the origin."

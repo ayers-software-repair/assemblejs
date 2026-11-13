@@ -158,6 +158,12 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await expect(status).toContainText("Build completed", { timeout: 45000 });
     await expect(preview.locator("assembly-root")).toHaveCount(13);
     await expect(calculator).toHaveAttribute("data-mounted", "");
+    await page.getByRole("button", { name: "Inspect shop composition", exact: true }).click();
+    await expect(status).toContainText(
+      "Buy-box is local. Product-detail comes from another server.",
+    );
+    await lessons.getByRole("combobox").selectOption("place-assembly");
+    await expect(lessons.getByText("Previous verification saved.", { exact: false })).toBeVisible();
     await expect(calculator.getByRole("heading", { name: "Coffee total" })).toBeVisible();
     const quote = page.waitForResponse(
       (response) => response.url() === `${fixture.runtime.origin}/api/quote`,

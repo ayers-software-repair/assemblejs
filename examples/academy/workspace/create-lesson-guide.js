@@ -13,7 +13,12 @@ export function createLessonGuide(container) {
   const key = "assemblejs.academy.lesson-selection.v1";
   const proof = document.createElement("p");
   proof.setAttribute("role", "status");
-  const verifiedLessons = new Set(["edit-content", "explore-shop", "fix-placement"]);
+  const verifiedLessons = new Set([
+    "edit-content",
+    "explore-shop",
+    "fix-placement",
+    "place-assembly",
+  ]);
   const proofKey = (lesson) => "assemblejs.academy.lesson-proof." + lesson.id;
   const readProof = (storage, lesson) => {
     const raw = storage.getItem(proofKey(lesson));
