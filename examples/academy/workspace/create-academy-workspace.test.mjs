@@ -9,6 +9,7 @@ import { createAcademyWorkspace } from "./create-academy-workspace.js";
 import { academyWorkspaceFixture as fixture } from "./academy-workspace-fixture.mjs";
 
 import "./create-lesson-guide.test.mjs";
+import "./create-placement-recovery.test.mjs";
 import "./verify-manual-edit.test.mjs";
 
 test("check precedes the real runtime request, with a pinned framed URL and explicit stop", async () => {
@@ -289,6 +290,33 @@ test("calculator verification is current-preview-only and writes or Stop invalid
     await f.view.stop();
     assert.equal(button.disabled, true);
     assert.doesNotMatch(status.textContent, /verified for revision/);
+  } finally {
+    f.close();
+  }
+});
+
+test("the placement check keeps an existing preview when a read-only check fails", async () => {
+  let refuse = false;
+  const f = await fixture((data) => ({
+    callTool(request) {
+      if (refuse && request.name === "check") throw new Error("Unavailable check");
+      return data.client.callTool(request);
+    },
+  }));
+  try {
+    assert.equal((await f.view.refresh()).ok, true);
+    const frame = f.document.querySelector("iframe");
+    refuse = true;
+    const button = Array.from(f.document.querySelectorAll("button")).find(
+      (node) => node.textContent === "Check placement recovery",
+    );
+    button.click();
+    await setImmediate();
+    assert.equal(f.document.querySelector("iframe"), frame);
+    assert.match(
+      f.document.querySelector('[aria-label="Workspace status"]').textContent,
+      /Placement check failed/,
+    );
   } finally {
     f.close();
   }

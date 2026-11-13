@@ -4,6 +4,7 @@ import { callProjectTool } from "./call-project-tool.js";
 import { createCalculatorControls } from "./create-calculator-controls.js";
 import { createLessonGuide } from "./create-lesson-guide.js";
 import { createModeWalkthrough } from "./create-mode-walkthrough.js";
+import { createPlacementRecovery } from "./create-placement-recovery.js";
 import { createProjectFiles } from "./create-project-files.js";
 import { createSourceEditor } from "./create-source-editor.js";
 import { projectToolResult } from "./project-tool-result.js";
@@ -50,8 +51,9 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const stop = node("button", "Stop preview");
   const verify = node("button", "Verify calculator");
   const verifyEdit = node("button", "Verify manual edit");
-  build.type = stop.type = verify.type = verifyEdit.type = "button";
-  actions.append(build, stop, verify);
+  const recovery = node("button", "Check placement recovery");
+  build.type = stop.type = verify.type = verifyEdit.type = recovery.type = "button";
+  actions.append(build, stop, verify, recovery);
   if (typeof runtime.readProductPage === "function") actions.append(verifyEdit);
   header.append(heading, actions);
   const status = node("p", "Check and preview to start the application.");
@@ -87,6 +89,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     build.disabled = busy || pending > 0;
     verify.disabled = busy || pending > 0 || !previewState || typeof runtime.inspect !== "function";
     verifyEdit.disabled = busy || pending > 0 || !previewState;
+    recovery.disabled = busy || pending > 0;
     stop.disabled = busy || pending > 0 || !touched;
     guide.disabled = code.disabled = busy;
   };
@@ -136,6 +139,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       }
     },
   };
+  const checkRecovery = createPlacementRecovery(document, observed);
   const lessons = createLessonGuide(guide);
   const practice = createModeWalkthrough(guide, client);
   const tutor = createCalculatorControls(guide, observed, recipe, (state) =>
@@ -204,40 +208,55 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       sync();
     }
   };
-  const checkOutput = async (manual = false) => {
+  const checkOutput = async (button = verify) => {
+    const manual = button === verifyEdit;
+    const placement = button === recovery;
     if (disposed || busy || pending)
       return { ok: false, error: "wait for the current project operation" };
-    const button = manual ? verifyEdit : verify;
     const focused = document.activeElement === button;
     busy = true;
     verificationController = new AbortController();
     sync();
-    status.textContent = manual
-      ? "Checking the saved buy-box label against the served product."
-      : "Checking saved calculator output and quote responses.";
+    status.textContent = placement
+      ? "Checking the saved placement."
+      : manual
+        ? "Checking the saved buy-box label against the served product."
+        : "Checking saved calculator output and quote responses.";
     try {
       const signal = verificationController.signal;
-      const evidence = manual
-        ? await verifyManualEdit(
-            document,
-            observed,
-            previewState,
-            runtime.readProductPage.bind(runtime),
-            signal,
-          )
-        : await verifyCalculator(document, observed, recipe, runtime, previewState, signal);
+      const evidence = placement
+        ? await checkRecovery(signal)
+        : manual
+          ? await verifyManualEdit(
+              document,
+              observed,
+              previewState,
+              runtime.readProductPage.bind(runtime),
+              signal,
+            )
+          : await verifyCalculator(document, observed, recipe, runtime, previewState, signal);
       if (disposed) return { ok: false, error: "workspace closed" };
       if (manual) lessons.recordManualEdit(evidence);
       output.textContent = JSON.stringify(evidence, null, 2);
-      status.textContent = manual
-        ? `Saved and served buy-box labels match at revision ${evidence.version}.`
-        : `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
+      status.textContent = placement
+        ? {
+            finding: "Placement finding recorded. Fix the saved placement and check again.",
+            "other-findings": "Other project findings remain. Inspect the diagnostics.",
+            "no-observed-failure":
+              "Save a placement named buy-box-missing, check it, then restore buy-box.",
+            recovered: "The placement check passes on a new saved revision.",
+          }[evidence.kind]
+        : manual
+          ? `Saved and served buy-box labels match at revision ${evidence.version}.`
+          : `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
       return { ok: true, evidence };
     } catch (error) {
       if (!disposed) {
-        clear(
-          `${manual ? "Manual edit" : "Calculator"} check failed. Inspect its diagnostics, then check and preview again.`,
-        );
+        if (placement) status.textContent = "Placement check failed. Inspect its diagnostics.";
+        else
+          clear(
+            `${manual ? "Manual edit" : "Calculator"} check failed. Inspect its diagnostics, then check and preview again.`,
+          );
         output.textContent = String(error);
       }
       return { ok: false, error: String(error) };
@@ -273,7 +292,8 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   build.addEventListener("click", () => void refresh());
   stop.addEventListener("click", () => void stopPreview());
   verify.addEventListener("click", () => void checkOutput());
-  verifyEdit.addEventListener("click", () => void checkOutput(true));
+  verifyEdit.addEventListener("click", () => void checkOutput(verifyEdit));
+  recovery.addEventListener("click", () => void checkOutput(recovery));
   preview.append(diagnostics);
   layout.append(guide, code, preview);
   root.append(header, status, layout);
