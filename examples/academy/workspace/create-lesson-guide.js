@@ -39,6 +39,14 @@ export function createLessonGuide(container) {
   const label = document.createElement("label");
   label.textContent = "Lesson";
   const select = document.createElement("select");
+  const seenKey = (id) => "assemblejs.academy.lesson-seen.v1." + id;
+  const updateSeenLabels = () => {
+    const storage = document.defaultView.localStorage;
+    for (const [index, lesson] of academyLessons.entries()) {
+      select.options[index].textContent =
+        storage.getItem(seenKey(lesson.id)) === "1" ? lesson.title : lesson.title + " (New)";
+    }
+  };
   for (const lesson of academyLessons) {
     const option = document.createElement("option");
     option.value = lesson.id;
@@ -81,16 +89,34 @@ export function createLessonGuide(container) {
   } catch {
     status.textContent = "Lesson selection could not be restored on this device.";
   }
-  select.addEventListener("change", () => {
-    render();
+  const markSelectedSeen = () => {
     try {
       if (academyLessons.some(({ id }) => id === select.value)) {
-        document.defaultView.localStorage.setItem(key, select.value);
+        const storage = document.defaultView.localStorage;
+        storage.setItem(seenKey(select.value), "1");
         status.textContent = "";
       }
     } catch {
-      status.textContent = "Lesson selection could not be saved on this device.";
+      status.textContent = "Lesson visit could not be saved on this device.";
     }
+    try {
+      updateSeenLabels();
+    } catch {
+      if (!status.textContent)
+        status.textContent = "Saved lesson visits could not be read on this device.";
+    }
+  };
+  select.addEventListener("change", () => {
+    render();
+    try {
+      if (academyLessons.some(({ id }) => id === select.value))
+        document.defaultView.localStorage.setItem(key, select.value);
+    } catch {
+      markSelectedSeen();
+      status.textContent = "Lesson selection could not be saved on this device.";
+      return;
+    }
+    markSelectedSeen();
   });
   reset.addEventListener("click", () => {
     const lesson = academyLessons.find(({ id }) => id === select.value);
@@ -105,6 +131,7 @@ export function createLessonGuide(container) {
   panel.append(availability, label, task, details, proof, reset, status);
   container.append(panel);
   render();
+  markSelectedSeen();
   return {
     recordProof(evidence) {
       const lesson = academyLessons.find(({ id }) => id === evidence.lesson);

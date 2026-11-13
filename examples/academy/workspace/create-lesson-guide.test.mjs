@@ -133,3 +133,57 @@ test("clearing selected proof preserves other lessons and the selected lesson", 
     window.close();
   }
 });
+
+test("opening a lesson removes its New label across reload without recording proof", () => {
+  const window = new Window();
+  const { document, localStorage } = window;
+  let guide = createLessonGuide(document.body);
+  try {
+    const select = document.querySelector("select");
+    const capstone = select.querySelector('option[value="capstone"]');
+    assert.match(capstone.textContent, /\(New\)$/);
+    select.value = "capstone";
+    select.dispatchEvent(new window.Event("change"));
+    assert.doesNotMatch(capstone.textContent, /\(New\)$/);
+    guide.destroy();
+    guide = createLessonGuide(document.body);
+    assert.equal(document.querySelector("select").value, "capstone");
+    assert.doesNotMatch(document.querySelector('option[value="capstone"]').textContent, /\(New\)$/);
+    assert.equal(localStorage.getItem("assemblejs.academy.lesson-proof.capstone"), null);
+  } finally {
+    guide.destroy();
+    window.close();
+  }
+});
+
+test("readable saved visits remain visible when a new visit cannot be stored", () => {
+  const window = new Window();
+  const { document, localStorage } = window;
+  const selection = "assemblejs.academy.lesson-selection.v1";
+  const proof = "assemblejs.academy.lesson-proof.edit-content";
+  localStorage.setItem(selection, "capstone");
+  localStorage.setItem("assemblejs.academy.lesson-seen.v1.edit-content", "1");
+  localStorage.setItem(proof, '{"schema":1,"revision":1,"version":"abcdef123456"}');
+  const previous = localStorage.getItem(proof);
+  Object.defineProperty(localStorage, "setItem", {
+    value() {
+      throw new Error("Storage quota exceeded");
+    },
+  });
+  const guide = createLessonGuide(document.body);
+  try {
+    const select = document.querySelector("select");
+    assert.equal(select.value, "capstone");
+    assert.match(select.querySelector('option[value="capstone"]').textContent, /\(New\)$/);
+    assert.doesNotMatch(
+      select.querySelector('option[value="edit-content"]').textContent,
+      /\(New\)$/,
+    );
+    assert.match(document.body.textContent, /Lesson visit could not be saved/);
+    assert.equal(localStorage.getItem(selection), "capstone");
+    assert.equal(localStorage.getItem(proof), previous);
+  } finally {
+    guide.destroy();
+    window.close();
+  }
+});
