@@ -8,6 +8,7 @@ import { createPlacementRecovery } from "./create-placement-recovery.js";
 import { createProjectFiles } from "./create-project-files.js";
 import { createSourceEditor } from "./create-source-editor.js";
 import { projectToolResult } from "./project-tool-result.js";
+import { readShopComposition } from "./read-shop-composition.js";
 import { readProjectVersion } from "./read-project-version.js";
 import { restoreVerificationFocus } from "./restore-verification-focus.js";
 import { verifyCalculator } from "./verify-calculator.js";
@@ -51,10 +52,12 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const stop = node("button", "Stop preview");
   const verify = node("button", "Verify calculator");
   const verifyEdit = node("button", "Verify manual edit");
+  const composition = node("button", "Inspect shop composition");
+  composition.type = "button";
   const recovery = node("button", "Check placement recovery");
   build.type = stop.type = verify.type = verifyEdit.type = recovery.type = "button";
   actions.append(build, stop, verify, recovery);
-  if (typeof runtime.readProductPage === "function") actions.append(verifyEdit);
+  if (typeof runtime.readProductPage === "function") actions.append(verifyEdit, composition);
   header.append(heading, actions);
   const status = node("p", "Check and preview to start the application.");
   status.setAttribute("role", "status");
@@ -89,6 +92,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     build.disabled = busy || pending > 0;
     verify.disabled = busy || pending > 0 || !previewState || typeof runtime.inspect !== "function";
     verifyEdit.disabled = busy || pending > 0 || !previewState;
+    composition.disabled = verifyEdit.disabled;
     recovery.disabled = busy || pending > 0;
     stop.disabled = busy || pending > 0 || !touched;
     guide.disabled = code.disabled = busy;
@@ -211,48 +215,62 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const checkOutput = async (button = verify) => {
     const manual = button === verifyEdit;
     const placement = button === recovery;
+    const exploring = button === composition;
     if (disposed || busy || pending)
       return { ok: false, error: "wait for the current project operation" };
     const focused = document.activeElement === button;
     busy = true;
     verificationController = new AbortController();
     sync();
-    status.textContent = placement
-      ? "Checking the saved placement."
-      : manual
-        ? "Checking the saved buy-box label against the served product."
-        : "Checking saved calculator output and quote responses.";
+    status.textContent = exploring
+      ? "Reading the served shop composition."
+      : placement
+        ? "Checking the saved placement."
+        : manual
+          ? "Checking the saved buy-box label against the served product."
+          : "Checking saved calculator output and quote responses.";
     try {
       const signal = verificationController.signal;
-      const evidence = placement
-        ? await checkRecovery(signal)
-        : manual
-          ? await verifyManualEdit(
-              document,
-              observed,
-              previewState,
-              runtime.readProductPage.bind(runtime),
-              signal,
-            )
-          : await verifyCalculator(document, observed, recipe, runtime, previewState, signal);
+      const evidence = exploring
+        ? await readShopComposition(
+            document,
+            observed,
+            previewState,
+            runtime.readProductPage.bind(runtime),
+            signal,
+          )
+        : placement
+          ? await checkRecovery(signal)
+          : manual
+            ? await verifyManualEdit(
+                document,
+                observed,
+                previewState,
+                runtime.readProductPage.bind(runtime),
+                signal,
+              )
+            : await verifyCalculator(document, observed, recipe, runtime, previewState, signal);
       if (disposed) return { ok: false, error: "workspace closed" };
       if (manual) lessons.recordManualEdit(evidence);
       output.textContent = JSON.stringify(evidence, null, 2);
-      status.textContent = placement
-        ? {
-            finding: "Placement finding recorded. Fix the saved placement and check again.",
-            "other-findings": "Other project findings remain. Inspect the diagnostics.",
-            "no-observed-failure":
-              "Save a placement named buy-box-missing, check it, then restore buy-box.",
-            recovered: "The placement check passes on a new saved revision.",
-          }[evidence.kind]
-        : manual
-          ? `Saved and served buy-box labels match at revision ${evidence.version}.`
-          : `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
+      status.textContent = exploring
+        ? "Buy-box is local. Product-detail comes from another server. Open diagnostics for the origin."
+        : placement
+          ? {
+              finding: "Placement finding recorded. Fix the saved placement and check again.",
+              "other-findings": "Other project findings remain. Inspect the diagnostics.",
+              "no-observed-failure":
+                "Save a placement named buy-box-missing, check it, then restore buy-box.",
+              recovered: "The placement check passes on a new saved revision.",
+            }[evidence.kind]
+          : manual
+            ? `Saved and served buy-box labels match at revision ${evidence.version}.`
+            : `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
       return { ok: true, evidence };
     } catch (error) {
       if (!disposed) {
-        if (placement) status.textContent = "Placement check failed. Inspect its diagnostics.";
+        if (exploring) status.textContent = "Composition check failed. Inspect its diagnostics.";
+        else if (placement) status.textContent = "Placement check failed. Inspect its diagnostics.";
         else
           clear(
             `${manual ? "Manual edit" : "Calculator"} check failed. Inspect its diagnostics, then check and preview again.`,
@@ -293,6 +311,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   stop.addEventListener("click", () => void stopPreview());
   verify.addEventListener("click", () => void checkOutput());
   verifyEdit.addEventListener("click", () => void checkOutput(verifyEdit));
+  composition.addEventListener("click", () => void checkOutput(composition));
   recovery.addEventListener("click", () => void checkOutput(recovery));
   preview.append(diagnostics);
   layout.append(guide, code, preview);

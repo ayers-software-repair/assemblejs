@@ -7,7 +7,7 @@ export const academyLessons = [
     id: "explore-shop",
     revision: 1,
     title: "Explore the finished shop",
-    task: "Open a product and turn on Outline. Find product-detail and buy-box. Which server owns each?",
+    task: "Open a product and turn on Outline. Then select Inspect shop composition to check which server supplies each assembly.",
     hint: "They share a page. The catalog server supplies the product; the shop supplies the buy box.",
     evidence:
       "You identified a local assembly and one supplied by another server in actual composition data.",

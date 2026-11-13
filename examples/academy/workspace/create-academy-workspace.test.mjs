@@ -10,6 +10,7 @@ import { academyWorkspaceFixture as fixture } from "./academy-workspace-fixture.
 
 import "./create-lesson-guide.test.mjs";
 import "./create-placement-recovery.test.mjs";
+import "./read-shop-composition.test.mjs";
 import "./verify-manual-edit.test.mjs";
 
 test("check precedes the real runtime request, with a pinned framed URL and explicit stop", async () => {
