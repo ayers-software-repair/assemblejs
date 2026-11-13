@@ -86,3 +86,30 @@ test("restored composition proof is historical and separate from manual edit pro
     window.close();
   }
 });
+
+test("placement recovery is saved separately as historical evidence", () => {
+  const window = new Window();
+  const { document, localStorage } = window;
+  let guide = createLessonGuide(document.body);
+  try {
+    guide.recordProof({ kind: "finding", version: "abcdef123456" });
+    const key = "assemblejs.academy.lesson-proof.fix-placement";
+    assert.equal(localStorage.getItem(key), null);
+    guide.recordProof({
+      kind: "recovered",
+      lesson: "fix-placement",
+      revision: 1,
+      version: "123456abcdef",
+    });
+    guide.destroy();
+    guide = createLessonGuide(document.body);
+    const select = document.querySelector("select");
+    select.value = "fix-placement";
+    select.dispatchEvent(new window.Event("change"));
+    assert.match(document.body.textContent, /Previous verification saved/);
+    assert.match(document.body.textContent, /Check the current project again/);
+  } finally {
+    guide.destroy();
+    window.close();
+  }
+});
