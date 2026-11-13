@@ -31,6 +31,16 @@ export function createLessonGuide(container) {
       throw new Error("Unsupported verification record");
     return record;
   };
+  const currentProofs = new Map();
+  const progress = document.createElement("p");
+  progress.setAttribute("role", "status");
+  let previewVersion;
+  const renderProgress = () => {
+    const count = academyLessons.filter(
+      (lesson) => previewVersion && currentProofs.get(lesson.id) === previewVersion,
+    ).length;
+    progress.textContent = `${count} of ${academyLessons.length} lessons verified for this preview.`;
+  };
   const reset = document.createElement("button");
   reset.type = "button";
   reset.textContent = "Clear saved proof for this lesson";
@@ -123,16 +133,24 @@ export function createLessonGuide(container) {
     if (!lesson || !verifiedLessons.has(lesson.id)) return;
     try {
       document.defaultView.localStorage.removeItem(proofKey(lesson));
+      currentProofs.delete(lesson.id);
+      renderProgress();
       proof.textContent = "Saved proof cleared for this lesson.";
     } catch {
       proof.textContent = "Saved proof could not be cleared on this device.";
     }
   });
-  panel.append(availability, label, task, details, proof, reset, status);
+  panel.append(availability, label, task, details, proof, reset, progress, status);
   container.append(panel);
   render();
   markSelectedSeen();
+  renderProgress();
   return {
+    setPreviewVersion(version) {
+      if (version !== previewVersion) currentProofs.clear();
+      previewVersion = version;
+      renderProgress();
+    },
     recordProof(evidence) {
       const lesson = academyLessons.find(({ id }) => id === evidence.lesson);
       if (
@@ -143,6 +161,10 @@ export function createLessonGuide(container) {
         !/^[a-f0-9]{12}$/.test(evidence.version)
       )
         return;
+      if (evidence.version === previewVersion) {
+        currentProofs.set(lesson.id, evidence.version);
+        renderProgress();
+      }
       try {
         const storage = document.defaultView.localStorage;
         readProof(storage, lesson);

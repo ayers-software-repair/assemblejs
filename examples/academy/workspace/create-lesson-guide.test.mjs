@@ -187,3 +187,26 @@ test("readable saved visits remain visible when a new visit cannot be stored", (
     window.close();
   }
 });
+
+test("only distinct checks for the active preview contribute to current progress", () => {
+  const window = new Window();
+  const { document } = window;
+  let guide = createLessonGuide(document.body);
+  const proof = { lesson: "explore-shop", revision: 1, version: "abcdef123456" };
+  try {
+    guide.setPreviewVersion(proof.version);
+    guide.recordProof(proof);
+    guide.recordProof(proof);
+    guide.recordProof({ ...proof, lesson: "edit-content", version: "123456abcdef" });
+    assert.match(document.body.textContent, /1 of 20 lessons verified/);
+    guide.setPreviewVersion(undefined);
+    assert.match(document.body.textContent, /0 of 20 lessons verified/);
+    guide.destroy();
+    guide = createLessonGuide(document.body);
+    guide.setPreviewVersion(proof.version);
+    assert.match(document.body.textContent, /0 of 20 lessons verified/);
+  } finally {
+    guide.destroy();
+    window.close();
+  }
+});

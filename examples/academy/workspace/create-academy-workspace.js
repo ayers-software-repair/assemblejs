@@ -97,8 +97,10 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     stop.disabled = busy || pending > 0 || !touched;
     guide.disabled = code.disabled = busy;
   };
+  const lessons = createLessonGuide(guide);
   const clear = (message) => {
     previewState = undefined;
+    lessons.setPreviewVersion(undefined);
     frame.remove();
     empty.hidden = false;
     status.textContent = message;
@@ -112,6 +114,23 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       if (writing && !disposed) clear("Source change requested. Check and preview again.");
       try {
         const reply = await client.callTool(request);
+        if (!disposed && previewState && request.name === "read_source_version") {
+          try {
+            const answer = projectToolResult(reply);
+            const version = answer.result?.version;
+            if (
+              answer.ok &&
+              answer.problems.length === 0 &&
+              typeof version === "string" &&
+              /^[a-f0-9]{12}$/.test(version) &&
+              version !== previewState.version
+            ) {
+              lessons.setPreviewVersion(undefined);
+            }
+          } catch {
+            // Let the requesting check report an unreadable version.
+          }
+        }
         if (writing && editor && !disposed && Array.isArray(request.arguments?.changes)) {
           const proposed = new Set(request.arguments.changes.map((change) => change.path));
           try {
@@ -144,7 +163,6 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     },
   };
   const checkRecovery = createPlacementRecovery(document, observed);
-  const lessons = createLessonGuide(guide);
   const practice = createModeWalkthrough(guide, client);
   const tutor = createCalculatorControls(guide, observed, recipe, (state) =>
     practice.update(state),
@@ -196,6 +214,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       await unchanged();
       if (disposed) return { ok: false, error: "workspace closed" };
       previewState = Object.freeze({ url: url.href, version });
+      lessons.setPreviewVersion(version);
       frame.src = url.href;
       empty.hidden = true;
       preview.insertBefore(frame, diagnostics);

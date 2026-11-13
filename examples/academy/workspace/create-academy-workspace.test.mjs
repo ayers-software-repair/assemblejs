@@ -322,3 +322,87 @@ test("the placement check keeps an existing preview when a read-only check fails
     f.close();
   }
 });
+
+test("observing an outside edit clears verified preview progress", async () => {
+  let unavailable = false;
+  const f = await fixture(
+    ({ client }) => ({
+      callTool(request) {
+        if (unavailable && request.name === "read_source_version")
+          throw new Error("Source version temporarily unavailable");
+        return client.callTool(request);
+      },
+    }),
+    async (url) => ({
+      url,
+      html:
+        '<assembly-root data-name="buy-box"></assembly-root>' +
+        '<assembly-root data-name="product-detail" data-remote="https://catalog.example"></assembly-root>',
+    }),
+  );
+  try {
+    assert.equal((await f.view.refresh()).ok, true);
+    const button = Array.from(f.document.querySelectorAll("button")).find(
+      (node) => node.textContent === "Inspect shop composition",
+    );
+    button.click();
+    await setImmediate();
+    assert.match(f.document.body.textContent, /1 of 20 lessons verified/);
+    unavailable = true;
+    button.click();
+    await setImmediate();
+    assert.match(f.document.body.textContent, /Composition check failed/);
+    assert.match(f.document.body.textContent, /1 of 20 lessons verified/);
+    unavailable = false;
+    const path = "src/pages/product/product.html";
+    f.files.set(path, f.files.get(path) + "\n<!-- outside edit -->");
+    button.click();
+    await setImmediate();
+    assert.match(f.document.body.textContent, /0 of 20 lessons verified/);
+  } finally {
+    f.close();
+  }
+});
+
+test("a recovered placement counts after refreshing to the repaired revision", async () => {
+  const path = "src/pages/product/product.html";
+  const message = 'Page places "buy-box-missing", and there is no such assembly';
+  const f = await fixture(({ client, files }) => ({
+    callTool(request) {
+      if (request.name === "check" && files.get(path).includes('name="buy-box-missing"')) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                ok: false,
+                problems: [message],
+                result: {
+                  findings: [{ path, rule: "a-placement-names-an-assembly", message, fix: "" }],
+                },
+              }),
+            },
+          ],
+        };
+      }
+      return client.callTool(request);
+    },
+  }));
+  try {
+    const source = f.files.get(path);
+    f.files.set(path, source.replace('name="buy-box"', 'name="buy-box-missing"'));
+    const button = Array.from(f.document.querySelectorAll("button")).find(
+      (node) => node.textContent === "Check placement recovery",
+    );
+    button.click();
+    await setImmediate();
+    assert.match(f.document.body.textContent, /Placement finding recorded/);
+    f.files.set(path, source);
+    assert.equal((await f.view.refresh()).ok, true);
+    button.click();
+    await setImmediate();
+    assert.match(f.document.body.textContent, /1 of 20 lessons verified/);
+  } finally {
+    f.close();
+  }
+});
