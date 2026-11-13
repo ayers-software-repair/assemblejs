@@ -92,6 +92,11 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await expect(status).toContainText(
       "Buy-box is local. Product-detail comes from another server.",
     );
+    await expect(
+      lessons.getByText("2 of 20 lessons verified for this preview.", {
+        exact: true,
+      }),
+    ).toBeVisible();
     await page.getByText("Build diagnostics", { exact: true }).click();
     await expect(
       page.getByRole("region", { name: "Application preview" }).locator("pre"),
@@ -143,6 +148,11 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await expect(guided.getByRole("status")).toContainText("project check passed");
     await expect(practice.getByRole("heading")).toHaveText("4. Try Auto");
     await expect(page.locator("iframe")).toHaveCount(0);
+    await expect(
+      lessons.getByText("0 of 20 lessons verified for this preview.", {
+        exact: true,
+      }),
+    ).toBeVisible();
     await expect(input).toHaveValue(fixture.calculatorSource("product.html"));
     await build.click();
     await expect(status).toContainText("Build completed", { timeout: 45000 });
