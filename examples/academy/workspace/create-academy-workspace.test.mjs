@@ -8,6 +8,9 @@ import { calculatorFixture } from "./calculator-fixture.mjs";
 import { createAcademyWorkspace } from "./create-academy-workspace.js";
 import { academyWorkspaceFixture as fixture } from "./academy-workspace-fixture.mjs";
 
+import "./create-lesson-guide.test.mjs";
+import "./verify-manual-edit.test.mjs";
+
 test("check precedes the real runtime request, with a pinned framed URL and explicit stop", async () => {
   const f = await fixture();
   assert.equal(f.document.querySelector("iframe"), null);

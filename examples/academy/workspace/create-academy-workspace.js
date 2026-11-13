@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import { callProjectTool } from "./call-project-tool.js";
 import { createCalculatorControls } from "./create-calculator-controls.js";
+import { createLessonGuide } from "./create-lesson-guide.js";
 import { createModeWalkthrough } from "./create-mode-walkthrough.js";
 import { createProjectFiles } from "./create-project-files.js";
 import { createSourceEditor } from "./create-source-editor.js";
@@ -9,6 +10,7 @@ import { projectToolResult } from "./project-tool-result.js";
 import { readProjectVersion } from "./read-project-version.js";
 import { restoreVerificationFocus } from "./restore-verification-focus.js";
 import { verifyCalculator } from "./verify-calculator.js";
+import { verifyManualEdit } from "./verify-manual-edit.js";
 
 /** One supplied project: source and authored guidance beside a genuine completed-build URL. */
 export function createAcademyWorkspace(container, client, recipe, paths, runtime) {
@@ -47,8 +49,10 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const build = node("button", "Check & preview");
   const stop = node("button", "Stop preview");
   const verify = node("button", "Verify calculator");
-  build.type = stop.type = verify.type = "button";
+  const verifyEdit = node("button", "Verify manual edit");
+  build.type = stop.type = verify.type = verifyEdit.type = "button";
   actions.append(build, stop, verify);
+  if (typeof runtime.readProductPage === "function") actions.append(verifyEdit);
   header.append(heading, actions);
   const status = node("p", "Check and preview to start the application.");
   status.setAttribute("role", "status");
@@ -82,6 +86,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     if (disposed) return;
     build.disabled = busy || pending > 0;
     verify.disabled = busy || pending > 0 || !previewState || typeof runtime.inspect !== "function";
+    verifyEdit.disabled = busy || pending > 0 || !previewState;
     stop.disabled = busy || pending > 0 || !touched;
     guide.disabled = code.disabled = busy;
   };
@@ -131,6 +136,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       }
     },
   };
+  const lessons = createLessonGuide(guide);
   const practice = createModeWalkthrough(guide, client);
   const tutor = createCalculatorControls(guide, observed, recipe, (state) =>
     practice.update(state),
@@ -198,30 +204,40 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       sync();
     }
   };
-  const checkCalculator = async () => {
+  const checkOutput = async (manual = false) => {
     if (disposed || busy || pending)
       return { ok: false, error: "wait for the current project operation" };
-    const focused = document.activeElement === verify;
+    const button = manual ? verifyEdit : verify;
+    const focused = document.activeElement === button;
     busy = true;
     verificationController = new AbortController();
     sync();
-    status.textContent = "Checking saved calculator output and quote responses.";
+    status.textContent = manual
+      ? "Checking the saved buy-box label against the served product."
+      : "Checking saved calculator output and quote responses.";
     try {
-      const evidence = await verifyCalculator(
-        document,
-        observed,
-        recipe,
-        runtime,
-        previewState,
-        verificationController.signal,
-      );
+      const signal = verificationController.signal;
+      const evidence = manual
+        ? await verifyManualEdit(
+            document,
+            observed,
+            previewState,
+            runtime.readProductPage.bind(runtime),
+            signal,
+          )
+        : await verifyCalculator(document, observed, recipe, runtime, previewState, signal);
       if (disposed) return { ok: false, error: "workspace closed" };
+      if (manual) lessons.recordManualEdit(evidence);
       output.textContent = JSON.stringify(evidence, null, 2);
-      status.textContent = `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
+      status.textContent = manual
+        ? `Saved and served buy-box labels match at revision ${evidence.version}.`
+        : `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
       return { ok: true, evidence };
     } catch (error) {
       if (!disposed) {
-        clear("Calculator check failed. Inspect its diagnostics, then check and preview again.");
+        clear(
+          `${manual ? "Manual edit" : "Calculator"} check failed. Inspect its diagnostics, then check and preview again.`,
+        );
         output.textContent = String(error);
       }
       return { ok: false, error: String(error) };
@@ -229,7 +245,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       verificationController = undefined;
       busy = false;
       sync();
-      if (!disposed) restoreVerificationFocus(document, verify, diagnostics, focused);
+      if (!disposed) restoreVerificationFocus(document, button, diagnostics, focused);
     }
   };
   const stopPreview = async () => {
@@ -256,7 +272,8 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   };
   build.addEventListener("click", () => void refresh());
   stop.addEventListener("click", () => void stopPreview());
-  verify.addEventListener("click", () => void checkCalculator());
+  verify.addEventListener("click", () => void checkOutput());
+  verifyEdit.addEventListener("click", () => void checkOutput(true));
   preview.append(diagnostics);
   layout.append(guide, code, preview);
   root.append(header, status, layout);
@@ -267,12 +284,13 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     editor,
     tutor,
     refresh,
-    verify: checkCalculator,
+    verify: () => checkOutput(),
     stop: stopPreview,
     destroy() {
       disposed = true;
       verificationController?.abort();
       practice.destroy();
+      lessons.destroy();
       tutor.destroy();
       editor.destroy();
       root.remove();

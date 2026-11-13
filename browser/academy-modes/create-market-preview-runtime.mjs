@@ -4,6 +4,7 @@ import { execFile, spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { createServer } from "node:net";
 import { join, resolve } from "node:path";
+import { readPreviewResponse } from "./read-preview-response.mjs";
 import { inspectMarketCalculator } from "./inspect-market-calculator.mjs";
 
 /** Hosted proof only: real CLI builds and owned Market servers, not a production sandbox. */
@@ -209,6 +210,21 @@ export async function createMarketPreviewRuntime(root, parentOrigin) {
   return {
     origin,
     rebuild,
+    async readProductPage(url, signal) {
+      if (closed || inFlight || inspecting || !shop || !children.has(shop))
+        throw new Error("Build a preview before reading the served product.");
+      if (url !== origin + "/p/kb-guji-250") throw new Error("Unexpected product preview URL.");
+      const response = await fetch(url, {
+        redirect: "error",
+        signal: AbortSignal.any([signal, controller.signal, AbortSignal.timeout(10000)]),
+      });
+      if (
+        !response.ok ||
+        response.headers.get("content-type")?.split(";")[0].trim() !== "text/html"
+      )
+        throw new Error("Product preview did not return HTML.");
+      return { url: response.url, html: await readPreviewResponse(response, 524288) };
+    },
     async inspect(values) {
       if (closed || inFlight || inspecting || !shop || !children.has(shop))
         throw new Error("Build a preview before inspecting it; wait for any current operation.");

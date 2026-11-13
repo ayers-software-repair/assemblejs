@@ -48,8 +48,25 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await input.fill(editedPage);
     await editor.getByRole("button", { name: "Save file", exact: true }).click();
     await expect(editor.getByRole("status")).toContainText("Saved");
+    await editor
+      .getByRole("button", {
+        name: "src/assemblies/buy-box/buy-box.react.tsx",
+        exact: true,
+      })
+      .click();
+    await expect(input).toHaveValue(/Add to basket/);
+    await input.fill((await input.inputValue()).replace("Add to basket", "Add to bag"));
+    await editor.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(editor.getByRole("status")).toContainText("Saved");
+    await editor
+      .getByRole("button", { name: "src/pages/product/product.html", exact: true })
+      .click();
+    await expect(input).toHaveValue(editedPage);
     await build.click();
     await expect(status).toContainText("Build completed", { timeout: 60000 });
+    await page.getByRole("button", { name: "Verify manual edit", exact: true }).click();
+    await expect(status).toContainText("Saved and served buy-box labels match");
+    await expect(preview.getByRole("button", { name: "Add to bag", exact: true })).toBeVisible();
     await expect(preview.getByText(introduction, { exact: true })).toBeVisible();
     await expect(preview.locator("assembly-root")).toHaveCount(12);
     await expect(preview.locator("assembly-root[data-failed]")).toHaveCount(0);

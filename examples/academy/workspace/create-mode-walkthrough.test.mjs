@@ -49,8 +49,16 @@ test("short practice follows actual Plan, exact rejection, revised approval and 
   assert.ok(Object.isFrozen(f.modes.state.receipt));
   f.modes.mode("auto");
   assert.match(f.heading(), /^4\./);
+  const key = "assemblejs.academy.practice.calculator-modes";
+  assert.equal(f.window.localStorage.getItem(key), null);
   await f.modes.request("Use presets 2, 4, 8");
   assert.equal(f.heading(), "You used all three modes");
+  assert.deepEqual(JSON.parse(f.window.localStorage.getItem(key)), { schema: 1, revision: 1 });
+  f.guide.destroy();
+  const reopened = createModeWalkthrough(f.window.document.body);
+  assert.match(f.heading(), /^1\./);
+  assert.match(f.window.document.body.textContent, /Mode practice saved on this device/);
+  reopened.destroy();
   assert.match(
     f.files.get("src/assemblies/price-calculator/price-calculator.react.tsx"),
     /Coffee total/,
@@ -276,4 +284,20 @@ test("unknown and oversized tutor questions stay honest and cannot author or com
   } finally {
     f.close();
   }
+});
+
+test("practice completion preserves progress from an unsupported storage schema", async () => {
+  const f = fixture();
+  const key = "assemblejs.academy.practice.calculator-modes";
+  const future = '{"schema":2,"revision":1}';
+  f.window.localStorage.setItem(key, future);
+  await rejectFirst(f);
+  await f.modes.request('Add a calculator called "Coffee total"');
+  await f.modes.approve();
+  f.modes.mode("auto");
+  await f.modes.request("Use presets 2, 4, 8");
+  assert.equal(f.heading(), "You used all three modes");
+  assert.match(f.window.document.body.textContent, /progress could not be saved/);
+  assert.equal(f.window.localStorage.getItem(key), future);
+  f.close();
 });
