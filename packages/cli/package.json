@@ -27,7 +27,8 @@
   },
   "bin": {
     "assemblejs": "./dist/bin.js",
-    "asm": "./dist/bin.js"
+    "assemble": "./dist/short-bin.js",
+    "asm": "./dist/short-bin.js"
   },
   "exports": {
     ".": {
