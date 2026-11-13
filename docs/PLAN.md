@@ -31,8 +31,10 @@ framework or the framework's own jargon.
    server emits per assembly; the renderer interface; the events API; the service and api
    signatures. Open choices are put to the owner in one pass, against the written design.
 4. **Freeze the ladder.** One rung per gate, each with the command that proves it.
-5. **Build the ladder.** One rung per pull request onto `next`, proof command run and pasted
-   before the next rung starts.
+5. **Build the ladder.** Use scoped pull requests onto `next` and keep the existing CI
+   suites and gates. The owner's 2026-11-02 ruling (D2050) removes a per-rung verifier
+   and a new or deliberately failing test as requirements for every change. Retain relevant check
+   results, independent source review and appropriate behavior QA before integration.
 
 ## 3. The design
 
@@ -60,17 +62,9 @@ The points below are the shape it assumes, and they follow from decisions alread
 
 ## 4. Ladder
 
-Frozen 2026-09-03 against `docs/DESIGN.md`. Every rung is one pull request onto `next`, whole but
-thin, and names the command that proves it. A rung is done when that command has been run in the
-session that did the work and its output pasted, not when the diff looks right. Every new gate is
-watched failing on a known-bad input before it is trusted.
-
-The order follows the design's own dependency: the composer is a pure function, so it is built and
-proven before a server exists; the envelope and the encoders come before anything emits markup;
-configuration comes before anything can be configured open.
-
-Until the owner enables Actions for this repository, every proof below is local only. That is
-logged in `docs/TODO.md` and it does not stop a rung; it stops the claim that CI proved it.
+This historical ladder was frozen on 2026-09-03 against `docs/DESIGN.md`.
+The proof column records the commands and acceptance used for that work.
+The current verification policy is in section 5.
 
 | rung  | what lands                                                                                                                                                                                                                                                                                                                                                                                              | proof                                                                                                                                                                                                        |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -194,7 +188,7 @@ The record is `docs/studies/academy-research.md`; it must distinguish observed p
 After research, define the lesson and proof ladder, reuse existing examples and tooling, then
 implement and verify it. The landing work first inspects older GitHub history and the read-only
 design reference, then improves that direction with the owner's tagline, "Frameworks Assemble".
-Each completed rung requires independent source review and the relevant hosted checks.
+Before integration, independently review the source and run the relevant hosted checks.
 No release tag, npm publication, shared router change or stable promotion is granted here.
 The owner further requires no additional paid hosting or required paid runtime licence.
 The owner approved the PR29 async tooling API migration: reuse esbuild, migrate the 28
@@ -217,7 +211,8 @@ This is one coherent branding correction, not a framework rewrite or runtime/rel
 
 - `pnpm check` runs, in order, what CI runs: the identity gate against its own red fixtures then
   the tree, the header check, lint, typecheck, tests, build, and the pack check.
-- Every gate is watched failing on a known-bad input before it is trusted.
+- Keep the configured CI self-tests and their known-bad fixtures. D2050 supersedes the general
+  requirement for a new or deliberately failing test and a separate verifier on every step.
 - The conformance suite generates real projects from packed tarballs and runs them; it never
   resolves the packages through workspace links, because that would not prove what a user gets.
 - Before the first stable release, someone who has never seen the project follows the quickstart

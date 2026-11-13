@@ -583,9 +583,8 @@ rowed or the owner's; the numbers are the report's.
 
 ## Phase 3: the ladder
 
-From the frozen ladder in `docs/PLAN.md`, which holds each rung's proof command. Each rung is one
-pull request onto `next`; its proof command is run and its output pasted before the next rung
-starts. Until the owner enables Actions, every proof is local only.
+The rows below preserve the original ladder and its historical evidence. Current work follows
+the 2026-11-02 verification policy in `CLAUDE.md` and `docs/PLAN.md`.
 
 - [x] B-01 repository skeleton, gates, working rules (`c565074`)
 - [x] B-02 core package shell: exports map and build only
@@ -978,7 +977,7 @@ scoped>` under one id on both sides), an app per assembly, `useEvents()` by inje
       budget is lowered from 100000 bytes to 66000, which the unsplit build was watched
       crossing (found 2026-10-10 when A-01 crossed the old budget; DECISIONS 2026-10-10, "one
       copy of the code")
-- [x] A new project installs 90 packages, 15 MB, for the agent surface alone, through the
+- [x] Historical pre-bundle observation: a new project installed 90 packages, 15 MB, through the
       protocol SDK's dependencies on express and hono. All are development dependencies and
       none reaches a deploy. Bundling the SDK into `@assemblejs/mcp`, with its notices, would
       make it one package: the owner's to say (morning list; DECISIONS 2026-10-10, A-01)
