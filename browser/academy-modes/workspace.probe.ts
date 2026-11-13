@@ -64,6 +64,26 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
       .getByRole("button", { name: "src/pages/product/product.html", exact: true })
       .click();
     await expect(input).toHaveValue(editedPage);
+    const placement = page.getByRole("button", { name: "Check placement recovery", exact: true });
+    const save = editor.getByRole("button", { name: "Save file", exact: true });
+    await input.fill(
+      editedPage.replaceAll(
+        '<assembly name="buy-box"></assembly>',
+        '<assembly name="buy-box-missing"></assembly>',
+      ),
+    );
+    await save.click();
+    await expect(editor.getByRole("status")).toContainText("Saved");
+    await placement.click();
+    await expect(status).toContainText("Placement finding recorded");
+    await input.fill(editedPage);
+    await save.click();
+    await expect(editor.getByRole("status")).toContainText("Saved");
+    await placement.click();
+    await expect(status).toContainText("The placement check passes on a new saved revision.");
+    const lessons = page.getByRole("region", { name: "Academy lessons" });
+    await lessons.getByRole("combobox").selectOption("fix-placement");
+    await expect(lessons.getByText("Previous verification saved.", { exact: false })).toBeVisible();
     await build.click();
     await expect(status).toContainText("Build completed", { timeout: 60000 });
     await page.getByRole("button", { name: "Verify manual edit", exact: true }).click();
