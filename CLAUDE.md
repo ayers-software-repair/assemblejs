@@ -144,15 +144,10 @@ package versions and all four release-note surfaces; the release does not rewrit
   plan's shape, then pivot and continue.
 - AUTONOMOUS BY DEFAULT. Work runs without asking. Stop for the owner only when the plan itself
   must change, never for permission to continue.
-- EVERY GATE IS RUN, NOT ASSUMED. A rung is done when its proof command has been run in this
-  session and its output pasted; a green diff proves nothing.
-- A PROBE IS WATCHED FAILING BEFORE IT IS TRUSTED. A check that has never gone red on a known-bad
-  input is not a check.
-- EVERY RUNG IS VERIFIED BY A SEPARATE AGENT (owner, 2026-09-03: "always use a verification
-  subagent to verify your work"). When a rung's own proof is green, a fresh reader with no stake
-  in the work checks it at the source: that the gates actually gate, that the claims in the commit
-  match the tree, that nothing was asserted from a diff. Its findings are fixed before the rung is
-  reported done. A self-verified rung is an unverified rung.
+- VERIFICATION follows the owner's 2026-11-02 ruling (D2050). Keep the existing suites
+  and CI gates. Run relevant checks and retain their actual results. A separate verifier
+  and a new or deliberately failing test are no longer required for every change.
+  Independent source review and appropriate behavior QA still apply before integration.
 - TRIPLE-CHECK IN FULL (owner, 2026-09-03). Read the whole thing, not the part that changed.
 
 ## After a restart
