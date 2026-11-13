@@ -251,7 +251,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
               )
             : await verifyCalculator(document, observed, recipe, runtime, previewState, signal);
       if (disposed) return { ok: false, error: "workspace closed" };
-      if (manual) lessons.recordManualEdit(evidence);
+      if (manual || exploring) lessons.recordProof(evidence);
       output.textContent = JSON.stringify(evidence, null, 2);
       status.textContent = exploring
         ? "Buy-box is local. Product-detail comes from another server. Open diagnostics for the origin."

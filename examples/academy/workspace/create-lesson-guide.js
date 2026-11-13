@@ -13,10 +13,10 @@ export function createLessonGuide(container) {
   const key = "assemblejs.academy.lesson-selection.v1";
   const proof = document.createElement("p");
   proof.setAttribute("role", "status");
-  const proofKey = "assemblejs.academy.lesson-proof.edit-content";
-  const manualLesson = academyLessons.find(({ id }) => id === "edit-content");
-  const readProof = (storage) => {
-    const raw = storage.getItem(proofKey);
+  const verifiedLessons = new Set(["edit-content", "explore-shop"]);
+  const proofKey = (lesson) => "assemblejs.academy.lesson-proof." + lesson.id;
+  const readProof = (storage, lesson) => {
+    const raw = storage.getItem(proofKey(lesson));
     if (raw === null) return undefined;
     if (raw.length > 256) throw new Error("Invalid verification record");
     const record = JSON.parse(raw);
@@ -24,7 +24,7 @@ export function createLessonGuide(container) {
       record?.schema !== 1 ||
       !Number.isSafeInteger(record.revision) ||
       record.revision < 1 ||
-      record.revision > manualLesson.revision ||
+      record.revision > lesson.revision ||
       typeof record.version !== "string" ||
       !/^[a-f0-9]{12}$/.test(record.version)
     )
@@ -57,9 +57,9 @@ export function createLessonGuide(container) {
     evidence.textContent = "Required evidence: " + lesson.evidence;
     details.open = false;
     proof.textContent = "";
-    if (lesson.id === "edit-content") {
+    if (verifiedLessons.has(lesson.id)) {
       try {
-        const prior = readProof(document.defaultView.localStorage);
+        const prior = readProof(document.defaultView.localStorage, lesson);
         if (prior) {
           proof.textContent =
             prior.revision === lesson.revision
@@ -92,26 +92,28 @@ export function createLessonGuide(container) {
   container.append(panel);
   render();
   return {
-    recordManualEdit(evidence) {
+    recordProof(evidence) {
+      const lesson = academyLessons.find(({ id }) => id === evidence.lesson);
       if (
-        evidence.lesson !== manualLesson.id ||
-        evidence.revision !== manualLesson.revision ||
+        !lesson ||
+        !verifiedLessons.has(lesson.id) ||
+        evidence.revision !== lesson.revision ||
         typeof evidence.version !== "string" ||
         !/^[a-f0-9]{12}$/.test(evidence.version)
       )
         return;
       try {
         const storage = document.defaultView.localStorage;
-        readProof(storage);
+        readProof(storage, lesson);
         storage.setItem(
-          proofKey,
+          proofKey(lesson),
           JSON.stringify({
             schema: 1,
             revision: evidence.revision,
             version: evidence.version,
           }),
         );
-        if (select.value === "edit-content")
+        if (select.value === lesson.id)
           proof.textContent =
             "Previous verification saved. Check the current project again to confirm it.";
       } catch {

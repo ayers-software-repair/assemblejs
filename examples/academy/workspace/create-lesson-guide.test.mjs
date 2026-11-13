@@ -20,7 +20,7 @@ test("the shared guide exposes each distinct lesson and its required evidence", 
     assert.match(document.body.textContent, /Run the final checks/);
     assert.match(document.body.textContent, /Required evidence: All required core/);
     assert.equal(document.querySelector("details").open, false);
-    guide.recordManualEdit({ lesson: "edit-content", revision: 1, version: "abcdef123456" });
+    guide.recordProof({ lesson: "edit-content", revision: 1, version: "abcdef123456" });
     guide.destroy();
     const reopened = createLessonGuide(document.body);
     assert.equal(document.querySelector("select").value, "capstone");
@@ -46,7 +46,7 @@ test("the guide reports unsaved manual proof while another lesson is selected", 
     const select = document.querySelector("select");
     select.value = "capstone";
     select.dispatchEvent(new window.Event("change"));
-    guide.recordManualEdit({ lesson: "edit-content", revision: 1, version: "abcdef123456" });
+    guide.recordProof({ lesson: "edit-content", revision: 1, version: "abcdef123456" });
     const previous = localStorage.getItem(key);
     assert.ok(previous);
     const setItem = localStorage.setItem;
@@ -56,9 +56,31 @@ test("the guide reports unsaved manual proof while another lesson is selected", 
         setItem.call(localStorage, name, value);
       },
     });
-    guide.recordManualEdit({ lesson: "edit-content", revision: 1, version: "123456abcdef" });
+    guide.recordProof({ lesson: "edit-content", revision: 1, version: "123456abcdef" });
     assert.match(document.body.textContent, /Verification passed but could not be saved/);
     assert.equal(localStorage.getItem(key), previous);
+  } finally {
+    guide.destroy();
+    window.close();
+  }
+});
+
+test("restored composition proof is historical and separate from manual edit proof", () => {
+  const window = new Window();
+  const { document, localStorage } = window;
+  let guide = createLessonGuide(document.body);
+  try {
+    guide.recordProof({ lesson: "explore-shop", revision: 1, version: "abcdef123456" });
+    guide.recordProof({ lesson: "capstone", revision: 1, version: "abcdef123456" });
+    assert.equal(localStorage.getItem("assemblejs.academy.lesson-proof.capstone"), null);
+    guide.destroy();
+    guide = createLessonGuide(document.body);
+    assert.match(document.body.textContent, /Previous verification saved/);
+    assert.match(document.body.textContent, /Check the current project again/);
+    const select = document.querySelector("select");
+    select.value = "edit-content";
+    select.dispatchEvent(new window.Event("change"));
+    assert.doesNotMatch(document.body.textContent, /Previous verification saved/);
   } finally {
     guide.destroy();
     window.close();
