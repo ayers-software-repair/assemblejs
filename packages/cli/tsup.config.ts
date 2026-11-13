@@ -3,7 +3,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/bin.ts"],
+  entry: { index: "src/index.ts", bin: "src/bin.ts", "short-bin": "src/short/bin.ts" },
   format: ["esm"],
   target: "node22",
   dts: { compilerOptions: { ignoreDeprecations: "6.0" } },
