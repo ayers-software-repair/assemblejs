@@ -5,6 +5,8 @@ import { spawnSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { publicPackages } from "./first-publish.mjs";
 
+// Remove this exact name after the owner qualifies its first publication.
+const pendingFirstPublication = new Set(["create-assemblejs"]);
 const registry = "--registry=https://registry.npmjs.org";
 const number = "(?:0|[1-9]\\d*)";
 const base = `${number}\\.${number}\\.${number}`;
@@ -66,7 +68,7 @@ const npmRun = (args) =>
     maxBuffer: 1024 * 1024,
   });
 
-function readMetadata(name, run) {
+function readMetadata(name, run, allowPending = false) {
   const read = (field) => {
     const result = run(["view", name, field, "--json", "--prefer-online", registry]);
     let body;
@@ -75,13 +77,25 @@ function readMetadata(name, run) {
     } catch {
       /* Fixed error below. */
     }
+    if (
+      allowPending &&
+      field === "dist-tags" &&
+      result.status === 1 &&
+      body?.error?.code === "E404" &&
+      typeof body.error.summary === "string" &&
+      (body.error.summary === "Not Found - GET https://registry.npmjs.org/" + name ||
+        body.error.summary.startsWith("Not Found - GET https://registry.npmjs.org/" + name + " - "))
+    ) {
+      return undefined;
+    }
     if (result.status !== 0 || body === undefined) {
       const missing = body?.error?.code === "E404" ? "; E404 is not publication permission" : "";
       throw new Error(`npm view ${name} ${field} failed or returned invalid JSON${missing}`);
     }
     return body;
   };
-  return { tags: read("dist-tags"), versions: read("versions") };
+  const tags = read("dist-tags");
+  return tags === undefined ? undefined : { tags, versions: read("versions") };
 }
 
 function supportsOidcTags(run) {
@@ -105,12 +119,18 @@ function recovery(name, policy) {
 export function checkDistTags({ packages, run = npmRun, repair = false, say = console.log }) {
   if (packages.length === 0) throw new Error("no public packages to check");
   const failures = [];
+  const pending = [];
   for (const { name, version: published } of packages) {
     if (!/^(@[a-z0-9-]+\/)?[a-z0-9][a-z0-9._-]*$/.test(name)) {
       throw new Error("invalid local public package name");
     }
     try {
-      let metadata = readMetadata(name, run);
+      let metadata = readMetadata(name, run, !repair && pendingFirstPublication.has(name));
+      if (metadata === undefined) {
+        pending.push(name);
+        say(`${name}: pending first publication (E404)`);
+        continue;
+      }
       let policy = tagPolicy(metadata);
       if (repair && !metadata.versions.includes(published)) {
         throw new Error("the tagged local version is not published; refusing repair");
@@ -168,7 +188,11 @@ export function checkDistTags({ packages, run = npmRun, repair = false, say = co
     }
   }
   if (failures.length > 0) throw new Error(failures.join("\n"));
-  say("dist-tags: every public package passes");
+  say(
+    pending.length
+      ? `dist-tags: published packages pass; pending first publication: ${pending.join(", ")}`
+      : "dist-tags: every public package passes",
+  );
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
