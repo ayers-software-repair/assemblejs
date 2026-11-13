@@ -31,6 +31,9 @@ export function createLessonGuide(container) {
       throw new Error("Unsupported verification record");
     return record;
   };
+  const reset = document.createElement("button");
+  reset.type = "button";
+  reset.textContent = "Clear saved proof for this lesson";
   const status = document.createElement("p");
   status.setAttribute("role", "status");
   const label = document.createElement("label");
@@ -57,6 +60,7 @@ export function createLessonGuide(container) {
     evidence.textContent = "Required evidence: " + lesson.evidence;
     details.open = false;
     proof.textContent = "";
+    reset.hidden = !verifiedLessons.has(lesson.id);
     if (verifiedLessons.has(lesson.id)) {
       try {
         const prior = readProof(document.defaultView.localStorage, lesson);
@@ -88,7 +92,17 @@ export function createLessonGuide(container) {
       status.textContent = "Lesson selection could not be saved on this device.";
     }
   });
-  panel.append(availability, label, task, details, proof, status);
+  reset.addEventListener("click", () => {
+    const lesson = academyLessons.find(({ id }) => id === select.value);
+    if (!lesson || !verifiedLessons.has(lesson.id)) return;
+    try {
+      document.defaultView.localStorage.removeItem(proofKey(lesson));
+      proof.textContent = "Saved proof cleared for this lesson.";
+    } catch {
+      proof.textContent = "Saved proof could not be cleared on this device.";
+    }
+  });
+  panel.append(availability, label, task, details, proof, reset, status);
   container.append(panel);
   render();
   return {

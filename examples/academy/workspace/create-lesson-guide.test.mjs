@@ -113,3 +113,23 @@ test("placement recovery is saved separately as historical evidence", () => {
     window.close();
   }
 });
+
+test("clearing selected proof preserves other lessons and the selected lesson", () => {
+  const window = new Window();
+  const { document, localStorage } = window;
+  const guide = createLessonGuide(document.body);
+  try {
+    for (const lesson of ["explore-shop", "edit-content"])
+      guide.recordProof({ lesson, revision: 1, version: "abcdef123456" });
+    const select = document.querySelector("select");
+    select.dispatchEvent(new window.Event("change"));
+    document.querySelector("button").click();
+    assert.match(document.body.textContent, /Saved proof cleared for this lesson/);
+    assert.equal(localStorage.getItem("assemblejs.academy.lesson-proof.explore-shop"), null);
+    assert.ok(localStorage.getItem("assemblejs.academy.lesson-proof.edit-content"));
+    assert.equal(localStorage.getItem("assemblejs.academy.lesson-selection.v1"), "explore-shop");
+  } finally {
+    guide.destroy();
+    window.close();
+  }
+});
