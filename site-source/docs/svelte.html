@@ -32,7 +32,9 @@
           Writes <code>src/assemblies/cart/cart.svelte</code> and nothing else. The extension says
           the framework, and the directory is the assembly: nothing to register.
           <pre><code>&lt;script lang="ts"&gt;
-  let { data } = $props();
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
+
+  let { data }: AssemblyProps = $props();
 &lt;/script&gt;
 
 &lt;p&gt;cart {Object.keys(data).length}&lt;/p&gt;</code></pre>
@@ -91,7 +93,9 @@ export default defineService({
           The counter from the two-frameworks example reads its label from the service and sends an
           event on every click.
           <pre><code>&lt;script lang="ts"&gt;
-  let { data, events } = $props();
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
+
+  let { data, events }: AssemblyProps&lt;{ label: string }&gt; = $props();
   let count = $state(0);
 &lt;/script&gt;
 
@@ -112,7 +116,9 @@ export default defineService({
           then. A React or Vue assembly on the same page hears the same message, with no adapter
           between them.
           <pre><code>&lt;script lang="ts"&gt;
-  let { events } = $props();
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
+
+  let { events }: AssemblyProps = $props();
   let count = $state(0);
   let heard = $state("nothing");
   $effect(() =&gt; events.on("counted", (message) =&gt; (heard = message.from.name)));
@@ -134,9 +140,11 @@ export default defineService({
           then subscribes. A topic the stream does not send is kept once an
           assembly calls <code>events.keep(topic)</code>.
           <pre><code>&lt;script lang="ts"&gt;
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
+
   import { onMount } from "svelte";
 
-  let { events } = $props();
+  let { events }: AssemblyProps = $props();
   let price = $state("waiting");
   onMount(() =&gt; {
     const last = events.last("price");
@@ -166,7 +174,9 @@ export default defineService({
 &lt;/script&gt;
 
 &lt;script lang="ts"&gt;
-  let { data } = $props();
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
+
+  let { data }: AssemblyProps = $props();
 &lt;/script&gt;</code></pre>
         </dd>
       </div>
