@@ -22,6 +22,7 @@
       "@asmjs/check": ["./packages/check/src/index.ts"],
       "@asmjs/cli": ["./packages/cli/src/index.ts"],
       "@asmjs/create": ["./packages/create/src/index.ts"],
+      "create-assemblejs": ["./packages/create-assemblejs/src/index.ts"],
       "@asmjs/mcp": ["./packages/mcp/src/index.ts"],
       "@asmjs/renderer-lit": ["./packages/renderer-lit/src/index.ts"],
       "@asmjs/renderer-lit/client": ["./packages/renderer-lit/src/client/index.ts"],
