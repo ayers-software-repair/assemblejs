@@ -18,6 +18,10 @@ The fourteen names: `@asmjs/build`, `@asmjs/check`, `@asmjs/cli`, `@asmjs/core`,
 `@asmjs/renderer-preact`, `@asmjs/renderer-react`, `@asmjs/renderer-solid`,
 `@asmjs/renderer-svelte`, `@asmjs/renderer-templates`, `@asmjs/renderer-vue`.
 
+The unscoped starter `create-assemblejs` joins the fixed version group. Its first
+publication remains pending. Ordinary source CI reports that exact name's E404
+as pending. The release preflight still requires it to be present on the registry.
+
 ## Before you start
 
 Use Node.js 22.14 or newer and npm 11.15 or newer for the trust-management commands. Confirm
@@ -141,6 +145,7 @@ workflow already uses a GitHub-hosted runner and `id-token: write`. Do not creat
        npm trust github @asmjs/cli --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
        npm trust github @asmjs/core --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
        npm trust github @asmjs/create --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
+       npm trust github create-assemblejs --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
        npm trust github @asmjs/devtools --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
        npm trust github @asmjs/mcp --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish
        npm trust github @asmjs/renderer-lit --file release.yml --repo ayers-software-repair/assemblejs --env release --allow-publish

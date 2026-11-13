@@ -272,3 +272,31 @@ test("build identifiers do not change precedence or order equal-highest releases
   assert.deepEqual(tagPolicy(data).problems, []);
   assert.deepEqual(tagPolicy({ ...data, versions: [...data.versions].reverse() }).problems, []);
 });
+
+test("only the exact pending starter may be absent during a read-only check", () => {
+  const missing = {
+    status: 1,
+    stdout: JSON.stringify({
+      error: {
+        code: "E404",
+        summary: "Not Found - GET https://registry.npmjs.org/create-assemblejs - Not found",
+      },
+    }),
+  };
+  const starter = [{ name: "create-assemblejs", version: newest }];
+  const f = fixture(good, { unavailable: missing });
+  assert.doesNotThrow(() => f.check(false, starter));
+  assert.throws(() => f.check(true, starter), /E404/);
+  assert.throws(() => f.check(), /E404/);
+  const staleLatest = {
+    status: 1,
+    stdout: JSON.stringify({
+      error: { code: "E404", summary: "No match found for version 1.0.0" },
+    }),
+  };
+  assert.throws(() => fixture(good, { unavailable: staleLatest }).check(false, starter), /E404/);
+  assert.throws(
+    () => fixture(good, { unavailable: { status: 1, stdout: "{}" } }).check(false, starter),
+    /failed/,
+  );
+});

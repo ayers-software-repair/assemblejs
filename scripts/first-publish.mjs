@@ -57,12 +57,13 @@ export function registryKnows(name, view = npmView) {
 /**
  * The command that publishes a package's first version by hand, run from the repository root
  * after a build. pnpm packs it, writing real versions where the workspace says `workspace:*`;
- * npm publishes the tarball, which pnpm names `<scope>-<name>-<version>.tgz`, and asks for the
+ * npm publishes the tarball, named `<name>-<version>.tgz` with the scope prepended when present.
+ * npm asks for the
  * second factor. Provenance is off because it can only be made in CI; `--tag` is required for
  * a prerelease.
  */
 export function handCommand({ name, version, dir }, tag) {
-  const tarball = `${name.slice(1).replace("/", "-")}-${version}.tgz`;
+  const tarball = `${name.replace(/^@/, "").replace("/", "-")}-${version}.tgz`;
   return (
     `(cd ${dir} && pnpm pack && npm publish ./${tarball} --access public --tag ${tag} ` +
     `--provenance=false && rm ${tarball})`
@@ -111,6 +112,16 @@ function selfTest() {
       return { said, error };
     }
   };
+
+  assert.equal(
+    handCommand(
+      { name: "create-assemblejs", version: "1.0.0-next.1", dir: "packages/create-assemblejs" },
+      "next",
+    ),
+    "(cd packages/create-assemblejs && pnpm pack && npm publish " +
+      "./create-assemblejs-1.0.0-next.1.tgz --access public --tag next " +
+      "--provenance=false && rm create-assemblejs-1.0.0-next.1.tgz)",
+  );
 
   const someUnseen = run({});
   assert.deepEqual(someUnseen.said, ["unseen @x/core", "seen @x/cli", "unseen @x/build"]);

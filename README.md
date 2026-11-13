@@ -22,7 +22,7 @@ Node.js 22 or newer. Add a framework renderer when the project needs it; an appl
 ## Packages and documentation
 
 - Packages: `@asmjs/core`, `@asmjs/build`, `@asmjs/check`, `@asmjs/cli`,
-  `@asmjs/create`, `@asmjs/devtools`, `@asmjs/mcp`, one `@asmjs/renderer-*`
+  `@asmjs/create` (the `create-assemblejs` wrapper awaits its first publication), `@asmjs/devtools`, `@asmjs/mcp`, one `@asmjs/renderer-*`
   package per framework.
 - Command: `assemblejs` (alias `asm`): `new`, `add`, `dev`, `build`, `check`, `perf`, `deploy`.
 - Docs: https://assemblejs.com/docs/

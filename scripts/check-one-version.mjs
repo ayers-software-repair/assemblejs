@@ -8,19 +8,27 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const GROUP = "@asmjs/*";
+const STARTER = "create-assemblejs";
 
 /** Every problem with the versions and the fixed group, one line each. */
 export function problems(packages, config) {
   const found = [];
+  if (!packages.some((pkg) => pkg.name === STARTER)) found.push(`missing ${STARTER}`);
   const versions = new Set(packages.map((p) => p.version));
   if (versions.size > 1) {
     found.push(`the packages name ${String(versions.size)} versions: ${[...versions].join(", ")}`);
   }
   const fixed = Array.isArray(config.fixed) ? config.fixed : [];
-  const whole = fixed.length === 1 && fixed[0].length === 1 && fixed[0][0] === GROUP;
-  if (!whole) found.push(`.changeset/config.json "fixed" is not [["${GROUP}"]]`);
+  const whole =
+    fixed.length === 1 &&
+    Array.isArray(fixed[0]) &&
+    fixed[0].length === 2 &&
+    fixed[0][0] === GROUP &&
+    fixed[0][1] === STARTER;
+  if (!whole) found.push(`.changeset/config.json "fixed" is not [["${GROUP}", "${STARTER}"]]`);
   for (const pkg of packages) {
-    if (!pkg.name.startsWith("@asmjs/")) found.push(`${pkg.name} is outside the fixed group`);
+    if (!pkg.name.startsWith("@asmjs/") && pkg.name !== STARTER)
+      found.push(`${pkg.name} is outside the fixed group`);
     for (const field of [
       "dependencies",
       "devDependencies",
@@ -28,7 +36,7 @@ export function problems(packages, config) {
       "optionalDependencies",
     ]) {
       for (const [name, version] of Object.entries(pkg[field] ?? {})) {
-        if (name.startsWith("@asmjs/") && version !== "workspace:*") {
+        if ((name.startsWith("@asmjs/") || name === STARTER) && version !== "workspace:*") {
           found.push(`${pkg.name} ${field}.${name} must use workspace:* instead of ${version}`);
         }
       }
@@ -50,16 +58,23 @@ if (process.argv[2] === "--self-test") {
   const good = [
     { name: "@asmjs/core", version: "1.0.0-next.0" },
     { name: "@asmjs/cli", version: "1.0.0-next.0" },
+    { name: STARTER, version: "1.0.0-next.0" },
   ];
-  assert.deepEqual(problems(good, { fixed: [[GROUP]] }), []);
+  assert.deepEqual(problems(good, { fixed: [[GROUP, STARTER]] }), []);
   assert.equal(
-    problems([good[0], { ...good[1], version: "1.0.1" }], { fixed: [[GROUP]] }).length,
+    problems([good[0], { ...good[1], version: "1.0.1" }, good[2]], { fixed: [[GROUP, STARTER]] })
+      .length,
     1,
   );
   assert.equal(problems(good, { fixed: [] }).length, 1);
+  assert.equal(problems(good, { fixed: [[GROUP]] }).length, 1);
+  assert.deepEqual(problems(good.slice(0, 2), { fixed: [[GROUP, STARTER]] }), [
+    `missing ${STARTER}`,
+  ]);
   assert.equal(problems(good, { fixed: [["@asmjs/core"]] }).length, 1);
   assert.equal(
-    problems([...good, { name: "other", version: "1.0.0-next.0" }], { fixed: [[GROUP]] }).length,
+    problems([...good, { name: "other", version: "1.0.0-next.0" }], { fixed: [[GROUP, STARTER]] })
+      .length,
     1,
   );
   for (const field of [
@@ -69,11 +84,15 @@ if (process.argv[2] === "--self-test") {
     "optionalDependencies",
   ]) {
     const stale = { ...good[1], [field]: { "@asmjs/core": "1.0.0-next.0" } };
-    assert.equal(problems([good[0], stale], { fixed: [[GROUP]] }).length, 1);
+    assert.equal(problems([good[0], stale, good[2]], { fixed: [[GROUP, STARTER]] }).length, 1);
     assert.deepEqual(
       problems(
-        [good[0], { ...good[1], [field]: { "@asmjs/core": "workspace:*", external: "^1.0.0" } }],
-        { fixed: [[GROUP]] },
+        [
+          good[0],
+          { ...good[1], [field]: { "@asmjs/core": "workspace:*", external: "^1.0.0" } },
+          good[2],
+        ],
+        { fixed: [[GROUP, STARTER]] },
       ),
       [],
     );

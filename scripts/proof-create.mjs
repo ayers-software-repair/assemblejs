@@ -14,40 +14,76 @@
 //
 // It needs the network for the third-party dependencies, and minutes, so it is a proof run on
 // demand (`pnpm proof:create`) rather than a gate in `pnpm check`.
-import { execFileSync, spawn } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import assert from "node:assert/strict";
+import { execFileSync, spawn, spawnSync } from "node:child_process";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { pack } from "../conformance/harness/pack.mjs";
 
 const step = (text) => console.log(`\n== ${text}`);
 const sh = (command, args, cwd) =>
   execFileSync(command, args, { cwd, stdio: ["ignore", "pipe", "inherit"], encoding: "utf8" });
 
+const scaffold = (root) =>
+  Object.fromEntries(
+    readdirSync(root, { recursive: true, withFileTypes: true })
+      .filter((entry) => entry.isFile())
+      .map((entry) => {
+        const file = join(entry.parentPath, entry.name);
+        return [relative(root, file), readFileSync(file)];
+      }),
+  );
+
 const work = mkdtempSync(join(tmpdir(), "assemblejs-proof-"));
 const tarballs = join(work, "tarballs");
 
 // The starter, and every package of ours it writes into a project.
-const packed = ["create", "core", "build", "check", "cli", "mcp"];
+const packed = ["create-assemblejs", "create", "core", "build", "check", "cli", "mcp"];
 step(`build and pack ${packed.join(", ")}, so the tarballs are the source at this commit`);
 const tarball = pack(packed, tarballs);
 console.log(readdirSync(tarballs).join("\n"));
 
-step("npm create, from the starter's tarball, into an empty directory");
-// Its dependencies are handed over as tarballs too, because none of them is published yet.
-sh(
-  "npm",
-  [
-    "exec",
-    "--yes",
-    ...["create", "cli", "check", "build", "core"].map((name) => `--package=${tarball(name)}`),
-    "--",
-    "create-assemblejs",
-    "my-app",
-  ],
-  work,
+step("compare the packed scoped starter and unscoped wrapper");
+const setup = join(work, "starter");
+mkdirSync(setup);
+const internal = ["create", "cli", "check", "build", "core"];
+const archives = Object.fromEntries(
+  internal.map((name) => [`@asmjs/${name}`, `file:${tarball(name)}`]),
 );
-const app = join(work, "my-app");
+writeFileSync(
+  join(setup, "package.json"),
+  JSON.stringify({
+    private: true,
+    dependencies: { ...archives, "create-assemblejs": `file:${tarball("create-assemblejs")}` },
+    overrides: archives,
+  }),
+);
+sh("npm", ["install", "--ignore-scripts", "--no-audit", "--no-fund"], setup);
+const entry = (name) => join(setup, "node_modules", name, "dist", "bin.js");
+const scoped = join(work, "scoped", "my-app");
+const unscoped = join(work, "unscoped", "my-app");
+mkdirSync(join(work, "scoped"));
+mkdirSync(join(work, "unscoped"));
+sh(process.execPath, [entry("@asmjs/create"), "my-app"], join(work, "scoped"));
+sh(process.execPath, [entry("create-assemblejs"), "my-app"], join(work, "unscoped"));
+assert.deepEqual(scaffold(unscoped), scaffold(scoped));
+for (const name of ["@asmjs/create", "create-assemblejs"]) {
+  const invalid = spawnSync(process.execPath, [entry(name), "--bad"], {
+    cwd: setup,
+    encoding: "utf8",
+  });
+  assert.equal(invalid.status, 2);
+  assert.match(invalid.stderr, /usage:/);
+}
+const app = unscoped;
 
 step("install the project against the tarballs");
 const manifest = JSON.parse(readFileSync(join(app, "package.json"), "utf8"));

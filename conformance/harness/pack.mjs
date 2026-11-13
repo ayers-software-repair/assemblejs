@@ -12,10 +12,20 @@ const workspace = fileURLToPath(new URL("../../", import.meta.url));
 
 /** Builds and packs the named packages into `into`, answering the tarball of each by name. */
 export function pack(names, into) {
-  execFileSync("pnpm", [...names.flatMap((name) => ["--filter", `@asmjs/${name}`]), "build"], {
-    cwd: workspace,
-    stdio: ["ignore", "ignore", "inherit"],
-  });
+  execFileSync(
+    "pnpm",
+    [
+      ...names.flatMap((name) => [
+        "--filter",
+        name === "create-assemblejs" ? name : `@asmjs/${name}`,
+      ]),
+      "build",
+    ],
+    {
+      cwd: workspace,
+      stdio: ["ignore", "ignore", "inherit"],
+    },
+  );
   const packedFiles = new Map();
   for (const name of names) {
     const { filename } = JSON.parse(

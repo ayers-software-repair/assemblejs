@@ -12,5 +12,6 @@
   "@asmjs/renderer-solid": 10500,
   "@asmjs/renderer-svelte": 7800,
   "@asmjs/renderer-templates": 10100,
-  "@asmjs/renderer-vue": 9000
+  "@asmjs/renderer-vue": 9000,
+  "create-assemblejs": 7000
 }
