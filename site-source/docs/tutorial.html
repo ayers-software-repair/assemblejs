@@ -92,7 +92,9 @@ export default defineService({
         <dd>
           The view receives <code>data</code> and its own <code>events</code> as props.
           <pre><code>&lt;script lang="ts"&gt;
-  let { data, events } = $props();
+  import type { AssemblyProps } from "@asmjs/renderer-svelte";
+
+  let { data, events }: AssemblyProps&lt;{ label: string }&gt; = $props();
   let count = $state(0);
 &lt;/script&gt;
 
