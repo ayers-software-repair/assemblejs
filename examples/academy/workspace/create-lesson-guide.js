@@ -115,8 +115,7 @@ export function createLessonGuide(container) {
           proof.textContent =
             "Previous verification saved. Check the current project again to confirm it.";
       } catch {
-        if (select.value === "edit-content")
-          proof.textContent = "Verification passed but could not be saved on this device.";
+        proof.textContent = "Verification passed but could not be saved on this device.";
       }
     },
     destroy: () => panel.remove(),

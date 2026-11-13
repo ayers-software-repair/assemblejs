@@ -36,3 +36,31 @@ test("the shared guide exposes each distinct lesson and its required evidence", 
     window.close();
   }
 });
+
+test("the guide reports unsaved manual proof while another lesson is selected", () => {
+  const window = new Window();
+  const { document, localStorage } = window;
+  const guide = createLessonGuide(document.body);
+  const key = "assemblejs.academy.lesson-proof.edit-content";
+  try {
+    const select = document.querySelector("select");
+    select.value = "capstone";
+    select.dispatchEvent(new window.Event("change"));
+    guide.recordManualEdit({ lesson: "edit-content", revision: 1, version: "abcdef123456" });
+    const previous = localStorage.getItem(key);
+    assert.ok(previous);
+    const setItem = localStorage.setItem;
+    Object.defineProperty(localStorage, "setItem", {
+      value(name, value) {
+        if (name === key) throw new Error("Storage quota exceeded");
+        setItem.call(localStorage, name, value);
+      },
+    });
+    guide.recordManualEdit({ lesson: "edit-content", revision: 1, version: "123456abcdef" });
+    assert.match(document.body.textContent, /Verification passed but could not be saved/);
+    assert.equal(localStorage.getItem(key), previous);
+  } finally {
+    guide.destroy();
+    window.close();
+  }
+});

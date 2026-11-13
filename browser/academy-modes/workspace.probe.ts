@@ -49,6 +49,7 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await editor.getByRole("button", { name: "Save file", exact: true }).click();
     await expect(editor.getByRole("status")).toContainText("Saved");
     await editor
+      .getByRole("navigation", { name: "Project files" })
       .getByRole("button", {
         name: "src/assemblies/buy-box/buy-box.react.tsx",
         exact: true,
@@ -59,6 +60,7 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await editor.getByRole("button", { name: "Save file", exact: true }).click();
     await expect(editor.getByRole("status")).toContainText("Saved");
     await editor
+      .getByRole("navigation", { name: "Open files" })
       .getByRole("button", { name: "src/pages/product/product.html", exact: true })
       .click();
     await expect(input).toHaveValue(editedPage);
