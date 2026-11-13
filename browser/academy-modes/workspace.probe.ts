@@ -68,6 +68,15 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await expect(status).toContainText("Build completed", { timeout: 60000 });
     await page.getByRole("button", { name: "Verify manual edit", exact: true }).click();
     await expect(status).toContainText("Saved and served buy-box labels match");
+    await page.getByRole("button", { name: "Inspect shop composition", exact: true }).click();
+    await expect(status).toContainText(
+      "Buy-box is local. Product-detail comes from another server.",
+    );
+    await page.getByText("Build diagnostics", { exact: true }).click();
+    await expect(
+      page.getByRole("region", { name: "Application preview" }).locator("pre"),
+    ).toContainText('"lesson": "explore-shop"');
+    await page.getByText("Build diagnostics", { exact: true }).click();
     await expect(preview.getByRole("button", { name: "Add to bag", exact: true })).toBeVisible();
     await expect(preview.getByText(introduction, { exact: true })).toBeVisible();
     await expect(preview.locator("assembly-root")).toHaveCount(12);
