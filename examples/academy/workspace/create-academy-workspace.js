@@ -1,6 +1,7 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { callProjectTool } from "./call-project-tool.js";
+import { calculatorRequest } from "./calculator-request.js";
 import { createCalculatorControls } from "./create-calculator-controls.js";
 import { createLessonGuide } from "./create-lesson-guide.js";
 import { createModeWalkthrough } from "./create-mode-walkthrough.js";
@@ -105,13 +106,17 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     empty.hidden = false;
     status.textContent = message;
   };
+  let autoPresetSource;
   const observed = {
     async callTool(request) {
       const writing = request.name === "apply_source_changes";
       if (writing && busy) throw new Error("wait for the preview operation before changing source");
       pending++;
       sync();
-      if (writing && !disposed) clear("Source change requested. Check and preview again.");
+      if (writing && !disposed) {
+        autoPresetSource = undefined;
+        clear("Source change requested. Check and preview again.");
+      }
       try {
         const reply = await client.callTool(request);
         if (!disposed && previewState && request.name === "read_source_version") {
@@ -164,9 +169,19 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   };
   const checkRecovery = createPlacementRecovery(document, observed);
   const practice = createModeWalkthrough(guide, client);
-  const tutor = createCalculatorControls(guide, observed, recipe, (state) =>
-    practice.update(state),
-  );
+  const tutor = createCalculatorControls(guide, observed, recipe, (state) => {
+    practice.update(state);
+    const receipt = state.receipt;
+    if (
+      receipt?.kind === "applied" &&
+      receipt.mode === "auto" &&
+      calculatorRequest(receipt.proposal.request).action === "presets"
+    ) {
+      autoPresetSource = receipt.proposal.changes.find(
+        ({ path }) => path === "src/assemblies/price-calculator/price-calculator.react.tsx",
+      )?.after;
+    }
+  });
   editor = createSourceEditor(code, createProjectFiles(observed), paths);
   const refresh = async () => {
     if (disposed || busy || pending)
@@ -268,9 +283,22 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
                 runtime.readProductPage.bind(runtime),
                 signal,
               )
-            : await verifyCalculator(document, observed, recipe, runtime, previewState, signal);
+            : await verifyCalculator(
+                document,
+                observed,
+                recipe,
+                runtime,
+                previewState,
+                signal,
+                autoPresetSource,
+              );
       if (disposed) return { ok: false, error: "workspace closed" };
-      if (manual || exploring || (placement && evidence.kind === "recovered"))
+      if (
+        evidence.lesson === "auto-presets" ||
+        manual ||
+        exploring ||
+        (placement && evidence.kind === "recovered")
+      )
         lessons.recordProof(evidence);
       if (exploring && evidence.calculatorBesideBuyBox)
         lessons.recordProof({ lesson: "place-assembly", revision: 1, version: evidence.version });

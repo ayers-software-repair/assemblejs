@@ -280,6 +280,7 @@ test("calculator verification is current-preview-only and writes or Stop invalid
     assert.equal(button.disabled, false);
     assert.equal((await f.view.verify()).ok, true);
     assert.deepEqual(f.runtimeCalls, ["build", "inspect"]);
+    assert.match(f.document.body.textContent, /0 of 20 lessons verified/);
     const status = f.document.querySelector('[aria-label="Workspace status"]');
     assert.match(status.textContent, /verified for revision/);
     f.view.tutor.modes.mode("auto");
@@ -288,6 +289,7 @@ test("calculator verification is current-preview-only and writes or Stop invalid
     assert.doesNotMatch(status.textContent, /verified for revision/);
     await f.view.refresh();
     assert.equal((await f.view.verify()).ok, true);
+    assert.match(f.document.body.textContent, /1 of 20 lessons verified/);
     await f.view.stop();
     assert.equal(button.disabled, true);
     assert.doesNotMatch(status.textContent, /verified for revision/);
