@@ -8,7 +8,15 @@ import { createProjectFiles } from "./create-project-files.js";
 import { readProjectVersion } from "./read-project-version.js";
 
 /** Verify current saved settings against actual served output; no build, write or inferred hydration. */
-export async function verifyCalculator(document, client, recipe, runtime, preview, signal) {
+export async function verifyCalculator(
+  document,
+  client,
+  recipe,
+  runtime,
+  preview,
+  signal,
+  autoPresetSource,
+) {
   if (!preview || typeof runtime.inspect !== "function")
     throw new Error(
       "Check & preview first with a runtime that can inspect actual calculator output.",
@@ -38,6 +46,7 @@ export async function verifyCalculator(document, client, recipe, runtime, previe
   signal.throwIfAborted();
   return {
     version: preview.version,
+    ...(source === autoPresetSource ? { lesson: "auto-presets", revision: 1 } : {}),
     ...calculatorEvidence(document, evidence, {
       label: titles.label.value,
       heading: titles.heading.value,

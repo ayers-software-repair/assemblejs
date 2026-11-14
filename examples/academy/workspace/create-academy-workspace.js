@@ -1,14 +1,19 @@
 // Copyright Ayers Electronics Inc. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 import { callProjectTool } from "./call-project-tool.js";
+import { calculatorRequest } from "./calculator-request.js";
 import { createCalculatorControls } from "./create-calculator-controls.js";
+import { createLessonGuide } from "./create-lesson-guide.js";
 import { createModeWalkthrough } from "./create-mode-walkthrough.js";
+import { createPlacementRecovery } from "./create-placement-recovery.js";
 import { createProjectFiles } from "./create-project-files.js";
 import { createSourceEditor } from "./create-source-editor.js";
 import { projectToolResult } from "./project-tool-result.js";
+import { readShopComposition } from "./read-shop-composition.js";
 import { readProjectVersion } from "./read-project-version.js";
 import { restoreVerificationFocus } from "./restore-verification-focus.js";
 import { verifyCalculator } from "./verify-calculator.js";
+import { verifyManualEdit } from "./verify-manual-edit.js";
 
 /** One supplied project: source and authored guidance beside a genuine completed-build URL. */
 export function createAcademyWorkspace(container, client, recipe, paths, runtime) {
@@ -47,8 +52,13 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const build = node("button", "Check & preview");
   const stop = node("button", "Stop preview");
   const verify = node("button", "Verify calculator");
-  build.type = stop.type = verify.type = "button";
-  actions.append(build, stop, verify);
+  const verifyEdit = node("button", "Verify manual edit");
+  const composition = node("button", "Inspect shop composition");
+  composition.type = "button";
+  const recovery = node("button", "Check placement recovery");
+  build.type = stop.type = verify.type = verifyEdit.type = recovery.type = "button";
+  actions.append(build, stop, verify, recovery);
+  if (typeof runtime.readProductPage === "function") actions.append(verifyEdit, composition);
   header.append(heading, actions);
   const status = node("p", "Check and preview to start the application.");
   status.setAttribute("role", "status");
@@ -82,24 +92,50 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     if (disposed) return;
     build.disabled = busy || pending > 0;
     verify.disabled = busy || pending > 0 || !previewState || typeof runtime.inspect !== "function";
+    verifyEdit.disabled = busy || pending > 0 || !previewState;
+    composition.disabled = verifyEdit.disabled;
+    recovery.disabled = busy || pending > 0;
     stop.disabled = busy || pending > 0 || !touched;
     guide.disabled = code.disabled = busy;
   };
+  const lessons = createLessonGuide(guide);
   const clear = (message) => {
     previewState = undefined;
+    lessons.setPreviewVersion(undefined);
     frame.remove();
     empty.hidden = false;
     status.textContent = message;
   };
+  let autoPresetSource;
   const observed = {
     async callTool(request) {
       const writing = request.name === "apply_source_changes";
       if (writing && busy) throw new Error("wait for the preview operation before changing source");
       pending++;
       sync();
-      if (writing && !disposed) clear("Source change requested. Check and preview again.");
+      if (writing && !disposed) {
+        autoPresetSource = undefined;
+        clear("Source change requested. Check and preview again.");
+      }
       try {
         const reply = await client.callTool(request);
+        if (!disposed && previewState && request.name === "read_source_version") {
+          try {
+            const answer = projectToolResult(reply);
+            const version = answer.result?.version;
+            if (
+              answer.ok &&
+              answer.problems.length === 0 &&
+              typeof version === "string" &&
+              /^[a-f0-9]{12}$/.test(version) &&
+              version !== previewState.version
+            ) {
+              lessons.setPreviewVersion(undefined);
+            }
+          } catch {
+            // Let the requesting check report an unreadable version.
+          }
+        }
         if (writing && editor && !disposed && Array.isArray(request.arguments?.changes)) {
           const proposed = new Set(request.arguments.changes.map((change) => change.path));
           try {
@@ -131,10 +167,21 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       }
     },
   };
+  const checkRecovery = createPlacementRecovery(document, observed);
   const practice = createModeWalkthrough(guide, client);
-  const tutor = createCalculatorControls(guide, observed, recipe, (state) =>
-    practice.update(state),
-  );
+  const tutor = createCalculatorControls(guide, observed, recipe, (state) => {
+    practice.update(state);
+    const receipt = state.receipt;
+    if (
+      receipt?.kind === "applied" &&
+      receipt.mode === "auto" &&
+      calculatorRequest(receipt.proposal.request).action === "presets"
+    ) {
+      autoPresetSource = receipt.proposal.changes.find(
+        ({ path }) => path === "src/assemblies/price-calculator/price-calculator.react.tsx",
+      )?.after;
+    }
+  });
   editor = createSourceEditor(code, createProjectFiles(observed), paths);
   const refresh = async () => {
     if (disposed || busy || pending)
@@ -182,6 +229,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       await unchanged();
       if (disposed) return { ok: false, error: "workspace closed" };
       previewState = Object.freeze({ url: url.href, version });
+      lessons.setPreviewVersion(version);
       frame.src = url.href;
       empty.hidden = true;
       preview.insertBefore(frame, diagnostics);
@@ -198,30 +246,85 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       sync();
     }
   };
-  const checkCalculator = async () => {
+  const checkOutput = async (button = verify) => {
+    const manual = button === verifyEdit;
+    const placement = button === recovery;
+    const exploring = button === composition;
     if (disposed || busy || pending)
       return { ok: false, error: "wait for the current project operation" };
-    const focused = document.activeElement === verify;
+    const focused = document.activeElement === button;
     busy = true;
     verificationController = new AbortController();
     sync();
-    status.textContent = "Checking saved calculator output and quote responses.";
+    status.textContent = exploring
+      ? "Reading the served shop composition."
+      : placement
+        ? "Checking the saved placement."
+        : manual
+          ? "Checking the saved buy-box label against the served product."
+          : "Checking saved calculator output and quote responses.";
     try {
-      const evidence = await verifyCalculator(
-        document,
-        observed,
-        recipe,
-        runtime,
-        previewState,
-        verificationController.signal,
-      );
+      const signal = verificationController.signal;
+      const evidence = exploring
+        ? await readShopComposition(
+            document,
+            observed,
+            previewState,
+            runtime.readProductPage.bind(runtime),
+            signal,
+          )
+        : placement
+          ? await checkRecovery(signal)
+          : manual
+            ? await verifyManualEdit(
+                document,
+                observed,
+                previewState,
+                runtime.readProductPage.bind(runtime),
+                signal,
+              )
+            : await verifyCalculator(
+                document,
+                observed,
+                recipe,
+                runtime,
+                previewState,
+                signal,
+                autoPresetSource,
+              );
       if (disposed) return { ok: false, error: "workspace closed" };
+      if (
+        evidence.lesson === "auto-presets" ||
+        manual ||
+        exploring ||
+        (placement && evidence.kind === "recovered")
+      )
+        lessons.recordProof(evidence);
+      if (exploring && evidence.calculatorBesideBuyBox)
+        lessons.recordProof({ lesson: "place-assembly", revision: 1, version: evidence.version });
       output.textContent = JSON.stringify(evidence, null, 2);
-      status.textContent = `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
+      status.textContent = exploring
+        ? "Buy-box is local. Product-detail comes from another server. Open diagnostics for the origin."
+        : placement
+          ? {
+              finding: "Placement finding recorded. Fix the saved placement and check again.",
+              "other-findings": "Other project findings remain. Inspect the diagnostics.",
+              "no-observed-failure":
+                "Save a placement named buy-box-missing, check it, then restore buy-box.",
+              recovered: "The placement check passes on a new saved revision.",
+            }[evidence.kind]
+          : manual
+            ? `Saved and served buy-box labels match at revision ${evidence.version}.`
+            : `Saved calculator output and quotes verified for revision ${evidence.version}. Try the quantity buttons.`;
       return { ok: true, evidence };
     } catch (error) {
       if (!disposed) {
-        clear("Calculator check failed. Inspect its diagnostics, then check and preview again.");
+        if (exploring) status.textContent = "Composition check failed. Inspect its diagnostics.";
+        else if (placement) status.textContent = "Placement check failed. Inspect its diagnostics.";
+        else
+          clear(
+            `${manual ? "Manual edit" : "Calculator"} check failed. Inspect its diagnostics, then check and preview again.`,
+          );
         output.textContent = String(error);
       }
       return { ok: false, error: String(error) };
@@ -229,7 +332,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       verificationController = undefined;
       busy = false;
       sync();
-      if (!disposed) restoreVerificationFocus(document, verify, diagnostics, focused);
+      if (!disposed) restoreVerificationFocus(document, button, diagnostics, focused);
     }
   };
   const stopPreview = async () => {
@@ -256,7 +359,10 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   };
   build.addEventListener("click", () => void refresh());
   stop.addEventListener("click", () => void stopPreview());
-  verify.addEventListener("click", () => void checkCalculator());
+  verify.addEventListener("click", () => void checkOutput());
+  verifyEdit.addEventListener("click", () => void checkOutput(verifyEdit));
+  composition.addEventListener("click", () => void checkOutput(composition));
+  recovery.addEventListener("click", () => void checkOutput(recovery));
   preview.append(diagnostics);
   layout.append(guide, code, preview);
   root.append(header, status, layout);
@@ -267,12 +373,13 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     editor,
     tutor,
     refresh,
-    verify: checkCalculator,
+    verify: () => checkOutput(),
     stop: stopPreview,
     destroy() {
       disposed = true;
       verificationController?.abort();
       practice.destroy();
+      lessons.destroy();
       tutor.destroy();
       editor.destroy();
       root.remove();

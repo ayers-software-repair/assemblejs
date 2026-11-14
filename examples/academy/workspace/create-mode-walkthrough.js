@@ -3,6 +3,7 @@
 import { calculatorPresets } from "./calculator-presets.js";
 import { calculatorTitle } from "./calculator-title.js";
 import { calculatorRequest } from "./calculator-request.js";
+import { createPracticeProgress } from "./create-practice-progress.js";
 import { explainProjectCheck } from "./explain-project-check.js";
 
 /** Short authored practice follows actual controller receipts, never clicks or status prose. */
@@ -38,6 +39,9 @@ export function createModeWalkthrough(container, client) {
   form.append(label, send, answer);
   hint.append(summary, authored, explanation, form);
   const notice = document.createElement("p");
+  const savedProgress = document.createElement("p");
+  savedProgress.setAttribute("role", "status");
+  const progress = createPracticeProgress(document.defaultView, savedProgress);
   const steps = [
     [
       "1. Plan without writing",
@@ -128,7 +132,7 @@ export function createModeWalkthrough(container, client) {
     [heading.textContent, task.textContent, explanation.textContent] = steps[step];
     hint.open = false;
   };
-  panel.append(heading, task, hint, notice);
+  panel.append(heading, task, hint, notice, savedProgress);
   container.append(panel);
   render();
   return {
@@ -218,6 +222,7 @@ export function createModeWalkthrough(container, client) {
       }
       if (advance) {
         step++;
+        if (step === 4) progress.record();
         notice.textContent = "";
         render();
       } else if (step === 1 && receipt.kind === "rejected") {

@@ -5,7 +5,7 @@ import { Window } from "happy-dom";
 import { calculatorFixture } from "./calculator-fixture.mjs";
 import { createAcademyWorkspace } from "./create-academy-workspace.js";
 
-export async function academyWorkspaceFixture(clientOf = (f) => f.client) {
+export async function academyWorkspaceFixture(clientOf = (f) => f.client, readProductPage) {
   const f = calculatorFixture();
   const window = new Window({
     url: "https://academy.example/",
@@ -47,6 +47,7 @@ export async function academyWorkspaceFixture(clientOf = (f) => f.client) {
       calls.push("stop");
     },
   };
+  if (readProductPage) runtime.readProductPage = readProductPage;
   const paths = [...f.files.keys()];
   const view = createAcademyWorkspace(document.body, clientOf(f), f.recipe, paths, runtime);
   await setImmediate();

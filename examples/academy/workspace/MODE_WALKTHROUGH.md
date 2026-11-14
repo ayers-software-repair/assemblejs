@@ -33,7 +33,10 @@ learner work. Reloading starts fresh practice on the current calculator without 
 The guide chooses a changed title and presets from the actual reviewed source. It never
 infers historical completion from files. General curriculum recovery remains open.
 
-This is session-only mode practice, not persisted curriculum progress or certificate evidence.
+The workspace saves a versioned record of receipt-backed mode practice in the host origin’s
+local storage. Reopening the workspace shows the saved practice result and starts a fresh
+walkthrough against the current source. This practice record does not count toward lesson
+verification or the certificate. Draft recovery and project files remain separate.
 Its final text records the three modes used and asks the learner to build and try the actual
 calculator, including the separate saved-output verification action. It does not assert that a later edit is checked or that a frame load proves behavior.
 Full revision-bound lesson checks, snapshots, resume, certificate, verified external-agent

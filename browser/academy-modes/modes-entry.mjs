@@ -40,6 +40,9 @@ if (globalThis.location.search === "?workspace") {
       if (typeof result.url !== "string") throw new Error("missing actual preview URL");
       return result.url;
     },
+    readProductPage(_url, signal) {
+      return json("/preview-product", {}, signal);
+    },
     inspect(values, signal) {
       return json("/preview-inspect", { values }, signal);
     },

@@ -48,8 +48,61 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await input.fill(editedPage);
     await editor.getByRole("button", { name: "Save file", exact: true }).click();
     await expect(editor.getByRole("status")).toContainText("Saved");
+    await editor
+      .getByRole("navigation", { name: "Project files" })
+      .getByRole("button", {
+        name: "src/assemblies/buy-box/buy-box.react.tsx",
+        exact: true,
+      })
+      .click();
+    await expect(input).toHaveValue(/Add to basket/);
+    await input.fill((await input.inputValue()).replace("Add to basket", "Add to bag"));
+    await editor.getByRole("button", { name: "Save file", exact: true }).click();
+    await expect(editor.getByRole("status")).toContainText("Saved");
+    await editor
+      .getByRole("navigation", { name: "Open files" })
+      .getByRole("button", { name: "src/pages/product/product.html", exact: true })
+      .click();
+    await expect(input).toHaveValue(editedPage);
+    const placement = page.getByRole("button", { name: "Check placement recovery", exact: true });
+    const save = editor.getByRole("button", { name: "Save file", exact: true });
+    await input.fill(
+      editedPage.replaceAll(
+        '<assembly name="buy-box"></assembly>',
+        '<assembly name="buy-box-missing"></assembly>',
+      ),
+    );
+    await save.click();
+    await expect(editor.getByRole("status")).toContainText("Saved");
+    await placement.click();
+    await expect(status).toContainText("Placement finding recorded");
+    await input.fill(editedPage);
+    await save.click();
+    await expect(editor.getByRole("status")).toContainText("Saved");
+    await placement.click();
+    await expect(status).toContainText("The placement check passes on a new saved revision.");
+    const lessons = page.getByRole("region", { name: "Academy lessons" });
+    await lessons.getByRole("combobox").selectOption("fix-placement");
+    await expect(lessons.getByText("Previous verification saved.", { exact: false })).toBeVisible();
     await build.click();
     await expect(status).toContainText("Build completed", { timeout: 60000 });
+    await page.getByRole("button", { name: "Verify manual edit", exact: true }).click();
+    await expect(status).toContainText("Saved and served buy-box labels match");
+    await page.getByRole("button", { name: "Inspect shop composition", exact: true }).click();
+    await expect(status).toContainText(
+      "Buy-box is local. Product-detail comes from another server.",
+    );
+    await expect(
+      lessons.getByText("2 of 20 lessons verified for this preview.", {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await page.getByText("Build diagnostics", { exact: true }).click();
+    await expect(
+      page.getByRole("region", { name: "Application preview" }).locator("pre"),
+    ).toContainText('"lesson": "explore-shop"');
+    await page.getByText("Build diagnostics", { exact: true }).click();
+    await expect(preview.getByRole("button", { name: "Add to bag", exact: true })).toBeVisible();
     await expect(preview.getByText(introduction, { exact: true })).toBeVisible();
     await expect(preview.locator("assembly-root")).toHaveCount(12);
     await expect(preview.locator("assembly-root[data-failed]")).toHaveCount(0);
@@ -95,11 +148,22 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await expect(guided.getByRole("status")).toContainText("project check passed");
     await expect(practice.getByRole("heading")).toHaveText("4. Try Auto");
     await expect(page.locator("iframe")).toHaveCount(0);
+    await expect(
+      lessons.getByText("0 of 20 lessons verified for this preview.", {
+        exact: true,
+      }),
+    ).toBeVisible();
     await expect(input).toHaveValue(fixture.calculatorSource("product.html"));
     await build.click();
     await expect(status).toContainText("Build completed", { timeout: 45000 });
     await expect(preview.locator("assembly-root")).toHaveCount(13);
     await expect(calculator).toHaveAttribute("data-mounted", "");
+    await page.getByRole("button", { name: "Inspect shop composition", exact: true }).click();
+    await expect(status).toContainText(
+      "Buy-box is local. Product-detail comes from another server.",
+    );
+    await lessons.getByRole("combobox").selectOption("place-assembly");
+    await expect(lessons.getByText("Previous verification saved.", { exact: false })).toBeVisible();
     await expect(calculator.getByRole("heading", { name: "Coffee total" })).toBeVisible();
     const quote = page.waitForResponse(
       (response) => response.url() === `${fixture.runtime.origin}/api/quote`,
