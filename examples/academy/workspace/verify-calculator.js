@@ -8,7 +8,15 @@ import { createProjectFiles } from "./create-project-files.js";
 import { readProjectVersion } from "./read-project-version.js";
 
 /** Verify current saved settings against actual served output; no build, write or inferred hydration. */
-export async function verifyCalculator(document, client, recipe, runtime, preview, signal) {
+export async function verifyCalculator(
+  document,
+  client,
+  recipe,
+  runtime,
+  preview,
+  signal,
+  calculatorProof,
+) {
   if (!preview || typeof runtime.inspect !== "function")
     throw new Error(
       "Check & preview first with a runtime that can inspect actual calculator output.",
@@ -34,10 +42,20 @@ export async function verifyCalculator(document, client, recipe, runtime, previe
   signal.throwIfAborted();
   if (evidence?.url !== preview.url)
     throw new Error("Calculator evidence does not identify the actual preview URL.");
+  let lesson;
+  if (calculatorProof) {
+    const files = createProjectFiles(client);
+    const saved = await Promise.all(
+      calculatorProof.changes.map(({ path }) => files.readFile(path)),
+    );
+    if (calculatorProof.changes.every(({ after }, index) => saved[index] === after))
+      lesson = calculatorProof.lesson;
+  }
   await unchanged();
   signal.throwIfAborted();
   return {
     version: preview.version,
+    ...(lesson ? { lesson, revision: 1 } : {}),
     ...calculatorEvidence(document, evidence, {
       label: titles.label.value,
       heading: titles.heading.value,

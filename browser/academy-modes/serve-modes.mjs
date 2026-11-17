@@ -165,7 +165,7 @@ export async function serveModes(kind = "modes") {
       }
       if (
         request.method === "POST" &&
-        ["/preview", "/preview-stop"].includes(path) &&
+        ["/preview", "/preview-stop", "/preview-product"].includes(path) &&
         previewRuntime
       ) {
         if (request.headers.origin !== origin)
@@ -184,6 +184,17 @@ export async function serveModes(kind = "modes") {
               200,
               "application/json",
               JSON.stringify({ url: await previewRuntime.rebuild() }),
+            );
+          if (path === "/preview-product")
+            return send(
+              200,
+              "application/json",
+              JSON.stringify(
+                await previewRuntime.readProductPage(
+                  previewRuntime.origin + "/p/kb-guji-250",
+                  AbortSignal.timeout(10000),
+                ),
+              ),
             );
           await previewRuntime.stop();
           return send(
