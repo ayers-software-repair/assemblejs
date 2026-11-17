@@ -165,6 +165,10 @@ test("workspace uses saved source and actual composed Market servers", async ({ 
     await lessons.getByRole("combobox").selectOption("place-assembly");
     await expect(lessons.getByText("Previous verification saved.", { exact: false })).toBeVisible();
     await expect(calculator.getByRole("heading", { name: "Coffee total" })).toBeVisible();
+    await page.getByRole("button", { name: "Verify calculator", exact: true }).click();
+    await expect(status).toContainText("Saved calculator output and quotes verified");
+    await lessons.getByRole("combobox").selectOption("approve-revision");
+    await expect(lessons.getByText("Previous verification saved.", { exact: false })).toBeVisible();
     const quote = page.waitForResponse(
       (response) => response.url() === `${fixture.runtime.origin}/api/quote`,
     );

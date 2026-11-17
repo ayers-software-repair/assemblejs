@@ -408,3 +408,27 @@ test("a recovered placement counts after refreshing to the repaired revision", a
     f.close();
   }
 });
+
+test("Approval credit requires the reviewed files and verified preview output", async () => {
+  const f = await fixture();
+  try {
+    f.view.tutor.modes.mode("approval");
+    await f.view.tutor.modes.request('Add a calculator called "Coffee total"');
+    await f.view.tutor.modes.approve();
+    const inspect = f.runtime.inspect.bind(f.runtime);
+    f.runtime.inspect = async (values) => {
+      const result = await inspect(values);
+      return { ...result, html: result.html.replaceAll("Order estimate", "Coffee total") };
+    };
+    assert.equal((await f.view.refresh()).ok, true);
+    assert.equal((await f.view.verify()).evidence.lesson, "approve-revision");
+    const path = "src/pages/product/product.html";
+    f.files.set(path, f.files.get(path) + "\n<!-- outside edit -->");
+    assert.equal((await f.view.refresh()).ok, true);
+    const result = await f.view.verify();
+    assert.equal(result.ok, true);
+    assert.equal(result.evidence.lesson, undefined);
+  } finally {
+    f.close();
+  }
+});

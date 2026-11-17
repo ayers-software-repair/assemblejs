@@ -106,7 +106,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
     empty.hidden = false;
     status.textContent = message;
   };
-  let autoPresetSource;
+  let calculatorProof;
   const observed = {
     async callTool(request) {
       const writing = request.name === "apply_source_changes";
@@ -114,7 +114,7 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
       pending++;
       sync();
       if (writing && !disposed) {
-        autoPresetSource = undefined;
+        calculatorProof = undefined;
         clear("Source change requested. Check and preview again.");
       }
       try {
@@ -172,14 +172,16 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
   const tutor = createCalculatorControls(guide, observed, recipe, (state) => {
     practice.update(state);
     const receipt = state.receipt;
-    if (
-      receipt?.kind === "applied" &&
-      receipt.mode === "auto" &&
-      calculatorRequest(receipt.proposal.request).action === "presets"
+    if (receipt?.kind !== "applied") return;
+    const request = calculatorRequest(receipt.proposal.request);
+    if (receipt.mode === "auto" && request.action === "presets") {
+      calculatorProof = { lesson: "auto-presets", changes: receipt.proposal.changes };
+    } else if (
+      receipt.mode === "approval" &&
+      request.action === "add" &&
+      request.title === "Coffee total"
     ) {
-      autoPresetSource = receipt.proposal.changes.find(
-        ({ path }) => path === "src/assemblies/price-calculator/price-calculator.react.tsx",
-      )?.after;
+      calculatorProof = { lesson: "approve-revision", changes: receipt.proposal.changes };
     }
   });
   editor = createSourceEditor(code, createProjectFiles(observed), paths);
@@ -290,15 +292,10 @@ export function createAcademyWorkspace(container, client, recipe, paths, runtime
                 runtime,
                 previewState,
                 signal,
-                autoPresetSource,
+                calculatorProof,
               );
       if (disposed) return { ok: false, error: "workspace closed" };
-      if (
-        evidence.lesson === "auto-presets" ||
-        manual ||
-        exploring ||
-        (placement && evidence.kind === "recovered")
-      )
+      if (evidence.lesson || manual || exploring || (placement && evidence.kind === "recovered"))
         lessons.recordProof(evidence);
       if (exploring && evidence.calculatorBesideBuyBox)
         lessons.recordProof({ lesson: "place-assembly", revision: 1, version: evidence.version });

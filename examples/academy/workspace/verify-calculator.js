@@ -15,7 +15,7 @@ export async function verifyCalculator(
   runtime,
   preview,
   signal,
-  autoPresetSource,
+  calculatorProof,
 ) {
   if (!preview || typeof runtime.inspect !== "function")
     throw new Error(
@@ -42,11 +42,20 @@ export async function verifyCalculator(
   signal.throwIfAborted();
   if (evidence?.url !== preview.url)
     throw new Error("Calculator evidence does not identify the actual preview URL.");
+  let lesson;
+  if (calculatorProof) {
+    const files = createProjectFiles(client);
+    const saved = await Promise.all(
+      calculatorProof.changes.map(({ path }) => files.readFile(path)),
+    );
+    if (calculatorProof.changes.every(({ after }, index) => saved[index] === after))
+      lesson = calculatorProof.lesson;
+  }
   await unchanged();
   signal.throwIfAborted();
   return {
     version: preview.version,
-    ...(source === autoPresetSource ? { lesson: "auto-presets", revision: 1 } : {}),
+    ...(lesson ? { lesson, revision: 1 } : {}),
     ...calculatorEvidence(document, evidence, {
       label: titles.label.value,
       heading: titles.heading.value,

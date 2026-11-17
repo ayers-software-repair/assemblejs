@@ -19,6 +19,7 @@ export function createLessonGuide(container) {
     "fix-placement",
     "place-assembly",
     "auto-presets",
+    "approve-revision",
   ]);
   const proofKey = (lesson) => "assemblejs.academy.lesson-proof." + lesson.id;
   const readProof = (storage, lesson) => {
